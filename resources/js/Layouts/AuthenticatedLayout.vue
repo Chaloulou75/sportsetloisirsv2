@@ -163,6 +163,11 @@ const showingNavigationDropdown = ref(false);
                         </div>
 
                         <div class="mt-3 space-y-1">
+                            <ResponsiveNavLink
+                                :href="route('inscriptions.create')"
+                            >
+                                Inscrire une structure
+                            </ResponsiveNavLink>
                             <ResponsiveNavLink :href="route('profile.edit')">
                                 Profil
                             </ResponsiveNavLink>
