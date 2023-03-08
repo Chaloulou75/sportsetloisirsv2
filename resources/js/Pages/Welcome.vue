@@ -6,9 +6,9 @@ import BreezeResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import { ArrowNarrowRightIcon, CheckIcon } from "@heroicons/vue/24/solid";
 const props = defineProps({
     categories: Object,
-    sports: Object,
+    activites: Object,
     categoriesCount: Number,
-    sportsCount: Number,
+    activitesCount: Number,
     clubsCount: Number,
     lastClubs: Object,
 });
@@ -70,7 +70,7 @@ const props = defineProps({
                     <div
                         class="rotate-3 bg-gradient-to-r from-green-500 to-blue-600 bg-clip-text py-2 text-xl font-bold text-transparent sm:text-3xl"
                     >
-                        {{ sportsCount }} activités disponibles!
+                        {{ activitesCount }} activités disponibles!
                     </div>
                 </div>
                 <div
@@ -110,11 +110,13 @@ const props = defineProps({
                         <p class="text-gray-600">
                             Trouvez un club de sport ou un cours collectif dans
                             plus de
-                            <span class="font-semibold">{{ sportsCount }}</span>
-                            <span class="italic"> disciplines différentes</span
-                            >. Il y en a pour tous les gouts : sports de
-                            collectifs, sports de balle, sport de combats,
-                            danse, musique, ...
+                            <span class="font-semibold">{{
+                                activitesCount
+                            }}</span>
+                            <span class="italic"> activites différentes</span>.
+                            Il y en a pour tous les gouts : sports collectifs,
+                            sports de balle, sport de combats, danse, musique,
+                            ...
                         </p>
                     </div>
                     <div
@@ -155,25 +157,27 @@ const props = defineProps({
                 <div
                     class="mb-8 grid h-auto grid-cols-1 place-items-stretch gap-4 px-1.5 sm:grid-cols-2 md:grid-cols-3 md:px-0 lg:grid-cols-4"
                 >
-                    <!-- <Link
-                :href="route('sports.show', sport.slug)"
-                :active="route().current('sports.show', sport.slug)"
-                v-for="sport in sports"
-                :key="sport.id"
-                class="btn-component"
-                >{{ sport.name }}</Link
-            > -->
+                    <Link
+                        :href="route('activite.show', activite.slug)"
+                        :active="
+                            route().current('activite.show', activite.slug)
+                        "
+                        v-for="activite in activites"
+                        :key="activite.id"
+                        class="flex h-24 flex-col items-center justify-center overflow-hidden rounded bg-white text-center text-lg text-gray-700 shadow-lg transition duration-100 hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                        >{{ activite.name }}</Link
+                    >
                 </div>
                 <div class="mb-4 flex items-center justify-center">
-                    <!-- <Link
-                :href="route('sports.index')"
-                class="flex items-center justify-center px-4 py-3 text-lg text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
-            >
-                Et beaucoup d'autres
-                <span>
-                    <ArrowNarrowRightIcon class="w-6 h-6 ml-2" />
-                </span>
-            </Link> -->
+                    <Link
+                        :href="route('activite.index')"
+                        class="hover:bg-darkblue flex items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                    >
+                        Et beaucoup d'autres
+                        <span>
+                            <ArrowNarrowRightIcon class="ml-2 h-6 w-6" />
+                        </span>
+                    </Link>
                 </div>
             </section>
 

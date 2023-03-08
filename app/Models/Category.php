@@ -15,8 +15,8 @@ class Category extends Model
         return 'slug';
     }
 
-    public function sports(): HasMany
+    public function activites(): HasMany
     {
-        return $this->hasMany(Sport::class);
+        return $this->hasMany(Activite::class);
     }
 }

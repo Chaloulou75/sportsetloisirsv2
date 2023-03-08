@@ -3,7 +3,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 defineProps({
     categories: Object,
-    // sportsCount: Number,
+    activitesCount: Number,
     // categoriesCount: Number,
     // clubsCount: Number,
     // villesCount: Number,
@@ -15,7 +15,7 @@ defineProps({
         title="Catégories d'activités"
         :description="
             'Trouvez un club de sport ou un cours collectif parmi plus de ' +
-            sportsCount +
+            activitesCount +
             ' disciplines différentes en France. Choisissez parmi ' +
             clubsCount +
             ' clubs sur notre site prêts à vous accueillir.'
@@ -33,9 +33,9 @@ defineProps({
                     {{ clubsCount }}
                 </span> -->
                 clubs, dans plus de
-                <!-- <span class="font-semibold text-gray-800">
-                    {{ sportsCount }}
-                </span> -->
+                <span class="font-semibold text-gray-800">
+                    {{ activitesCount }}
+                </span>
                 disciplines différentes.
                 <!-- , dans
                 <span class="font-semibold text-gray-800">
@@ -60,7 +60,7 @@ defineProps({
                         "
                         v-for="category in categories"
                         :key="category.id"
-                        class="flex h-24 flex-col items-center justify-center overflow-hidden rounded bg-white text-center text-lg text-gray-700 shadow-lg transition duration-100 hover:bg-green-200 hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                        class="flex h-24 flex-col items-center justify-center overflow-hidden rounded bg-white text-center text-lg text-gray-700 shadow-lg transition duration-100 hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                     >
                         {{ category.name }}
                     </Link>

@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use App\Models\Activite;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use App\Http\Resources\CategoryResource;
 use Illuminate\Http\RedirectResponse;
+use App\Http\Resources\CategoryResource;
 
 class CategoryController extends Controller
 {
@@ -18,13 +19,13 @@ class CategoryController extends Controller
         $categories = Category::select(['id', 'name', 'slug'])->get();
 
         $categoriesCount = Category::count();
-        // $sportsCount = Sport::count();
+        $activitesCount = Activite::count();
         // $clubsCount = Club::count();
 
         return Inertia::render('Category/Index', [
             'categories' => $categories,
             'categoriesCount' => $categoriesCount,
-            // 'sportsCount' => $sportsCount,
+            'activitesCount' => $activitesCount,
             // 'clubsCount' => $clubsCount,
         ]);
     }
