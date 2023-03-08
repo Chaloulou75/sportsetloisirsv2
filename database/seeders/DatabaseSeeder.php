@@ -354,6 +354,6 @@ class DatabaseSeeder extends Seeder
         Activite::factory()->create(['name' => 'Tarot', 'slug' => 'tarot', 'category_id' => 10]);
         Activite::factory()->create(['name' => 'Thalassothérapie', 'slug' => 'thalassotherapie', 'category_id' => 10]);
 
-        $sports= Activite::all();
+        $activites= Activite::all();
     }
 }
