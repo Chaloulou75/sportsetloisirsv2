@@ -10,10 +10,10 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::create('inscriptions', function (Blueprint $table) {
+        Schema::create('structures', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('structure_id')->constrained()->onDelete('cascade');
+            $table->foreignId('structuretype_id')->constrained()->onDelete('cascade')->nullable();
             $table->string('address', 150)->nullable();
             $table->string('city', 50)->nullable();
             $table->string('zip_code', 50)->nullable();
@@ -44,6 +44,6 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('inscriptions');
+        Schema::dropIfExists('structures');
     }
 };

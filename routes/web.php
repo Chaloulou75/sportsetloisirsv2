@@ -5,9 +5,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ActiviteController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\InscriptionController;
+use App\Http\Controllers\StructureController;
+use App\Http\Controllers\DisciplineController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,14 +32,15 @@ Route::get('/faq', function () {
 })->name('faq.index');
 
 Route::resource('category', CategoryController::class);
-Route::resource('activite', ActiviteController::class);
+Route::resource('discipline', DisciplineController::class);
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::resource('inscriptions', InscriptionController::class);
+    Route::get('/structure/create', [StructureController::class, 'create'])->name('structure.create');
+    Route::post('/structure', [StructureController::class, 'store'])->name('structure.store');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

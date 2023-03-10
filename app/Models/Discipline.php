@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Activite extends Model
+class Discipline extends Model
 {
     use HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -43,9 +44,9 @@ class Activite extends Model
         return $this->belongsTo(Category::class);
     }
 
-    // public function clubs(): BelongsToMany
+    // public function structures(): BelongsToMany
     // {
-    //     return $this->belongsToMany(Club::class, 'club_sport')->withTimestamps();
+    //     return $this->belongsToMany(Structure::class, 'structure_sport')->withTimestamps();
     // }
 
     public function inscriptions(): BelongsToMany

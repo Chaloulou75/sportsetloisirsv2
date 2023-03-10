@@ -32,7 +32,7 @@ const submit = () => {
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
                 <UserCircleIcon
-                    class="mr-2 inline-block h-6 w-6 text-gray-600"
+                    class="inline-block w-6 h-6 mr-2 text-gray-600"
                 ></UserCircleIcon
                 >Inscription
             </h2>
@@ -45,21 +45,21 @@ const submit = () => {
                     gratuitement à l'ensemble de nos services, à savoir :
                 </p>
                 <p class="flex items-center">
-                    <CheckIcon class="mr-2 h-5 w-5 text-blue-500" />Publier la
-                    fiche détaillée de votre club
+                    <CheckIcon class="w-5 h-5 mr-2 text-blue-500" />Publier la
+                    fiche détaillée de votre structure
                 </p>
                 <p class="flex items-center">
-                    <CheckIcon class="mr-2 h-5 w-5 text-blue-500" />Diffuser vos
+                    <CheckIcon class="w-5 h-5 mr-2 text-blue-500" />Diffuser vos
                     événements
                 </p>
             </div>
         </template>
 
         <div
-            class="from-darkblue to-midnight flex min-h-full flex-col items-center bg-gradient-to-b py-16 sm:justify-center"
+            class="flex flex-col items-center min-h-full py-16 from-darkblue to-midnight bg-gradient-to-b sm:justify-center"
         >
             <div
-                class="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg"
+                class="w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md sm:max-w-md sm:rounded-lg"
             >
                 <form @submit.prevent="submit">
                     <div>
@@ -68,7 +68,7 @@ const submit = () => {
                         <TextInput
                             id="name"
                             type="text"
-                            class="mt-1 block w-full"
+                            class="block w-full mt-1"
                             v-model="form.name"
                             required
                             autofocus
@@ -84,7 +84,7 @@ const submit = () => {
                         <TextInput
                             id="email"
                             type="email"
-                            class="mt-1 block w-full"
+                            class="block w-full mt-1"
                             v-model="form.email"
                             required
                             autocomplete="username"
@@ -99,7 +99,7 @@ const submit = () => {
                         <TextInput
                             id="password"
                             type="password"
-                            class="mt-1 block w-full"
+                            class="block w-full mt-1"
                             v-model="form.password"
                             required
                             autocomplete="new-password"
@@ -120,7 +120,7 @@ const submit = () => {
                         <TextInput
                             id="password_confirmation"
                             type="password"
-                            class="mt-1 block w-full"
+                            class="block w-full mt-1"
                             v-model="form.password_confirmation"
                             required
                             autocomplete="new-password"
@@ -132,10 +132,10 @@ const submit = () => {
                         />
                     </div>
 
-                    <div class="mt-4 flex items-center justify-end">
+                    <div class="flex items-center justify-end mt-4">
                         <Link
                             :href="route('login')"
-                            class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            class="text-sm text-gray-600 underline rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         >
                             Déjà enregistré?
                         </Link>

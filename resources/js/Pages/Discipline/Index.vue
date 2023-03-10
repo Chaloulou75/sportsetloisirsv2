@@ -7,7 +7,7 @@ import { defineAsyncComponent } from "vue";
 import TextInput from "@/Components/TextInput.vue";
 
 let props = defineProps({
-    activites: Object,
+    disciplines: Object,
     filters: Object,
     // clubsCount: Number,
 });
@@ -22,7 +22,7 @@ watch(
     search,
     debounce(function (value) {
         router.get(
-            "/activite",
+            "/discipline",
             { search: value },
             { preserveState: true, replace: true }
         );
@@ -32,10 +32,10 @@ watch(
 
 <template>
     <Head
-        title="Activités"
+        title="Disciplines"
         :description="
             'Trouvez un club de sport ou un cours collectif parmi plus de ' +
-            activitesCount +
+            disciplinesCount +
             ' disciplines différentes en France. Choisissez parmi ' +
             clubsCount +
             ' clubs sur notre site prêts à vous accueillir.'
@@ -45,7 +45,7 @@ watch(
     <AppLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Les sports et activités
+                Les disciplines et activités
             </h2>
             <p class="py-2 text-base font-medium leading-relaxed text-gray-600">
                 Trouvez un club de sport ou un cours collectif parmi plus de
@@ -54,7 +54,7 @@ watch(
                 </span>
                 clubs, dans plus de
                 <span class="font-semibold text-gray-800">
-                    {{ activites.total }}
+                    {{ disciplines.total }}
                 </span>
                 disciplines différentes.
                 <br />
@@ -66,21 +66,21 @@ watch(
         <div class="py-12">
             <!-- search box -->
             <div
-                class="mx-auto mt-4 mb-8 flex w-full max-w-3xl flex-col items-center justify-center px-2 md:flex-row"
+                class="flex flex-col items-center justify-center w-full max-w-3xl px-2 mx-auto mt-4 mb-8 md:flex-row"
             >
                 <label
                     for="search"
-                    value="Rechercher une activité"
-                    class="mb-1 pr-2 text-sm font-medium text-gray-300"
-                    >Rechercher une activité:</label
+                    value="Rechercher une discipline"
+                    class="pr-2 mb-1 text-sm font-medium text-gray-800"
+                    >Rechercher une discipline:</label
                 >
 
                 <TextInput
                     id="search"
                     type="text"
-                    class="focus:ring-midnight mt-1 block w-full flex-1 px-2 placeholder-gray-500 placeholder-opacity-50 focus:ring-2"
+                    class="flex-1 block w-full px-2 mt-1 placeholder-gray-500 placeholder-opacity-50 focus:ring-midnight focus:ring-2"
                     v-model="search"
-                    placeholder="activité, disciplines..."
+                    placeholder="discipline..."
                 />
 
                 <!-- <button type="button" @click="reset">
@@ -97,24 +97,24 @@ watch(
                     </svg>
                 </button> -->
             </div>
-            <div class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8">
+            <div class="min-h-screen px-2 mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div
-                    class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
+                    class="grid h-auto grid-cols-1 gap-4 place-items-stretch sm:grid-cols-2 md:grid-cols-3"
                 >
                     <Link
-                        :href="route('activite.show', activite.slug)"
+                        :href="route('discipline.show', discipline.slug)"
                         :active="
-                            route().current('activite.show', activite.slug)
+                            route().current('discipline.show', discipline.slug)
                         "
-                        v-for="(activite, index) in activites.data"
-                        :key="activite.id"
+                        v-for="(discipline, index) in disciplines.data"
+                        :key="discipline.id"
                         :index="index"
-                        class="flex h-24 flex-col items-center justify-center overflow-hidden rounded bg-white text-center text-lg text-gray-700 shadow-lg transition duration-100 hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                        class="flex flex-col items-center justify-center h-24 overflow-hidden text-lg text-center text-gray-700 transition duration-100 bg-white rounded shadow-lg hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                     >
-                        <div>{{ activite.name }}</div>
-                        <!-- <div v-if="activite.clubs_count > 0" class="text-xs">
-                            ({{ activite.clubs_count }}
-                            <span v-if="activite.clubs_count > 1">clubs</span>
+                        <div>{{ discipline.name }}</div>
+                        <!-- <div v-if="discipline.clubs_count > 0" class="text-xs">
+                            ({{ discipline.clubs_count }}
+                            <span v-if="discipline.clubs_count > 1">clubs</span>
                             <span v-else>club</span>)
                         </div>
                         <div v-else class="text-xs">
@@ -123,7 +123,7 @@ watch(
                     </Link>
                 </div>
                 <div class="flex justify-end p-10">
-                    <Pagination :links="activites.links" />
+                    <Pagination :links="disciplines.links" />
                 </div>
             </div>
         </div>

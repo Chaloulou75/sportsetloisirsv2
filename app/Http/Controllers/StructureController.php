@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
 use App\Models\Structure;
 use Illuminate\Http\Request;
+use App\Models\Structuretype;
+use Illuminate\Validation\Rule;
 
 class StructureController extends Controller
 {
@@ -20,7 +23,10 @@ class StructureController extends Controller
      */
     public function create()
     {
-        //
+        $structuresType = Structuretype::select(['id', 'name'])->get();
+        return Inertia::render('Structure/Create', [
+            'structuresType' => $structuresType
+        ]);
     }
 
     /**
@@ -28,7 +34,33 @@ class StructureController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request->all());
+
+        $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
+
+        $validated= request()->validate([
+            'firstname' => ['required'],
+            'lastname' => ['required'],
+            'structuretype_id' => ['required', Rule::exists('structurestype', 'id')],
+            'category_id' => ['required', Rule::exists('categories', 'id')],
+            'email' => ['required', 'max:50', 'email'],
+            'website' => ['nullable', 'regex:'.$regex],
+            'phone' => ['required', 'digits:10'],
+            'facebook' => ['nullable'],
+            'instagram' => ['nullable'],
+            'youtube' => ['nullable'],
+            'address' => ['nullable'],
+            'city' => ['nullable'],
+            'zip_code' => ['nullable'],
+            'country' => ['nullable'],
+            'address_lat' => ['nullable'],
+            'address_lng' => ['nullable'],
+            'description' => ['required', 'min:8'],
+        ]);
+
+        $structure = Structure::create($validated);
+
+        return $structure->toJson();
     }
 
     /**

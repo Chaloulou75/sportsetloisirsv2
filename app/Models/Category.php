@@ -15,8 +15,8 @@ class Category extends Model
         return 'slug';
     }
 
-    public function activites(): HasMany
+    public function disciplines(): HasMany
     {
-        return $this->hasMany(Activite::class);
+        return $this->hasMany(Discipline::class);
     }
 }

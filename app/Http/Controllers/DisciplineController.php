@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use App\Models\Activite;
+use App\Models\Discipline;
 use Illuminate\Http\Request;
 
-class ActiviteController extends Controller
+class DisciplineController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class ActiviteController extends Controller
     {
         // $clubsCount = Club::count();
 
-        $activites = Activite::select(['id', 'name', 'slug'])
+        $disciplines = Discipline::select(['id', 'name', 'slug'])
                         // ->withCount('clubs')
                         ->filter(
                             request(['search'])
@@ -24,8 +24,8 @@ class ActiviteController extends Controller
                         ->paginate(15)
                         ->withQueryString();
 
-        return Inertia::render('Activite/Index', [
-            'activites' => $activites,
+        return Inertia::render('Discipline/Index', [
+            'disciplines' => $disciplines,
             // 'clubsCount' => $clubsCount,
             'filters' => request()->all(['search']),
         ]);
@@ -50,7 +50,7 @@ class ActiviteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Activite $activite)
+    public function show(Discipline $discipline)
     {
         //
     }
@@ -58,7 +58,7 @@ class ActiviteController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Activite $activite)
+    public function edit(Discipline $discipline)
     {
         //
     }
@@ -66,7 +66,7 @@ class ActiviteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Activite $activite)
+    public function update(Request $request, Discipline $discipline)
     {
         //
     }
@@ -74,7 +74,7 @@ class ActiviteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Activite $activite)
+    public function destroy(Discipline $discipline)
     {
         //
     }

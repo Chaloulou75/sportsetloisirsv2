@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use App\Models\Activite;
+use App\Models\Discipline;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -13,11 +13,11 @@ class HomeController extends Controller
     public function index()
     {
         $categoriesCount = Category::count();
-        $activitesCount = Activite::count();
+        $disciplinesCount = Discipline::count();
         // $clubsCount = Club::count();
 
         $categories = Category::select(['id', 'name', 'slug'])->get();
-        $activites = Activite::inRandomOrder()->limit(12)->select(['id', 'name', 'slug'])->get();
+        $disciplines = Discipline::inRandomOrder()->limit(12)->select(['id', 'name', 'slug'])->get();
 
         // $lastClubs = Club::with('category:id,name')
         //         ->select(['id', 'name', 'slug', 'category_id', 'city', 'zip_code'])
@@ -27,9 +27,9 @@ class HomeController extends Controller
 
         return Inertia::render('Welcome', [
             'categories' => $categories,
-            'activites' => $activites,
+            'disciplines' => $disciplines,
             'categoriesCount' => $categoriesCount,
-            'activitesCount' => $activitesCount,
+            'disciplinesCount' => $disciplinesCount,
             // 'clubsCount' => $clubsCount,
             // 'lastClubs' => $lastClubs,
             'canLogin' => Route::has('login'),
