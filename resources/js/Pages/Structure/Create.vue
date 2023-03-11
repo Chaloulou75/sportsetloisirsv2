@@ -18,7 +18,7 @@ const AddressForm = defineAsyncComponent(() =>
 );
 
 const props = defineProps({
-    structurestype: Object,
+    structuresType: Object,
     errors: Object,
 });
 
@@ -40,14 +40,14 @@ const form = useForm({
     address_lat: ref(null),
     address_lng: ref(null),
     description: ref(null),
-    sports: ref([]),
+    disciplines: ref([]),
     activites: ref([]),
 });
 
 const formStep = ref(1);
 const firstName = ref(null);
 const categories = ref([]);
-const sportsList = ref([]);
+const disciplinesList = ref([]);
 const activiteSportsList = ref([]);
 
 const getCategories = async () => {
@@ -64,9 +64,9 @@ watch(
     () => form.category_id,
     async (newCategoryID) => {
         axios
-            .get("/api/sports?category_id=" + newCategoryID)
+            .get("/api/disciplines?category_id=" + newCategoryID)
             .then((response) => {
-                sportsList.value = response.data.data;
+                disciplinesList.value = response.data.data;
             })
             .catch((e) => {
                 console.log(e);
@@ -90,7 +90,6 @@ function addActivite() {
     form.activites.push({
         activite_name: "",
         activite_category_id: "",
-        activite_sports: [],
     });
 }
 
@@ -98,7 +97,7 @@ function removeActivite(index) {
     form.activites.splice(index, 1);
 }
 
-function enterAfterSports() {
+function enterAfterDisciplines() {
     document.getElementById("address").focus();
 }
 </script>
@@ -158,7 +157,7 @@ function enterAfterSports() {
                                     <!-- formstep 1 -->
                                     <div
                                         v-if="formStep == 1"
-                                        class="px-4 py-5 space-y-6 bg-white sm:p-6"
+                                        class="space-y-6 bg-white px-4 py-5 sm:p-6"
                                     >
                                         <div class="grid grid-cols-3 gap-6">
                                             <!-- Prenom -->
@@ -172,7 +171,7 @@ function enterAfterSports() {
                                                     Prénom
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md"
+                                                    class="mt-1 flex rounded-md"
                                                 >
                                                     <input
                                                         ref="firstName"
@@ -180,7 +179,7 @@ function enterAfterSports() {
                                                         type="text"
                                                         name="firstname"
                                                         id="firstname"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -203,14 +202,14 @@ function enterAfterSports() {
                                                     Nom
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md"
+                                                    class="mt-1 flex rounded-md"
                                                 >
                                                     <input
                                                         v-model="form.lastname"
                                                         type="text"
                                                         name="lastname"
                                                         id="lastname"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -240,10 +239,10 @@ function enterAfterSports() {
                                                         v-model="
                                                             form.structuretype_id
                                                         "
-                                                        class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
+                                                        class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                                     >
                                                         <option
-                                                            v-for="structure in structurestype"
+                                                            v-for="structure in structuresType"
                                                             :key="structure.id"
                                                             :value="
                                                                 structure.id
@@ -298,10 +297,10 @@ function enterAfterSports() {
                                                     >
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md shadow-sm"
+                                                    class="mt-1 flex rounded-md shadow-sm"
                                                 >
                                                     <span
-                                                        class="inline-flex items-center px-3 text-xs text-gray-500 border border-r-0 border-gray-300 rounded-l-md bg-gray-50"
+                                                        class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-xs text-gray-500"
                                                     >
                                                         https://...
                                                     </span>
@@ -310,7 +309,7 @@ function enterAfterSports() {
                                                         type="text"
                                                         name="website"
                                                         id="website"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-none rounded-r-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                        class="block w-full flex-1 rounded-none rounded-r-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                         placeholder="https://www.exemple.com"
                                                         autocomplete="none"
                                                     />
@@ -334,14 +333,14 @@ function enterAfterSports() {
                                                     Email du club
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md shadow-sm"
+                                                    class="mt-1 flex rounded-md shadow-sm"
                                                 >
                                                     <input
                                                         v-model="form.email"
                                                         type="email"
                                                         name="email"
                                                         id="email"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                         placeholder="Club ..."
                                                         autocomplete="none"
                                                     />
@@ -365,14 +364,14 @@ function enterAfterSports() {
                                                     Numéro de téléphone
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md shadow-sm"
+                                                    class="mt-1 flex rounded-md shadow-sm"
                                                 >
                                                     <input
                                                         v-model="form.phone"
                                                         type="tel"
                                                         name="phone"
                                                         id="phone"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                         placeholder="+33 1 42 ..."
                                                         autocomplete="none"
                                                     />
@@ -396,14 +395,14 @@ function enterAfterSports() {
                                                     Facebook
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md"
+                                                    class="mt-1 flex rounded-md"
                                                 >
                                                     <input
                                                         v-model="form.facebook"
                                                         type="text"
                                                         name="facebook"
                                                         id="facebook"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -427,14 +426,14 @@ function enterAfterSports() {
                                                     Instagram
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md"
+                                                    class="mt-1 flex rounded-md"
                                                 >
                                                     <input
                                                         v-model="form.instagram"
                                                         type="text"
                                                         name="instagram"
                                                         id="instagram"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -458,14 +457,14 @@ function enterAfterSports() {
                                                     Youtube
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md"
+                                                    class="mt-1 flex rounded-md"
                                                 >
                                                     <input
                                                         v-model="form.youtube"
                                                         type="text"
                                                         name="youtube"
                                                         id="youtube"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -495,7 +494,7 @@ function enterAfterSports() {
                                                         v-model="
                                                             form.category_id
                                                         "
-                                                        class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
+                                                        class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                                     >
                                                         <option
                                                             v-for="category in categories"
@@ -533,21 +532,25 @@ function enterAfterSports() {
                                                 </label>
                                                 <div class="mt-1">
                                                     <select
-                                                        name="sports"
-                                                        id="sports"
-                                                        v-model="form.sports"
-                                                        @keydown.enter.prevent="
-                                                            enterAfterSports
+                                                        name="disciplines"
+                                                        id="disciplines"
+                                                        v-model="
+                                                            form.disciplines
                                                         "
-                                                        class="block w-full h-64 text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
+                                                        @keydown.enter.prevent="
+                                                            enterAfterDisciplines
+                                                        "
+                                                        class="block h-64 w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                                         multiple
                                                     >
                                                         <option
-                                                            v-for="sport in sportsList"
-                                                            :key="sport.id"
-                                                            :value="sport"
+                                                            v-for="discipline in disciplinesList"
+                                                            :key="discipline.id"
+                                                            :value="discipline"
                                                         >
-                                                            {{ sport.name }}
+                                                            {{
+                                                                discipline.name
+                                                            }}
                                                         </option>
                                                     </select>
                                                 </div>
@@ -556,18 +559,18 @@ function enterAfterSports() {
                                                 >
                                                     Disciplines sélectionnées:
                                                     <span
-                                                        v-for="sport in form.sports"
-                                                        :key="sport.id"
+                                                        v-for="discipline in form.disciplines"
+                                                        :key="discipline.id"
                                                         class="ml-1 text-sm font-semibold text-gray-700"
-                                                        >{{ sport.name }}
+                                                        >{{ discipline.name }}
                                                         &bullet;
                                                     </span>
                                                 </div>
                                                 <div
-                                                    v-if="errors.sports"
+                                                    v-if="errors.disciplines"
                                                     class="mt-2 text-xs text-red-500"
                                                 >
-                                                    {{ errors.sports }}
+                                                    {{ errors.disciplines }}
                                                 </div>
                                             </div>
                                         </div>
@@ -586,7 +589,7 @@ function enterAfterSports() {
                                                     id="description"
                                                     name="description"
                                                     rows="3"
-                                                    class="block w-full h-48 min-h-full mt-1 placeholder-gray-400 placeholder-opacity-50 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                    class="mt-1 block h-48 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                     :class="{
                                                         errors: 'border-red-500 focus:ring focus:ring-red-200',
                                                     }"
@@ -597,8 +600,8 @@ function enterAfterSports() {
                                             <p
                                                 class="mt-2 text-sm text-gray-500"
                                             >
-                                                Description de votre club en
-                                                quelques lignes.
+                                                Description de votre structure
+                                                en quelques lignes.
                                             </p>
                                             <div
                                                 v-if="errors.description"
@@ -612,12 +615,12 @@ function enterAfterSports() {
                                     <!-- formstep 2 -->
                                     <div
                                         v-if="formStep == 2"
-                                        class="px-4 py-5 space-y-6 bg-white sm:p-6"
+                                        class="space-y-6 bg-white px-4 py-5 sm:p-6"
                                     >
                                         <button
                                             type="button"
                                             @click="addActivite"
-                                            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                            class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                         >
                                             Ajouter une activité
                                         </button>
@@ -640,7 +643,7 @@ function enterAfterSports() {
                                                     Nom de l'activité
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md"
+                                                    class="mt-1 flex rounded-md"
                                                 >
                                                     <input
                                                         ref="activiteName"
@@ -650,7 +653,7 @@ function enterAfterSports() {
                                                         type="text"
                                                         name="activite_name"
                                                         id="activite_name"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -661,11 +664,11 @@ function enterAfterSports() {
                                                                 index
                                                             )
                                                         "
-                                                        class="inline-flex justify-center px-4 py-2 ml-6 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                                                        class="ml-6 inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                                                     >
                                                         <svg
                                                             xmlns="http://www.w3.org/2000/svg"
-                                                            class="w-6 h-6"
+                                                            class="h-6 w-6"
                                                             fill="none"
                                                             viewBox="0 0 24 24"
                                                             stroke="currentColor"
@@ -708,7 +711,7 @@ function enterAfterSports() {
                                                         v-model="
                                                             activite.activite_category_id
                                                         "
-                                                        class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
+                                                        class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                                     >
                                                         <option
                                                             v-for="category in categories"
@@ -732,80 +735,18 @@ function enterAfterSports() {
                                                     }}
                                                 </div> -->
                                             </div>
-
-                                            <!-- activite_sports -->
-                                            <div
-                                                class="col-span-3 sm:col-span-2"
-                                            >
-                                                <label
-                                                    for="activite_sports"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Ajouter une discipline à
-                                                    votre activité
-                                                    <span
-                                                        class="text-xs text-gray-600"
-                                                        >(Selectionnez une ou
-                                                        plusieurs disciplines
-                                                        )</span
-                                                    >
-                                                </label>
-                                                <div class="mt-1">
-                                                    <select
-                                                        name="activite_sports"
-                                                        id="activite_sports"
-                                                        v-model="
-                                                            activite.activite_sports
-                                                        "
-                                                        class="block w-full h-64 text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
-                                                        multiple
-                                                    >
-                                                        <option
-                                                            v-for="sport in activiteSportsList"
-                                                            :key="sport.id"
-                                                            :value="sport"
-                                                        >
-                                                            {{ sport.name }}
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                                <div
-                                                    class="mt-2 text-xs text-gray-700"
-                                                >
-                                                    Disciplines sélectionnées:
-                                                    <span
-                                                        v-for="sport in activite.activite_sports"
-                                                        :key="sport.id"
-                                                        class="ml-1 text-sm font-semibold text-gray-700"
-                                                        >{{ sport.name }}
-                                                        &bullet;
-                                                    </span>
-                                                </div>
-                                                <!-- <div
-                                                    v-if="
-                                                        errors.activite
-                                                            .activite_sports
-                                                    "
-                                                    class="mt-2 text-xs text-red-500"
-                                                >
-                                                    {{
-                                                        errors.activite
-                                                            .activite_sports
-                                                    }}
-                                                </div> -->
-                                            </div>
                                         </div>
                                     </div>
 
                                     <!--buttons formstep 1 -->
                                     <div
                                         v-if="formStep == 1"
-                                        class="px-4 py-3 text-right bg-gray-50 sm:px-6"
+                                        class="bg-gray-50 px-4 py-3 text-right sm:px-6"
                                     >
                                         <button
                                             @click="nextStep"
                                             type="button"
-                                            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                            class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                         >
                                             Ajouter une activité ponctuelle
                                         </button>
@@ -813,22 +754,22 @@ function enterAfterSports() {
                                     <!--buttons formstep 2 -->
                                     <div
                                         v-if="formStep == 2"
-                                        class="px-4 py-3 text-right bg-gray-50 sm:px-6"
+                                        class="bg-gray-50 px-4 py-3 text-right sm:px-6"
                                     >
                                         <div
-                                            class="flex items-center justify-between w-full"
+                                            class="flex w-full items-center justify-between"
                                         >
                                             <button
                                                 type="button"
                                                 @click="prevStep"
-                                                class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                                class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                             >
                                                 Précédent
                                             </button>
                                             <button
                                                 :disabled="form.processing"
                                                 type="submit"
-                                                class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                                class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                             >
                                                 Enregistrer
                                             </button>

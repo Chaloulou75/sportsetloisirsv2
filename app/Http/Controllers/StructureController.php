@@ -24,6 +24,7 @@ class StructureController extends Controller
     public function create()
     {
         $structuresType = Structuretype::select(['id', 'name'])->get();
+
         return Inertia::render('Structure/Create', [
             'structuresType' => $structuresType
         ]);
