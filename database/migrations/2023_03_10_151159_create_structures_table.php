@@ -12,6 +12,8 @@ return new class () extends Migration {
     {
         Schema::create('structures', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('slug');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('structuretype_id')->constrained()->onDelete('cascade')->nullable();
             $table->string('address', 150)->nullable();
@@ -20,6 +22,7 @@ return new class () extends Migration {
             $table->string('country')->nullable();
             $table->double('address_lat')->nullable();
             $table->double('address_lng')->nullable();
+
             $table->string('firstname');
             $table->string('lastname');
             $table->string('email')->nullable();
@@ -30,11 +33,6 @@ return new class () extends Migration {
             $table->string('facebook')->nullable();
             $table->string('instagram')->nullable();
             $table->string('youtube')->nullable();
-            $table->string('activite_name')->nullable();
-            $table->foreignId('activite_category_id')->constrained('categories')->onDelete('cascade');
-            $table->string('lieux_de_pratique')->nullable();
-            $table->boolean('lieux_public')->default(1);
-            $table->string('siege_social')->nullable();
             $table->timestamps();
         });
     }

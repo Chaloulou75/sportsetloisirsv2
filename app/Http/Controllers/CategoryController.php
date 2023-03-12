@@ -55,7 +55,7 @@ class CategoryController extends Controller
                             ->where('slug', $category->slug)
                             ->select(['id', 'name', 'slug'])
                             ->withCount('disciplines')
-                            // ->withCount('clubs')
+                            // ->withCount('structures')
                             ->first();
 
         return Inertia::render('Category/Show', [

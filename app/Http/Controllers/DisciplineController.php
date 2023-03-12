@@ -52,7 +52,18 @@ class DisciplineController extends Controller
      */
     public function show(Discipline $discipline)
     {
-        //
+
+$discipline = Discipline::with(['structures:id,category_id,name,slug'])
+                            ->where('slug', $discipline->slug)
+                            ->select(['id', 'name', 'slug'])
+                            ->withCount('structures')
+                            // ->withCount('structures')
+                            ->first();
+
+return Inertia::render('Discipline/Show', [
+    'discipline'=> $discipline,
+]);
+
     }
 
     /**

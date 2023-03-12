@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Discipline extends Model
@@ -44,13 +44,13 @@ class Discipline extends Model
         return $this->belongsTo(Category::class);
     }
 
-    // public function structures(): BelongsToMany
-    // {
-    //     return $this->belongsToMany(Structure::class, 'structure_sport')->withTimestamps();
-    // }
-
-    public function inscriptions(): BelongsToMany
+    public function structures(): BelongsToMany
     {
-        return $this->belongsToMany(Inscription::class, 'inscription_sport')->withTimestamps();
+        return $this->belongsToMany(Structure::class, 'discipline_structure')->withTimestamps();
     }
+
+    // public function inscriptions(): BelongsToMany
+    // {
+    //     return $this->belongsToMany(Inscription::class, 'inscription_sport')->withTimestamps();
+    // }
 }
