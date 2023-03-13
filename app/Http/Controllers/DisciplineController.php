@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use App\Models\Structure;
 use App\Models\Discipline;
 use Illuminate\Http\Request;
 use App\Http\Resources\DisciplineResource;
@@ -14,20 +15,20 @@ class DisciplineController extends Controller
      */
     public function index()
     {
-        // $clubsCount = Club::count();
+        $structuresCount = Structure::count();
 
         $disciplines = Discipline::select(['id', 'name', 'slug'])
-                        // ->withCount('clubs')
+                        ->withCount('structures')
                         ->filter(
                             request(['search'])
                         )
-                        // ->orderByDesc('clubs_count')
+                        ->orderByDesc('structures_count')
                         ->paginate(15)
                         ->withQueryString();
 
         return Inertia::render('Discipline/Index', [
             'disciplines' => $disciplines,
-            // 'clubsCount' => $clubsCount,
+            'structuresCount' => $structuresCount,
             'filters' => request()->all(['search']),
         ]);
     }
@@ -53,11 +54,10 @@ class DisciplineController extends Controller
      */
     public function show(Discipline $discipline)
     {
-        $discipline = Discipline::with(['structures:id,category_id,name,slug'])
+        $discipline = Discipline::with(['structures:id,category_id,name,slug,city,zip_code'])
                                     ->where('slug', $discipline->slug)
                                     ->select(['id', 'name', 'slug', 'view_count'])
                                     ->withCount('structures')
-                                    // ->withCount('structures')
                                     ->first();
 
         $discipline->timestamps = false;

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use App\Models\Category;
 use App\Models\Structure;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -16,7 +17,51 @@ class StructureController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::select(['id', 'name', 'slug'])->get();
+
+        return Inertia::render('Structure/Index', [
+            'structures'=> Structure::with([
+                    'category:id,name',
+                    'user:id,name',
+                    'disciplines:id,name',
+                    // 'weekdays:id,name',
+                    // 'medias',
+                ])
+                        ->filter(
+                            request(['search', 'category'])
+                        )
+                        ->latest()
+                        ->paginate(9)
+                        ->through(function ($structure) {
+                            return [
+                            'id' => $structure->id,
+                            'name' => $structure->name,
+                            'slug' => $structure->slug,
+                            'website' => $structure->website,
+                            'email' => $structure->email,
+                            'phone' => $structure->phone,
+                            'address' => $structure->address,
+                            'zip_code' => $structure->zip_code,
+                            'city' => $structure->city,
+                            'country' => $structure->country,
+                            'address_lat' => $structure->address_lat,
+                            'address_lng' => $structure->address_lng,
+                            'description' => $structure->description,
+                            'category' => $structure->category,
+                            'disciplines' => $structure->disciplines,
+                            // 'weekdays' => $structure->weekdays,
+                            'user' => $structure->user,
+                            // 'mediasImg' => MediaResource::collection($structure->medias),
+                            // 'start_at' => $structure->start_at,
+                            // 'end_at' => $structure->end_at,
+                            // 'hour_start_at' => $structure->hour_start_at,
+                            // 'hour_end_at' => $structure->hour_end_at,
+                            // 'logo' => $structure->logo ? Storage::disk('s3')->temporaryUrl('logo/' .$structure->id. '/' .$structure->logo, now()->addMinutes(5)) : null,
+                ];
+                        })->withQueryString(),
+            'filters' => request()->all(['search', 'category']),
+            'categories' => $categories,
+        ]);
     }
 
     /**
@@ -41,8 +86,9 @@ class StructureController extends Controller
         $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
 
         $validated= request()->validate([
-            'firstname' => ['required'],
-            'lastname' => ['required'],
+            'name' => ['required', 'string', 'max:255'],
+            'firstname' => ['required', 'string', 'max:255'],
+            'lastname' => ['required', 'string', 'max:255'],
             'structuretype_id' => ['required', Rule::exists('structuretypes', 'id')],
             'category_id' => ['required', Rule::exists('categories', 'id')],
             'email' => ['required', 'max:50', 'email'],

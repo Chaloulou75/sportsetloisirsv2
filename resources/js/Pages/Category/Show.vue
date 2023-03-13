@@ -13,10 +13,9 @@ defineProps({
         :description="
             'Vous souhaitez pratiquer un sport de ' +
             category.name +
-            ' en France ? '
-            //  +
-            // category.clubs_count +
-            // ' clubs sur notre site prêts à vous accueillir.'
+            ' en France ? ' +
+            category.structures_count +
+            ' structures sur notre site prêts à vous accueillir.'
         "
     />
 
@@ -29,7 +28,7 @@ defineProps({
             <p class="py-2 text-base font-medium leading-relaxed text-gray-600">
                 Choisissez parmi les
                 <span class="font-semibold text-gray-800">
-                    {{ category.discipline_count }}
+                    {{ category.disciplines_count }}
                 </span>
                 sports ou activités en lien avec la catégorie
                 <span class="font-semibold text-gray-800">
@@ -38,10 +37,10 @@ defineProps({
                 en France. <br />
                 Consultez la liste des
                 <span class="font-semibold text-gray-800">
-                    {{ category.clubs_count }}
+                    {{ category.structures_count }}
                 </span>
-                clubs disponibles, comparez services, tarifs et horaires en 2
-                clics ! Pratiquer un sport de
+                structures disponibles, comparez services, tarifs et horaires en
+                2 clics ! Pratiquer un sport de
                 <span class="font-semibold text-gray-800">{{
                     category.name
                 }}</span>

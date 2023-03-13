@@ -9,8 +9,8 @@ const props = defineProps({
     disciplines: Object,
     categoriesCount: Number,
     disciplinesCount: Number,
-    clubsCount: Number,
-    lastClubs: Object,
+    structuresCount: Number,
+    lastStructures: Object,
 });
 </script>
 
@@ -61,7 +61,7 @@ const props = defineProps({
                     <div
                         class="-rotate-3 bg-gradient-to-br from-red-500 to-blue-500 bg-clip-text text-xl font-bold text-transparent sm:text-3xl"
                     >
-                        {{ clubsCount }} clubs référencés!
+                        {{ structuresCount }} clubs référencés!
                     </div>
                 </div>
                 <div
@@ -125,7 +125,7 @@ const props = defineProps({
                         <h3
                             class="pb-4 text-lg font-semibold text-gray-600 underline decoration-sky-600 decoration-4 underline-offset-2"
                         >
-                            Plus de {{ clubsCount }} structures référencées
+                            Plus de {{ structuresCount }} structures référencées
                         </h3>
                         <p class="text-gray-600">
                             De très nombreux clubs référencés, prêt à vous
@@ -191,30 +191,37 @@ const props = defineProps({
                     <div
                         class="mb-8 grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3"
                     >
-                        <!-- <Link
-                    :href="route('clubs.show', club.slug)"
-                    :active="route().current('clubs.show', club.slug)"
-                    v-for="club in lastClubs"
-                    :key="club.id"
-                    class="flex flex-col items-center justify-center h-24 px-2 py-1 text-lg text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg md:h-28"
-                >
-                    <div class="mb-1">{{ club.name }}</div>
-                    <div class="mb-1 text-xs">{{ club.category.name }}</div>
-                    <div class="mb-1 text-xs uppercase">
-                        {{ club.city }} ({{ club.zip_code }})
-                    </div>
-                </Link> -->
+                        <Link
+                            :href="route('structure.show', structure.slug)"
+                            :active="
+                                route().current(
+                                    'structure.show',
+                                    structure.slug
+                                )
+                            "
+                            v-for="structure in lastStructures"
+                            :key="structure.id"
+                            class="flex h-24 flex-col items-center justify-center overflow-hidden rounded bg-white text-center text-lg text-gray-700 shadow-lg transition duration-100 hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                        >
+                            <div class="mb-1">{{ structure.name }}</div>
+                            <div class="mb-1 text-xs">
+                                {{ structure.category.name }}
+                            </div>
+                            <div class="mb-1 text-xs">
+                                {{ structure.city }} ({{ structure.zip_code }})
+                            </div>
+                        </Link>
                     </div>
                     <div class="mb-4 flex items-center justify-center">
-                        <!-- <Link
-                    :href="route('clubs.index')"
-                    class="flex flex-col items-center justify-center h-24 overflow-hidden text-lg text-center text-gray-700 transition duration-100 bg-white rounded shadow-lg hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
-                >
-                    Et beaucoup d'autres
-                    <span>
-                        <ArrowNarrowRightIcon class="w-6 h-6 ml-2" />
-                    </span>
-                </Link> -->
+                        <Link
+                            :href="route('structure.index')"
+                            class="flex h-24 flex-col items-center justify-center overflow-hidden rounded bg-white text-center text-lg text-gray-700 shadow-lg transition duration-100 hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                        >
+                            Et beaucoup d'autres
+                            <span>
+                                <ArrowNarrowRightIcon class="ml-2 h-6 w-6" />
+                            </span>
+                        </Link>
                     </div>
                 </div>
                 <div class="mx-auto max-w-sm text-gray-700 md:px-8">
@@ -264,7 +271,7 @@ const props = defineProps({
                         <Link
                             v-if="$page.props.auth.user"
                             :href="route('structure.create')"
-                            class="hover:bg-darkblue flex items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-700 shadow-lg transition duration-150 hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                            class="flex h-24 flex-col items-center justify-center overflow-hidden rounded bg-white text-center text-lg text-gray-700 shadow-lg transition duration-100 hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                         >
                             Créer votre structure
                             <span>
@@ -274,7 +281,7 @@ const props = defineProps({
                         <Link
                             v-else
                             :href="route('register')"
-                            class="flex items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-700 shadow-lg transition duration-150 hover:bg-green-200 hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                            class="flex h-24 flex-col items-center justify-center overflow-hidden rounded bg-white text-center text-lg text-gray-700 shadow-lg transition duration-100 hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                         >
                             S'inscrire
                             <span>

@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use App\Models\Discipline;
 use App\Models\Category;
+use App\Models\Structure;
+use App\Models\Discipline;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Resources\CategoryResource;
@@ -20,13 +21,13 @@ class CategoryController extends Controller
 
         $categoriesCount = Category::count();
         $disciplinesCount = Discipline::count();
-        // $clubsCount = Club::count();
+        $structuresCount = Structure::count();
 
         return Inertia::render('Category/Index', [
             'categories' => $categories,
             'categoriesCount' => $categoriesCount,
             'disciplinesCount' => $disciplinesCount,
-            // 'clubsCount' => $clubsCount,
+            'structuresCount' => $structuresCount,
         ]);
     }
 
@@ -55,7 +56,7 @@ class CategoryController extends Controller
                             ->where('slug', $category->slug)
                             ->select(['id', 'name', 'slug', 'view_count'])
                             ->withCount('disciplines')
-                            // ->withCount('structures')
+                            ->withCount('structures')
                             ->first();
 
         $category->timestamps = false;

@@ -262,7 +262,7 @@ function enterAfterDisciplines() {
                                                     for="structuretype_id"
                                                     class="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Structure
+                                                    Type de structure
                                                 </label>
                                                 <div class="mt-1">
                                                     <select
@@ -545,7 +545,7 @@ function enterAfterDisciplines() {
                                                 </div>
                                             </div>
 
-                                            <!-- sports -->
+                                            <!-- disciplines -->
                                             <div
                                                 class="col-span-3 sm:col-span-2"
                                             >

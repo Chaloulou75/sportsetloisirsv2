@@ -74,7 +74,7 @@ import { Link } from "@inertiajs/vue3";
 
             <div class="flex shrink-0 items-center">
                 <Link :href="route('welcome')">
-                    <BreezeApplicationLogo class="block h-14 w-auto" />
+                    <BreezeApplicationLogo class="block h-9 w-auto" />
                 </Link>
             </div>
         </div>

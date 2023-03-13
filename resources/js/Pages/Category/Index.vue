@@ -4,8 +4,8 @@ import { Head, Link } from "@inertiajs/vue3";
 defineProps({
     categories: Object,
     disciplinesCount: Number,
-    // categoriesCount: Number,
-    // structuresCount: Number,
+    categoriesCount: Number,
+    structuresCount: Number,
     // villesCount: Number,
 });
 </script>
@@ -29,9 +29,9 @@ defineProps({
             </h2>
             <p class="py-2 text-base font-medium leading-relaxed text-gray-600">
                 Trouvez une discipline ou un cours collectif parmi plus de
-                <!-- <span class="font-semibold text-gray-800">
-                    {{ clubsCount }}
-                </span> -->
+                <span class="font-semibold text-gray-800">
+                    {{ structuresCount }}
+                </span>
                 structures, dans plus de
                 <span class="font-semibold text-gray-800">
                     {{ disciplinesCount }}

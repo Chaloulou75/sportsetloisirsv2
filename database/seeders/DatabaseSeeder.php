@@ -4,8 +4,9 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\User;
-use App\Models\Discipline;
 use App\Models\Category;
+use App\Models\Structure;
+use App\Models\Discipline;
 use App\Models\Structuretype;
 use Illuminate\Database\Seeder;
 
@@ -357,6 +358,11 @@ class DatabaseSeeder extends Seeder
         Discipline::factory()->create(['name' => 'Tarot', 'slug' => 'tarot', 'category_id' => 10]);
         Discipline::factory()->create(['name' => 'Thalassothérapie', 'slug' => 'thalassotherapie', 'category_id' => 10]);
 
-        $Disciplines= Discipline::all();
+        $disciplines= Discipline::all();
+
+
+        Structure::factory(40)->create()->each(function ($structure) use ($disciplines) {
+            $structure->disciplines()->attach($disciplines->where('category_id', $structure->category_id)->random(2));
+        });
     }
 }

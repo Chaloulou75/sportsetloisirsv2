@@ -34,6 +34,13 @@ Route::get('/faq', function () {
 Route::resource('category', CategoryController::class);
 Route::resource('discipline', DisciplineController::class);
 
+
+Route::get('structure', [StructureController::class, 'index'])
+    ->name('structure.index');
+Route::get('structure/{structure:slug}', [StructureController::class, 'show'])
+    ->name('structure.show');
+
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
