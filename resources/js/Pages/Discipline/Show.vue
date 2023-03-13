@@ -23,7 +23,7 @@ defineProps({
     <AppLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                {{ discipline.name }}
+                {{ discipline.name }}({{ discipline.view_count }} vues)
             </h2>
 
             <p class="py-2 text-base font-medium leading-relaxed text-gray-600">
@@ -50,9 +50,9 @@ defineProps({
         </template>
 
         <div class="py-12">
-            <div class="min-h-screen px-2 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8">
                 <div
-                    class="grid h-auto grid-cols-1 gap-4 place-items-stretch sm:grid-cols-2 md:grid-cols-3"
+                    class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                 >
                     <!-- <Link
                         :href="route('structure.show', structure.slug)"

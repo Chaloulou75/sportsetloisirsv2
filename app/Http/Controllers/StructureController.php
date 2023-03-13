@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use App\Models\Structure;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use Illuminate\Validation\Rule;
@@ -35,14 +36,14 @@ class StructureController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
 
         $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
 
         $validated= request()->validate([
             'firstname' => ['required'],
             'lastname' => ['required'],
-            'structuretype_id' => ['required', Rule::exists('structurestype', 'id')],
+            'structuretype_id' => ['required', Rule::exists('structuretypes', 'id')],
             'category_id' => ['required', Rule::exists('categories', 'id')],
             'email' => ['required', 'max:50', 'email'],
             'website' => ['nullable', 'regex:'.$regex],
@@ -59,7 +60,17 @@ class StructureController extends Controller
             'description' => ['required', 'min:8'],
         ]);
 
+        $name = $validated['name'];
+        $slug = Str::slug($name, '-');
+        $validated['user_id'] = auth()->id();
+        $validated['slug'] = $slug;
+
+        dd($validated);
+
         $structure = Structure::create($validated);
+
+        $disciplinesIds = collect($request['disciplines'])->pluck('id');
+        $structure->disciplines()->attach($disciplinesIds);
 
         return $structure->toJson();
     }
@@ -69,7 +80,8 @@ class StructureController extends Controller
      */
     public function show(Structure $structure)
     {
-        //
+        $structure->timestamps = false;
+        $structure->increment('view_count');
     }
 
     /**

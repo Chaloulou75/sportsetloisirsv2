@@ -23,6 +23,7 @@ const props = defineProps({
 });
 
 const form = useForm({
+    name: ref(null),
     firstname: ref(null),
     lastname: ref(null),
     structuretype_id: ref(null),
@@ -160,6 +161,37 @@ function enterAfterDisciplines() {
                                         class="space-y-6 bg-white px-4 py-5 sm:p-6"
                                     >
                                         <div class="grid grid-cols-3 gap-6">
+                                            <!-- Name -->
+                                            <div
+                                                class="col-span-3 sm:col-span-2"
+                                            >
+                                                <label
+                                                    for="name"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                >
+                                                    Nom de la structure
+                                                </label>
+                                                <div
+                                                    class="mt-1 flex rounded-md"
+                                                >
+                                                    <input
+                                                        ref="name"
+                                                        v-model="form.name"
+                                                        type="text"
+                                                        name="name"
+                                                        id="name"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                        placeholder=""
+                                                        autocomplete="none"
+                                                    />
+                                                </div>
+                                                <div
+                                                    v-if="errors.name"
+                                                    class="mt-2 text-xs text-red-500"
+                                                >
+                                                    {{ errors.name }}
+                                                </div>
+                                            </div>
                                             <!-- Prenom -->
                                             <div
                                                 class="col-span-3 sm:col-span-2"
@@ -518,7 +550,7 @@ function enterAfterDisciplines() {
                                                 class="col-span-3 sm:col-span-2"
                                             >
                                                 <label
-                                                    for="sports"
+                                                    for="disciplines"
                                                     class="block text-sm font-medium text-gray-700"
                                                 >
                                                     Disciplines pratiquées dans

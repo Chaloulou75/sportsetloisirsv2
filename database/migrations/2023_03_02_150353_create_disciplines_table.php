@@ -17,6 +17,7 @@ return new class () extends Migration {
             $table->string('slug')->nullable();
             $table->text('description')->nullable();
             $table->string('image')->nullable();
+            $table->bigInteger('view_count')->unsigned()->default(0)->index();
             $table->timestamps();
         });
     }

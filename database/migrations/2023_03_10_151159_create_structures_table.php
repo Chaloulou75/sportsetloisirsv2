@@ -22,7 +22,6 @@ return new class () extends Migration {
             $table->string('country')->nullable();
             $table->double('address_lat')->nullable();
             $table->double('address_lng')->nullable();
-
             $table->string('firstname');
             $table->string('lastname');
             $table->string('email')->nullable();
@@ -33,6 +32,7 @@ return new class () extends Migration {
             $table->string('facebook')->nullable();
             $table->string('instagram')->nullable();
             $table->string('youtube')->nullable();
+            $table->bigInteger('view_count')->unsigned()->default(0)->index();
             $table->timestamps();
         });
     }

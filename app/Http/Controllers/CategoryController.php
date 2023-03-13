@@ -53,10 +53,13 @@ class CategoryController extends Controller
     {
         $category = Category::with(['disciplines:id,category_id,name,slug'])
                             ->where('slug', $category->slug)
-                            ->select(['id', 'name', 'slug'])
+                            ->select(['id', 'name', 'slug', 'view_count'])
                             ->withCount('disciplines')
                             // ->withCount('structures')
                             ->first();
+
+        $category->timestamps = false;
+        $category->increment('view_count');
 
         return Inertia::render('Category/Show', [
             'category'=> $category,

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Models\Discipline;
 use Illuminate\Http\Request;
+use App\Http\Resources\DisciplineResource;
 
 class DisciplineController extends Controller
 {
@@ -52,18 +53,19 @@ class DisciplineController extends Controller
      */
     public function show(Discipline $discipline)
     {
+        $discipline = Discipline::with(['structures:id,category_id,name,slug'])
+                                    ->where('slug', $discipline->slug)
+                                    ->select(['id', 'name', 'slug', 'view_count'])
+                                    ->withCount('structures')
+                                    // ->withCount('structures')
+                                    ->first();
 
-$discipline = Discipline::with(['structures:id,category_id,name,slug'])
-                            ->where('slug', $discipline->slug)
-                            ->select(['id', 'name', 'slug'])
-                            ->withCount('structures')
-                            // ->withCount('structures')
-                            ->first();
+        $discipline->timestamps = false;
+        $discipline->increment('view_count');
 
-return Inertia::render('Discipline/Show', [
-    'discipline'=> $discipline,
-]);
-
+        return Inertia::render('Discipline/Show', [
+            'discipline'=> $discipline,
+        ]);
     }
 
     /**
@@ -88,5 +90,13 @@ return Inertia::render('Discipline/Show', [
     public function destroy(Discipline $discipline)
     {
         //
+    }
+
+    public function loadDisciplines()
+    {
+        $category_id = request('category_id');
+
+        $disciplines = Discipline::where('category_id', $category_id)->get(['id', 'name', 'category_id']);
+        return DisciplineResource::collection($disciplines);
     }
 }
