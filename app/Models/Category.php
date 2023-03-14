@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Category extends Model
@@ -20,8 +21,8 @@ class Category extends Model
         return $this->hasMany(Discipline::class);
     }
 
-    public function structures(): HasMany
+    public function structures(): hasManyThrough
     {
-        return $this->hasMany(Structure::class);
+        return $this->hasManyThrough(Structure::class, Discipline::class);
     }
 }

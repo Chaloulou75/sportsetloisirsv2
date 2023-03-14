@@ -20,7 +20,7 @@ const showingNavigationDropdown = ref(false);
                         <div class="flex">
                             <!-- Logo -->
                             <div class="flex items-center shrink-0">
-                                <Link :href="route('dashboard')">
+                                <Link :href="route('welcome')">
                                     <ApplicationLogo
                                         class="block w-auto text-gray-800 fill-current h-9"
                                     />
@@ -32,15 +32,15 @@ const showingNavigationDropdown = ref(false);
                                 class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"
                             >
                                 <NavLink
-                                    :href="route('dashboard')"
-                                    :active="route().current('dashboard')"
+                                    :href="route('welcome')"
+                                    :active="route().current('welcome')"
                                 >
                                     Accueil
                                 </NavLink>
                             </div>
                         </div>
 
-                        <div class="hidden sm:flex sm:items-center sm:ml-6">
+                        <div class="hidden sm:ml-6 sm:flex sm:items-center">
                             <!-- Settings Dropdown -->
                             <div class="relative ml-3">
                                 <Dropdown align="right" width="48">
@@ -70,7 +70,7 @@ const showingNavigationDropdown = ref(false);
 
                                     <template #content>
                                         <DropdownLink
-                                            :href="route('inscriptions.create')"
+                                            :href="route('structure.create')"
                                         >
                                             Inscrire une structure
                                         </DropdownLink>
@@ -98,7 +98,7 @@ const showingNavigationDropdown = ref(false);
                                     showingNavigationDropdown =
                                         !showingNavigationDropdown
                                 "
-                                class="inline-flex items-center justify-center p-2 text-gray-400 transition duration-150 ease-in-out rounded-md hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500"
+                                class="inline-flex items-center justify-center p-2 text-gray-400 transition duration-150 ease-in-out rounded-md hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
                             >
                                 <svg
                                     class="w-6 h-6"
@@ -164,7 +164,7 @@ const showingNavigationDropdown = ref(false);
 
                         <div class="mt-3 space-y-1">
                             <ResponsiveNavLink
-                                :href="route('inscriptions.create')"
+                                :href="route('structure.create')"
                             >
                                 Inscrire une structure
                             </ResponsiveNavLink>

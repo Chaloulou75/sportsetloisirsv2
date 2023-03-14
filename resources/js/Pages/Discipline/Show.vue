@@ -30,7 +30,7 @@ defineProps({
                 <span class="font-semibold text-gray-800">
                     {{ discipline.structures_count }}
                 </span>
-                sports ou activités en lien avec la catégorie
+                structures ou activités en lien avec la catégorie
                 <span class="font-semibold text-gray-800">
                     {{ discipline.name }}
                 </span>
@@ -51,10 +51,10 @@ defineProps({
         <template v-if="discipline.structures_count > 0">
             <div class="py-12">
                 <div
-                    class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8"
+                    class="min-h-screen px-2 mx-auto max-w-7xl sm:px-6 lg:px-8"
                 >
                     <div
-                        class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
+                        class="grid h-auto grid-cols-1 gap-4 place-items-stretch sm:grid-cols-2 md:grid-cols-3"
                     >
                         <Link
                             :href="route('structure.show', structure.slug)"
@@ -66,7 +66,7 @@ defineProps({
                             "
                             v-for="structure in discipline.structures"
                             :key="structure.id"
-                            class="flex h-24 flex-col items-center justify-center overflow-hidden rounded bg-white text-center text-lg text-gray-700 shadow-lg transition duration-100 hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                            class="flex flex-col items-center justify-center h-24 overflow-hidden text-lg text-center text-gray-700 transition duration-100 bg-white rounded shadow-lg hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                         >
                             {{ structure.name }}
                             <div class="mb-1 text-xs">
@@ -80,7 +80,7 @@ defineProps({
         <template v-else>
             <div class="py-12">
                 <div
-                    class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8"
+                    class="min-h-screen px-2 mx-auto max-w-7xl sm:px-6 lg:px-8"
                 >
                     <p class="font-medium text-gray-700">
                         Dommage, il n'y a pas encore de club inscrit en

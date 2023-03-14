@@ -48,9 +48,4 @@ class Discipline extends Model
     {
         return $this->belongsToMany(Structure::class, 'discipline_structure')->withTimestamps();
     }
-
-    // public function inscriptions(): BelongsToMany
-    // {
-    //     return $this->belongsToMany(Inscription::class, 'inscription_sport')->withTimestamps();
-    // }
 }

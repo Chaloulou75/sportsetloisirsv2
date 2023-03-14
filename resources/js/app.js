@@ -8,7 +8,7 @@ import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 
 const appName =
     window.document.getElementsByTagName("title")[0]?.innerText ||
-    "Sports et Loisirs v2";
+    "Sports et Loisirs";
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,

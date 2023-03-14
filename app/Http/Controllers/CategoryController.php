@@ -52,11 +52,10 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        $category = Category::with(['disciplines:id,category_id,name,slug'])
+        $category = Category::with(['disciplines:id,category_id,name,slug', 'disciplines.structures'])
+                            ->withCount(['disciplines','structures'])
                             ->where('slug', $category->slug)
                             ->select(['id', 'name', 'slug', 'view_count'])
-                            ->withCount('disciplines')
-                            ->withCount('structures')
                             ->first();
 
         $category->timestamps = false;
