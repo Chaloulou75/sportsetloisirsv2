@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Redirect;
 
 class StructureController extends Controller
 {
@@ -111,14 +112,12 @@ class StructureController extends Controller
         $validated['user_id'] = auth()->id();
         $validated['slug'] = $slug;
 
-        dd($validated);
-
         $structure = Structure::create($validated);
 
         $disciplinesIds = collect($request['disciplines'])->pluck('id');
         $structure->disciplines()->attach($disciplinesIds);
 
-        return $structure->toJson();
+        return Redirect::route('structure.show', $structure->slug)->with('success', 'Structure crée.');
     }
 
     /**
@@ -128,6 +127,31 @@ class StructureController extends Controller
     {
         $structure->timestamps = false;
         $structure->increment('view_count');
+
+        // $mediasImg = MediaResource::collection(Media::with('club')->where('club_id', $club->id)->latest()->get());
+
+        $structure = Structure::with([
+            'category:id,name',
+            'user:id,name',
+            'disciplines:id,name',
+            // 'weekdays:id,name',
+            // 'medias'
+            ])
+            ->select(['id', 'name', 'slug', 'description', 'address', 'address_lat', 'address_lng', 'zip_code', 'user_id', 'category_id', 'city', 'country', 'website', 'email', 'phone', 'view_count'])
+            ->where('slug', $structure->slug)
+            ->first();
+
+        // $clubLogoUrl = $structure->logo ? Storage::disk('s3')->temporaryUrl('logo/' .$structure->id. '/' .$structure->logo, now()->addMinutes(5)) : null;
+
+        return Inertia::render('Structure/Show', [
+            'structure'=> $structure,
+            // 'clubLogoUrl' => $clubLogoUrl,
+            // 'mediasImg' => MediaResource::collection($club->medias),
+            // 'can' => [
+    //     'update' => optional(Auth::user())->can('update', $club),
+    //     'delete' => optional(Auth::user())->can('delete', $club),
+            // ]
+        ]);
     }
 
     /**

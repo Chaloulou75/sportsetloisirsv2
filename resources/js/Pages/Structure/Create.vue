@@ -46,7 +46,7 @@ const form = useForm({
 });
 
 const formStep = ref(1);
-const firstName = ref(null);
+const name = ref(null);
 const categories = ref([]);
 const disciplinesList = ref([]);
 const activiteSportsList = ref([]);
@@ -57,7 +57,7 @@ const getCategories = async () => {
 };
 
 onMounted(() => {
-    firstName.value.focus();
+    name.value.focus();
     getCategories();
 });
 

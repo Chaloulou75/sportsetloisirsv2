@@ -43,7 +43,7 @@ const submit = () => {
         </template>
 
         <div
-            class="from-darkblue to-midnight flex min-h-full flex-col items-center bg-gradient-to-b py-16 sm:justify-center"
+            class="flex min-h-full flex-col items-center bg-white py-16 sm:justify-center"
         >
             <div
                 class="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg"

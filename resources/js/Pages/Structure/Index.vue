@@ -5,6 +5,7 @@ import { ref, watch } from "vue";
 import { debounce, pickBy, throttle, mapValues } from "lodash";
 import { defineAsyncComponent } from "vue";
 import TextInput from "@/Components/TextInput.vue";
+import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
 
 let props = defineProps({
     structures: Object,
@@ -60,19 +61,19 @@ watch(
         <div class="py-12">
             <!-- search box -->
             <div
-                class="flex flex-col items-center justify-center w-full max-w-3xl px-2 mx-auto mt-4 mb-8 md:flex-row"
+                class="mx-auto mt-4 mb-8 flex w-full max-w-3xl flex-col items-center justify-center px-2 md:flex-row"
             >
                 <label
                     for="search"
                     value="Rechercher une structure"
-                    class="pr-2 mb-1 text-sm font-medium text-gray-800"
+                    class="mb-1 pr-2 text-sm font-medium text-gray-800"
                     >Rechercher une structure:</label
                 >
 
                 <TextInput
                     id="search"
                     type="text"
-                    class="flex-1 block w-full px-2 mt-1 placeholder-gray-500 placeholder-opacity-50 focus:ring-midnight focus:ring-2"
+                    class="focus:ring-midnight mt-1 block w-full flex-1 px-2 placeholder-gray-500 placeholder-opacity-50 focus:ring-2"
                     v-model="search"
                     placeholder="structures, clubs..."
                 />
@@ -91,32 +92,43 @@ watch(
                     </svg>
                 </button> -->
             </div>
-            <div class="min-h-screen px-2 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div
-                    class="grid h-auto grid-cols-1 gap-4 place-items-stretch sm:grid-cols-2 md:grid-cols-2"
-                >
-                    <Link
-                        :href="route('structure.show', structure.slug)"
-                        :active="
-                            route().current('structure.show', structure.slug)
-                        "
-                        v-for="(structure, index) in structures.data"
-                        :key="structure.id"
-                        :index="index"
-                        class="flex flex-col items-center justify-center h-24 overflow-hidden text-lg text-center text-gray-700 transition duration-100 bg-white rounded shadow-lg hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+            <div
+                class="mx-auto flex min-h-screen max-w-7xl space-x-4 px-2 sm:px-6 lg:px-8"
+            >
+                <div class="w-1/2">
+                    <div
+                        class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-2"
                     >
-                        <div>{{ structure.name }}</div>
-                        <div class="text-xs">
-                            {{ structure.category.name }}
-                        </div>
-                        <div class="text-xs">
-                            {{ structure.city }} ({{ structure.zip_code }})
-                        </div>
-                    </Link>
+                        <Link
+                            :href="route('structure.show', structure.slug)"
+                            :active="
+                                route().current(
+                                    'structure.show',
+                                    structure.slug
+                                )
+                            "
+                            v-for="(structure, index) in structures.data"
+                            :key="structure.id"
+                            :index="index"
+                            class="flex h-24 flex-col items-center justify-center overflow-hidden rounded bg-white text-center text-lg text-gray-700 shadow-lg transition duration-100 hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                        >
+                            <div>{{ structure.name }}</div>
+                            <div class="text-xs">
+                                {{ structure.category.name }}
+                            </div>
+                            <div class="text-xs">
+                                {{ structure.city }} ({{ structure.zip_code }})
+                            </div>
+                        </Link>
+                    </div>
+                    <div class="flex justify-end p-10">
+                        <Pagination :links="structures.links" />
+                    </div>
                 </div>
-                <div class="flex justify-end p-10">
-                    <Pagination :links="structures.links" />
-                </div>
+                <LeafletMapMultiple
+                    class="w-1/2"
+                    :structures="structures.data"
+                />
             </div>
         </div>
     </AppLayout>

@@ -3,7 +3,7 @@ import { ref, computed } from "vue";
 import { useScriptTag } from "@vueuse/core";
 
 const props = defineProps({
-    club: Object,
+    structure: Object,
 });
 
 // the map element in the templste
@@ -15,11 +15,11 @@ const marker = ref(null);
 
 // a computed ref to get lat & lng
 const lat = computed(() => {
-    return parseFloat(props.club.address_lat);
+    return parseFloat(props.structure.address_lat);
 });
 
 const lng = computed(() => {
-    return parseFloat(props.club.address_lng);
+    return parseFloat(props.structure.address_lng);
 });
 
 useScriptTag(
@@ -50,6 +50,6 @@ useScriptTag(
 <template>
     <div
         ref="mapDivRef"
-        class="w-full h-64 rounded-sm shadow-sm shadow-sky-700"
+        class="h-64 w-full rounded-sm shadow-sm shadow-sky-700"
     ></div>
 </template>
