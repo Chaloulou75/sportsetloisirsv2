@@ -4,9 +4,7 @@ import BreezeApplicationLogo from "@/Components/ApplicationLogo.vue";
 import { Link } from "@inertiajs/vue3";
 </script>
 <template>
-    <div
-        class="bg-midnight mx-auto h-full max-w-full px-2 py-16 sm:px-3 lg:px-6"
-    >
+    <div class="mx-auto h-full max-w-full bg-white px-2 py-16 sm:px-3 lg:px-6">
         <div
             class="mx-auto grid max-w-7xl grid-cols-1 place-items-start gap-6 border-b border-gray-700 px-2 pb-6 text-sm text-gray-700 sm:grid-cols-2 lg:grid-cols-4"
         >

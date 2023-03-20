@@ -35,6 +35,7 @@ class HomeController extends Controller
             'lastStructures' => $lastStructures,
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
+            'filters' => request()->all(['search']),
         ]);
     }
 }

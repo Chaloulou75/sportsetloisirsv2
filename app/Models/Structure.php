@@ -28,6 +28,7 @@ class Structure extends Model
                 $query->where('name', 'like', '%' . $search . '%')
                     ->orWhere('description', 'like', '%' . $search . '%')
                     ->orWhere('city', 'like', '%' . $search . '%')
+                    ->orWhere('zip_code', 'like', '%' . $search . '%')
             )->orWhereHas('disciplines', function ($query) use ($search) {
                 $query->where('name', 'like', '%' . $search . '%');
             })

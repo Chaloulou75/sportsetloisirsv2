@@ -1,4 +1,4 @@
-const defaultTheme = require('tailwindcss/defaultTheme');
+const defaultTheme = require("tailwindcss/defaultTheme");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -14,11 +14,17 @@ module.exports = {
             fontFamily: {
                 sans: ["Figtree", ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                darkblue: "#151f32",
+                midnight: "#121b4f",
+                gold: "#ffd700",
+            },
         },
     },
 
     plugins: [
         require("@tailwindcss/forms"),
+        require("@tailwindcss/line-clamp"),
         require("prettier-plugin-tailwindcss"),
     ],
 };

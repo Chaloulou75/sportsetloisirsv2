@@ -100,6 +100,9 @@ watch(
                         class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-2"
                     >
                         <Link
+                            v-for="(structure, index) in structures.data"
+                            :key="structure.id"
+                            :index="index"
                             :href="route('structure.show', structure.slug)"
                             :active="
                                 route().current(
@@ -107,19 +110,72 @@ watch(
                                     structure.slug
                                 )
                             "
-                            v-for="(structure, index) in structures.data"
-                            :key="structure.id"
-                            :index="index"
-                            class="flex h-24 flex-col items-center justify-center overflow-hidden rounded bg-white text-center text-lg text-gray-700 shadow-lg transition duration-100 hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                            class="group relative block bg-black"
                         >
-                            <div>{{ structure.name }}</div>
-                            <div class="text-xs">
-                                {{ structure.category.name }}
-                            </div>
-                            <div class="text-xs">
-                                {{ structure.city }} ({{ structure.zip_code }})
+                            <img
+                                alt="Developer"
+                                src="https://images.unsplash.com/photo-1603871165848-0aa92c869fa1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=772&q=80"
+                                class="absolute inset-0 h-full w-full object-cover opacity-75 transition-opacity group-hover:opacity-50"
+                            />
+
+                            <div class="relative p-4 sm:p-6 lg:p-8">
+                                <p
+                                    class="text-sm font-medium uppercase tracking-widest text-pink-500"
+                                >
+                                    {{ structure.category.name }}
+                                </p>
+
+                                <p
+                                    class="text-xl font-bold text-white sm:text-2xl"
+                                >
+                                    {{ structure.name }}
+                                </p>
+
+                                <div class="mt-32 sm:mt-48 lg:mt-64">
+                                    <div
+                                        class="translate-y-8 transform opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100"
+                                    >
+                                        <p
+                                            class="text-sm text-white line-clamp-3"
+                                        >
+                                            {{ structure.description }}
+                                        </p>
+                                        <p class="text-sm text-white">
+                                            {{ structure.city }} ({{
+                                                structure.zip_code
+                                            }})
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </Link>
+                        <!-- <Link
+                                :href="route('structure.show', structure.slug)"
+                                :active="
+                                    route().current(
+                                        'structure.show',
+                                        structure.slug
+                                    )
+                                "
+                                class="block p-4 bg-white rounded-xl sm:p-6 lg:p-8"
+                            >
+                                <div class="mt-16">
+                                    <h3
+                                        class="text-lg font-bold text-gray-900 sm:text-xl"
+                                    >
+                                        {{ structure.name }}
+                                    </h3>
+
+                                    <p class="mt-2 text-sm text-gray-500">
+                                        {{ structure.category.name }}
+                                    </p>
+                                    <p class="mt-2 text-xs text-gray-500">
+                                        {{ structure.city }} ({{
+                                            structure.zip_code
+                                        }})
+                                    </p>
+                                </div>
+                            </Link> -->
                     </div>
                     <div class="flex justify-end p-10">
                         <Pagination :links="structures.links" />
