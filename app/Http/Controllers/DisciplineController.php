@@ -7,6 +7,7 @@ use App\Models\Structure;
 use App\Models\Discipline;
 use Illuminate\Http\Request;
 use App\Http\Resources\DisciplineResource;
+use Illuminate\Database\Eloquent\Builder;
 
 class DisciplineController extends Controller
 {
