@@ -5,7 +5,7 @@ import { router, Head, Link } from "@inertiajs/vue3";
 import BreezeNavLink from "@/Components/NavLink.vue";
 import { debounce } from "lodash";
 import TextInput from "@/Components/TextInput.vue";
-import { ArrowNarrowRightIcon, CheckIcon } from "@heroicons/vue/24/solid";
+import { ArrowSmallRightIcon, CheckIcon } from "@heroicons/vue/24/solid";
 const props = defineProps({
     categories: Object,
     disciplines: Object,
@@ -78,7 +78,7 @@ watch(
                         ref="searchbox"
                         id="search"
                         type="text"
-                        class="focus:ring-midnight mt-1 block w-full flex-1 px-2 placeholder-gray-500 placeholder-opacity-50 focus:ring-2"
+                        class="mt-1 block w-full flex-1 px-2 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
                         v-model="search"
                         placeholder="structure, discipline, ville, code postal..."
                     />
@@ -207,18 +207,18 @@ watch(
                         "
                         v-for="discipline in disciplines"
                         :key="discipline.id"
-                        class="flex h-24 flex-col items-center justify-center overflow-hidden rounded bg-white text-center text-lg text-gray-700 shadow-lg transition duration-100 hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                        class="flex items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                         >{{ discipline.name }}</Link
                     >
                 </div>
                 <div class="mb-4 flex items-center justify-center">
                     <Link
                         :href="route('discipline.index')"
-                        class="flex h-24 flex-col items-center justify-center overflow-hidden rounded bg-white text-center text-lg text-gray-700 shadow-lg transition duration-100 hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                        class="flex items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                     >
                         Et beaucoup d'autres
                         <span>
-                            <ArrowNarrowRightIcon class="ml-2 h-6 w-6" />
+                            <ArrowSmallRightIcon class="ml-2 h-6 w-6" />
                         </span>
                     </Link>
                 </div>
@@ -244,7 +244,7 @@ watch(
                             "
                             v-for="structure in lastStructures"
                             :key="structure.id"
-                            class="flex h-24 flex-col items-center justify-center overflow-hidden rounded bg-white text-center text-lg text-gray-700 shadow-lg transition duration-100 hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                            class="flex flex-col items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                         >
                             <div class="mb-1">{{ structure.name }}</div>
                             <div class="mb-1 text-xs">
@@ -258,11 +258,11 @@ watch(
                     <div class="mb-4 flex items-center justify-center">
                         <Link
                             :href="route('structure.index')"
-                            class="flex h-24 flex-col items-center justify-center overflow-hidden rounded bg-white text-center text-lg text-gray-700 shadow-lg transition duration-100 hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                            class="flex items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                         >
                             Et beaucoup d'autres
                             <span>
-                                <ArrowNarrowRightIcon class="ml-2 h-6 w-6" />
+                                <ArrowSmallRightIcon class="ml-2 h-6 w-6" />
                             </span>
                         </Link>
                     </div>
@@ -314,21 +314,21 @@ watch(
                         <Link
                             v-if="$page.props.auth.user"
                             :href="route('structure.create')"
-                            class="flex h-24 flex-col items-center justify-center overflow-hidden rounded bg-white text-center text-lg text-gray-700 shadow-lg transition duration-100 hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                            class="flex items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                         >
                             Créer votre structure
                             <span>
-                                <ArrowNarrowRightIcon class="ml-2 h-6 w-6" />
+                                <ArrowSmallRightIcon class="ml-2 h-6 w-6" />
                             </span>
                         </Link>
                         <Link
                             v-else
                             :href="route('register')"
-                            class="flex h-24 flex-col items-center justify-center overflow-hidden rounded bg-white text-center text-lg text-gray-700 shadow-lg transition duration-100 hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                            class="flex items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                         >
                             S'inscrire
                             <span>
-                                <ArrowNarrowRightIcon class="ml-2 h-6 w-6" />
+                                <ArrowSmallRightIcon class="ml-2 h-6 w-6" />
                             </span>
                         </Link>
                     </div>
