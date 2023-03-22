@@ -54,23 +54,23 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         $category = Category::with(['disciplines' => function ($query) {
-            $query->withCount('structures');
+            $query->withCount('structures')->orderByDesc('structures_count');
         }])
                             ->where('slug', $category->slug)
                             ->select(['id', 'name', 'slug', 'view_count'])
                             ->withCount(['disciplines', 'structures'])
                             ->first();
 
-        $totalStructures = $category->structures_count;
-
-        $disciplinesWithStructures = $category->disciplines->pluck('structures_count', 'id');
+        // dd($category);
+        // $disciplinesWithStructures = $category->disciplines->pluck('structures_count', 'id');
+        $totalStructures = $category->disciplines->sum('structures_count');
 
         $category->timestamps = false;
         $category->increment('view_count');
 
         return Inertia::render('Category/Show', [
             'category'=> $category,
-            'disciplinesWithStructures' => $disciplinesWithStructures,
+            // 'disciplinesWithStructures' => $disciplinesWithStructures,
             'totalStructures' => $totalStructures,
         ]);
     }

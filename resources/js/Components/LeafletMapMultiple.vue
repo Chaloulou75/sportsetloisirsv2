@@ -1,10 +1,18 @@
 <script setup>
+import { ref, computed } from "vue";
 import { LMap, LTileLayer, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
 import "leaflet/dist/leaflet.css";
-import { ref, computed } from "vue";
+
 const props = defineProps({
     structures: Object,
 });
+
+const center = ref([
+    props.structures[0].address_lat,
+    props.structures[0].address_lng,
+]);
+
+const zoom = ref(6);
 
 // a computed ref to get lat & lng
 const lat = computed(() => {
@@ -14,8 +22,6 @@ const lat = computed(() => {
 const lng = computed(() => {
     return parseFloat(props.structures[0].address_lng);
 });
-
-const zoom = ref(6);
 </script>
 
 <template>
@@ -28,7 +34,7 @@ const zoom = ref(6);
             :minZoom="2"
             :maxZoom="20"
             :zoomAnimation="true"
-            :center="[lat, lng]"
+            :center="center"
         >
             <l-tile-layer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
