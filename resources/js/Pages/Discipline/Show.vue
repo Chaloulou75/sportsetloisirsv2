@@ -84,7 +84,7 @@ defineProps({
                                     class="group relative block bg-black"
                                 >
                                     <img
-                                        alt="Developer"
+                                        alt="a guy"
                                         src="https://images.unsplash.com/photo-1603871165848-0aa92c869fa1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=772&q=80"
                                         class="absolute inset-0 h-full w-full object-cover opacity-75 transition-opacity group-hover:opacity-50"
                                     />
@@ -121,11 +121,6 @@ defineProps({
                                     </div>
                                 </Link>
                             </div>
-                            <!-- <div class="flex justify-end p-10">
-                                <Pagination
-                                    :links="discipline.structures.links"
-                                />
-                            </div> -->
                         </div>
                         <LeafletMapMultiple
                             class="md:w-1/2"

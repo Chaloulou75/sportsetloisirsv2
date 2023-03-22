@@ -21,8 +21,8 @@ class Category extends Model
         return $this->hasMany(Discipline::class);
     }
 
-    public function structures(): hasManyThrough
+    public function structures(): HasMany
     {
-        return $this->hasManyThrough(Structure::class, Discipline::class);
+        return $this->hasMany(Structure::class);
     }
 }

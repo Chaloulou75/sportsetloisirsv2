@@ -12,8 +12,8 @@ return new class () extends Migration {
     {
         Schema::create('discipline_structure', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('discipline_id');
-            $table->foreignId('structure_id');
+            $table->foreignId('discipline_id')->constrained();
+            $table->foreignId('structure_id')->constrained();
             $table->timestamps();
         });
     }

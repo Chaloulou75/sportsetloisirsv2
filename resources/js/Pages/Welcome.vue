@@ -6,6 +6,7 @@ import BreezeNavLink from "@/Components/NavLink.vue";
 import { debounce } from "lodash";
 import TextInput from "@/Components/TextInput.vue";
 import { ArrowSmallRightIcon, CheckIcon } from "@heroicons/vue/24/solid";
+
 const props = defineProps({
     categories: Object,
     disciplines: Object,

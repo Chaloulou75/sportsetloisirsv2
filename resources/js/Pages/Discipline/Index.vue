@@ -66,19 +66,19 @@ watch(
         <div class="py-12">
             <!-- search box -->
             <div
-                class="flex flex-col items-center justify-center w-full max-w-3xl px-2 mx-auto mt-4 mb-8 md:flex-row"
+                class="mx-auto mt-4 mb-8 flex w-full max-w-3xl flex-col items-center justify-center px-2 md:flex-row"
             >
                 <label
                     for="search"
                     value="Rechercher une discipline"
-                    class="pr-2 mb-1 text-sm font-medium text-gray-800"
+                    class="mb-1 pr-2 text-sm font-medium text-gray-800"
                     >Rechercher une discipline:</label
                 >
 
                 <TextInput
                     id="search"
                     type="text"
-                    class="flex-1 block w-full px-2 mt-1 placeholder-gray-500 placeholder-opacity-50 focus:ring-midnight focus:ring-2"
+                    class="mt-1 block w-full flex-1 px-2 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
                     v-model="search"
                     placeholder="discipline..."
                 />
@@ -97,9 +97,9 @@ watch(
                     </svg>
                 </button> -->
             </div>
-            <div class="min-h-screen px-2 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8">
                 <div
-                    class="grid h-auto grid-cols-1 gap-4 place-items-stretch sm:grid-cols-2 md:grid-cols-3"
+                    class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                 >
                     <Link
                         :href="route('discipline.show', discipline.slug)"
@@ -109,7 +109,7 @@ watch(
                         v-for="(discipline, index) in disciplines.data"
                         :key="discipline.id"
                         :index="index"
-                        class="flex flex-col items-center justify-center h-24 overflow-hidden text-lg text-center text-gray-700 transition duration-100 bg-white rounded shadow-lg hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                        class="flex flex-col items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                     >
                         <div>{{ discipline.name }}</div>
                         <div

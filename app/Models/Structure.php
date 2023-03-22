@@ -64,8 +64,13 @@ class Structure extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function structuretype(): BelongsTo
+    {
+        return $this->belongsTo(Structuretype::class);
+    }
+
     public function disciplines(): BelongsToMany
     {
-        return $this->belongsToMany(Discipline::class, 'discipline_structure')->withTimestamps();
+        return $this->belongsToMany(Discipline::class);
     }
 }

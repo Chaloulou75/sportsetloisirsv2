@@ -4,6 +4,8 @@ import { Head, Link } from "@inertiajs/vue3";
 
 defineProps({
     category: Object,
+    disciplinesWithStructures: Number,
+    totalStructures: Number,
 });
 </script>
 
@@ -22,7 +24,10 @@ defineProps({
     <AppLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                {{ category.name }} ({{ category.view_count }} vues)
+                {{ category.name }}
+                <span class="text-xs italic text-gray-600"
+                    >({{ category.view_count }} vues)
+                </span>
             </h2>
 
             <p class="py-2 text-base font-medium leading-relaxed text-gray-600">
@@ -37,7 +42,7 @@ defineProps({
                 en France. <br />
                 Consultez la liste des
                 <span class="font-semibold text-gray-800">
-                    {{ category.structures_count }}
+                    {{ totalStructures }}
                 </span>
                 structures disponibles, comparez services, tarifs et horaires en
                 2 clics ! Pratiquer un sport de
@@ -49,9 +54,9 @@ defineProps({
         </template>
 
         <div class="py-12">
-            <div class="min-h-screen px-2 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8">
                 <div
-                    class="grid h-auto grid-cols-1 gap-4 place-items-stretch sm:grid-cols-2 md:grid-cols-3"
+                    class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                 >
                     <Link
                         :href="route('discipline.show', discipline.slug)"
@@ -60,9 +65,22 @@ defineProps({
                         "
                         v-for="discipline in category.disciplines"
                         :key="discipline.id"
-                        class="flex flex-col items-center justify-center h-24 overflow-hidden text-lg text-center text-gray-700 transition duration-100 bg-white rounded shadow-lg hover:bg-gray-200 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                        class="flex flex-col items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                     >
                         {{ discipline.name }}
+                        <div
+                            v-if="discipline.structures_count > 0"
+                            class="text-xs"
+                        >
+                            ({{ discipline.structures_count }}
+                            <span v-if="discipline.structures_count > 1"
+                                >structures</span
+                            >
+                            <span v-else>structure</span>)
+                        </div>
+                        <div v-else class="text-xs">
+                            (Pas encore de structure inscrite)
+                        </div>
                     </Link>
                 </div>
             </div>

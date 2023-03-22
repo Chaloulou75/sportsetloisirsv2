@@ -8,6 +8,7 @@ use App\Models\Structure;
 use App\Models\Discipline;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Database\Eloquent\Builder;
 use App\Http\Resources\CategoryResource;
 
 class CategoryController extends Controller
@@ -52,17 +53,25 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        $category = Category::with(['disciplines:id,category_id,name,slug', 'disciplines.structures'])
-                            ->withCount(['disciplines','structures'])
+        $category = Category::with(['disciplines' => function ($query) {
+            $query->withCount('structures');
+        }])
                             ->where('slug', $category->slug)
                             ->select(['id', 'name', 'slug', 'view_count'])
+                            ->withCount(['disciplines', 'structures'])
                             ->first();
+
+        $totalStructures = $category->structures_count;
+
+        $disciplinesWithStructures = $category->disciplines->pluck('structures_count', 'id');
 
         $category->timestamps = false;
         $category->increment('view_count');
 
         return Inertia::render('Category/Show', [
             'category'=> $category,
+            'disciplinesWithStructures' => $disciplinesWithStructures,
+            'totalStructures' => $totalStructures,
         ]);
     }
 
