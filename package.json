@@ -5,26 +5,26 @@
         "build": "vite build && vite build --ssr"
     },
     "devDependencies": {
-        "@inertiajs/vue3": "^1.0.0",
+        "@inertiajs/vue3": "^1.0.2",
         "@tailwindcss/forms": "^0.5.3",
         "@tailwindcss/line-clamp": "^0.4.2",
-        "@vitejs/plugin-vue": "^4.0.0",
+        "@vitejs/plugin-vue": "^4.1.0",
         "@vue-leaflet/vue-leaflet": "^0.9.0",
-        "@vue/server-renderer": "^3.2.31",
-        "autoprefixer": "^10.4.12",
+        "@vue/server-renderer": "^3.2.47",
+        "autoprefixer": "^10.4.14",
         "axios": "^1.1.2",
-        "laravel-vite-plugin": "^0.7.2",
+        "laravel-vite-plugin": "^0.7.4",
         "leaflet": "^1.9.3",
         "lodash": "^4.17.21",
-        "postcss": "^8.4.18",
+        "postcss": "^8.4.21",
         "prettier": "^2.8.4",
         "prettier-plugin-tailwindcss": "^0.2.4",
-        "tailwindcss": "^3.2.1",
-        "vite": "^4.0.0",
-        "vue": "^3.2.41"
+        "tailwindcss": "^3.2.7",
+        "vite": "^4.2.1",
+        "vue": "^3.2.47"
     },
     "dependencies": {
-        "@headlessui/vue": "^1.7.11",
+        "@headlessui/vue": "^1.7.12",
         "@heroicons/vue": "^2.0.16",
         "@vueuse/core": "^9.13.0"
     }
