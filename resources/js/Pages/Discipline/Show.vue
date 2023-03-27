@@ -28,7 +28,10 @@ defineProps({
     <AppLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                {{ discipline.name }} ({{ discipline.view_count }} vues)
+                {{ discipline.name }}
+                <span class="text-xs italic text-gray-600"
+                    >({{ discipline.view_count }} vues)
+                </span>
             </h2>
 
             <p class="py-2 text-base font-medium leading-relaxed text-gray-600">
