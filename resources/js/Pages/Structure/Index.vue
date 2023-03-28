@@ -119,8 +119,6 @@ watch(
                                     structure.slug
                                 )
                             "
-                            @mouseover="showTooltip(structure)"
-                            @mouseout="hideTooltip()"
                             class="group relative block bg-black"
                         >
                             <img
@@ -129,7 +127,11 @@ watch(
                                 class="absolute inset-0 h-full w-full object-cover opacity-75 transition-opacity group-hover:opacity-50"
                             />
 
-                            <div class="relative p-4 sm:p-6 lg:p-8">
+                            <div
+                                @mouseover="showTooltip(structure)"
+                                @mouseout="hideTooltip()"
+                                class="relative p-4 sm:p-6 lg:p-8"
+                            >
                                 <p
                                     class="text-sm font-medium uppercase tracking-widest text-pink-500"
                                 >
@@ -147,11 +149,11 @@ watch(
                                         class="translate-y-8 transform opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100"
                                     >
                                         <p
-                                            class="text-sm text-white line-clamp-3"
+                                            class="mb-3 text-base text-white line-clamp-3"
                                         >
                                             {{ structure.description }}
                                         </p>
-                                        <p class="text-sm text-white">
+                                        <p class="text-base text-white">
                                             {{ structure.city }} ({{
                                                 structure.zip_code
                                             }})

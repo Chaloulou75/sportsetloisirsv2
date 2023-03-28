@@ -69,7 +69,7 @@ const lng = computed(() => {
                     parseFloat(structure.address_lat),
                     parseFloat(structure.address_lng),
                 ]"
-                ><l-tooltip>
+                ><l-tooltip class="rouded-lg px-1.5 py-1 font-semibold">
                     {{ structure.name }}
                 </l-tooltip></l-marker
             >
