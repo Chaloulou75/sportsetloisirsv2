@@ -8,6 +8,7 @@ use App\Models\Structure;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -175,13 +176,14 @@ class StructureController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Structure $structure)
+    public function destroy(Structure $structure): RedirectResponse
     {
         if (! Gate::allows('destroy-structure', $structure)) {
             return Redirect::route('structure.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de supprimer cette fiche, vous devez être le créateur de la structure ou un administrateur.');
         }
 
         $structure->delete();
+        sleep(1);
 
         return Redirect::route('structure.index')->with('success', 'Structure supprimée.');
     }
