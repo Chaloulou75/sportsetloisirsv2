@@ -1,10 +1,11 @@
 <script setup>
-import { ref, computed } from "vue";
+import { defineProps, ref, computed, watch } from "vue";
 import { LMap, LTileLayer, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
 import "leaflet/dist/leaflet.css";
 
 const props = defineProps({
     structures: Object,
+    hoveredStructure: Number,
 });
 
 const center = ref([
@@ -13,6 +14,25 @@ const center = ref([
 ]);
 
 const zoom = ref(6);
+
+watch(
+    () => props.hoveredStructure,
+    (newValue) => {
+        if (newValue !== null) {
+            const structure = props.structures.find((s) => s.id === newValue);
+            if (structure) {
+                center.value = [structure.address_lat, structure.address_lng];
+                zoom.value = 8;
+            }
+        } else {
+            center.value = [
+                props.structures[0].address_lat,
+                props.structures[0].address_lng,
+            ];
+            zoom.value = 6;
+        }
+    }
+);
 
 // a computed ref to get lat & lng
 const lat = computed(() => {
@@ -49,7 +69,9 @@ const lng = computed(() => {
                     parseFloat(structure.address_lat),
                     parseFloat(structure.address_lng),
                 ]"
-                ><l-tooltip> {{ structure.name }} </l-tooltip></l-marker
+                ><l-tooltip>
+                    {{ structure.name }}
+                </l-tooltip></l-marker
             >
         </l-map>
     </div>
