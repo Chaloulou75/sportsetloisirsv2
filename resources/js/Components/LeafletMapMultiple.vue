@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, ref, computed, watch } from "vue";
+import { ref, computed, watch } from "vue";
 import { LMap, LTileLayer, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
 import "leaflet/dist/leaflet.css";
 

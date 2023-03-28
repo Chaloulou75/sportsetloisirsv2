@@ -84,7 +84,7 @@ watch(
                     type="text"
                     class="mt-1 block w-full flex-1 px-2 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
                     v-model="search"
-                    placeholder="structures, clubs..."
+                    placeholder="structure, club, categorie, ville..."
                 />
 
                 <!-- <button type="button" @click="reset">
@@ -102,11 +102,11 @@ watch(
                 </button> -->
             </div>
             <div
-                class="mx-auto flex min-h-screen max-w-7xl flex-col px-2 sm:px-6 md:flex-row md:space-x-4 lg:px-8"
+                class="mx-auto flex min-h-screen max-w-full flex-col px-2 sm:px-6 md:flex-row md:space-x-4 lg:px-8"
             >
                 <div class="md:w-1/2">
                     <div
-                        class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-2"
+                        class="grid h-auto grid-cols-1 place-items-stretch gap-4 md:grid-cols-2"
                     >
                         <Link
                             v-for="(structure, index) in structures.data"

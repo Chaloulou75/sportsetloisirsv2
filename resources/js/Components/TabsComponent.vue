@@ -1,18 +1,8 @@
 <script setup>
 import { ref } from "vue";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
-// import GoogleMap from "@/Components/Google/GoogleMap.vue";
 import LeafletMap from "@/Components/LeafletMap.vue";
-import {
-    CheckIcon,
-    UserIcon,
-    AtSymbolIcon,
-    LockOpenIcon,
-    GlobeAltIcon,
-    ClockIcon,
-    PhoneIcon,
-    LocationMarkerIcon,
-} from "@heroicons/vue/24/solid";
+import { LockOpenIcon, ClockIcon, MapPinIcon } from "@heroicons/vue/24/solid";
 const props = defineProps({
     structure: Object,
 });
@@ -92,13 +82,13 @@ const categories = ref({
                                 v-if="info.address"
                                 class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
                             >
-                                <LocationMarkerIcon
+                                <MapPinIcon
                                     class="mr-1.5 inline-block h-4 w-4"
                                 />{{ info.address }}
                             </h3>
                             <h3
                                 v-if="info.weekdays"
-                                class="text-sm font-medium leading-5 text-gray-700"
+                                class="px-6 text-sm font-medium leading-5 text-gray-700"
                             >
                                 <LockOpenIcon
                                     class="mr-1.5 inline-block h-4 w-4"
@@ -114,7 +104,7 @@ const categories = ref({
 
                             <ul
                                 v-if="info.address"
-                                class="mt-1 flex space-x-1 text-sm font-medium leading-4 text-gray-500"
+                                class="mt-1 flex space-x-1 px-6 text-sm font-medium leading-4 text-gray-500"
                             >
                                 <li>{{ info.zip_code }}</li>
                                 <li>&middot;</li>
@@ -125,7 +115,7 @@ const categories = ref({
 
                             <div
                                 v-if="info.address"
-                                class="mx-auto max-w-2xl py-4"
+                                class="mx-auto max-w-2xl px-4"
                             >
                                 <div class="container mx-auto w-full">
                                     <Suspense>
