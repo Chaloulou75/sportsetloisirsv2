@@ -41,6 +41,8 @@ Route::get('/dashboard', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/structure/create', [StructureController::class, 'create'])->name('structure.create');
     Route::post('/structure', [StructureController::class, 'store'])->name('structure.store');
+    Route::delete('/structure', [StructureController::class, 'destroy'])->name('structure.destroy');
+
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

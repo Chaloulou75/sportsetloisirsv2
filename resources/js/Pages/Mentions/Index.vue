@@ -587,24 +587,24 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                             class="divide-y divide-gray-200 border border-gray-200 text-gray-700"
                         >
                             <li
-                                class="hover:bg-midnight cursor-pointer px-4 py-2 hover:text-white"
+                                class="cursor-pointer px-4 py-2 hover:bg-midnight hover:text-white"
                             >
                                 <Link href="#conditions"
                                     >Conditions d'utilisations</Link
                                 >
                             </li>
                             <li
-                                class="hover:bg-midnight cursor-pointer px-4 py-2 hover:text-white"
+                                class="cursor-pointer px-4 py-2 hover:bg-midnight hover:text-white"
                             >
                                 <Link href="#mentions">Mentions Légales</Link>
                             </li>
                             <li
-                                class="hover:bg-midnight cursor-pointer px-4 py-2 hover:text-white"
+                                class="cursor-pointer px-4 py-2 hover:bg-midnight hover:text-white"
                             >
                                 <Link href="#droitauteur">Droit d'auteur</Link>
                             </li>
                             <li
-                                class="hover:bg-midnight cursor-pointer px-4 py-2 hover:text-white"
+                                class="cursor-pointer px-4 py-2 hover:bg-midnight hover:text-white"
                             >
                                 <Link href="#integriteEtExactitude"
                                     >Intégrité et exactitude de
@@ -612,28 +612,28 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                 >
                             </li>
                             <li
-                                class="hover:bg-midnight cursor-pointer px-4 py-2 hover:text-white"
+                                class="cursor-pointer px-4 py-2 hover:bg-midnight hover:text-white"
                             >
                                 <Link href="#modificationsEtContenuIllegaux"
                                     >Modifications et contenu illégaux</Link
                                 >
                             </li>
                             <li
-                                class="hover:bg-midnight cursor-pointer px-4 py-2 hover:text-white"
+                                class="cursor-pointer px-4 py-2 hover:bg-midnight hover:text-white"
                             >
                                 <Link href="#hyperliens"
                                     >Hyperliens vers d'autres sites</Link
                                 >
                             </li>
                             <li
-                                class="hover:bg-midnight cursor-pointer px-4 py-2 hover:text-white"
+                                class="cursor-pointer px-4 py-2 hover:bg-midnight hover:text-white"
                             >
                                 <Link href="#sauvegardeViePrivee"
                                     >Sauvegarde de la vie privée</Link
                                 >
                             </li>
                             <li
-                                class="hover:bg-midnight cursor-pointer px-4 py-2 hover:text-white"
+                                class="cursor-pointer px-4 py-2 hover:bg-midnight hover:text-white"
                             >
                                 <Link href="#gestionEtDifficultes"
                                     >Gestion du site et difficultés

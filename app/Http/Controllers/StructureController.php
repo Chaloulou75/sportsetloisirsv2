@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 
 class StructureController extends Controller
@@ -147,10 +149,10 @@ class StructureController extends Controller
             'structure'=> $structure,
             // 'clubLogoUrl' => $clubLogoUrl,
             // 'mediasImg' => MediaResource::collection($club->medias),
-            // 'can' => [
-    //     'update' => optional(Auth::user())->can('update', $club),
-    //     'delete' => optional(Auth::user())->can('delete', $club),
-            // ]
+            'can' => [
+                'update' => optional(Auth::user())->can('update', $structure),
+                'delete' => optional(Auth::user())->can('delete', $structure),
+            ]
         ]);
     }
 
@@ -175,6 +177,12 @@ class StructureController extends Controller
      */
     public function destroy(Structure $structure)
     {
-        //
+        if (! Gate::allows('destroy-structure', $structure)) {
+            return Redirect::route('structure.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de supprimer cette fiche, vous devez être le créateur de la structure ou un administrateur.');
+        }
+
+        $structure->delete();
+
+        return Redirect::route('structure.index')->with('success', 'Structure supprimée.');
     }
 }

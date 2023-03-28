@@ -3,9 +3,14 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+
+use App\Models\User;
+use App\Models\Structure;
+use App\Policies\StructurePolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -15,7 +20,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        Structure::class => StructurePolicy::class,
     ];
 
     /**
@@ -28,6 +33,15 @@ class AuthServiceProvider extends ServiceProvider
                 ->subject('Verification de votre adresse Email')
                 ->line('Veuillez cliquer sur le bouton ci-dessous pour vérifier votre adresse e-mail :')
                 ->action('Verifier votre adresse Email', $url);
+        });
+
+        $this->registerPolicies();
+
+        Gate::define('update-structure', function (User $user, Structure $structure) {
+            return ($user->id === $structure->user_id) || ($user->email === 'c.jeandey@gmail.com') || ($user->email === 'tonio20@hotmail.fr');
+        });
+        Gate::define('destroy-structure', function (User $user, Structure $structure) {
+            return ($user->id === $structure->user_id) || ($user->email === 'c.jeandey@gmail.com') || ($user->email === 'tonio20@hotmail.fr');
         });
     }
 }

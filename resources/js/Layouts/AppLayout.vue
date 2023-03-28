@@ -16,7 +16,7 @@ const isShowing = ref(true);
             class="bg-white shadow-lg shadow-sky-600/20"
             v-if="$slots.header"
         >
-            <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                 <slot name="header" />
             </div>
         </header>
