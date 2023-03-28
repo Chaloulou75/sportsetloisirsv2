@@ -193,7 +193,7 @@ watch(
                     </div>
                 </div>
                 <LeafletMapMultiple
-                    class="md:w-1/2"
+                    class="md:sticky md:top-0 md:w-1/2"
                     :structures="structures.data"
                     :hovered-structure="hoveredStructure"
                 />
