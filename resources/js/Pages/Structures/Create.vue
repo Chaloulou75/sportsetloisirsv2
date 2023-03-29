@@ -372,7 +372,7 @@ function enterAfterDisciplines() {
                                                         name="email"
                                                         id="email"
                                                         class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                        placeholder="Club ..."
+                                                        placeholder="structure@mail.com"
                                                         autocomplete="none"
                                                     />
                                                 </div>

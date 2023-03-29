@@ -98,7 +98,7 @@ const showingNavigationDropdown = ref(false);
                                 <BreezeDropdownLink
                                     :href="route('profile.edit')"
                                 >
-                                    Mon Profil
+                                    Mon profil
                                 </BreezeDropdownLink>
                                 <BreezeDropdownLink
                                     :href="route('logout')"
