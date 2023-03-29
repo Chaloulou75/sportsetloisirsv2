@@ -178,13 +178,16 @@ class StructureController extends Controller
      */
     public function destroy(Structure $structure): RedirectResponse
     {
+        $structure = Structure::where('id', $structure->id)->first();
+
         if (! Gate::allows('destroy-structure', $structure)) {
             return Redirect::route('structure.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de supprimer cette fiche, vous devez être le créateur de la structure ou un administrateur.');
         }
+        // $structure = Structure::where('slug', $structure->slug)->firstOrFail();
 
         $structure->delete();
         sleep(1);
 
-        return Redirect::route('structure.index')->with('success', 'Structure supprimée.');
+        return redirect()->route('structure.index')->with('success', 'Structure supprimée.');
     }
 }

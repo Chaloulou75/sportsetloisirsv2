@@ -12,9 +12,12 @@ const props = defineProps({
     structure: Object,
     show: Boolean,
 });
-// `/structure/${props.structure.id}`
+
 function destroy(id) {
-    router.delete(route("structure.destroy", id));
+    router.delete(`/structure/${id}`, {
+        method: "DELETE",
+        preserveScroll: true,
+    });
 }
 </script>
 
