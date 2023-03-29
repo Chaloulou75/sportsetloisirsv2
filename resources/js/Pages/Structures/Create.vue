@@ -83,7 +83,7 @@ function prevStep() {
 }
 
 function submit() {
-    form.post("/structure");
+    form.post("/structures");
 }
 
 function addActivite() {

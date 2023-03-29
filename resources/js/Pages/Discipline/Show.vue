@@ -76,11 +76,11 @@ defineProps({
                                     :key="structure.id"
                                     :index="index"
                                     :href="
-                                        route('structure.show', structure.slug)
+                                        route('structures.show', structure.slug)
                                     "
                                     :active="
                                         route().current(
-                                            'structure.show',
+                                            'structures.show',
                                             structure.slug
                                         )
                                     "
@@ -139,7 +139,7 @@ defineProps({
                     class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8"
                 >
                     <p class="font-medium text-gray-700">
-                        Dommage, il n'y a pas encore de club inscrit en
+                        Dommage, il n'y a pas encore de structures inscrites en
                         <span class="font-semibold text-gray-800">{{
                             discipline.name
                         }}</span>

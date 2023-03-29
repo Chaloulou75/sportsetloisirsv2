@@ -37,7 +37,9 @@ const zoom = ref(15);
                 name="OpenStreetMap"
             ></l-tile-layer>
             <l-marker :lat-lng="[lat, lng]"
-                ><l-tooltip> {{ structure.name }} </l-tooltip></l-marker
+                ><l-tooltip class="rouded-lg px-1.5 py-1 font-semibold">
+                    {{ structure.name }}
+                </l-tooltip></l-marker
             >
         </l-map>
     </div>

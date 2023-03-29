@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ActiviteController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\DisciplineController;
@@ -39,19 +40,23 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/structure/create', [StructureController::class, 'create'])->name('structure.create');
-    Route::post('/structure', [StructureController::class, 'store'])->name('structure.store');
-    Route::delete('/structure/{structure}', [StructureController::class, 'destroy'])->name('structure.destroy');
+    Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
+    Route::post('/structures', [StructureController::class, 'store'])->name('structures.store');
+    Route::delete('/structures/{structure}', [StructureController::class, 'destroy'])->name('structures.destroy');
 
-    Route::get('/profile/structures', [ProfileController::class, 'messtructures'])->name('profile.structures');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('structure', [StructureController::class, 'index'])
-    ->name('structure.index');
-Route::get('structure/{structure:slug}', [StructureController::class, 'show'])
-    ->name('structure.show');
+Route::get('structures', [StructureController::class, 'index'])
+    ->name('structures.index');
+Route::get('structures/{structure:slug}', [StructureController::class, 'show'])
+    ->name('structures.show');
+
+// Route::get('structures/{structure:slug}/activites', [ActiviteController::class, 'index'])
+//     ->name('activites.index');
+
+
 
 require __DIR__.'/auth.php';

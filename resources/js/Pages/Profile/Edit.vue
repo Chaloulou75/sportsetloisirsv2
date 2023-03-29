@@ -27,16 +27,6 @@ defineProps({
                         Informations du profil
                     </h2>
                 </div>
-                <Link
-                    v-if="$page.props.auth.user"
-                    :href="route('profile.structures')"
-                    class="flex items-center justify-center rounded bg-white px-4 py-3 text-base text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
-                >
-                    Voir mes structures
-                    <span>
-                        <ArrowSmallRightIcon class="ml-2 h-6 w-6" />
-                    </span>
-                </Link>
             </div>
         </template>
 

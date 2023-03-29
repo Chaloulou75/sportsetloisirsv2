@@ -14,7 +14,7 @@ const props = defineProps({
 });
 
 function destroy(id) {
-    router.delete(`/structure/${id}`, {
+    router.delete(`/structures/${id}`, {
         method: "DELETE",
         preserveScroll: true,
     });
@@ -74,9 +74,9 @@ function destroy(id) {
                                                 as="h3"
                                                 class="text-lg font-medium leading-6 text-gray-900"
                                                 >Suppression de la structure
-                                                {{
-                                                    structure.name
-                                                }}</DialogTitle
+                                                <span class="text-blue-600">
+                                                    {{ structure.name }}</span
+                                                ></DialogTitle
                                             >
                                             <div class="mt-2">
                                                 <p

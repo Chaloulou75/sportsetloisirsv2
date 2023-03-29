@@ -53,8 +53,8 @@ const showingNavigationDropdown = ref(false);
                             Departements
                         </BreezeNavLink> -->
                         <BreezeNavLink
-                            :href="route('structure.index')"
-                            :active="route().current('structure.index')"
+                            :href="route('structures.index')"
+                            :active="route().current('structures.index')"
                         >
                             Structures
                         </BreezeNavLink>
@@ -91,7 +91,7 @@ const showingNavigationDropdown = ref(false);
 
                             <template #content>
                                 <BreezeDropdownLink
-                                    :href="route('structure.create')"
+                                    :href="route('structures.create')"
                                 >
                                     Inscrire une structure
                                 </BreezeDropdownLink>
@@ -205,15 +205,15 @@ const showingNavigationDropdown = ref(false);
                     Departements
                 </BreezeResponsiveNavLink> -->
                 <BreezeResponsiveNavLink
-                    :href="route('structure.index')"
-                    :active="route().current('structure.index')"
+                    :href="route('structures.index')"
+                    :active="route().current('structures.index')"
                 >
                     Structures
                 </BreezeResponsiveNavLink>
                 <BreezeResponsiveNavLink
                     v-if="$page.props.auth.user"
-                    :href="route('structure.create')"
-                    :active="route().current('structure.create')"
+                    :href="route('structures.create')"
+                    :active="route().current('structures.create')"
                 >
                     Inscrire votre structure
                 </BreezeResponsiveNavLink>

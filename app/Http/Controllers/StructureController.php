@@ -23,7 +23,7 @@ class StructureController extends Controller
     {
         $categories = Category::select(['id', 'name', 'slug'])->get();
 
-        return Inertia::render('Structure/Index', [
+        return Inertia::render('Structures/Index', [
             'structures'=> Structure::with([
                     'category:id,name',
                     'user:id,name',
@@ -75,7 +75,7 @@ class StructureController extends Controller
     {
         $structuresType = Structuretype::select(['id', 'name'])->get();
 
-        return Inertia::render('Structure/Create', [
+        return Inertia::render('Structures/Create', [
             'structuresType' => $structuresType
         ]);
     }
@@ -120,7 +120,7 @@ class StructureController extends Controller
         $disciplinesIds = collect($request['disciplines'])->pluck('id');
         $structure->disciplines()->attach($disciplinesIds);
 
-        return Redirect::route('structure.show', $structure->slug)->with('success', 'Structure crée.');
+        return Redirect::route('structures.show', $structure->slug)->with('success', 'Structure crée.');
     }
 
     /**
@@ -146,7 +146,7 @@ class StructureController extends Controller
 
         // $clubLogoUrl = $structure->logo ? Storage::disk('s3')->temporaryUrl('logo/' .$structure->id. '/' .$structure->logo, now()->addMinutes(5)) : null;
 
-        return Inertia::render('Structure/Show', [
+        return Inertia::render('Structures/Show', [
             'structure'=> $structure,
             // 'clubLogoUrl' => $clubLogoUrl,
             // 'mediasImg' => MediaResource::collection($club->medias),
@@ -181,13 +181,13 @@ class StructureController extends Controller
         $structure = Structure::where('id', $structure->id)->first();
 
         if (! Gate::allows('destroy-structure', $structure)) {
-            return Redirect::route('structure.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de supprimer cette fiche, vous devez être le créateur de la structure ou un administrateur.');
+            return Redirect::route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de supprimer cette fiche, vous devez être le créateur de la structure ou un administrateur.');
         }
         // $structure = Structure::where('slug', $structure->slug)->firstOrFail();
 
         $structure->delete();
         sleep(1);
 
-        return redirect()->route('structure.index')->with('success', 'Structure supprimée.');
+        return redirect()->route('structures.index')->with('success', 'Structure supprimée.');
     }
 }
