@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activitetype;
 use Inertia\Inertia;
+use App\Models\Nivel;
 use App\Models\Category;
+use App\Models\Publictype;
 use App\Models\Structure;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 
 class StructureController extends Controller
@@ -73,10 +76,16 @@ class StructureController extends Controller
      */
     public function create()
     {
-        $structuresType = Structuretype::select(['id', 'name'])->get();
+        $structurestypes = Structuretype::select(['id', 'name'])->get();
+        $niveaux = Nivel::select(['id', 'name'])->get();
+        $publictypes = Publictype::select(['id', 'name'])->get();
+        $activitestypes = Activitetype::select(['id', 'name'])->get();
 
         return Inertia::render('Structures/Create', [
-            'structuresType' => $structuresType
+            'structurestypes' => $structurestypes,
+            'niveaux' => $niveaux,
+            'publictypes' => $publictypes,
+            'activitestypes' => $activitestypes,
         ]);
     }
 

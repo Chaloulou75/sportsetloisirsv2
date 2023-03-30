@@ -54,9 +54,9 @@ defineProps({
                     class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                 >
                     <Link
-                        :href="route('category.show', category.slug)"
+                        :href="route('categories.show', category.slug)"
                         :active="
-                            route().current('category.show', category.slug)
+                            route().current('categories.show', category.slug)
                         "
                         v-for="category in categories"
                         :key="category.id"

@@ -18,7 +18,7 @@ class HomeController extends Controller
         $structuresCount = Structure::count();
 
         $categories = Category::select(['id', 'name', 'slug'])->get();
-        $disciplines = Discipline::inRandomOrder()->limit(12)->select(['id', 'name', 'slug'])->get();
+        $disciplines = Discipline::has('structures')->inRandomOrder()->limit(12)->select(['id', 'name', 'slug'])->get();
 
         $lastStructures = Structure::with('category:id,name')
                 ->select(['id', 'name', 'slug', 'category_id', 'city', 'zip_code'])

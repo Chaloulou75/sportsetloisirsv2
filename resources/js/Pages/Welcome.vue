@@ -50,9 +50,12 @@ watch(
                         class="grid grid-cols-1 place-items-start gap-2 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-10 lg:place-items-center"
                     >
                         <BreezeNavLink
-                            :href="route('category.show', category.slug)"
+                            :href="route('categories.show', category.slug)"
                             :active="
-                                route().current('category.show', category.slug)
+                                route().current(
+                                    'categories.show',
+                                    category.slug
+                                )
                             "
                             v-for="(category, index) in categories"
                             :key="index"
@@ -171,7 +174,7 @@ watch(
                             Plus de {{ structuresCount }} structures référencées
                         </h3>
                         <p class="text-gray-600">
-                            De très nombreuses structures référencées, prêt à
+                            De très nombreuses structures référencées, prêtes à
                             vous accueillir et vous accompagner dans la pratique
                             de votre discipline favorite !
                         </p>
@@ -202,9 +205,9 @@ watch(
                     class="mb-8 grid h-auto grid-cols-1 place-items-stretch gap-4 px-1.5 sm:grid-cols-2 md:grid-cols-3 md:px-0 lg:grid-cols-4"
                 >
                     <Link
-                        :href="route('discipline.show', discipline.slug)"
+                        :href="route('disciplines.show', discipline.slug)"
                         :active="
-                            route().current('discipline.show', discipline.slug)
+                            route().current('disciplines.show', discipline.slug)
                         "
                         v-for="discipline in disciplines"
                         :key="discipline.id"
@@ -214,7 +217,7 @@ watch(
                 </div>
                 <div class="mb-4 flex items-center justify-center">
                     <Link
-                        :href="route('discipline.index')"
+                        :href="route('disciplines.index')"
                         class="flex items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                     >
                         Et beaucoup d'autres
@@ -247,7 +250,9 @@ watch(
                             :key="structure.id"
                             class="flex flex-col items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                         >
-                            <div class="mb-1">{{ structure.name }}</div>
+                            <div class="mb-1 text-center">
+                                {{ structure.name }}
+                            </div>
                             <div class="mb-1 text-xs">
                                 {{ structure.category.name }}
                             </div>

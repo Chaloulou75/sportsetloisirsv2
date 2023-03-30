@@ -32,8 +32,8 @@ Route::get('/faq', function () {
     return Inertia::render('Faq/Index');
 })->name('faq.index');
 
-Route::resource('category', CategoryController::class);
-Route::resource('discipline', DisciplineController::class);
+Route::resource('categories', CategoryController::class);
+Route::resource('disciplines', DisciplineController::class);
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

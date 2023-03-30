@@ -27,7 +27,7 @@ class DisciplineController extends Controller
                         ->paginate(15)
                         ->withQueryString();
 
-        return Inertia::render('Discipline/Index', [
+        return Inertia::render('Disciplines/Index', [
             'disciplines' => $disciplines,
             'structuresCount' => $structuresCount,
             'filters' => request()->all(['search']),
@@ -64,7 +64,7 @@ class DisciplineController extends Controller
         $discipline->timestamps = false;
         $discipline->increment('view_count');
 
-        return Inertia::render('Discipline/Show', [
+        return Inertia::render('Disciplines/Show', [
             'discipline'=> $discipline,
         ]);
     }

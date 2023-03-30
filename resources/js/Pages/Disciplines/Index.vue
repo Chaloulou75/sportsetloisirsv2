@@ -22,7 +22,7 @@ watch(
     search,
     debounce(function (value) {
         router.get(
-            "/discipline",
+            "/disciplines",
             { search: value },
             { preserveState: true, replace: true }
         );
@@ -102,9 +102,9 @@ watch(
                     class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                 >
                     <Link
-                        :href="route('discipline.show', discipline.slug)"
+                        :href="route('disciplines.show', discipline.slug)"
                         :active="
-                            route().current('discipline.show', discipline.slug)
+                            route().current('disciplines.show', discipline.slug)
                         "
                         v-for="(discipline, index) in disciplines.data"
                         :key="discipline.id"

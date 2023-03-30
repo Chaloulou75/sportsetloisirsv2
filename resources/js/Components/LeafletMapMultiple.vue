@@ -22,7 +22,7 @@ watch(
             const structure = props.structures.find((s) => s.id === newValue);
             if (structure) {
                 center.value = [structure.address_lat, structure.address_lng];
-                zoom.value = 8;
+                zoom.value = 7;
             }
         } else {
             center.value = [

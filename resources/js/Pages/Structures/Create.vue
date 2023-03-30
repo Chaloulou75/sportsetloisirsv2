@@ -17,16 +17,27 @@ const AddressForm = defineAsyncComponent(() =>
     import("@/Components/Google/AddressForm.vue")
 );
 
+const ActivityForm = defineAsyncComponent(() =>
+    import("@/Components/Inscription/ActivityForm.vue")
+);
+
 const props = defineProps({
-    structuresType: Object,
+    structurestypes: Object,
+    niveaux: Object,
+    publictypes: Object,
+    activitestypes: Object,
     errors: Object,
 });
 
 const form = useForm({
     name: ref(null),
-    firstname: ref(null),
-    lastname: ref(null),
     structuretype_id: ref(null),
+    address: ref(null),
+    city: ref(null),
+    zip_code: ref(null),
+    country: ref(null),
+    address_lat: ref(null),
+    address_lng: ref(null),
     category_id: ref(null),
     email: ref(null),
     website: ref(null),
@@ -34,12 +45,6 @@ const form = useForm({
     facebook: ref(null),
     instagram: ref(null),
     youtube: ref(null),
-    address: ref(null),
-    city: ref(null),
-    zip_code: ref(null),
-    country: ref(null),
-    address_lat: ref(null),
-    address_lng: ref(null),
     description: ref(null),
     disciplines: ref([]),
     activites: ref([]),
@@ -86,12 +91,15 @@ function submit() {
     form.post("/structures");
 }
 
-function addActivite() {
-    form.activites.push({
-        activite_name: "",
-        activite_category_id: "",
-    });
-}
+// function addActivite() {
+//     form.activites.push({
+//         activite_name: "",
+//         category_id: "",
+//         nivel_id: "",
+//         activitestype_id: "",
+//         publictype_id: "",
+//     });
+// }
 
 function removeActivite(index) {
     form.activites.splice(index, 1);
@@ -135,7 +143,7 @@ function enterAfterDisciplines() {
                                 <h3
                                     class="text-lg font-medium leading-6 text-gray-700"
                                 >
-                                    Ajouter une activité ponctuelle
+                                    Ajouter des activités
                                 </h3>
                                 <p class="mt-1 text-sm text-gray-800">
                                     Ces informations apparaitront publiquement
@@ -192,7 +200,7 @@ function enterAfterDisciplines() {
                                                 </div>
                                             </div>
                                             <!-- Prenom -->
-                                            <div
+                                            <!-- <div
                                                 class="col-span-3 sm:col-span-2"
                                             >
                                                 <label
@@ -202,7 +210,7 @@ function enterAfterDisciplines() {
                                                     Prénom
                                                 </label>
                                                 <div
-                                                    class="mt-1 flex rounded-md"
+                                                    class="flex mt-1 rounded-md"
                                                 >
                                                     <input
                                                         ref="firstName"
@@ -210,7 +218,7 @@ function enterAfterDisciplines() {
                                                         type="text"
                                                         name="firstname"
                                                         id="firstname"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -221,9 +229,9 @@ function enterAfterDisciplines() {
                                                 >
                                                     {{ errors.firstname }}
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <!-- Nom -->
-                                            <div
+                                            <!-- <div
                                                 class="col-span-3 sm:col-span-2"
                                             >
                                                 <label
@@ -233,14 +241,14 @@ function enterAfterDisciplines() {
                                                     Nom
                                                 </label>
                                                 <div
-                                                    class="mt-1 flex rounded-md"
+                                                    class="flex mt-1 rounded-md"
                                                 >
                                                     <input
                                                         v-model="form.lastname"
                                                         type="text"
                                                         name="lastname"
                                                         id="lastname"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -251,7 +259,7 @@ function enterAfterDisciplines() {
                                                 >
                                                     {{ errors.lastname }}
                                                 </div>
-                                            </div>
+                                            </div> -->
 
                                             <!-- structuretype_id -->
                                             <div
@@ -273,7 +281,7 @@ function enterAfterDisciplines() {
                                                         class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                                     >
                                                         <option
-                                                            v-for="structure in structuresType"
+                                                            v-for="structure in structurestypes"
                                                             :key="structure.id"
                                                             :value="
                                                                 structure.id
@@ -403,7 +411,7 @@ function enterAfterDisciplines() {
                                                         name="phone"
                                                         id="phone"
                                                         class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                        placeholder="+33 1 42 ..."
+                                                        placeholder="02 10 ..."
                                                         autocomplete="none"
                                                     />
                                                 </div>
@@ -644,14 +652,14 @@ function enterAfterDisciplines() {
                                     </div>
 
                                     <!-- formstep 2 -->
-                                    <div
+                                    <!-- <div
                                         v-if="formStep == 2"
-                                        class="space-y-6 bg-white px-4 py-5 sm:p-6"
+                                        class="px-4 py-5 space-y-6 bg-white sm:p-6"
                                     >
                                         <button
                                             type="button"
                                             @click="addActivite"
-                                            class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                         >
                                             Ajouter une activité
                                         </button>
@@ -662,112 +670,25 @@ function enterAfterDisciplines() {
                                             :key="index"
                                             class="grid grid-cols-3 gap-6"
                                         >
-                                            <!-- activité -->
-                                            <div
-                                                class="col-span-3 sm:col-span-2"
-                                            >
-                                                <!-- Nom activité -->
-                                                <label
-                                                    for="activite_name"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Nom de l'activité
-                                                </label>
-                                                <div
-                                                    class="mt-1 flex rounded-md"
-                                                >
-                                                    <input
-                                                        ref="activiteName"
-                                                        v-model="
-                                                            activite.activite_name
-                                                        "
-                                                        type="text"
-                                                        name="activite_name"
-                                                        id="activite_name"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                        placeholder=""
-                                                        autocomplete="none"
-                                                    />
-                                                    <button
-                                                        type="button"
-                                                        @click="
-                                                            removeActivite(
-                                                                index
-                                                            )
-                                                        "
-                                                        class="ml-6 inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                                                    >
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            class="h-6 w-6"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            stroke="currentColor"
-                                                            stroke-width="2"
-                                                        >
-                                                            <path
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
-                                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                                <!-- <div
-                                                    v-if="
-                                                        errors.activite
-                                                            .activite_name
-                                                    "
-                                                    class="mt-2 text-xs text-red-500"
-                                                >
-                                                    {{
-                                                        errors.activite
-                                                            .activite_name
-                                                    }}
-                                                </div> -->
-                                            </div>
-                                            <div
-                                                class="col-span-3 sm:col-span-2"
-                                            >
-                                                <label
-                                                    for="activite_category_id"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Domaine d'activité
-                                                </label>
-                                                <div class="mt-1">
-                                                    <select
-                                                        name="activite_category_id"
-                                                        id="activite_category_id"
-                                                        v-model="
-                                                            activite.activite_category_id
-                                                        "
-                                                        class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
-                                                    >
-                                                        <option
-                                                            v-for="category in categories"
-                                                            :key="category.id"
-                                                            :value="category.id"
-                                                        >
-                                                            {{ category.name }}
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                                <!-- <div
-                                                    v-if="
-                                                        errors.activite
-                                                            .activite_category_id
-                                                    "
-                                                    class="mt-2 text-xs text-red-500"
-                                                >
-                                                    {{
-                                                        errors.activite
-                                                            .activite_category_id
-                                                    }}
-                                                </div> -->
-                                            </div>
+                                            <ActivityForm
+                                                :activitestypes="activitestypes"
+                                                :niveaux="niveaux"
+                                                :publictypes="publictypes"
+                                                v-model:name="
+                                                    activite.activite_name
+                                                "
+                                                v-model:activitestype_id="
+                                                    activite.activitestype_id
+                                                "
+                                                v-model:nivel_id="
+                                                    activite.nivel_id
+                                                "
+                                                v-model:publictype_id="
+                                                    activite.publictype_id
+                                                "
+                                            />
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                     <!--buttons formstep 1 -->
                                     <div
@@ -779,7 +700,7 @@ function enterAfterDisciplines() {
                                             type="button"
                                             class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                         >
-                                            Ajouter une activité ponctuelle
+                                            Ajouter une activité
                                         </button>
                                     </div>
                                     <!--buttons formstep 2 -->

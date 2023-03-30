@@ -10,14 +10,10 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::create('disciplines', function (Blueprint $table) {
+        Schema::create('nivels', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->string('slug')->unique();
-            $table->text('description')->nullable();
-            $table->string('image')->nullable();
-            $table->bigInteger('view_count')->unsigned()->default(0)->index();
             $table->timestamps();
         });
     }
@@ -27,6 +23,6 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('disciplines');
+        Schema::dropIfExists('nivels');
     }
 };

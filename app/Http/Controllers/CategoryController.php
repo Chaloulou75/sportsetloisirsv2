@@ -24,7 +24,7 @@ class CategoryController extends Controller
         $disciplinesCount = Discipline::count();
         $structuresCount = Structure::count();
 
-        return Inertia::render('Category/Index', [
+        return Inertia::render('Categories/Index', [
             'categories' => $categories,
             'categoriesCount' => $categoriesCount,
             'disciplinesCount' => $disciplinesCount,
@@ -68,7 +68,7 @@ class CategoryController extends Controller
         $category->timestamps = false;
         $category->increment('view_count');
 
-        return Inertia::render('Category/Show', [
+        return Inertia::render('Categories/Show', [
             'category'=> $category,
             // 'disciplinesWithStructures' => $disciplinesWithStructures,
             'totalStructures' => $totalStructures,

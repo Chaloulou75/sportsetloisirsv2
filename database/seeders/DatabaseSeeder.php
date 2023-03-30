@@ -4,9 +4,12 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\User;
+use App\Models\Nivel;
 use App\Models\Category;
 use App\Models\Structure;
 use App\Models\Discipline;
+use App\Models\Publictype;
+use App\Models\Activitetype;
 use App\Models\Structuretype;
 use Illuminate\Database\Seeder;
 
@@ -45,7 +48,6 @@ class DatabaseSeeder extends Seeder
         Structuretype::factory()->create(['name' =>'Lieux', 'slug' => 'lieux']);
         Structuretype::factory()->create(['name' =>'Agence', 'slug' => 'agence']);
 
-
         //les categories
         Category::factory()->create(['name' => 'Balle', 'slug' => 'balle']);
         Category::factory()->create(['name' => 'Combat', 'slug' => 'combat']);
@@ -66,7 +68,6 @@ class DatabaseSeeder extends Seeder
         Discipline::factory()->create(['name' => 'Basket-ball', 'slug' => 'basket-ball', 'category_id' => 1]);
         Discipline::factory()->create(['name' => 'Beach Soccer', 'slug' => 'beach-soccer', 'category_id' => 1]);
         Discipline::factory()->create(['name' => 'Beach Volley', 'slug' => 'beach-volley', 'category_id' => 1]);
-        Discipline::factory()->create(['name' => 'Beach Soccer', 'slug' => 'beach-soccer', 'category_id' => 1]);
         Discipline::factory()->create(['name' => 'Cricket', 'slug' => 'cricket', 'category_id' => 1]);
         Discipline::factory()->create(['name' => 'Flag', 'slug' => 'flag', 'category_id' => 1]);
         Discipline::factory()->create(['name' => 'Foot 5', 'slug' => 'foot-5', 'category_id' => 1]);
@@ -360,6 +361,31 @@ class DatabaseSeeder extends Seeder
 
         $disciplines= Discipline::all();
 
+        //les types d'activités
+        Activitetype::factory()->create(['name' =>'Cours à l\'année', 'slug' => 'cours']);
+        Activitetype::factory()->create(['name' =>'Sortie accompagnée', 'slug' => 'sortie']);
+        Activitetype::factory()->create(['name' =>'Competitions', 'slug' => 'competitions']);
+        Activitetype::factory()->create(['name' =>'Stages', 'slug' => 'stages']);
+        Activitetype::factory()->create(['name' =>'Séjours', 'slug' => 'sejours']);
+
+        //les Niveaux
+        Nivel::factory()->create(['name' =>'Tous niveaux', 'slug' => 'tous-niveaux']);
+        Nivel::factory()->create(['name' =>'Novice', 'slug' => 'novice']);
+        Nivel::factory()->create(['name' =>'Débutant', 'slug' => 'debutant']);
+        Nivel::factory()->create(['name' =>'Intermédiaire', 'slug' => 'intermediaire']);
+        Nivel::factory()->create(['name' =>'Avancé', 'slug' => 'avance']);
+        Nivel::factory()->create(['name' =>'Expert', 'slug' => 'expert']);
+
+        //les publics
+        Publictype::factory()->create(['name' =>'Tous âges', 'slug' => 'tous-ages']);
+        Publictype::factory()->create(['name' =>'3 ans', 'slug' => '3ans']);
+        Publictype::factory()->create(['name' =>'3 à 6 ans', 'slug' => '3-6ans']);
+        Publictype::factory()->create(['name' =>'6 à 8 ans', 'slug' => '6-8ans']);
+        Publictype::factory()->create(['name' =>'8 à 10 ans', 'slug' => '8-10ans']);
+        Publictype::factory()->create(['name' =>'10 à 12 ans', 'slug' => '10-12ans']);
+        Publictype::factory()->create(['name' =>'12 à 14 ans', 'slug' => '12-14ans']);
+        Publictype::factory()->create(['name' =>'14 à 18 ans', 'slug' => '14-18ans']);
+        Publictype::factory()->create(['name' =>'Adultes', 'slug' => 'adultes']);
 
         Structure::factory(40)->create()->each(function ($structure) use ($disciplines) {
             $structure->disciplines()->attach($disciplines->where('category_id', $structure->category_id)->random(2));

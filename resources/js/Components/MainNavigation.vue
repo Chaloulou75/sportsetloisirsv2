@@ -29,14 +29,14 @@ const showingNavigationDropdown = ref(false);
                     <!-- Navigation Links -->
                     <div class="hidden space-x-8 lg:-my-px lg:ml-10 lg:flex">
                         <BreezeNavLink
-                            :href="route('category.index')"
-                            :active="route().current('category.index')"
+                            :href="route('categories.index')"
+                            :active="route().current('categories.index')"
                         >
                             Categories
                         </BreezeNavLink>
                         <BreezeNavLink
-                            :href="route('discipline.index')"
-                            :active="route().current('discipline.index')"
+                            :href="route('disciplines.index')"
+                            :active="route().current('disciplines.index')"
                         >
                             Disciplines
                         </BreezeNavLink>
@@ -181,14 +181,14 @@ const showingNavigationDropdown = ref(false);
         >
             <div class="space-y-1 pt-2 pb-3">
                 <BreezeResponsiveNavLink
-                    :href="route('category.index')"
-                    :active="route().current('category.index')"
+                    :href="route('categories.index')"
+                    :active="route().current('categories.index')"
                 >
                     Categories
                 </BreezeResponsiveNavLink>
                 <BreezeResponsiveNavLink
-                    :href="route('discipline.index')"
-                    :active="route().current('discipline.index')"
+                    :href="route('disciplines.index')"
+                    :active="route().current('disciplines.index')"
                 >
                     Disciplines
                 </BreezeResponsiveNavLink>
