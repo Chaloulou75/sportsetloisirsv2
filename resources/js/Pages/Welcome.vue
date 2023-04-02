@@ -26,6 +26,10 @@ onMounted(() => {
     searchbox.value.focus();
 });
 
+const formatCityName = (ville) => {
+    return ville.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
+};
+
 watch(
     search,
     debounce(function (value) {
@@ -238,14 +242,14 @@ watch(
                     class="mb-8 grid h-auto grid-cols-1 place-items-stretch gap-4 px-1.5 sm:grid-cols-2 md:grid-cols-3 md:px-0 lg:grid-cols-4"
                 >
                     <Link
-                        :href="route('villes.show', ville.ville_formatee)"
+                        :href="route('villes.show', city.ville_formatee)"
                         :active="
-                            route().current('villes.show', ville.ville_formatee)
+                            route().current('villes.show', city.ville_formatee)
                         "
-                        v-for="ville in topVilles"
-                        :key="ville.id"
+                        v-for="city in topVilles"
+                        :key="city.id"
                         class="flex items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
-                        >{{ ville.ville }}</Link
+                        >{{ formatCityName(city.ville) }}</Link
                     >
                 </div>
                 <div class="mb-4 flex items-center justify-center">
