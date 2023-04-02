@@ -1,8 +1,8 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { router, Head, Link } from "@inertiajs/vue3";
-import { ref, watch } from "vue";
-import { debounce, pickBy, throttle, mapValues } from "lodash";
+import { ref, watch, computed } from "vue";
+import { debounce } from "lodash";
 import { defineAsyncComponent } from "vue";
 import TextInput from "@/Components/TextInput.vue";
 
@@ -16,6 +16,10 @@ const Pagination = defineAsyncComponent(() =>
     import("@/Components/Pagination.vue")
 );
 
+const formatCityName = (ville) => {
+    return ville.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
+};
+
 let search = ref(props.filters.search);
 
 watch(
@@ -26,7 +30,7 @@ watch(
             { search: value },
             { preserveState: true, replace: true }
         );
-    }, 300)
+    }, 400)
 );
 </script>
 
@@ -45,7 +49,7 @@ watch(
     <AppLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Les villes
+                Villes
             </h2>
             <p class="py-2 text-base font-medium leading-relaxed text-gray-600">
                 Trouvez un club de sport ou un cours collectif parmi plus de
@@ -102,19 +106,19 @@ watch(
                     class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                 >
                     <Link
-                        :href="route('villes.show', ville.ville_formatee)"
+                        :href="route('villes.show', city.ville_formatee)"
                         :active="
-                            route().current('villes.show', ville.ville_formatee)
+                            route().current('villes.show', city.ville_formatee)
                         "
-                        v-for="(ville, index) in cities.data"
-                        :key="ville.id"
+                        v-for="(city, index) in cities.data"
+                        :key="city.id"
                         :index="index"
                         class="flex flex-col items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                     >
-                        <div>{{ ville.ville }}</div>
-                        <div v-if="ville.structures_count > 0" class="text-xs">
-                            ({{ ville.structures_count }}
-                            <span v-if="ville.structures_count > 1"
+                        <div>{{ formatCityName(city.ville) }}</div>
+                        <div v-if="city.structures_count > 0" class="text-xs">
+                            ({{ city.structures_count }}
+                            <span v-if="city.structures_count > 1"
                                 >structures</span
                             >
                             <span v-else>structure</span>)

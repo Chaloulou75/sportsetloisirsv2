@@ -40,13 +40,13 @@ const showingNavigationDropdown = ref(false);
                         >
                             Disciplines
                         </BreezeNavLink>
-                        <!-- <BreezeNavLink
-                            :href="route('cities.index')"
-                            :active="route().current('cities.index')"
+                        <BreezeNavLink
+                            :href="route('villes.index')"
+                            :active="route().current('villes.index')"
                         >
                             Villes
                         </BreezeNavLink>
-                        <BreezeNavLink
+                        <!-- <BreezeNavLink
                             :href="route('departments.index')"
                             :active="route().current('departments.index')"
                         >
@@ -192,13 +192,13 @@ const showingNavigationDropdown = ref(false);
                 >
                     Disciplines
                 </BreezeResponsiveNavLink>
-                <!-- <BreezeResponsiveNavLink
-                    :href="route('cities.index')"
-                    :active="route().current('cities.index')"
+                <BreezeResponsiveNavLink
+                    :href="route('villes.index')"
+                    :active="route().current('villes.index')"
                 >
                     Villes
                 </BreezeResponsiveNavLink>
-                <BreezeResponsiveNavLink
+                <!-- <BreezeResponsiveNavLink
                     :href="route('departments.index')"
                     :active="route().current('departments.index')"
                 >
