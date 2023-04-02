@@ -15,7 +15,7 @@ const lng = computed(() => {
     return parseFloat(props.structure.address_lng);
 });
 
-const zoom = ref(15);
+const zoom = ref(12);
 </script>
 
 <template>

@@ -3,12 +3,14 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use App\Http\Controllers\CityController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActiviteController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\DisciplineController;
+use App\Http\Controllers\DepartementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +36,9 @@ Route::get('/faq', function () {
 
 Route::resource('categories', CategoryController::class);
 Route::resource('disciplines', DisciplineController::class);
+Route::resource('departements', DepartementController::class);
+Route::resource('villes', CityController::class);
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -54,9 +59,8 @@ Route::get('structures', [StructureController::class, 'index'])
 Route::get('structures/{structure:slug}', [StructureController::class, 'show'])
     ->name('structures.show');
 
-// Route::get('structures/{structure:slug}/activites', [ActiviteController::class, 'index'])
-//     ->name('activites.index');
-
+Route::get('structures/{structure:slug}/activites/create', [ActiviteController::class, 'create'])
+    ->name('activites.create');
 
 
 require __DIR__.'/auth.php';

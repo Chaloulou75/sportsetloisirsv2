@@ -100,8 +100,6 @@ class StructureController extends Controller
 
         $validated= request()->validate([
             'name' => ['required', 'string', 'max:255'],
-            'firstname' => ['required', 'string', 'max:255'],
-            'lastname' => ['required', 'string', 'max:255'],
             'structuretype_id' => ['required', Rule::exists('structuretypes', 'id')],
             'category_id' => ['required', Rule::exists('categories', 'id')],
             'email' => ['required', 'max:50', 'email'],

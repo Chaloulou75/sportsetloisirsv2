@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\City;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -25,15 +26,13 @@ class StructureFactory extends Factory
             'user_id' => $this->faker->numberBetween(1, 20),
             'category_id' => $this->faker->numberBetween(1, 10),
             'name' => ucwords($name),
-            'firstname' => $this->faker->firstNameFemale(),
-            'lastname' => $this->faker->lastName(),
             'slug' => $slug .'-'.$this->faker->numberBetween(1, 99),
             'description' => 'Notre ' . ucwords($name). ' spécialisé ' . $this->faker->realText(300),
             'website' => 'www.' .$slug. '.com',
             'email' => $this->faker->companyEmail(),
             'phone' => $this->faker->phoneNumber(),
             'address' => $this->faker->streetAddress(),
-            'city' => $this->faker->city(),
+            'city' => $this->faker->randomElement(City::all())['ville'],
             'zip_code' => $this->faker->postcode(),
             'country' => 'France',
             'address_lat' => $this->faker->latitude(41.59101, 51.03457),

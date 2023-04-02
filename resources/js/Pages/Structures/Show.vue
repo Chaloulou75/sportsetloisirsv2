@@ -196,19 +196,37 @@ const showModal = ref(false);
                             <UserIcon class="inline-block h-4 w-4" />
                             {{ structure.user.name }}
                         </p>
-                        <p>
+                        <p class="text-base font-medium text-gray-700">
+                            <GlobeAltIcon class="mr-1.5 inline-block h-4 w-4" />
+                            Site web:
                             <a
                                 :href="structure.website"
                                 target="_blank"
-                                class="text-base font-medium text-blue-700"
+                                class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
                             >
-                                <GlobeAltIcon
-                                    class="mr-1.5 inline-block h-4 w-4"
-                                />
-                                <span
-                                    class="hover:text-blue-800 hover:underline"
-                                    >{{ structure.website }}</span
-                                >
+                                {{ structure.website }}
+                            </a>
+                        </p>
+                        <p class="text-base font-medium text-gray-700">
+                            <GlobeAltIcon class="mr-1.5 inline-block h-4 w-4" />
+                            Facebook:
+                            <a
+                                :href="structure.facebook"
+                                target="_blank"
+                                class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
+                            >
+                                {{ structure.facebook }}
+                            </a>
+                        </p>
+                        <p class="text-base font-medium text-gray-700">
+                            <GlobeAltIcon class="mr-1.5 inline-block h-4 w-4" />
+                            Instagram:
+                            <a
+                                :href="structure.instagram"
+                                target="_blank"
+                                class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
+                            >
+                                {{ structure.instagram }}
                             </a>
                         </p>
 

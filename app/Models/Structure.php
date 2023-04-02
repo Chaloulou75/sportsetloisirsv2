@@ -64,6 +64,11 @@ class Structure extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class);
+    }
+
     public function structuretype(): BelongsTo
     {
         return $this->belongsTo(Structuretype::class);

@@ -12,6 +12,8 @@ use App\Models\Publictype;
 use App\Models\Activitetype;
 use App\Models\Structuretype;
 use Illuminate\Database\Seeder;
+use Database\Seeders\DepartementsTableSeeder;
+use Database\Seeders\VillesFranceTableSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,14 +24,9 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
         // $this->call(RegionsTableSeeder::class);
-        // $this->call(DepartmentsTableSeeder::class);
-        // $this->call(CitiesTableSeeder::class);
+        $this->call(DepartementsTableSeeder::class);
+        $this->call(VillesFranceTableSeeder::class);
 
         User::factory()->create([
                     'name' => 'Charles J',

@@ -22,14 +22,12 @@ watch(
             const structure = props.structures.find((s) => s.id === newValue);
             if (structure) {
                 center.value = [structure.address_lat, structure.address_lng];
-                zoom.value = 7;
             }
         } else {
             center.value = [
                 props.structures[0].address_lat,
                 props.structures[0].address_lng,
             ];
-            zoom.value = 6;
         }
     }
 );

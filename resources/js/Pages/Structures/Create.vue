@@ -17,10 +17,6 @@ const AddressForm = defineAsyncComponent(() =>
     import("@/Components/Google/AddressForm.vue")
 );
 
-const ActivityForm = defineAsyncComponent(() =>
-    import("@/Components/Inscription/ActivityForm.vue")
-);
-
 const props = defineProps({
     structurestypes: Object,
     niveaux: Object,

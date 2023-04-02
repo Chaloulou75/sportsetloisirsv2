@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use Inertia\Inertia;
 use App\Models\Category;
 use App\Models\Structure;
@@ -16,9 +17,13 @@ class HomeController extends Controller
         $categoriesCount = Category::count();
         $disciplinesCount = Discipline::count();
         $structuresCount = Structure::count();
+        $citiesCount = City::count();
 
         $categories = Category::select(['id', 'name', 'slug'])->get();
         $disciplines = Discipline::has('structures')->inRandomOrder()->limit(12)->select(['id', 'name', 'slug'])->get();
+
+        $topVilles = City::has('structures')->inRandomOrder()->limit(12)->select(['id', 'ville', 'ville_formatee'])->get();
+
 
         $lastStructures = Structure::with('category:id,name')
                 ->select(['id', 'name', 'slug', 'category_id', 'city', 'zip_code'])
@@ -32,7 +37,9 @@ class HomeController extends Controller
             'categoriesCount' => $categoriesCount,
             'disciplinesCount' => $disciplinesCount,
             'structuresCount' => $structuresCount,
+            'citiesCount'=> $citiesCount,
             'lastStructures' => $lastStructures,
+            'topVilles' => $topVilles,
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             'filters' => request()->all(['search']),

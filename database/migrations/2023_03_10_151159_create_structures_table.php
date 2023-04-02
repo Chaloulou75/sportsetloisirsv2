@@ -22,8 +22,6 @@ return new class () extends Migration {
             $table->string('country')->nullable();
             $table->double('address_lat')->nullable();
             $table->double('address_lng')->nullable();
-            $table->string('firstname');
-            $table->string('lastname');
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->text('description')->nullable();

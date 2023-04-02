@@ -13,7 +13,9 @@ const props = defineProps({
     categoriesCount: Number,
     disciplinesCount: Number,
     structuresCount: Number,
+    citiesCount: Number,
     lastStructures: Object,
+    topVilles: Object,
     filters: Object,
 });
 
@@ -125,7 +127,7 @@ watch(
                     <div
                         class="-rotate-3 bg-gradient-to-br from-sky-600 to-blue-600 bg-clip-text py-2 text-xl font-bold text-transparent sm:text-2xl"
                     >
-                        + 80 villes!
+                        + {{ citiesCount }} villes!
                     </div>
                 </div>
                 <div
@@ -218,6 +220,37 @@ watch(
                 <div class="mb-4 flex items-center justify-center">
                     <Link
                         :href="route('disciplines.index')"
+                        class="flex items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                    >
+                        Et beaucoup d'autres
+                        <span>
+                            <ArrowSmallRightIcon class="ml-2 h-6 w-6" />
+                        </span>
+                    </Link>
+                </div>
+            </section>
+
+            <section class="mx-auto max-w-7xl px-2 py-8 md:py-20">
+                <h3 class="pb-6 text-2xl font-semibold text-gray-700">
+                    Top villes:
+                </h3>
+                <div
+                    class="mb-8 grid h-auto grid-cols-1 place-items-stretch gap-4 px-1.5 sm:grid-cols-2 md:grid-cols-3 md:px-0 lg:grid-cols-4"
+                >
+                    <Link
+                        :href="route('villes.show', ville.ville_formatee)"
+                        :active="
+                            route().current('villes.show', ville.ville_formatee)
+                        "
+                        v-for="ville in topVilles"
+                        :key="ville.id"
+                        class="flex items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                        >{{ ville.ville }}</Link
+                    >
+                </div>
+                <div class="mb-4 flex items-center justify-center">
+                    <Link
+                        :href="route('villes.index')"
                         class="flex items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                     >
                         Et beaucoup d'autres
