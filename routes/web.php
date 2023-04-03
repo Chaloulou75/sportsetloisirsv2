@@ -37,7 +37,11 @@ Route::get('/faq', function () {
 Route::resource('categories', CategoryController::class);
 Route::resource('disciplines', DisciplineController::class);
 Route::resource('departements', DepartementController::class);
-Route::resource('villes', CityController::class);
+Route::resource('villes', CityController::class, [
+    'parameters' => [
+        'villes' => 'city'
+    ]
+]);
 
 
 Route::get('/dashboard', function () {

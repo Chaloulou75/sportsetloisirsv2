@@ -66,7 +66,7 @@ class Structure extends Model
 
     public function city(): BelongsTo
     {
-        return $this->belongsTo(City::class);
+        return $this->belongsTo(City::class, 'ville', 'city');
     }
 
     public function structuretype(): BelongsTo

@@ -53,6 +53,17 @@ class CityController extends Controller
      */
     public function show(City $city)
     {
+        $city = City::with(['structures:id,category_id,name,slug,description,city,zip_code,address,address_lat,address_lng', 'structures.category:id,name'])->where('ville_formatee', $city->ville_formatee)
+                                            ->select(['id', 'ville', 'ville_formatee', 'nom_departement', 'view_count'])
+                                            ->withCount('structures')
+                                            ->first();
+
+        // $city->timestamp = false;
+        // $city->increment('view_count');
+        // dd($city);
+        return Inertia::render('Villes/Show', [
+            'city'=> $city,
+        ]);
     }
 
     /**
