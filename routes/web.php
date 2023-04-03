@@ -11,6 +11,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\DepartementController;
+use App\Http\Controllers\CityDisciplineController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,12 +38,14 @@ Route::get('/faq', function () {
 Route::resource('categories', CategoryController::class);
 Route::resource('disciplines', DisciplineController::class);
 Route::resource('departements', DepartementController::class);
+
+Route::get('villes/{city}/disciplines/{discipline}', [CityDisciplineController::class, 'show'])->name('citydiscipline.show');
+
 Route::resource('villes', CityController::class, [
     'parameters' => [
         'villes' => 'city'
     ]
 ]);
-
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

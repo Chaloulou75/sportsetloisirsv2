@@ -27,7 +27,7 @@ onMounted(() => {
 });
 
 const formatCityName = (ville) => {
-    return ville.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
+    return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
 };
 
 watch(

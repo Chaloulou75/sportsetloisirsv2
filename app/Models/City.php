@@ -47,6 +47,16 @@ class City extends Model
                     ->orWhere('code_postal', 'like', '%' . $search . '%')
             )
         );
+
+        $query->when(
+            $filters['discipline'] ?? false,
+            fn ($query, $discipline) =>
+            $query->whereHas(
+                'disciplines',
+                fn ($query) =>
+                $query->where('slug', $discipline)
+            )
+        );
     }
 
     public function departement(): BelongsTo

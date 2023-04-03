@@ -3,27 +3,14 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import { router, Head, Link } from "@inertiajs/vue3";
 import { ref, watch } from "vue";
 import { debounce } from "lodash";
-import TextInput from "@/Components/TextInput.vue";
 // import { defineAsyncComponent } from "vue";
 import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
 
 let props = defineProps({
     city: Object,
+    discipline: Object,
     filters: Object,
 });
-
-let discipline = ref("");
-
-watch(
-    discipline,
-    debounce(function (value) {
-        router.get(
-            "/villes",
-            { discipline: value },
-            { preserveState: true, replace: true }
-        );
-    }, 500)
-);
 
 // const Pagination = defineAsyncComponent(() =>
 //     import("@/Components/Pagination.vue")
@@ -32,7 +19,7 @@ watch(
 
 <template>
     <Head
-        :title="city.ville"
+        :title="discipline.name + ' à ' + city.ville"
         :description="
             'Envie de faire du sport à ' +
             city.ville +
@@ -46,7 +33,8 @@ watch(
     <AppLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Les structures disponibles à {{ city.ville }}
+                Les structures disponibles à {{ city.ville }} pour faire de la
+                {{ discipline.name }}
                 <span class="text-xs italic text-gray-600"
                     >({{ city.view_count }} vues)
                 </span>
@@ -65,46 +53,13 @@ watch(
                     >{{ city.structures_count }}
                 </span>
                 structures disponibles, comparez services, tarifs et horaires en
-                2 clics ! Pratiquer un sport à {{ city.ville }} n'a jamais été
-                aussi simple!
+                2 clics ! Pratiquer {{ discipline.name }} à {{ city.ville }} n'a
+                jamais été aussi simple!
             </p>
         </template>
 
         <template v-if="city.structures_count > 0">
             <div class="py-12">
-                <!-- discipline box -->
-                <div
-                    class="flex flex-col items-center justify-center w-full max-w-3xl px-2 mx-auto mt-4 mb-8 md:flex-row"
-                >
-                    <label
-                        for="discipline"
-                        value="Rechercher dans votre discipline:"
-                        class="pr-2 mb-1 text-sm font-medium text-gray-800"
-                        >Rechercher une discipline:</label
-                    >
-
-                    <TextInput
-                        id="discipline"
-                        type="text"
-                        class="flex-1 block w-full px-2 mt-1 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
-                        v-model="discipline"
-                        placeholder="discipline..."
-                    />
-
-                    <!-- <button type="button" @click="reset">
-                    <svg
-                        class="w-6 h-6 my-2 text-gray-300 hover:text-gray-200 lg:my-0 lg:h-8 lg:w-8"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
-                            clip-rule="evenodd"
-                        />
-                    </svg>
-                </button> -->
-                </div>
                 <div
                     class="min-h-screen px-2 mx-auto max-w-7xl sm:px-6 lg:px-8"
                 >
@@ -175,7 +130,7 @@ watch(
                             </div> -->
                         </div>
                         <LeafletMapMultiple
-                            class="md:w-1/2"
+                            class="hidden md:w-1/2"
                             :structures="city.structures"
                         />
                     </div>

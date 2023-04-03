@@ -35,7 +35,7 @@ class StructureController extends Controller
                     // 'medias',
                 ])
                         ->filter(
-                            request(['search', 'category'])
+                            request(['search', 'category', 'discipline'])
                         )
                         ->latest()
                         ->paginate(9)
@@ -66,7 +66,7 @@ class StructureController extends Controller
                             // 'logo' => $structure->logo ? Storage::disk('s3')->temporaryUrl('logo/' .$structure->id. '/' .$structure->logo, now()->addMinutes(5)) : null,
                 ];
                         })->withQueryString(),
-            'filters' => request()->all(['search', 'category']),
+            'filters' => request()->all(['search', 'category', 'discipline']),
             'categories' => $categories,
         ]);
     }
