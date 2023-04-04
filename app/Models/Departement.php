@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Departement extends Model
 {
@@ -36,8 +37,6 @@ class Departement extends Model
                 fn ($query) =>
                 $query->where('departement', 'like', '%' . $search . '%')
                     ->orWhere('numero', 'like', '%' . $search . '%')
-                // ->orWhere('code', 'like', '%' . $search . '%')
-                // ->orWhere('region_code', 'like', '%' . $search . '%')
             )
         );
     }
@@ -45,5 +44,10 @@ class Departement extends Model
     public function cities(): HasMany
     {
         return $this->hasMany(City::class, 'departement', 'numero');
+    }
+
+    public function structures(): BelongsToMany
+    {
+        return $this->belongsToMany(Structure::class);
     }
 }

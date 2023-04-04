@@ -13,7 +13,7 @@ return new class () extends Migration {
     public function up()
     {
         Schema::create('departements', function (Blueprint $table) {
-            $table->integer('id', true);
+            $table->bigIncrements('id');
             $table->string('departement');
             $table->string('numero', 10);
             $table->string('latitude', 200);

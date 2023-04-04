@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class City extends Model
 {
@@ -61,11 +62,12 @@ class City extends Model
 
     public function departement(): BelongsTo
     {
-        return $this->belongsTo(Departement::class, 'numero', 'departement');
+        return $this->belongsTo(Departement::class);
     }
 
-    public function structures(): HasMany
+    public function structures(): BelongsToMany
     {
-        return $this->hasMany(Structure::class, 'city', 'ville');
+        return $this->belongsToMany(Structure::class, 'structure_villes_france', 'villes_france_id', 'structure_id');
+        ;
     }
 }

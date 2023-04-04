@@ -79,9 +79,14 @@ class Structure extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function city(): BelongsTo
+    public function cities(): BelongsToMany
     {
-        return $this->belongsTo(City::class, 'ville', 'city');
+        return $this->belongsToMany(City::class, 'structure_villes_france', 'structure_id', 'villes_france_id');
+    }
+
+    public function departements(): BelongsToMany
+    {
+        return $this->belongsToMany(Departement::class);
     }
 
     public function structuretype(): BelongsTo

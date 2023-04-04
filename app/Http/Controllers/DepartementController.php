@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
+use App\Models\Structure;
 use App\Models\Departement;
 use Illuminate\Http\Request;
 
@@ -12,6 +14,23 @@ class DepartementController extends Controller
      */
     public function index()
     {
+        $structuresCount = Structure::count();
+
+        $departements = Departement::with(['structures:id,category_id,name,slug,description,city,zip_code,address,address_lat,address_lng', 'structures.category:id,name'])
+                        ->select(['id', 'departement', 'numero'])
+                        ->withCount('structures')
+                        ->filter(
+                            request(['search'])
+                        )
+                        ->orderByDesc('structures_count')
+                        ->paginate(15)
+                        ->withQueryString();
+
+        return Inertia::render('Departements/Index', [
+            'departements' => $departements,
+            'structuresCount' => $structuresCount,
+            'filters' => request()->all(['search']),
+        ]);
     }
 
     /**
@@ -35,6 +54,19 @@ class DepartementController extends Controller
      */
     public function show(Departement $departement)
     {
+        $departement = Departement::with(['structures:id,category_id,name,slug,description,city,zip_code,address,address_lat,address_lng', 'structures.category:id,name'])
+                                    ->where('numero', $departement->numero)
+                                    ->select(['id', 'numero', 'departement', 'prefixe', 'view_count'])
+                                    ->withCount('structures')
+                                    ->first();
+
+
+        $departement->timestamp = false;
+        $departement->increment('view_count');
+        // dd($city);
+        return Inertia::render('Departements/Show', [
+            'departement'=> $departement,
+        ]);
     }
 
     /**

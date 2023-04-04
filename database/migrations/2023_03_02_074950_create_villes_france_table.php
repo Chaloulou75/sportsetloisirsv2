@@ -14,7 +14,7 @@ return new class () extends Migration {
     public function up()
     {
         Schema::create('villes_france', function (Blueprint $table) {
-            $table->integer('id', true);
+            $table->bigIncrements('id');
             $table->string('code_postal', 10);
             $table->string('code_insee', 10);
             $table->string('article', 20);

@@ -3,12 +3,14 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\City;
 use App\Models\User;
 use App\Models\Nivel;
 use App\Models\Category;
 use App\Models\Structure;
 use App\Models\Discipline;
 use App\Models\Publictype;
+use App\Models\Departement;
 use App\Models\Activitetype;
 use App\Models\Structuretype;
 use Illuminate\Database\Seeder;
@@ -27,6 +29,9 @@ class DatabaseSeeder extends Seeder
         // $this->call(RegionsTableSeeder::class);
         $this->call(DepartementsTableSeeder::class);
         $this->call(VillesFranceTableSeeder::class);
+
+        $departements = Departement::all();
+        $cities = City::all();
 
         User::factory()->create([
                     'name' => 'Charles J',
@@ -386,6 +391,10 @@ class DatabaseSeeder extends Seeder
 
         Structure::factory(40)->create()->each(function ($structure) use ($disciplines) {
             $structure->disciplines()->attach($disciplines->where('category_id', $structure->category_id)->random(2));
+        })->each(function ($structure) use ($cities) {
+            $structure->cities()->attach($cities->random(2));
+        })->each(function ($structure) use ($departements, $cities) {
+            $structure->departements()->attach($departements->whereIn('numero', $cities->pluck('departement')->random(2)));
         });
     }
 }

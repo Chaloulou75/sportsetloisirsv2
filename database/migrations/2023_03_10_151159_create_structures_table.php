@@ -25,7 +25,7 @@ return new class () extends Migration {
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->text('description')->nullable();
-            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade')->nullable();
             $table->string('website')->nullable();
             $table->string('facebook')->nullable();
             $table->string('instagram')->nullable();

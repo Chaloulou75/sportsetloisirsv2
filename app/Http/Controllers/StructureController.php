@@ -101,7 +101,7 @@ class StructureController extends Controller
         $validated= request()->validate([
             'name' => ['required', 'string', 'max:255'],
             'structuretype_id' => ['required', Rule::exists('structuretypes', 'id')],
-            'category_id' => ['required', Rule::exists('categories', 'id')],
+            // 'category_id' => ['required', Rule::exists('categories', 'id')],
             'email' => ['required', 'max:50', 'email'],
             'website' => ['nullable', 'regex:'.$regex],
             'phone' => ['required', 'digits:10'],
@@ -124,8 +124,8 @@ class StructureController extends Controller
 
         $structure = Structure::create($validated);
 
-        $disciplinesIds = collect($request['disciplines'])->pluck('id');
-        $structure->disciplines()->attach($disciplinesIds);
+        // $disciplinesIds = collect($request['disciplines'])->pluck('id');
+        // $structure->disciplines()->attach($disciplinesIds);
 
         return Redirect::route('structures.show', $structure->slug)->with('success', 'Structure crée.');
     }
