@@ -361,7 +361,7 @@ class DatabaseSeeder extends Seeder
         Discipline::factory()->create(['name' => 'Tarot', 'slug' => 'tarot', 'category_id' => 10]);
         Discipline::factory()->create(['name' => 'Thalassothérapie', 'slug' => 'thalassotherapie', 'category_id' => 10]);
 
-        $disciplines= Discipline::all();
+        $disciplines= Discipline::select('id')->get();
 
         //les types d'activités
         Activitetype::factory()->create(['name' =>'Cours à l\'année', 'slug' => 'cours']);
@@ -389,7 +389,7 @@ class DatabaseSeeder extends Seeder
         Publictype::factory()->create(['name' =>'14 à 18 ans', 'slug' => '14-18ans']);
         Publictype::factory()->create(['name' =>'Adultes', 'slug' => 'adultes']);
 
-        Structure::factory(15)->create()->each(function ($structure) use ($disciplines) {
+        Structure::factory(12)->create()->each(function ($structure) use ($disciplines) {
             $structure->disciplines()->attach($disciplines->random(2));
         })->each(function ($structure) use ($cities) {
             $structure->cities()->attach($cities->random(2));
