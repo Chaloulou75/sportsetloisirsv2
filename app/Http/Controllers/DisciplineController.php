@@ -55,7 +55,7 @@ class DisciplineController extends Controller
      */
     public function show(Discipline $discipline)
     {
-        $discipline = Discipline::with(['structures:id,category_id,name,slug,description,city,zip_code,address,address_lat,address_lng', 'structures.category:id,name'])
+        $discipline = Discipline::with(['structures:id,name,structuretype_id,slug,description,city,zip_code,address,address_lat,address_lng', 'structures.structuretype:id,name'])
                                     ->where('slug', $discipline->slug)
                                     ->select(['id', 'name', 'slug', 'view_count'])
                                     ->withCount('structures')

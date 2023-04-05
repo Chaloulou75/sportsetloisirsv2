@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Activitetype;
 use Inertia\Inertia;
 use App\Models\Nivel;
 use App\Models\Category;
-use App\Models\Publictype;
 use App\Models\Structure;
+use App\Models\Discipline;
+use App\Models\Publictype;
 use Illuminate\Support\Str;
+use App\Models\Activitetype;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use Illuminate\Validation\Rule;
@@ -31,6 +32,9 @@ class StructureController extends Controller
                     'category:id,name',
                     'user:id,name',
                     'disciplines:id,name',
+                    'cities:id,ville,ville_formatee',
+                    'departements:id,departement,numero',
+                    'structuretype:id,name,slug',
                     // 'weekdays:id,name',
                     // 'medias',
                 ])
@@ -54,7 +58,7 @@ class StructureController extends Controller
                             'address_lat' => $structure->address_lat,
                             'address_lng' => $structure->address_lng,
                             'description' => $structure->description,
-                            'category' => $structure->category,
+                            'structuretype' => $structure->structuretype,
                             'disciplines' => $structure->disciplines,
                             // 'weekdays' => $structure->weekdays,
                             'user' => $structure->user,
@@ -80,9 +84,11 @@ class StructureController extends Controller
         $niveaux = Nivel::select(['id', 'name'])->get();
         $publictypes = Publictype::select(['id', 'name'])->get();
         $activitestypes = Activitetype::select(['id', 'name'])->get();
+        $disciplines = Discipline::select(['id', 'name'])->get();
 
         return Inertia::render('Structures/Create', [
             'structurestypes' => $structurestypes,
+            'disciplines' => $disciplines,
             'niveaux' => $niveaux,
             'publictypes' => $publictypes,
             'activitestypes' => $activitestypes,
@@ -101,7 +107,7 @@ class StructureController extends Controller
         $validated= request()->validate([
             'name' => ['required', 'string', 'max:255'],
             'structuretype_id' => ['required', Rule::exists('structuretypes', 'id')],
-            // 'category_id' => ['required', Rule::exists('categories', 'id')],
+            // 'category_id' => ['nullable', Rule::exists('categories', 'id')],
             'email' => ['required', 'max:50', 'email'],
             'website' => ['nullable', 'regex:'.$regex],
             'phone' => ['required', 'digits:10'],
@@ -127,7 +133,7 @@ class StructureController extends Controller
         // $disciplinesIds = collect($request['disciplines'])->pluck('id');
         // $structure->disciplines()->attach($disciplinesIds);
 
-        return Redirect::route('structures.show', $structure->slug)->with('success', 'Structure crée.');
+        return Redirect::route('structures.show', $structure->slug)->with('success', 'Structure crée, maintenant, ajoutez des activités à votre structure.');
     }
 
     /**
@@ -144,10 +150,14 @@ class StructureController extends Controller
             'category:id,name',
             'user:id,name',
             'disciplines:id,name',
+            'cities:id,ville,ville_formatee',
+            'departements:id,departement,numero',
+            'structuretype:id,name,slug',
+            'activites:id,name,slug,description,address,city,country,address_lat,address_lng,zip_code,structuretype_id',
             // 'weekdays:id,name',
             // 'medias'
             ])
-            ->select(['id', 'name', 'slug', 'description', 'address', 'address_lat', 'address_lng', 'zip_code', 'user_id', 'category_id', 'city', 'country', 'website', 'email', 'phone', 'view_count'])
+            ->select(['id', 'name', 'slug', 'description', 'address', 'address_lat', 'address_lng', 'zip_code', 'user_id', 'structuretype_id', 'city', 'country', 'website', 'email', 'facebook', 'instagram', 'phone', 'view_count'])
             ->where('slug', $structure->slug)
             ->first();
 

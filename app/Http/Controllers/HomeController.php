@@ -26,10 +26,16 @@ class HomeController extends Controller
 
         $topVilles = City::with('departement')->has('structures')->select(['id', 'ville', 'ville_formatee', 'departement', 'nom_departement'])->withCount('structures')->orderByDesc('structures_count')->limit(12)->get();
 
-        $topDepartements = Departement::has('structures')->select(['id', 'departement', 'numero'])->withCount('structures')->with('cities')->whereIn('numero', $topVilles->pluck('departement'))->orderByDesc('structures_count')->limit(12)->get();
+        $topDepartements = Departement::with(['structures'])
+                                ->select(['id', 'departement', 'numero'])
+                                ->withCount('structures')
+                                ->orderByDesc('structures_count')
+                                ->limit(12)
+                                ->get();
 
-        $lastStructures = Structure::with('category:id,name')
-                ->select(['id', 'name', 'slug', 'category_id', 'city', 'zip_code'])
+
+        $lastStructures = Structure::with('structuretype:id,name')
+                ->select(['id', 'name', 'structuretype_id', 'slug', 'city', 'zip_code'])
                 ->latest()
                 ->limit(12)
                 ->get();

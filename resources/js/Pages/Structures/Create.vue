@@ -10,6 +10,7 @@ import { CheckIcon, SelectorIcon } from "@heroicons/vue/24/solid";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import LogoInput from "@/Components/LogoInput.vue";
 import StepsIndicator from "@/Components/Inscription/StepsIndicator.vue";
+import AutocompleteActiviteForm from "@/Components/Inscription/AutocompleteActiviteForm.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, onMounted, watch, defineAsyncComponent } from "vue";
 
@@ -22,6 +23,7 @@ const props = defineProps({
     niveaux: Object,
     publictypes: Object,
     activitestypes: Object,
+    disciplines: Object,
     errors: Object,
 });
 
@@ -121,8 +123,8 @@ function enterAfterDisciplines() {
                 <div>
                     <div class="md:grid md:grid-cols-3 md:gap-6">
                         <div class="md:col-span-1">
-                            <!-- formstep 1 -->
-                            <div v-if="formStep == 1" class="px-4 sm:px-0">
+                            <!--  -->
+                            <div class="px-4 sm:px-0">
                                 <h3
                                     class="text-lg font-medium leading-6 text-gray-700"
                                 >
@@ -134,20 +136,6 @@ function enterAfterDisciplines() {
                                     sur ce site.
                                 </p>
                             </div>
-                            <!-- formstep 2 -->
-                            <div v-if="formStep == 2" class="px-4 sm:px-0">
-                                <h3
-                                    class="text-lg font-medium leading-6 text-gray-700"
-                                >
-                                    Ajouter des activités
-                                </h3>
-                                <p class="mt-1 text-sm text-gray-800">
-                                    Ces informations apparaitront publiquement
-                                    sur ce site.
-                                </p>
-                            </div>
-
-                            <StepsIndicator :formStep="formStep" />
                         </div>
                         <div class="mt-5 md:col-span-2 md:mt-0">
                             <form
@@ -160,7 +148,6 @@ function enterAfterDisciplines() {
                                 >
                                     <!-- formstep 1 -->
                                     <div
-                                        v-if="formStep == 1"
                                         class="space-y-6 bg-white px-4 py-5 sm:p-6"
                                     >
                                         <div class="grid grid-cols-3 gap-6">
@@ -195,68 +182,6 @@ function enterAfterDisciplines() {
                                                     {{ errors.name }}
                                                 </div>
                                             </div>
-                                            <!-- Prenom -->
-                                            <!-- <div
-                                                class="col-span-3 sm:col-span-2"
-                                            >
-                                                <label
-                                                    for="firstname"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Prénom
-                                                </label>
-                                                <div
-                                                    class="flex mt-1 rounded-md"
-                                                >
-                                                    <input
-                                                        ref="firstName"
-                                                        v-model="form.firstname"
-                                                        type="text"
-                                                        name="firstname"
-                                                        id="firstname"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
-                                                        placeholder=""
-                                                        autocomplete="none"
-                                                    />
-                                                </div>
-                                                <div
-                                                    v-if="errors.firstname"
-                                                    class="mt-2 text-xs text-red-500"
-                                                >
-                                                    {{ errors.firstname }}
-                                                </div>
-                                            </div> -->
-                                            <!-- Nom -->
-                                            <!-- <div
-                                                class="col-span-3 sm:col-span-2"
-                                            >
-                                                <label
-                                                    for="lastname"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Nom
-                                                </label>
-                                                <div
-                                                    class="flex mt-1 rounded-md"
-                                                >
-                                                    <input
-                                                        v-model="form.lastname"
-                                                        type="text"
-                                                        name="lastname"
-                                                        id="lastname"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
-                                                        placeholder=""
-                                                        autocomplete="none"
-                                                    />
-                                                </div>
-                                                <div
-                                                    v-if="errors.lastname"
-                                                    class="mt-2 text-xs text-red-500"
-                                                >
-                                                    {{ errors.lastname }}
-                                                </div>
-                                            </div> -->
-
                                             <!-- structuretype_id -->
                                             <div
                                                 class="col-span-3 sm:col-span-2"
@@ -302,8 +227,7 @@ function enterAfterDisciplines() {
 
                                         <!-- Adresse -->
                                         <AddressForm
-                                            v-if="form.structuretype_id === 3"
-                                            label="Addresse du Club"
+                                            label="Siège social"
                                             :errors="errors"
                                             v-model:address="form.address"
                                             v-model:city="form.city"
@@ -511,103 +435,6 @@ function enterAfterDisciplines() {
                                                     {{ errors.youtube }}
                                                 </div>
                                             </div>
-
-                                            <!-- categorie -->
-                                            <div
-                                                class="col-span-3 sm:col-span-2"
-                                            >
-                                                <label
-                                                    for="category_id"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Catégorie
-                                                </label>
-                                                <div class="mt-1">
-                                                    <select
-                                                        name="category_id"
-                                                        id="category_id"
-                                                        v-model="
-                                                            form.category_id
-                                                        "
-                                                        class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
-                                                    >
-                                                        <option
-                                                            v-for="category in categories"
-                                                            :key="category.id"
-                                                            :value="category.id"
-                                                        >
-                                                            {{ category.name }}
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                                <div
-                                                    v-if="errors.category_id"
-                                                    class="mt-2 text-xs text-red-500"
-                                                >
-                                                    {{ errors.category_id }}
-                                                </div>
-                                            </div>
-
-                                            <!-- disciplines -->
-                                            <div
-                                                class="col-span-3 sm:col-span-2"
-                                            >
-                                                <label
-                                                    for="disciplines"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Disciplines pratiquées dans
-                                                    votre structure
-                                                    <span
-                                                        class="text-xs text-gray-600"
-                                                        >(Selectionnez une ou
-                                                        plusieurs
-                                                        disciplines)</span
-                                                    >
-                                                </label>
-                                                <div class="mt-1">
-                                                    <select
-                                                        name="disciplines"
-                                                        id="disciplines"
-                                                        v-model="
-                                                            form.disciplines
-                                                        "
-                                                        @keydown.enter.prevent="
-                                                            enterAfterDisciplines
-                                                        "
-                                                        class="block h-64 w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
-                                                        multiple
-                                                    >
-                                                        <option
-                                                            v-for="discipline in disciplinesList"
-                                                            :key="discipline.id"
-                                                            :value="discipline"
-                                                        >
-                                                            {{
-                                                                discipline.name
-                                                            }}
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                                <div
-                                                    class="mt-2 text-xs text-gray-700"
-                                                >
-                                                    Disciplines sélectionnées:
-                                                    <span
-                                                        v-for="discipline in form.disciplines"
-                                                        :key="discipline.id"
-                                                        class="ml-1 text-sm font-semibold text-gray-700"
-                                                        >{{ discipline.name }}
-                                                        &bullet;
-                                                    </span>
-                                                </div>
-                                                <div
-                                                    v-if="errors.disciplines"
-                                                    class="mt-2 text-xs text-red-500"
-                                                >
-                                                    {{ errors.disciplines }}
-                                                </div>
-                                            </div>
                                         </div>
 
                                         <!-- Description -->
@@ -647,81 +474,24 @@ function enterAfterDisciplines() {
                                         </div>
                                     </div>
 
-                                    <!-- formstep 2 -->
-                                    <!-- <div
-                                        v-if="formStep == 2"
-                                        class="px-4 py-5 space-y-6 bg-white sm:p-6"
+                                    <!--buttons formstep 1 -->
+                                    <div
+                                        class="bg-gray-50 px-4 py-3 text-right sm:px-6"
                                     >
                                         <button
+                                            :disabled="form.processing"
+                                            type="submit"
+                                            class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                        >
+                                            Enregistrer et ajouter une activité
+                                        </button>
+                                        <!-- <button
+                                            @click="nextStep"
                                             type="button"
-                                            @click="addActivite"
                                             class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                         >
                                             Ajouter une activité
-                                        </button>
-                                        <div
-                                            v-for="(
-                                                activite, index
-                                            ) in form.activites"
-                                            :key="index"
-                                            class="grid grid-cols-3 gap-6"
-                                        >
-                                            <ActivityForm
-                                                :activitestypes="activitestypes"
-                                                :niveaux="niveaux"
-                                                :publictypes="publictypes"
-                                                v-model:name="
-                                                    activite.activite_name
-                                                "
-                                                v-model:activitestype_id="
-                                                    activite.activitestype_id
-                                                "
-                                                v-model:nivel_id="
-                                                    activite.nivel_id
-                                                "
-                                                v-model:publictype_id="
-                                                    activite.publictype_id
-                                                "
-                                            />
-                                        </div>
-                                    </div> -->
-
-                                    <!--buttons formstep 1 -->
-                                    <div
-                                        v-if="formStep == 1"
-                                        class="bg-gray-50 px-4 py-3 text-right sm:px-6"
-                                    >
-                                        <button
-                                            @click="nextStep"
-                                            type="button"
-                                            class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                        >
-                                            Ajouter une activité
-                                        </button>
-                                    </div>
-                                    <!--buttons formstep 2 -->
-                                    <div
-                                        v-if="formStep == 2"
-                                        class="bg-gray-50 px-4 py-3 text-right sm:px-6"
-                                    >
-                                        <div
-                                            class="flex w-full items-center justify-between"
-                                        >
-                                            <button
-                                                type="button"
-                                                @click="prevStep"
-                                                class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                            >
-                                                Précédent
-                                            </button>
-                                            <button
-                                                :disabled="form.processing"
-                                                type="submit"
-                                                class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                            >
-                                                Enregistrer
-                                            </button>
-                                        </div>
+                                        </button> -->
                                     </div>
                                 </div>
                             </form>

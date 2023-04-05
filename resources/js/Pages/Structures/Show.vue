@@ -26,7 +26,7 @@ const showModal = ref(false);
             ' - ' +
             structure.city +
             ' - ' +
-            structure.category.name
+            structure.structuretype.name
         "
         :description="
             'Fiche détaillée de ' + structure.name + '. Horaires et tarifs.'
@@ -119,7 +119,7 @@ const showModal = ref(false);
                         <p
                             class="mb-2 text-lg font-medium uppercase tracking-wider text-gray-500"
                         >
-                            {{ structure.category.name }}
+                            {{ structure.structuretype.name }}
                         </p>
                         <div
                             class="mt-4 mb-8 grid grid-cols-2 gap-4 sm:grid-cols-3"

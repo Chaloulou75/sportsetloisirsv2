@@ -35,6 +35,9 @@ class Structure extends Model
             })->orWhereHas('category', function ($query) use ($search) {
                 $query->where('name', 'like', '%' . $search . '%')
                       ->orWhere('slug', 'like', '%' . $search . '%');
+            })->orWhereHas('structuretype', function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%')
+                      ->orWhere('slug', 'like', '%' . $search . '%');
             })
         );
 

@@ -58,7 +58,7 @@ class CategoryController extends Controller
         }])
                             ->where('slug', $category->slug)
                             ->select(['id', 'name', 'slug', 'view_count'])
-                            ->withCount(['disciplines', 'structures'])
+                            ->withCount(['disciplines'])
                             ->first();
 
         // dd($category);

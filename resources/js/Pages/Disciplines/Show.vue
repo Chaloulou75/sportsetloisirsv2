@@ -96,7 +96,7 @@ defineProps({
                                         <p
                                             class="text-sm font-medium uppercase tracking-widest text-pink-500"
                                         >
-                                            {{ structure.category.name }}
+                                            {{ structure.structuretype.name }}
                                         </p>
 
                                         <p
