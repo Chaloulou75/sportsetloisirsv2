@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -100,5 +101,10 @@ class Structure extends Model
     public function disciplines(): BelongsToMany
     {
         return $this->belongsToMany(Discipline::class);
+    }
+
+    public function activites(): HasMany
+    {
+        return $this->hasMany(Activite::class);
     }
 }
