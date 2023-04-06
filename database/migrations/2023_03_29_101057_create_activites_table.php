@@ -14,8 +14,8 @@ return new class () extends Migration {
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->foreignId('activitetype_id')->constrained()->onDelete('cascade');
             $table->foreignId('structure_id')->constrained()->onDelete('cascade');
+            $table->foreignId('activitetype_id')->constrained()->onDelete('cascade');
             $table->foreignId('discipline_id')->constrained()->onDelete('cascade');
             $table->foreignId('nivel_id')->constrained()->onDelete('cascade');
             $table->foreignId('publictype_id')->constrained()->onDelete('cascade');

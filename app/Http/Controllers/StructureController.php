@@ -80,11 +80,11 @@ class StructureController extends Controller
      */
     public function create()
     {
-        $structurestypes = Structuretype::select(['id', 'name'])->get();
-        $niveaux = Nivel::select(['id', 'name'])->get();
-        $publictypes = Publictype::select(['id', 'name'])->get();
-        $activitestypes = Activitetype::select(['id', 'name'])->get();
-        $disciplines = Discipline::select(['id', 'name'])->get();
+        $structurestypes = Structuretype::select(['id', 'name', 'slug'])->get();
+        $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
+        $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
+        $activitestypes = Activitetype::select(['id', 'name', 'slug'])->get();
+        $disciplines = Discipline::select(['id', 'name', 'slug'])->get();
 
         return Inertia::render('Structures/Create', [
             'structurestypes' => $structurestypes,
@@ -100,8 +100,6 @@ class StructureController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
-
         $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
 
         $validated= request()->validate([
@@ -133,7 +131,7 @@ class StructureController extends Controller
         // $disciplinesIds = collect($request['disciplines'])->pluck('id');
         // $structure->disciplines()->attach($disciplinesIds);
 
-        return Redirect::route('structures.show', $structure->slug)->with('success', 'Structure crée, maintenant, ajoutez des activités à votre structure.');
+        return Redirect::route('activites.create', $structure->slug)->with('success', 'Structure crée, maintenant, ajoutez des activités à votre structure.');
     }
 
     /**
@@ -153,11 +151,11 @@ class StructureController extends Controller
             'cities:id,ville,ville_formatee',
             'departements:id,departement,numero',
             'structuretype:id,name,slug',
-            'activites:id,name,slug,description,address,city,country,address_lat,address_lng,zip_code,structuretype_id',
+            'activites:id,name,slug,structure_id,description,address,city,zip_code,country,address_lat,address_lng',
             // 'weekdays:id,name',
             // 'medias'
             ])
-            ->select(['id', 'name', 'slug', 'description', 'address', 'address_lat', 'address_lng', 'zip_code', 'user_id', 'structuretype_id', 'city', 'country', 'website', 'email', 'facebook', 'instagram', 'phone', 'view_count'])
+            ->select(['id', 'name', 'slug', 'description', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'phone', 'view_count'])
             ->where('slug', $structure->slug)
             ->first();
 

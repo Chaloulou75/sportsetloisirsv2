@@ -23,7 +23,7 @@ class ActiviteController extends Controller
     public function create(Structure $structure)
     {
         $structure = Structure::select(['id', 'name', 'slug'])->where('slug', $structure->slug)->get();
-        $structurestypes = Structuretype::select(['id', 'name'])->get();
+        // $structurestypes = Structuretype::select(['id', 'name'])->get();
         $niveaux = Nivel::select(['id', 'name'])->get();
         $publictypes = Publictype::select(['id', 'name'])->get();
         $activitestypes = Activitetype::select(['id', 'name'])->get();
@@ -31,7 +31,7 @@ class ActiviteController extends Controller
 
         return Inertia::render('Structures/Activites/Create', [
             'structure' => $structure,
-            'structurestypes' => $structurestypes,
+            // 'structurestypes' => $structurestypes,
             'disciplines' => $disciplines,
             'niveaux' => $niveaux,
             'publictypes' => $publictypes,
@@ -72,6 +72,6 @@ class ActiviteController extends Controller
         // $disciplinesIds = collect($request['disciplines'])->pluck('id');
         // $structure->disciplines()->attach($discipline_id);
 
-        return Redirect::route('structures.index')->with('success', 'Activité crée, ajoutez des activités à votre structure.');
+        return Redirect::route('structures.show', $structure)->with('success', 'Activité crée, ajoutez des activités à votre structure.');
     }
 }
