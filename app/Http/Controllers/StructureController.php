@@ -151,7 +151,11 @@ class StructureController extends Controller
             'cities:id,ville,ville_formatee',
             'departements:id,departement,numero',
             'structuretype:id,name,slug',
-            'activites:id,name,slug,structure_id,description,address,city,zip_code,country,address_lat,address_lng',
+            'activites:id,name,slug,structure_id,description,address,city,zip_code,country,address_lat,address_lng,discipline_id,nivel_id,activitetype_id,publictype_id',
+            'activites.discipline:id,name,slug',
+            'activites.nivel:id,name,slug',
+            'activites.activitetype:id,name,slug',
+            'activites.publictype:id,name,slug',
             // 'weekdays:id,name',
             // 'medias'
             ])

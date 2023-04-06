@@ -20,28 +20,33 @@ const props = defineProps({
 });
 
 const form = useForm({
-    // name: ref(null),
+    structure_id: ref(props.structure.id),
+    discipline_id: ref(null),
+    activitetype_id: ref(null),
+    nivel_id: ref(null),
+    name: ref(null),
     address: ref(null),
     city: ref(null),
     zip_code: ref(null),
     country: ref(null),
     address_lat: ref(null),
     address_lng: ref(null),
-    activitetype_id: ref(null),
-    discipline_id: ref(null),
-    // description: ref(null),
-    nivel_id: ref(null),
-    // publictypes_id: ref(null),
+    description: ref(null),
+    publictype_id: ref(null),
 });
 
-// const formStep = ref(1);
-
 function submit() {
-    const url = `/structures/${props.structure.value}/activites`;
-    form.post(url, {
-        preserveScroll: true,
-        onSuccess: () => form.reset(),
-    });
+    // const structureValue = props.structure.value;
+    const url = `/structures/${props.structure.slug}/activites`;
+    console.log(url);
+    form.post(
+        url,
+        {
+            preserveScroll: true,
+            onSuccess: () => form.reset(),
+        },
+        props.structure
+    );
 }
 </script>
 
@@ -51,7 +56,7 @@ function submit() {
     <AppLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Ajouter une activité à {{ structure.name }}
+                Ajouter une activité à {{ props.structure.name }}
             </h2>
         </template>
 
@@ -82,12 +87,12 @@ function submit() {
                                     class="shadow-lg shadow-sky-700 sm:overflow-hidden sm:rounded-md"
                                 >
                                     <div
-                                        class="space-y-6 bg-white px-4 py-5 sm:p-6"
+                                        class="px-4 py-5 space-y-6 bg-white sm:p-6"
                                     >
                                         <!-- <button
                                                 type="button"
                                                 @click="addActivite"
-                                                class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                                class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                             >
                                                 Ajouter une activité
                                             </button> -->
@@ -98,43 +103,7 @@ function submit() {
                                             :key="index"
                                             class="grid grid-cols-3 gap-6"
                                         > -->
-                                        <!-- categorie -->
-                                        <!-- <div
-                                                class="col-span-3 sm:col-span-2"
-                                            >
-                                                <label
-                                                    for="category_id"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Catégorie
-                                                </label>
-                                                <div class="mt-1">
-                                                    <select
-                                                        name="category_id"
-                                                        id="category_id"
-                                                        v-model="
-                                                            form.category_id
-                                                        "
-                                                        class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
-                                                    >
-                                                        <option
-                                                            v-for="category in categories"
-                                                            :key="category.id"
-                                                            :value="category.id"
-                                                        >
-                                                            {{ category.name }}
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                                <div
-                                                    v-if="errors.category_id"
-                                                    class="mt-2 text-xs text-red-500"
-                                                >
-                                                    {{ errors.category_id }}
-                                                </div>
-                                            </div> -->
-
-                                        <!-- disciplines -->
+                                        <!-- discipline -->
                                         <div class="col-span-3 sm:col-span-2">
                                             <AutocompleteActiviteForm
                                                 :disciplines="disciplines"
@@ -165,7 +134,7 @@ function submit() {
                                                     v-model="
                                                         form.activitetype_id
                                                     "
-                                                    class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                    class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
                                                 >
                                                     <option
                                                         v-for="activitetype in activitestypes"
@@ -201,7 +170,7 @@ function submit() {
                                                     name="nivel_id"
                                                     id="nivel_id"
                                                     v-model="form.nivel_id"
-                                                    class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                    class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
                                                 >
                                                     <option
                                                         v-for="nivel in niveaux"
@@ -220,6 +189,38 @@ function submit() {
                                             </div>
                                         </div>
 
+                                        <!-- publictype_id -->
+                                        <div class="col-span-3 sm:col-span-2">
+                                            <label
+                                                for="publictype_id"
+                                                class="block text-sm font-medium text-gray-700"
+                                            >
+                                                Public
+                                            </label>
+                                            <div class="mt-1">
+                                                <select
+                                                    name="publictype_id"
+                                                    id="publictype_id"
+                                                    v-model="form.publictype_id"
+                                                    class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
+                                                >
+                                                    <option
+                                                        v-for="publictype in publictypes"
+                                                        :key="publictype.id"
+                                                        :value="publictype.id"
+                                                    >
+                                                        {{ publictype.name }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div
+                                                v-if="form.errors.publictype_id"
+                                                class="mt-2 text-xs text-red-500"
+                                            >
+                                                {{ form.errors.publictype_id }}
+                                            </div>
+                                        </div>
+
                                         <!-- name  -->
                                         <div class="col-span-3 sm:col-span-2">
                                             <label
@@ -228,14 +229,14 @@ function submit() {
                                             >
                                                 Nom de l'activité
                                             </label>
-                                            <div class="mt-1 flex rounded-md">
+                                            <div class="flex mt-1 rounded-md">
                                                 <input
                                                     ref="name"
                                                     v-model="form.name"
                                                     type="text"
                                                     name="name"
                                                     id="name"
-                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                     placeholder=""
                                                     autocomplete="none"
                                                 />
@@ -262,17 +263,51 @@ function submit() {
                                                 form.address_lng
                                             "
                                         />
-                                        <!-- </div> -->
+                                        <!-- Description -->
+                                        <div>
+                                            <label
+                                                for="description"
+                                                class="block text-sm font-medium text-gray-700"
+                                            >
+                                                Description
+                                            </label>
+                                            <div class="mt-1">
+                                                <textarea
+                                                    v-model="form.description"
+                                                    id="description"
+                                                    name="description"
+                                                    rows="3"
+                                                    class="block w-full h-48 min-h-full mt-1 placeholder-gray-400 placeholder-opacity-50 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                    :class="{
+                                                        errors: 'border-red-500 focus:ring focus:ring-red-200',
+                                                    }"
+                                                    placeholder="Mettez en valeur votre activité"
+                                                    autocomplete="none"
+                                                />
+                                            </div>
+                                            <p
+                                                class="mt-2 text-sm text-gray-500"
+                                            >
+                                                Description de votre activité en
+                                                quelques lignes.
+                                            </p>
+                                            <div
+                                                v-if="form.errors.description"
+                                                class="mt-2 text-xs text-red-500"
+                                            >
+                                                {{ form.errors.description }}
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <!--buttons -->
                                     <div
-                                        class="bg-gray-50 px-4 py-3 text-right sm:px-6"
+                                        class="px-4 py-3 text-right bg-gray-50 sm:px-6"
                                     >
                                         <button
                                             :disabled="form.processing"
                                             type="submit"
-                                            class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                         >
                                             Enregistrer
                                         </button>

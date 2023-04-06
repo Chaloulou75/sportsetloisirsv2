@@ -12,19 +12,31 @@ class Activite extends Model
 {
     use HasFactory;
 
-    public function nivels(): HasOne
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
+    public function nivel(): BelongsTo
     {
-        return $this->hasOne(Nivel::class);
+        return $this->belongsTo(Nivel::class);
     }
 
-    public function publictypes(): HasOne
+    public function publictype(): BelongsTo
     {
-        return $this->hasOne(Nivel::class);
+        return $this->belongsTo(Nivel::class);
     }
 
-    public function activitetype(): HasOne
+    public function activitetype(): BelongsTo
     {
-        return $this->hasOne(Activitetype::class);
+        return $this->belongsTo(Activitetype::class);
+    }
+
+    public function discipline(): BelongsTo
+    {
+        return $this->belongsTo(Discipline::class);
     }
 
     public function structure(): BelongsTo

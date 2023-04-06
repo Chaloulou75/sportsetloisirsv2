@@ -11,8 +11,10 @@ use App\Models\Publictype;
 use Illuminate\Support\Str;
 use App\Models\Activitetype;
 use Illuminate\Http\Request;
-use App\Models\Structuretype;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 
 class ActiviteController extends Controller
@@ -22,16 +24,14 @@ class ActiviteController extends Controller
      */
     public function create(Structure $structure)
     {
-        $structure = Structure::select(['id', 'name', 'slug'])->where('slug', $structure->slug)->get();
-        // $structurestypes = Structuretype::select(['id', 'name'])->get();
-        $niveaux = Nivel::select(['id', 'name'])->get();
-        $publictypes = Publictype::select(['id', 'name'])->get();
-        $activitestypes = Activitetype::select(['id', 'name'])->get();
-        $disciplines = Discipline::select(['id', 'name'])->get();
+        $structure = Structure::select(['id', 'name', 'slug'])->where('slug', $structure->slug)->first();
+        $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
+        $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
+        $activitestypes = Activitetype::select(['id', 'name', 'slug'])->get();
+        $disciplines = Discipline::select(['id', 'name', 'slug'])->get();
 
         return Inertia::render('Structures/Activites/Create', [
             'structure' => $structure,
-            // 'structurestypes' => $structurestypes,
             'disciplines' => $disciplines,
             'niveaux' => $niveaux,
             'publictypes' => $publictypes,
@@ -44,12 +44,12 @@ class ActiviteController extends Controller
      */
     public function store(Request $request, $structure)
     {
-        dd($request->all());
-
+        // dd($structure);
         $validated= request()->validate([
+            'structure_id' => ['required', Rule::exists('structures', 'id')],
             'name' => ['required', 'string', 'max:255'],
             'discipline_id' => ['required', Rule::exists('disciplines', 'id')],
-            'activitetype_id' => ['required', Rule::exists('activitestypes', 'id')],
+            'activitetype_id' => ['required', Rule::exists('activitetypes', 'id')],
             'nivel_id' => ['required', Rule::exists('nivels', 'id')],
             'publictype_id' => ['required', Rule::exists('publictypes', 'id')],
             'address' => ['nullable'],
@@ -63,15 +63,30 @@ class ActiviteController extends Controller
 
         $name = $validated['name'];
         $slug = Str::slug($name, '-');
-        $validated['user_id'] = auth()->id();
+        // $validated['user_id'] = auth()->id();
         $validated['slug'] = $slug;
-        $validated['structure_id'] = $structure->id;
+        // $validated['structure_id'] = $structure->id;
 
         $activite = Activite::create($validated);
 
-        // $disciplinesIds = collect($request['disciplines'])->pluck('id');
-        // $structure->disciplines()->attach($discipline_id);
+        return Redirect::route('structures.show', $structure)->with('success', 'Activité crée, ajoutez d\'autres activités à votre structure.');
+    }
 
-        return Redirect::route('structures.show', $structure)->with('success', 'Activité crée, ajoutez des activités à votre structure.');
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Activite $activite, $structure): RedirectResponse
+    {
+        $activite = Activite::where('id', $activite->id)->first();
+
+        if (! Gate::allows('destroy-structure', $activite)) {
+            return Redirect::route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de supprimer cette fiche, vous devez être le créateur de la structure ou un administrateur.');
+        }
+        // $structure = Structure::where('slug', $structure->slug)->firstOrFail();
+
+        $activite->delete();
+        sleep(1);
+
+        return redirect()->route('structures.show', $structure)->with('success', 'Activite supprimée.');
     }
 }
