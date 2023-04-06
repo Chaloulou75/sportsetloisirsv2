@@ -3,7 +3,8 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { ref, watch } from "vue";
 import TabsComponent from "@/Components/TabsComponent.vue";
-import Modals from "@/Components/Modals.vue";
+import ModalDeleteStructure from "@/Components/ModalDeleteStructure.vue";
+
 import {
     CheckIcon,
     UserIcon,
@@ -16,6 +17,7 @@ let props = defineProps({
     structure: Object,
     can: Object,
 });
+
 const showModal = ref(false);
 </script>
 
@@ -69,7 +71,7 @@ const showModal = ref(false);
                             :key="discipline.id"
                             class="flex items-center font-semibold"
                         >
-                            <CheckIcon class="w-5 h-5 mr-2 text-blue-500" />
+                            <CheckIcon class="mr-2 h-5 w-5 text-blue-500" />
                             {{ discipline.name }}
                         </p>
                     </div>
@@ -82,7 +84,7 @@ const showModal = ref(false);
                         <Link
                             :href="route('activites.create', structure)"
                             v-if="can.update"
-                            class="flex flex-col items-center justify-center px-4 py-2 overflow-hidden text-xs text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                         >
                             Ajouter des activités</Link
                         >
@@ -97,11 +99,11 @@ const showModal = ref(false);
                         <button
                             v-if="can.delete"
                             @click="showModal = true"
-                            class="flex flex-col items-center justify-center px-4 py-2 overflow-hidden text-xs text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-red-400 hover:text-white hover:ring-2 hover:ring-red-400 hover:ring-offset-2 focus:ring-2 focus:ring-red-400 focus:ring-offset-2 sm:rounded-lg"
+                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-red-400 hover:text-white hover:ring-2 hover:ring-red-400 hover:ring-offset-2 focus:ring-2 focus:ring-red-400 focus:ring-offset-2 sm:rounded-lg"
                         >
                             Supprimer cette structure
                         </button>
-                        <Modals
+                        <ModalDeleteStructure
                             :structure="structure"
                             :show="showModal"
                             @close="showModal = false"
@@ -111,19 +113,19 @@ const showModal = ref(false);
             </div>
         </template>
 
-        <section class="px-4 py-6 mx-auto my-4 max-w-7xl sm:px-6 lg:px-8">
+        <section class="mx-auto my-4 max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
             <div
-                class="flex flex-col justify-between px-4 py-6 bg-white rounded-lg shadow-lg shadow-sky-700 md:flex-row"
+                class="flex flex-col justify-between rounded-lg bg-white px-4 py-6 shadow-lg shadow-sky-700 md:flex-row"
             >
                 <div class="w-full space-y-4 md:w-2/3 md:pr-10">
                     <div class="relative mb-4 md:mb-6">
                         <p
-                            class="mb-2 text-lg font-medium tracking-wider text-gray-500 uppercase"
+                            class="mb-2 text-lg font-medium uppercase tracking-wider text-gray-500"
                         >
                             {{ structure.structuretype.name }}
                         </p>
                         <div
-                            class="grid grid-cols-2 gap-4 mt-4 mb-8 sm:grid-cols-3"
+                            class="mt-4 mb-8 grid grid-cols-2 gap-4 sm:grid-cols-3"
                         >
                             <div
                                 v-for="discipline in structure.disciplines"
@@ -136,19 +138,19 @@ const showModal = ref(false);
                             </div>
                         </div>
                         <div
-                            class="flex items-center justify-start my-4 space-x-4"
+                            class="my-4 flex items-center justify-start space-x-4"
                         >
                             <img
                                 v-if="structure.logo"
                                 alt="img"
                                 :src="clubLogoUrl"
-                                class="object-cover object-center rounded-full h-14 w-14 shrink-0 md:h-20 md:w-20"
+                                class="h-14 w-14 shrink-0 rounded-full object-cover object-center md:h-20 md:w-20"
                             />
                             <img
                                 v-else
                                 alt="img"
                                 src="https://via.placeholder.com/360x360.png/151f32?text=LOGO"
-                                class="object-cover object-center w-20 h-20 rounded-full shrink-0"
+                                class="h-20 w-20 shrink-0 rounded-full object-cover object-center"
                             />
                             <h2
                                 class="inline-block text-xl font-semibold text-black sm:text-2xl sm:leading-7 md:text-3xl"
@@ -181,7 +183,7 @@ const showModal = ref(false);
                     </div> -->
                 </div>
                 <div class="w-full md:w-1/3">
-                    <div class="flex items-center justify-center my-4 md:mb-8">
+                    <div class="my-4 flex items-center justify-center md:mb-8">
                         <h3 class="text-base font-semibold uppercase">
                             Coordonnées de la structure
                         </h3>
@@ -194,10 +196,13 @@ const showModal = ref(false);
                     </div>
                     <div class="mb-4 space-y-6">
                         <p class="text-base font-semibold text-gray-700">
-                            <UserIcon class="inline-block w-4 h-4" />
+                            <UserIcon class="inline-block h-4 w-4" />
                             {{ structure.user.name }}
                         </p>
-                        <p class="text-base font-medium text-gray-700">
+                        <p
+                            v-if="structure.website"
+                            class="text-base font-medium text-gray-700"
+                        >
                             <GlobeAltIcon class="mr-1.5 inline-block h-4 w-4" />
                             Site web:
                             <a
@@ -208,7 +213,10 @@ const showModal = ref(false);
                                 {{ structure.website }}
                             </a>
                         </p>
-                        <p class="text-base font-medium text-gray-700">
+                        <p
+                            v-if="structure.facebook"
+                            class="text-base font-medium text-gray-700"
+                        >
                             <GlobeAltIcon class="mr-1.5 inline-block h-4 w-4" />
                             Facebook:
                             <a
@@ -219,7 +227,10 @@ const showModal = ref(false);
                                 {{ structure.facebook }}
                             </a>
                         </p>
-                        <p class="text-base font-medium text-gray-700">
+                        <p
+                            v-if="structure.instagram"
+                            class="text-base font-medium text-gray-700"
+                        >
                             <GlobeAltIcon class="mr-1.5 inline-block h-4 w-4" />
                             Instagram:
                             <a
@@ -231,32 +242,77 @@ const showModal = ref(false);
                             </a>
                         </p>
 
-                        <p class="text-base font-medium text-gray-700">
-                            <PhoneIcon class="inline-block w-4 h-4" />
+                        <p
+                            v-if="structure.phone"
+                            class="text-base font-medium text-gray-700"
+                        >
+                            <PhoneIcon class="inline-block h-4 w-4" />
                             {{ structure.phone }}
                         </p>
-                        <p class="text-base font-medium text-gray-700">
-                            <AtSymbolIcon class="inline-block w-4 h-4" />
+                        <p
+                            v-if="structure.email"
+                            class="text-base font-medium text-gray-700"
+                        >
+                            <AtSymbolIcon class="inline-block h-4 w-4" />
                             {{ structure.email }}
                         </p>
                     </div>
                 </div>
             </div>
         </section>
-        <section class="px-4 py-6 mx-auto my-4 max-w-7xl sm:px-6 lg:px-8">
-            <h2 class="text-xl">Nos activités</h2>
+        <section
+            v-if="structure.activites"
+            class="mx-auto my-4 max-w-7xl space-y-4 px-4 py-6 sm:px-6 lg:px-8"
+        >
+            <h2 class="text-xl font-bold">Nos activités</h2>
             <div
                 v-for="(activite, index) in structure.activites"
                 :key="activite.id"
                 :index="index"
-                class="flex flex-col px-6 py-4 text-gray-800 rounded-lg"
+                class="flex w-full rounded-lg border border-blue-600 px-6 py-4 text-gray-800 shadow-md"
             >
-                <h3>{{ activite.name }}</h3>
-                <p>{{ activite.nivel.name }}</p>
-                <p>{{ activite.activitetype.name }}</p>
-                <p>{{ activite.discipline.name }}</p>
-                <p>{{ activite.publictype.name }}</p>
-                <p>{{ activite.description }}</p>
+                <div class="flex w-full flex-col">
+                    <h3 class="text-lg font-semibold">{{ activite.name }}</h3>
+                    <p class="text-base font-semibold">
+                        Niveaux:
+                        <span class="font-normal">{{
+                            activite.nivel.name
+                        }}</span>
+                    </p>
+                    <p class="text-base font-semibold">
+                        Type d'activité:
+                        <span class="font-normal">{{
+                            activite.activitetype.name
+                        }}</span>
+                    </p>
+                    <p class="text-base font-semibold">
+                        Discipline pratiquée:
+                        <span class="font-normal">{{
+                            activite.discipline.name
+                        }}</span>
+                    </p>
+                    <p class="text-base font-semibold">
+                        Public:
+                        <span class="font-normal">{{
+                            activite.publictype.name
+                        }}</span>
+                    </p>
+                    <p class="text-base font-semibold">
+                        Description:
+                        <span class="font-normal">{{
+                            activite.description
+                        }}</span>
+                    </p>
+                </div>
+                <div class="flex items-center justify-end px-4">
+                    <!-- <button
+                        v-if="can.delete"
+                        @click="destroy(activite.id)"
+                        class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-red-400 hover:text-white hover:ring-2 hover:ring-red-400 hover:ring-offset-2 focus:ring-2 focus:ring-red-400 focus:ring-offset-2 sm:rounded-lg"
+                    >
+                        Supprimer cette activité
+                    </button> -->
+                </div>
             </div>
         </section>
     </AppLayout>

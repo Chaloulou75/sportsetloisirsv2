@@ -26,7 +26,7 @@ class Activite extends Model
 
     public function publictype(): BelongsTo
     {
-        return $this->belongsTo(Nivel::class);
+        return $this->belongsTo(Publictype::class);
     }
 
     public function activitetype(): BelongsTo

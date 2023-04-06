@@ -152,12 +152,10 @@ class StructureController extends Controller
             'departements:id,departement,numero',
             'structuretype:id,name,slug',
             'activites:id,name,slug,structure_id,description,address,city,zip_code,country,address_lat,address_lng,discipline_id,nivel_id,activitetype_id,publictype_id',
-            'activites.discipline:id,name,slug',
-            'activites.nivel:id,name,slug',
-            'activites.activitetype:id,name,slug',
-            'activites.publictype:id,name,slug',
-            // 'weekdays:id,name',
-            // 'medias'
+            'activites.discipline',
+            'activites.nivel',
+            'activites.activitetype',
+            'activites.publictype',
             ])
             ->select(['id', 'name', 'slug', 'description', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'phone', 'view_count'])
             ->where('slug', $structure->slug)
