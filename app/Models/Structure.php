@@ -30,10 +30,7 @@ class Structure extends Model
                     ->orWhere('description', 'like', '%' . $search . '%')
                     ->orWhere('city', 'like', '%' . $search . '%')
                     ->orWhere('zip_code', 'like', '%' . $search . '%')
-            )->orWhereHas('disciplines', function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%')
-                      ->orWhere('slug', 'like', '%' . $search . '%');
-            })->orWhereHas('category', function ($query) use ($search) {
+            )->orWhereHas('activites.discipline', function ($query) use ($search) {
                 $query->where('name', 'like', '%' . $search . '%')
                       ->orWhere('slug', 'like', '%' . $search . '%');
             })->orWhereHas('structuretype', function ($query) use ($search) {
@@ -42,6 +39,10 @@ class Structure extends Model
             })
         );
 
+        // ->orWhereHas('category', function ($query) use ($search) {
+        //         $query->where('name', 'like', '%' . $search . '%')
+        //               ->orWhere('slug', 'like', '%' . $search . '%');
+        //     })
         // ->orWhereHas('city', function ($query) use ($search) {
         //     $query->where('ville', 'like', '%' . $search . '%')
         //           ->orWhere('code_postal', 'like', '%' . $search . '%');

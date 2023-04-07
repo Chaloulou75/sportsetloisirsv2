@@ -22,17 +22,26 @@ class HomeController extends Controller
 
         $categories = Category::select(['id', 'name', 'slug'])->get();
 
-        $disciplines = Discipline::has('structures')->select(['id', 'name', 'slug'])->withCount('structures')->orderByDesc('structures_count')->limit(12)->get();
+        $disciplines = Discipline::with('structures')
+                        ->select(['id', 'name', 'slug'])
+                        ->withCount(['structures'])
+                        ->orderByDesc('structures_count')
+                        ->limit(12)
+                        ->get();
 
-        $topVilles = City::with('departement')->has('structures')->select(['id', 'ville', 'ville_formatee', 'departement', 'nom_departement'])->withCount('structures')->orderByDesc('structures_count')->limit(12)->get();
+        $topVilles = City::with(['departement', 'structures'])
+                        ->select(['id', 'ville', 'ville_formatee', 'departement', 'nom_departement'])
+                        ->withCount('structures')
+                        ->orderByDesc('structures_count')
+                        ->limit(12)
+                        ->get();
 
-        $topDepartements = Departement::with(['structures'])
+        $topDepartements = Departement::with(['structures', 'structures'])
                                 ->select(['id', 'departement', 'numero'])
                                 ->withCount('structures')
                                 ->orderByDesc('structures_count')
                                 ->limit(12)
                                 ->get();
-
 
         $lastStructures = Structure::with('structuretype:id,name')
                 ->select(['id', 'name', 'structuretype_id', 'slug', 'city', 'zip_code'])

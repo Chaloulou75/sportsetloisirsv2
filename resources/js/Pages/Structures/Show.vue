@@ -15,6 +15,7 @@ import {
 
 let props = defineProps({
     structure: Object,
+    disciplines: Object,
     can: Object,
 });
 
@@ -65,14 +66,18 @@ const showModal = ref(false);
                                 structure.name
                             }}</span>
                             vous propose de pratiquer:
-                        </p>
-                        <p
-                            v-for="discipline in structure.disciplines"
-                            :key="discipline.id"
-                            class="flex items-center font-semibold"
-                        >
-                            <CheckIcon class="mr-2 h-5 w-5 text-blue-500" />
-                            {{ discipline.name }}
+                            <p class="flex items-center">
+                                <span
+                                    v-for="(discipline,index) in disciplines"
+                                    :key="index"
+                                    class="flex items-center font-semibold pr-1.5"
+                                >
+                                    <CheckIcon class="w-5 h-5 text-blue-500" />
+                                    {{ discipline }}
+                                </span>
+                            </p>
+
+
                         </p>
                     </div>
                 </div>
@@ -84,7 +89,7 @@ const showModal = ref(false);
                         <Link
                             :href="route('activites.create', structure)"
                             v-if="can.update"
-                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                            class="flex flex-col items-center justify-center px-4 py-2 overflow-hidden text-xs text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                         >
                             Ajouter des activités</Link
                         >
@@ -99,7 +104,7 @@ const showModal = ref(false);
                         <button
                             v-if="can.delete"
                             @click="showModal = true"
-                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-red-400 hover:text-white hover:ring-2 hover:ring-red-400 hover:ring-offset-2 focus:ring-2 focus:ring-red-400 focus:ring-offset-2 sm:rounded-lg"
+                            class="flex flex-col items-center justify-center px-4 py-2 overflow-hidden text-xs text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-red-400 hover:text-white hover:ring-2 hover:ring-red-400 hover:ring-offset-2 focus:ring-2 focus:ring-red-400 focus:ring-offset-2 sm:rounded-lg"
                         >
                             Supprimer cette structure
                         </button>
@@ -113,44 +118,44 @@ const showModal = ref(false);
             </div>
         </template>
 
-        <section class="mx-auto my-4 max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <section class="px-4 py-6 mx-auto my-4 max-w-7xl sm:px-6 lg:px-8">
             <div
-                class="flex flex-col justify-between rounded-lg bg-white px-4 py-6 shadow-lg shadow-sky-700 md:flex-row"
+                class="flex flex-col justify-between px-4 py-6 bg-white rounded-lg shadow-lg shadow-sky-700 md:flex-row"
             >
                 <div class="w-full space-y-4 md:w-2/3 md:pr-10">
                     <div class="relative mb-4 md:mb-6">
                         <p
-                            class="mb-2 text-lg font-medium uppercase tracking-wider text-gray-500"
+                            class="mb-2 text-lg font-medium tracking-wider text-gray-500 uppercase"
                         >
                             {{ structure.structuretype.name }}
                         </p>
                         <div
-                            class="mt-4 mb-8 grid grid-cols-2 gap-4 sm:grid-cols-3"
+                            class="grid grid-cols-2 gap-4 mt-4 mb-8 sm:grid-cols-3"
                         >
                             <div
-                                v-for="discipline in structure.disciplines"
-                                :key="discipline.id"
+                                v-for="(discipline, index) in disciplines"
+                                :key="index"
                                 class="inline-flex cursor-auto flex-col items-center justify-center overflow-hidden truncate rounded-sm bg-blue-800 px-2 py-1.5 text-center text-sm text-gray-50 shadow-lg ring-1 ring-gray-400 ring-offset-1"
                             >
                                 <span class="truncate">{{
-                                    discipline.name
+                                    discipline
                                 }}</span>
                             </div>
                         </div>
                         <div
-                            class="my-4 flex items-center justify-start space-x-4"
+                            class="flex items-center justify-start my-4 space-x-4"
                         >
                             <img
                                 v-if="structure.logo"
                                 alt="img"
                                 :src="clubLogoUrl"
-                                class="h-14 w-14 shrink-0 rounded-full object-cover object-center md:h-20 md:w-20"
+                                class="object-cover object-center rounded-full h-14 w-14 shrink-0 md:h-20 md:w-20"
                             />
                             <img
                                 v-else
                                 alt="img"
                                 src="https://via.placeholder.com/360x360.png/151f32?text=LOGO"
-                                class="h-20 w-20 shrink-0 rounded-full object-cover object-center"
+                                class="object-cover object-center w-20 h-20 rounded-full shrink-0"
                             />
                             <h2
                                 class="inline-block text-xl font-semibold text-black sm:text-2xl sm:leading-7 md:text-3xl"
@@ -183,7 +188,7 @@ const showModal = ref(false);
                     </div> -->
                 </div>
                 <div class="w-full md:w-1/3">
-                    <div class="my-4 flex items-center justify-center md:mb-8">
+                    <div class="flex items-center justify-center my-4 md:mb-8">
                         <h3 class="text-base font-semibold uppercase">
                             Coordonnées de la structure
                         </h3>
@@ -196,7 +201,7 @@ const showModal = ref(false);
                     </div>
                     <div class="mb-4 space-y-6">
                         <p class="text-base font-semibold text-gray-700">
-                            <UserIcon class="inline-block h-4 w-4" />
+                            <UserIcon class="inline-block w-4 h-4" />
                             {{ structure.user.name }}
                         </p>
                         <p
@@ -246,14 +251,14 @@ const showModal = ref(false);
                             v-if="structure.phone"
                             class="text-base font-medium text-gray-700"
                         >
-                            <PhoneIcon class="inline-block h-4 w-4" />
+                            <PhoneIcon class="inline-block w-4 h-4" />
                             {{ structure.phone }}
                         </p>
                         <p
                             v-if="structure.email"
                             class="text-base font-medium text-gray-700"
                         >
-                            <AtSymbolIcon class="inline-block h-4 w-4" />
+                            <AtSymbolIcon class="inline-block w-4 h-4" />
                             {{ structure.email }}
                         </p>
                     </div>
@@ -262,16 +267,16 @@ const showModal = ref(false);
         </section>
         <section
             v-if="structure.activites"
-            class="mx-auto my-4 max-w-7xl space-y-4 px-4 py-6 sm:px-6 lg:px-8"
+            class="px-4 py-6 mx-auto my-4 space-y-4 max-w-7xl sm:px-6 lg:px-8"
         >
             <h2 class="text-xl font-bold">Nos activités</h2>
             <div
                 v-for="(activite, index) in structure.activites"
                 :key="activite.id"
                 :index="index"
-                class="flex w-full rounded-lg border border-blue-600 px-6 py-4 text-gray-800 shadow-md"
+                class="flex w-full px-6 py-4 text-gray-800 border border-blue-600 rounded-lg shadow-md"
             >
-                <div class="flex w-full flex-col">
+                <div class="flex flex-col w-full">
                     <h3 class="text-lg font-semibold">{{ activite.name }}</h3>
                     <p class="text-base font-semibold">
                         Niveaux:
@@ -308,7 +313,7 @@ const showModal = ref(false);
                     <!-- <button
                         v-if="can.delete"
                         @click="destroy(activite.id)"
-                        class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-red-400 hover:text-white hover:ring-2 hover:ring-red-400 hover:ring-offset-2 focus:ring-2 focus:ring-red-400 focus:ring-offset-2 sm:rounded-lg"
+                        class="flex flex-col items-center justify-center px-4 py-2 overflow-hidden text-xs text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-red-400 hover:text-white hover:ring-2 hover:ring-red-400 hover:ring-offset-2 focus:ring-2 focus:ring-red-400 focus:ring-offset-2 sm:rounded-lg"
                     >
                         Supprimer cette activité
                     </button> -->

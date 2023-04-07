@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Discipline extends Model
 {
@@ -51,8 +53,8 @@ class Discipline extends Model
         return $this->belongsToMany(Structure::class);
     }
 
-    public function activite(): HasOne
+    public function activites(): HasManyThrough
     {
-        return $this->hasOne(Activite::class);
+        return $this->hasManyThrough(Activite::class, Structure::class);
     }
 }

@@ -19,7 +19,7 @@ class DisciplineController extends Controller
         $structuresCount = Structure::count();
 
         $disciplines = Discipline::select(['id', 'name', 'slug'])
-                        ->withCount('structures')
+                        ->withCount(['structures'])
                         ->filter(
                             request(['search'])
                         )
@@ -55,11 +55,16 @@ class DisciplineController extends Controller
      */
     public function show(Discipline $discipline)
     {
-        $discipline = Discipline::with(['structures:id,name,structuretype_id,slug,description,city,zip_code,address,address_lat,address_lng', 'structures.structuretype:id,name'])
-                                    ->where('slug', $discipline->slug)
-                                    ->select(['id', 'name', 'slug', 'view_count'])
-                                    ->withCount('structures')
-                                    ->first();
+        $discipline = Discipline::with([
+                'structures',
+                'structures.structuretype',
+                'structures.activites:id,name,slug,structure_id,description,address,city,zip_code,country,address_lat,address_lng,discipline_id,nivel_id,activitetype_id,publictype_id',
+                'structures.activites.discipline',
+            ])
+            ->where('slug', $discipline->slug)
+            ->select(['id', 'name', 'slug', 'view_count'])
+            ->withCount('structures')
+            ->first();
 
         $discipline->timestamps = false;
         $discipline->increment('view_count');

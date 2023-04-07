@@ -35,6 +35,11 @@ class StructureController extends Controller
                     'cities:id,ville,ville_formatee',
                     'departements:id,departement,numero',
                     'structuretype:id,name,slug',
+                    'activites:id,name,slug,structure_id,description,address,city,zip_code,country,address_lat,address_lng,discipline_id,nivel_id,activitetype_id,publictype_id',
+                    'activites.discipline',
+                    'activites.nivel',
+                    'activites.activitetype',
+                    'activites.publictype',
                     // 'weekdays:id,name',
                     // 'medias',
                 ])
@@ -50,6 +55,9 @@ class StructureController extends Controller
                             'slug' => $structure->slug,
                             'website' => $structure->website,
                             'email' => $structure->email,
+                            'facebook' => $structure->facebook,
+                            'instagram' => $structure->instagram,
+                            'youtube' => $structure->youtube,
                             'phone' => $structure->phone,
                             'address' => $structure->address,
                             'zip_code' => $structure->zip_code,
@@ -59,9 +67,10 @@ class StructureController extends Controller
                             'address_lng' => $structure->address_lng,
                             'description' => $structure->description,
                             'structuretype' => $structure->structuretype,
-                            'disciplines' => $structure->disciplines,
+                            // 'disciplines' => $structure->disciplines,
                             // 'weekdays' => $structure->weekdays,
                             'user' => $structure->user,
+                            'disciplines' => $structure->activites->pluck('discipline.name')->unique(),
                             // 'mediasImg' => MediaResource::collection($structure->medias),
                             // 'start_at' => $structure->start_at,
                             // 'end_at' => $structure->end_at,
@@ -161,10 +170,13 @@ class StructureController extends Controller
             ->where('slug', $structure->slug)
             ->first();
 
+        $disciplines = $structure->activites->pluck('discipline.name')->unique();
+
         // $clubLogoUrl = $structure->logo ? Storage::disk('s3')->temporaryUrl('logo/' .$structure->id. '/' .$structure->logo, now()->addMinutes(5)) : null;
 
         return Inertia::render('Structures/Show', [
             'structure'=> $structure,
+            'disciplines' => $disciplines,
             // 'clubLogoUrl' => $clubLogoUrl,
             // 'mediasImg' => MediaResource::collection($club->medias),
             'can' => [

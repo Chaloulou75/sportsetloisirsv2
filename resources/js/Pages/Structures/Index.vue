@@ -153,6 +153,19 @@ watch(
                                             <p
                                                 class="mb-3 text-base text-white line-clamp-3"
                                             >
+                                                <span
+                                                    v-for="(
+                                                        discipline, index
+                                                    ) in structure.disciplines"
+                                                    :key="index"
+                                                >
+                                                    {{ discipline }}
+                                                    <span> / </span>
+                                                </span>
+                                            </p>
+                                            <p
+                                                class="mb-3 text-base text-white line-clamp-3"
+                                            >
                                                 {{ structure.description }}
                                             </p>
                                             <p class="text-base text-white">
