@@ -304,7 +304,7 @@ const showModal = ref(false);
                     </p>
                     <p class="text-base font-semibold">
                         Description:
-                        <span class="font-normal">{{
+                        <span class="font-medium leading-5 text-gray-700 whitespace-pre-line">{{
                             activite.description
                         }}</span>
                     </p>

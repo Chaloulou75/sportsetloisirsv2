@@ -18,7 +18,7 @@ class DisciplineController extends Controller
     {
         $structuresCount = Structure::count();
 
-        $disciplines = Discipline::select(['id', 'name', 'slug'])
+        $disciplines = Discipline::with(['structures', 'structures.activites:id,discipline_id'])->select(['id', 'name', 'slug'])
                         ->withCount(['structures'])
                         ->filter(
                             request(['search'])
