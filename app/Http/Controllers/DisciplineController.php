@@ -18,12 +18,12 @@ class DisciplineController extends Controller
     {
         $structuresCount = Structure::count();
 
-        $disciplines = Discipline::with(['structures', 'structures.activites:id,discipline_id'])->select(['id', 'name', 'slug'])
-                        ->withCount(['structures'])
+        $disciplines = Discipline::select(['id', 'name', 'slug'])
+                        ->withCount('activites')
                         ->filter(
                             request(['search'])
                         )
-                        ->orderByDesc('structures_count')
+                        ->orderByDesc('activites_count')
                         ->paginate(15)
                         ->withQueryString();
 
@@ -56,21 +56,21 @@ class DisciplineController extends Controller
     public function show(Discipline $discipline)
     {
         $discipline = Discipline::with([
-                'structures',
-                'structures.structuretype',
-                'structures.activites:id,name,slug,structure_id,description,address,city,zip_code,country,address_lat,address_lng,discipline_id,nivel_id,activitetype_id,publictype_id',
-                'structures.activites.discipline',
+                'activites:id,name,slug,structure_id,description,address,city,zip_code,country,address_lat,address_lng,discipline_id,nivel_id,activitetype_id,publictype_id',
             ])
             ->where('slug', $discipline->slug)
             ->select(['id', 'name', 'slug', 'view_count'])
-            ->withCount('structures')
+            ->withCount('activites')
             ->first();
+
+        $structures = $discipline->structures->load('structuretype')->unique();
 
         $discipline->timestamps = false;
         $discipline->increment('view_count');
 
         return Inertia::render('Disciplines/Show', [
             'discipline'=> $discipline,
+            'structures' => $structures
         ]);
     }
 

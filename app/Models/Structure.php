@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Structure extends Model
 {
@@ -99,9 +100,9 @@ class Structure extends Model
         return $this->belongsTo(Structuretype::class);
     }
 
-    public function disciplines(): BelongsToMany
+    public function discipline(): HasManyThrough
     {
-        return $this->belongsToMany(Discipline::class);
+        return $this->hasManyThrough(Discipline::class, Activite::class);
     }
 
     public function activites(): HasMany

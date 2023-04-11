@@ -31,7 +31,6 @@ class StructureController extends Controller
             'structures'=> Structure::with([
                     'category:id,name',
                     'user:id,name',
-                    'disciplines:id,name',
                     'cities:id,ville,ville_formatee',
                     'departements:id,departement,numero',
                     'structuretype:id,name,slug',
@@ -156,7 +155,6 @@ class StructureController extends Controller
         $structure = Structure::with([
             'category:id,name',
             'user:id,name',
-            'disciplines:id,name',
             'cities:id,ville,ville_formatee',
             'departements:id,departement,numero',
             'structuretype:id,name,slug',

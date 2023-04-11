@@ -22,12 +22,13 @@ class HomeController extends Controller
 
         $categories = Category::select(['id', 'name', 'slug'])->get();
 
-        $disciplines = Discipline::with('structures')
-                        ->select(['id', 'name', 'slug'])
-                        ->withCount(['structures'])
-                        ->orderByDesc('structures_count')
+        $disciplines = Discipline::select(['id', 'name', 'slug'])
+                        ->withCount('activites')
+                        ->orderByDesc('activites_count')
                         ->limit(12)
                         ->get();
+
+        // dd($disciplines);
 
         $topVilles = City::with(['departement', 'structures'])
                         ->select(['id', 'ville', 'ville_formatee', 'departement', 'nom_departement'])
@@ -36,7 +37,7 @@ class HomeController extends Controller
                         ->limit(12)
                         ->get();
 
-        $topDepartements = Departement::with(['structures', 'structures'])
+        $topDepartements = Departement::with('structures')
                                 ->select(['id', 'departement', 'numero'])
                                 ->withCount('structures')
                                 ->orderByDesc('structures_count')
