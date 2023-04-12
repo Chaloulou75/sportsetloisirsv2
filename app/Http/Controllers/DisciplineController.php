@@ -57,6 +57,7 @@ class DisciplineController extends Controller
     {
         $discipline = Discipline::with([
                 'activites:id,name,slug,structure_id,description,address,city,zip_code,country,address_lat,address_lng,discipline_id,nivel_id,activitetype_id,publictype_id',
+                'activites.discipline'
             ])
             ->where('slug', $discipline->slug)
             ->select(['id', 'name', 'slug', 'view_count'])

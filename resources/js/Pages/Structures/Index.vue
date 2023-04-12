@@ -71,19 +71,19 @@ watch(
             <!-- search box -->
             <template v-if="structures.data">
                 <div
-                    class="mx-auto mt-4 mb-8 flex w-full max-w-3xl flex-col items-center justify-center px-2 md:flex-row"
+                    class="flex flex-col items-center justify-center w-full max-w-3xl px-2 mx-auto mt-4 mb-8 md:flex-row"
                 >
                     <label
                         for="search"
                         value="Rechercher une structure"
-                        class="mb-1 pr-2 text-sm font-medium text-gray-800"
+                        class="pr-2 mb-1 text-sm font-medium text-gray-800"
                         >Rechercher une structure:</label
                     >
 
                     <TextInput
                         id="search"
                         type="text"
-                        class="mt-1 block w-full flex-1 px-2 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
+                        class="flex-1 block w-full px-2 mt-1 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
                         v-model="search"
                         placeholder="structure, club, categorie, ville..."
                     />
@@ -104,11 +104,11 @@ watch(
                 </div>
 
                 <div
-                    class="mx-auto flex min-h-screen max-w-full flex-col px-2 sm:px-6 md:flex-row md:space-x-4 lg:px-8"
+                    class="flex flex-col max-w-full min-h-screen px-2 mx-auto sm:px-6 md:flex-row md:space-x-4 lg:px-8"
                 >
                     <div class="md:w-1/2">
                         <div
-                            class="grid h-auto grid-cols-1 place-items-stretch gap-4 md:grid-cols-2"
+                            class="grid h-auto grid-cols-1 gap-4 place-items-stretch md:grid-cols-2"
                         >
                             <Link
                                 v-for="(structure, index) in structures.data"
@@ -121,12 +121,12 @@ watch(
                                         structure.slug
                                     )
                                 "
-                                class="group relative block bg-black"
+                                class="relative block bg-black group"
                             >
                                 <img
                                     alt="Developer"
                                     src="https://images.unsplash.com/photo-1603871165848-0aa92c869fa1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=772&q=80"
-                                    class="absolute inset-0 h-full w-full object-cover opacity-75 transition-opacity group-hover:opacity-50"
+                                    class="absolute inset-0 object-cover w-full h-full transition-opacity opacity-75 group-hover:opacity-50"
                                 />
 
                                 <div
@@ -135,7 +135,7 @@ watch(
                                     class="relative p-4 sm:p-6 lg:p-8"
                                 >
                                     <p
-                                        class="text-sm font-medium uppercase tracking-widest text-pink-500"
+                                        class="text-sm font-medium tracking-widest text-pink-500 uppercase"
                                     >
                                         {{ structure.structuretype.name }}
                                     </p>
@@ -148,19 +148,20 @@ watch(
 
                                     <div class="mt-32 sm:mt-48 lg:mt-64">
                                         <div
-                                            class="translate-y-8 transform opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100"
+                                            class="transition-all transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
                                         >
                                             <p
                                                 class="mb-3 text-base text-white line-clamp-3"
                                             >
                                                 <span
+                                                    class="font-semibold"
                                                     v-for="(
                                                         discipline, index
                                                     ) in structure.disciplines"
                                                     :key="index"
                                                 >
                                                     {{ discipline }}
-                                                    <span> / </span>
+                                                    <span> | </span>
                                                 </span>
                                             </p>
                                             <p
@@ -219,7 +220,7 @@ watch(
             <template v-else>
                 <div class="py-12">
                     <div
-                        class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8"
+                        class="min-h-screen px-2 mx-auto max-w-7xl sm:px-6 lg:px-8"
                     >
                         <p class="font-medium text-gray-700">
                             Dommage, il n'y a pas encore de structures

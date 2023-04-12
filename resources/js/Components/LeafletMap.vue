@@ -3,16 +3,16 @@ import { LMap, LTileLayer, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
 import "leaflet/dist/leaflet.css";
 import { ref, computed } from "vue";
 const props = defineProps({
-    structure: Object,
+    item: Object,
 });
 
 // a computed ref to get lat & lng
 const lat = computed(() => {
-    return parseFloat(props.structure.address_lat);
+    return parseFloat(props.item.address_lat);
 });
 
 const lng = computed(() => {
-    return parseFloat(props.structure.address_lng);
+    return parseFloat(props.item.address_lng);
 });
 
 const zoom = ref(12);
@@ -38,7 +38,7 @@ const zoom = ref(12);
             ></l-tile-layer>
             <l-marker :lat-lng="[lat, lng]"
                 ><l-tooltip class="rouded-lg px-1.5 py-1 font-semibold">
-                    {{ structure.name }}
+                    {{ item.name }}
                 </l-tooltip></l-marker
             >
         </l-map>

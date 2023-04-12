@@ -60,7 +60,6 @@ class DepartementController extends Controller
                                     ->withCount('structures')
                                     ->first();
 
-
         $departement->timestamp = false;
         $departement->increment('view_count');
         // dd($city);

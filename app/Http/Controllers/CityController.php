@@ -53,7 +53,8 @@ class CityController extends Controller
      */
     public function show(City $city)
     {
-        $city = City::with(['structures:id,name,slug,structuretype_id,description,city,zip_code,address,address_lat,address_lng', 'structures.structuretype:id,name'])
+        $city = City::with(['structures:id,name,slug,structuretype_id,description,city,zip_code,address,address_lat,address_lng', 'structures.structuretype:id,name'
+        ])
                             ->where('ville_formatee', $city->ville_formatee)
                             ->select(['id', 'ville', 'ville_formatee', 'nom_departement', 'view_count'])
                             ->withCount('structures')

@@ -4,7 +4,7 @@ import { Head, Link, router  } from "@inertiajs/vue3";
 import { ref, watch } from "vue";
 import TabsComponent from "@/Components/TabsComponent.vue";
 import ModalDeleteStructure from "@/Components/ModalDeleteStructure.vue";
-
+import LeafletMap from "@/Components/LeafletMap.vue";
 import {
     CheckIcon,
     UserIcon,
@@ -305,8 +305,14 @@ function destroy(activite) {
                 :index="index"
                 class="flex flex-col justify-between w-full px-6 py-4 text-gray-800 border border-gray-500 rounded-lg shadow-md md:flex-row"
             >
-                <div class="flex flex-col justify-between w-full md:w-1/3">
-                    <h3 class="text-lg font-semibold">{{ activite.name }}</h3>
+                <div class="flex flex-col justify-start w-full md:w-1/3">
+                    <h3 class="mb-3 text-lg font-semibold">{{ activite.name }}</h3>
+                    <p class="text-base font-semibold">
+                        Discipline pratiquée:
+                        <span class="font-normal">{{
+                            activite.discipline.name
+                        }}</span>
+                    </p>
                     <p class="text-base font-semibold">
                         Niveaux:
                         <span class="font-normal">{{
@@ -319,12 +325,7 @@ function destroy(activite) {
                             activite.activitetype.name
                         }}</span>
                     </p>
-                    <p class="text-base font-semibold">
-                        Discipline pratiquée:
-                        <span class="font-normal">{{
-                            activite.discipline.name
-                        }}</span>
-                    </p>
+
                     <p class="text-base font-semibold">
                         Public:
                         <span class="font-normal">{{
@@ -338,7 +339,7 @@ function destroy(activite) {
                         }}</span>
                     </p>
                 </div>
-                <div class="w-full space-y-3 md:w-1/3">
+                <div class="flex flex-col justify-start w-full md:w-1/3">
                     <p class="text-base font-semibold">
                         Addresse:
                         <span class="font-normal">{{ activite.address }}</span>
@@ -355,8 +356,9 @@ function destroy(activite) {
                             activite.city
                         }}</span>
                     </p>
-                    
-
+                    <LeafletMap
+                        :item="activite"
+                    />
                 </div>
                 <div class="flex flex-col items-center justify-end px-4 space-y-2 md:ml-4 md:space-y-6 md:w:1/3">
                     <Link
