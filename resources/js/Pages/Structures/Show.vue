@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { Head, Link } from "@inertiajs/vue3";
+import { Head, Link, router  } from "@inertiajs/vue3";
 import { ref, watch } from "vue";
 import TabsComponent from "@/Components/TabsComponent.vue";
 import ModalDeleteStructure from "@/Components/ModalDeleteStructure.vue";
@@ -20,6 +20,14 @@ let props = defineProps({
 });
 
 const showModal = ref(false);
+
+function destroy(activite) {
+    const url = `/structures/${props.structure.slug}/activites/${activite.slug}`;
+    router.delete(
+        url,
+        { structure: props.structure, activite: activite }
+    );
+}
 </script>
 
 <template>
@@ -84,8 +92,15 @@ const showModal = ref(false);
                 <div v-if="$page.props.auth.user" class="w-full md:w-1/4">
                     <div
                         v-if="can.update"
-                        class="flex flex-col justify-between space-y-2 md:ml-4 md:space-y-6"
+                        class="flex flex-col justify-between space-y-3 md:ml-4 md:space-y-6"
                     >
+                        <Link
+                            :href="route('structures.edit', structure.slug)"
+                            v-if="can.update"
+                            class="flex flex-col items-center justify-center px-4 py-2 overflow-hidden text-xs text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                        >
+                            Editer la structure</Link
+                        >
                         <Link
                             :href="route('activites.create', structure)"
                             v-if="can.update"
@@ -246,6 +261,20 @@ const showModal = ref(false);
                                 {{ structure.instagram }}
                             </a>
                         </p>
+                        <p
+                            v-if="structure.youtube"
+                            class="text-base font-medium text-gray-700"
+                        >
+                            <GlobeAltIcon class="mr-1.5 inline-block h-4 w-4" />
+                            Youtube:
+                            <a
+                                :href="structure.youtube"
+                                target="_blank"
+                                class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
+                            >
+                                {{ structure.youtube }}
+                            </a>
+                        </p>
 
                         <p
                             v-if="structure.phone"
@@ -274,9 +303,9 @@ const showModal = ref(false);
                 v-for="(activite, index) in structure.activites"
                 :key="activite.id"
                 :index="index"
-                class="flex w-full px-6 py-4 text-gray-800 border border-blue-600 rounded-lg shadow-md"
+                class="flex flex-col justify-between w-full px-6 py-4 text-gray-800 border border-gray-500 rounded-lg shadow-md md:flex-row"
             >
-                <div class="flex flex-col w-full">
+                <div class="flex flex-col justify-between w-full md:w-1/3">
                     <h3 class="text-lg font-semibold">{{ activite.name }}</h3>
                     <p class="text-base font-semibold">
                         Niveaux:
@@ -309,14 +338,42 @@ const showModal = ref(false);
                         }}</span>
                     </p>
                 </div>
-                <div class="flex items-center justify-end px-4">
-                    <!-- <button
+                <div class="w-full space-y-3 md:w-1/3">
+                    <p class="text-base font-semibold">
+                        Addresse:
+                        <span class="font-normal">{{ activite.address }}</span>
+                    </p>
+                    <p class="text-base font-semibold">
+                        Code postal:
+                        <span class="font-normal">{{
+                            activite.zip_code
+                        }}</span>
+                    </p>
+                    <p class="text-base font-semibold">
+                        Ville:
+                        <span class="font-normal">{{
+                            activite.city
+                        }}</span>
+                    </p>
+                    
+
+                </div>
+                <div class="flex flex-col items-center justify-end px-4 space-y-2 md:ml-4 md:space-y-6 md:w:1/3">
+                    <Link
+                        :href="route('structures.activites.edit', {structure:structure.slug, activite: activite})"
+                        v-if="can.update"
+                        class="flex flex-col items-center justify-center w-full px-4 py-2 overflow-hidden text-xs text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                    >
+                            Editer l'activité
+                    </Link>
+                    <button
                         v-if="can.delete"
-                        @click="destroy(activite.id)"
-                        class="flex flex-col items-center justify-center px-4 py-2 overflow-hidden text-xs text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-red-400 hover:text-white hover:ring-2 hover:ring-red-400 hover:ring-offset-2 focus:ring-2 focus:ring-red-400 focus:ring-offset-2 sm:rounded-lg"
+                        @click="destroy(activite)"
+                        class="flex flex-col items-center justify-center w-full px-4 py-2 overflow-hidden text-xs text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-red-400 hover:text-white hover:ring-2 hover:ring-red-400 hover:ring-offset-2 focus:ring-2 focus:ring-red-400 focus:ring-offset-2 sm:rounded-lg"
                     >
                         Supprimer cette activité
-                    </button> -->
+                    </button>
+
                 </div>
             </div>
         </section>

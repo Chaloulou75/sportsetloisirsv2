@@ -35,6 +35,10 @@ Route::get('/faq', function () {
     return Inertia::render('Faq/Index');
 })->name('faq.index');
 
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
 Route::resource('categories', CategoryController::class);
 Route::resource('disciplines', DisciplineController::class);
 Route::resource('departements', DepartementController::class);
@@ -47,29 +51,26 @@ Route::resource('villes', CityController::class, [
     ]
 ]);
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::resource('structures.activites', ActiviteController::class)->scoped(['structure' => 'slug','activite' => 'slug']);
+
     Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
     Route::post('/structures', [StructureController::class, 'store'])->name('structures.store');
+    Route::get('/structures/{structure:slug}/edit', [StructureController::class, 'edit'])->name('structures.edit');
+    Route::patch('/structures/{structure:slug}/update', [StructureController::class, 'update'])->name('structures.update');
     Route::delete('/structures/{structure}', [StructureController::class, 'destroy'])->name('structures.destroy');
-
-    Route::resource('/structures/{structure}/activites', ActiviteController::class);
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('structures/{structure:slug}/activites/create', [ActiviteController::class, 'create'])->name('activites.create');
+
 Route::get('structures', [StructureController::class, 'index'])
     ->name('structures.index');
 Route::get('structures/{structure:slug}', [StructureController::class, 'show'])
     ->name('structures.show');
-
-Route::get('structures/{structure:slug}/activites/create', [ActiviteController::class, 'create'])
-    ->name('activites.create');
 
 
 require __DIR__.'/auth.php';

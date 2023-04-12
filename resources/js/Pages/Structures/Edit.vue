@@ -24,28 +24,30 @@ const props = defineProps({
     publictypes: Object,
     activitestypes: Object,
     disciplines: Object,
+    structure: Object,
     errors: Object,
 });
 
 const form = useForm({
-    name: ref(null),
-    structuretype_id: ref(null),
-    address: ref(null),
-    city: ref(null),
-    zip_code: ref(null),
-    country: ref(null),
-    address_lat: ref(null),
-    address_lng: ref(null),
+    name: ref(props.structure.name),
+    structuretype_id: ref(props.structure.structuretype_id),
+    address: ref(props.structure.address),
+    city: ref(props.structure.city),
+    zip_code: ref(props.structure.zip_code),
+    country: ref(props.structure.country),
+    address_lat: ref(props.structure.address_lat),
+    address_lng: ref(props.structure.address_lng),
     // category_id: ref(null),
-    email: ref(null),
-    website: ref(null),
-    phone: ref(null),
-    facebook: ref(null),
-    instagram: ref(null),
-    youtube: ref(null),
-    description: ref(null),
+    email: ref(props.structure.email),
+    website: ref(props.structure.website),
+    phone: ref(props.structure.phone),
+    facebook: ref(props.structure.facebook),
+    instagram: ref(props.structure.instagram),
+    youtube: ref(props.structure.youtube),
+    description: ref(props.structure.description),
 });
 
+const formStep = ref(1);
 const name = ref(null);
 const categories = ref([]);
 const disciplinesList = ref([]);
@@ -74,8 +76,16 @@ watch(
     }
 );
 
+// function nextStep() {
+//     formStep.value++;
+// }
+
+// function prevStep() {
+//     formStep.value--;
+// }
+
 function submit() {
-    form.post("/structures");
+    form.patch(route("structures.update", props.structure));
 }
 
 function enterAfterDisciplines() {
@@ -84,12 +94,13 @@ function enterAfterDisciplines() {
 </script>
 
 <template>
-    <Head title="Inscription de votre structure" />
+    <Head title="Editer votre structure" />
 
     <AppLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Inscription de votre structure
+                Editer votre structure
+                <span class="text-blue-700">{{ structure.name }}</span>
             </h2>
         </template>
 
@@ -103,8 +114,7 @@ function enterAfterDisciplines() {
                                 <h3
                                     class="text-lg font-medium leading-6 text-gray-700"
                                 >
-                                    Inscription et Profil social de votre
-                                    structure
+                                    Edition et Profil social de votre structure
                                 </h3>
                                 <p class="mt-1 text-sm text-gray-800">
                                     Ces informations apparaitront publiquement
@@ -135,6 +145,13 @@ function enterAfterDisciplines() {
                                                     class="block text-sm font-medium text-gray-700"
                                                 >
                                                     Nom de la structure
+                                                    <span class="text-xs italic"
+                                                        >(Attention, en
+                                                        changeant le nom, vous
+                                                        changez aussi le lien
+                                                        d'accès à la page de
+                                                        votre structure)</span
+                                                    >
                                                 </label>
                                                 <div
                                                     class="mt-1 flex rounded-md"
@@ -458,7 +475,7 @@ function enterAfterDisciplines() {
                                             type="submit"
                                             class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                         >
-                                            Enregistrer et ajouter une activité
+                                            Editer votre structure
                                         </button>
                                         <!-- <button
                                             @click="nextStep"

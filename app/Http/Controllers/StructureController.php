@@ -166,7 +166,7 @@ class StructureController extends Controller
             'activites.activitetype',
             'activites.publictype',
             ])
-            ->select(['id', 'name', 'slug', 'description', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'phone', 'view_count'])
+            ->select(['id', 'name', 'slug', 'description', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'phone', 'view_count'])
             ->where('slug', $structure->slug)
             ->first();
 
@@ -191,7 +191,43 @@ class StructureController extends Controller
      */
     public function edit(Structure $structure)
     {
-        //
+        if (! Gate::allows('update-structure', $structure)) {
+            return Redirect::route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette fiche, vous devez être le créateur de la structure ou un administrateur.');
+        }
+
+        $structurestypes = Structuretype::select(['id', 'name', 'slug'])->get();
+        $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
+        $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
+        $activitestypes = Activitetype::select(['id', 'name', 'slug'])->get();
+        $disciplines = Discipline::select(['id', 'name', 'slug'])->get();
+
+        $structure = Structure::with([
+            'category:id,name',
+            'user:id,name',
+            'cities:id,ville,ville_formatee',
+            'departements:id,departement,numero',
+            'structuretype:id,name,slug',
+            'activites' => function ($query) {
+                $query->latest();
+            },
+            'activites.discipline',
+            'activites.nivel',
+            'activites.activitetype',
+            'activites.publictype',
+            ])
+            ->select(['id', 'name', 'slug', 'description', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'phone', 'view_count'])
+            ->where('slug', $structure->slug)
+            ->firstOrFail();
+
+        return Inertia::render('Structures/Edit', [
+            'structurestypes' => $structurestypes,
+            'disciplines' => $disciplines,
+            'niveaux' => $niveaux,
+            'publictypes' => $publictypes,
+            'activitestypes' => $activitestypes,
+            'structure' => $structure,
+        ]);
+
     }
 
     /**
@@ -199,7 +235,35 @@ class StructureController extends Controller
      */
     public function update(Request $request, Structure $structure)
     {
-        //
+        $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
+
+        $validated= request()->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'structuretype_id' => ['required', Rule::exists('structuretypes', 'id')],
+            'email' => ['required', 'max:50', 'email'],
+            'website' => ['nullable', 'regex:'.$regex],
+            'phone' => ['required', 'digits:10'],
+            'facebook' => ['nullable'],
+            'instagram' => ['nullable'],
+            'youtube' => ['nullable'],
+            'address' => ['nullable'],
+            'city' => ['nullable'],
+            'zip_code' => ['nullable'],
+            'country' => ['nullable'],
+            'address_lat' => ['nullable'],
+            'address_lng' => ['nullable'],
+            'description' => ['required', 'min:8'],
+        ]);
+
+        $name = $validated['name'];
+        $slug = Str::slug($name, '-');
+        $validated['user_id'] = auth()->id();
+        $validated['slug'] = $slug;
+
+        $structure->update($validated);
+
+        return Redirect::route('structures.show', $structure->slug)->with('success', 'Votre structure a été mise à jour');
+
     }
 
     /**

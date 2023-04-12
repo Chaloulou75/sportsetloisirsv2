@@ -17,46 +17,47 @@ const props = defineProps({
     publictypes: Object,
     activitestypes: Object,
     structure: Object,
+    activite: Object,
 });
 
 const form = useForm({
     structure_id: ref(props.structure.id),
-    discipline_id: ref(null),
-    activitetype_id: ref(null),
-    nivel_id: ref(null),
-    name: ref(null),
-    address: ref(null),
-    city: ref(null),
-    zip_code: ref(null),
-    country: ref(null),
-    address_lat: ref(null),
-    address_lng: ref(null),
-    description: ref(null),
-    publictype_id: ref(null),
+    discipline_id: ref(props.activite.discipline_id),
+    activitetype_id: ref(props.activite.activitetype_id),
+    nivel_id: ref(props.activite.nivel_id),
+    name: ref(props.activite.name),
+    address: ref(props.activite.address),
+    city: ref(props.activite.city),
+    zip_code: ref(props.activite.zip_code),
+    country: ref(props.activite.country),
+    address_lat: ref(props.activite.address_lat),
+    address_lng: ref(props.activite.address_lng),
+    description: ref(props.activite.description),
+    publictype_id: ref(props.activite.publictype_id),
 });
 
 function submit() {
     // const structureValue = props.structure.value;
-    const url = `/structures/${props.structure.slug}/activites`;
-    form.post(
+    const url = `/structures/${props.structure.slug}/activites/${props.activite.slug}`;
+    form.patch(
         url,
         {
             preserveScroll: true,
             onSuccess: () => form.reset(),
         },
-        props.structure
+        { structure: props.structure, activite: props.activite }
     );
 }
 </script>
 
 <template>
-    <Head title="Ajouter une activité" />
+    <Head title="Modifier une activité" />
 
     <AppLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Ajouter une activité à
-                <span class="text-blue-700">{{ structure.name }}</span>
+                Modifier l'activité
+                <span class="text-blue-700">{{ activite.name }}</span>
             </h2>
         </template>
 
@@ -69,7 +70,7 @@ function submit() {
                                 <h3
                                     class="text-lg font-medium leading-6 text-gray-700"
                                 >
-                                    Ajouter des activités
+                                    Modifier votre activité
                                 </h3>
                                 <p class="mt-1 text-sm text-gray-800">
                                     Ces informations apparaitront publiquement
@@ -228,6 +229,12 @@ function submit() {
                                                 class="block text-sm font-medium text-gray-700"
                                             >
                                                 Nom de l'activité
+                                                <span class="text-xs italic"
+                                                    >(Attention, en changeant le
+                                                    nom, vous changez aussi le
+                                                    lien d'accès à la page de
+                                                    votre activité)</span
+                                                >
                                             </label>
                                             <div class="mt-1 flex rounded-md">
                                                 <input
@@ -309,7 +316,7 @@ function submit() {
                                             type="submit"
                                             class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                         >
-                                            Enregistrer
+                                            Mettre à jour
                                         </button>
                                     </div>
                                 </div>
