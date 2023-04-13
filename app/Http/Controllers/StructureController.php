@@ -32,7 +32,7 @@ class StructureController extends Controller
                     'category:id,name',
                     'user:id,name',
                     'cities:id,ville,ville_formatee',
-                    'departements:id,departement,numero',
+                    'departement:id,departement,numero',
                     'structuretype:id,name,slug',
                     'activites:id,name,slug,structure_id,description,address,city,zip_code,country,address_lat,address_lng,discipline_id,nivel_id,activitetype_id,publictype_id',
                     'activites.discipline',
@@ -156,7 +156,7 @@ class StructureController extends Controller
             'category:id,name',
             'user:id,name',
             'cities:id,ville,ville_formatee',
-            'departements:id,departement,numero',
+            'departement:id,departement,numero',
             'structuretype:id,name,slug',
             'activites' => function ($query) {
                 $query->latest();
