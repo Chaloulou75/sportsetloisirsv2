@@ -49,6 +49,7 @@ class DatabaseSeeder extends Seeder
         Structuretype::factory()->create(['name' =>'Coach', 'slug' => 'coach']);
         Structuretype::factory()->create(['name' =>'Lieux', 'slug' => 'lieux']);
         Structuretype::factory()->create(['name' =>'Agence', 'slug' => 'agence']);
+        Structuretype::factory()->create(['name' =>'Société', 'slug' => 'societe']);
 
         //les categories
         Category::factory()->create(['name' => 'Balle', 'slug' => 'balle']);

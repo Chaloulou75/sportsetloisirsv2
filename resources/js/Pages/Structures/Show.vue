@@ -89,10 +89,10 @@ function destroy(activite) {
                         </p>
                     </div>
                 </div>
-                <div v-if="$page.props.auth.user" class="w-full md:w-1/4">
+                <div v-if="$page.props.auth.user" class="w-full mt-4 md:w-1/4 md:mt-0">
                     <div
                         v-if="can.update"
-                        class="flex flex-col justify-between space-y-3 md:ml-4 md:space-y-6"
+                        class="flex flex-col justify-between space-y-4 md:ml-4 md:space-y-6"
                     >
                         <Link
                             :href="route('structures.edit', structure.slug)"
@@ -133,7 +133,7 @@ function destroy(activite) {
             </div>
         </template>
 
-        <section class="px-4 py-6 mx-auto my-4 max-w-7xl sm:px-6 lg:px-8">
+        <section class="px-0 py-6 mx-auto my-4 max-w-7xl sm:px-4 lg:px-8">
             <div
                 class="flex flex-col justify-between px-4 py-6 bg-white rounded-lg shadow-lg shadow-sky-700 md:flex-row"
             >
@@ -296,14 +296,14 @@ function destroy(activite) {
         </section>
         <section
             v-if="structure.activites"
-            class="px-4 py-6 mx-auto my-4 space-y-4 max-w-7xl sm:px-6 lg:px-8"
+            class="px-2 py-6 mx-auto my-4 space-y-4 max-w-7xl sm:px-4 lg:px-8"
         >
             <h2 class="text-xl font-bold">Nos activités</h2>
             <div
                 v-for="(activite, index) in structure.activites"
                 :key="activite.id"
                 :index="index"
-                class="flex flex-col justify-between w-full px-6 py-4 text-gray-800 border border-gray-500 rounded-lg shadow-md md:flex-row"
+                class="flex flex-col justify-between w-full px-2 py-4 space-y-4 text-gray-800 border border-gray-500 rounded-lg shadow-md md:flex-row md:space-y-0"
             >
                 <div class="flex flex-col justify-start w-full md:w-1/3">
                     <h3 class="mb-3 text-lg font-semibold">{{ activite.name }}</h3>
@@ -375,7 +375,6 @@ function destroy(activite) {
                     >
                         Supprimer cette activité
                     </button>
-
                 </div>
             </div>
         </section>

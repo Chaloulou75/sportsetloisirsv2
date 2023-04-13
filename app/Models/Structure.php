@@ -90,9 +90,9 @@ class Structure extends Model
         return $this->belongsToMany(City::class, 'structure_villes_france', 'structure_id', 'villes_france_id');
     }
 
-    public function departements(): BelongsToMany
+    public function departement(): BelongsTo
     {
-        return $this->belongsToMany(Departement::class);
+        return $this->belongsTo(Departement::class);
     }
 
     public function structuretype(): BelongsTo

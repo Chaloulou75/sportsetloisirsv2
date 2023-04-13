@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -46,8 +47,13 @@ class Departement extends Model
         return $this->hasMany(City::class, 'departement', 'numero');
     }
 
-    public function structures(): BelongsToMany
+    public function structures(): HasMany
     {
-        return $this->belongsToMany(Structure::class);
+        return $this->hasMany(Structure::class);
+    }
+
+    public function activites(): HasMany
+    {
+        return $this->hasMany(Activite::class);
     }
 }

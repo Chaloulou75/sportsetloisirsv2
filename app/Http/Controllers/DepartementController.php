@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Models\Structure;
 use App\Models\Departement;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DepartementController extends Controller
 {
@@ -16,8 +17,7 @@ class DepartementController extends Controller
     {
         $structuresCount = Structure::count();
 
-        $departements = Departement::with(['structures:id,name,slug,description,city,zip_code,address,address_lat,address_lng'])
-                        ->select(['id', 'departement', 'numero'])
+        $departements = Departement::with(['structures:id,name,slug,description,address,city,zip_code,address_lat,address_lng,departement_id'])->select(['id', 'departement', 'numero'])
                         ->withCount('structures')
                         ->filter(
                             request(['search'])
@@ -54,9 +54,9 @@ class DepartementController extends Controller
      */
     public function show(Departement $departement)
     {
-        $departement = Departement::with(['structures:id,name,slug,structuretype_id,description,city,zip_code,address,address_lat,address_lng', 'structures.structuretype:id,name,slug'])
-                                    ->where('numero', $departement->numero)
+        $departement = Departement::with(['cities','structures:id,name,slug,structuretype_id,description,city,zip_code,address,address_lat,address_lng,departement_id', 'structures.structuretype:id,name,slug'])
                                     ->select(['id', 'numero', 'departement', 'prefixe', 'view_count'])
+                                    ->where('numero', $departement->numero)
                                     ->withCount('structures')
                                     ->first();
 
