@@ -32,7 +32,7 @@ class StructureController extends Controller
             'structures'=> Structure::with([
                     'category:id,name',
                     'user:id,name',
-                    'cities:id,ville,ville_formatee',
+                    'city:id,ville,ville_formatee,code_postal',
                     'departement:id,departement,numero',
                     'structuretype:id,name,slug',
                     'activites:id,name,slug,structure_id,description,address,city,zip_code,country,address_lat,address_lng,discipline_id,nivel_id,activitetype_id,publictype_id',
@@ -44,7 +44,7 @@ class StructureController extends Controller
                     // 'medias',
                 ])
                         ->filter(
-                            request(['search', 'category', 'discipline'])
+                            request(['search', 'category', 'discipline', 'localite'])
                         )
                         ->latest()
                         ->paginate(9)
@@ -79,7 +79,7 @@ class StructureController extends Controller
                             // 'logo' => $structure->logo ? Storage::disk('s3')->temporaryUrl('logo/' .$structure->id. '/' .$structure->logo, now()->addMinutes(5)) : null,
                 ];
                         })->withQueryString(),
-            'filters' => request()->all(['search', 'category', 'discipline']),
+            'filters' => request()->all(['search', 'category', 'discipline', 'localite']),
             'categories' => $categories,
         ]);
     }

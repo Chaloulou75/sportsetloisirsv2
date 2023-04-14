@@ -21,6 +21,9 @@ const formatCityName = (ville) => {
 };
 
 let search = ref(props.filters.search);
+function resetSearch() {
+    search.value = "";
+}
 
 watch(
     search,
@@ -87,9 +90,9 @@ watch(
                     placeholder="ville..."
                 />
 
-                <!-- <button type="button" @click="reset">
+                <button type="button" @click="resetSearch">
                     <svg
-                        class="w-6 h-6 my-2 text-gray-300 hover:text-gray-200 lg:my-0 lg:h-8 lg:w-8"
+                        class="w-6 h-6 my-3 ml-2 text-gray-400 hover:text-gray-700 lg:my-0 lg:h-8 lg:w-8"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                     >
@@ -99,7 +102,7 @@ watch(
                             clip-rule="evenodd"
                         />
                     </svg>
-                </button> -->
+                </button>
             </div>
             <div class="min-h-screen px-2 mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div

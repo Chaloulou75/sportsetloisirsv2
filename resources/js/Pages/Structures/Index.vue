@@ -19,6 +19,10 @@ const Pagination = defineAsyncComponent(() =>
 
 let search = ref(props.filters.search);
 
+function resetSearch() {
+    search.value = "";
+}
+
 const hoveredStructure = ref(null);
 
 function showTooltip(structure) {
@@ -69,28 +73,28 @@ watch(
 
         <div class="py-12">
             <!-- search box -->
-            <template v-if="structures.data">
-                <div
-                    class="flex flex-col items-center justify-center w-full max-w-3xl px-2 mx-auto mt-4 mb-8 md:flex-row"
+
+            <div
+                class="flex flex-col items-center justify-center w-full max-w-3xl px-2 mx-auto mt-4 mb-8 md:flex-row"
+            >
+                <label
+                    for="search"
+                    value="Rechercher une structure"
+                    class="pr-2 mb-1 text-sm font-medium text-gray-800"
+                    >Rechercher une structure:</label
                 >
-                    <label
-                        for="search"
-                        value="Rechercher une structure"
-                        class="pr-2 mb-1 text-sm font-medium text-gray-800"
-                        >Rechercher une structure:</label
-                    >
 
-                    <TextInput
-                        id="search"
-                        type="text"
-                        class="flex-1 block w-full px-2 mt-1 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
-                        v-model="search"
-                        placeholder="structure, club, categorie, ville..."
-                    />
+                <TextInput
+                    id="search"
+                    type="text"
+                    class="flex-1 block w-full px-2 mt-1 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
+                    v-model="search"
+                    placeholder="structure, club, categorie, ville..."
+                />
 
-                    <!-- <button type="button" @click="reset">
+                <button type="button" @click="resetSearch">
                     <svg
-                        class="w-6 h-6 my-3 text-gray-300 hover:text-gray-200 lg:my-0 lg:h-8 lg:w-8"
+                        class="w-6 h-6 my-3 ml-2 text-gray-400 hover:text-gray-700 lg:my-0 lg:h-8 lg:w-8"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                     >
@@ -100,9 +104,9 @@ watch(
                             clip-rule="evenodd"
                         />
                     </svg>
-                </button> -->
-                </div>
-
+                </button>
+            </div>
+            <template v-if="structures.data.length > 0">
                 <div
                     class="flex flex-col max-w-full min-h-screen px-2 mx-auto sm:px-6 md:flex-row md:space-x-4 lg:px-8"
                 >
@@ -218,15 +222,13 @@ watch(
                 </div>
             </template>
             <template v-else>
-                <div class="py-12">
-                    <div
-                        class="min-h-screen px-2 mx-auto max-w-7xl sm:px-6 lg:px-8"
-                    >
-                        <p class="font-medium text-gray-700">
-                            Dommage, il n'y a pas encore de structures
-                            inscrites.
-                        </p>
-                    </div>
+                <div
+                    class="min-h-screen px-2 mx-auto max-w-7xl sm:px-6 lg:px-8"
+                >
+                    <p class="font-medium text-gray-700">
+                        Dommage, il n'y a pas encore de structures inscrites
+                        pour cette requète.
+                    </p>
                 </div>
             </template>
         </div>

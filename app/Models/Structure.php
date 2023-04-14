@@ -73,6 +73,18 @@ class Structure extends Model
                 $query->where('slug', $discipline)
             )
         );
+
+
+        $query->when(
+            $filters['localite'] ?? false,
+            fn ($query, $localite) =>
+                $query->where(
+                    fn ($query) =>
+                $query->where('city', 'like', '%' . $localite . '%')
+                     ->orWhere('zip_code', 'like', '%' . $localite . '%')
+                )
+        );
+
     }
 
     public function user(): BelongsTo
