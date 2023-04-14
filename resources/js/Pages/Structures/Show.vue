@@ -94,13 +94,7 @@ function destroy(activite) {
                         v-if="can.update"
                         class="flex flex-col justify-between space-y-4 md:ml-4 md:space-y-6"
                     >
-                        <Link
-                            :href="route('structures.edit', structure.slug)"
-                            v-if="can.update"
-                            class="flex flex-col items-center justify-center px-4 py-2 overflow-hidden text-xs text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
-                        >
-                            Editer la structure</Link
-                        >
+
                         <Link
                             :href="route('activites.create', structure)"
                             v-if="can.update"
@@ -108,14 +102,13 @@ function destroy(activite) {
                         >
                             Ajouter des activités</Link
                         >
-
-                        <!-- <Link
-                            :href="route('media.edit', club.slug)"
+                        <Link
+                            :href="route('structures.edit', structure.slug)"
                             v-if="can.update"
                             class="flex flex-col items-center justify-center px-4 py-2 overflow-hidden text-xs text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                         >
-                            Mettre à jour les images</Link
-                        >  -->
+                            Editer la structure</Link
+                        >
                         <button
                             v-if="can.delete"
                             @click="showModal = true"
@@ -226,7 +219,7 @@ function destroy(activite) {
                             <GlobeAltIcon class="mr-1.5 inline-block h-4 w-4" />
                             Site web:
                             <a
-                                :href="structure.website"
+                                :href="'https://' + structure.website"
                                 target="_blank"
                                 class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
                             >
