@@ -44,7 +44,6 @@ class ActiviteController extends Controller
      */
     public function store(Request $request, $structure)
     {
-        // dd($structure);
         $validated= request()->validate([
             'structure_id' => ['required', Rule::exists('structures', 'id')],
             'name' => ['required', 'string', 'max:255'],

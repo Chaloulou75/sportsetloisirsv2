@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Structure;
 use App\Models\Discipline;
 use App\Models\Publictype;
+use App\Models\Departement;
 use Illuminate\Support\Str;
 use App\Models\Activitetype;
 use Illuminate\Http\Request;
@@ -66,7 +67,7 @@ class StructureController extends Controller
                             'address_lng' => $structure->address_lng,
                             'description' => $structure->description,
                             'structuretype' => $structure->structuretype,
-                            // 'disciplines' => $structure->disciplines,
+                            'departement_id' => $structure->departement_id,
                             // 'weekdays' => $structure->weekdays,
                             'user' => $structure->user,
                             'disciplines' => $structure->activites->pluck('discipline.name')->unique(),
@@ -134,6 +135,11 @@ class StructureController extends Controller
         $validated['user_id'] = auth()->id();
         $validated['slug'] = $slug;
 
+        $departmentNumber = substr($validated['zip_code'], 0, 2);
+
+        $departement= Departement::where('numero', $departmentNumber)->firstOrFail();
+        $validated['departement_id'] = $departement->id;
+
         $structure = Structure::create($validated);
 
         // $disciplinesIds = collect($request['disciplines'])->pluck('id');
@@ -166,7 +172,7 @@ class StructureController extends Controller
             'activites.activitetype',
             'activites.publictype',
             ])
-            ->select(['id', 'name', 'slug', 'description', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'phone', 'view_count'])
+            ->select(['id', 'name', 'slug', 'description', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'phone', 'view_count', 'departement_id'])
             ->where('slug', $structure->slug)
             ->first();
 
@@ -205,7 +211,7 @@ class StructureController extends Controller
             'category:id,name',
             'user:id,name',
             'cities:id,ville,ville_formatee',
-            'departements:id,departement,numero',
+            'departement:id,departement,numero',
             'structuretype:id,name,slug',
             'activites' => function ($query) {
                 $query->latest();
@@ -215,7 +221,7 @@ class StructureController extends Controller
             'activites.activitetype',
             'activites.publictype',
             ])
-            ->select(['id', 'name', 'slug', 'description', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'phone', 'view_count'])
+            ->select(['id', 'name', 'slug', 'description', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'phone', 'view_count', 'departement_id'])
             ->where('slug', $structure->slug)
             ->firstOrFail();
 
@@ -260,6 +266,10 @@ class StructureController extends Controller
         $validated['user_id'] = auth()->id();
         $validated['slug'] = $slug;
 
+        $departmentNumber = substr($validated['zip_code'], 0, 2);
+        $departement= Departement::where('numero', $departmentNumber)->firstOrFail();
+        $validated['departement_id'] = $departement->id;
+
         $structure->update($validated);
 
         return Redirect::route('structures.show', $structure->slug)->with('success', 'Votre structure a été mise à jour');
@@ -279,7 +289,7 @@ class StructureController extends Controller
         // $structure = Structure::where('slug', $structure->slug)->firstOrFail();
 
         $structure->delete();
-        sleep(1);
+        sleep(0.5);
 
         return redirect()->route('structures.index')->with('success', 'Structure supprimée.');
     }

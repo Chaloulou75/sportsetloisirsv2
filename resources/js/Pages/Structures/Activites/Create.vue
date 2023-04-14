@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { Head, useForm } from "@inertiajs/vue3";
+import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, defineAsyncComponent } from "vue";
 
 const AddressForm = defineAsyncComponent(() =>
@@ -54,10 +54,30 @@ function submit() {
 
     <AppLayout>
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Ajouter une activité à
-                <span class="text-blue-700">{{ structure.name }}</span>
-            </h2>
+            <div
+                class="flex flex-col items-start justify-between md:flex-row md:items-center"
+            >
+                <div>
+                    <h2
+                        class="text-xl font-semibold leading-tight text-gray-800"
+                    >
+                        Ajouter une activité à
+                        <span class="text-blue-700">{{ structure.name }}</span>
+                    </h2>
+                </div>
+                <div class="w-full mt-4 md:mt-0 md:w-1/4">
+                    <div
+                        class="flex flex-col justify-between space-y-4 md:ml-4 md:space-y-6"
+                    >
+                        <Link
+                            :href="route('structures.show', structure.slug)"
+                            class="flex flex-col items-center justify-center px-4 py-2 overflow-hidden text-xs text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                        >
+                            Voir la structure</Link
+                        >
+                    </div>
+                </div>
+            </div>
         </template>
 
         <div class="py-12">
@@ -87,7 +107,7 @@ function submit() {
                                     class="shadow-lg shadow-sky-700 sm:overflow-hidden sm:rounded-md"
                                 >
                                     <div
-                                        class="space-y-6 bg-white px-4 py-5 sm:p-6"
+                                        class="px-4 py-5 space-y-6 bg-white sm:p-6"
                                     >
                                         <!-- <button
                                                 type="button"
@@ -134,7 +154,7 @@ function submit() {
                                                     v-model="
                                                         form.activitetype_id
                                                     "
-                                                    class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                    class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
                                                 >
                                                     <option
                                                         v-for="activitetype in activitestypes"
@@ -170,7 +190,7 @@ function submit() {
                                                     name="nivel_id"
                                                     id="nivel_id"
                                                     v-model="form.nivel_id"
-                                                    class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                    class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
                                                 >
                                                     <option
                                                         v-for="nivel in niveaux"
@@ -202,7 +222,7 @@ function submit() {
                                                     name="publictype_id"
                                                     id="publictype_id"
                                                     v-model="form.publictype_id"
-                                                    class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                    class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
                                                 >
                                                     <option
                                                         v-for="publictype in publictypes"
@@ -229,14 +249,14 @@ function submit() {
                                             >
                                                 Nom de l'activité
                                             </label>
-                                            <div class="mt-1 flex rounded-md">
+                                            <div class="flex mt-1 rounded-md">
                                                 <input
                                                     ref="name"
                                                     v-model="form.name"
                                                     type="text"
                                                     name="name"
                                                     id="name"
-                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                     placeholder=""
                                                     autocomplete="none"
                                                 />
@@ -277,7 +297,7 @@ function submit() {
                                                     id="description"
                                                     name="description"
                                                     rows="3"
-                                                    class="mt-1 block h-48 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                    class="block w-full h-48 min-h-full mt-1 placeholder-gray-400 placeholder-opacity-50 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                     :class="{
                                                         errors: 'border-red-500 focus:ring focus:ring-red-200',
                                                     }"
@@ -302,12 +322,12 @@ function submit() {
 
                                     <!--buttons -->
                                     <div
-                                        class="bg-gray-50 px-4 py-3 text-right sm:px-6"
+                                        class="px-4 py-3 text-right bg-gray-50 sm:px-6"
                                     >
                                         <button
                                             :disabled="form.processing"
                                             type="submit"
-                                            class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                         >
                                             Enregistrer
                                         </button>

@@ -98,10 +98,30 @@ function enterAfterDisciplines() {
 
     <AppLayout>
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Editer votre structure
-                <span class="text-blue-700">{{ structure.name }}</span>
-            </h2>
+            <div
+                class="flex flex-col items-start justify-between md:flex-row md:items-center"
+            >
+                <div>
+                    <h2
+                        class="text-xl font-semibold leading-tight text-gray-800"
+                    >
+                        Editer votre structure
+                        <span class="text-blue-700">{{ structure.name }}</span>
+                    </h2>
+                </div>
+                <div class="w-full mt-4 md:mt-0 md:w-1/4">
+                    <div
+                        class="flex flex-col justify-between space-y-4 md:ml-4 md:space-y-6"
+                    >
+                        <Link
+                            :href="route('structures.show', structure.slug)"
+                            class="flex flex-col items-center justify-center px-4 py-2 overflow-hidden text-xs text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                        >
+                            Voir la structure</Link
+                        >
+                    </div>
+                </div>
+            </div>
         </template>
 
         <div class="py-12">
@@ -133,7 +153,7 @@ function enterAfterDisciplines() {
                                 >
                                     <!-- formstep 1 -->
                                     <div
-                                        class="space-y-6 bg-white px-4 py-5 sm:p-6"
+                                        class="px-4 py-5 space-y-6 bg-white sm:p-6"
                                     >
                                         <div class="grid grid-cols-3 gap-6">
                                             <!-- Name -->
@@ -154,7 +174,7 @@ function enterAfterDisciplines() {
                                                     >
                                                 </label>
                                                 <div
-                                                    class="mt-1 flex rounded-md"
+                                                    class="flex mt-1 rounded-md"
                                                 >
                                                     <input
                                                         ref="name"
@@ -162,7 +182,7 @@ function enterAfterDisciplines() {
                                                         type="text"
                                                         name="name"
                                                         id="name"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -191,7 +211,7 @@ function enterAfterDisciplines() {
                                                         v-model="
                                                             form.structuretype_id
                                                         "
-                                                        class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                        class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
                                                     >
                                                         <option
                                                             v-for="structure in structurestypes"
@@ -248,10 +268,10 @@ function enterAfterDisciplines() {
                                                     >
                                                 </label>
                                                 <div
-                                                    class="mt-1 flex rounded-md shadow-sm"
+                                                    class="flex mt-1 rounded-md shadow-sm"
                                                 >
                                                     <span
-                                                        class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-xs text-gray-500"
+                                                        class="inline-flex items-center px-3 text-xs text-gray-500 border border-r-0 border-gray-300 rounded-l-md bg-gray-50"
                                                     >
                                                         https://...
                                                     </span>
@@ -260,7 +280,7 @@ function enterAfterDisciplines() {
                                                         type="text"
                                                         name="website"
                                                         id="website"
-                                                        class="block w-full flex-1 rounded-none rounded-r-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-none rounded-r-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                         placeholder="https://www.exemple.com"
                                                         autocomplete="none"
                                                     />
@@ -284,14 +304,14 @@ function enterAfterDisciplines() {
                                                     Email du club
                                                 </label>
                                                 <div
-                                                    class="mt-1 flex rounded-md shadow-sm"
+                                                    class="flex mt-1 rounded-md shadow-sm"
                                                 >
                                                     <input
                                                         v-model="form.email"
                                                         type="email"
                                                         name="email"
                                                         id="email"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                         placeholder="structure@mail.com"
                                                         autocomplete="none"
                                                     />
@@ -315,14 +335,14 @@ function enterAfterDisciplines() {
                                                     Numéro de téléphone
                                                 </label>
                                                 <div
-                                                    class="mt-1 flex rounded-md shadow-sm"
+                                                    class="flex mt-1 rounded-md shadow-sm"
                                                 >
                                                     <input
                                                         v-model="form.phone"
                                                         type="tel"
                                                         name="phone"
                                                         id="phone"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                         placeholder="02 10 ..."
                                                         autocomplete="none"
                                                     />
@@ -346,14 +366,14 @@ function enterAfterDisciplines() {
                                                     Facebook
                                                 </label>
                                                 <div
-                                                    class="mt-1 flex rounded-md"
+                                                    class="flex mt-1 rounded-md"
                                                 >
                                                     <input
                                                         v-model="form.facebook"
                                                         type="text"
                                                         name="facebook"
                                                         id="facebook"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -377,14 +397,14 @@ function enterAfterDisciplines() {
                                                     Instagram
                                                 </label>
                                                 <div
-                                                    class="mt-1 flex rounded-md"
+                                                    class="flex mt-1 rounded-md"
                                                 >
                                                     <input
                                                         v-model="form.instagram"
                                                         type="text"
                                                         name="instagram"
                                                         id="instagram"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -408,14 +428,14 @@ function enterAfterDisciplines() {
                                                     Youtube
                                                 </label>
                                                 <div
-                                                    class="mt-1 flex rounded-md"
+                                                    class="flex mt-1 rounded-md"
                                                 >
                                                     <input
                                                         v-model="form.youtube"
                                                         type="text"
                                                         name="youtube"
                                                         id="youtube"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -443,7 +463,7 @@ function enterAfterDisciplines() {
                                                     id="description"
                                                     name="description"
                                                     rows="3"
-                                                    class="mt-1 block h-48 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                    class="block w-full h-48 min-h-full mt-1 placeholder-gray-400 placeholder-opacity-50 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                     :class="{
                                                         errors: 'border-red-500 focus:ring focus:ring-red-200',
                                                     }"
@@ -468,12 +488,12 @@ function enterAfterDisciplines() {
 
                                     <!--buttons formstep 1 -->
                                     <div
-                                        class="bg-gray-50 px-4 py-3 text-right sm:px-6"
+                                        class="px-4 py-3 text-right bg-gray-50 sm:px-6"
                                     >
                                         <button
                                             :disabled="form.processing"
                                             type="submit"
-                                            class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                         >
                                             Editer votre structure
                                         </button>

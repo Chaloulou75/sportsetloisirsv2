@@ -47,7 +47,7 @@ function destroy(activite) {
     <AppLayout>
         <template #header>
             <div
-                class="flex flex-col items-start justify-between md:flex-row md:items-center"
+                class="flex flex-col items-start justify-between md:flex-row"
             >
                 <div>
                     <h2
@@ -61,7 +61,7 @@ function destroy(activite) {
                     <div
                         class="py-2 text-base font-medium leading-relaxed text-gray-600"
                     >
-                        <p>
+                        <p v-if="disciplines > 0">
                             Situé à
                             <span class="font-semibold">{{
                                 structure.city

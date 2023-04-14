@@ -17,7 +17,10 @@ class DepartementController extends Controller
     {
         $structuresCount = Structure::count();
 
-        $departements = Departement::with(['structures:id,name,slug,description,address,city,zip_code,address_lat,address_lng,departement_id'])->select(['id', 'departement', 'numero'])
+        $departements = Departement::with([
+                            'structures:id,name,slug,description,address,city,zip_code,address_lat,address_lng,departement_id'
+                        ])
+                        ->select(['id', 'departement', 'numero'])
                         ->withCount('structures')
                         ->filter(
                             request(['search'])
@@ -54,7 +57,12 @@ class DepartementController extends Controller
      */
     public function show(Departement $departement)
     {
-        $departement = Departement::with(['cities','structures:id,name,slug,structuretype_id,description,city,zip_code,address,address_lat,address_lng,departement_id', 'structures.structuretype:id,name,slug'])
+        $departement = Departement::with(['cities',
+                                        'structures' => function ($query) {
+                                            $query->latest();
+                                        },
+                                        'structures.structuretype:id,name,slug'
+                                    ])
                                     ->select(['id', 'numero', 'departement', 'prefixe', 'view_count'])
                                     ->where('numero', $departement->numero)
                                     ->withCount('structures')

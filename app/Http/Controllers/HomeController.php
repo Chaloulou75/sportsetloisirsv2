@@ -28,8 +28,6 @@ class HomeController extends Controller
                         ->limit(12)
                         ->get();
 
-        // dd($disciplines);
-
         $topVilles = City::with(['departement', 'structures'])
                         ->select(['id', 'ville', 'ville_formatee', 'departement', 'nom_departement'])
                         ->withCount('structures')
