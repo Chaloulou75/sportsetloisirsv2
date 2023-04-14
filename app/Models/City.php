@@ -65,9 +65,14 @@ class City extends Model
         return $this->belongsTo(Departement::class);
     }
 
-    public function structures(): BelongsToMany
+    public function structures(): HasMany
     {
-        return $this->belongsToMany(Structure::class, 'structure_villes_france', 'villes_france_id', 'structure_id');
-        ;
+        return $this->hasMany(Structure::class, 'zip_code', 'code_postal');
     }
+
+    // public function structures(): BelongsToMany
+    // {
+    //     return $this->belongsToMany(Structure::class, 'structure_villes_france', 'villes_france_id', 'structure_id');
+    //     ;
+    // }
 }

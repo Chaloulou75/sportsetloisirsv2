@@ -29,7 +29,7 @@ class HomeController extends Controller
                         ->get();
 
         $topVilles = City::with(['departement', 'structures'])
-                        ->select(['id', 'ville', 'ville_formatee', 'departement', 'nom_departement'])
+                        ->select(['id', 'code_postal', 'ville', 'ville_formatee', 'departement', 'nom_departement'])
                         ->withCount('structures')
                         ->orderByDesc('structures_count')
                         ->limit(12)

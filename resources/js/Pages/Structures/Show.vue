@@ -61,7 +61,7 @@ function destroy(activite) {
                     <div
                         class="py-2 text-base font-medium leading-relaxed text-gray-600"
                     >
-                        <p v-if="disciplines > 0">
+                        <p v-if="disciplines.length > 0">
                             Situé à
                             <span class="font-semibold">{{
                                 structure.city
@@ -295,7 +295,7 @@ function destroy(activite) {
             </div>
         </section>
         <section
-            v-if="structure.activites"
+            v-if="structure.activites.length > 0"
             class="px-2 py-6 mx-auto my-4 space-y-4 max-w-7xl sm:px-4 lg:px-8"
         >
             <h2 class="text-xl font-bold">Nos activités</h2>
@@ -341,7 +341,7 @@ function destroy(activite) {
                 </div>
                 <div class="flex flex-col justify-start w-full md:w-1/3">
                     <p class="text-base font-semibold">
-                        Addresse:
+                        Adresse:
                         <span class="font-normal">{{ activite.address }}</span>
                     </p>
                     <p class="text-base font-semibold">
