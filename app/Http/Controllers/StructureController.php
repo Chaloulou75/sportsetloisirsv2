@@ -58,14 +58,14 @@ class StructureController extends Controller
                             'facebook' => $structure->facebook,
                             'instagram' => $structure->instagram,
                             'youtube' => $structure->youtube,
-                            'phone' => $structure->phone,
+                            'phone1' => $structure->phone1,
                             'address' => $structure->address,
                             'zip_code' => $structure->zip_code,
                             'city' => $structure->city,
                             'country' => $structure->country,
                             'address_lat' => $structure->address_lat,
                             'address_lng' => $structure->address_lng,
-                            'description' => $structure->description,
+                            'presentation_courte' => $structure->presentation_courte,
                             'structuretype' => $structure->structuretype,
                             'departement_id' => $structure->departement_id,
                             // 'weekdays' => $structure->weekdays,
@@ -117,7 +117,7 @@ class StructureController extends Controller
             // 'famille_id' => ['nullable', Rule::exists('familles', 'id')],
             'email' => ['required', 'max:50', 'email'],
             'website' => ['nullable', 'regex:'.$regex],
-            'phone' => ['required', 'digits:10'],
+            'phone1' => ['required', 'digits:10'],
             'facebook' => ['nullable'],
             'instagram' => ['nullable'],
             'youtube' => ['nullable'],
@@ -127,13 +127,13 @@ class StructureController extends Controller
             'country' => ['nullable'],
             'address_lat' => ['nullable'],
             'address_lng' => ['nullable'],
-            'description' => ['required', 'min:8'],
+            'presentation_courte' => ['required', 'min:8'],
         ]);
 
         $name = $validated['name'];
         $slug = Str::slug($name, '-');
         $validated['user_id'] = auth()->id();
-        $validated['slug'] = $slug + '-' + $validated['id'];
+        $validated['slug'] = $slug;
 
         $departmentNumber = substr($validated['zip_code'], 0, 2);
 
@@ -141,6 +141,9 @@ class StructureController extends Controller
         $validated['departement_id'] = $departement->id;
 
         $structure = Structure::create($validated);
+
+        $newSlug = $structure->slug . '-' . $structure->id;
+        $structure->update(['slug' => $newSlug]);
 
         // $disciplinesIds = collect($request['disciplines'])->pluck('id');
         // $structure->disciplines()->attach($disciplinesIds);
@@ -172,7 +175,7 @@ class StructureController extends Controller
             'activites.activitetype',
             'activites.publictype',
             ])
-            ->select(['id', 'name', 'slug', 'description', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'phone', 'view_count', 'departement_id'])
+            ->select(['id', 'name', 'slug', 'presentation_courte', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'phone1', 'view_count', 'departement_id'])
             ->where('slug', $structure->slug)
             ->first();
 
@@ -221,7 +224,7 @@ class StructureController extends Controller
             'activites.activitetype',
             'activites.publictype',
             ])
-            ->select(['id', 'name', 'slug', 'description', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'phone', 'view_count', 'departement_id'])
+            ->select(['id', 'name', 'slug', 'presentation_courte', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'phone1', 'view_count', 'departement_id'])
             ->where('slug', $structure->slug)
             ->firstOrFail();
 
@@ -248,7 +251,7 @@ class StructureController extends Controller
             'structuretype_id' => ['required', Rule::exists('structuretypes', 'id')],
             'email' => ['required', 'max:50', 'email'],
             'website' => ['nullable', 'regex:'.$regex],
-            'phone' => ['required', 'digits:10'],
+            'phone1' => ['required', 'digits:10'],
             'facebook' => ['nullable'],
             'instagram' => ['nullable'],
             'youtube' => ['nullable'],
@@ -258,13 +261,13 @@ class StructureController extends Controller
             'country' => ['nullable'],
             'address_lat' => ['nullable'],
             'address_lng' => ['nullable'],
-            'description' => ['required', 'min:8'],
+            'presentation_courte' => ['required', 'min:8'],
         ]);
 
         $name = $validated['name'];
         $slug = Str::slug($name, '-');
         $validated['user_id'] = auth()->id();
-        $validated['slug'] = $slug;
+        $validated['slug'] = $slug . '-' . $structure->id;
 
         $departmentNumber = substr($validated['zip_code'], 0, 2);
         $departement= Departement::where('numero', $departmentNumber)->firstOrFail();

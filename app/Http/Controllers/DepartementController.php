@@ -18,7 +18,7 @@ class DepartementController extends Controller
         $structuresCount = Structure::count();
 
         $departements = Departement::with([
-                            'structures:id,name,slug,description,address,city,zip_code,address_lat,address_lng,departement_id'
+                            'structures:id,name,slug,presentation_courte,address,city,zip_code,address_lat,address_lng,departement_id'
                         ])
                         ->select(['id', 'departement', 'numero'])
                         ->withCount('structures')

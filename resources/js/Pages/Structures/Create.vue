@@ -39,11 +39,11 @@ const form = useForm({
     // famille_id: ref(null),
     email: ref(null),
     website: ref(null),
-    phone: ref(null),
+    phone1: ref(null),
     facebook: ref(null),
     instagram: ref(null),
     youtube: ref(null),
-    description: ref(null),
+    presentation_courte: ref(null),
 });
 
 const name = ref(null);
@@ -287,12 +287,12 @@ function enterAfterDisciplines() {
                                                 </div>
                                             </div>
 
-                                            <!-- Phone -->
+                                            <!-- Phone1 -->
                                             <div
                                                 class="col-span-3 sm:col-span-2"
                                             >
                                                 <label
-                                                    for="phone"
+                                                    for="phone1"
                                                     class="block text-sm font-medium text-gray-700"
                                                 >
                                                     Numéro de téléphone
@@ -301,20 +301,20 @@ function enterAfterDisciplines() {
                                                     class="mt-1 flex rounded-md shadow-sm"
                                                 >
                                                     <input
-                                                        v-model="form.phone"
+                                                        v-model="form.phone1"
                                                         type="tel"
-                                                        name="phone"
-                                                        id="phone"
+                                                        name="phone1"
+                                                        id="phone1"
                                                         class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                         placeholder="02 10 ..."
                                                         autocomplete="none"
                                                     />
                                                 </div>
                                                 <div
-                                                    v-if="errors.phone"
+                                                    v-if="errors.phone1"
                                                     class="mt-2 text-xs text-red-500"
                                                 >
-                                                    {{ errors.phone }}
+                                                    {{ errors.phone1 }}
                                                 </div>
                                             </div>
 
@@ -412,19 +412,21 @@ function enterAfterDisciplines() {
                                             </div>
                                         </div>
 
-                                        <!-- Description -->
+                                        <!-- presentation_courte -->
                                         <div>
                                             <label
-                                                for="description"
+                                                for="presentation_courte"
                                                 class="block text-sm font-medium text-gray-700"
                                             >
                                                 Description
                                             </label>
                                             <div class="mt-1">
                                                 <textarea
-                                                    v-model="form.description"
-                                                    id="description"
-                                                    name="description"
+                                                    v-model="
+                                                        form.presentation_courte
+                                                    "
+                                                    id="presentation_courte"
+                                                    name="presentation_courte"
                                                     rows="3"
                                                     class="mt-1 block h-48 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                     :class="{
@@ -441,10 +443,12 @@ function enterAfterDisciplines() {
                                                 en quelques lignes.
                                             </p>
                                             <div
-                                                v-if="errors.description"
+                                                v-if="
+                                                    errors.presentation_courte
+                                                "
                                                 class="mt-2 text-xs text-red-500"
                                             >
-                                                {{ errors.description }}
+                                                {{ errors.presentation_courte }}
                                             </div>
                                         </div>
                                     </div>

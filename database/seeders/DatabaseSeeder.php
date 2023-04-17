@@ -15,6 +15,7 @@ use App\Models\Activitetype;
 use App\Models\Structuretype;
 use Illuminate\Database\Seeder;
 use Database\Seeders\AListePaysTableSeeder;
+use Database\Seeders\CategoriesTableSeeder;
 use Database\Seeders\DepartementsTableSeeder;
 use Database\Seeders\VillesFranceTableSeeder;
 
@@ -32,6 +33,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AListePaysTableSeeder::class);
         $this->call(DepartementsTableSeeder::class);
         $this->call(VillesFranceTableSeeder::class);
+        $this->call(CategoriesTableSeeder::class);
 
         $departements = Departement::all();
         $cities = City::all();
@@ -394,14 +396,5 @@ class DatabaseSeeder extends Seeder
         Publictype::factory()->create(['name' =>'Adultes', 'slug' => 'adultes']);
 
         Structure::factory(12)->create();
-
-        //->each(function ($structure) use ($disciplines) {
-        //     $structure->disciplines()->attach($disciplines->random(2));
-        //     $this->call(AListePaysTableSeeder::class);
-        // })->each(function ($structure) use ($cities) {
-        //     $structure->cities()->attach($cities->random(2));
-        // })>each(function ($structure) use ($departements, $cities) {
-        //     $structure->departements()->attach($departements->whereIn('numero', $cities->pluck('departement')->random(2)));
-        // })
     }
 }

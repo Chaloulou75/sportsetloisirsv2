@@ -171,7 +171,9 @@ watch(
                                             <p
                                                 class="mb-3 text-base text-white line-clamp-3"
                                             >
-                                                {{ structure.description }}
+                                                {{
+                                                    structure.presentation_courte
+                                                }}
                                             </p>
                                             <p class="text-base text-white">
                                                 {{ structure.city }} ({{

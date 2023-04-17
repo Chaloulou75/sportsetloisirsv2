@@ -270,11 +270,11 @@ function destroy(activite) {
                         </p>
 
                         <p
-                            v-if="structure.phone"
+                            v-if="structure.phone1"
                             class="text-base font-medium text-gray-700"
                         >
                             <PhoneIcon class="inline-block w-4 h-4" />
-                            {{ structure.phone }}
+                            {{ structure.phone1 }}
                         </p>
                         <p
                             v-if="structure.email"

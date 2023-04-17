@@ -12,37 +12,37 @@ return new class () extends Migration {
      */
     public function up()
     {
-        Schema::create('ab_structures', function (Blueprint $table) {
+        Schema::create('structures', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nom');
+            $table->string('name');
             $table->string('slug');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('structuretype_id')->constrained()->onDelete('cascade')->default(1);
-            $table->string('adresse');
-            $table->integer('afficher_adresse');
+            $table->string('address');
+            $table->integer('afficher_adresse')->nullable();
             $table->double('address_lat');
             $table->double('address_lng');
-            $table->string('code_postal', 20);
-            $table->unsignedBigInteger('city_id');
+            $table->string('zip_code', 20);
+            $table->unsignedBigInteger('city_id')->nullable();
             $table->foreign('city_id')->references('id')->on('villes_france')->onDelete('cascade');
-            $table->string('ville');
+            $table->string('city');
             $table->foreignId('departement_id')->constrained()->onDelete('cascade');
-            $table->unsignedBigInteger('country_id');
+            $table->unsignedBigInteger('country_id')->nullable();
             $table->foreign('country_id')->references('id')->on('a_liste_pays')->onDelete('cascade');
-            $table->string('pays');
-            $table->string('contact');
-            $table->string('telephone1', 30)->nullable();
-            $table->string('telephone2', 30)->nullable();
+            $table->string('country');
+            $table->string('contact')->nullable();
+            $table->string('phone1', 30)->nullable();
+            $table->string('phone2', 30)->nullable();
             $table->string('email');
-            $table->string('email_sauvegarde');
+            $table->string('email_sauvegarde')->nullable();
             $table->text('presentation_courte');
             $table->text('presentation_longue')->nullable();
-            $table->string('photo');
+            $table->string('photo')->nullable();
             $table->string('facebook')->nullable();
             $table->string('instagram')->nullable();
             $table->string('youtube')->nullable();
             $table->string('tiktok')->nullable();
-            $table->string('web')->nullable();
+            $table->string('website')->nullable();
             $table->boolean('premium')->nullable();
             $table->integer('rank')->nullable();
             $table->boolean('valide_client')->default(false);
@@ -50,13 +50,13 @@ return new class () extends Migration {
             $table->boolean('valide_update')->default(false);
             $table->boolean('abo_news')->default(true);
             $table->boolean('abo_promo')->default(true);
-            $table->timestamp('date_actif');
-            $table->boolean('ajout_admin');
+            $table->timestamp('date_actif')->nullable();
+            $table->boolean('ajout_admin')->nullable();
             $table->integer('nb_activites')->default(0);
             $table->integer('nb_produits')->default(0);
             $table->integer('nb_reservations')->default(0);
-            $table->bigInteger('nb_vues')->unsigned()->default(0)->index();
-            $table->decimal('moyenne_notes', 2, 1);
+            $table->bigInteger('view_count')->unsigned()->default(0)->index();
+            $table->decimal('moyenne_notes', 2, 1)->nullable();
             $table->timestamps();
 
         });
