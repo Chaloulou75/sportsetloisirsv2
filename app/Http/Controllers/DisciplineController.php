@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use App\Models\Categorie;
 use App\Models\Structure;
 use App\Models\Discipline;
 use Illuminate\Http\Request;
-use App\Http\Resources\DisciplineResource;
 use Illuminate\Database\Eloquent\Builder;
+use App\Http\Resources\DisciplineResource;
 
 class DisciplineController extends Controller
 {
@@ -101,9 +102,20 @@ class DisciplineController extends Controller
 
     public function loadDisciplines()
     {
-        $category_id = request('category_id');
+        $famille_id = request('famille_id');
 
-        $disciplines = Discipline::where('category_id', $category_id)->get(['id', 'name', 'category_id']);
+        $disciplines = Discipline::where('famille_id', $famille_id)->get(['id', 'name', 'famille_id']);
         return DisciplineResource::collection($disciplines);
+    }
+
+    public function getCategories($id)
+    {
+        $categories = Categorie::whereHas('disciplines', function ($query) use ($id) {
+            $query->where('id', $id);
+        })->get();
+
+        return response()->json([
+            'data' => $categories,
+        ]);
     }
 }

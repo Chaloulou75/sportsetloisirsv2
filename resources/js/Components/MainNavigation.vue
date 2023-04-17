@@ -29,10 +29,10 @@ const showingNavigationDropdown = ref(false);
                     <!-- Navigation Links -->
                     <div class="hidden space-x-8 lg:-my-px lg:ml-10 lg:flex">
                         <BreezeNavLink
-                            :href="route('categories.index')"
-                            :active="route().current('categories.index')"
+                            :href="route('familles.index')"
+                            :active="route().current('familles.index')"
                         >
-                            Categories
+                            Rubriques
                         </BreezeNavLink>
                         <BreezeNavLink
                             :href="route('disciplines.index')"
@@ -91,10 +91,27 @@ const showingNavigationDropdown = ref(false);
 
                             <template #content>
                                 <BreezeDropdownLink
+                                    v-if="$page.props.auth.user"
                                     :href="route('structures.create')"
                                 >
                                     Inscrire une structure
                                 </BreezeDropdownLink>
+                                <!-- <BreezeDropdownLink
+                                    v-if="
+                                        $page.props.auth.user.structures
+                                            .length > 1
+                                    "
+                                    :href="
+                                        route(
+                                            'structures.edit',
+                                            $page.props.auth.user.structures[0]
+                                                .slug
+                                        )
+                                    "
+                                    :active="route().current('structures.edit')"
+                                >
+                                    Editer votre structure
+                                </BreezeDropdownLink> -->
                                 <BreezeDropdownLink
                                     :href="route('profile.edit')"
                                 >
@@ -181,10 +198,10 @@ const showingNavigationDropdown = ref(false);
         >
             <div class="space-y-1 pt-2 pb-3">
                 <BreezeResponsiveNavLink
-                    :href="route('categories.index')"
-                    :active="route().current('categories.index')"
+                    :href="route('familles.index')"
+                    :active="route().current('familles.index')"
                 >
-                    Categories
+                    Rubriques
                 </BreezeResponsiveNavLink>
                 <BreezeResponsiveNavLink
                     :href="route('disciplines.index')"
@@ -218,11 +235,16 @@ const showingNavigationDropdown = ref(false);
                     Inscrire votre structure
                 </BreezeResponsiveNavLink>
                 <!-- <BreezeResponsiveNavLink
-                    v-if="$page.props.auth.user"
-                    :href="route('clubs.create')"
-                    :active="route().current('clubs.create')"
+                    v-if="$page.props.auth.user.structures.length > 1"
+                    :href="
+                        route(
+                            'structures.edit',
+                            $page.props.auth.user.structures[0].slug
+                        )
+                    "
+                    :active="route().current('structures.edit')"
                 >
-                    Créer un club
+                    Editer votre structure
                 </BreezeResponsiveNavLink> -->
             </div>
 

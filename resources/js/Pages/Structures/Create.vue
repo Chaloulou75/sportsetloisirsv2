@@ -36,7 +36,7 @@ const form = useForm({
     country: ref(null),
     address_lat: ref(null),
     address_lng: ref(null),
-    // category_id: ref(null),
+    // famille_id: ref(null),
     email: ref(null),
     website: ref(null),
     phone: ref(null),
@@ -47,24 +47,24 @@ const form = useForm({
 });
 
 const name = ref(null);
-const categories = ref([]);
+const familles = ref([]);
 const disciplinesList = ref([]);
 
-const getCategories = async () => {
-    let response = await axios.get("/api/categories");
-    categories.value = response.data.data;
+const getFamilles = async () => {
+    let response = await axios.get("/api/familles");
+    familles.value = response.data.data;
 };
 
 onMounted(() => {
     name.value.focus();
-    getCategories();
+    getFamilles();
 });
 
 watch(
-    () => form.category_id,
-    async (newCategoryID) => {
+    () => form.famille_id,
+    async (newFamilleID) => {
         axios
-            .get("/api/disciplines?category_id=" + newCategoryID)
+            .get("/api/disciplines?famille_id=" + newFamilleID)
             .then((response) => {
                 disciplinesList.value = response.data.data;
             })

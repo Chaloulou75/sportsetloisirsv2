@@ -66,6 +66,7 @@ class CityController extends Controller
         // dd($city);
         return Inertia::render('Villes/Show', [
             'city'=> $city,
+            'filters' => request()->all(['discipline']),
         ]);
     }
 

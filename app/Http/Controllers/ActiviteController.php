@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Models\Nivel;
 use App\Models\Activite;
+use App\Models\Categorie;
 use App\Models\Structure;
 use App\Models\Discipline;
 use App\Models\Publictype;
@@ -19,6 +20,32 @@ use Illuminate\Support\Facades\Redirect;
 
 class ActiviteController extends Controller
 {
+    /**
+     * Display a listing of the resource and also Show the form for creating a new resource.
+     */
+    public function index(Structure $structure)
+    {
+        $structure = Structure::with(['activites', 'activites.discipline'])->select(['id', 'name', 'slug'])->where('id', $structure->id)->first();
+        $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
+        $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
+        $activitestypes = Activitetype::select(['id', 'name', 'slug'])->get();
+        $disciplines = Discipline::select(['id', 'name', 'slug'])->get();
+        $categories = Categorie::select(['id', 'nom', 'ico'])->get();
+
+        return Inertia::render('Structures/Activites/Index', [
+            'structure' => $structure,
+            'disciplines' => $disciplines,
+            'niveaux' => $niveaux,
+            'publictypes' => $publictypes,
+            'activitestypes' => $activitestypes,
+            'categories' => $categories,
+            'can' => [
+                'update' => optional(Auth::user())->can('update', $structure),
+                'delete' => optional(Auth::user())->can('delete', $structure),
+            ]
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -68,7 +95,7 @@ class ActiviteController extends Controller
 
         $activite = Activite::create($validated);
 
-        return Redirect::route('structures.show', $structure)->with('success', 'Activité crée, ajoutez d\'autres activités à votre structure.');
+        return Redirect::route('structures.activites.index', $structure)->with('success', 'Activité crée, ajoutez d\'autres activités à votre structure.');
     }
 
     /**
@@ -94,6 +121,10 @@ class ActiviteController extends Controller
             'niveaux' => $niveaux,
             'publictypes' => $publictypes,
             'activitestypes' => $activitestypes,
+            'can' => [
+                'update' => optional(Auth::user())->can('update', $structure),
+                'delete' => optional(Auth::user())->can('delete', $structure),
+            ]
         ]);
     }
 

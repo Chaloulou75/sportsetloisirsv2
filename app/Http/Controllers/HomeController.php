@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use Inertia\Inertia;
-use App\Models\Category;
+use App\Models\Famille;
 use App\Models\Structure;
 use App\Models\Discipline;
 use App\Models\Departement;
@@ -15,12 +15,12 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $categoriesCount = Category::count();
+        $familleCount = Famille::count();
         $disciplinesCount = Discipline::count();
         $structuresCount = Structure::count();
         $citiesCount = City::count();
 
-        $categories = Category::select(['id', 'name', 'slug'])->get();
+        $familles = Famille::select(['id', 'name', 'slug'])->get();
 
         $disciplines = Discipline::select(['id', 'name', 'slug'])
                         ->withCount('activites')
@@ -49,9 +49,9 @@ class HomeController extends Controller
                 ->get();
 
         return Inertia::render('Welcome', [
-            'categories' => $categories,
+            'familles' => $familles,
             'disciplines' => $disciplines,
-            'categoriesCount' => $categoriesCount,
+            'familleCount' => $familleCount,
             'disciplinesCount' => $disciplinesCount,
             'structuresCount' => $structuresCount,
             'citiesCount'=> $citiesCount,

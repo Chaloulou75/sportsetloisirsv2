@@ -40,7 +40,7 @@ class Structure extends Model
             })
         );
 
-        // ->orWhereHas('category', function ($query) use ($search) {
+        // ->orWhereHas('famille', function ($query) use ($search) {
         //         $query->where('name', 'like', '%' . $search . '%')
         //               ->orWhere('slug', 'like', '%' . $search . '%');
         //     })
@@ -54,12 +54,12 @@ class Structure extends Model
         // })
 
         $query->when(
-            $filters['category'] ?? false,
-            fn ($query, $category) =>
+            $filters['famille'] ?? false,
+            fn ($query, $famille) =>
             $query->whereHas(
-                'category',
+                'famille',
                 fn ($query) =>
-                $query->where('slug', $category)
+                $query->where('slug', $famille)
             )
         );
 
@@ -92,9 +92,9 @@ class Structure extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function category(): BelongsTo
+    public function famille(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Famille::class);
     }
 
     public function cities(): BelongsToMany

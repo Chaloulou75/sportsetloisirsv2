@@ -7,7 +7,7 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActiviteController;
-use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\FamilleController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\DepartementController;
@@ -39,11 +39,9 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::resource('categories', CategoryController::class);
+Route::resource('familles', FamilleController::class);
 Route::resource('disciplines', DisciplineController::class);
 Route::resource('departements', DepartementController::class);
-
-Route::get('villes/{city}/disciplines/{discipline}', [CityDisciplineController::class, 'show'])->name('citydiscipline.show');
 
 Route::resource('villes', CityController::class, [
     'parameters' => [

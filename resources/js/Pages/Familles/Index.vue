@@ -2,9 +2,9 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 defineProps({
-    categories: Object,
+    familles: Object,
     disciplinesCount: Number,
-    categoriesCount: Number,
+    famillesCount: Number,
     structuresCount: Number,
     // villesCount: Number,
 });
@@ -12,7 +12,7 @@ defineProps({
 
 <template>
     <Head
-        title="Catégories d'activités"
+        title="Familles d'activités"
         :description="
             'Trouvez un club de sport ou un cours collectif parmi plus de ' +
             disciplinesCount +
@@ -25,7 +25,7 @@ defineProps({
     <AppLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Les catégories d'activités
+                Les familles d'activités
             </h2>
             <p class="py-2 text-base font-medium leading-relaxed text-gray-600">
                 Trouvez une discipline ou un cours collectif parmi plus de
@@ -54,15 +54,13 @@ defineProps({
                     class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                 >
                     <Link
-                        :href="route('categories.show', category.slug)"
-                        :active="
-                            route().current('categories.show', category.slug)
-                        "
-                        v-for="category in categories"
-                        :key="category.id"
+                        :href="route('familles.show', famille.slug)"
+                        :active="route().current('familles.show', famille.slug)"
+                        v-for="famille in familles"
+                        :key="famille.id"
                         class="flex items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                     >
-                        {{ category.name }}
+                        {{ famille.name }}
                     </Link>
                 </div>
             </div>

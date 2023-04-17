@@ -43,9 +43,9 @@ class Discipline extends Model
         );
     }
 
-    public function category(): BelongsTo
+    public function famille(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Famille::class);
     }
 
     public function activites(): HasMany
@@ -63,5 +63,10 @@ class Discipline extends Model
             'id',
             'structure_id'
         );
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Categorie::class, 'categorie_discipline', 'discipline_id', 'categorie_id');
     }
 }

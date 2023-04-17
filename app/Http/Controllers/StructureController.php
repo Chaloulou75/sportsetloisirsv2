@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use App\Models\Nivel;
-use App\Models\Category;
+use App\Models\Famille;
 use App\Models\Structure;
 use App\Models\Discipline;
 use App\Models\Publictype;
@@ -26,11 +26,11 @@ class StructureController extends Controller
      */
     public function index()
     {
-        $categories = Category::select(['id', 'name', 'slug'])->get();
+        $familles = Famille::select(['id', 'name', 'slug'])->get();
 
         return Inertia::render('Structures/Index', [
             'structures'=> Structure::with([
-                    'category:id,name',
+                    'famille:id,name',
                     'user:id,name',
                     'city:id,ville,ville_formatee,code_postal',
                     'departement:id,departement,numero',
@@ -44,7 +44,7 @@ class StructureController extends Controller
                     // 'medias',
                 ])
                         ->filter(
-                            request(['search', 'category', 'discipline', 'localite'])
+                            request(['search', 'famille', 'discipline', 'localite'])
                         )
                         ->latest()
                         ->paginate(9)
@@ -79,8 +79,8 @@ class StructureController extends Controller
                             // 'logo' => $structure->logo ? Storage::disk('s3')->temporaryUrl('logo/' .$structure->id. '/' .$structure->logo, now()->addMinutes(5)) : null,
                 ];
                         })->withQueryString(),
-            'filters' => request()->all(['search', 'category', 'discipline', 'localite']),
-            'categories' => $categories,
+            'filters' => request()->all(['search', 'famille', 'discipline', 'localite']),
+            'familles' => $familles,
         ]);
     }
 
@@ -114,7 +114,7 @@ class StructureController extends Controller
         $validated= request()->validate([
             'name' => ['required', 'string', 'max:255'],
             'structuretype_id' => ['required', Rule::exists('structuretypes', 'id')],
-            // 'category_id' => ['nullable', Rule::exists('categories', 'id')],
+            // 'famille_id' => ['nullable', Rule::exists('familles', 'id')],
             'email' => ['required', 'max:50', 'email'],
             'website' => ['nullable', 'regex:'.$regex],
             'phone' => ['required', 'digits:10'],
@@ -133,7 +133,7 @@ class StructureController extends Controller
         $name = $validated['name'];
         $slug = Str::slug($name, '-');
         $validated['user_id'] = auth()->id();
-        $validated['slug'] = $slug;
+        $validated['slug'] = $slug + '-' + $validated['id'];
 
         $departmentNumber = substr($validated['zip_code'], 0, 2);
 
@@ -159,7 +159,7 @@ class StructureController extends Controller
         // $mediasImg = MediaResource::collection(Media::with('club')->where('club_id', $club->id)->latest()->get());
 
         $structure = Structure::with([
-            'category:id,name',
+            'famille:id,name',
             'user:id,name',
             'cities:id,ville,ville_formatee',
             'departement:id,departement,numero',
@@ -208,7 +208,7 @@ class StructureController extends Controller
         $disciplines = Discipline::select(['id', 'name', 'slug'])->get();
 
         $structure = Structure::with([
-            'category:id,name',
+            'famille:id,name',
             'user:id,name',
             'cities:id,ville,ville_formatee',
             'departement:id,departement,numero',
