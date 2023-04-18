@@ -14,10 +14,12 @@ use Illuminate\Support\Str;
 use App\Models\Activitetype;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
+use App\Mail\StructureCreated;
 use Illuminate\Validation\Rule;
 use App\Models\StructureAddress;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 
@@ -73,14 +75,8 @@ class StructureController extends Controller
                             'presentation_longue' => $structure->presentation_longue,
                             'structuretype' => $structure->structuretype,
                             'departement_id' => $structure->departement_id,
-                            // 'weekdays' => $structure->weekdays,
                             'user' => $structure->user,
                             'disciplines' => $structure->activites->pluck('discipline.name')->unique(),
-                            // 'mediasImg' => MediaResource::collection($structure->medias),
-                            // 'start_at' => $structure->start_at,
-                            // 'end_at' => $structure->end_at,
-                            // 'hour_start_at' => $structure->hour_start_at,
-                            // 'hour_end_at' => $structure->hour_end_at,
                             'logo' => $structure->logo,
                 ];
                         })->withQueryString(),
@@ -178,10 +174,9 @@ class StructureController extends Controller
 
         $structureAddress = StructureAddress::create($validatedAddress);
 
-        // $disciplinesIds = collect($request['disciplines'])->pluck('id');
-        // $structure->disciplines()->attach($disciplinesIds);
+        Mail::to($structure->email)->send(new StructureCreated($structure));
 
-        return Redirect::route('activites.create', $structure->slug)->with('success', 'Structure crée, maintenant, ajoutez des activités à votre structure.');
+        return Redirect::route('activites.create', $structure->slug)->with('success', 'Votre structure est bien créée, vous allez recevoir une confirmation par email. Vous pouvez, maintenant, ajouter des activités à votre structure.');
     }
 
     /**
@@ -191,8 +186,6 @@ class StructureController extends Controller
     {
         $structure->timestamps = false;
         $structure->increment('view_count');
-
-        // $mediasImg = MediaResource::collection(Media::with('club')->where('club_id', $club->id)->latest()->get());
 
         $structure = Structure::with([
             'famille:id,name',
@@ -216,13 +209,10 @@ class StructureController extends Controller
 
         $disciplines = $structure->activites->pluck('discipline.name')->unique();
 
-        // $clubLogoUrl = $structure->logo ? Storage::disk('s3')->temporaryUrl('logo/' .$structure->id. '/' .$structure->logo, now()->addMinutes(5)) : null;
-
         return Inertia::render('Structures/Show', [
             'structure'=> $structure,
             'disciplines' => $disciplines,
             'logoUrl' => $logoUrl,
-            // 'mediasImg' => MediaResource::collection($club->medias),
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),
@@ -282,7 +272,7 @@ class StructureController extends Controller
         $structure = Structure::where('id', $structure->id)->firstOrFail();
 
         $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
-        // dd($request->all());
+
         $validated= request()->validate([
             'name' => ['required', 'string', 'max:255'],
             'structuretype_id' => ['required', Rule::exists('structuretypes', 'id')],

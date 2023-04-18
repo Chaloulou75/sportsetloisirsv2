@@ -89,13 +89,11 @@ class ActiviteController extends Controller
 
         $name = $validated['name'];
         $slug = Str::slug($name, '-');
-        // $validated['user_id'] = auth()->id();
         $validated['slug'] = $slug;
-        // $validated['structure_id'] = $structure->id;
 
         $activite = Activite::create($validated);
 
-        return Redirect::route('structures.activites.index', $structure)->with('success', 'Activité crée, ajoutez d\'autres activités à votre structure.');
+        return Redirect::route('structures.activites.index', $structure)->with('success', 'Activité créée, vous pouvez ajouter d\'autres activités à votre structure.');
     }
 
     /**
