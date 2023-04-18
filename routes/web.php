@@ -55,7 +55,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
     Route::post('/structures', [StructureController::class, 'store'])->name('structures.store');
     Route::get('/structures/{structure:slug}/edit', [StructureController::class, 'edit'])->name('structures.edit');
-    Route::patch('/structures/{structure:slug}/update', [StructureController::class, 'update'])->name('structures.update');
+    Route::put('/structures/{structure}', [StructureController::class, 'update'])->name('structures.update');
     Route::delete('/structures/{structure}', [StructureController::class, 'destroy'])->name('structures.destroy');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

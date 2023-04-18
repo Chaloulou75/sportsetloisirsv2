@@ -119,7 +119,6 @@ class StructureController extends Controller
         $validated= request()->validate([
             'name' => ['required', 'string', 'max:255'],
             'structuretype_id' => ['required', Rule::exists('structuretypes', 'id')],
-            // 'famille_id' => ['nullable', Rule::exists('familles', 'id')],
             'email' => ['required', 'max:50', 'email'],
             'website' => ['nullable', 'regex:'.$regex],
             'phone1' => ['required', 'regex:/^0[1-9](?:[\-\s]?[0-9]{2}){4}$/'],
@@ -157,8 +156,10 @@ class StructureController extends Controller
         $newSlug = $structure->slug . '-' . $structure->id;
         $structure->update(['slug' => $newSlug]);
 
-        $path = $request->file('logo')->store('public/structures/' . $structure->id);
-        $structure->update(['logo' => 'structures/' . $structure->id . '/' . $request->file('logo')->hashName()]);
+        if($request->file('logo')) {
+            $path = $request->file('logo')->store('public/structures/' . $structure->id);
+            $structure->update(['logo' => 'structures/' . $structure->id . '/' . $request->file('logo')->hashName()]);
+        }
 
         $validatedAddress = [
             'structure_id' => $structure->id,
@@ -278,17 +279,21 @@ class StructureController extends Controller
      */
     public function update(Request $request, Structure $structure)
     {
-        $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
+        $structure = Structure::where('id', $structure->id)->firstOrFail();
 
+        $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
+        // dd($request->all());
         $validated= request()->validate([
             'name' => ['required', 'string', 'max:255'],
             'structuretype_id' => ['required', Rule::exists('structuretypes', 'id')],
             'email' => ['required', 'max:50', 'email'],
             'website' => ['nullable', 'regex:'.$regex],
-            'phone1' => ['required', 'digits:10'],
+            'phone1' => ['required', 'regex:/^0[1-9](?:[\-\s]?[0-9]{2}){4}$/'],
+            'phone2' => ['nullable', 'regex:/^0[1-9](?:[\-\s]?[0-9]{2}){4}$/'],
             'facebook' => ['nullable'],
             'instagram' => ['nullable'],
             'youtube' => ['nullable'],
+            'tiktok' => ['nullable'],
             'address' => ['nullable'],
             'city' => ['nullable'],
             'zip_code' => ['nullable'],
@@ -296,6 +301,8 @@ class StructureController extends Controller
             'address_lat' => ['nullable'],
             'address_lng' => ['nullable'],
             'presentation_courte' => ['required', 'min:8'],
+            'presentation_longue' => ['nullable'],
+            'logo' => ['nullable','image','max:2048'],
         ]);
 
         $name = $validated['name'];
@@ -303,11 +310,38 @@ class StructureController extends Controller
         $validated['user_id'] = auth()->id();
         $validated['slug'] = $slug . '-' . $structure->id;
 
+        $city= City::where('code_postal', $validated['zip_code'])->firstOrFail();
+        $cityId = $city->id;
+        $validated['city_id'] = $cityId;
+
         $departmentNumber = substr($validated['zip_code'], 0, 2);
         $departement= Departement::where('numero', $departmentNumber)->firstOrFail();
         $validated['departement_id'] = $departement->id;
 
         $structure->update($validated);
+
+        if($request->file('logo')) {
+            $path = $request->file('logo')->store('public/structures/' . $structure->id);
+            $structure->update(['logo' => 'structures/' . $structure->id . '/' . $request->file('logo')->hashName()]);
+        }
+
+        $validatedAddress = [
+            'structure_id' => $structure->id,
+            'name' => $structure->name,
+            'address' => $structure->address,
+            'zip_code' => $structure->zip_code,
+            'city' => $structure->city,
+            'country' => $structure->country,
+            'city_id' => $structure->city_id,
+            'country_id' => $structure->country_id,
+            'address_lat' => $structure->address_lat,
+            'address_lng' => $structure->address_lng,
+            'phone' => $structure->phone1,
+            'email' => $structure->email,
+        ];
+        $structureAddress = StructureAddress::where('structure_id', $structure->id)->firstOrFail();
+        $structureAddress->update($validatedAddress);
+
 
         return Redirect::route('structures.show', $structure->slug)->with('success', 'Votre structure a été mise à jour');
 

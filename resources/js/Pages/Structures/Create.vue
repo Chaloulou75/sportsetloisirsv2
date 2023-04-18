@@ -557,6 +557,7 @@ function enterAfterDisciplines() {
                                             </div>
                                         </div>
 
+                                        <!-- Logo -->
                                         <div>
                                             <label
                                                 for="logo"

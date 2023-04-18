@@ -8,10 +8,7 @@ import {
 } from "@headlessui/vue";
 import { CheckIcon, SelectorIcon } from "@heroicons/vue/24/solid";
 import AppLayout from "@/Layouts/AppLayout.vue";
-import LogoInput from "@/Components/LogoInput.vue";
-import StepsIndicator from "@/Components/Inscription/StepsIndicator.vue";
-import AutocompleteActiviteForm from "@/Components/Inscription/AutocompleteActiviteForm.vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
+import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import { ref, onMounted, watch, defineAsyncComponent } from "vue";
 
 const AddressForm = defineAsyncComponent(() =>
@@ -37,60 +34,75 @@ const form = useForm({
     country: ref(props.structure.country),
     address_lat: ref(props.structure.address_lat),
     address_lng: ref(props.structure.address_lng),
-    // famille_id: ref(null),
     email: ref(props.structure.email),
     website: ref(props.structure.website),
     phone1: ref(props.structure.phone1),
+    phone2: ref(props.structure.phone2),
     facebook: ref(props.structure.facebook),
     instagram: ref(props.structure.instagram),
     youtube: ref(props.structure.youtube),
+    tiktok: ref(props.structure.tiktok),
     presentation_courte: ref(props.structure.presentation_courte),
+    presentation_longue: ref(props.structure.presentation_longue),
+    logo: ref(null),
 });
 
-const formStep = ref(1);
 const name = ref(null);
-const familles = ref([]);
-const disciplinesList = ref([]);
-
-const getFamilles = async () => {
-    let response = await axios.get("/api/familles");
-    familles.value = response.data.data;
-};
 
 onMounted(() => {
     name.value.focus();
-    getFamilles();
+    // getFamilles();
 });
 
-watch(
-    () => form.famille_id,
-    async (newFamilleID) => {
-        axios
-            .get("/api/disciplines?famille_id=" + newFamilleID)
-            .then((response) => {
-                disciplinesList.value = response.data.data;
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-    }
-);
-
-// function nextStep() {
-//     formStep.value++;
-// }
-
-// function prevStep() {
-//     formStep.value--;
-// }
-
 function submit() {
-    form.patch(route("structures.update", props.structure));
+    router.post(
+        `/structures/${props.structure.id}`,
+        {
+            _method: "put",
+            name: form.name,
+            structuretype_id: form.structuretype_id,
+            address: form.address,
+            city: form.city,
+            zip_code: form.zip_code,
+            country: form.country,
+            address_lat: form.address_lat,
+            address_lng: form.address_lng,
+            email: form.email,
+            website: form.website,
+            phone1: form.phone1,
+            phone2: form.phone2,
+            facebook: form.facebook,
+            instagram: form.instagram,
+            youtube: form.youtube,
+            tiktok: form.tiktok,
+            presentation_courte: form.presentation_courte,
+            presentation_longue: form.presentation_longue,
+            logo: form.logo,
+        },
+        props.structure
+    );
 }
 
-function enterAfterDisciplines() {
-    document.getElementById("address").focus();
-}
+// const familles = ref([]);
+// const disciplinesList = ref([]);
+
+// const getFamilles = async () => {
+//     let response = await axios.get("/api/familles");
+//     familles.value = response.data.data;
+// };
+// watch(
+//     () => form.famille_id,
+//     async (newFamilleID) => {
+//         axios
+//             .get("/api/disciplines?famille_id=" + newFamilleID)
+//             .then((response) => {
+//                 disciplinesList.value = response.data.data;
+//             })
+//             .catch((e) => {
+//                 console.log(e);
+//             });
+//     }
+// );
 </script>
 
 <template>
@@ -137,8 +149,9 @@ function enterAfterDisciplines() {
                                     Edition et Profil social de votre structure
                                 </h3>
                                 <p class="mt-1 text-sm text-gray-800">
-                                    Ces informations apparaitront publiquement
-                                    sur ce site.
+                                    Les champs suivis d'un astérisque (*) sont
+                                    requis. Ces informations apparaitront
+                                    publiquement sur ce site.
                                 </p>
                             </div>
                         </div>
@@ -151,7 +164,6 @@ function enterAfterDisciplines() {
                                 <div
                                     class="shadow-lg shadow-sky-700 sm:overflow-hidden sm:rounded-md"
                                 >
-                                    <!-- formstep 1 -->
                                     <div
                                         class="space-y-6 bg-white px-4 py-5 sm:p-6"
                                     >
@@ -164,7 +176,7 @@ function enterAfterDisciplines() {
                                                     for="name"
                                                     class="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Nom de la structure
+                                                    Nom de la structure *
                                                     <span class="text-xs italic"
                                                         >(Attention, en
                                                         changeant le nom, vous
@@ -202,7 +214,7 @@ function enterAfterDisciplines() {
                                                     for="structuretype_id"
                                                     class="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Type de structure
+                                                    Type de structure *
                                                 </label>
                                                 <div class="mt-1">
                                                     <select
@@ -281,7 +293,7 @@ function enterAfterDisciplines() {
                                                         name="website"
                                                         id="website"
                                                         class="block w-full flex-1 rounded-none rounded-r-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                        placeholder="https://www.exemple.com"
+                                                        placeholder="www.exemple.com"
                                                         autocomplete="none"
                                                     />
                                                 </div>
@@ -301,7 +313,7 @@ function enterAfterDisciplines() {
                                                     for="email"
                                                     class="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Email du club
+                                                    Email *
                                                 </label>
                                                 <div
                                                     class="mt-1 flex rounded-md shadow-sm"
@@ -332,7 +344,7 @@ function enterAfterDisciplines() {
                                                     for="phone1"
                                                     class="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Numéro de téléphone
+                                                    Numéro de téléphone *
                                                 </label>
                                                 <div
                                                     class="mt-1 flex rounded-md shadow-sm"
@@ -352,6 +364,38 @@ function enterAfterDisciplines() {
                                                     class="mt-2 text-xs text-red-500"
                                                 >
                                                     {{ errors.phone1 }}
+                                                </div>
+                                            </div>
+
+                                            <!-- Phone2 -->
+                                            <div
+                                                class="col-span-3 sm:col-span-2"
+                                            >
+                                                <label
+                                                    for="phone2"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                >
+                                                    Numéro de téléphone de
+                                                    sauvegarde
+                                                </label>
+                                                <div
+                                                    class="mt-1 flex rounded-md shadow-sm"
+                                                >
+                                                    <input
+                                                        v-model="form.phone2"
+                                                        type="tel"
+                                                        name="phone2"
+                                                        id="phone2"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                        placeholder="02 10 ..."
+                                                        autocomplete="none"
+                                                    />
+                                                </div>
+                                                <div
+                                                    v-if="errors.phone2"
+                                                    class="mt-2 text-xs text-red-500"
+                                                >
+                                                    {{ errors.phone2 }}
                                                 </div>
                                             </div>
 
@@ -447,6 +491,37 @@ function enterAfterDisciplines() {
                                                     {{ errors.youtube }}
                                                 </div>
                                             </div>
+
+                                            <!-- tiktok -->
+                                            <div
+                                                class="col-span-3 sm:col-span-2"
+                                            >
+                                                <label
+                                                    for="tiktok"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                >
+                                                    Tiktok
+                                                </label>
+                                                <div
+                                                    class="mt-1 flex rounded-md"
+                                                >
+                                                    <input
+                                                        v-model="form.tiktok"
+                                                        type="text"
+                                                        name="tiktok"
+                                                        id="tiktok"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                        placeholder=""
+                                                        autocomplete="none"
+                                                    />
+                                                </div>
+                                                <div
+                                                    v-if="errors.tiktok"
+                                                    class="mt-2 text-xs text-red-500"
+                                                >
+                                                    {{ errors.tiktok }}
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <!-- presentation_courte -->
@@ -455,7 +530,7 @@ function enterAfterDisciplines() {
                                                 for="presentation_courte"
                                                 class="block text-sm font-medium text-gray-700"
                                             >
-                                                Description
+                                                Description courte *
                                             </label>
                                             <div class="mt-1">
                                                 <textarea
@@ -488,9 +563,71 @@ function enterAfterDisciplines() {
                                                 {{ errors.presentation_courte }}
                                             </div>
                                         </div>
+
+                                        <!-- presentation_longue -->
+                                        <div>
+                                            <label
+                                                for="presentation_longue"
+                                                class="block text-sm font-medium text-gray-700"
+                                            >
+                                                Présentation longue
+                                            </label>
+                                            <div class="mt-1">
+                                                <textarea
+                                                    v-model="
+                                                        form.presentation_longue
+                                                    "
+                                                    id="presentation_longue"
+                                                    name="presentation_longue"
+                                                    rows="3"
+                                                    class="mt-1 block h-48 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                    :class="{
+                                                        errors: 'border-red-500 focus:ring focus:ring-red-200',
+                                                    }"
+                                                    placeholder="Un peu d'historique, vos activités... Mettez votre structure en valeur"
+                                                    autocomplete="none"
+                                                />
+                                            </div>
+                                            <p
+                                                class="mt-2 text-sm text-gray-500"
+                                            >
+                                                Description de votre structure.
+                                            </p>
+                                            <div
+                                                v-if="
+                                                    errors.presentation_longue
+                                                "
+                                                class="mt-2 text-xs text-red-500"
+                                            >
+                                                {{ errors.presentation_longue }}
+                                            </div>
+                                        </div>
+
+                                        <!-- Logo -->
+                                        <div>
+                                            <label
+                                                for="logo"
+                                                class="block text-sm font-medium text-gray-700"
+                                                >Photo ou logo:</label
+                                            >
+                                            <input
+                                                class="mt-1 text-sm text-gray-700"
+                                                type="file"
+                                                id="logo"
+                                                @input="
+                                                    form.logo =
+                                                        $event.target.files[0]
+                                                "
+                                            />
+                                            <span
+                                                class="mt-2 text-xs text-red-500"
+                                                v-if="errors.logo"
+                                                v-text="errors.logo[0]"
+                                            ></span>
+                                        </div>
                                     </div>
 
-                                    <!--buttons formstep 1 -->
+                                    <!--buttons  -->
                                     <div
                                         class="bg-gray-50 px-4 py-3 text-right sm:px-6"
                                     >
@@ -501,13 +638,6 @@ function enterAfterDisciplines() {
                                         >
                                             Editer votre structure
                                         </button>
-                                        <!-- <button
-                                            @click="nextStep"
-                                            type="button"
-                                            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                        >
-                                            Ajouter une activité
-                                        </button> -->
                                     </div>
                                 </div>
                             </form>
