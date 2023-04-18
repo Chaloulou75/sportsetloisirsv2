@@ -60,7 +60,9 @@ class StructureController extends Controller
                             'facebook' => $structure->facebook,
                             'instagram' => $structure->instagram,
                             'youtube' => $structure->youtube,
+                            'tiktok' => $structure->tiktok,
                             'phone1' => $structure->phone1,
+                            'phone2' => $structure->phone2,
                             'address' => $structure->address,
                             'zip_code' => $structure->zip_code,
                             'city' => $structure->city,
@@ -68,6 +70,7 @@ class StructureController extends Controller
                             'address_lat' => $structure->address_lat,
                             'address_lng' => $structure->address_lng,
                             'presentation_courte' => $structure->presentation_courte,
+                            'presentation_longue' => $structure->presentation_longue,
                             'structuretype' => $structure->structuretype,
                             'departement_id' => $structure->departement_id,
                             // 'weekdays' => $structure->weekdays,
@@ -78,7 +81,7 @@ class StructureController extends Controller
                             // 'end_at' => $structure->end_at,
                             // 'hour_start_at' => $structure->hour_start_at,
                             // 'hour_end_at' => $structure->hour_end_at,
-                            // 'logo' => $structure->logo ? Storage::disk('s3')->temporaryUrl('logo/' .$structure->id. '/' .$structure->logo, now()->addMinutes(5)) : null,
+                            'logo' => $structure->logo,
                 ];
                         })->withQueryString(),
             'filters' => request()->all(['search', 'famille', 'discipline', 'localite']),
@@ -154,8 +157,8 @@ class StructureController extends Controller
         $newSlug = $structure->slug . '-' . $structure->id;
         $structure->update(['slug' => $newSlug]);
 
-        $path = $request->file('logo')->store('structures/'. $structure->id .'/logo');
-        $structure->update(['logo' => $path]);
+        $path = $request->file('logo')->store('public/structures/' . $structure->id);
+        $structure->update(['logo' => 'structures/' . $structure->id . '/' . $request->file('logo')->hashName()]);
 
         $validatedAddress = [
             'structure_id' => $structure->id,
@@ -204,9 +207,11 @@ class StructureController extends Controller
             'activites.activitetype',
             'activites.publictype',
             ])
-            ->select(['id', 'name', 'slug', 'presentation_courte', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'phone1', 'view_count', 'departement_id'])
+            ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'view_count', 'departement_id', 'logo'])
             ->where('slug', $structure->slug)
             ->first();
+
+        $logoUrl = asset('storage/'.$structure->logo);
 
         $disciplines = $structure->activites->pluck('discipline.name')->unique();
 
@@ -215,7 +220,7 @@ class StructureController extends Controller
         return Inertia::render('Structures/Show', [
             'structure'=> $structure,
             'disciplines' => $disciplines,
-            // 'clubLogoUrl' => $clubLogoUrl,
+            'logoUrl' => $logoUrl,
             // 'mediasImg' => MediaResource::collection($club->medias),
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
@@ -253,7 +258,7 @@ class StructureController extends Controller
             'activites.activitetype',
             'activites.publictype',
             ])
-            ->select(['id', 'name', 'slug', 'presentation_courte', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'phone1', 'view_count', 'departement_id'])
+            ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'view_count', 'departement_id', 'logo'])
             ->where('slug', $structure->slug)
             ->firstOrFail();
 

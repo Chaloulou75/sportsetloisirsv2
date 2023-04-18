@@ -15,6 +15,7 @@ import {
 
 let props = defineProps({
     structure: Object,
+    logoUrl: String,
     disciplines: Object,
     can: Object,
 });
@@ -156,7 +157,7 @@ function destroy(activite) {
                             <img
                                 v-if="structure.logo"
                                 alt="img"
-                                :src="clubLogoUrl"
+                                :src="logoUrl"
                                 class="object-cover object-center rounded-full h-14 w-14 shrink-0 md:h-20 md:w-20"
                             />
                             <img

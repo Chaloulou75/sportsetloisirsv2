@@ -10,7 +10,8 @@ const categories = ref({
     Présentation: [
         {
             id: 1,
-            resume: props.structure.presentation_courte,
+            resume_court: props.structure.presentation_courte,
+            resume_long: props.structure.presentation_longue,
         },
     ],
     Horaires: [
@@ -34,9 +35,9 @@ const categories = ref({
 });
 </script>
 <template>
-    <div class="my-4 w-full px-0 sm:px-2">
+    <div class="w-full px-0 my-4 sm:px-2">
         <TabGroup>
-            <TabList class="flex space-x-1 rounded-xl bg-gray-300 p-1">
+            <TabList class="flex p-1 space-x-1 bg-gray-300 rounded-xl">
                 <Tab
                     v-for="category in Object.keys(categories)"
                     as="template"
@@ -70,17 +71,23 @@ const categories = ref({
                         <li
                             v-for="info in infos"
                             :key="info.id"
-                            class="relative space-y-2 rounded-md bg-gray-50 px-1 py-3"
+                            class="relative px-1 py-3 space-y-2 rounded-md bg-gray-50"
                         >
-                            <h3
-                                v-if="info.resume"
-                                class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
+                            <p
+                                v-if="info.resume_long"
+                                class="text-base font-medium leading-5 text-gray-700 whitespace-pre-line"
                             >
-                                {{ info.resume }}
-                            </h3>
+                                {{ info.resume_long }}
+                            </p>
+                            <p
+                                v-if="info.resume_court"
+                                class="text-base font-medium leading-5 text-gray-700 whitespace-pre-line"
+                            >
+                                {{ info.resume_court }}
+                            </p>
                             <h3
                                 v-if="info.address"
-                                class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
+                                class="text-base font-medium leading-5 text-gray-700 whitespace-pre-line"
                             >
                                 <MapPinIcon
                                     class="mr-1.5 inline-block h-4 w-4"
@@ -104,7 +111,7 @@ const categories = ref({
 
                             <ul
                                 v-if="info.address"
-                                class="mt-1 flex space-x-1 px-6 text-sm font-medium leading-4 text-gray-500"
+                                class="flex px-6 mt-1 space-x-1 text-sm font-medium leading-4 text-gray-500"
                             >
                                 <li>{{ info.zip_code }}</li>
                                 <li>&middot;</li>
@@ -115,9 +122,9 @@ const categories = ref({
 
                             <div
                                 v-if="info.address"
-                                class="mx-auto max-w-2xl px-4"
+                                class="max-w-2xl px-4 mx-auto"
                             >
-                                <div class="container mx-auto w-full">
+                                <div class="container w-full mx-auto">
                                     <Suspense>
                                         <template #default>
                                             <!-- <GoogleMap :structure="structure" /> -->
@@ -133,7 +140,7 @@ const categories = ref({
                             </div>
                             <ul
                                 v-if="info.hour_start"
-                                class="mt-1 flex space-x-1 text-sm font-medium leading-4 text-gray-500"
+                                class="flex mt-1 space-x-1 text-sm font-medium leading-4 text-gray-500"
                             >
                                 <li>
                                     <ClockIcon
