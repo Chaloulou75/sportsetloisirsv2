@@ -61,14 +61,14 @@ defineProps({
         <template v-if="discipline.activites_count > 0">
             <div class="py-12">
                 <div
-                    class="min-h-screen px-2 mx-auto max-w-7xl sm:px-6 lg:px-8"
+                    class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8"
                 >
                     <div
-                        class="flex flex-col min-h-screen px-2 mx-auto max-w-7xl sm:px-6 md:flex-row md:space-x-4 lg:px-8"
+                        class="mx-auto flex min-h-screen max-w-7xl flex-col px-2 sm:px-6 md:flex-row md:space-x-4 lg:px-8"
                     >
                         <div class="md:w-1/2">
                             <div
-                                class="grid h-auto grid-cols-1 gap-4 place-items-stretch sm:grid-cols-2 md:grid-cols-2"
+                                class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-2"
                             >
                                 <Link
                                     v-for="(structure, index) in structures"
@@ -83,17 +83,17 @@ defineProps({
                                             structure.slug
                                         )
                                     "
-                                    class="relative block bg-black group"
+                                    class="group relative block bg-black"
                                 >
                                     <img
                                         alt="a guy"
-                                        src="https://images.unsplash.com/photo-1603871165848-0aa92c869fa1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=772&q=80"
-                                        class="absolute inset-0 object-cover w-full h-full transition-opacity opacity-75 group-hover:opacity-50"
+                                        src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                                        class="absolute inset-0 h-full w-full object-cover opacity-75 transition-opacity group-hover:opacity-50"
                                     />
 
                                     <div class="relative p-4 sm:p-6 lg:p-8">
                                         <p
-                                            class="text-sm font-medium tracking-widest text-pink-500 uppercase"
+                                            class="text-sm font-medium uppercase tracking-widest text-pink-500"
                                         >
                                             {{ structure.structuretype.name }}
                                         </p>
@@ -106,7 +106,7 @@ defineProps({
 
                                         <div class="mt-32 sm:mt-48 lg:mt-64">
                                             <div
-                                                class="transition-all transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
+                                                class="translate-y-8 transform opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100"
                                             >
                                                 <p
                                                     class="text-sm text-white line-clamp-3"
@@ -135,7 +135,7 @@ defineProps({
         <template v-else>
             <div class="py-12">
                 <div
-                    class="min-h-screen px-2 mx-auto max-w-7xl sm:px-6 lg:px-8"
+                    class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8"
                 >
                     <p class="font-medium text-gray-700">
                         Dommage, il n'y a pas encore de structures inscrites en

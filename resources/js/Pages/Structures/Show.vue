@@ -211,7 +211,7 @@ function destroy(activite) {
                     <div class="mb-4 space-y-6">
                         <p class="text-base font-semibold text-gray-700">
                             <UserIcon class="inline-block w-4 h-4" />
-                            {{ structure.user.name }}
+                            {{ structure.creator.name }}
                         </p>
                         <p
                             v-if="structure.website"

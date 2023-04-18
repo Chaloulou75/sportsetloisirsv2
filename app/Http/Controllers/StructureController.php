@@ -17,6 +17,7 @@ use App\Models\Structuretype;
 use App\Mail\StructureCreated;
 use Illuminate\Validation\Rule;
 use App\Models\StructureAddress;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
@@ -35,7 +36,8 @@ class StructureController extends Controller
         return Inertia::render('Structures/Index', [
             'structures'=> Structure::with([
                     'famille:id,name',
-                    'user:id,name',
+                    'creator:id,name',
+                    'users:id,name',
                     'city:id,ville,ville_formatee,code_postal',
                     'departement:id,departement,numero',
                     'structuretype:id,name,slug',
@@ -73,9 +75,9 @@ class StructureController extends Controller
                             'presentation_longue' => $structure->presentation_longue,
                             'structuretype' => $structure->structuretype,
                             'departement_id' => $structure->departement_id,
-                            'user' => $structure->user,
+                            'user' => $structure->creator,
                             'disciplines' => $structure->activites->pluck('discipline.name')->unique(),
-                            'logo' => $structure->logo,
+                            'logo' => $structure->logo ? asset('storage/'. $structure->logo) : 'https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
                 ];
                         })->withQueryString(),
             'filters' => request()->all(['search', 'famille', 'discipline', 'localite']),
@@ -192,7 +194,8 @@ class StructureController extends Controller
 
         $structure = Structure::with([
             'famille:id,name',
-            'user:id,name',
+            'creator:id,name,email',
+            'users:id,name',
             'cities:id,ville,ville_formatee',
             'departement:id,departement,numero',
             'structuretype:id,name,slug',
@@ -240,7 +243,8 @@ class StructureController extends Controller
 
         $structure = Structure::with([
             'famille:id,name',
-            'user:id,name',
+            'creator:id,name,email',
+            'users:id,name',
             'cities:id,ville,ville_formatee',
             'departement:id,departement,numero',
             'structuretype:id,name,slug',
@@ -293,7 +297,6 @@ class StructureController extends Controller
             'address_lng' => ['nullable'],
             'presentation_courte' => ['required', 'min:8'],
             'presentation_longue' => ['nullable'],
-            'logo' => ['nullable','image','max:2048'],
         ]);
 
         $name = $validated['name'];
@@ -309,12 +312,16 @@ class StructureController extends Controller
         $departement= Departement::where('numero', $departmentNumber)->firstOrFail();
         $validated['departement_id'] = $departement->id;
 
-        $structure->update($validated);
-
         if($request->file('logo')) {
+            request()->validate(['logo' => ['nullable','image','max:2048']]);
+            if($structure->logo !== null) {
+                Storage::disk('public')->delete('structures/' . $structure->id .'/'. $structure->logo);
+            }
             $path = $request->file('logo')->store('public/structures/' . $structure->id);
             $structure->update(['logo' => 'structures/' . $structure->id . '/' . $request->file('logo')->hashName()]);
         }
+
+        $structure->update($validated);
 
         $validatedAddress = [
             'structure_id' => $structure->id,
@@ -333,7 +340,6 @@ class StructureController extends Controller
         $structureAddress = StructureAddress::where('structure_id', $structure->id)->firstOrFail();
         $structureAddress->update($validatedAddress);
 
-
         return Redirect::route('structures.show', $structure->slug)->with('success', 'Votre structure a été mise à jour');
 
     }
@@ -348,7 +354,10 @@ class StructureController extends Controller
         if (! Gate::allows('destroy-structure', $structure)) {
             return Redirect::route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de supprimer cette fiche, vous devez être le créateur de la structure ou un administrateur.');
         }
-        // $structure = Structure::where('slug', $structure->slug)->firstOrFail();
+
+        if($structure->logo) {
+            Storage::disk('public')->delete('public/structures/' . $structure->id .'/'. $structure->logo);
+        }
 
         $structure->delete();
         sleep(0.5);
