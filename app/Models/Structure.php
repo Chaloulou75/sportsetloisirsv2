@@ -87,9 +87,14 @@ class Structure extends Model
 
     }
 
-    public function user(): BelongsTo
+    public function creator()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class);
     }
 
     public function famille(): BelongsTo

@@ -44,8 +44,6 @@ class StructureController extends Controller
                     'activites.nivel',
                     'activites.activitetype',
                     'activites.publictype',
-                    // 'weekdays:id,name',
-                    // 'medias',
                 ])
                         ->filter(
                             request(['search', 'famille', 'discipline', 'localite'])
@@ -110,19 +108,17 @@ class StructureController extends Controller
      */
     public function store(Request $request)
     {
-        $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
-
         $validated= request()->validate([
             'name' => ['required', 'string', 'max:255'],
             'structuretype_id' => ['required', Rule::exists('structuretypes', 'id')],
             'email' => ['required', 'max:50', 'email'],
-            'website' => ['nullable', 'regex:'.$regex],
+            'website' => ['nullable', 'url'],
             'phone1' => ['required', 'regex:/^0[1-9](?:[\-\s]?[0-9]{2}){4}$/'],
             'phone2' => ['nullable', 'regex:/^0[1-9](?:[\-\s]?[0-9]{2}){4}$/'],
-            'facebook' => ['nullable'],
-            'instagram' => ['nullable'],
-            'youtube' => ['nullable'],
-            'tiktok' => ['nullable'],
+            'facebook' => ['nullable', 'url', 'regex:/facebook\.com\/.*/i'],
+            'instagram' => ['nullable', 'url', 'regex:/facebook\.com\/.*/i'],
+            'youtube' => ['nullable', 'url', 'regex:/youtube\.com\/.*/i'],
+            'tiktok' => ['nullable', 'url', 'regex:/tiktok\.com\/.*/i'],
             'address' => ['nullable'],
             'city' => ['nullable'],
             'zip_code' => ['nullable'],
@@ -173,6 +169,13 @@ class StructureController extends Controller
         ];
 
         $structureAddress = StructureAddress::create($validatedAddress);
+
+        $structure->users()->attach($structure->user_id, [
+            'niveau' => 1,
+            'contact' => $structure->creator->name,
+            'email' => $structure->creator->email,
+            'phone' => $structure->phone1,
+        ]);
 
         Mail::to($structure->email)->send(new StructureCreated($structure));
 
@@ -271,19 +274,17 @@ class StructureController extends Controller
     {
         $structure = Structure::where('id', $structure->id)->firstOrFail();
 
-        $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
-
         $validated= request()->validate([
             'name' => ['required', 'string', 'max:255'],
             'structuretype_id' => ['required', Rule::exists('structuretypes', 'id')],
             'email' => ['required', 'max:50', 'email'],
-            'website' => ['nullable', 'regex:'.$regex],
+            'website' => ['nullable', 'url'],
             'phone1' => ['required', 'regex:/^0[1-9](?:[\-\s]?[0-9]{2}){4}$/'],
             'phone2' => ['nullable', 'regex:/^0[1-9](?:[\-\s]?[0-9]{2}){4}$/'],
-            'facebook' => ['nullable'],
-            'instagram' => ['nullable'],
-            'youtube' => ['nullable'],
-            'tiktok' => ['nullable'],
+            'facebook' => ['nullable', 'url', 'regex:/facebook\.com\/.*/i'],
+            'instagram' => ['nullable', 'url', 'regex:/facebook\.com\/.*/i'],
+            'youtube' => ['nullable', 'url', 'regex:/youtube\.com\/.*/i'],
+            'tiktok' => ['nullable', 'url', 'regex:/tiktok\.com\/.*/i'],
             'address' => ['nullable'],
             'city' => ['nullable'],
             'zip_code' => ['nullable'],
