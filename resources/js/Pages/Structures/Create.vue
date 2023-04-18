@@ -36,14 +36,17 @@ const form = useForm({
     country: ref(null),
     address_lat: ref(null),
     address_lng: ref(null),
-    // famille_id: ref(null),
     email: ref(null),
     website: ref(null),
     phone1: ref(null),
+    phone2: ref(null),
     facebook: ref(null),
     instagram: ref(null),
     youtube: ref(null),
+    tiktok: ref(null),
     presentation_courte: ref(null),
+    presentation_longue: ref(null),
+    logo: ref(null),
 });
 
 const name = ref(null);
@@ -107,8 +110,9 @@ function enterAfterDisciplines() {
                                     structure
                                 </h3>
                                 <p class="mt-1 text-sm text-gray-800">
-                                    Ces informations apparaitront publiquement
-                                    sur ce site.
+                                    Les champs suivis d'un astérisque (*) sont
+                                    requis. Ces informations apparaitront
+                                    publiquement sur ce site.
                                 </p>
                             </div>
                         </div>
@@ -123,7 +127,7 @@ function enterAfterDisciplines() {
                                 >
                                     <!-- formstep 1 -->
                                     <div
-                                        class="space-y-6 bg-white px-4 py-5 sm:p-6"
+                                        class="px-4 py-5 space-y-6 bg-white sm:p-6"
                                     >
                                         <div class="grid grid-cols-3 gap-6">
                                             <!-- Name -->
@@ -134,10 +138,10 @@ function enterAfterDisciplines() {
                                                     for="name"
                                                     class="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Nom de la structure
+                                                    Nom de la structure *
                                                 </label>
                                                 <div
-                                                    class="mt-1 flex rounded-md"
+                                                    class="flex mt-1 rounded-md"
                                                 >
                                                     <input
                                                         ref="name"
@@ -145,7 +149,7 @@ function enterAfterDisciplines() {
                                                         type="text"
                                                         name="name"
                                                         id="name"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -165,7 +169,7 @@ function enterAfterDisciplines() {
                                                     for="structuretype_id"
                                                     class="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Type de structure
+                                                    Type de structure *
                                                 </label>
                                                 <div class="mt-1">
                                                     <select
@@ -174,7 +178,7 @@ function enterAfterDisciplines() {
                                                         v-model="
                                                             form.structuretype_id
                                                         "
-                                                        class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                        class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
                                                     >
                                                         <option
                                                             v-for="structure in structurestypes"
@@ -226,15 +230,15 @@ function enterAfterDisciplines() {
                                                     class="block text-sm font-medium text-gray-700"
                                                 >
                                                     Site web
-                                                    <span class="text-xs italic"
+                                                    <!-- <span class="text-xs italic"
                                                         >(url complète)</span
-                                                    >
+                                                    > -->
                                                 </label>
                                                 <div
-                                                    class="mt-1 flex rounded-md shadow-sm"
+                                                    class="flex mt-1 rounded-md shadow-sm"
                                                 >
                                                     <span
-                                                        class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-xs text-gray-500"
+                                                        class="inline-flex items-center px-3 text-xs text-gray-500 border border-r-0 border-gray-300 rounded-l-md bg-gray-50"
                                                     >
                                                         https://...
                                                     </span>
@@ -243,8 +247,8 @@ function enterAfterDisciplines() {
                                                         type="text"
                                                         name="website"
                                                         id="website"
-                                                        class="block w-full flex-1 rounded-none rounded-r-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                        placeholder="https://www.exemple.com"
+                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-none rounded-r-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                        placeholder="www.exemple.com"
                                                         autocomplete="none"
                                                     />
                                                 </div>
@@ -264,17 +268,17 @@ function enterAfterDisciplines() {
                                                     for="email"
                                                     class="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Email du club
+                                                    Email *
                                                 </label>
                                                 <div
-                                                    class="mt-1 flex rounded-md shadow-sm"
+                                                    class="flex mt-1 rounded-md shadow-sm"
                                                 >
                                                     <input
                                                         v-model="form.email"
                                                         type="email"
                                                         name="email"
                                                         id="email"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                         placeholder="structure@mail.com"
                                                         autocomplete="none"
                                                     />
@@ -295,17 +299,17 @@ function enterAfterDisciplines() {
                                                     for="phone1"
                                                     class="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Numéro de téléphone
+                                                    Numéro de téléphone *
                                                 </label>
                                                 <div
-                                                    class="mt-1 flex rounded-md shadow-sm"
+                                                    class="flex mt-1 rounded-md shadow-sm"
                                                 >
                                                     <input
                                                         v-model="form.phone1"
                                                         type="tel"
                                                         name="phone1"
                                                         id="phone1"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                         placeholder="02 10 ..."
                                                         autocomplete="none"
                                                     />
@@ -315,6 +319,38 @@ function enterAfterDisciplines() {
                                                     class="mt-2 text-xs text-red-500"
                                                 >
                                                     {{ errors.phone1 }}
+                                                </div>
+                                            </div>
+
+                                            <!-- Phone2 -->
+                                            <div
+                                                class="col-span-3 sm:col-span-2"
+                                            >
+                                                <label
+                                                    for="phone2"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                >
+                                                    Numéro de téléphone de
+                                                    sauvegarde
+                                                </label>
+                                                <div
+                                                    class="flex mt-1 rounded-md shadow-sm"
+                                                >
+                                                    <input
+                                                        v-model="form.phone2"
+                                                        type="tel"
+                                                        name="phone2"
+                                                        id="phone2"
+                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                        placeholder="02 10 ..."
+                                                        autocomplete="none"
+                                                    />
+                                                </div>
+                                                <div
+                                                    v-if="errors.phone2"
+                                                    class="mt-2 text-xs text-red-500"
+                                                >
+                                                    {{ errors.phone2 }}
                                                 </div>
                                             </div>
 
@@ -329,14 +365,14 @@ function enterAfterDisciplines() {
                                                     Facebook
                                                 </label>
                                                 <div
-                                                    class="mt-1 flex rounded-md"
+                                                    class="flex mt-1 rounded-md"
                                                 >
                                                     <input
                                                         v-model="form.facebook"
                                                         type="text"
                                                         name="facebook"
                                                         id="facebook"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -360,14 +396,14 @@ function enterAfterDisciplines() {
                                                     Instagram
                                                 </label>
                                                 <div
-                                                    class="mt-1 flex rounded-md"
+                                                    class="flex mt-1 rounded-md"
                                                 >
                                                     <input
                                                         v-model="form.instagram"
                                                         type="text"
                                                         name="instagram"
                                                         id="instagram"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -391,14 +427,14 @@ function enterAfterDisciplines() {
                                                     Youtube
                                                 </label>
                                                 <div
-                                                    class="mt-1 flex rounded-md"
+                                                    class="flex mt-1 rounded-md"
                                                 >
                                                     <input
                                                         v-model="form.youtube"
                                                         type="text"
                                                         name="youtube"
                                                         id="youtube"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -410,6 +446,36 @@ function enterAfterDisciplines() {
                                                     {{ errors.youtube }}
                                                 </div>
                                             </div>
+                                            <!-- tiktok -->
+                                            <div
+                                                class="col-span-3 sm:col-span-2"
+                                            >
+                                                <label
+                                                    for="tiktok"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                >
+                                                    Tiktok
+                                                </label>
+                                                <div
+                                                    class="flex mt-1 rounded-md"
+                                                >
+                                                    <input
+                                                        v-model="form.tiktok"
+                                                        type="text"
+                                                        name="tiktok"
+                                                        id="tiktok"
+                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                        placeholder=""
+                                                        autocomplete="none"
+                                                    />
+                                                </div>
+                                                <div
+                                                    v-if="errors.tiktok"
+                                                    class="mt-2 text-xs text-red-500"
+                                                >
+                                                    {{ errors.tiktok }}
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <!-- presentation_courte -->
@@ -418,7 +484,7 @@ function enterAfterDisciplines() {
                                                 for="presentation_courte"
                                                 class="block text-sm font-medium text-gray-700"
                                             >
-                                                Description
+                                                Description courte *
                                             </label>
                                             <div class="mt-1">
                                                 <textarea
@@ -427,12 +493,12 @@ function enterAfterDisciplines() {
                                                     "
                                                     id="presentation_courte"
                                                     name="presentation_courte"
-                                                    rows="3"
-                                                    class="mt-1 block h-48 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                    rows="2"
+                                                    class="block w-full h-48 min-h-full mt-1 placeholder-gray-400 placeholder-opacity-50 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                     :class="{
                                                         errors: 'border-red-500 focus:ring focus:ring-red-200',
                                                     }"
-                                                    placeholder="Un peu d'historique, vos activités... Mettez votre club en valeur"
+                                                    placeholder="Un peu d'historique, vos activités... Mettez votre structure en valeur"
                                                     autocomplete="none"
                                                 />
                                             </div>
@@ -451,26 +517,80 @@ function enterAfterDisciplines() {
                                                 {{ errors.presentation_courte }}
                                             </div>
                                         </div>
+
+                                        <!-- presentation_longue -->
+                                        <div>
+                                            <label
+                                                for="presentation_longue"
+                                                class="block text-sm font-medium text-gray-700"
+                                            >
+                                                Présentation longue
+                                            </label>
+                                            <div class="mt-1">
+                                                <textarea
+                                                    v-model="
+                                                        form.presentation_longue
+                                                    "
+                                                    id="presentation_longue"
+                                                    name="presentation_longue"
+                                                    rows="3"
+                                                    class="block w-full h-48 min-h-full mt-1 placeholder-gray-400 placeholder-opacity-50 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                    :class="{
+                                                        errors: 'border-red-500 focus:ring focus:ring-red-200',
+                                                    }"
+                                                    placeholder="Un peu d'historique, vos activités... Mettez votre structure en valeur"
+                                                    autocomplete="none"
+                                                />
+                                            </div>
+                                            <p
+                                                class="mt-2 text-sm text-gray-500"
+                                            >
+                                                Description de votre structure.
+                                            </p>
+                                            <div
+                                                v-if="
+                                                    errors.presentation_longue
+                                                "
+                                                class="mt-2 text-xs text-red-500"
+                                            >
+                                                {{ errors.presentation_longue }}
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label
+                                                for="logo"
+                                                class="block text-sm font-medium text-gray-700"
+                                                >Photo ou logo:</label
+                                            >
+                                            <input
+                                                class="mt-1 text-sm text-gray-700"
+                                                type="file"
+                                                id="logo"
+                                                @input="
+                                                    form.logo =
+                                                        $event.target.files[0]
+                                                "
+                                            />
+                                            <span
+                                                class="mt-2 text-xs text-red-500"
+                                                v-if="errors.logo"
+                                                v-text="errors.logo[0]"
+                                            ></span>
+                                        </div>
                                     </div>
 
-                                    <!--buttons formstep 1 -->
+                                    <!--buttons -->
                                     <div
-                                        class="bg-gray-50 px-4 py-3 text-right sm:px-6"
+                                        class="px-4 py-3 text-right bg-gray-50 sm:px-6"
                                     >
                                         <button
                                             :disabled="form.processing"
                                             type="submit"
-                                            class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                         >
                                             Enregistrer et ajouter une activité
                                         </button>
-                                        <!-- <button
-                                            @click="nextStep"
-                                            type="button"
-                                            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                        >
-                                            Ajouter une activité
-                                        </button> -->
                                     </div>
                                 </div>
                             </form>

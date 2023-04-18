@@ -119,7 +119,7 @@ export default {
                 for="address"
                 class="block text-sm font-medium text-gray-700"
             >
-                Adresse
+                Adresse *
             </label>
             <div class="flex mt-1 rounded-md shadow-sm">
                 <input
@@ -145,7 +145,7 @@ export default {
         <!-- city-->
         <div class="col-span-3 sm:col-span-1">
             <label for="city" class="block text-sm font-medium text-gray-700"
-                >Ville</label
+                >Ville *</label
             >
             <input
                 @input="$emit('update:city', $event.target.value)"
@@ -167,7 +167,7 @@ export default {
             <label
                 for="zip_code"
                 class="block text-sm font-medium text-gray-700"
-                >ZIP / Code Postal</label
+                >ZIP / Code Postal *</label
             >
             <input
                 @input="$emit('update:zip_code', $event.target.value)"
@@ -222,7 +222,7 @@ export default {
         <!-- pays -->
         <div class="col-span-3 sm:col-span-2">
             <label for="country" class="block text-sm font-medium text-gray-700"
-                >Pays</label
+                >Pays *</label
             >
             <select
                 @input="$emit('update:country', $event.target.value)"

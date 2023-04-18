@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use Inertia\Inertia;
 use App\Models\Nivel;
 use App\Models\Famille;
@@ -14,6 +15,7 @@ use App\Models\Activitetype;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use Illuminate\Validation\Rule;
+use App\Models\StructureAddress;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\RedirectResponse;
@@ -117,10 +119,12 @@ class StructureController extends Controller
             // 'famille_id' => ['nullable', Rule::exists('familles', 'id')],
             'email' => ['required', 'max:50', 'email'],
             'website' => ['nullable', 'regex:'.$regex],
-            'phone1' => ['required', 'digits:10'],
+            'phone1' => ['required', 'regex:/^0[1-9](?:[\-\s]?[0-9]{2}){4}$/'],
+            'phone2' => ['nullable', 'regex:/^0[1-9](?:[\-\s]?[0-9]{2}){4}$/'],
             'facebook' => ['nullable'],
             'instagram' => ['nullable'],
             'youtube' => ['nullable'],
+            'tiktok' => ['nullable'],
             'address' => ['nullable'],
             'city' => ['nullable'],
             'zip_code' => ['nullable'],
@@ -128,6 +132,8 @@ class StructureController extends Controller
             'address_lat' => ['nullable'],
             'address_lng' => ['nullable'],
             'presentation_courte' => ['required', 'min:8'],
+            'presentation_longue' => ['nullable'],
+            'logo' => ['nullable','image','max:2048'],
         ]);
 
         $name = $validated['name'];
@@ -135,8 +141,11 @@ class StructureController extends Controller
         $validated['user_id'] = auth()->id();
         $validated['slug'] = $slug;
 
-        $departmentNumber = substr($validated['zip_code'], 0, 2);
+        $city= City::where('code_postal', $validated['zip_code'])->firstOrFail();
+        $cityId = $city->id;
+        $validated['city_id'] = $cityId;
 
+        $departmentNumber = substr($validated['zip_code'], 0, 2);
         $departement= Departement::where('numero', $departmentNumber)->firstOrFail();
         $validated['departement_id'] = $departement->id;
 
@@ -144,6 +153,26 @@ class StructureController extends Controller
 
         $newSlug = $structure->slug . '-' . $structure->id;
         $structure->update(['slug' => $newSlug]);
+
+        $path = $request->file('logo')->store('structures/'. $structure->id .'/logo');
+        $structure->update(['logo' => $path]);
+
+        $validatedAddress = [
+            'structure_id' => $structure->id,
+            'name' => $structure->name,
+            'address' => $structure->address,
+            'zip_code' => $structure->zip_code,
+            'city' => $structure->city,
+            'country' => $structure->country,
+            'city_id' => $structure->city_id,
+            'country_id' => $structure->country_id,
+            'address_lat' => $structure->address_lat,
+            'address_lng' => $structure->address_lng,
+            'phone' => $structure->phone1,
+            'email' => $structure->email,
+        ];
+
+        $structureAddress = StructureAddress::create($validatedAddress);
 
         // $disciplinesIds = collect($request['disciplines'])->pluck('id');
         // $structure->disciplines()->attach($disciplinesIds);
