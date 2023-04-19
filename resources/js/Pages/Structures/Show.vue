@@ -220,7 +220,7 @@ function destroy(activite) {
                             <GlobeAltIcon class="mr-1.5 inline-block h-4 w-4" />
                             Site web:
                             <a
-                                :href="'https://' + structure.website"
+                                :href="structure.website"
                                 target="_blank"
                                 class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
                             >
