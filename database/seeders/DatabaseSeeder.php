@@ -70,6 +70,8 @@ class DatabaseSeeder extends Seeder
 
         $familles = Famille::all();
 
+        // $this->call(AbListeActivitesTableSeeder::class);
+
         //balle
         Discipline::factory()->create(['name' => 'Badminton', 'slug' => 'badminton', 'famille_id' => 1]);
         Discipline::factory()->create(['name' => 'Baseball', 'slug' => 'baseball', 'famille_id' => 1]);
@@ -395,6 +397,7 @@ class DatabaseSeeder extends Seeder
         Publictype::factory()->create(['name' =>'14 à 18 ans', 'slug' => '14-18ans']);
         Publictype::factory()->create(['name' =>'Adultes', 'slug' => 'adultes']);
 
-        Structure::factory(3)->create();
+        Structure::factory(1)->create();
+
     }
 }
