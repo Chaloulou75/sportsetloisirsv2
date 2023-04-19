@@ -30,10 +30,10 @@ class DatabaseSeeder extends Seeder
 
         // $this->call(RegionsTableSeeder::class);
 
-        $this->call(AListePaysTableSeeder::class);
-        $this->call(DepartementsTableSeeder::class);
-        $this->call(VillesFranceTableSeeder::class);
-        $this->call(CategoriesTableSeeder::class);
+        // $this->call(AListePaysTableSeeder::class);
+        // $this->call(DepartementsTableSeeder::class);
+        // $this->call(VillesFranceTableSeeder::class);
+        // $this->call(CategoriesTableSeeder::class);
 
         $departements = Departement::all();
         $cities = City::all();
@@ -47,7 +47,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'tonio20@hotmail.fr',
         ]);
 
-        $users = User::factory()->count(18)->create();
+        $users = User::factory()->count(5)->create();
 
         //les Types de structure
         Structuretype::factory()->create(['name' =>'Club', 'slug' => 'club']);
