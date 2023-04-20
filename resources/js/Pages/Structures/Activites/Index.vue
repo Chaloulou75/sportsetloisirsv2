@@ -8,34 +8,23 @@ const AutocompleteActiviteFormSmall = defineAsyncComponent(() =>
 );
 
 const props = defineProps({
-    disciplines: Object,
+    // disciplines: Object,
     niveaux: Object,
     publictypes: Object,
     activitestypes: Object,
     structure: Object,
     categories: Object,
+    listDisciplines: Object,
     can: Object,
 });
 
 const form = useForm({
     structure_id: ref(props.structure.id),
     discipline_id: ref(null),
-    activitetype_id: ref(null),
-    // nivel_id: ref(null),
-    // name: ref(null),
-    // address: ref(null),
-    // city: ref(null),
-    // zip_code: ref(null),
-    // country: ref(null),
-    // address_lat: ref(null),
-    // address_lng: ref(null),
-    // description: ref(null),
-    // publictype_id: ref(null),
+    categories_id: ref([]),
+    niveaux: ref(1),
+    publictypes: ref(1),
 });
-
-function showCategorie(id) {
-    console.log(id);
-}
 
 const categoriesList = ref([]);
 
@@ -43,7 +32,7 @@ watch(
     () => form.discipline_id,
     async (newDisciplineID) => {
         axios
-            .get("/api/disciplines/" + newDisciplineID + "/categories")
+            .get("/api/listdisciplines/" + newDisciplineID)
             .then((response) => {
                 categoriesList.value = response.data.data;
             })
@@ -83,18 +72,18 @@ function submit() {
                         <span class="text-blue-700">{{ structure.name }}</span>
                     </h2>
                 </div>
-                <!-- <div class="w-full mt-4 md:mt-0 md:w-1/4">
+                <div class="mt-4 w-full md:mt-0 md:w-1/4">
                     <div
                         class="flex flex-col justify-between space-y-4 md:ml-4 md:space-y-6"
                     >
                         <Link
                             :href="route('structures.show', structure.slug)"
-                            class="flex flex-col items-center justify-center px-4 py-2 overflow-hidden text-xs text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                         >
                             Voir la structure</Link
                         >
                     </div>
-                </div> -->
+                </div>
             </div>
         </template>
 
@@ -103,16 +92,15 @@ function submit() {
                 <div>
                     <form @submit.prevent="submit" autocomplete="off">
                         <div
-                            class="shadow-lg shadow-sky-700 sm:overflow-hidden sm:rounded-md"
+                            class="min-h-screen shadow-lg shadow-sky-700 sm:overflow-hidden sm:rounded-md"
                         >
                             <div
-                                class="flex items-center justify-around w-full px-4 py-5 bg-white sm:p-6"
+                                class="flex w-full items-center justify-around bg-white px-4 py-5 sm:p-6"
                             >
                                 <!-- discipline -->
-
                                 <AutocompleteActiviteFormSmall
-                                    class="w-full"
-                                    :disciplines="disciplines"
+                                    class="h-full w-full"
+                                    :disciplines="listDisciplines"
                                     :errors="form.errors"
                                     v-model:discipline="form.discipline_id"
                                     @update:modelValue="
@@ -121,9 +109,8 @@ function submit() {
                                     "
                                 />
                                 <button
-                                    @click="showCategorie(form.discipline_id)"
                                     type="button"
-                                    class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                    class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                 >
                                     Ajouter
                                 </button>
@@ -146,47 +133,48 @@ function submit() {
                                 </label>
                                 <div class="mt-1">
                                     <select
+                                        multiple
                                         name="categories"
                                         id="categories"
-                                        v-model="form.categories"
-                                        class="block w-full h-64 text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
-                                        multiple
+                                        v-model="form.categories_id"
+                                        class="flex w-full items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                                     >
                                         <option
+                                            class="h-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                                             v-for="categorie in categoriesList"
                                             :key="categorie.id"
-                                            :value="categorie"
+                                            :value="categorie.id"
                                         >
-                                            {{ categorie.name }}
+                                            {{ categorie.nom }}
                                         </option>
                                     </select>
                                 </div>
-                                <div class="mt-2 text-xs text-gray-700">
-                                    Sports sélectionnés:
+                                <!-- <div class="mt-2 text-xs text-gray-700">
+                                    Categories sélectionnées:
                                     <span
-                                        v-for="categorie in form.sports"
+                                        v-for="categorie in form.categories_id"
                                         :key="categorie.id"
                                         class="ml-1 text-sm font-semibold text-gray-700"
-                                        >{{ categorie.name }}
+                                        >{{ categorie.nom }}
                                         &bullet;
                                     </span>
-                                </div>
+                                </div> -->
                                 <div
-                                    v-if="form.errors.categories"
+                                    v-if="form.errors.categories_id"
                                     class="mt-2 text-xs text-red-500"
                                 >
-                                    {{ form.errors.categories }}
+                                    {{ form.errors.categories_id }}
                                 </div>
                             </div>
 
                             <!--buttons -->
                             <div
-                                class="px-4 py-3 text-right bg-gray-50 sm:px-6"
+                                class="bg-gray-50 px-4 py-3 text-right sm:px-6"
                             >
                                 <button
                                     :disabled="form.processing"
                                     type="submit"
-                                    class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                    class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                 >
                                     Enregistrer
                                 </button>
@@ -197,25 +185,24 @@ function submit() {
 
                 <section
                     v-if="structure.activites.length > 0"
-                    class="px-2 py-6 mx-auto my-4 space-y-4 max-w-7xl sm:px-4 lg:px-8"
+                    class="mx-auto my-4 max-w-7xl space-y-4 px-2 py-6 sm:px-4 lg:px-8"
                 >
                     <h2 class="text-xl font-bold">Nos activités</h2>
                     <div
                         v-for="(activite, index) in structure.activites"
                         :key="activite.id"
                         :index="index"
-                        class="flex flex-col justify-between w-full px-2 py-4 space-y-4 text-gray-800 border border-gray-500 rounded-lg shadow-md md:flex-row md:space-y-0"
+                        class="flex w-full flex-col justify-between space-y-4 rounded-lg border border-gray-500 px-2 py-4 text-gray-800 shadow-md md:flex-row md:space-y-0"
                     >
                         <div
-                            class="flex flex-col justify-start w-full md:w-1/3"
+                            class="flex w-full flex-col justify-start md:w-1/3"
                         >
                             <p class="text-base font-semibold">
                                 {{ activite.discipline.name }}
                             </p>
                         </div>
-
                         <div
-                            class="flex flex-col items-center justify-end px-4 space-y-2 md:w:1/3 md:ml-4 md:space-y-6"
+                            class="md:w:1/3 flex flex-col items-center justify-end space-y-2 px-4 md:ml-4 md:space-y-6"
                         >
                             <Link
                                 :href="
@@ -225,7 +212,7 @@ function submit() {
                                     })
                                 "
                                 v-if="can.update"
-                                class="flex flex-col items-center justify-center w-full px-4 py-2 overflow-hidden text-xs text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                                class="flex w-full flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                             >
                                 Editer l'activité
                             </Link>

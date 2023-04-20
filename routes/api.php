@@ -21,6 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/familles', [FamilleController::class, 'loadFamilles']);
-Route::get('/api/disciplines/{id}/categories', [DisciplineController::class, 'getCategories']);
+Route::get('/listdisciplines/{id}', [DisciplineController::class, 'getCategories']);
 
 Route::get('/disciplines', [DisciplineController::class,'loadDisciplines']);

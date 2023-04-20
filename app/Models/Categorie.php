@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Categorie extends Model
 {
@@ -16,8 +17,13 @@ class Categorie extends Model
      */
     protected $guarded = [];
 
-    public function disciplines()
+    public function listactivites(): BelongsToMany
     {
-        return $this->belongsToMany(Discipline::class, 'categorie_discipline', 'categorie_id', 'discipline_id');
+        return $this->belongsToMany(ListDiscipline::class, 'a_liens_activites_categories', 'id_categorie', 'id_activite');
+    }
+
+    public function activites(): BelongsToMany
+    {
+        return $this->belongsToMany(Activite::class, 'structure_activite_categorie', 'categorie_id', 'activite_id');
     }
 }

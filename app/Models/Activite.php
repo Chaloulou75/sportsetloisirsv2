@@ -43,4 +43,9 @@ class Activite extends Model
     {
         return $this->belongsTo(Structure::class);
     }
+
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Categorie::class, 'structure_activite_categorie', 'activite_id', 'categorie_id');
+    }
 }

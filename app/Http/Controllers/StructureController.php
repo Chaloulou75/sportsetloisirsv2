@@ -90,7 +90,7 @@ class StructureController extends Controller
      */
     public function create()
     {
-        $structurestypes = Structuretype::select(['id', 'name', 'slug'])->get();
+        $structurestypes = Structuretype::with('structuretypeattributs')->select(['id', 'name', 'slug'])->get();
         $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
         $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
         $activitestypes = Activitetype::select(['id', 'name', 'slug'])->get();
@@ -127,8 +127,11 @@ class StructureController extends Controller
             'country' => ['nullable'],
             'address_lat' => ['nullable'],
             'address_lng' => ['nullable'],
+            'date_actif' => ['nullable'],
             'presentation_courte' => ['required', 'min:8'],
             'presentation_longue' => ['nullable'],
+            'abo_news' => ['nullable'],
+            'abo_promo' => ['nullable'],
             'logo' => ['nullable','image','max:2048'],
         ]);
 
@@ -181,7 +184,7 @@ class StructureController extends Controller
 
         Mail::to($structure->email)->send(new StructureCreated($structure));
 
-        return Redirect::route('activites.create', $structure->slug)->with('success', 'Votre structure est bien créée, vous allez recevoir une confirmation par email. Vous pouvez, maintenant, ajouter des activités à votre structure.');
+        return Redirect::route('structures.activites.index', $structure->slug)->with('success', 'Votre structure est bien créée, vous allez recevoir une confirmation par email. Vous pouvez, maintenant, ajouter des activités à votre structure.');
     }
 
     /**

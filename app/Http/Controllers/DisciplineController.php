@@ -7,6 +7,8 @@ use App\Models\Categorie;
 use App\Models\Structure;
 use App\Models\Discipline;
 use Illuminate\Http\Request;
+use App\Models\ListDiscipline;
+use App\Http\Resources\CategorieResource;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Resources\DisciplineResource;
 
@@ -110,12 +112,11 @@ class DisciplineController extends Controller
 
     public function getCategories($id)
     {
-        $categories = Categorie::whereHas('disciplines', function ($query) use ($id) {
-            $query->where('id', $id);
-        })->get();
+        $listdiscipline = ListDiscipline::findOrFail($id);
 
-        return response()->json([
-            'data' => $categories,
-        ]);
+        $categories = $listdiscipline->categories;
+
+        return CategorieResource::collection($categories);
+
     }
 }

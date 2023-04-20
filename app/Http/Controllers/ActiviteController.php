@@ -11,6 +11,7 @@ use App\Models\Discipline;
 use App\Models\Publictype;
 use Illuminate\Support\Str;
 use App\Models\Activitetype;
+use App\Models\ListDiscipline;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
@@ -21,24 +22,35 @@ use Illuminate\Support\Facades\Redirect;
 class ActiviteController extends Controller
 {
     /**
-     * Display a listing of the resource and also Show the form for creating a new resource.
+     * Display a listing of the resource and Show the form for creating a new resource.
      */
     public function index(Structure $structure)
     {
-        $structure = Structure::with(['activites', 'activites.discipline'])->select(['id', 'name', 'slug'])->where('id', $structure->id)->first();
+        $structure = Structure::with(['activites',
+                        'activites.discipline',
+                        'activites.categorie',
+                        'activites.nivel',
+                        'activites.activitetype',
+                        'activites.publictype'
+                    ])
+                    ->select(['id', 'name', 'slug'])
+                    ->where('id', $structure->id)
+                    ->first();
         $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
         $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
-        $activitestypes = Activitetype::select(['id', 'name', 'slug'])->get();
-        $disciplines = Discipline::select(['id', 'name', 'slug'])->get();
-        $categories = Categorie::select(['id', 'nom', 'ico'])->get();
+        // $activitestypes = Activitetype::select(['id', 'name', 'slug'])->get();
+        // $disciplines = Discipline::select(['id', 'name', 'slug'])->get();
+        $categories = Categorie::with('listactivites')->select(['id', 'nom', 'ico'])->get();
+        $listDisciplines = ListDiscipline::with('categories')->select(['id', 'discipline'])->get();
 
         return Inertia::render('Structures/Activites/Index', [
             'structure' => $structure,
-            'disciplines' => $disciplines,
+            // 'disciplines' => $disciplines,
             'niveaux' => $niveaux,
             'publictypes' => $publictypes,
-            'activitestypes' => $activitestypes,
+            // 'activitestypes' => $activitestypes,
             'categories' => $categories,
+            'listDisciplines' => $listDisciplines,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),
@@ -51,7 +63,15 @@ class ActiviteController extends Controller
      */
     public function create(Structure $structure)
     {
-        $structure = Structure::select(['id', 'name', 'slug'])->where('slug', $structure->slug)->first();
+        $structure = Structure::with([
+                    'activites',
+                    'activites.discipline',
+                    'activites.nivel',
+                    'activites.activitetype',
+                    'activites.publictype'
+                ])->select(['id', 'name', 'slug'])
+                ->where('slug', $structure->slug)
+                ->first();
         $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
         $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
         $activitestypes = Activitetype::select(['id', 'name', 'slug'])->get();
@@ -73,25 +93,17 @@ class ActiviteController extends Controller
     {
         $validated= request()->validate([
             'structure_id' => ['required', Rule::exists('structures', 'id')],
-            'name' => ['required', 'string', 'max:255'],
-            'discipline_id' => ['required', Rule::exists('disciplines', 'id')],
-            'activitetype_id' => ['required', Rule::exists('activitetypes', 'id')],
-            'nivel_id' => ['required', Rule::exists('nivels', 'id')],
-            'publictype_id' => ['required', Rule::exists('publictypes', 'id')],
-            'address' => ['nullable'],
-            'city' => ['nullable'],
-            'zip_code' => ['nullable'],
-            'country' => ['nullable'],
-            'address_lat' => ['nullable'],
-            'address_lng' => ['nullable'],
-            'description' => ['required', 'min:8'],
+            'discipline_id' => ['required', Rule::exists('a_liste_activites', 'id')],
+            'categories_id' => ['required', 'array', Rule::exists('categories', 'id')],
+            'niveaux' => ['required'],
+            'publictypes' => ['required'],
         ]);
 
-        $name = $validated['name'];
-        $slug = Str::slug($name, '-');
-        $validated['slug'] = $slug;
-
-        $activite = Activite::create($validated);
+        $categoriesIds = array_values($validated['categories_id']);
+        foreach ($categoriesIds as $validated['categorie_id']) {
+            dd($validated);
+            $activites = Activite::create($validated);
+        }
 
         return Redirect::route('structures.activites.index', $structure)->with('success', 'Activité créée, vous pouvez ajouter d\'autres activités à votre structure.');
     }

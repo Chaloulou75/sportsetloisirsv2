@@ -37,6 +37,7 @@ const form = useForm({
     address_lat: ref(null),
     address_lng: ref(null),
     email: ref(null),
+    date_actif: ref(null),
     website: ref(null),
     phone1: ref(null),
     phone2: ref(null),
@@ -46,6 +47,8 @@ const form = useForm({
     tiktok: ref(null),
     presentation_courte: ref(null),
     presentation_longue: ref(null),
+    abo_news: ref(true),
+    abo_promo: ref(true),
     logo: ref(null),
 });
 
@@ -125,9 +128,8 @@ function enterAfterDisciplines() {
                                 <div
                                     class="shadow-lg shadow-sky-700 sm:overflow-hidden sm:rounded-md"
                                 >
-                                    <!-- formstep 1 -->
                                     <div
-                                        class="px-4 py-5 space-y-6 bg-white sm:p-6"
+                                        class="space-y-6 bg-white px-4 py-5 sm:p-6"
                                     >
                                         <div class="grid grid-cols-3 gap-6">
                                             <!-- Name -->
@@ -141,7 +143,7 @@ function enterAfterDisciplines() {
                                                     Nom de la structure *
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md"
+                                                    class="mt-1 flex rounded-md"
                                                 >
                                                     <input
                                                         ref="name"
@@ -149,7 +151,7 @@ function enterAfterDisciplines() {
                                                         type="text"
                                                         name="name"
                                                         id="name"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -178,7 +180,7 @@ function enterAfterDisciplines() {
                                                         v-model="
                                                             form.structuretype_id
                                                         "
-                                                        class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
+                                                        class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                                     >
                                                         <option
                                                             v-for="structure in structurestypes"
@@ -200,6 +202,65 @@ function enterAfterDisciplines() {
                                                     {{
                                                         errors.structuretype_id
                                                     }}
+                                                </div>
+                                            </div>
+                                            <!-- structure type attributs -->
+                                            <div
+                                                v-for="(
+                                                    structuretype, index
+                                                ) in props.structurestypes"
+                                                :key="index"
+                                                class="col-span-3 sm:col-span-2"
+                                            >
+                                                <div
+                                                    v-for="(
+                                                        attribut, idx
+                                                    ) in structuretype.structuretypeattributs"
+                                                    :key="idx"
+                                                >
+                                                    <div
+                                                        v-if="
+                                                            (attribut.structuretype_id =
+                                                                form.structuretype_id)
+                                                        "
+                                                    >
+                                                        <label
+                                                            :for="attribut.nom"
+                                                            class="block text-sm font-medium text-gray-700"
+                                                        >
+                                                            {{ attribut.nom }}
+                                                        </label>
+                                                        <div
+                                                            class="mt-1 flex rounded-md"
+                                                        >
+                                                            <input
+                                                                v-model="
+                                                                    form.attribut
+                                                                "
+                                                                type="text"
+                                                                :name="
+                                                                    attribut.nom
+                                                                "
+                                                                :id="
+                                                                    attribut.nom
+                                                                "
+                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                                placeholder=""
+                                                                autocomplete="none"
+                                                            />
+                                                        </div>
+
+                                                        <div
+                                                            v-if="
+                                                                errors.attribut
+                                                            "
+                                                            class="mt-2 text-xs text-red-500"
+                                                        >
+                                                            {{
+                                                                errors.attribut
+                                                            }}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -230,15 +291,15 @@ function enterAfterDisciplines() {
                                                     class="block text-sm font-medium text-gray-700"
                                                 >
                                                     Site web
-                                                    <!-- <span class="text-xs italic"
+                                                    <span class="text-xs italic"
                                                         >(url complète)</span
-                                                    > -->
+                                                    >
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md shadow-sm"
+                                                    class="mt-1 flex rounded-md shadow-sm"
                                                 >
                                                     <span
-                                                        class="inline-flex items-center px-3 text-xs text-gray-500 border border-r-0 border-gray-300 rounded-l-md bg-gray-50"
+                                                        class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-xs text-gray-500"
                                                     >
                                                         https://...
                                                     </span>
@@ -247,8 +308,8 @@ function enterAfterDisciplines() {
                                                         type="text"
                                                         name="website"
                                                         id="website"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-none rounded-r-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                        placeholder="www.exemple.com"
+                                                        class="block w-full flex-1 rounded-none rounded-r-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                        placeholder="https://www.exemple.com"
                                                         autocomplete="none"
                                                     />
                                                 </div>
@@ -271,14 +332,14 @@ function enterAfterDisciplines() {
                                                     Email *
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md shadow-sm"
+                                                    class="mt-1 flex rounded-md shadow-sm"
                                                 >
                                                     <input
                                                         v-model="form.email"
                                                         type="email"
                                                         name="email"
                                                         id="email"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                         placeholder="structure@mail.com"
                                                         autocomplete="none"
                                                     />
@@ -288,6 +349,39 @@ function enterAfterDisciplines() {
                                                     class="mt-2 text-xs text-red-500"
                                                 >
                                                     {{ errors.email }}
+                                                </div>
+                                            </div>
+
+                                            <!-- date_actif -->
+                                            <div
+                                                class="col-span-3 sm:col-span-2"
+                                            >
+                                                <label
+                                                    for="date_actif"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                >
+                                                    En activité depuis:
+                                                </label>
+                                                <div
+                                                    class="mt-1 flex rounded-md shadow-sm"
+                                                >
+                                                    <input
+                                                        type="date"
+                                                        v-model="
+                                                            form.date_actif
+                                                        "
+                                                        name="date_actif"
+                                                        id="date_actif"
+                                                        class="form-input block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                        placeholder=""
+                                                        autocomplete="none"
+                                                    />
+                                                </div>
+                                                <div
+                                                    v-if="errors.date_actif"
+                                                    class="mt-2 text-xs text-red-500"
+                                                >
+                                                    {{ errors.date_actif }}
                                                 </div>
                                             </div>
 
@@ -302,14 +396,14 @@ function enterAfterDisciplines() {
                                                     Numéro de téléphone *
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md shadow-sm"
+                                                    class="mt-1 flex rounded-md shadow-sm"
                                                 >
                                                     <input
                                                         v-model="form.phone1"
                                                         type="tel"
                                                         name="phone1"
                                                         id="phone1"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                         placeholder="02 10 ..."
                                                         autocomplete="none"
                                                     />
@@ -334,14 +428,14 @@ function enterAfterDisciplines() {
                                                     sauvegarde
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md shadow-sm"
+                                                    class="mt-1 flex rounded-md shadow-sm"
                                                 >
                                                     <input
                                                         v-model="form.phone2"
                                                         type="tel"
                                                         name="phone2"
                                                         id="phone2"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                         placeholder="02 10 ..."
                                                         autocomplete="none"
                                                     />
@@ -363,16 +457,19 @@ function enterAfterDisciplines() {
                                                     class="block text-sm font-medium text-gray-700"
                                                 >
                                                     Facebook
+                                                    <span class="text-xs italic"
+                                                        >(url complète)</span
+                                                    >
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md"
+                                                    class="mt-1 flex rounded-md"
                                                 >
                                                     <input
                                                         v-model="form.facebook"
                                                         type="text"
                                                         name="facebook"
                                                         id="facebook"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -394,16 +491,19 @@ function enterAfterDisciplines() {
                                                     class="block text-sm font-medium text-gray-700"
                                                 >
                                                     Instagram
+                                                    <span class="text-xs italic"
+                                                        >(url complète)</span
+                                                    >
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md"
+                                                    class="mt-1 flex rounded-md"
                                                 >
                                                     <input
                                                         v-model="form.instagram"
                                                         type="text"
                                                         name="instagram"
                                                         id="instagram"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -425,16 +525,19 @@ function enterAfterDisciplines() {
                                                     class="block text-sm font-medium text-gray-700"
                                                 >
                                                     Youtube
+                                                    <span class="text-xs italic"
+                                                        >(url complète)</span
+                                                    >
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md"
+                                                    class="mt-1 flex rounded-md"
                                                 >
                                                     <input
                                                         v-model="form.youtube"
                                                         type="text"
                                                         name="youtube"
                                                         id="youtube"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -446,6 +549,7 @@ function enterAfterDisciplines() {
                                                     {{ errors.youtube }}
                                                 </div>
                                             </div>
+
                                             <!-- tiktok -->
                                             <div
                                                 class="col-span-3 sm:col-span-2"
@@ -455,16 +559,19 @@ function enterAfterDisciplines() {
                                                     class="block text-sm font-medium text-gray-700"
                                                 >
                                                     Tiktok
+                                                    <span class="text-xs italic"
+                                                        >(url complète)</span
+                                                    >
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md"
+                                                    class="mt-1 flex rounded-md"
                                                 >
                                                     <input
                                                         v-model="form.tiktok"
                                                         type="text"
                                                         name="tiktok"
                                                         id="tiktok"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -494,7 +601,7 @@ function enterAfterDisciplines() {
                                                     id="presentation_courte"
                                                     name="presentation_courte"
                                                     rows="2"
-                                                    class="block w-full h-48 min-h-full mt-1 placeholder-gray-400 placeholder-opacity-50 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                    class="mt-1 block h-48 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                     :class="{
                                                         errors: 'border-red-500 focus:ring focus:ring-red-200',
                                                     }"
@@ -534,7 +641,7 @@ function enterAfterDisciplines() {
                                                     id="presentation_longue"
                                                     name="presentation_longue"
                                                     rows="3"
-                                                    class="block w-full h-48 min-h-full mt-1 placeholder-gray-400 placeholder-opacity-50 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                    class="mt-1 block h-48 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                     :class="{
                                                         errors: 'border-red-500 focus:ring focus:ring-red-200',
                                                     }"
@@ -579,16 +686,54 @@ function enterAfterDisciplines() {
                                                 v-text="errors.logo[0]"
                                             ></span>
                                         </div>
+
+                                        <!-- abo_news -->
+                                        <div>
+                                            <div class="flex items-center">
+                                                <input
+                                                    v-model="form.abo_news"
+                                                    checked
+                                                    id="abo_news"
+                                                    type="checkbox"
+                                                    class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
+                                                />
+                                                <label
+                                                    for="abo_news"
+                                                    class="ml-2 text-sm font-medium text-gray-700"
+                                                    >Abonnement à la
+                                                    newsletter</label
+                                                >
+                                            </div>
+                                        </div>
+
+                                        <!-- abo_promo -->
+                                        <div>
+                                            <div class="flex items-center">
+                                                <input
+                                                    v-model="form.abo_promo"
+                                                    checked
+                                                    id="abo_promo"
+                                                    type="checkbox"
+                                                    class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
+                                                />
+                                                <label
+                                                    for="abo_promo"
+                                                    class="ml-2 text-sm font-medium text-gray-700"
+                                                    >Abonnement aux
+                                                    promotions</label
+                                                >
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <!--buttons -->
                                     <div
-                                        class="px-4 py-3 text-right bg-gray-50 sm:px-6"
+                                        class="bg-gray-50 px-4 py-3 text-right sm:px-6"
                                     >
                                         <button
                                             :disabled="form.processing"
                                             type="submit"
-                                            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                            class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                         >
                                             Enregistrer et ajouter une activité
                                         </button>
