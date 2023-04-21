@@ -16,10 +16,6 @@ class StructureTypeInfo extends Model
      */
     protected $guarded = [];
 
-    protected $table = 'a_liste_structures_types_infos';
+    protected $table = 'a_structures_types_infos';
 
-    // public function structuretype(): BelongsTo
-    // {
-    //     return $this->belongsTo(Structuretype::class, 'a_liste_structures_types_attributs');
-    // }
 }

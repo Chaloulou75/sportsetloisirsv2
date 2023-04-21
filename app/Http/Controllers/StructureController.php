@@ -17,6 +17,7 @@ use App\Models\Structuretype;
 use App\Mail\StructureCreated;
 use Illuminate\Validation\Rule;
 use App\Models\StructureAddress;
+use App\Models\StructureTypeInfo;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -90,7 +91,7 @@ class StructureController extends Controller
      */
     public function create()
     {
-        $structurestypes = Structuretype::with('structuretypeattributs')->select(['id', 'name', 'slug'])->get();
+        $structurestypes = Structuretype::with(['structuretypeattributs', 'structuretypeattributs.structuretypevaleurs'])->select(['id', 'name', 'slug'])->get();
         $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
         $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
         $activitestypes = Activitetype::select(['id', 'name', 'slug'])->get();
@@ -127,7 +128,7 @@ class StructureController extends Controller
             'country' => ['nullable'],
             'address_lat' => ['nullable'],
             'address_lng' => ['nullable'],
-            'date_actif' => ['nullable'],
+            'date_creation' => ['nullable'],
             'presentation_courte' => ['required', 'min:8'],
             'presentation_longue' => ['nullable'],
             'abo_news' => ['nullable'],
@@ -182,6 +183,17 @@ class StructureController extends Controller
             'phone' => $structure->phone1,
         ]);
 
+        $attributs = $request['attributs'];
+
+        foreach ($attributs as $key => $attribut) {
+            if (isset($attribut)) {
+                StructureTypeInfo::create([
+                    'attribut_id' => $key,
+                    'valeur' => $attribut
+                ]);
+            }
+        }
+
         Mail::to($structure->email)->send(new StructureCreated($structure));
 
         return Redirect::route('structures.activites.index', $structure->slug)->with('success', 'Votre structure est bien créée, vous allez recevoir une confirmation par email. Vous pouvez, maintenant, ajouter des activités à votre structure.');
@@ -210,7 +222,7 @@ class StructureController extends Controller
             'activites.activitetype',
             'activites.publictype',
             ])
-            ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'view_count', 'departement_id', 'logo'])
+            ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
             ->where('slug', $structure->slug)
             ->first();
 
@@ -238,7 +250,7 @@ class StructureController extends Controller
             return Redirect::route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette fiche, vous devez être le créateur de la structure ou un administrateur.');
         }
 
-        $structurestypes = Structuretype::select(['id', 'name', 'slug'])->get();
+        $structurestypes = Structuretype::with(['structuretypeattributs', 'structuretypeattributs.structuretypevaleurs'])->select(['id', 'name', 'slug'])->get();
         $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
         $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
         $activitestypes = Activitetype::select(['id', 'name', 'slug'])->get();
@@ -259,7 +271,7 @@ class StructureController extends Controller
             'activites.activitetype',
             'activites.publictype',
             ])
-            ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'view_count', 'departement_id', 'logo'])
+            ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'abo_news', 'abo_promo','logo'])
             ->where('slug', $structure->slug)
             ->firstOrFail();
 
@@ -298,8 +310,12 @@ class StructureController extends Controller
             'country' => ['nullable'],
             'address_lat' => ['nullable'],
             'address_lng' => ['nullable'],
+            'date_creation' => ['nullable'],
             'presentation_courte' => ['required', 'min:8'],
             'presentation_longue' => ['nullable'],
+            'abo_news' => ['nullable'],
+            'abo_promo' => ['nullable'],
+            'logo' => ['nullable','image','max:2048'],
         ]);
 
         $name = $validated['name'];
@@ -342,6 +358,19 @@ class StructureController extends Controller
         ];
         $structureAddress = StructureAddress::where('structure_id', $structure->id)->firstOrFail();
         $structureAddress->update($validatedAddress);
+
+        
+        $attributs = $request['attributs'];
+
+        foreach ($attributs as $key => $attribut) {
+            if (isset($attribut)) {
+                $structuretypeinfo = StructureTypeInfo::where('attribut_id', $key)->firstOrfail();
+                $structuretypeinfo->update([
+                    'attribut_id' => $key,
+                    'valeur' => $attribut
+                ]);
+            }
+        }
 
         return Redirect::route('structures.show', $structure->slug)->with('success', 'Votre structure a été mise à jour');
 

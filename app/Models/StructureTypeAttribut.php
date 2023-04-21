@@ -26,8 +26,8 @@ class StructureTypeAttribut extends Model
         return $this->belongsTo(Structuretype::class, 'a_liste_structures_types_attributs');
     }
 
-    // public function structuretypevaleur(): HasMany
-    // {
-    //     return $this->hasMany(StructureTypeValeur::class, 'a_liste_structures_types_valeurs');
-    // }
+    public function structuretypevaleurs(): HasMany
+    {
+        return $this->hasMany(StructureTypeValeur::class, 'id_champ', 'id');
+    }
 }

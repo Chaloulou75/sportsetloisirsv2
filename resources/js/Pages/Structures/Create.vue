@@ -6,18 +6,16 @@ import {
     ListboxOptions,
     ListboxOption,
 } from "@headlessui/vue";
-import { CheckIcon, SelectorIcon } from "@heroicons/vue/24/solid";
 import AppLayout from "@/Layouts/AppLayout.vue";
-import LogoInput from "@/Components/LogoInput.vue";
-import StepsIndicator from "@/Components/Inscription/StepsIndicator.vue";
-import AutocompleteActiviteForm from "@/Components/Inscription/AutocompleteActiviteForm.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, onMounted, watch, defineAsyncComponent } from "vue";
 
 const AddressForm = defineAsyncComponent(() =>
     import("@/Components/Google/AddressForm.vue")
 );
-
+const BaseInfoForm = defineAsyncComponent(() =>
+    import("@/Components/Inscription/BaseInfoForm.vue")
+);
 const props = defineProps({
     structurestypes: Object,
     niveaux: Object,
@@ -30,6 +28,7 @@ const props = defineProps({
 const form = useForm({
     name: ref(null),
     structuretype_id: ref(null),
+    attributs: ref([]),
     address: ref(null),
     city: ref(null),
     zip_code: ref(null),
@@ -37,7 +36,7 @@ const form = useForm({
     address_lat: ref(null),
     address_lng: ref(null),
     email: ref(null),
-    date_actif: ref(null),
+    date_creation: ref(null),
     website: ref(null),
     phone1: ref(null),
     phone2: ref(null),
@@ -51,6 +50,16 @@ const form = useForm({
     abo_promo: ref(true),
     logo: ref(null),
 });
+
+const addItem = (id) => {
+    form.attributs.push({
+        id,
+    });
+};
+
+function resetFields() {
+    form.reset("attributs");
+}
 
 const name = ref(null);
 const familles = ref([]);
@@ -84,9 +93,6 @@ function submit() {
     form.post("/structures");
 }
 
-function enterAfterDisciplines() {
-    document.getElementById("address").focus();
-}
 </script>
 
 <template>
@@ -175,6 +181,7 @@ function enterAfterDisciplines() {
                                                 </label>
                                                 <div class="mt-1">
                                                     <select
+                                                        @change="resetFields"
                                                         name="structuretype_id"
                                                         id="structuretype_id"
                                                         v-model="
@@ -204,61 +211,249 @@ function enterAfterDisciplines() {
                                                     }}
                                                 </div>
                                             </div>
+
                                             <!-- structure type attributs -->
                                             <div
                                                 v-for="(
                                                     structuretype, index
                                                 ) in props.structurestypes"
-                                                :key="index"
+                                                :key="structuretype.id"
                                                 class="col-span-3 sm:col-span-2"
                                             >
                                                 <div
                                                     v-for="(
                                                         attribut, idx
                                                     ) in structuretype.structuretypeattributs"
-                                                    :key="idx"
+                                                    :key="attribut.id"
                                                 >
                                                     <div
                                                         v-if="
-                                                            (attribut.structuretype_id =
-                                                                form.structuretype_id)
+                                                            attribut.structuretype_id ===
+                                                            form.structuretype_id
                                                         "
                                                     >
-                                                        <label
-                                                            :for="attribut.nom"
-                                                            class="block text-sm font-medium text-gray-700"
-                                                        >
-                                                            {{ attribut.nom }}
-                                                        </label>
-                                                        <div
-                                                            class="mt-1 flex rounded-md"
-                                                        >
-                                                            <input
-                                                                v-model="
-                                                                    form.attribut
-                                                                "
-                                                                type="text"
-                                                                :name="
-                                                                    attribut.nom
-                                                                "
-                                                                :id="
-                                                                    attribut.nom
-                                                                "
-                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                                placeholder=""
-                                                                autocomplete="none"
-                                                            />
-                                                        </div>
-
+                                                        <!-- input text -->
                                                         <div
                                                             v-if="
-                                                                errors.attribut
+                                                                attribut.type_champ_form ===
+                                                                'text'
                                                             "
-                                                            class="mt-2 text-xs text-red-500"
                                                         >
-                                                            {{
-                                                                errors.attribut
-                                                            }}
+                                                            <label
+                                                                :for="
+                                                                    attribut.nom
+                                                                "
+                                                                class="block text-sm font-medium text-gray-700"
+                                                            >
+                                                                {{
+                                                                    attribut.nom
+                                                                }}
+                                                            </label>
+                                                            <div
+                                                                class="mt-1 flex rounded-md"
+                                                            >
+                                                                <input
+                                                                    type="text"
+                                                                    v-model="
+                                                                        form
+                                                                            .attributs[
+                                                                            attribut
+                                                                                .id
+                                                                        ]
+                                                                    "
+                                                                    :name="
+                                                                        attribut.nom
+                                                                    "
+                                                                    :id="
+                                                                        attribut.nom
+                                                                    "
+                                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                                    placeholder=""
+                                                                    autocomplete="none"
+                                                                />
+                                                            </div>
+
+                                                            <!-- <div
+                                                                v-if="
+                                                                    errors.attributs
+                                                                "
+                                                                class="mt-2 text-xs text-red-500"
+                                                            >
+                                                                {{
+                                                                    errors.attributs
+                                                                }}
+                                                            </div> -->
+                                                        </div>
+                                                        <!-- select -->
+                                                        <div
+                                                            v-if="
+                                                                attribut.type_champ_form ===
+                                                                'select'
+                                                            "
+                                                        >
+                                                            <label
+                                                                :for="
+                                                                    attribut.nom
+                                                                "
+                                                                class="block text-sm font-medium text-gray-700"
+                                                            >
+                                                                {{
+                                                                    attribut.nom
+                                                                }}
+                                                            </label>
+                                                            <div
+                                                                class="mt-1 flex rounded-md"
+                                                            >
+                                                                <select
+                                                                    :name="
+                                                                        attribut.nom
+                                                                    "
+                                                                    :id="
+                                                                        attribut.nom
+                                                                    "
+                                                                    v-model="
+                                                                        form
+                                                                            .attributs[
+                                                                            attribut
+                                                                                .id
+                                                                        ]
+                                                                    "
+                                                                    class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                                >
+                                                                    <option
+                                                                        v-for="(
+                                                                            option,
+                                                                            index
+                                                                        ) in attribut.structuretypevaleurs"
+                                                                        :key="
+                                                                            index
+                                                                        "
+                                                                        :value="
+                                                                            option.nom
+                                                                        "
+                                                                    >
+                                                                        {{
+                                                                            option.nom
+                                                                        }}
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+
+                                                            <!-- <div
+                                                                v-if="
+                                                                    errors.attributs
+                                                                "
+                                                                class="mt-2 text-xs text-red-500"
+                                                            >
+                                                                {{
+                                                                    errors.attributs
+                                                                }}
+                                                            </div> -->
+                                                        </div>
+                                                        <!-- checkbox -->
+                                                        <div
+                                                            v-if="
+                                                                attribut.type_champ_form ===
+                                                                'checkbox'
+                                                            "
+                                                        >
+                                                            <div
+                                                                class="flex items-center"
+                                                            >
+                                                                <input
+                                                                    v-model="
+                                                                        form
+                                                                            .attributs[
+                                                                            attribut
+                                                                                .id
+                                                                        ]
+                                                                    "
+                                                                    :id="
+                                                                        attribut.nom
+                                                                    "
+                                                                    type="checkbox"
+                                                                    class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
+                                                                />
+                                                                <label
+                                                                    :for="
+                                                                        attribut.nom
+                                                                    "
+                                                                    class="ml-2 text-sm font-medium text-gray-700"
+                                                                    >{{
+                                                                        attribut.nom
+                                                                    }}</label
+                                                                >
+                                                            </div>
+                                                            <!-- <div
+                                                                v-if="
+                                                                    errors.attributs
+                                                                "
+                                                                class="mt-2 text-xs text-red-500"
+                                                            >
+                                                                {{
+                                                                    errors.attributs
+                                                                }}
+                                                            </div> -->
+                                                        </div>
+                                                        <!-- radio -->
+                                                        <div
+                                                            v-if="
+                                                                attribut.type_champ_form ===
+                                                                'radio'
+                                                            "
+                                                        >
+                                                            <label
+                                                                :for="
+                                                                    attribut.nom
+                                                                "
+                                                                class="block text-sm font-medium text-gray-700"
+                                                            >
+                                                                {{
+                                                                    attribut.nom
+                                                                }}
+                                                            </label>
+
+                                                            <div
+                                                                class="mt-1 flex rounded-md"
+                                                            >
+                                                                <div>
+                                                                    <label
+                                                                        class="inline-flex items-center"
+                                                                        v-for="(
+                                                                            option,
+                                                                            index
+                                                                        ) in attribut.structuretypevaleurs"
+                                                                        :key="
+                                                                            index
+                                                                        "
+                                                                    >
+                                                                        <input
+                                                                            v-model="form.attributs[attribut.id]"
+                                                                            type="radio"
+                                                                            class="form-radio"
+                                                                            :name="
+                                                                                option.nom
+                                                                            "
+                                                                            :value="option.nom"
+                                                                            checked
+                                                                        />
+                                                                        <span
+                                                                            class="ml-2"
+                                                                            >{{ option.nom }}</span
+                                                                        >
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <!-- <div
+                                                                v-if="
+                                                                    errors.attributs
+                                                                "
+                                                                class="mt-2 text-xs text-red-500"
+                                                            >
+                                                                {{
+                                                                    errors.attributs
+                                                                }}
+                                                            </div> -->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -281,309 +476,20 @@ function enterAfterDisciplines() {
                                             "
                                         />
 
-                                        <div class="grid grid-cols-3 gap-6">
-                                            <!-- website -->
-                                            <div
-                                                class="col-span-3 sm:col-span-2"
-                                            >
-                                                <label
-                                                    for="website"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Site web
-                                                    <span class="text-xs italic"
-                                                        >(url complète)</span
-                                                    >
-                                                </label>
-                                                <div
-                                                    class="mt-1 flex rounded-md shadow-sm"
-                                                >
-                                                    <span
-                                                        class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-xs text-gray-500"
-                                                    >
-                                                        https://...
-                                                    </span>
-                                                    <input
-                                                        v-model="form.website"
-                                                        type="text"
-                                                        name="website"
-                                                        id="website"
-                                                        class="block w-full flex-1 rounded-none rounded-r-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                        placeholder="https://www.exemple.com"
-                                                        autocomplete="none"
-                                                    />
-                                                </div>
-                                                <div
-                                                    v-if="errors.website"
-                                                    class="mt-2 text-xs text-red-500"
-                                                >
-                                                    {{ errors.website }}
-                                                </div>
-                                            </div>
-
-                                            <!-- Email -->
-                                            <div
-                                                class="col-span-3 sm:col-span-2"
-                                            >
-                                                <label
-                                                    for="email"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Email *
-                                                </label>
-                                                <div
-                                                    class="mt-1 flex rounded-md shadow-sm"
-                                                >
-                                                    <input
-                                                        v-model="form.email"
-                                                        type="email"
-                                                        name="email"
-                                                        id="email"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                        placeholder="structure@mail.com"
-                                                        autocomplete="none"
-                                                    />
-                                                </div>
-                                                <div
-                                                    v-if="errors.email"
-                                                    class="mt-2 text-xs text-red-500"
-                                                >
-                                                    {{ errors.email }}
-                                                </div>
-                                            </div>
-
-                                            <!-- date_actif -->
-                                            <div
-                                                class="col-span-3 sm:col-span-2"
-                                            >
-                                                <label
-                                                    for="date_actif"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    En activité depuis:
-                                                </label>
-                                                <div
-                                                    class="mt-1 flex rounded-md shadow-sm"
-                                                >
-                                                    <input
-                                                        type="date"
-                                                        v-model="
-                                                            form.date_actif
-                                                        "
-                                                        name="date_actif"
-                                                        id="date_actif"
-                                                        class="form-input block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                        placeholder=""
-                                                        autocomplete="none"
-                                                    />
-                                                </div>
-                                                <div
-                                                    v-if="errors.date_actif"
-                                                    class="mt-2 text-xs text-red-500"
-                                                >
-                                                    {{ errors.date_actif }}
-                                                </div>
-                                            </div>
-
-                                            <!-- Phone1 -->
-                                            <div
-                                                class="col-span-3 sm:col-span-2"
-                                            >
-                                                <label
-                                                    for="phone1"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Numéro de téléphone *
-                                                </label>
-                                                <div
-                                                    class="mt-1 flex rounded-md shadow-sm"
-                                                >
-                                                    <input
-                                                        v-model="form.phone1"
-                                                        type="tel"
-                                                        name="phone1"
-                                                        id="phone1"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                        placeholder="02 10 ..."
-                                                        autocomplete="none"
-                                                    />
-                                                </div>
-                                                <div
-                                                    v-if="errors.phone1"
-                                                    class="mt-2 text-xs text-red-500"
-                                                >
-                                                    {{ errors.phone1 }}
-                                                </div>
-                                            </div>
-
-                                            <!-- Phone2 -->
-                                            <div
-                                                class="col-span-3 sm:col-span-2"
-                                            >
-                                                <label
-                                                    for="phone2"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Numéro de téléphone de
-                                                    sauvegarde
-                                                </label>
-                                                <div
-                                                    class="mt-1 flex rounded-md shadow-sm"
-                                                >
-                                                    <input
-                                                        v-model="form.phone2"
-                                                        type="tel"
-                                                        name="phone2"
-                                                        id="phone2"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                        placeholder="02 10 ..."
-                                                        autocomplete="none"
-                                                    />
-                                                </div>
-                                                <div
-                                                    v-if="errors.phone2"
-                                                    class="mt-2 text-xs text-red-500"
-                                                >
-                                                    {{ errors.phone2 }}
-                                                </div>
-                                            </div>
-
-                                            <!-- Facebook -->
-                                            <div
-                                                class="col-span-3 sm:col-span-2"
-                                            >
-                                                <label
-                                                    for="facebook"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Facebook
-                                                    <span class="text-xs italic"
-                                                        >(url complète)</span
-                                                    >
-                                                </label>
-                                                <div
-                                                    class="mt-1 flex rounded-md"
-                                                >
-                                                    <input
-                                                        v-model="form.facebook"
-                                                        type="text"
-                                                        name="facebook"
-                                                        id="facebook"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                        placeholder=""
-                                                        autocomplete="none"
-                                                    />
-                                                </div>
-                                                <div
-                                                    v-if="errors.facebook"
-                                                    class="mt-2 text-xs text-red-500"
-                                                >
-                                                    {{ errors.facebook }}
-                                                </div>
-                                            </div>
-
-                                            <!-- Instagram -->
-                                            <div
-                                                class="col-span-3 sm:col-span-2"
-                                            >
-                                                <label
-                                                    for="instagram"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Instagram
-                                                    <span class="text-xs italic"
-                                                        >(url complète)</span
-                                                    >
-                                                </label>
-                                                <div
-                                                    class="mt-1 flex rounded-md"
-                                                >
-                                                    <input
-                                                        v-model="form.instagram"
-                                                        type="text"
-                                                        name="instagram"
-                                                        id="instagram"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                        placeholder=""
-                                                        autocomplete="none"
-                                                    />
-                                                </div>
-                                                <div
-                                                    v-if="errors.instagram"
-                                                    class="mt-2 text-xs text-red-500"
-                                                >
-                                                    {{ errors.instagram }}
-                                                </div>
-                                            </div>
-
-                                            <!-- youtube -->
-                                            <div
-                                                class="col-span-3 sm:col-span-2"
-                                            >
-                                                <label
-                                                    for="youtube"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Youtube
-                                                    <span class="text-xs italic"
-                                                        >(url complète)</span
-                                                    >
-                                                </label>
-                                                <div
-                                                    class="mt-1 flex rounded-md"
-                                                >
-                                                    <input
-                                                        v-model="form.youtube"
-                                                        type="text"
-                                                        name="youtube"
-                                                        id="youtube"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                        placeholder=""
-                                                        autocomplete="none"
-                                                    />
-                                                </div>
-                                                <div
-                                                    v-if="errors.youtube"
-                                                    class="mt-2 text-xs text-red-500"
-                                                >
-                                                    {{ errors.youtube }}
-                                                </div>
-                                            </div>
-
-                                            <!-- tiktok -->
-                                            <div
-                                                class="col-span-3 sm:col-span-2"
-                                            >
-                                                <label
-                                                    for="tiktok"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Tiktok
-                                                    <span class="text-xs italic"
-                                                        >(url complète)</span
-                                                    >
-                                                </label>
-                                                <div
-                                                    class="mt-1 flex rounded-md"
-                                                >
-                                                    <input
-                                                        v-model="form.tiktok"
-                                                        type="text"
-                                                        name="tiktok"
-                                                        id="tiktok"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                        placeholder=""
-                                                        autocomplete="none"
-                                                    />
-                                                </div>
-                                                <div
-                                                    v-if="errors.tiktok"
-                                                    class="mt-2 text-xs text-red-500"
-                                                >
-                                                    {{ errors.tiktok }}
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <BaseInfoForm
+                                            :errors="errors"
+                                            v-model:website="form.website"
+                                            v-model:email="form.email"
+                                            v-model:date_creation="
+                                                form.date_creation
+                                            "
+                                            v-model:phone1="form.phone1"
+                                            v-model:phone2="form.phone2"
+                                            v-model:facebook="form.facebook"
+                                            v-model:instagram="form.instagram"
+                                            v-model:youtube="form.youtube"
+                                            v-model:tiktok="form.tiktok"
+                                        />
 
                                         <!-- presentation_courte -->
                                         <div>

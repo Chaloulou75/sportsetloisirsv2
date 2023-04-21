@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class StructureTypeValeur extends Model
 {
@@ -18,8 +19,8 @@ class StructureTypeValeur extends Model
 
     protected $table = 'a_liste_structures_types_valeurs';
 
-    // public function structuretype(): BelongsTo
-    // {
-    //     return $this->belongsTo(Structuretype::class, 'a_liste_structures_types_attributs');
-    // }
+    public function structuretypeattribut(): BelongsTo
+    {
+        return $this->belongsTo(StructureTypeAttribut::class, 'id', 'id_champ');
+    }
 }
