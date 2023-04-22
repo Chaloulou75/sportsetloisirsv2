@@ -93,7 +93,7 @@ class ActiviteController extends Controller
     {
         $validated= request()->validate([
             'structure_id' => ['required', Rule::exists('structures', 'id')],
-            'discipline_id' => ['required', Rule::exists('a_liste_activites', 'id')],
+            'discipline_id' => ['required', Rule::exists('liste_disciplines', 'id')],
             'categories_id' => ['required', 'array', Rule::exists('categories', 'id')],
             'niveaux' => ['required'],
             'publictypes' => ['required'],

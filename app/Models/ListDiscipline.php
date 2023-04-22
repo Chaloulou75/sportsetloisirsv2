@@ -10,7 +10,7 @@ class ListDiscipline extends Model
 {
     use HasFactory;
 
-    protected $table = 'a_liste_activites';
+    protected $table = 'liste_disciplines';
 
     protected $guarded = [];
 
