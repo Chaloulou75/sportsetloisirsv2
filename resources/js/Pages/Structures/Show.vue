@@ -288,7 +288,7 @@ function destroy(activite) {
                 </div>
             </div>
         </section>
-        <section
+        <!-- <section
             v-if="structure.activites.length > 0"
             class="px-2 py-6 mx-auto my-4 space-y-4 max-w-7xl sm:px-4 lg:px-8"
         >
@@ -371,6 +371,6 @@ function destroy(activite) {
                     </button>
                 </div>
             </div>
-        </section>
+        </section> -->
     </AppLayout>
 </template>

@@ -108,7 +108,11 @@ const showingNavigationDropdown = ref(false);
                                     Editer ma structure
                                 </BreezeDropdownLink>
                                 <BreezeDropdownLink
-                                    v-if="$page.props.auth.user"
+                                    v-if="
+                                        $page.props.auth.user &&
+                                        !$page.props.auth.user.structures
+                                            .length > 0
+                                    "
                                     :href="route('structures.create')"
                                 >
                                     Inscrire une structure
@@ -229,7 +233,10 @@ const showingNavigationDropdown = ref(false);
                     Structures
                 </BreezeResponsiveNavLink>
                 <BreezeResponsiveNavLink
-                    v-if="$page.props.auth.user"
+                    v-if="
+                        $page.props.auth.user &&
+                        !$page.props.auth.user.structures.length > 0
+                    "
                     :href="route('structures.create')"
                     :active="route().current('structures.create')"
                 >

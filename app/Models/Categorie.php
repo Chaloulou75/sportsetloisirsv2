@@ -19,7 +19,7 @@ class Categorie extends Model
 
     public function listactivites(): BelongsToMany
     {
-        return $this->belongsToMany(ListDiscipline::class, 'a_liens_activites_categories', 'id_categorie', 'id_activite');
+        return $this->belongsToMany(ListDiscipline::class, 'liens_activites_categories', 'id_categorie', 'id_activite');
     }
 
     public function activites(): BelongsToMany

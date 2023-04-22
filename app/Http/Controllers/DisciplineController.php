@@ -11,6 +11,7 @@ use App\Models\ListDiscipline;
 use App\Http\Resources\CategorieResource;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Resources\DisciplineResource;
+use App\Models\LienActiviteSimilaire;
 
 class DisciplineController extends Controller
 {
@@ -117,6 +118,18 @@ class DisciplineController extends Controller
         $categories = $listdiscipline->categories;
 
         return CategorieResource::collection($categories);
+
+    }
+
+    public function getDisciplinesSimilaires($id)
+    {
+        $discipline = ListDiscipline::findOrFail($id);
+
+        $activiteSimilairesIds = LienActiviteSimilaire::where('activite_id', $discipline->id)->select('activite_similaire_id')->get();
+
+        $activiteSimilaires = ListDiscipline::whereIn('id', $activiteSimilairesIds)->get();
+
+        return DisciplineResource::collection($activiteSimilaires);
 
     }
 }

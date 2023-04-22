@@ -11,13 +11,23 @@ use App\Models\Discipline;
 use App\Models\Publictype;
 use Illuminate\Support\Str;
 use App\Models\Activitetype;
-use App\Models\ListDiscipline;
 use Illuminate\Http\Request;
+use App\Models\ListDiscipline;
 use Illuminate\Validation\Rule;
+use App\Models\StructureAddress;
+use App\Models\StructureActivite;
+use App\Models\StructureDiscipline;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use App\Models\LienActiviteCategorie;
 use Illuminate\Http\RedirectResponse;
+use App\Models\StructureActiviteProduit;
 use Illuminate\Support\Facades\Redirect;
+use App\Models\StructureActiviteCategorie;
+use App\Models\LienActiviteCategorieCritere;
+use App\Models\LienActiviteCategorieCritereValeur;
+use App\Models\StructureActiviteProduitDeclinaison;
+use App\Models\StructureActiviteProduitDeclinaisonCritere;
 
 class ActiviteController extends Controller
 {
@@ -28,7 +38,7 @@ class ActiviteController extends Controller
     {
         $structure = Structure::with(['activites',
                         'activites.discipline',
-                        'activites.categorie',
+                        'activites.categories',
                         'activites.nivel',
                         'activites.activitetype',
                         'activites.publictype'
@@ -91,19 +101,79 @@ class ActiviteController extends Controller
      */
     public function store(Request $request, $structure)
     {
-        $validated= request()->validate([
+        $validated = request()->validate([
             'structure_id' => ['required', Rule::exists('structures', 'id')],
             'discipline_id' => ['required', Rule::exists('liste_disciplines', 'id')],
-            'categories_id' => ['required', 'array', Rule::exists('categories', 'id')],
-            'niveaux' => ['required'],
-            'publictypes' => ['required'],
+            'nivel_id' => ['required'],
+            'publictype_id' => ['required'],
         ]);
 
-        $categoriesIds = array_values($validated['categories_id']);
-        foreach ($categoriesIds as $validated['categorie_id']) {
-            dd($validated);
-            $activites = Activite::create($validated);
+        $structure = Structure::where('id', $validated['structure_id'])->firstOrFail();
+
+        $structureAdresse = StructureAddress::where('structure_id', $structure->id)->firstOrfail();
+
+        // structureActivite
+        $structureActivite = StructureActivite::create([
+            'structure_id' => $validated['structure_id'],
+            'activite_id' => $validated['discipline_id'],
+        ]);
+        $structureActivite->increment('nb_produits');
+
+        // structureActiviteCategorie
+        $validatedData = request()->validate([
+            'categories_id' => ['required', 'array', Rule::exists('categories', 'id')]
+        ]);
+
+        foreach ($validatedData['categories_id'] as $category_id) {
+
+            $lienActCat = LienActiviteCategorie::where('id_activite', $validated['discipline_id'])->where('id_categorie', $category_id)->firstOrfail();
+
+            $validated['categorie_id'] = $lienActCat->id;
+            $structureActiviteCategorie = StructureActiviteCategorie::create([
+                'structure_id' => $validated['structure_id'],
+                'activite_id' => $validated['discipline_id'],
+                'categorie_id' => $validated['categorie_id'],
+            ]);
+
+            $titre = $lienActCat->nom_categorie;
+
+            $structureActiviteProduit = StructureActiviteProduit::create([
+                'structure_id' => $validated['structure_id'],
+                'activite_id' => $validated['discipline_id'],
+                'categorie_id' => $validated['categorie_id'],
+                'titre' => $titre,
+                'description' => "",
+                'image' => "",
+                "actif" => 1,
+            ]);
+
+            $declinaison = StructureActiviteProduitDeclinaison::create([
+                'structure_id' => $validated['structure_id'],
+                'activite_id' => $validated['discipline_id'],
+                'categorie_id' => $validated['categorie_id'],
+                'produit_id' => $structureActiviteProduit->id,
+                "actif" => 1,
+                'lieu_id' => $structureAdresse->id,
+                'reservable' => 0,
+            ]);
+
+            $ActiviteCategorieCriteres = LienActiviteCategorieCritere::where('activite_id', $validated['discipline_id'])->where('categorie_id', $validated['categorie_id'])->get();
+
+            foreach($ActiviteCategorieCriteres as $ActiviteCategorieCritere) {
+                $ActCatCriVal = LienActiviteCategorieCritereValeur::where('defaut', 1)->where('activite_categorie_critere_id', $ActiviteCategorieCritere->id)->get();
+
+                $critere = StructureActiviteProduitDeclinaisonCritere::create([
+                    'structure_id' => $validated['structure_id'],
+                    'activite_id' => $validated['discipline_id'],
+                    'categorie_id' => $validated['categorie_id'],
+                    'produit_id' => $structureActiviteProduit->id,
+                    'declinaison_id' => $declinaison->id,
+                    'critere_id' => $ActiviteCategorieCritere->id,
+                    'valeur' => $ActCatCriVal->valeur,
+                ]);
+            }
         }
+
 
         return Redirect::route('structures.activites.index', $structure)->with('success', 'Activité créée, vous pouvez ajouter d\'autres activités à votre structure.');
     }

@@ -138,8 +138,9 @@ class StructureController extends Controller
 
         $name = $validated['name'];
         $slug = Str::slug($name, '-');
-        $validated['user_id'] = auth()->id();
         $validated['slug'] = $slug;
+
+        $validated['user_id'] = auth()->id();
 
         $city= City::where('code_postal', $validated['zip_code'])->firstOrFail();
         $cityId = $city->id;
@@ -359,7 +360,7 @@ class StructureController extends Controller
         $structureAddress = StructureAddress::where('structure_id', $structure->id)->firstOrFail();
         $structureAddress->update($validatedAddress);
 
-        
+
         $attributs = $request['attributs'];
 
         foreach ($attributs as $key => $attribut) {

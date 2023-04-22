@@ -16,6 +16,6 @@ class ListDiscipline extends Model
 
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(Categorie::class, 'a_liens_activites_categories', 'id_activite', 'id_categorie');
+        return $this->belongsToMany(Categorie::class, 'liens_activites_categories', 'id_activite', 'id_categorie');
     }
 }
