@@ -34,14 +34,14 @@ class Activite extends Model
         return $this->belongsTo(Activitetype::class);
     }
 
-    public function discipline(): BelongsTo
+    public function disciplines(): BelongsToMany
     {
-        return $this->belongsTo(Discipline::class);
+        return $this->belongsToMany(ListDiscipline::class);
     }
 
-    public function structure(): BelongsTo
+    public function structures(): BelongsToMany
     {
-        return $this->belongsTo(Structure::class);
+        return $this->belongsToMany(Structure::class, 'structure_activite', 'structure_id', 'activite_id');
     }
 
     public function categories(): BelongsToMany

@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, defineEmits, ref, watch } from "vue";
+import { ref, watch } from "vue";
 
 const props = defineProps({
     errors: Object,
@@ -83,9 +83,9 @@ watch(tiktok, (value) => {
                 Site web
                 <span class="text-xs italic">(url complète)</span>
             </label>
-            <div class="mt-1 flex rounded-md shadow-sm">
+            <div class="flex mt-1 rounded-md shadow-sm">
                 <span
-                    class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-xs text-gray-500"
+                    class="inline-flex items-center px-3 text-xs text-gray-500 border border-r-0 border-gray-300 rounded-l-md bg-gray-50"
                 >
                     https://...
                 </span>
@@ -94,7 +94,7 @@ watch(tiktok, (value) => {
                     type="text"
                     name="website"
                     id="website"
-                    class="block w-full flex-1 rounded-none rounded-r-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-none rounded-r-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     placeholder="https://www.exemple.com"
                     autocomplete="none"
                 />
@@ -109,13 +109,13 @@ watch(tiktok, (value) => {
             <label for="email" class="block text-sm font-medium text-gray-700">
                 Email *
             </label>
-            <div class="mt-1 flex rounded-md shadow-sm">
+            <div class="flex mt-1 rounded-md shadow-sm">
                 <input
                     v-model="email"
                     type="email"
                     name="email"
                     id="email"
-                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     placeholder="structure@mail.com"
                     autocomplete="none"
                 />
@@ -133,13 +133,13 @@ watch(tiktok, (value) => {
             >
                 En activité depuis:
             </label>
-            <div class="mt-1 flex rounded-md shadow-sm">
+            <div class="flex mt-1 rounded-md shadow-sm">
                 <input
                     type="date"
                     v-model="date_creation"
                     name="date_creation"
                     id="date_creation"
-                    class="form-input block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md form-input focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     placeholder=""
                     autocomplete="none"
                 />
@@ -154,13 +154,13 @@ watch(tiktok, (value) => {
             <label for="phone1" class="block text-sm font-medium text-gray-700">
                 Numéro de téléphone *
             </label>
-            <div class="mt-1 flex rounded-md shadow-sm">
+            <div class="flex mt-1 rounded-md shadow-sm">
                 <input
                     v-model="phone1"
                     type="tel"
                     name="phone1"
                     id="phone1"
-                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     placeholder="02 10 ..."
                     autocomplete="none"
                 />
@@ -175,13 +175,13 @@ watch(tiktok, (value) => {
             <label for="phone2" class="block text-sm font-medium text-gray-700">
                 Numéro de téléphone de sauvegarde
             </label>
-            <div class="mt-1 flex rounded-md shadow-sm">
+            <div class="flex mt-1 rounded-md shadow-sm">
                 <input
                     v-model="phone2"
                     type="tel"
                     name="phone2"
                     id="phone2"
-                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     placeholder="02 10 ..."
                     autocomplete="none"
                 />
@@ -200,13 +200,13 @@ watch(tiktok, (value) => {
                 Facebook
                 <span class="text-xs italic">(url complète)</span>
             </label>
-            <div class="mt-1 flex rounded-md">
+            <div class="flex mt-1 rounded-md">
                 <input
                     v-model="facebook"
                     type="text"
                     name="facebook"
                     id="facebook"
-                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                     placeholder=""
                     autocomplete="none"
                 />
@@ -225,13 +225,13 @@ watch(tiktok, (value) => {
                 Instagram
                 <span class="text-xs italic">(url complète)</span>
             </label>
-            <div class="mt-1 flex rounded-md">
+            <div class="flex mt-1 rounded-md">
                 <input
                     v-model="instagram"
                     type="text"
                     name="instagram"
                     id="instagram"
-                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                     placeholder=""
                     autocomplete="none"
                 />
@@ -250,13 +250,13 @@ watch(tiktok, (value) => {
                 Youtube
                 <span class="text-xs italic">(url complète)</span>
             </label>
-            <div class="mt-1 flex rounded-md">
+            <div class="flex mt-1 rounded-md">
                 <input
                     v-model="youtube"
                     type="text"
                     name="youtube"
                     id="youtube"
-                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                     placeholder=""
                     autocomplete="none"
                 />
@@ -272,13 +272,13 @@ watch(tiktok, (value) => {
                 Tiktok
                 <span class="text-xs italic">(url complète)</span>
             </label>
-            <div class="mt-1 flex rounded-md">
+            <div class="flex mt-1 rounded-md">
                 <input
                     v-model="tiktok"
                     type="text"
                     name="tiktok"
                     id="tiktok"
-                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                     placeholder=""
                     autocomplete="none"
                 />

@@ -15,14 +15,15 @@ use App\Models\Activitetype;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Mail\StructureCreated;
+use App\Models\ListDiscipline;
 use Illuminate\Validation\Rule;
 use App\Models\StructureAddress;
 use App\Models\StructureTypeInfo;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 
 class StructureController extends Controller
@@ -95,7 +96,7 @@ class StructureController extends Controller
         $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
         $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
         $activitestypes = Activitetype::select(['id', 'name', 'slug'])->get();
-        $disciplines = Discipline::select(['id', 'name', 'slug'])->get();
+        $disciplines = ListDiscipline::select(['id', 'name', 'slug'])->get();
 
         return Inertia::render('Structures/Create', [
             'structurestypes' => $structurestypes,
@@ -255,7 +256,7 @@ class StructureController extends Controller
         $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
         $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
         $activitestypes = Activitetype::select(['id', 'name', 'slug'])->get();
-        $disciplines = Discipline::select(['id', 'name', 'slug'])->get();
+        $disciplines = ListDiscipline::select(['id', 'name', 'slug'])->get();
 
         $structure = Structure::with([
             'famille:id,name',

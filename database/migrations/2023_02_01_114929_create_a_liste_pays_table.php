@@ -12,7 +12,7 @@ return new class () extends Migration {
      */
     public function up()
     {
-        Schema::create('a_liste_pays', function (Blueprint $table) {
+        Schema::create('liste_pays', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('code');
             $table->string('alpha2', 2);
@@ -32,6 +32,6 @@ return new class () extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('a_liste_pays');
+        Schema::dropIfExists('liste_pays');
     }
 };

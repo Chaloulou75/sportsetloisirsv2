@@ -21,7 +21,7 @@ return new class () extends Migration {
             $table->foreign('city_id')->references('id')->on('villes_france')->onDelete('cascade');
             $table->string('ville');
             $table->unsignedBigInteger('country_id')->nullable();
-            $table->foreign('country_id')->references('id')->on('a_liste_pays')->onDelete('cascade');
+            $table->foreign('country_id')->references('id')->on('liste_pays')->onDelete('cascade');
             $table->string('pays');
             $table->double('address_lat');
             $table->double('address_lng');

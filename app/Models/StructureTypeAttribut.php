@@ -19,11 +19,11 @@ class StructureTypeAttribut extends Model
      */
     protected $guarded = [];
 
-    protected $table = 'a_liste_structures_types_attributs';
+    protected $table = 'liste_structures_types_attributs';
 
     public function structuretype(): BelongsTo
     {
-        return $this->belongsTo(Structuretype::class, 'a_liste_structures_types_attributs');
+        return $this->belongsTo(Structuretype::class, 'liste_structures_types_attributs');
     }
 
     public function structuretypevaleurs(): HasMany

@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 class AListePaysTableSeeder extends Seeder
 {
-
     /**
      * Auto generated seed file
      *
@@ -15,13 +14,13 @@ class AListePaysTableSeeder extends Seeder
      */
     public function run()
     {
-        
 
-        DB::table('a_liste_pays')->delete();
-        
-        DB::table('a_liste_pays')->insert(array (
-            0 => 
-            array (
+
+        DB::table('liste_pays')->delete();
+
+        DB::table('liste_pays')->insert(array(
+            0 =>
+            array(
                 'id' => 1,
                 'code' => 4,
                 'alpha2' => 'AF',
@@ -32,8 +31,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            1 => 
-            array (
+            1 =>
+            array(
                 'id' => 2,
                 'code' => 8,
                 'alpha2' => 'AL',
@@ -44,8 +43,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            2 => 
-            array (
+            2 =>
+            array(
                 'id' => 3,
                 'code' => 10,
                 'alpha2' => 'AQ',
@@ -56,8 +55,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            3 => 
-            array (
+            3 =>
+            array(
                 'id' => 4,
                 'code' => 12,
                 'alpha2' => 'DZ',
@@ -68,8 +67,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            4 => 
-            array (
+            4 =>
+            array(
                 'id' => 5,
                 'code' => 16,
                 'alpha2' => 'AS',
@@ -80,8 +79,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            5 => 
-            array (
+            5 =>
+            array(
                 'id' => 6,
                 'code' => 20,
                 'alpha2' => 'AD',
@@ -92,8 +91,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            6 => 
-            array (
+            6 =>
+            array(
                 'id' => 7,
                 'code' => 24,
                 'alpha2' => 'AO',
@@ -104,8 +103,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            7 => 
-            array (
+            7 =>
+            array(
                 'id' => 8,
                 'code' => 28,
                 'alpha2' => 'AG',
@@ -116,8 +115,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            8 => 
-            array (
+            8 =>
+            array(
                 'id' => 9,
                 'code' => 31,
                 'alpha2' => 'AZ',
@@ -128,8 +127,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            9 => 
-            array (
+            9 =>
+            array(
                 'id' => 10,
                 'code' => 32,
                 'alpha2' => 'AR',
@@ -140,8 +139,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            10 => 
-            array (
+            10 =>
+            array(
                 'id' => 11,
                 'code' => 36,
                 'alpha2' => 'AU',
@@ -152,8 +151,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            11 => 
-            array (
+            11 =>
+            array(
                 'id' => 12,
                 'code' => 40,
                 'alpha2' => 'AT',
@@ -164,8 +163,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            12 => 
-            array (
+            12 =>
+            array(
                 'id' => 13,
                 'code' => 44,
                 'alpha2' => 'BS',
@@ -176,8 +175,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            13 => 
-            array (
+            13 =>
+            array(
                 'id' => 14,
                 'code' => 48,
                 'alpha2' => 'BH',
@@ -188,8 +187,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            14 => 
-            array (
+            14 =>
+            array(
                 'id' => 15,
                 'code' => 50,
                 'alpha2' => 'BD',
@@ -200,8 +199,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            15 => 
-            array (
+            15 =>
+            array(
                 'id' => 16,
                 'code' => 51,
                 'alpha2' => 'AM',
@@ -212,8 +211,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            16 => 
-            array (
+            16 =>
+            array(
                 'id' => 17,
                 'code' => 52,
                 'alpha2' => 'BB',
@@ -224,8 +223,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            17 => 
-            array (
+            17 =>
+            array(
                 'id' => 18,
                 'code' => 56,
                 'alpha2' => 'BE',
@@ -236,8 +235,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            18 => 
-            array (
+            18 =>
+            array(
                 'id' => 19,
                 'code' => 60,
                 'alpha2' => 'BM',
@@ -248,8 +247,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            19 => 
-            array (
+            19 =>
+            array(
                 'id' => 20,
                 'code' => 64,
                 'alpha2' => 'BT',
@@ -260,8 +259,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            20 => 
-            array (
+            20 =>
+            array(
                 'id' => 21,
                 'code' => 68,
                 'alpha2' => 'BO',
@@ -272,8 +271,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            21 => 
-            array (
+            21 =>
+            array(
                 'id' => 22,
                 'code' => 70,
                 'alpha2' => 'BA',
@@ -284,8 +283,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            22 => 
-            array (
+            22 =>
+            array(
                 'id' => 23,
                 'code' => 72,
                 'alpha2' => 'BW',
@@ -296,8 +295,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            23 => 
-            array (
+            23 =>
+            array(
                 'id' => 24,
                 'code' => 74,
                 'alpha2' => 'BV',
@@ -308,8 +307,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            24 => 
-            array (
+            24 =>
+            array(
                 'id' => 25,
                 'code' => 76,
                 'alpha2' => 'BR',
@@ -320,8 +319,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            25 => 
-            array (
+            25 =>
+            array(
                 'id' => 26,
                 'code' => 84,
                 'alpha2' => 'BZ',
@@ -332,8 +331,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            26 => 
-            array (
+            26 =>
+            array(
                 'id' => 27,
                 'code' => 86,
                 'alpha2' => 'IO',
@@ -344,8 +343,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            27 => 
-            array (
+            27 =>
+            array(
                 'id' => 28,
                 'code' => 90,
                 'alpha2' => 'SB',
@@ -356,8 +355,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            28 => 
-            array (
+            28 =>
+            array(
                 'id' => 29,
                 'code' => 92,
                 'alpha2' => 'VG',
@@ -368,8 +367,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            29 => 
-            array (
+            29 =>
+            array(
                 'id' => 30,
                 'code' => 96,
                 'alpha2' => 'BN',
@@ -380,8 +379,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            30 => 
-            array (
+            30 =>
+            array(
                 'id' => 31,
                 'code' => 100,
                 'alpha2' => 'BG',
@@ -392,8 +391,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            31 => 
-            array (
+            31 =>
+            array(
                 'id' => 32,
                 'code' => 104,
                 'alpha2' => 'MM',
@@ -404,8 +403,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            32 => 
-            array (
+            32 =>
+            array(
                 'id' => 33,
                 'code' => 108,
                 'alpha2' => 'BI',
@@ -416,8 +415,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            33 => 
-            array (
+            33 =>
+            array(
                 'id' => 34,
                 'code' => 112,
                 'alpha2' => 'BY',
@@ -428,8 +427,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            34 => 
-            array (
+            34 =>
+            array(
                 'id' => 35,
                 'code' => 116,
                 'alpha2' => 'KH',
@@ -440,8 +439,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            35 => 
-            array (
+            35 =>
+            array(
                 'id' => 36,
                 'code' => 120,
                 'alpha2' => 'CM',
@@ -452,8 +451,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            36 => 
-            array (
+            36 =>
+            array(
                 'id' => 37,
                 'code' => 124,
                 'alpha2' => 'CA',
@@ -464,8 +463,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            37 => 
-            array (
+            37 =>
+            array(
                 'id' => 38,
                 'code' => 132,
                 'alpha2' => 'CV',
@@ -476,8 +475,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            38 => 
-            array (
+            38 =>
+            array(
                 'id' => 39,
                 'code' => 136,
                 'alpha2' => 'KY',
@@ -488,8 +487,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            39 => 
-            array (
+            39 =>
+            array(
                 'id' => 40,
                 'code' => 140,
                 'alpha2' => 'CF',
@@ -500,8 +499,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            40 => 
-            array (
+            40 =>
+            array(
                 'id' => 41,
                 'code' => 144,
                 'alpha2' => 'LK',
@@ -512,8 +511,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            41 => 
-            array (
+            41 =>
+            array(
                 'id' => 42,
                 'code' => 148,
                 'alpha2' => 'TD',
@@ -524,8 +523,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            42 => 
-            array (
+            42 =>
+            array(
                 'id' => 43,
                 'code' => 152,
                 'alpha2' => 'CL',
@@ -536,8 +535,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            43 => 
-            array (
+            43 =>
+            array(
                 'id' => 44,
                 'code' => 156,
                 'alpha2' => 'CN',
@@ -548,8 +547,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            44 => 
-            array (
+            44 =>
+            array(
                 'id' => 45,
                 'code' => 158,
                 'alpha2' => 'TW',
@@ -560,8 +559,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            45 => 
-            array (
+            45 =>
+            array(
                 'id' => 46,
                 'code' => 162,
                 'alpha2' => 'CX',
@@ -572,8 +571,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            46 => 
-            array (
+            46 =>
+            array(
                 'id' => 47,
                 'code' => 166,
                 'alpha2' => 'CC',
@@ -584,8 +583,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            47 => 
-            array (
+            47 =>
+            array(
                 'id' => 48,
                 'code' => 170,
                 'alpha2' => 'CO',
@@ -596,8 +595,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            48 => 
-            array (
+            48 =>
+            array(
                 'id' => 49,
                 'code' => 174,
                 'alpha2' => 'KM',
@@ -608,8 +607,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            49 => 
-            array (
+            49 =>
+            array(
                 'id' => 50,
                 'code' => 175,
                 'alpha2' => 'YT',
@@ -620,8 +619,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            50 => 
-            array (
+            50 =>
+            array(
                 'id' => 51,
                 'code' => 178,
                 'alpha2' => 'CG',
@@ -632,8 +631,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            51 => 
-            array (
+            51 =>
+            array(
                 'id' => 52,
                 'code' => 180,
                 'alpha2' => 'CD',
@@ -644,8 +643,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            52 => 
-            array (
+            52 =>
+            array(
                 'id' => 53,
                 'code' => 184,
                 'alpha2' => 'CK',
@@ -656,8 +655,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            53 => 
-            array (
+            53 =>
+            array(
                 'id' => 54,
                 'code' => 188,
                 'alpha2' => 'CR',
@@ -668,8 +667,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            54 => 
-            array (
+            54 =>
+            array(
                 'id' => 55,
                 'code' => 191,
                 'alpha2' => 'HR',
@@ -680,8 +679,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            55 => 
-            array (
+            55 =>
+            array(
                 'id' => 56,
                 'code' => 192,
                 'alpha2' => 'CU',
@@ -692,8 +691,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            56 => 
-            array (
+            56 =>
+            array(
                 'id' => 57,
                 'code' => 196,
                 'alpha2' => 'CY',
@@ -704,8 +703,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            57 => 
-            array (
+            57 =>
+            array(
                 'id' => 58,
                 'code' => 203,
                 'alpha2' => 'CZ',
@@ -716,8 +715,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            58 => 
-            array (
+            58 =>
+            array(
                 'id' => 59,
                 'code' => 204,
                 'alpha2' => 'BJ',
@@ -728,8 +727,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            59 => 
-            array (
+            59 =>
+            array(
                 'id' => 60,
                 'code' => 208,
                 'alpha2' => 'DK',
@@ -740,8 +739,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            60 => 
-            array (
+            60 =>
+            array(
                 'id' => 61,
                 'code' => 212,
                 'alpha2' => 'DM',
@@ -752,8 +751,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            61 => 
-            array (
+            61 =>
+            array(
                 'id' => 62,
                 'code' => 214,
                 'alpha2' => 'DO',
@@ -764,8 +763,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            62 => 
-            array (
+            62 =>
+            array(
                 'id' => 63,
                 'code' => 218,
                 'alpha2' => 'EC',
@@ -776,8 +775,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            63 => 
-            array (
+            63 =>
+            array(
                 'id' => 64,
                 'code' => 222,
                 'alpha2' => 'SV',
@@ -788,8 +787,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            64 => 
-            array (
+            64 =>
+            array(
                 'id' => 65,
                 'code' => 226,
                 'alpha2' => 'GQ',
@@ -800,8 +799,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            65 => 
-            array (
+            65 =>
+            array(
                 'id' => 66,
                 'code' => 231,
                 'alpha2' => 'ET',
@@ -812,8 +811,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            66 => 
-            array (
+            66 =>
+            array(
                 'id' => 67,
                 'code' => 232,
                 'alpha2' => 'ER',
@@ -824,8 +823,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            67 => 
-            array (
+            67 =>
+            array(
                 'id' => 68,
                 'code' => 233,
                 'alpha2' => 'EE',
@@ -836,8 +835,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            68 => 
-            array (
+            68 =>
+            array(
                 'id' => 69,
                 'code' => 234,
                 'alpha2' => 'FO',
@@ -848,8 +847,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            69 => 
-            array (
+            69 =>
+            array(
                 'id' => 70,
                 'code' => 238,
                 'alpha2' => 'FK',
@@ -860,8 +859,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            70 => 
-            array (
+            70 =>
+            array(
                 'id' => 71,
                 'code' => 239,
                 'alpha2' => 'GS',
@@ -872,8 +871,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            71 => 
-            array (
+            71 =>
+            array(
                 'id' => 72,
                 'code' => 242,
                 'alpha2' => 'FJ',
@@ -884,8 +883,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            72 => 
-            array (
+            72 =>
+            array(
                 'id' => 73,
                 'code' => 246,
                 'alpha2' => 'FI',
@@ -896,8 +895,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            73 => 
-            array (
+            73 =>
+            array(
                 'id' => 74,
                 'code' => 248,
                 'alpha2' => 'AX',
@@ -908,8 +907,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            74 => 
-            array (
+            74 =>
+            array(
                 'id' => 75,
                 'code' => 250,
                 'alpha2' => 'FR',
@@ -920,8 +919,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 1,
                 'taux_tva' => '20.00',
             ),
-            75 => 
-            array (
+            75 =>
+            array(
                 'id' => 76,
                 'code' => 254,
                 'alpha2' => 'GF',
@@ -932,8 +931,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            76 => 
-            array (
+            76 =>
+            array(
                 'id' => 77,
                 'code' => 258,
                 'alpha2' => 'PF',
@@ -944,8 +943,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            77 => 
-            array (
+            77 =>
+            array(
                 'id' => 78,
                 'code' => 260,
                 'alpha2' => 'TF',
@@ -956,8 +955,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            78 => 
-            array (
+            78 =>
+            array(
                 'id' => 79,
                 'code' => 262,
                 'alpha2' => 'DJ',
@@ -968,8 +967,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            79 => 
-            array (
+            79 =>
+            array(
                 'id' => 80,
                 'code' => 266,
                 'alpha2' => 'GA',
@@ -980,8 +979,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            80 => 
-            array (
+            80 =>
+            array(
                 'id' => 81,
                 'code' => 268,
                 'alpha2' => 'GE',
@@ -992,8 +991,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            81 => 
-            array (
+            81 =>
+            array(
                 'id' => 82,
                 'code' => 270,
                 'alpha2' => 'GM',
@@ -1004,8 +1003,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            82 => 
-            array (
+            82 =>
+            array(
                 'id' => 83,
                 'code' => 275,
                 'alpha2' => 'PS',
@@ -1016,8 +1015,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            83 => 
-            array (
+            83 =>
+            array(
                 'id' => 84,
                 'code' => 276,
                 'alpha2' => 'DE',
@@ -1028,8 +1027,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            84 => 
-            array (
+            84 =>
+            array(
                 'id' => 85,
                 'code' => 288,
                 'alpha2' => 'GH',
@@ -1040,8 +1039,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            85 => 
-            array (
+            85 =>
+            array(
                 'id' => 86,
                 'code' => 292,
                 'alpha2' => 'GI',
@@ -1052,8 +1051,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            86 => 
-            array (
+            86 =>
+            array(
                 'id' => 87,
                 'code' => 296,
                 'alpha2' => 'KI',
@@ -1064,8 +1063,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            87 => 
-            array (
+            87 =>
+            array(
                 'id' => 88,
                 'code' => 300,
                 'alpha2' => 'GR',
@@ -1076,8 +1075,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            88 => 
-            array (
+            88 =>
+            array(
                 'id' => 89,
                 'code' => 304,
                 'alpha2' => 'GL',
@@ -1088,8 +1087,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            89 => 
-            array (
+            89 =>
+            array(
                 'id' => 90,
                 'code' => 308,
                 'alpha2' => 'GD',
@@ -1100,8 +1099,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            90 => 
-            array (
+            90 =>
+            array(
                 'id' => 91,
                 'code' => 312,
                 'alpha2' => 'GP',
@@ -1112,8 +1111,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            91 => 
-            array (
+            91 =>
+            array(
                 'id' => 92,
                 'code' => 316,
                 'alpha2' => 'GU',
@@ -1124,8 +1123,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            92 => 
-            array (
+            92 =>
+            array(
                 'id' => 93,
                 'code' => 320,
                 'alpha2' => 'GT',
@@ -1136,8 +1135,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            93 => 
-            array (
+            93 =>
+            array(
                 'id' => 94,
                 'code' => 324,
                 'alpha2' => 'GN',
@@ -1148,8 +1147,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            94 => 
-            array (
+            94 =>
+            array(
                 'id' => 95,
                 'code' => 328,
                 'alpha2' => 'GY',
@@ -1160,8 +1159,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            95 => 
-            array (
+            95 =>
+            array(
                 'id' => 96,
                 'code' => 332,
                 'alpha2' => 'HT',
@@ -1172,8 +1171,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            96 => 
-            array (
+            96 =>
+            array(
                 'id' => 97,
                 'code' => 334,
                 'alpha2' => 'HM',
@@ -1184,8 +1183,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            97 => 
-            array (
+            97 =>
+            array(
                 'id' => 98,
                 'code' => 336,
                 'alpha2' => 'VA',
@@ -1196,8 +1195,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            98 => 
-            array (
+            98 =>
+            array(
                 'id' => 99,
                 'code' => 340,
                 'alpha2' => 'HN',
@@ -1208,8 +1207,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            99 => 
-            array (
+            99 =>
+            array(
                 'id' => 100,
                 'code' => 344,
                 'alpha2' => 'HK',
@@ -1220,8 +1219,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            100 => 
-            array (
+            100 =>
+            array(
                 'id' => 101,
                 'code' => 348,
                 'alpha2' => 'HU',
@@ -1232,8 +1231,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            101 => 
-            array (
+            101 =>
+            array(
                 'id' => 102,
                 'code' => 352,
                 'alpha2' => 'IS',
@@ -1244,8 +1243,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            102 => 
-            array (
+            102 =>
+            array(
                 'id' => 103,
                 'code' => 356,
                 'alpha2' => 'IN',
@@ -1256,8 +1255,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            103 => 
-            array (
+            103 =>
+            array(
                 'id' => 104,
                 'code' => 360,
                 'alpha2' => 'ID',
@@ -1268,8 +1267,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            104 => 
-            array (
+            104 =>
+            array(
                 'id' => 105,
                 'code' => 364,
                 'alpha2' => 'IR',
@@ -1280,8 +1279,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            105 => 
-            array (
+            105 =>
+            array(
                 'id' => 106,
                 'code' => 368,
                 'alpha2' => 'IQ',
@@ -1292,8 +1291,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            106 => 
-            array (
+            106 =>
+            array(
                 'id' => 107,
                 'code' => 372,
                 'alpha2' => 'IE',
@@ -1304,8 +1303,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            107 => 
-            array (
+            107 =>
+            array(
                 'id' => 108,
                 'code' => 376,
                 'alpha2' => 'IL',
@@ -1316,8 +1315,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            108 => 
-            array (
+            108 =>
+            array(
                 'id' => 109,
                 'code' => 380,
                 'alpha2' => 'IT',
@@ -1328,8 +1327,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            109 => 
-            array (
+            109 =>
+            array(
                 'id' => 110,
                 'code' => 384,
                 'alpha2' => 'CI',
@@ -1340,8 +1339,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            110 => 
-            array (
+            110 =>
+            array(
                 'id' => 111,
                 'code' => 388,
                 'alpha2' => 'JM',
@@ -1352,8 +1351,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            111 => 
-            array (
+            111 =>
+            array(
                 'id' => 112,
                 'code' => 392,
                 'alpha2' => 'JP',
@@ -1364,8 +1363,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            112 => 
-            array (
+            112 =>
+            array(
                 'id' => 113,
                 'code' => 398,
                 'alpha2' => 'KZ',
@@ -1376,8 +1375,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            113 => 
-            array (
+            113 =>
+            array(
                 'id' => 114,
                 'code' => 400,
                 'alpha2' => 'JO',
@@ -1388,8 +1387,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            114 => 
-            array (
+            114 =>
+            array(
                 'id' => 115,
                 'code' => 404,
                 'alpha2' => 'KE',
@@ -1400,8 +1399,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            115 => 
-            array (
+            115 =>
+            array(
                 'id' => 116,
                 'code' => 408,
                 'alpha2' => 'KP',
@@ -1412,8 +1411,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            116 => 
-            array (
+            116 =>
+            array(
                 'id' => 117,
                 'code' => 410,
                 'alpha2' => 'KR',
@@ -1424,8 +1423,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            117 => 
-            array (
+            117 =>
+            array(
                 'id' => 118,
                 'code' => 414,
                 'alpha2' => 'KW',
@@ -1436,8 +1435,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            118 => 
-            array (
+            118 =>
+            array(
                 'id' => 119,
                 'code' => 417,
                 'alpha2' => 'KG',
@@ -1448,8 +1447,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            119 => 
-            array (
+            119 =>
+            array(
                 'id' => 120,
                 'code' => 418,
                 'alpha2' => 'LA',
@@ -1460,8 +1459,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            120 => 
-            array (
+            120 =>
+            array(
                 'id' => 121,
                 'code' => 422,
                 'alpha2' => 'LB',
@@ -1472,8 +1471,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            121 => 
-            array (
+            121 =>
+            array(
                 'id' => 122,
                 'code' => 426,
                 'alpha2' => 'LS',
@@ -1484,8 +1483,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            122 => 
-            array (
+            122 =>
+            array(
                 'id' => 123,
                 'code' => 428,
                 'alpha2' => 'LV',
@@ -1496,8 +1495,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            123 => 
-            array (
+            123 =>
+            array(
                 'id' => 124,
                 'code' => 430,
                 'alpha2' => 'LR',
@@ -1508,8 +1507,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            124 => 
-            array (
+            124 =>
+            array(
                 'id' => 125,
                 'code' => 434,
                 'alpha2' => 'LY',
@@ -1520,8 +1519,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            125 => 
-            array (
+            125 =>
+            array(
                 'id' => 126,
                 'code' => 438,
                 'alpha2' => 'LI',
@@ -1532,8 +1531,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            126 => 
-            array (
+            126 =>
+            array(
                 'id' => 127,
                 'code' => 440,
                 'alpha2' => 'LT',
@@ -1544,8 +1543,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            127 => 
-            array (
+            127 =>
+            array(
                 'id' => 128,
                 'code' => 442,
                 'alpha2' => 'LU',
@@ -1556,8 +1555,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            128 => 
-            array (
+            128 =>
+            array(
                 'id' => 129,
                 'code' => 446,
                 'alpha2' => 'MO',
@@ -1568,8 +1567,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            129 => 
-            array (
+            129 =>
+            array(
                 'id' => 130,
                 'code' => 450,
                 'alpha2' => 'MG',
@@ -1580,8 +1579,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            130 => 
-            array (
+            130 =>
+            array(
                 'id' => 131,
                 'code' => 454,
                 'alpha2' => 'MW',
@@ -1592,8 +1591,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            131 => 
-            array (
+            131 =>
+            array(
                 'id' => 132,
                 'code' => 458,
                 'alpha2' => 'MY',
@@ -1604,8 +1603,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            132 => 
-            array (
+            132 =>
+            array(
                 'id' => 133,
                 'code' => 462,
                 'alpha2' => 'MV',
@@ -1616,8 +1615,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            133 => 
-            array (
+            133 =>
+            array(
                 'id' => 134,
                 'code' => 466,
                 'alpha2' => 'ML',
@@ -1628,8 +1627,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            134 => 
-            array (
+            134 =>
+            array(
                 'id' => 135,
                 'code' => 470,
                 'alpha2' => 'MT',
@@ -1640,8 +1639,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            135 => 
-            array (
+            135 =>
+            array(
                 'id' => 136,
                 'code' => 474,
                 'alpha2' => 'MQ',
@@ -1652,8 +1651,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            136 => 
-            array (
+            136 =>
+            array(
                 'id' => 137,
                 'code' => 478,
                 'alpha2' => 'MR',
@@ -1664,8 +1663,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            137 => 
-            array (
+            137 =>
+            array(
                 'id' => 138,
                 'code' => 480,
                 'alpha2' => 'MU',
@@ -1676,8 +1675,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            138 => 
-            array (
+            138 =>
+            array(
                 'id' => 139,
                 'code' => 484,
                 'alpha2' => 'MX',
@@ -1688,8 +1687,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            139 => 
-            array (
+            139 =>
+            array(
                 'id' => 140,
                 'code' => 492,
                 'alpha2' => 'MC',
@@ -1700,8 +1699,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            140 => 
-            array (
+            140 =>
+            array(
                 'id' => 141,
                 'code' => 496,
                 'alpha2' => 'MN',
@@ -1712,8 +1711,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            141 => 
-            array (
+            141 =>
+            array(
                 'id' => 142,
                 'code' => 498,
                 'alpha2' => 'MD',
@@ -1724,8 +1723,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            142 => 
-            array (
+            142 =>
+            array(
                 'id' => 143,
                 'code' => 500,
                 'alpha2' => 'MS',
@@ -1736,8 +1735,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            143 => 
-            array (
+            143 =>
+            array(
                 'id' => 144,
                 'code' => 504,
                 'alpha2' => 'MA',
@@ -1748,8 +1747,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            144 => 
-            array (
+            144 =>
+            array(
                 'id' => 145,
                 'code' => 508,
                 'alpha2' => 'MZ',
@@ -1760,8 +1759,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            145 => 
-            array (
+            145 =>
+            array(
                 'id' => 146,
                 'code' => 512,
                 'alpha2' => 'OM',
@@ -1772,8 +1771,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            146 => 
-            array (
+            146 =>
+            array(
                 'id' => 147,
                 'code' => 516,
                 'alpha2' => 'NA',
@@ -1784,8 +1783,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            147 => 
-            array (
+            147 =>
+            array(
                 'id' => 148,
                 'code' => 520,
                 'alpha2' => 'NR',
@@ -1796,8 +1795,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            148 => 
-            array (
+            148 =>
+            array(
                 'id' => 149,
                 'code' => 524,
                 'alpha2' => 'NP',
@@ -1808,8 +1807,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            149 => 
-            array (
+            149 =>
+            array(
                 'id' => 150,
                 'code' => 528,
                 'alpha2' => 'NL',
@@ -1820,8 +1819,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            150 => 
-            array (
+            150 =>
+            array(
                 'id' => 151,
                 'code' => 530,
                 'alpha2' => 'AN',
@@ -1832,8 +1831,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            151 => 
-            array (
+            151 =>
+            array(
                 'id' => 152,
                 'code' => 533,
                 'alpha2' => 'AW',
@@ -1844,8 +1843,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            152 => 
-            array (
+            152 =>
+            array(
                 'id' => 153,
                 'code' => 540,
                 'alpha2' => 'NC',
@@ -1856,8 +1855,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            153 => 
-            array (
+            153 =>
+            array(
                 'id' => 154,
                 'code' => 548,
                 'alpha2' => 'VU',
@@ -1868,8 +1867,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            154 => 
-            array (
+            154 =>
+            array(
                 'id' => 155,
                 'code' => 554,
                 'alpha2' => 'NZ',
@@ -1880,8 +1879,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            155 => 
-            array (
+            155 =>
+            array(
                 'id' => 156,
                 'code' => 558,
                 'alpha2' => 'NI',
@@ -1892,8 +1891,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            156 => 
-            array (
+            156 =>
+            array(
                 'id' => 157,
                 'code' => 562,
                 'alpha2' => 'NE',
@@ -1904,8 +1903,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            157 => 
-            array (
+            157 =>
+            array(
                 'id' => 158,
                 'code' => 566,
                 'alpha2' => 'NG',
@@ -1916,8 +1915,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            158 => 
-            array (
+            158 =>
+            array(
                 'id' => 159,
                 'code' => 570,
                 'alpha2' => 'NU',
@@ -1928,8 +1927,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            159 => 
-            array (
+            159 =>
+            array(
                 'id' => 160,
                 'code' => 574,
                 'alpha2' => 'NF',
@@ -1940,8 +1939,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            160 => 
-            array (
+            160 =>
+            array(
                 'id' => 161,
                 'code' => 578,
                 'alpha2' => 'NO',
@@ -1952,8 +1951,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            161 => 
-            array (
+            161 =>
+            array(
                 'id' => 162,
                 'code' => 580,
                 'alpha2' => 'MP',
@@ -1964,8 +1963,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            162 => 
-            array (
+            162 =>
+            array(
                 'id' => 163,
                 'code' => 581,
                 'alpha2' => 'UM',
@@ -1976,8 +1975,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            163 => 
-            array (
+            163 =>
+            array(
                 'id' => 164,
                 'code' => 583,
                 'alpha2' => 'FM',
@@ -1988,8 +1987,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            164 => 
-            array (
+            164 =>
+            array(
                 'id' => 165,
                 'code' => 584,
                 'alpha2' => 'MH',
@@ -2000,8 +1999,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            165 => 
-            array (
+            165 =>
+            array(
                 'id' => 166,
                 'code' => 585,
                 'alpha2' => 'PW',
@@ -2012,8 +2011,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            166 => 
-            array (
+            166 =>
+            array(
                 'id' => 167,
                 'code' => 586,
                 'alpha2' => 'PK',
@@ -2024,8 +2023,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            167 => 
-            array (
+            167 =>
+            array(
                 'id' => 168,
                 'code' => 591,
                 'alpha2' => 'PA',
@@ -2036,8 +2035,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            168 => 
-            array (
+            168 =>
+            array(
                 'id' => 169,
                 'code' => 598,
                 'alpha2' => 'PG',
@@ -2048,8 +2047,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            169 => 
-            array (
+            169 =>
+            array(
                 'id' => 170,
                 'code' => 600,
                 'alpha2' => 'PY',
@@ -2060,8 +2059,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            170 => 
-            array (
+            170 =>
+            array(
                 'id' => 171,
                 'code' => 604,
                 'alpha2' => 'PE',
@@ -2072,8 +2071,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            171 => 
-            array (
+            171 =>
+            array(
                 'id' => 172,
                 'code' => 608,
                 'alpha2' => 'PH',
@@ -2084,8 +2083,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            172 => 
-            array (
+            172 =>
+            array(
                 'id' => 173,
                 'code' => 612,
                 'alpha2' => 'PN',
@@ -2096,8 +2095,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            173 => 
-            array (
+            173 =>
+            array(
                 'id' => 174,
                 'code' => 616,
                 'alpha2' => 'PL',
@@ -2108,8 +2107,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            174 => 
-            array (
+            174 =>
+            array(
                 'id' => 175,
                 'code' => 620,
                 'alpha2' => 'PT',
@@ -2120,8 +2119,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            175 => 
-            array (
+            175 =>
+            array(
                 'id' => 176,
                 'code' => 624,
                 'alpha2' => 'GW',
@@ -2132,8 +2131,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            176 => 
-            array (
+            176 =>
+            array(
                 'id' => 177,
                 'code' => 626,
                 'alpha2' => 'TL',
@@ -2144,8 +2143,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            177 => 
-            array (
+            177 =>
+            array(
                 'id' => 178,
                 'code' => 630,
                 'alpha2' => 'PR',
@@ -2156,8 +2155,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            178 => 
-            array (
+            178 =>
+            array(
                 'id' => 179,
                 'code' => 634,
                 'alpha2' => 'QA',
@@ -2168,8 +2167,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            179 => 
-            array (
+            179 =>
+            array(
                 'id' => 180,
                 'code' => 638,
                 'alpha2' => 'RE',
@@ -2180,8 +2179,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            180 => 
-            array (
+            180 =>
+            array(
                 'id' => 181,
                 'code' => 642,
                 'alpha2' => 'RO',
@@ -2192,8 +2191,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            181 => 
-            array (
+            181 =>
+            array(
                 'id' => 182,
                 'code' => 643,
                 'alpha2' => 'RU',
@@ -2204,8 +2203,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            182 => 
-            array (
+            182 =>
+            array(
                 'id' => 183,
                 'code' => 646,
                 'alpha2' => 'RW',
@@ -2216,8 +2215,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            183 => 
-            array (
+            183 =>
+            array(
                 'id' => 184,
                 'code' => 654,
                 'alpha2' => 'SH',
@@ -2228,8 +2227,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            184 => 
-            array (
+            184 =>
+            array(
                 'id' => 185,
                 'code' => 659,
                 'alpha2' => 'KN',
@@ -2240,8 +2239,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            185 => 
-            array (
+            185 =>
+            array(
                 'id' => 186,
                 'code' => 660,
                 'alpha2' => 'AI',
@@ -2252,8 +2251,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            186 => 
-            array (
+            186 =>
+            array(
                 'id' => 187,
                 'code' => 662,
                 'alpha2' => 'LC',
@@ -2264,8 +2263,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            187 => 
-            array (
+            187 =>
+            array(
                 'id' => 188,
                 'code' => 666,
                 'alpha2' => 'PM',
@@ -2276,8 +2275,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            188 => 
-            array (
+            188 =>
+            array(
                 'id' => 189,
                 'code' => 670,
                 'alpha2' => 'VC',
@@ -2288,8 +2287,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            189 => 
-            array (
+            189 =>
+            array(
                 'id' => 190,
                 'code' => 674,
                 'alpha2' => 'SM',
@@ -2300,8 +2299,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            190 => 
-            array (
+            190 =>
+            array(
                 'id' => 191,
                 'code' => 678,
                 'alpha2' => 'ST',
@@ -2312,8 +2311,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            191 => 
-            array (
+            191 =>
+            array(
                 'id' => 192,
                 'code' => 682,
                 'alpha2' => 'SA',
@@ -2324,8 +2323,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            192 => 
-            array (
+            192 =>
+            array(
                 'id' => 193,
                 'code' => 686,
                 'alpha2' => 'SN',
@@ -2336,8 +2335,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            193 => 
-            array (
+            193 =>
+            array(
                 'id' => 194,
                 'code' => 690,
                 'alpha2' => 'SC',
@@ -2348,8 +2347,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            194 => 
-            array (
+            194 =>
+            array(
                 'id' => 195,
                 'code' => 694,
                 'alpha2' => 'SL',
@@ -2360,8 +2359,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            195 => 
-            array (
+            195 =>
+            array(
                 'id' => 196,
                 'code' => 702,
                 'alpha2' => 'SG',
@@ -2372,8 +2371,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            196 => 
-            array (
+            196 =>
+            array(
                 'id' => 197,
                 'code' => 703,
                 'alpha2' => 'SK',
@@ -2384,8 +2383,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            197 => 
-            array (
+            197 =>
+            array(
                 'id' => 198,
                 'code' => 704,
                 'alpha2' => 'VN',
@@ -2396,8 +2395,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            198 => 
-            array (
+            198 =>
+            array(
                 'id' => 199,
                 'code' => 705,
                 'alpha2' => 'SI',
@@ -2408,8 +2407,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            199 => 
-            array (
+            199 =>
+            array(
                 'id' => 200,
                 'code' => 706,
                 'alpha2' => 'SO',
@@ -2420,8 +2419,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            200 => 
-            array (
+            200 =>
+            array(
                 'id' => 201,
                 'code' => 710,
                 'alpha2' => 'ZA',
@@ -2432,8 +2431,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            201 => 
-            array (
+            201 =>
+            array(
                 'id' => 202,
                 'code' => 716,
                 'alpha2' => 'ZW',
@@ -2444,8 +2443,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            202 => 
-            array (
+            202 =>
+            array(
                 'id' => 203,
                 'code' => 724,
                 'alpha2' => 'ES',
@@ -2456,8 +2455,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            203 => 
-            array (
+            203 =>
+            array(
                 'id' => 204,
                 'code' => 732,
                 'alpha2' => 'EH',
@@ -2468,8 +2467,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            204 => 
-            array (
+            204 =>
+            array(
                 'id' => 205,
                 'code' => 736,
                 'alpha2' => 'SD',
@@ -2480,8 +2479,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            205 => 
-            array (
+            205 =>
+            array(
                 'id' => 206,
                 'code' => 740,
                 'alpha2' => 'SR',
@@ -2492,8 +2491,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            206 => 
-            array (
+            206 =>
+            array(
                 'id' => 207,
                 'code' => 744,
                 'alpha2' => 'SJ',
@@ -2504,8 +2503,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            207 => 
-            array (
+            207 =>
+            array(
                 'id' => 208,
                 'code' => 748,
                 'alpha2' => 'SZ',
@@ -2516,8 +2515,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            208 => 
-            array (
+            208 =>
+            array(
                 'id' => 209,
                 'code' => 752,
                 'alpha2' => 'SE',
@@ -2528,8 +2527,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            209 => 
-            array (
+            209 =>
+            array(
                 'id' => 210,
                 'code' => 756,
                 'alpha2' => 'CH',
@@ -2540,8 +2539,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            210 => 
-            array (
+            210 =>
+            array(
                 'id' => 211,
                 'code' => 760,
                 'alpha2' => 'SY',
@@ -2552,8 +2551,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            211 => 
-            array (
+            211 =>
+            array(
                 'id' => 212,
                 'code' => 762,
                 'alpha2' => 'TJ',
@@ -2564,8 +2563,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            212 => 
-            array (
+            212 =>
+            array(
                 'id' => 213,
                 'code' => 764,
                 'alpha2' => 'TH',
@@ -2576,8 +2575,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            213 => 
-            array (
+            213 =>
+            array(
                 'id' => 214,
                 'code' => 768,
                 'alpha2' => 'TG',
@@ -2588,8 +2587,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            214 => 
-            array (
+            214 =>
+            array(
                 'id' => 215,
                 'code' => 772,
                 'alpha2' => 'TK',
@@ -2600,8 +2599,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            215 => 
-            array (
+            215 =>
+            array(
                 'id' => 216,
                 'code' => 776,
                 'alpha2' => 'TO',
@@ -2612,8 +2611,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            216 => 
-            array (
+            216 =>
+            array(
                 'id' => 217,
                 'code' => 780,
                 'alpha2' => 'TT',
@@ -2624,8 +2623,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            217 => 
-            array (
+            217 =>
+            array(
                 'id' => 218,
                 'code' => 784,
                 'alpha2' => 'AE',
@@ -2636,8 +2635,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            218 => 
-            array (
+            218 =>
+            array(
                 'id' => 219,
                 'code' => 788,
                 'alpha2' => 'TN',
@@ -2648,8 +2647,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            219 => 
-            array (
+            219 =>
+            array(
                 'id' => 220,
                 'code' => 792,
                 'alpha2' => 'TR',
@@ -2660,8 +2659,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            220 => 
-            array (
+            220 =>
+            array(
                 'id' => 221,
                 'code' => 795,
                 'alpha2' => 'TM',
@@ -2672,8 +2671,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            221 => 
-            array (
+            221 =>
+            array(
                 'id' => 222,
                 'code' => 796,
                 'alpha2' => 'TC',
@@ -2684,8 +2683,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            222 => 
-            array (
+            222 =>
+            array(
                 'id' => 223,
                 'code' => 798,
                 'alpha2' => 'TV',
@@ -2696,8 +2695,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            223 => 
-            array (
+            223 =>
+            array(
                 'id' => 224,
                 'code' => 800,
                 'alpha2' => 'UG',
@@ -2708,8 +2707,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            224 => 
-            array (
+            224 =>
+            array(
                 'id' => 225,
                 'code' => 804,
                 'alpha2' => 'UA',
@@ -2720,8 +2719,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            225 => 
-            array (
+            225 =>
+            array(
                 'id' => 226,
                 'code' => 807,
                 'alpha2' => 'MK',
@@ -2732,8 +2731,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            226 => 
-            array (
+            226 =>
+            array(
                 'id' => 227,
                 'code' => 818,
                 'alpha2' => 'EG',
@@ -2744,8 +2743,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            227 => 
-            array (
+            227 =>
+            array(
                 'id' => 228,
                 'code' => 826,
                 'alpha2' => 'GB',
@@ -2756,8 +2755,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            228 => 
-            array (
+            228 =>
+            array(
                 'id' => 229,
                 'code' => 833,
                 'alpha2' => 'IM',
@@ -2768,8 +2767,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            229 => 
-            array (
+            229 =>
+            array(
                 'id' => 230,
                 'code' => 834,
                 'alpha2' => 'TZ',
@@ -2780,8 +2779,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            230 => 
-            array (
+            230 =>
+            array(
                 'id' => 231,
                 'code' => 840,
                 'alpha2' => 'US',
@@ -2792,8 +2791,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            231 => 
-            array (
+            231 =>
+            array(
                 'id' => 232,
                 'code' => 850,
                 'alpha2' => 'VI',
@@ -2804,8 +2803,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            232 => 
-            array (
+            232 =>
+            array(
                 'id' => 233,
                 'code' => 854,
                 'alpha2' => 'BF',
@@ -2816,8 +2815,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            233 => 
-            array (
+            233 =>
+            array(
                 'id' => 234,
                 'code' => 858,
                 'alpha2' => 'UY',
@@ -2828,8 +2827,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            234 => 
-            array (
+            234 =>
+            array(
                 'id' => 235,
                 'code' => 860,
                 'alpha2' => 'UZ',
@@ -2840,8 +2839,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            235 => 
-            array (
+            235 =>
+            array(
                 'id' => 236,
                 'code' => 862,
                 'alpha2' => 'VE',
@@ -2852,8 +2851,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            236 => 
-            array (
+            236 =>
+            array(
                 'id' => 237,
                 'code' => 876,
                 'alpha2' => 'WF',
@@ -2864,8 +2863,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            237 => 
-            array (
+            237 =>
+            array(
                 'id' => 238,
                 'code' => 882,
                 'alpha2' => 'WS',
@@ -2876,8 +2875,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            238 => 
-            array (
+            238 =>
+            array(
                 'id' => 239,
                 'code' => 887,
                 'alpha2' => 'YE',
@@ -2888,8 +2887,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            239 => 
-            array (
+            239 =>
+            array(
                 'id' => 240,
                 'code' => 891,
                 'alpha2' => 'CS',
@@ -2900,8 +2899,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            240 => 
-            array (
+            240 =>
+            array(
                 'id' => 241,
                 'code' => 894,
                 'alpha2' => 'ZM',
@@ -2912,8 +2911,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            241 => 
-            array (
+            241 =>
+            array(
                 'id' => 242,
                 'code' => 0,
                 'alpha2' => 'VT',
@@ -2924,8 +2923,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            242 => 
-            array (
+            242 =>
+            array(
                 'id' => 243,
                 'code' => 0,
                 'alpha2' => '',
@@ -2936,8 +2935,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            243 => 
-            array (
+            243 =>
+            array(
                 'id' => 244,
                 'code' => 0,
                 'alpha2' => '',
@@ -2948,8 +2947,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            244 => 
-            array (
+            244 =>
+            array(
                 'id' => 245,
                 'code' => 0,
                 'alpha2' => '',
@@ -2960,8 +2959,8 @@ class AListePaysTableSeeder extends Seeder
                 'tva' => 0,
                 'taux_tva' => '0.00',
             ),
-            245 => 
-            array (
+            245 =>
+            array(
                 'id' => 246,
                 'code' => 0,
                 'alpha2' => '',
@@ -2973,7 +2972,7 @@ class AListePaysTableSeeder extends Seeder
                 'taux_tva' => '0.00',
             ),
         ));
-        
-        
+
+
     }
 }

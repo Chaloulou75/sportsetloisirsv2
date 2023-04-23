@@ -16,6 +16,6 @@ class StructureTypeInfo extends Model
      */
     protected $guarded = [];
 
-    protected $table = 'a_structures_types_infos';
+    protected $table = 'structures_types_infos';
 
 }

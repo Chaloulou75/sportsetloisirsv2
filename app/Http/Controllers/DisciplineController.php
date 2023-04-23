@@ -5,13 +5,12 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Models\Categorie;
 use App\Models\Structure;
-use App\Models\Discipline;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
+use App\Models\LienActiviteSimilaire;
 use App\Http\Resources\CategorieResource;
 use Illuminate\Database\Eloquent\Builder;
-use App\Http\Resources\DisciplineResource;
-use App\Models\LienActiviteSimilaire;
+use App\Http\Resources\ListDisciplineResource;
 
 class DisciplineController extends Controller
 {
@@ -22,12 +21,12 @@ class DisciplineController extends Controller
     {
         $structuresCount = Structure::count();
 
-        $disciplines = Discipline::select(['id', 'name', 'slug'])
-                        ->withCount('activites')
+        $disciplines = ListDiscipline::select(['id', 'name', 'slug'])
+                        // ->withCount('activites')
                         ->filter(
                             request(['search'])
                         )
-                        ->orderByDesc('activites_count')
+                        // ->orderByDesc('activites_count')
                         ->paginate(15)
                         ->withQueryString();
 
@@ -57,15 +56,15 @@ class DisciplineController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Discipline $discipline)
+    public function show(ListDiscipline $discipline)
     {
-        $discipline = Discipline::with([
-                'activites:id,name,slug,structure_id,description,address,city,zip_code,country,address_lat,address_lng,discipline_id,nivel_id,activitetype_id,publictype_id',
-                'activites.discipline'
+        $discipline = ListDiscipline::with([
+                // 'activites:id,name,slug,structure_id,description,address,city,zip_code,country,address_lat,address_lng,discipline_id,nivel_id,activitetype_id,publictype_id',
+                // 'activites.discipline'
             ])
             ->where('slug', $discipline->slug)
             ->select(['id', 'name', 'slug', 'view_count'])
-            ->withCount('activites')
+            // ->withCount('activites')
             ->first();
 
         $structures = $discipline->structures->load('structuretype')->unique();
@@ -82,7 +81,7 @@ class DisciplineController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Discipline $discipline)
+    public function edit(ListDiscipline $discipline)
     {
         //
     }
@@ -90,7 +89,7 @@ class DisciplineController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Discipline $discipline)
+    public function update(Request $request, ListDiscipline $discipline)
     {
         //
     }
@@ -98,7 +97,7 @@ class DisciplineController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Discipline $discipline)
+    public function destroy(ListDiscipline $discipline)
     {
         //
     }
@@ -107,8 +106,11 @@ class DisciplineController extends Controller
     {
         $famille_id = request('famille_id');
 
-        $disciplines = Discipline::where('famille_id', $famille_id)->get(['id', 'name', 'famille_id']);
-        return DisciplineResource::collection($disciplines);
+        $disciplines = ListDiscipline::whereHas('familles', function ($query) use ($famille_id) {
+            $query->where('famille_id', $famille_id);
+        })->get(['id', 'name']);
+
+        return ListDisciplineResource::collection($disciplines);
     }
 
     public function getCategories($id)
@@ -129,7 +131,7 @@ class DisciplineController extends Controller
 
         $activiteSimilaires = ListDiscipline::whereIn('id', $activiteSimilairesIds)->get();
 
-        return DisciplineResource::collection($activiteSimilaires);
+        return ListDisciplineResource::collection($activiteSimilaires);
 
     }
 }

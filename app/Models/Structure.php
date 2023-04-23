@@ -127,8 +127,8 @@ class Structure extends Model
         return $this->hasManyThrough(Discipline::class, Activite::class);
     }
 
-    public function activites(): HasMany
+    public function activites(): BelongsToMany
     {
-        return $this->hasMany(Activite::class);
+        return $this->belongsToMany(Activite::class, 'structure_activite', 'activite_id', 'structure_id');
     }
 }

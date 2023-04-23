@@ -17,7 +17,7 @@ class StructureTypeValeur extends Model
      */
     protected $guarded = [];
 
-    protected $table = 'a_liste_structures_types_valeurs';
+    protected $table = 'liste_structures_types_valeurs';
 
     public function structuretypeattribut(): BelongsTo
     {

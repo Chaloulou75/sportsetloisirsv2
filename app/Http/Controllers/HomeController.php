@@ -9,6 +9,7 @@ use App\Models\Structure;
 use App\Models\Discipline;
 use App\Models\Departement;
 use Illuminate\Http\Request;
+use App\Models\ListDiscipline;
 use Illuminate\Support\Facades\Route;
 
 class HomeController extends Controller
@@ -16,15 +17,15 @@ class HomeController extends Controller
     public function index()
     {
         $familleCount = Famille::count();
-        $disciplinesCount = Discipline::count();
+        $disciplinesCount = ListDiscipline::count();
         $structuresCount = Structure::count();
         $citiesCount = City::count();
 
         $familles = Famille::select(['id', 'name', 'slug'])->get();
 
-        $disciplines = Discipline::select(['id', 'name', 'slug'])
-                        ->withCount('activites')
-                        ->orderByDesc('activites_count')
+        $disciplines = ListDiscipline::select(['id', 'name', 'slug'])
+                        // ->withCount('activites')
+                        // ->orderByDesc('activites_count')
                         ->limit(12)
                         ->get();
 

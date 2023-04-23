@@ -50,7 +50,7 @@ Route::resource('villes', CityController::class, [
 ]);
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::resource('structures.activites', ActiviteController::class)->scoped(['structure' => 'slug','activite' => 'slug']);
+    Route::resource('structures.activites', ActiviteController::class)->scoped(['structure' => 'slug','activite' => 'id']);
 
     Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
     Route::post('/structures', [StructureController::class, 'store'])->name('structures.store');

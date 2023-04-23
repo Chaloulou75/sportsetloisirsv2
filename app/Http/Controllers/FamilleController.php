@@ -7,6 +7,7 @@ use App\Models\Famille;
 use App\Models\Structure;
 use App\Models\Discipline;
 use Illuminate\Http\Request;
+use App\Models\ListDiscipline;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Resources\FamilleResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -21,7 +22,7 @@ class FamilleController extends Controller
         $familles = Famille::select(['id', 'name', 'slug'])->get();
 
         $familleCount = Famille::count();
-        $disciplinesCount = Discipline::count();
+        $disciplinesCount = ListDiscipline::count();
         $structuresCount = Structure::count();
 
         return Inertia::render('Familles/Index', [
@@ -54,21 +55,21 @@ class FamilleController extends Controller
     public function show(Famille $famille)
     {
         $famille = Famille::with(['disciplines' => function ($query) {
-            $query->withCount('activites')->orderByDesc('activites_count');
+            // $query->withCount('activites')->orderByDesc('activites_count');
         }])
                             ->where('slug', $famille->slug)
                             ->select(['id', 'name', 'slug', 'view_count'])
                             ->withCount(['disciplines'])
                             ->first();
 
-        $totalActivites = $famille->disciplines->sum('activites_count');
+        // $totalActivites = $famille->disciplines->sum('activites_count');
 
         $famille->timestamps = false;
         $famille->increment('view_count');
 
         return Inertia::render('Familles/Show', [
             'famille'=> $famille,
-            'totalActivites' => $totalActivites,
+            // 'totalActivites' => $totalActivites,
         ]);
     }
 

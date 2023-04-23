@@ -51,7 +51,7 @@ class ActiviteController extends Controller
         // $activitestypes = Activitetype::select(['id', 'name', 'slug'])->get();
         // $disciplines = Discipline::select(['id', 'name', 'slug'])->get();
         $categories = Categorie::with('listactivites')->select(['id', 'nom', 'ico'])->get();
-        $listDisciplines = ListDiscipline::with('categories')->select(['id', 'discipline'])->get();
+        $listDisciplines = ListDiscipline::with('categories')->select(['id', 'name', 'slug'])->get();
 
         return Inertia::render('Structures/Activites/Index', [
             'structure' => $structure,
@@ -85,7 +85,7 @@ class ActiviteController extends Controller
         $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
         $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
         $activitestypes = Activitetype::select(['id', 'name', 'slug'])->get();
-        $disciplines = Discipline::select(['id', 'name', 'slug'])->get();
+        $disciplines = ListDiscipline::select(['id', 'name', 'slug'])->get();
 
         return Inertia::render('Structures/Activites/Create', [
             'structure' => $structure,
@@ -192,7 +192,7 @@ class ActiviteController extends Controller
         $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
         $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
         $activitestypes = Activitetype::select(['id', 'name', 'slug'])->get();
-        $disciplines = Discipline::select(['id', 'name', 'slug'])->get();
+        $disciplines = ListDiscipline::select(['id', 'name', 'slug'])->get();
 
         return Inertia::render('Structures/Activites/Edit', [
             'structure' => $structure,
@@ -221,7 +221,7 @@ class ActiviteController extends Controller
         $validated= request()->validate([
             'structure_id' => ['required', Rule::exists('structures', 'id')],
             'name' => ['required', 'string', 'max:255'],
-            'discipline_id' => ['required', Rule::exists('disciplines', 'id')],
+            'discipline_id' => ['required', Rule::exists('liste_disciplines', 'id')],
             'activitetype_id' => ['required', Rule::exists('activitetypes', 'id')],
             'nivel_id' => ['required', Rule::exists('nivels', 'id')],
             'publictype_id' => ['required', Rule::exists('publictypes', 'id')],

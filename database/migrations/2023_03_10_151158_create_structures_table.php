@@ -28,7 +28,7 @@ return new class () extends Migration {
             $table->string('city');
             $table->foreignId('departement_id')->constrained()->onDelete('cascade');
             $table->unsignedBigInteger('country_id')->nullable();
-            $table->foreign('country_id')->references('id')->on('a_liste_pays')->onDelete('cascade');
+            $table->foreign('country_id')->references('id')->on('liste_pays')->onDelete('cascade');
             $table->string('country');
             $table->string('contact')->nullable();
             $table->string('phone1', 30)->nullable();

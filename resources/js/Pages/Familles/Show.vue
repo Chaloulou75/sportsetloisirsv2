@@ -4,7 +4,7 @@ import { Head, Link } from "@inertiajs/vue3";
 
 defineProps({
     famille: Object,
-    totalActivites: Number,
+    // totalActivites: Number,
 });
 </script>
 
@@ -53,9 +53,9 @@ defineProps({
         </template>
 
         <div class="py-12">
-            <div class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8">
+            <div class="min-h-screen px-2 mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div
-                    class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
+                    class="grid h-auto grid-cols-1 gap-4 place-items-stretch sm:grid-cols-2 md:grid-cols-3"
                 >
                     <Link
                         :href="route('disciplines.show', discipline.slug)"
@@ -64,7 +64,7 @@ defineProps({
                         "
                         v-for="discipline in famille.disciplines"
                         :key="discipline.id"
-                        class="flex flex-col items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                        class="flex flex-col items-center justify-center px-4 py-3 text-lg text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                     >
                         {{ discipline.name }}
                         <div
