@@ -23,7 +23,6 @@ const props = defineProps({
     structurestypes: Object,
     niveaux: Object,
     publictypes: Object,
-    activitestypes: Object,
     disciplines: Object,
     structure: Object,
     errors: Object,

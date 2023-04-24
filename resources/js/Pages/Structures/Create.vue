@@ -20,7 +20,6 @@ const props = defineProps({
     structurestypes: Object,
     niveaux: Object,
     publictypes: Object,
-    activitestypes: Object,
     disciplines: Object,
     errors: Object,
 });
@@ -92,7 +91,6 @@ watch(
 function submit() {
     form.post("/structures");
 }
-
 </script>
 
 <template>
@@ -428,18 +426,28 @@ function submit() {
                                                                         "
                                                                     >
                                                                         <input
-                                                                            v-model="form.attributs[attribut.id]"
+                                                                            v-model="
+                                                                                form
+                                                                                    .attributs[
+                                                                                    attribut
+                                                                                        .id
+                                                                                ]
+                                                                            "
                                                                             type="radio"
                                                                             class="form-radio"
                                                                             :name="
                                                                                 option.nom
                                                                             "
-                                                                            :value="option.nom"
+                                                                            :value="
+                                                                                option.nom
+                                                                            "
                                                                             checked
                                                                         />
                                                                         <span
                                                                             class="ml-2"
-                                                                            >{{ option.nom }}</span
+                                                                            >{{
+                                                                                option.nom
+                                                                            }}</span
                                                                         >
                                                                     </label>
                                                                 </div>

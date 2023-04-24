@@ -70,7 +70,7 @@ class DepartementController extends Controller
 
         $departement->timestamp = false;
         $departement->increment('view_count');
-        // dd($city);
+
         return Inertia::render('Departements/Show', [
             'departement'=> $departement,
         ]);

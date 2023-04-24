@@ -31,10 +31,12 @@ class Structure extends Model
                     ->orWhere('presentation_courte', 'like', '%' . $search . '%')
                     ->orWhere('city', 'like', '%' . $search . '%')
                     ->orWhere('zip_code', 'like', '%' . $search . '%')
-            )->orWhereHas('activites.discipline', function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%')
-                      ->orWhere('slug', 'like', '%' . $search . '%');
-            })->orWhereHas('structuretype', function ($query) use ($search) {
+            )
+            // ->orWhereHas('activites.disciplines', function ($query) use ($search) {
+            //     $query->where('name', 'like', '%' . $search . '%')
+            //           ->orWhere('slug', 'like', '%' . $search . '%');
+            // })
+            ->orWhereHas('structuretype', function ($query) use ($search) {
                 $query->where('name', 'like', '%' . $search . '%')
                       ->orWhere('slug', 'like', '%' . $search . '%');
             })
@@ -65,12 +67,12 @@ class Structure extends Model
 
 
         $query->when(
-            $filters['discipline'] ?? false,
-            fn ($query, $discipline) =>
+            $filters['disciplines'] ?? false,
+            fn ($query, $disciplines) =>
             $query->whereHas(
                 'disciplines',
                 fn ($query) =>
-                $query->where('slug', $discipline)
+                $query->where('slug', $disciplines)
             )
         );
 
@@ -122,13 +124,9 @@ class Structure extends Model
         return $this->belongsTo(Structuretype::class);
     }
 
-    public function discipline(): HasManyThrough
+    public function disciplines(): BelongsToMany
     {
-        return $this->hasManyThrough(Discipline::class, Activite::class);
+        return $this->belongsToMany(ListDiscipline::class, 'structure_activite', 'activite_id', 'structure_id');
     }
 
-    public function activites(): BelongsToMany
-    {
-        return $this->belongsToMany(Activite::class, 'structure_activite', 'activite_id', 'structure_id');
-    }
 }

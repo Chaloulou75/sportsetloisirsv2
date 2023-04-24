@@ -53,17 +53,22 @@ class Discipline extends Model
         return $this->hasMany(Activite::class);
     }
 
-    public function structures()
+    public function structures(): BelongsToMany
     {
-        return $this->hasManyThrough(
-            Structure::class,
-            Activite::class,
-            'discipline_id',
-            'id',
-            'id',
-            'structure_id'
-        );
+        return $this->belongsToMany(Structure::class, 'structure_activite', 'structure_id', 'activite_id');
     }
+
+    // public function structures()
+    // {
+    //     return $this->hasManyThrough(
+    //         Structure::class,
+    //         Activite::class,
+    //         'discipline_id',
+    //         'id',
+    //         'id',
+    //         'structure_id'
+    //     );
+    // }
 
     public function categories()
     {

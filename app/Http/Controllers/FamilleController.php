@@ -54,9 +54,7 @@ class FamilleController extends Controller
      */
     public function show(Famille $famille)
     {
-        $famille = Famille::with(['disciplines' => function ($query) {
-            // $query->withCount('activites')->orderByDesc('activites_count');
-        }])
+        $famille = Famille::with(['disciplines'])
                             ->where('slug', $famille->slug)
                             ->select(['id', 'name', 'slug', 'view_count'])
                             ->withCount(['disciplines'])

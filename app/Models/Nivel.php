@@ -11,8 +11,4 @@ class Nivel extends Model
 {
     use HasFactory;
 
-    public function activite(): HasOne
-    {
-        return $this->hasOne(Activite::class);
-    }
 }

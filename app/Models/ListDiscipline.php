@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
@@ -46,20 +47,8 @@ class ListDiscipline extends Model
         return $this->belongsToMany(Categorie::class, 'liens_activites_categories', 'id_activite', 'id_categorie');
     }
 
-    public function structures(): HasManyThrough
+    public function structures(): HasMany
     {
-        return $this->hasManyThrough(
-            Structure::class,
-            Activite::class,
-            'discipline_id',
-            'id',
-            'id',
-            'structure_id'
-        );
-    }
-
-    public function activites(): BelongsToMany
-    {
-        return $this->belongsToMany(Activite::class);
+        return $this->hasMany(StructureActiviteCategorie::class, 'structure_id', 'activite_id');
     }
 }

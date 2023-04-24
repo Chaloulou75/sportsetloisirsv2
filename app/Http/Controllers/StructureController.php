@@ -7,11 +7,9 @@ use Inertia\Inertia;
 use App\Models\Nivel;
 use App\Models\Famille;
 use App\Models\Structure;
-use App\Models\Discipline;
 use App\Models\Publictype;
 use App\Models\Departement;
 use Illuminate\Support\Str;
-use App\Models\Activitetype;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Mail\StructureCreated;
@@ -43,14 +41,9 @@ class StructureController extends Controller
                     'city:id,ville,ville_formatee,code_postal',
                     'departement:id,departement,numero',
                     'structuretype:id,name,slug',
-                    'activites:id,name,slug,structure_id,description,address,city,zip_code,country,address_lat,address_lng,discipline_id,nivel_id,activitetype_id,publictype_id',
-                    'activites.discipline',
-                    'activites.nivel',
-                    'activites.activitetype',
-                    'activites.publictype',
                 ])
                         ->filter(
-                            request(['search', 'famille', 'discipline', 'localite'])
+                            request(['search'])
                         )
                         ->latest()
                         ->paginate(9)
@@ -78,11 +71,11 @@ class StructureController extends Controller
                             'structuretype' => $structure->structuretype,
                             'departement_id' => $structure->departement_id,
                             'user' => $structure->creator,
-                            'disciplines' => $structure->activites->pluck('discipline.name')->unique(),
+                            // 'disciplines' => $structure->activites->pluck('discipline.name')->unique(),
                             'logo' => $structure->logo ? asset('storage/'. $structure->logo) : 'https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
                 ];
                         })->withQueryString(),
-            'filters' => request()->all(['search', 'famille', 'discipline', 'localite']),
+            'filters' => request()->all(['search']),
             'familles' => $familles,
         ]);
     }
@@ -95,7 +88,6 @@ class StructureController extends Controller
         $structurestypes = Structuretype::with(['structuretypeattributs', 'structuretypeattributs.structuretypevaleurs'])->select(['id', 'name', 'slug'])->get();
         $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
         $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
-        $activitestypes = Activitetype::select(['id', 'name', 'slug'])->get();
         $disciplines = ListDiscipline::select(['id', 'name', 'slug'])->get();
 
         return Inertia::render('Structures/Create', [
@@ -103,7 +95,6 @@ class StructureController extends Controller
             'disciplines' => $disciplines,
             'niveaux' => $niveaux,
             'publictypes' => $publictypes,
-            'activitestypes' => $activitestypes,
         ]);
     }
 
@@ -216,13 +207,6 @@ class StructureController extends Controller
             'cities:id,ville,ville_formatee',
             'departement:id,departement,numero',
             'structuretype:id,name,slug',
-            'activites' => function ($query) {
-                $query->latest();
-            },
-            'activites.discipline',
-            'activites.nivel',
-            'activites.activitetype',
-            'activites.publictype',
             ])
             ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
             ->where('slug', $structure->slug)
@@ -230,11 +214,11 @@ class StructureController extends Controller
 
         $logoUrl = asset('storage/'.$structure->logo);
 
-        $disciplines = $structure->activites->pluck('discipline.name')->unique();
+        // $disciplines = $structure->activites->pluck('discipline.name')->unique();
 
         return Inertia::render('Structures/Show', [
             'structure'=> $structure,
-            'disciplines' => $disciplines,
+            // 'disciplines' => $disciplines,
             'logoUrl' => $logoUrl,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
@@ -255,7 +239,6 @@ class StructureController extends Controller
         $structurestypes = Structuretype::with(['structuretypeattributs', 'structuretypeattributs.structuretypevaleurs'])->select(['id', 'name', 'slug'])->get();
         $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
         $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
-        $activitestypes = Activitetype::select(['id', 'name', 'slug'])->get();
         $disciplines = ListDiscipline::select(['id', 'name', 'slug'])->get();
 
         $structure = Structure::with([
@@ -265,13 +248,12 @@ class StructureController extends Controller
             'cities:id,ville,ville_formatee',
             'departement:id,departement,numero',
             'structuretype:id,name,slug',
-            'activites' => function ($query) {
-                $query->latest();
-            },
-            'activites.discipline',
-            'activites.nivel',
-            'activites.activitetype',
-            'activites.publictype',
+            // 'activites' => function ($query) {
+            //     $query->latest();
+            // },
+            // 'activites.discipline',
+            // 'activites.nivel',
+            // 'activites.publictype',
             ])
             ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'abo_news', 'abo_promo','logo'])
             ->where('slug', $structure->slug)
@@ -282,7 +264,6 @@ class StructureController extends Controller
             'disciplines' => $disciplines,
             'niveaux' => $niveaux,
             'publictypes' => $publictypes,
-            'activitestypes' => $activitestypes,
             'structure' => $structure,
         ]);
 

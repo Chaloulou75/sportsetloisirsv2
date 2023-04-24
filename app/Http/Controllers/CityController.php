@@ -63,7 +63,7 @@ class CityController extends Controller
 
         $city->timestamp = false;
         $city->increment('view_count');
-        // dd($city);
+
         return Inertia::render('Villes/Show', [
             'city'=> $city,
             'filters' => request()->all(['discipline']),

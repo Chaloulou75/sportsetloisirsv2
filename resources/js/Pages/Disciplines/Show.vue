@@ -93,6 +93,7 @@ defineProps({
 
                                     <div class="relative p-4 sm:p-6 lg:p-8">
                                         <p
+                                            v-if="structure.structuretype"
                                             class="text-sm font-medium uppercase tracking-widest text-pink-500"
                                         >
                                             {{ structure.structuretype.name }}
