@@ -13,9 +13,6 @@ const AutocompleteActiviteForm = defineAsyncComponent(() =>
 
 const props = defineProps({
     disciplines: Object,
-    niveaux: Object,
-    publictypes: Object,
-    activitestypes: Object,
     structure: Object,
     activite: Object,
     can: Object,
@@ -24,9 +21,6 @@ const props = defineProps({
 const form = useForm({
     structure_id: ref(props.structure.id),
     discipline_id: ref(props.activite.discipline_id),
-    activitetype_id: ref(props.activite.activitetype_id),
-    nivel_id: ref(props.activite.nivel_id),
-    name: ref(props.activite.name),
     address: ref(props.activite.address),
     city: ref(props.activite.city),
     zip_code: ref(props.activite.zip_code),
@@ -34,12 +28,11 @@ const form = useForm({
     address_lat: ref(props.activite.address_lat),
     address_lng: ref(props.activite.address_lng),
     description: ref(props.activite.description),
-    publictype_id: ref(props.activite.publictype_id),
 });
 
 function submit() {
     // const structureValue = props.structure.value;
-    const url = `/structures/${props.structure.slug}/activites/${props.activite.slug}`;
+    const url = `/structures/${props.structure.slug}/activites/${props.activite.id}`;
     form.patch(
         url,
         {

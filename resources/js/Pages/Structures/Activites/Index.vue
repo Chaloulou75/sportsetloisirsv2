@@ -9,10 +9,7 @@ const AutocompleteActiviteFormSmall = defineAsyncComponent(() =>
 
 const props = defineProps({
     structureActiviteCategories: Object,
-    structureActiviteCategoriesByDiscAndCategorie: Object,
-    niveaux: Object,
-    publictypes: Object,
-    activitestypes: Object,
+    actByDiscAndCategorie: Object,
     structure: Object,
     categories: Object,
     listDisciplines: Object,
@@ -23,12 +20,9 @@ const form = useForm({
     structure_id: ref(props.structure.id),
     discipline_id: ref(null),
     categories_id: ref([]),
-    nivel_id: ref(1),
-    publictype_id: ref(1),
 });
 
 const categoriesList = ref([]);
-
 const activiteSimilairesList = ref([]);
 
 watch(
@@ -89,7 +83,7 @@ function submit() {
                     >
                         <Link
                             :href="route('structures.show', structure.slug)"
-                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-3 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                         >
                             Voir la structure</Link
                         >
@@ -119,12 +113,12 @@ function submit() {
                                             (form.discipline_id = discipline)
                                     "
                                 />
-                                <button
+                                <!-- <button
                                     type="button"
-                                    class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                    class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                 >
                                     Ajouter
-                                </button>
+                                </button> -->
                             </div>
 
                             <!-- categories -->
@@ -179,7 +173,10 @@ function submit() {
                             </div>
 
                             <!--buttons -->
-                            <div class="px-4 py-3 text-right sm:px-6">
+                            <div
+                                v-if="form.categories_id.length > 0"
+                                class="px-4 py-3 text-right sm:px-6"
+                            >
                                 <button
                                     :disabled="form.processing"
                                     type="submit"
@@ -222,7 +219,7 @@ function submit() {
                                 <div
                                     v-for="(
                                         activite, index
-                                    ) in structureActiviteCategoriesByDiscAndCategorie"
+                                    ) in actByDiscAndCategorie"
                                     :key="activite.id"
                                     :index="index"
                                     class="flex w-full flex-col justify-between space-y-4 rounded-lg border border-gray-500 px-2 py-4 text-gray-800 shadow-md md:flex-row md:space-y-0"
@@ -246,22 +243,20 @@ function submit() {
                                         </p>
                                         <div
                                             v-if="activite.categories"
-                                            class="grid w-full grid-flow-col gap-4"
+                                            class="grid-col-1 grid w-full gap-4 md:grid-flow-col"
                                         >
                                             <div
-                                                class="rounded-md border-gray-300 bg-gray-100 px-4 py-4 shadow-sm"
+                                                class="flex flex-col items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                                                 v-for="(
                                                     categorie, index
                                                 ) in activite.categories"
                                                 :key="index"
                                             >
                                                 <div
-                                                    class="flex flex-col items-center justify-center text-gray-700"
+                                                    class="flex flex-col items-center justify-center"
                                                 >
                                                     {{ categorie.name }}
-                                                    <span
-                                                        class="text-sm text-gray-600"
-                                                    >
+                                                    <span class="text-sm">
                                                         ({{
                                                             categorie.count
                                                         }})</span

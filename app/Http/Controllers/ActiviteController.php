@@ -4,19 +4,15 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use App\Models\Nivel;
-use App\Models\Activite;
 use App\Models\Categorie;
 use App\Models\Structure;
-use App\Models\Discipline;
 use App\Models\Publictype;
 use Illuminate\Support\Str;
-use App\Models\Activitetype;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use Illuminate\Validation\Rule;
 use App\Models\StructureAddress;
 use App\Models\StructureActivite;
-use App\Models\StructureDiscipline;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Models\LienActiviteCategorie;
@@ -42,15 +38,17 @@ class ActiviteController extends Controller
 
         $structureActiviteCategories = StructureActiviteCategorie::with(['structure','categorie', 'discipline'])
             ->where('structure_id', $structure->id)
+            ->latest()
             ->get();
 
-        $structureActiviteCategoriesByDiscAndCategorie = $structureActiviteCategories->groupBy('discipline.name')->map(function ($disciplineCategories) {
+        $actByDiscAndCategorie = $structureActiviteCategories->groupBy('discipline.name')->map(function ($disciplineCategories) {
             $categories = $disciplineCategories->groupBy('categorie.nom')->map(function ($categorieItems) {
                 return [
+                            'id' => $categorieItems->first()->id,
                             'name' => $categorieItems->first()->categorie->nom ?? 'Sans Catégorie',
                             'count' => $categorieItems->count()
                         ];
-            });
+            })->sortByDesc('count');
 
             return [
                 'name' => $disciplineCategories->first()->discipline->name,
@@ -59,19 +57,15 @@ class ActiviteController extends Controller
             ];
         });
 
-        $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
-        $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
         $categories = Categorie::with('listactivites')->select(['id', 'nom', 'ico'])->get();
         $listDisciplines = ListDiscipline::with('categories')->select(['id', 'name', 'slug'])->get();
 
         return Inertia::render('Structures/Activites/Index', [
             'structure' => $structure,
-            'niveaux' => $niveaux,
-            'publictypes' => $publictypes,
             'categories' => $categories,
             'listDisciplines' => $listDisciplines,
             'structureActiviteCategories' => $structureActiviteCategories,
-            'structureActiviteCategoriesByDiscAndCategorie' => $structureActiviteCategoriesByDiscAndCategorie,
+            'actByDiscAndCategorie' => $actByDiscAndCategorie,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),
@@ -84,19 +78,7 @@ class ActiviteController extends Controller
      */
     public function create(Structure $structure)
     {
-        $structure = Structure::select(['id', 'name', 'slug'])
-                ->where('slug', $structure->slug)
-                ->first();
-        $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
-        $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
-        $disciplines = ListDiscipline::select(['id', 'name', 'slug'])->get();
 
-        return Inertia::render('Structures/Activites/Create', [
-            'structure' => $structure,
-            'disciplines' => $disciplines,
-            'niveaux' => $niveaux,
-            'publictypes' => $publictypes,
-        ]);
     }
 
     /**
@@ -107,8 +89,6 @@ class ActiviteController extends Controller
         $validated = request()->validate([
             'structure_id' => ['required', Rule::exists('structures', 'id')],
             'discipline_id' => ['required', Rule::exists('liste_disciplines', 'id')],
-            'nivel_id' => ['required'],
-            'publictype_id' => ['required'],
         ]);
 
         $structure = Structure::where('id', $validated['structure_id'])->firstOrFail();
@@ -184,23 +164,21 @@ class ActiviteController extends Controller
     /**
      * Show the form for editing a resource.
      */
-    public function edit(Structure $structure)
+    public function edit(Structure $structure, StructureActiviteCategorie $activite)
     {
         if (! Gate::allows('update-structure', $structure)) {
             return Redirect::route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
 
         $structure = Structure::select(['id', 'name', 'slug'])->where('slug', $structure->slug)->first();
-        // $activite = Activite::where('slug', $activite->slug)->first();
-        $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
-        $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
-        $disciplines = ListDiscipline::select(['id', 'name', 'slug'])->get();
-
+        $activite = StructureActiviteCategorie::with(['structure','categorie', 'discipline'])->where('structure_id', $structure->id)
+                      ->where('activite_id', $activite->discipline->id)
+                      ->where('categorie_id', $activite->categorie->id)
+                      ->first();
+        dd($activite);
         return Inertia::render('Structures/Activites/Edit', [
             'structure' => $structure,
-            'disciplines' => $disciplines,
-            'niveaux' => $niveaux,
-            'publictypes' => $publictypes,
+            'activite' => $activite,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),
