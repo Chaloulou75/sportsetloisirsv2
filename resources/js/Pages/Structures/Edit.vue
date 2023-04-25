@@ -276,7 +276,6 @@ function submit() {
                                                         structuretype, index
                                                     ) in props.structurestypes"
                                                     :key="structuretype.id"
-                                                    class="flex flex-col space-y-6"
                                                 >
                                                     <div
                                                         v-for="(
@@ -289,6 +288,7 @@ function submit() {
                                                                 attribut.structuretype_id ===
                                                                 form.structuretype_id
                                                             "
+                                                            class="flex flex-col space-y-6"
                                                         >
                                                             <!-- input text -->
                                                             <div
@@ -528,7 +528,6 @@ function submit() {
                                                 </div>
                                             </div>
                                         </div>
-
                                         <!-- Adresse -->
                                         <AddressForm
                                             label="Siège social"

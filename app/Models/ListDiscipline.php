@@ -44,11 +44,11 @@ class ListDiscipline extends Model
 
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(Categorie::class, 'liens_activites_categories', 'id_activite', 'id_categorie');
+        return $this->belongsToMany(Categorie::class, 'liens_disciplines_categories', 'discipline_id', 'categorie_id');
     }
 
     public function structures(): HasMany
     {
-        return $this->hasMany(StructureActiviteCategorie::class, 'structure_id', 'activite_id');
+        return $this->hasMany(StructureCategorie::class, 'structure_id', 'activite_id');
     }
 }

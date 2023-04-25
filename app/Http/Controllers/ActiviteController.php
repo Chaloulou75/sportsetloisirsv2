@@ -3,27 +3,26 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use App\Models\Nivel;
-use App\Models\Categorie;
-use App\Models\Structure;
-use App\Models\Publictype;
+
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Models\ListDiscipline;
-use Illuminate\Validation\Rule;
-use App\Models\StructureAddress;
-use App\Models\StructureActivite;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use App\Models\LienActiviteCategorie;
 use Illuminate\Http\RedirectResponse;
-use App\Models\StructureActiviteProduit;
 use Illuminate\Support\Facades\Redirect;
-use App\Models\StructureActiviteCategorie;
-use App\Models\LienActiviteCategorieCritere;
-use App\Models\LienActiviteCategorieCritereValeur;
-use App\Models\StructureActiviteProduitDeclinaison;
-use App\Models\StructureActiviteProduitDeclinaisonCritere;
+use Illuminate\Validation\Rule;
+use App\Models\Categorie;
+use App\Models\Structure;
+use App\Models\StructureAddress;
+use App\Models\ListDiscipline;
+use App\Models\StructureDiscipline;
+use App\Models\StructureActivite;
+use App\Models\StructureCategorie;
+use App\Models\LienDisciplineCategorie;
+use App\Models\LienDisciplineCategorieCritere;
+use App\Models\LienDisciplineCategorieCritereValeur;
+use App\Models\StructureProduit;
+use App\Models\StructureProduitCritere;
 
 class ActiviteController extends Controller
 {
@@ -36,7 +35,7 @@ class ActiviteController extends Controller
                     ->where('id', $structure->id)
                     ->first();
 
-        $structureActiviteCategories = StructureActiviteCategorie::with(['structure','categorie', 'discipline'])
+        $structureActiviteCategories = StructureCategorie::with(['structure','categorie', 'discipline'])
             ->where('structure_id', $structure->id)
             ->latest()
             ->get();
@@ -95,22 +94,19 @@ class ActiviteController extends Controller
 
         $structureAdresse = StructureAddress::where('structure_id', $structure->id)->firstOrfail();
 
-
-        // structureActivite
-
-        // check if structure_id and activite_id combined exists in StructureActivite
-        $exists = StructureActivite::where('structure_id', $validated['structure_id'])
-                                    ->where('activite_id', $validated['discipline_id'])
+        // check if structure_id and discipline_id combined exists in StructureDiscipline
+        $exists = StructureDiscipline::where('structure_id', $validated['structure_id'])
+                                    ->where('discipline_id', $validated['discipline_id'])
                                     ->exists();
         if($exists) {
             return Redirect::back()->with('error', 'Cette discipline est déjà associée à cette structure.');
         }
 
-        $structureActivite = StructureActivite::create([
+        $structureDiscipline = StructureDiscipline::create([
             'structure_id' => $validated['structure_id'],
-            'activite_id' => $validated['discipline_id'],
+            'discipline_id' => $validated['discipline_id'],
         ]);
-        $structureActivite->increment('nb_produits');
+        $structureDiscipline->increment('nb_produits');
 
         // structureActiviteCategorie
         $validatedData = request()->validate([
@@ -119,20 +115,20 @@ class ActiviteController extends Controller
 
         foreach ($validatedData['categories_id'] as $category_id) {
 
-            $lienActCat = LienActiviteCategorie::where('id_activite', $validated['discipline_id'])->where('id_categorie', $category_id)->firstOrfail();
+            $lienActCat = LienDisciplineCategorie::where('discipline_id', $validated['discipline_id'])->where('categorie_id', $category_id)->firstOrfail();
 
             $validated['categorie_id'] = $lienActCat->id;
-            $structureActiviteCategorie = StructureActiviteCategorie::create([
+            $structureActiviteCategorie = StructureCategorie::create([
                 'structure_id' => $validated['structure_id'],
-                'activite_id' => $validated['discipline_id'],
+                'discipline_id' => $validated['discipline_id'],
                 'categorie_id' => $validated['categorie_id'],
             ]);
 
             $titre = $lienActCat->nom_categorie;
 
-            $structureActiviteProduit = StructureActiviteProduit::create([
+            $structureActivite = StructureActivite::create([
                 'structure_id' => $validated['structure_id'],
-                'activite_id' => $validated['discipline_id'],
+                'discipline_id' => $validated['discipline_id'],
                 'categorie_id' => $validated['categorie_id'],
                 'titre' => $titre,
                 'description' => "",
@@ -140,28 +136,28 @@ class ActiviteController extends Controller
                 "actif" => 1,
             ]);
 
-            $declinaison = StructureActiviteProduitDeclinaison::create([
+            $declinaison = StructureProduit::create([
                 'structure_id' => $validated['structure_id'],
-                'activite_id' => $validated['discipline_id'],
+                'discipline_id' => $validated['discipline_id'],
                 'categorie_id' => $validated['categorie_id'],
-                'produit_id' => $structureActiviteProduit->id,
+                'activite_id' => $structureActivite->id,
                 "actif" => 1,
                 'lieu_id' => $structureAdresse->id,
                 'reservable' => 0,
             ]);
 
-            $ActiviteCategorieCriteres = LienActiviteCategorieCritere::where('activite_id', $validated['discipline_id'])->where('categorie_id', $validated['categorie_id'])->get();
+            $activiteCategorieCriteres = LienDisciplineCategorieCritere::where('discipline_id', $validated['discipline_id'])->where('categorie_id', $validated['categorie_id'])->get();
 
-            foreach($ActiviteCategorieCriteres as $ActiviteCategorieCritere) {
-                $ActCatCriVal = LienActiviteCategorieCritereValeur::where('defaut', 1)->where('activite_categorie_critere_id', $ActiviteCategorieCritere->id)->first();
+            foreach($activiteCategorieCriteres as $activiteCategorieCritere) {
+                $ActCatCriVal = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('activite_categorie_critere_id', $activiteCategorieCritere->id)->first();
 
-                $critere = StructureActiviteProduitDeclinaisonCritere::create([
+                $critere = StructureProduitCritere::create([
                     'structure_id' => $validated['structure_id'],
-                    'activite_id' => $validated['discipline_id'],
+                    'discipline_id' => $validated['discipline_id'],
                     'categorie_id' => $validated['categorie_id'],
-                    'produit_id' => $structureActiviteProduit->id,
+                    'activite_id' => $structureActivite->id,
                     'declinaison_id' => $declinaison->id,
-                    'critere_id' => $ActiviteCategorieCritere->id,
+                    'critere_id' => $activiteCategorieCritere->id,
                     'valeur' => $ActCatCriVal->valeur ?? 'Tous',
                 ]);
             }
@@ -174,14 +170,14 @@ class ActiviteController extends Controller
     /**
      * Show the form for editing a resource.
      */
-    public function edit(Structure $structure, StructureActiviteCategorie $activite)
+    public function edit(Structure $structure, StructureCategorie $activite)
     {
         if (! Gate::allows('update-structure', $structure)) {
             return Redirect::route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
 
         $structure = Structure::select(['id', 'name', 'slug'])->where('slug', $structure->slug)->first();
-        $activite = StructureActiviteCategorie::with(['structure','categorie', 'discipline'])->where('structure_id', $structure->id)
+        $activite = StructureCategorie::with(['structure','categorie', 'discipline'])->where('structure_id', $structure->id)
                       ->where('activite_id', $activite->discipline->id)
                       ->where('categorie_id', $activite->categorie->id)
                       ->first();

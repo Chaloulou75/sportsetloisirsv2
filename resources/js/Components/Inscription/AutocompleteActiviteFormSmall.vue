@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from "vue";
-const emit = defineEmits(["modelValue"]);
+const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
     disciplines: Object,
     errors: Object,
@@ -27,19 +27,23 @@ const searchDisciplines = computed(() => {
     });
 });
 
+let selectedDiscipline = ref(
+    props.disciplines.find((discipline) => discipline.id === props.discipline)
+);
+
+const updateSelectedDiscipline = (discipline) => {
+    selectedDiscipline.value = discipline;
+};
+
 const selectDiscipline = (discipline) => {
     selectedDiscipline.value = discipline;
     searchTerm.value = "";
     // Emit the selected discipline value to the parent component
     emit("update:modelValue", discipline.id);
 };
-
-let selectedDiscipline = ref(
-    props.disciplines.find((discipline) => discipline.id === props.discipline)
-);
 </script>
 <template>
-    <div class="flex items-center justify-start min-w-screen min-h-72">
+    <div class="min-w-screen min-h-72 flex items-center justify-start">
         <div class="relative max-w-md space-y-3">
             <label for="search" class="text-lg font-medium text-gray-700">
                 Taper le nom de la discipline à proposer:
@@ -55,10 +59,10 @@ let selectedDiscipline = ref(
 
             <ul
                 v-if="searchDisciplines.length"
-                class="absolute z-10 w-full px-4 py-2 space-y-1 bg-white border border-gray-300 rounded"
+                class="absolute z-10 w-full space-y-1 rounded border border-gray-300 bg-white px-4 py-2"
             >
                 <li
-                    class="px-1 pt-1 pb-2 text-sm font-medium text-gray-700 border-b border-gray-200"
+                    class="border-b border-gray-200 px-1 pt-1 pb-2 text-sm font-medium text-gray-700"
                 >
                     liste de {{ searchDisciplines.length }} de
                     {{ disciplines.length }} resultats
@@ -67,7 +71,7 @@ let selectedDiscipline = ref(
                     v-for="discipline in searchDisciplines"
                     :key="discipline.id"
                     @click="selectDiscipline(discipline)"
-                    class="p-1 cursor-pointer hover:bg-gray-100"
+                    class="cursor-pointer p-1 hover:bg-gray-100"
                 >
                     {{ discipline.name }}
                 </li>

@@ -189,6 +189,7 @@ class StructureController extends Controller
         foreach ($attributs as $key => $attribut) {
             if (isset($attribut)) {
                 StructureTypeInfo::create([
+                    'structure_id' => $structure->id,
                     'attribut_id' => $key,
                     'valeur' => $attribut
                 ]);
@@ -256,12 +257,6 @@ class StructureController extends Controller
             'cities:id,ville,ville_formatee',
             'departement:id,departement,numero',
             'structuretype:id,name,slug',
-            // 'activites' => function ($query) {
-            //     $query->latest();
-            // },
-            // 'activites.discipline',
-            // 'activites.nivel',
-            // 'activites.publictype',
             ])
             ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'abo_news', 'abo_promo', 'logo'])
             ->where('slug', $structure->slug)

@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LienActiviteCategorieCritereValeur extends Model
+class LienDisciplineSimilaire extends Model
 {
     use HasFactory;
 
-    protected $table = 'liens_activites_categories_criteres_valeurs';
+    protected $table = 'liens_disciplines_similaires';
 
     /**
      * The attributes that are mass assignable.

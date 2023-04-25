@@ -7,7 +7,7 @@ use App\Models\Categorie;
 use App\Models\Structure;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
-use App\Models\LienActiviteSimilaire;
+use App\Models\LienDisciplineSimilaire;
 use App\Http\Resources\CategorieResource;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Resources\ListDisciplineResource;
@@ -123,7 +123,7 @@ class DisciplineController extends Controller
     {
         $discipline = ListDiscipline::findOrFail($id);
 
-        $activiteSimilairesIds = LienActiviteSimilaire::where('activite_id', $discipline->id)->select('activite_similaire_id')->get();
+        $activiteSimilairesIds = LienDisciplineSimilaire::where('activite_id', $discipline->id)->select('activite_similaire_id')->get();
 
         $activiteSimilaires = ListDiscipline::whereIn('id', $activiteSimilairesIds)->get();
 

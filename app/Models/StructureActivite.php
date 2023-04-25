@@ -2,15 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class StructureActivite extends Model
 {
     use HasFactory;
 
-    protected $table = 'structure_activite';
+    protected $table = 'structures_activites';
 
     /**
      * The attributes that are mass assignable.
@@ -18,14 +17,4 @@ class StructureActivite extends Model
      * @var array
      */
     protected $guarded = [];
-
-    public function structure(): BelongsTo
-    {
-        return $this->belongsTo(Structure::class);
-    }
-
-    public function discipline(): BelongsTo
-    {
-        return $this->belongsTo(ListDiscipline::class, 'activite_id');
-    }
 }

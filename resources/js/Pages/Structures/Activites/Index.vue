@@ -2,6 +2,7 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, watch, defineAsyncComponent } from "vue";
+const emit = defineEmits(["updateSelectedDiscipline"]);
 
 const AutocompleteActiviteFormSmall = defineAsyncComponent(() =>
     import("@/Components/Inscription/AutocompleteActiviteFormSmall.vue")
@@ -24,6 +25,11 @@ const form = useForm({
 
 const categoriesList = ref([]);
 const activiteSimilairesList = ref([]);
+
+const updateDiscipline = (discipline) => {
+    form.discipline_id = discipline.id;
+    emit("updateSelectedDiscipline", discipline);
+};
 
 watch(
     () => form.discipline_id,
@@ -73,7 +79,7 @@ function submit() {
                     <h2
                         class="text-xl font-semibold leading-tight text-gray-800"
                     >
-                        Ajouter, visualiser, gérer et vos activités à
+                        Ajouter, visualiser, et gérer vos activités à
                         <span class="text-blue-700">{{ structure.name }}</span>
                     </h2>
                 </div>
@@ -107,25 +113,53 @@ function submit() {
                             class="min-h-screen shadow-md shadow-sky-700 sm:overflow-hidden sm:rounded-md"
                         >
                             <div
-                                class="flex w-full items-center justify-around bg-white px-4 py-5 sm:p-6"
+                                class="flex w-full flex-col items-start justify-start bg-white px-4 py-5 md:flex-row md:px-6 md:py-10"
                             >
                                 <!-- discipline -->
                                 <AutocompleteActiviteFormSmall
-                                    class="h-full w-full"
+                                    class="h-full w-full md:w-1/2"
                                     :disciplines="listDisciplines"
                                     :errors="form.errors"
                                     v-model:discipline="form.discipline_id"
+                                    :updateDiscipline="updateDiscipline"
                                     @update:modelValue="
                                         (discipline) =>
                                             (form.discipline_id = discipline)
                                     "
+                                    @updateSelectedDiscipline="
+                                        (discipline) =>
+                                            handleUpdateSelectedDiscipline
+                                    "
                                 />
-                                <!-- <button
-                                    type="button"
-                                    class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                <section
+                                    v-if="activiteSimilairesList.length > 0"
+                                    class="mx-auto md:w-1/2"
                                 >
-                                    Ajouter
-                                </button> -->
+                                    <h2
+                                        class="mb-4 text-lg font-medium text-gray-700"
+                                    >
+                                        Les disciplines similaires
+                                    </h2>
+                                    <div
+                                        class="grid auto-cols-auto grid-flow-col gap-4"
+                                    >
+                                        <div
+                                            v-for="discipline in activiteSimilairesList"
+                                            :key="discipline.id"
+                                            :index="discipline.id"
+                                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-2 py-4 text-center text-lg text-gray-700 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
+                                        >
+                                            <button
+                                                type="button"
+                                                @click="
+                                                    updateDiscipline(discipline)
+                                                "
+                                            >
+                                                {{ discipline.name }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </section>
                             </div>
 
                             <!-- categories -->
@@ -182,7 +216,7 @@ function submit() {
                             <!--buttons -->
                             <div
                                 v-if="form.categories_id.length > 0"
-                                class="px-4 py-3 text-right sm:px-6"
+                                class="px-4 py-3 text-right md:px-6"
                             >
                                 <button
                                     :disabled="form.processing"
@@ -192,32 +226,7 @@ function submit() {
                                     Enregistrer
                                 </button>
                             </div>
-                            <section
-                                v-if="activiteSimilairesList.length > 0"
-                                class="mx-auto my-4 px-2 py-6 sm:px-4 lg:px-8"
-                            >
-                                <h2
-                                    class="mb-4 text-lg font-medium text-gray-700"
-                                >
-                                    Les activités similaires
-                                </h2>
-                                <div
-                                    class="grid auto-cols-auto grid-flow-col gap-4 border-gray-300 px-4 py-8 shadow-md"
-                                >
-                                    <div
-                                        v-for="activite in activiteSimilairesList"
-                                        :key="activite.id"
-                                        :index="activite.id"
-                                        class="rounded-lg border-gray-600 px-2 py-4 text-gray-700 shadow-lg"
-                                    >
-                                        <div class="flex flex-col items-center">
-                                            <p class="text-base font-medium">
-                                                {{ activite.name }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
+
                             <section
                                 v-if="structureActiviteCategories.length > 0"
                                 class="mx-auto my-4 max-w-7xl space-y-4 px-2 py-6 sm:px-4 lg:px-8"
