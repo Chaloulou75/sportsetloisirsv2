@@ -9,7 +9,7 @@ import {
 import { CheckIcon, SelectorIcon } from "@heroicons/vue/24/solid";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
-import { ref, onMounted, watch, defineAsyncComponent } from "vue";
+import { ref, onMounted, computed, defineAsyncComponent } from "vue";
 
 const AddressForm = defineAsyncComponent(() =>
     import("@/Components/Google/AddressForm.vue")
@@ -26,6 +26,7 @@ const props = defineProps({
     disciplines: Object,
     structure: Object,
     errors: Object,
+    can: Object,
 });
 
 const form = useForm({
@@ -55,6 +56,15 @@ const form = useForm({
 });
 
 const name = ref(null);
+
+const aboNews = ref(props.structure.abo_news);
+const aboPromo = ref(props.structure.abo_promo);
+const isAboNewsChecked = computed(() => {
+    return aboNews.value === 1 ? true : false;
+});
+const isAboPromoChecked = computed(() => {
+    return aboPromo.value === 1 ? true : false;
+});
 
 const addItem = (id) => {
     form.attributs.push({
@@ -130,6 +140,15 @@ function submit() {
                             class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                         >
                             Voir la structure</Link
+                        >
+                        <Link
+                            :href="
+                                route('structures.activites.index', structure)
+                            "
+                            v-if="can.update"
+                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                        >
+                            Ajouter des activités</Link
                         >
                     </div>
                 </div>
@@ -647,8 +666,13 @@ function submit() {
                                         <div>
                                             <div class="flex items-center">
                                                 <input
-                                                    v-model="form.abo_news"
-                                                    checked
+                                                    :checked="isAboNewsChecked"
+                                                    @change="
+                                                        form.abo_news = $event
+                                                            .target.checked
+                                                            ? 1
+                                                            : 0
+                                                    "
                                                     id="abo_news"
                                                     type="checkbox"
                                                     class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
@@ -666,8 +690,13 @@ function submit() {
                                         <div>
                                             <div class="flex items-center">
                                                 <input
-                                                    v-model="form.abo_promo"
-                                                    checked
+                                                    :checked="isAboPromoChecked"
+                                                    @change="
+                                                        form.abo_promo = $event
+                                                            .target.checked
+                                                            ? 1
+                                                            : 0
+                                                    "
                                                     id="abo_promo"
                                                     type="checkbox"
                                                     class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"

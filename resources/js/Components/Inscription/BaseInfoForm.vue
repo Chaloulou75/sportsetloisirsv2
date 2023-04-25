@@ -74,9 +74,9 @@ watch(tiktok, (value) => {
 });
 </script>
 <template>
-    <div class="grid grid-cols-3 gap-6">
+    <div class="grid grid-cols-4 gap-6">
         <!-- website -->
-        <div class="col-span-3 sm:col-span-2">
+        <div class="col-span-4 sm:col-span-3">
             <label
                 for="website"
                 class="block text-sm font-medium text-gray-700"
@@ -106,7 +106,7 @@ watch(tiktok, (value) => {
         </div>
 
         <!-- Email -->
-        <div class="col-span-3 sm:col-span-2">
+        <div class="col-span-4 sm:col-span-3">
             <label for="email" class="block text-sm font-medium text-gray-700">
                 Email *
             </label>
@@ -127,7 +127,7 @@ watch(tiktok, (value) => {
         </div>
 
         <!-- date_creation -->
-        <div class="col-span-3 sm:col-span-2">
+        <div class="col-span-4 sm:col-span-3">
             <label
                 for="date_creation"
                 class="block text-sm font-medium text-gray-700"
@@ -151,7 +151,7 @@ watch(tiktok, (value) => {
         </div>
 
         <!-- Phone1 -->
-        <div class="col-span-3 sm:col-span-2">
+        <div class="col-span-4 sm:col-span-2">
             <label for="phone1" class="block text-sm font-medium text-gray-700">
                 Numéro de téléphone *
             </label>
@@ -172,7 +172,7 @@ watch(tiktok, (value) => {
         </div>
 
         <!-- Phone2 -->
-        <div class="col-span-3 sm:col-span-2">
+        <div class="col-span-4 sm:col-span-2">
             <label for="phone2" class="block text-sm font-medium text-gray-700">
                 Numéro de téléphone de sauvegarde
             </label>
@@ -193,7 +193,7 @@ watch(tiktok, (value) => {
         </div>
 
         <!-- Facebook -->
-        <div class="col-span-3 sm:col-span-2">
+        <div class="col-span-4 sm:col-span-2">
             <label
                 for="facebook"
                 class="block text-sm font-medium text-gray-700"
@@ -218,7 +218,7 @@ watch(tiktok, (value) => {
         </div>
 
         <!-- Instagram -->
-        <div class="col-span-3 sm:col-span-2">
+        <div class="col-span-4 sm:col-span-2">
             <label
                 for="instagram"
                 class="block text-sm font-medium text-gray-700"
@@ -243,7 +243,7 @@ watch(tiktok, (value) => {
         </div>
 
         <!-- youtube -->
-        <div class="col-span-3 sm:col-span-2">
+        <div class="col-span-4 sm:col-span-2">
             <label
                 for="youtube"
                 class="block text-sm font-medium text-gray-700"
@@ -268,7 +268,7 @@ watch(tiktok, (value) => {
         </div>
 
         <!-- tiktok -->
-        <div class="col-span-3 sm:col-span-2">
+        <div class="col-span-4 sm:col-span-2">
             <label for="tiktok" class="block text-sm font-medium text-gray-700">
                 Tiktok
                 <span class="text-xs italic">(url complète)</span>

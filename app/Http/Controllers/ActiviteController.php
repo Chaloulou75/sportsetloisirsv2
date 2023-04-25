@@ -95,7 +95,17 @@ class ActiviteController extends Controller
 
         $structureAdresse = StructureAddress::where('structure_id', $structure->id)->firstOrfail();
 
+
         // structureActivite
+
+        // check if structure_id and activite_id combined exists in StructureActivite
+        $exists = StructureActivite::where('structure_id', $validated['structure_id'])
+                                    ->where('activite_id', $validated['discipline_id'])
+                                    ->exists();
+        if($exists) {
+            return Redirect::back()->with('error', 'Cette discipline est déjà associée à cette structure.');
+        }
+
         $structureActivite = StructureActivite::create([
             'structure_id' => $validated['structure_id'],
             'activite_id' => $validated['discipline_id'],

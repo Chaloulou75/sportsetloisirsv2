@@ -106,12 +106,12 @@ class StructureController extends Controller
         $validated= request()->validate([
             'name' => ['required', 'string', 'max:255'],
             'structuretype_id' => ['required', Rule::exists('structuretypes', 'id')],
-            'email' => ['required', 'max:50', 'email'],
+            'email' => ['required', 'max:50', 'email', 'unique:structures,email'],
             'website' => ['nullable', 'url'],
             'phone1' => ['required', 'regex:/^0[1-9](?:[\-\s]?[0-9]{2}){4}$/'],
             'phone2' => ['nullable', 'regex:/^0[1-9](?:[\-\s]?[0-9]{2}){4}$/'],
             'facebook' => ['nullable', 'url', 'regex:/facebook\.com\/.*/i'],
-            'instagram' => ['nullable', 'url', 'regex:/facebook\.com\/.*/i'],
+            'instagram' => ['nullable', 'url', 'regex:/instagram\.com\/.*/i'],
             'youtube' => ['nullable', 'url', 'regex:/youtube\.com\/.*/i'],
             'tiktok' => ['nullable', 'url', 'regex:/tiktok\.com\/.*/i'],
             'address' => ['nullable'],
@@ -137,6 +137,14 @@ class StructureController extends Controller
         $city= City::where('code_postal', $validated['zip_code'])->firstOrFail();
         $cityId = $city->id;
         $validated['city_id'] = $cityId;
+
+        // check if name and city combined exists in Structure
+        $exists = Structure::where('name', $name)
+                            ->where('city_id', $validated['city_id'])
+                            ->exists();
+        if($exists) {
+            return Redirect::back()->with('error', 'Ce nom de structure existe déjà dans cette ville.');
+        }
 
         $departmentNumber = substr($validated['zip_code'], 0, 2);
         $departement= Departement::where('numero', $departmentNumber)->firstOrFail();
@@ -255,7 +263,7 @@ class StructureController extends Controller
             // 'activites.nivel',
             // 'activites.publictype',
             ])
-            ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'abo_news', 'abo_promo','logo'])
+            ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'abo_news', 'abo_promo', 'logo'])
             ->where('slug', $structure->slug)
             ->firstOrFail();
 
@@ -265,6 +273,10 @@ class StructureController extends Controller
             'niveaux' => $niveaux,
             'publictypes' => $publictypes,
             'structure' => $structure,
+            'can' => [
+                'update' => optional(Auth::user())->can('update', $structure),
+                'delete' => optional(Auth::user())->can('delete', $structure),
+            ]
         ]);
 
     }
@@ -284,7 +296,7 @@ class StructureController extends Controller
             'phone1' => ['required', 'regex:/^0[1-9](?:[\-\s]?[0-9]{2}){4}$/'],
             'phone2' => ['nullable', 'regex:/^0[1-9](?:[\-\s]?[0-9]{2}){4}$/'],
             'facebook' => ['nullable', 'url', 'regex:/facebook\.com\/.*/i'],
-            'instagram' => ['nullable', 'url', 'regex:/facebook\.com\/.*/i'],
+            'instagram' => ['nullable', 'url', 'regex:/instagram\.com\/.*/i'],
             'youtube' => ['nullable', 'url', 'regex:/youtube\.com\/.*/i'],
             'tiktok' => ['nullable', 'url', 'regex:/tiktok\.com\/.*/i'],
             'address' => ['nullable'],
@@ -309,6 +321,15 @@ class StructureController extends Controller
         $city= City::where('code_postal', $validated['zip_code'])->firstOrFail();
         $cityId = $city->id;
         $validated['city_id'] = $cityId;
+
+        // check if name and city combined exists in Structure
+        $exists = Structure::where('id', '!=', $structure->id)
+                            ->where('name', $name)
+                            ->where('city_id', $validated['city_id'])
+                            ->exists();
+        if($exists) {
+            return Redirect::back()->with('error', 'Ce nom de structure existe déjà dans cette ville.');
+        }
 
         $departmentNumber = substr($validated['zip_code'], 0, 2);
         $departement= Departement::where('numero', $departmentNumber)->firstOrFail();
