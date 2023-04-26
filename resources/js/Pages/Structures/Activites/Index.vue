@@ -2,7 +2,6 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, watch, defineAsyncComponent } from "vue";
-const emit = defineEmits(["updateSelectedDiscipline"]);
 
 const AutocompleteActiviteFormSmall = defineAsyncComponent(() =>
     import("@/Components/Inscription/AutocompleteActiviteFormSmall.vue")
@@ -30,7 +29,6 @@ const selectedDiscipline = ref(null);
 const updateDiscipline = (discipline) => {
     form.discipline_id = discipline.id;
     selectedDiscipline.value = discipline;
-    emit("updateSelectedDiscipline", discipline);
 };
 
 watch(
@@ -127,10 +125,6 @@ function submit() {
                                     @update:modelValue="
                                         (discipline) =>
                                             (form.discipline_id = discipline)
-                                    "
-                                    @updateSelectedDiscipline="
-                                        (discipline) =>
-                                            handleUpdateSelectedDiscipline
                                     "
                                 />
                                 <section
