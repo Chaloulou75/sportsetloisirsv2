@@ -174,33 +174,39 @@ function submit() {
                                     >
                                 </label>
                                 <div class="mt-1">
-                                    <select
-                                        multiple
-                                        name="categories"
-                                        id="categories"
-                                        v-model="form.categories_id"
-                                        class="focus:outline-nonefocus:ring-indigo-500 flex w-full items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 shadow-md focus:border-indigo-500 sm:text-base"
+                                    <ul
+                                        class="flex w-full flex-col items-start justify-between rounded-md border border-gray-300 bg-white px-3 py-2 shadow-md focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-base md:flex-row md:items-center"
                                     >
-                                        <option
-                                            class="h-full rounded-md border border-gray-300 bg-white px-3 py-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-base"
+                                        <li
                                             v-for="categorie in categoriesList"
                                             :key="categorie.id"
-                                            :value="categorie.id"
+                                            class="py-2"
                                         >
-                                            {{ categorie.nom }}
-                                        </option>
-                                    </select>
+                                            <div
+                                                class="flex items-center justify-between"
+                                            >
+                                                <input
+                                                    name="categories"
+                                                    id="categories"
+                                                    v-model="form.categories_id"
+                                                    type="checkbox"
+                                                    multiple
+                                                    :value="categorie.id"
+                                                    :checked="
+                                                        form.categories_id.includes(
+                                                            categorie.id
+                                                        )
+                                                    "
+                                                    class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                />
+                                                <span
+                                                    class="ml-2 text-gray-700"
+                                                    >{{ categorie.nom }}</span
+                                                >
+                                            </div>
+                                        </li>
+                                    </ul>
                                 </div>
-                                <!-- <div class="mt-2 text-xs text-gray-700">
-                                    Categories sélectionnées:
-                                    <span
-                                        v-for="categorie in form.categories_id"
-                                        :key="categorie.id"
-                                        class="ml-1 text-sm font-semibold text-gray-700"
-                                        >{{ categorie.nom }}
-                                        &bullet;
-                                    </span>
-                                </div> -->
                                 <div
                                     v-if="form.errors.categories_id"
                                     class="mt-2 text-xs text-red-500"
