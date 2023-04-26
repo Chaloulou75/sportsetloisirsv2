@@ -12,6 +12,7 @@ const props = defineProps({
     actByDiscAndCategorie: Object,
     structure: Object,
     categories: Object,
+    disciplinesDejaUsed: Array,
     listDisciplines: Object,
     can: Object,
 });
@@ -119,6 +120,7 @@ function submit() {
                                 <AutocompleteActiviteFormSmall
                                     class="h-full w-full md:w-1/2"
                                     :disciplines="listDisciplines"
+                                    :disciplinesDejaUsed="disciplinesDejaUsed"
                                     :errors="form.errors"
                                     v-model:discipline="form.discipline_id"
                                     :selectedDiscipline="selectedDiscipline"
@@ -240,35 +242,43 @@ function submit() {
                                     ) in actByDiscAndCategorie"
                                     :key="activite.id"
                                     :index="index"
-                                    class="flex w-full flex-col justify-between space-y-4 rounded-lg border border-gray-500 px-2 py-4 text-gray-800 shadow-md md:flex-row md:space-y-0"
+                                    class="flex w-full flex-col justify-between space-y-4 rounded-lg border border-gray-200 px-2 py-4 text-gray-700 shadow-md md:flex-row md:space-y-0"
                                 >
                                     <div
                                         class="flex w-full flex-col justify-start space-y-2"
                                     >
-                                        <p
+                                        <div
+                                            v-if="activite"
                                             class="text-lg font-semibold text-gray-700"
                                         >
-                                            <span v-if="activite"
-                                                >{{ activite.name }}
+                                            <p>
+                                                {{ activite.name }}
                                                 <span
+                                                    v-if="activite.count > 1"
+                                                    class="text-sm text-gray-600"
+                                                    >({{ activite.count }}
+                                                    activités liées)
+                                                </span>
+                                                <span
+                                                    v-else
                                                     class="text-sm text-gray-600"
                                                     >({{
                                                         activite.count
                                                     }}
-                                                    activités liées)</span
+                                                    activité liée)</span
                                                 >
-                                            </span>
-                                        </p>
+                                            </p>
+                                        </div>
                                         <div
                                             v-if="activite.categories"
-                                            class="grid-col-1 grid w-full gap-4 md:grid-flow-col"
+                                            class="grid grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-4"
                                         >
                                             <div
-                                                class="flex flex-col items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                                                class="flex flex-col items-center justify-between rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                                                 v-for="(
                                                     categorie, index
                                                 ) in activite.categories"
-                                                :key="index"
+                                                :key="categorie.id"
                                             >
                                                 <div
                                                     class="flex flex-col items-center justify-center"

@@ -123,7 +123,7 @@ class DisciplineController extends Controller
     {
         $discipline = ListDiscipline::findOrFail($id);
 
-        $activiteSimilairesIds = LienDisciplineSimilaire::where('activite_id', $discipline->id)->select('activite_similaire_id')->get();
+        $activiteSimilairesIds = LienDisciplineSimilaire::where('discipline_id', $discipline->id)->select('discipline_similaire_id')->get();
 
         $activiteSimilaires = ListDiscipline::whereIn('id', $activiteSimilairesIds)->get();
 

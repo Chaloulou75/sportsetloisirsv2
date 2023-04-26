@@ -31,7 +31,7 @@ class ActiviteController extends Controller
      */
     public function index(Structure $structure)
     {
-        $structure = Structure::select(['id', 'name', 'slug'])
+        $structure = Structure::with('disciplines')->select(['id', 'name', 'slug'])
                     ->where('id', $structure->id)
                     ->first();
 
@@ -57,11 +57,15 @@ class ActiviteController extends Controller
         });
 
         $categories = Categorie::with('disciplines')->select(['id', 'nom', 'ico'])->get();
-        $listDisciplines = ListDiscipline::with('categories')->select(['id', 'name', 'slug'])->get();
+
+        $disciplinesDejaUsed= $structure->disciplines->unique()->pluck('id');
+        // ->whereNotIn('id', $disciplinesDejaUsed)
+        $listDisciplines = ListDiscipline::with(['categories'])->select(['id', 'name', 'slug'])->get();
 
         return Inertia::render('Structures/Activites/Index', [
             'structure' => $structure,
             'categories' => $categories,
+            'disciplinesDejaUsed' => $disciplinesDejaUsed,
             'listDisciplines' => $listDisciplines,
             'structureActiviteCategories' => $structureActiviteCategories,
             'actByDiscAndCategorie' => $actByDiscAndCategorie,

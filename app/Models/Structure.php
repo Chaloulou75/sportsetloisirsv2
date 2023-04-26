@@ -126,7 +126,7 @@ class Structure extends Model
 
     public function disciplines(): BelongsToMany
     {
-        return $this->belongsToMany(ListDiscipline::class, 'structure_activite', 'activite_id', 'structure_id');
+        return $this->belongsToMany(ListDiscipline::class, 'structures_disciplines', 'structure_id', 'discipline_id');
     }
 
 }
