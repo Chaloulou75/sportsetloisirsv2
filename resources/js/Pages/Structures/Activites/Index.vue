@@ -25,9 +25,11 @@ const form = useForm({
 
 const categoriesList = ref([]);
 const activiteSimilairesList = ref([]);
+const selectedDiscipline = ref(null);
 
 const updateDiscipline = (discipline) => {
     form.discipline_id = discipline.id;
+    selectedDiscipline.value = discipline;
     emit("updateSelectedDiscipline", discipline);
 };
 
@@ -121,7 +123,7 @@ function submit() {
                                     :disciplines="listDisciplines"
                                     :errors="form.errors"
                                     v-model:discipline="form.discipline_id"
-                                    :updateDiscipline="updateDiscipline"
+                                    :selectedDiscipline="selectedDiscipline"
                                     @update:modelValue="
                                         (discipline) =>
                                             (form.discipline_id = discipline)

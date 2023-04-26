@@ -112,9 +112,9 @@ export default {
 </script>
 
 <template>
-    <div class="grid grid-cols-3 gap-6">
+    <div class="grid grid-cols-4 gap-6">
         <!-- Adresse -->
-        <div class="col-span-3 sm:col-span-2">
+        <div class="col-span-4 sm:col-span-2">
             <label
                 for="address"
                 class="block text-sm font-medium text-gray-700"
@@ -139,11 +139,9 @@ export default {
                 {{ errors.address }}
             </div>
         </div>
-    </div>
 
-    <div class="grid grid-cols-3 gap-6">
         <!-- city-->
-        <div class="col-span-3 sm:col-span-1">
+        <div class="col-span-4 sm:col-span-2">
             <label for="city" class="block text-sm font-medium text-gray-700"
                 >Ville *</label
             >
@@ -163,7 +161,7 @@ export default {
         </div>
 
         <!-- code postal -->
-        <div class="col-span-3 sm:col-span-1">
+        <div class="col-span-4 sm:col-span-2">
             <label
                 for="zip_code"
                 class="block text-sm font-medium text-gray-700"
@@ -220,7 +218,7 @@ export default {
             </div>
         </div> -->
         <!-- pays -->
-        <div class="col-span-3 sm:col-span-2">
+        <div class="col-span-4 sm:col-span-2">
             <label for="country" class="block text-sm font-medium text-gray-700"
                 >Pays *</label
             >

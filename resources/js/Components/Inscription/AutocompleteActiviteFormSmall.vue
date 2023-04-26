@@ -1,10 +1,11 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
     disciplines: Object,
     errors: Object,
     discipline: Number,
+    selectedDiscipline: Object,
 });
 
 let searchTerm = ref("");
@@ -31,9 +32,12 @@ let selectedDiscipline = ref(
     props.disciplines.find((discipline) => discipline.id === props.discipline)
 );
 
-const updateSelectedDiscipline = (discipline) => {
-    selectedDiscipline.value = discipline;
-};
+watch(
+    () => props.selectedDiscipline,
+    (newVal) => {
+        selectedDiscipline.value = newVal;
+    }
+);
 
 const selectDiscipline = (discipline) => {
     selectedDiscipline.value = discipline;
