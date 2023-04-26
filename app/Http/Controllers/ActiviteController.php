@@ -56,7 +56,7 @@ class ActiviteController extends Controller
             ];
         });
 
-        $categories = Categorie::with('listactivites')->select(['id', 'nom', 'ico'])->get();
+        $categories = Categorie::with('disciplines')->select(['id', 'nom', 'ico'])->get();
         $listDisciplines = ListDiscipline::with('categories')->select(['id', 'name', 'slug'])->get();
 
         return Inertia::render('Structures/Activites/Index', [

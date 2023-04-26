@@ -17,7 +17,7 @@ class Categorie extends Model
      */
     protected $guarded = [];
 
-    public function listactivites(): BelongsToMany
+    public function disciplines(): BelongsToMany
     {
         return $this->belongsToMany(ListDiscipline::class, 'liens_disciplines_categories', 'categorie_id', 'discipline_id');
     }
