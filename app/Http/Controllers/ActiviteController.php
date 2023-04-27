@@ -50,6 +50,7 @@ class ActiviteController extends Controller
             })->sortByDesc('count');
 
             return [
+                'id' => $disciplineCategories->first()->discipline->id,
                 'name' => $disciplineCategories->first()->discipline->name,
                 'count' => $disciplineCategories->count(),
                 'categories' => $categories
@@ -58,14 +59,14 @@ class ActiviteController extends Controller
 
         $categories = Categorie::with('disciplines')->select(['id', 'nom', 'ico'])->get();
 
-        $disciplinesDejaUsed= $structure->disciplines->unique()->pluck('id');
-        // ->whereNotIn('id', $disciplinesDejaUsed)
+        $dejaUsedDisciplines= $structure->disciplines->unique()->pluck('id');
+        // ->whereNotIn('id', $dejaUsedDisciplines)
         $listDisciplines = ListDiscipline::with(['categories'])->select(['id', 'name', 'slug'])->get();
 
         return Inertia::render('Structures/Activites/Index', [
             'structure' => $structure,
             'categories' => $categories,
-            'disciplinesDejaUsed' => $disciplinesDejaUsed,
+            'dejaUsedDisciplines' => $dejaUsedDisciplines,
             'listDisciplines' => $listDisciplines,
             'structureActiviteCategories' => $structureActiviteCategories,
             'actByDiscAndCategorie' => $actByDiscAndCategorie,

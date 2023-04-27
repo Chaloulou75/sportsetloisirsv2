@@ -6,12 +6,12 @@ const props = defineProps({
     errors: Object,
     discipline: Number,
     selectedDiscipline: Object,
-    disciplinesDejaUsed: Array,
+    dejaUsedDisciplines: Array,
 });
 
 let searchTerm = ref("");
 
-const disciplinesDejaUsed = ref(props.disciplinesDejaUsed);
+const dejaUsedDisciplinesRef = ref(props.dejaUsedDisciplines);
 
 const searchDisciplines = computed(() => {
     if (searchTerm.value === "") {
@@ -78,10 +78,18 @@ const selectDiscipline = (discipline) => {
                     v-for="discipline in searchDisciplines"
                     :key="discipline.id"
                     @click="selectDiscipline(discipline)"
-                    :disabled="disciplinesDejaUsed.includes(discipline.id)"
-                    class="cursor-pointer p-1 hover:bg-gray-100"
+                    :class="{
+                        'pointer-events-none bg-gray-100':
+                            dejaUsedDisciplinesRef.includes(discipline.id),
+                    }"
+                    class="cursor-pointer p-1 hover:bg-blue-100"
                 >
                     {{ discipline.name }}
+                    <span
+                        v-if="dejaUsedDisciplinesRef.includes(discipline.id)"
+                        class="text-xs text-gray-500"
+                        >(déjà sélectionné)</span
+                    >
                 </li>
             </ul>
             <p

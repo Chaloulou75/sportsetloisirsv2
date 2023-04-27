@@ -12,7 +12,7 @@ const props = defineProps({
     actByDiscAndCategorie: Object,
     structure: Object,
     categories: Object,
-    disciplinesDejaUsed: Array,
+    dejaUsedDisciplines: Array,
     listDisciplines: Object,
     can: Object,
 });
@@ -120,7 +120,7 @@ function submit() {
                                 <AutocompleteActiviteFormSmall
                                     class="h-full w-full md:w-1/2"
                                     :disciplines="listDisciplines"
-                                    :disciplinesDejaUsed="disciplinesDejaUsed"
+                                    :dejaUsedDisciplines="dejaUsedDisciplines"
                                     :errors="form.errors"
                                     v-model:discipline="form.discipline_id"
                                     :selectedDiscipline="selectedDiscipline"
