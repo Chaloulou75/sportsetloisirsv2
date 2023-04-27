@@ -79,15 +79,15 @@ const selectDiscipline = (discipline) => {
                     :key="discipline.id"
                     @click="selectDiscipline(discipline)"
                     :class="{
-                        'pointer-events-none bg-gray-100':
+                        'pointer-events-none bg-gray-500 text-white':
                             dejaUsedDisciplinesRef.includes(discipline.id),
                     }"
-                    class="cursor-pointer p-1 hover:bg-blue-100"
+                    class="cursor-pointer p-1 hover:bg-blue-200"
                 >
                     {{ discipline.name }}
                     <span
                         v-if="dejaUsedDisciplinesRef.includes(discipline.id)"
-                        class="text-xs text-gray-500"
+                        class="text-xs italic text-gray-100"
                         >(déjà sélectionné)</span
                     >
                 </li>

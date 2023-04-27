@@ -26,6 +26,7 @@ const form = useForm({
 const categoriesList = ref([]);
 const activiteSimilairesList = ref([]);
 const selectedDiscipline = ref(null);
+const dejaUsedDisciplinesRef = ref(props.dejaUsedDisciplines);
 
 const updateDiscipline = (discipline) => {
     form.discipline_id = discipline.id;
@@ -145,7 +146,13 @@ function submit() {
                                             v-for="discipline in activiteSimilairesList"
                                             :key="discipline.id"
                                             :index="discipline.id"
-                                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-2 py-4 text-center text-lg text-gray-700 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
+                                            :class="{
+                                                'pointer-events-none bg-gray-500 text-white':
+                                                    dejaUsedDisciplinesRef.includes(
+                                                        discipline.id
+                                                    ),
+                                            }"
+                                            class="flex flex-col items-center justify-center overflow-hidden rounded px-2 py-4 text-center text-lg text-gray-700 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
                                         >
                                             <button
                                                 type="button"
@@ -154,6 +161,15 @@ function submit() {
                                                 "
                                             >
                                                 {{ discipline.name }}
+                                                <span
+                                                    v-if="
+                                                        dejaUsedDisciplinesRef.includes(
+                                                            discipline.id
+                                                        )
+                                                    "
+                                                    class="text-xs italic text-gray-100"
+                                                    >(déjà sélectionné)</span
+                                                >
                                             </button>
                                         </div>
                                     </div>
