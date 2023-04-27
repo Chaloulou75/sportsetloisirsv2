@@ -31,7 +31,7 @@ class ActiviteController extends Controller
      */
     public function index(Structure $structure)
     {
-        $structure = Structure::with('disciplines')->select(['id', 'name', 'slug'])
+        $structure = Structure::with(['disciplines', 'activites'])->select(['id', 'name', 'slug'])
                     ->where('id', $structure->id)
                     ->first();
 
@@ -175,21 +175,20 @@ class ActiviteController extends Controller
     /**
      * Show the form for editing a resource.
      */
-    public function edit(Structure $structure, StructureCategorie $activite)
+    public function edit(Structure $structure, StructureActivite $activite)
     {
         if (! Gate::allows('update-structure', $structure)) {
             return Redirect::route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
 
         $structure = Structure::select(['id', 'name', 'slug'])->where('slug', $structure->slug)->first();
-        $activite = StructureCategorie::with(['structure','categorie', 'discipline'])->where('structure_id', $structure->id)
-                      ->where('activite_id', $activite->discipline->id)
+        $activite = StructureActivite::where('structure_id', $structure->id)
+                      ->where('discipline_id', $activite->discipline->id)
                       ->where('categorie_id', $activite->categorie->id)
                       ->first();
-        dd($activite);
+        // dd($activite);
         return Inertia::render('Structures/Activites/Edit', [
             'structure' => $structure,
-            'activite' => $activite,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),

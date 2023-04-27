@@ -130,6 +130,7 @@ function submit() {
                                             (form.discipline_id = discipline)
                                     "
                                 />
+                                <!-- disciplines similaires -->
                                 <section
                                     v-if="activiteSimilairesList.length > 0"
                                     class="mx-auto md:w-1/2"

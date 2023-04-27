@@ -63,8 +63,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('structures/{structure:slug}/activites/create', [ActiviteController::class, 'create'])->name('activites.create');
-
 Route::get('structures', [StructureController::class, 'index'])
     ->name('structures.index');
 Route::get('structures/{structure:slug}', [StructureController::class, 'show'])
