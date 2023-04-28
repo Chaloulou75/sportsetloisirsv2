@@ -8,7 +8,7 @@ const AutocompleteActiviteFormSmall = defineAsyncComponent(() =>
 );
 
 const props = defineProps({
-    structureActiviteCategories: Object,
+    activites: Object,
     actByDiscAndCategorie: Object,
     structure: Object,
     categories: Object,
@@ -249,7 +249,7 @@ function submit() {
                             </div>
 
                             <section
-                                v-if="structureActiviteCategories.length > 0"
+                                v-if="activites.length > 0"
                                 class="mx-auto my-4 max-w-7xl space-y-4 px-2 py-6 sm:px-4 lg:px-8"
                             >
                                 <h2 class="text-xl font-bold">Les activités</h2>

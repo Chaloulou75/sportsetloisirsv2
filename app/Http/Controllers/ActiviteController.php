@@ -31,21 +31,28 @@ class ActiviteController extends Controller
      */
     public function index(Structure $structure)
     {
-        $structure = Structure::with(['disciplines', 'activites'])->select(['id', 'name', 'slug'])
+        $structure = Structure::with([
+                        'activites',
+                        'activites.disciplines',
+                        'activites.disciplines.categoriesByActivite',
+                    ])->select(['id', 'name', 'slug'])
                     ->where('id', $structure->id)
                     ->first();
 
-        $structureActiviteCategories = StructureCategorie::with(['structure','categorie', 'discipline'])
+        // dd($structure);
+
+        $activites = StructureCategorie::with(['structure','categorie', 'discipline'])
             ->where('structure_id', $structure->id)
             ->latest()
             ->get();
 
-        $actByDiscAndCategorie = $structureActiviteCategories->groupBy('discipline.name')->map(function ($disciplineCategories) {
+
+        $actByDiscAndCategorie = $activites->groupBy('discipline.name')->map(function ($disciplineCategories) {
             $categories = $disciplineCategories->groupBy('categorie.nom')->map(function ($categorieItems) {
                 return [
                             'id' => $categorieItems->first()->id,
                             'name' => $categorieItems->first()->categorie->nom ?? 'Sans Catégorie',
-                            'count' => $categorieItems->count()
+                            'count' => $categorieItems->count(),
                         ];
             })->sortByDesc('count');
 
@@ -60,7 +67,7 @@ class ActiviteController extends Controller
         $categories = Categorie::with('disciplines')->select(['id', 'nom', 'ico'])->get();
 
         $dejaUsedDisciplines= $structure->disciplines->unique()->pluck('id');
-        // ->whereNotIn('id', $dejaUsedDisciplines)
+
         $listDisciplines = ListDiscipline::with(['categories'])->select(['id', 'name', 'slug'])->get();
 
         return Inertia::render('Structures/Activites/Index', [
@@ -68,7 +75,7 @@ class ActiviteController extends Controller
             'categories' => $categories,
             'dejaUsedDisciplines' => $dejaUsedDisciplines,
             'listDisciplines' => $listDisciplines,
-            'structureActiviteCategories' => $structureActiviteCategories,
+            'activites' => $activites,
             'actByDiscAndCategorie' => $actByDiscAndCategorie,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
@@ -151,10 +158,10 @@ class ActiviteController extends Controller
                 'reservable' => 0,
             ]);
 
-            $activiteCategorieCriteres = LienDisciplineCategorieCritere::where('discipline_id', $validated['discipline_id'])->where('categorie_id', $validated['categorie_id'])->get();
+            $disciplineCategorieCriteres = LienDisciplineCategorieCritere::where('discipline_id', $validated['discipline_id'])->where('categorie_id', $validated['categorie_id'])->get();
 
-            foreach($activiteCategorieCriteres as $activiteCategorieCritere) {
-                $ActCatCriVal = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('activite_categorie_critere_id', $activiteCategorieCritere->id)->first();
+            foreach($disciplineCategorieCriteres as $disciplineCategorieCritere) {
+                $ActCatCriVal = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('activite_categorie_critere_id', $disciplineCategorieCritere->id)->first();
 
                 $critere = StructureProduitCritere::create([
                     'structure_id' => $validated['structure_id'],
@@ -162,7 +169,7 @@ class ActiviteController extends Controller
                     'categorie_id' => $validated['categorie_id'],
                     'activite_id' => $structureActivite->id,
                     'declinaison_id' => $declinaison->id,
-                    'critere_id' => $activiteCategorieCritere->id,
+                    'critere_id' => $disciplineCategorieCritere->id,
                     'valeur' => $ActCatCriVal->valeur ?? 'Tous',
                 ]);
             }

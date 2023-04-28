@@ -126,12 +126,17 @@ class Structure extends Model
 
     public function disciplines(): BelongsToMany
     {
-        return $this->belongsToMany(ListDiscipline::class, 'structures_disciplines', 'structure_id', 'discipline_id');
+        return $this->belongsToMany(ListDiscipline::class, 'structures_disciplines', 'structure_id', 'discipline_id')->withTimestamps();
+    }
+
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Categorie::class, 'structures_categories', 'structure_id', 'categorie_id')->withTimestamps();
     }
 
     public function activites(): BelongsToMany
     {
-        return $this->belongsToMany(StructureActivite::class, 'structures_produits', 'structure_id', 'activite_id');
+        return $this->belongsToMany(StructureActivite::class, 'structures_produits', 'structure_id', 'activite_id')->withTimestamps();
     }
 
 }
