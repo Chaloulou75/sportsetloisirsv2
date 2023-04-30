@@ -131,7 +131,7 @@ class Structure extends Model
 
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(Categorie::class, 'structures_categories', 'structure_id', 'categorie_id')->withTimestamps();
+        return $this->belongsToMany(LienDisciplineCategorie::class, 'structures_categories', 'structure_id', 'categorie_id')->withTimestamps();
     }
 
     public function activites(): BelongsToMany

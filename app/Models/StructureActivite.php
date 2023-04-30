@@ -27,7 +27,7 @@ class StructureActivite extends Model
 
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(Categorie::class, 'structures_produits', 'activite_id', 'categorie_id')->withTimestamps();
+        return $this->belongsToMany(LienDisciplineCategorie::class, 'structures_produits', 'activite_id', 'categorie_id')->withTimestamps();
     }
 
     public function structures(): BelongsToMany

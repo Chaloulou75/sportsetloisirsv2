@@ -48,10 +48,10 @@ class ActiviteController extends Controller
 
 
         $actByDiscAndCategorie = $activites->groupBy('discipline.name')->map(function ($disciplineCategories) {
-            $categories = $disciplineCategories->groupBy('categorie.nom')->map(function ($categorieItems) {
+            $categories = $disciplineCategories->groupBy('categorie.nom_categorie')->map(function ($categorieItems) {
                 return [
                             'id' => $categorieItems->first()->id,
-                            'name' => $categorieItems->first()->categorie->nom ?? 'Sans Catégorie',
+                            'name' => $categorieItems->first()->categorie->nom_categorie ?? 'Sans Catégorie',
                             'count' => $categorieItems->count(),
                         ];
             })->sortByDesc('count');

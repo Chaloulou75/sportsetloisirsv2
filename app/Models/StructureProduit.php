@@ -26,7 +26,7 @@ class StructureProduit extends Model
 
     public function categorie(): BelongsTo
     {
-        return $this->belongsTo(Categorie::class);
+        return $this->belongsTo(LienDisciplineCategorie::class, 'categorie_id');
     }
 
     public function discipline(): BelongsTo
