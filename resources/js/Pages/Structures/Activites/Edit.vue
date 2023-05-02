@@ -1,13 +1,19 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
+import { ref, computed } from "vue";
 
 const props = defineProps({
     structure: Object,
+    activite: Object,
+    categories: Object,
+    categoriesListByDiscipline: Object,
     can: Object,
 });
 
-const form = useForm({});
+const form = useForm({
+    categorie_id: ref(props.activite.categorie_id),
+});
 
 // function submit() {
 //     // const structureValue = props.structure.value;
@@ -35,7 +41,7 @@ const form = useForm({});
                     <h2
                         class="text-xl font-semibold leading-tight text-gray-800"
                     >
-                        Modifier l'activité
+                        Modifier votre activité
                         <span class="text-blue-700"></span>
                     </h2>
                 </div>
@@ -43,6 +49,15 @@ const form = useForm({});
                     <div
                         class="flex flex-col justify-between space-y-4 md:ml-4 md:space-y-6"
                     >
+                        <Link
+                            :href="
+                                route('structures.activites.index', structure)
+                            "
+                            v-if="can.update"
+                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                        >
+                            Mes activités</Link
+                        >
                         <Link
                             :href="route('structures.show', structure.slug)"
                             class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
@@ -56,30 +71,85 @@ const form = useForm({});
 
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div>
-                    <div class="md:grid md:grid-cols-3 md:gap-6">
-                        <div class="md:col-span-1">
-                            <div class="px-4 sm:px-0">
-                                <h3
-                                    class="text-lg font-medium leading-6 text-gray-700"
+                <section
+                    class="mx-auto max-w-7xl space-y-4 px-2 py-6 text-gray-700"
+                >
+                    <div class="">
+                        <h2 class="text-3xl font-bold uppercase">
+                            {{ activite.discipline.name }}
+                        </h2>
+                        <!-- categories -->
+                        <div class="mt-4 w-full">
+                            <label
+                                for="categorie_id"
+                                class="mb-4 block text-lg font-medium text-gray-700"
+                            >
+                                Categories
+                            </label>
+                            <div class="mt-1">
+                                <ul
+                                    class="flex w-full flex-col items-start justify-between rounded-md border border-gray-300 bg-white px-3 py-2 shadow-md focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-base md:flex-row md:items-center"
                                 >
-                                    Modifier votre activité
-                                </h3>
-                                <p class="mt-1 text-sm text-gray-800">
-                                    Ces informations apparaitront publiquement
-                                    sur ce site.
-                                </p>
+                                    <li
+                                        v-for="categorie in categoriesListByDiscipline"
+                                        :key="categorie.id"
+                                        class="py-2"
+                                    >
+                                        <div
+                                            class="flex items-center justify-between"
+                                        >
+                                            <input
+                                                name="categorie_id"
+                                                id="categorie_id"
+                                                type="radio"
+                                                v-model="form.categorie_id"
+                                                :value="categorie.id"
+                                                class="form-radio h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                            />
+                                            <span class="ml-2 text-gray-700">{{
+                                                categorie.nom_categorie
+                                            }}</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div
+                                v-if="form.errors.categories_id"
+                                class="mt-2 text-xs text-red-500"
+                            >
+                                {{ form.errors.categories_id }}
                             </div>
                         </div>
-                        <div class="mt-5 md:col-span-2 md:mt-0">
-                            <form
-                                @submit.prevent="submit"
-                                enctype="multipart/form-data"
-                                autocomplete="off"
-                            ></form>
+                    </div>
+
+                    <div
+                        v-if="activite"
+                        class="text-lg font-semibold text-gray-600"
+                    >
+                        <h3>
+                            {{ activite.categorie.nom_categorie }}
+                        </h3>
+                    </div>
+                    <div
+                        class="flex flex-col items-start justify-start space-x-0 space-y-3 md:flex-row md:space-y-0 md:space-x-4"
+                    >
+                        <div
+                            class="flex w-full flex-col items-center justify-between rounded bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
+                        >
+                            Ajouter {{ activite.categorie.nom_categorie }}
+                        </div>
+                        <div
+                            class="flex w-full flex-col items-center justify-between rounded bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
+                        >
+                            Voir le planning
+                        </div>
+                        <div
+                            class="flex w-full flex-col items-center justify-between rounded bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
+                        >
+                            Ajouter un tarif
                         </div>
                     </div>
-                </div>
+                </section>
 
                 <div class="hidden sm:block" aria-hidden="true">
                     <div class="py-5">

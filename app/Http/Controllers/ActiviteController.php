@@ -39,8 +39,6 @@ class ActiviteController extends Controller
                     ->where('id', $structure->id)
                     ->first();
 
-        // dd($structure);
-
         $activites = StructureCategorie::with(['structure','categorie', 'discipline'])
             ->where('structure_id', $structure->id)
             ->latest()
@@ -51,18 +49,21 @@ class ActiviteController extends Controller
             $categories = $disciplineCategories->groupBy('categorie.nom_categorie')->map(function ($categorieItems) {
                 return [
                             'id' => $categorieItems->first()->id,
+                            'categorie_id' => $categorieItems->first()->categorie->id,
                             'name' => $categorieItems->first()->categorie->nom_categorie ?? 'Sans Catégorie',
                             'count' => $categorieItems->count(),
                         ];
             })->sortByDesc('count');
 
             return [
-                'id' => $disciplineCategories->first()->discipline->id,
+                'discipline_id' => $disciplineCategories->first()->discipline->id,
                 'name' => $disciplineCategories->first()->discipline->name,
                 'count' => $disciplineCategories->count(),
-                'categories' => $categories
+                'categories' => $categories,
             ];
         });
+
+        // dd($actByDiscAndCategorie);
 
         $categories = Categorie::with('disciplines')->select(['id', 'nom', 'ico'])->get();
 
@@ -182,20 +183,27 @@ class ActiviteController extends Controller
     /**
      * Show the form for editing a resource.
      */
-    public function edit(Structure $structure, StructureActivite $activite)
+    public function edit(Structure $structure, $activite)
     {
         if (! Gate::allows('update-structure', $structure)) {
-            return Redirect::route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
+            return Redirect::route('structures.activites.index', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
 
         $structure = Structure::select(['id', 'name', 'slug'])->where('slug', $structure->slug)->first();
-        $activite = StructureActivite::where('structure_id', $structure->id)
-                      ->where('discipline_id', $activite->discipline->id)
-                      ->where('categorie_id', $activite->categorie->id)
-                      ->first();
-        // dd($activite);
+        $activite = StructureCategorie::with(['structure','categorie', 'discipline'])
+                        ->where('structure_id', $structure->id)
+                        ->where('id', $activite)
+                        ->first();
+
+        $categories = Categorie::with('disciplines')->select(['id', 'nom', 'ico'])->get();
+        $categoriesListByDiscipline = LienDisciplineCategorie::where('discipline_id', $activite->discipline->id)->get();
+
+
         return Inertia::render('Structures/Activites/Edit', [
             'structure' => $structure,
+            'activite' => $activite,
+            'categories' => $categories,
+            'categoriesListByDiscipline' => $categoriesListByDiscipline,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),

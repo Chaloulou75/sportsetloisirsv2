@@ -20,9 +20,19 @@ class StructureActivite extends Model
      */
     protected $guarded = [];
 
-    public function disciplines(): BelongsToMany
+    public function structure(): BelongsTo
     {
-        return $this->belongsToMany(ListDiscipline::class, 'structures_produits', 'activite_id', 'discipline_id')->withTimestamps();
+        return $this->belongsTo(Structure::class);
+    }
+
+    public function structures(): BelongsToMany
+    {
+        return $this->belongsToMany(Structure::class, 'structures_produits', 'activite_id', 'structure_id')->withTimestamps();
+    }
+
+    public function categorie(): BelongsTo
+    {
+        return $this->belongsTo(LienDisciplineCategorie::class, 'categorie_id');
     }
 
     public function categories(): BelongsToMany
@@ -30,8 +40,13 @@ class StructureActivite extends Model
         return $this->belongsToMany(LienDisciplineCategorie::class, 'structures_produits', 'activite_id', 'categorie_id')->withTimestamps();
     }
 
-    public function structures(): BelongsToMany
+    public function discipline(): BelongsTo
     {
-        return $this->belongsToMany(Structure::class, 'structures_produits', 'activite_id', 'structure_id')->withTimestamps();
+        return $this->belongsTo(ListDiscipline::class, 'discipline_id');
+    }
+
+    public function disciplines(): BelongsToMany
+    {
+        return $this->belongsToMany(ListDiscipline::class, 'structures_produits', 'activite_id', 'discipline_id')->withTimestamps();
     }
 }

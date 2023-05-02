@@ -141,19 +141,19 @@ function submit() {
                                         Les disciplines similaires
                                     </h2>
                                     <div
-                                        class="grid auto-cols-auto grid-flow-col gap-4"
+                                        class="grid auto-cols-auto grid-flow-col gap-4 text-gray-700"
                                     >
                                         <div
                                             v-for="discipline in activiteSimilairesList"
                                             :key="discipline.id"
                                             :index="discipline.id"
                                             :class="{
-                                                'pointer-events-none bg-gray-500 text-white':
+                                                'pointer-events-none text-gray-400':
                                                     dejaUsedDisciplinesRef.includes(
                                                         discipline.id
                                                     ),
                                             }"
-                                            class="flex flex-col items-center justify-center overflow-hidden rounded px-2 py-4 text-center text-lg text-gray-700 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
+                                            class="flex flex-col items-center justify-center overflow-hidden rounded px-2 py-4 text-center text-lg shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
                                         >
                                             <button
                                                 type="button"
@@ -168,7 +168,7 @@ function submit() {
                                                             discipline.id
                                                         )
                                                     "
-                                                    class="text-xs italic text-gray-100"
+                                                    class="text-xs italic text-gray-400"
                                                     >(déjà sélectionné)</span
                                                 >
                                             </button>
@@ -297,16 +297,28 @@ function submit() {
                                                 ) in activite.categories"
                                                 :key="categorie.id"
                                             >
-                                                <div
+                                                <Link
+                                                    :href="
+                                                        route(
+                                                            'structures.activites.edit',
+                                                            {
+                                                                structure:
+                                                                    structure.slug,
+                                                                activite:
+                                                                    categorie.id,
+                                                            }
+                                                        )
+                                                    "
                                                     class="flex flex-col items-center justify-center"
                                                 >
                                                     {{ categorie.name }}
+
                                                     <span class="text-sm">
                                                         ({{
                                                             categorie.count
                                                         }})</span
                                                     >
-                                                </div>
+                                                </Link>
                                             </div>
                                         </div>
                                     </div>
