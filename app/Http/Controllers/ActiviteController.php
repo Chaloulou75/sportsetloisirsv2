@@ -189,7 +189,8 @@ class ActiviteController extends Controller
             return Redirect::route('structures.activites.index', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
 
-        $structure = Structure::select(['id', 'name', 'slug'])->where('slug', $structure->slug)->first();
+        $structure = Structure::with('adresse')->select(['id', 'name', 'slug'])->where('slug', $structure->slug)->first();
+
         $activite = StructureCategorie::with(['structure','categorie', 'discipline'])
                         ->where('structure_id', $structure->id)
                         ->where('id', $activite)

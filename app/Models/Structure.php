@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -89,7 +90,7 @@ class Structure extends Model
 
     }
 
-    public function creator()
+    public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -137,6 +138,11 @@ class Structure extends Model
     public function activites(): BelongsToMany
     {
         return $this->belongsToMany(StructureActivite::class, 'structures_produits', 'structure_id', 'activite_id')->withTimestamps();
+    }
+
+    public function adresse(): HasOne
+    {
+        return $this->hasOne(StructureAddress::class);
     }
 
 }

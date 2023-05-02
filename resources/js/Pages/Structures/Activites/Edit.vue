@@ -2,6 +2,7 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, computed } from "vue";
+import { PlusIcon } from "@heroicons/vue/24/solid";
 
 const props = defineProps({
     structure: Object,
@@ -74,7 +75,7 @@ const form = useForm({
                 <section
                     class="mx-auto max-w-7xl space-y-4 px-2 py-6 text-gray-700"
                 >
-                    <div class="">
+                    <div>
                         <h2 class="text-3xl font-bold uppercase">
                             {{ activite.discipline.name }}
                         </h2>
@@ -82,7 +83,7 @@ const form = useForm({
                         <div class="mt-4 w-full">
                             <label
                                 for="categorie_id"
-                                class="mb-4 block text-lg font-medium text-gray-700"
+                                class="mb-4 block text-sm font-medium text-gray-700"
                             >
                                 Categories
                             </label>
@@ -124,29 +125,91 @@ const form = useForm({
 
                     <div
                         v-if="activite"
-                        class="text-lg font-semibold text-gray-600"
+                        class="text-lg font-medium text-gray-500"
                     >
                         <h3>
                             {{ activite.categorie.nom_categorie }}
                         </h3>
                     </div>
+                    <!-- buttons -->
                     <div
                         class="flex flex-col items-start justify-start space-x-0 space-y-3 md:flex-row md:space-y-0 md:space-x-4"
                     >
-                        <div
-                            class="flex w-full flex-col items-center justify-between rounded bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
+                        <button
+                            type="button"
+                            class="flex w-full items-center justify-between rounded bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
                         >
                             Ajouter {{ activite.categorie.nom_categorie }}
-                        </div>
-                        <div
-                            class="flex w-full flex-col items-center justify-between rounded bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
+                            <PlusIcon class="ml-2 h-5 w-5" />
+                        </button>
+                        <button
+                            type="button"
+                            class="flex w-full items-center justify-between rounded bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
                         >
                             Voir le planning
-                        </div>
-                        <div
-                            class="flex w-full flex-col items-center justify-between rounded bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
+                        </button>
+                        <button
+                            type="button"
+                            class="flex w-full items-center justify-between rounded bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
                         >
                             Ajouter un tarif
+                        </button>
+                    </div>
+                </section>
+
+                <section
+                    class="mx-auto flex max-w-7xl flex-col space-y-4 px-2 py-6 text-gray-700"
+                >
+                    <div
+                        class="flex w-full items-center justify-between md:px-6"
+                    >
+                        <div class="text-lg font-semibold text-gray-700">
+                            {{ activite.categorie.nom_categorie }}
+                        </div>
+                        <button
+                            type="button"
+                            class="flex w-full items-center justify-between rounded bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
+                        >
+                            Ajouter
+                            <PlusIcon class="ml-2 h-5 w-5" />
+                        </button>
+                    </div>
+                    <div
+                        class="flex h-96 w-full flex-col space-y-3 rounded border border-gray-200"
+                    >
+                        <h2
+                            class="bg-gray-700 py-4 px-4 font-semibold text-white"
+                        >
+                            {{ activite.categorie.nom_categorie }} de
+                            {{ activite.discipline.name }}
+                        </h2>
+                        <div class="flex w-full">
+                            <div class="h-full w-1/4 border border-gray-100">
+                                image
+                            </div>
+                            <div>
+                                <div>Actif</div>
+                                <p>Description:</p>
+                            </div>
+                        </div>
+                        <h3
+                            class="bg-gray-700 py-4 px-4 font-semibold text-white"
+                        >
+                            XX Produits / declinaisons
+                        </h3>
+
+                        <div
+                            class="grid grid-cols-3 place-items-center gap-1 md:grid-cols-6"
+                        >
+                            <div class="col-span-1">Tous Public</div>
+                            <div class="col-span-1">Tous Niveaux</div>
+                            <div class="col-span-1">
+                                {{ structure.adresse.address }}
+                                {{ structure.adresse.zip_code }}
+                            </div>
+                            <div class="col-span-1">Planning</div>
+                            <div class="col-span-1">Tarifs</div>
+                            <div class="col-span-1">Modifier / Supprimer</div>
                         </div>
                     </div>
                 </section>
