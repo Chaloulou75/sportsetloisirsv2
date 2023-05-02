@@ -2,7 +2,16 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, computed } from "vue";
-import { PlusIcon } from "@heroicons/vue/24/solid";
+import {
+    AcademicCapIcon,
+    ArrowPathIcon,
+    ClockIcon,
+    DocumentDuplicateIcon,
+    MapPinIcon,
+    PlusIcon,
+    TrashIcon,
+    UsersIcon,
+} from "@heroicons/vue/24/solid";
 
 const props = defineProps({
     structure: Object,
@@ -198,18 +207,39 @@ const form = useForm({
                             XX Produits / declinaisons
                         </h3>
 
-                        <div
-                            class="grid grid-cols-3 place-items-center gap-1 md:grid-cols-6"
-                        >
-                            <div class="col-span-1">Tous Public</div>
-                            <div class="col-span-1">Tous Niveaux</div>
-                            <div class="col-span-1">
-                                {{ structure.adresse.address }}
-                                {{ structure.adresse.zip_code }}
+                        <div class="grid grid-cols-6 place-items-center">
+                            <div class="col-span-1 flex items-center">
+                                <UsersIcon class="mr-1 h-4 w-4" />Tous Public
                             </div>
-                            <div class="col-span-1">Planning</div>
-                            <div class="col-span-1">Tarifs</div>
-                            <div class="col-span-1">Modifier / Supprimer</div>
+                            <div class="col-span-1 flex items-center">
+                                <AcademicCapIcon class="mr-1 h-4 w-4" />
+                                Tous Niveaux
+                            </div>
+                            <div class="col-span-1 flex items-center p-0.5">
+                                <MapPinIcon class="mr-1 h-5 w-5" />
+                                <div class="flex flex-col items-center">
+                                    {{ structure.adresse.address }},
+                                    {{ structure.adresse.zip_code }}
+                                    {{ structure.adresse.city }}
+                                </div>
+                            </div>
+                            <div class="col-span-1 flex items-center">
+                                <ClockIcon class="mr-1 h-4 w-4" />
+                                Planning
+                            </div>
+                            <div class="col-span-1 flex items-center">
+                                <button
+                                    type="button"
+                                    class="flex w-full items-center justify-between rounded bg-green-600 px-3 py-2 text-sm text-white shadow-lg transition duration-100 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm"
+                                >
+                                    Tarifs
+                                </button>
+                            </div>
+                            <div class="col-span-1 flex items-center space-x-2">
+                                <ArrowPathIcon class="mr-1 h-5 w-5" />
+                                <DocumentDuplicateIcon class="mr-1 h-5 w-5" />
+                                <TrashIcon class="mr-1 h-5 w-5" />
+                            </div>
                         </div>
                     </div>
                 </section>
