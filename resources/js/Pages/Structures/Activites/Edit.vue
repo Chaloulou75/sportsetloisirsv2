@@ -2,6 +2,7 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, computed } from "vue";
+import TextInput from "@/Components/TextInput.vue";
 import {
     AcademicCapIcon,
     ArrowPathIcon,
@@ -11,12 +12,19 @@ import {
     PlusIcon,
     TrashIcon,
     UsersIcon,
+    ChevronUpIcon,
 } from "@heroicons/vue/24/solid";
-import { Switch } from "@headlessui/vue";
-
-const enabledActif = computed(() => {
-    return form.actif.value === 1 ? true : false;
-});
+import {
+    Switch,
+    Disclosure,
+    DisclosureButton,
+    DisclosurePanel,
+    TransitionRoot,
+    TransitionChild,
+    Dialog,
+    DialogPanel,
+    DialogTitle,
+} from "@headlessui/vue";
 
 const props = defineProps({
     structure: Object,
@@ -27,9 +35,21 @@ const props = defineProps({
     can: Object,
 });
 
+const isOpen = ref(false);
+
+function closeModal() {
+    isOpen.value = false;
+}
+function openModal() {
+    isOpen.value = true;
+}
+
 const form = useForm({
     categorie_id: ref(props.activite.categorie_id),
     actif: ref(props.structureActivite.actif),
+    image: ref(null),
+    titre: ref(null),
+    description: ref(null),
 });
 
 // function submit() {
@@ -184,11 +204,126 @@ const form = useForm({
                         </div>
                         <button
                             type="button"
+                            @click="openModal"
                             class="flex w-full items-center justify-between rounded bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
                         >
                             Ajouter
                             <PlusIcon class="ml-2 h-5 w-5" />
                         </button>
+                        <TransitionRoot appear :show="isOpen" as="template">
+                            <Dialog
+                                as="div"
+                                @close="closeModal"
+                                class="relative z-10"
+                            >
+                                <TransitionChild
+                                    as="template"
+                                    enter="duration-300 ease-out"
+                                    enter-from="opacity-0"
+                                    enter-to="opacity-100"
+                                    leave="duration-200 ease-in"
+                                    leave-from="opacity-100"
+                                    leave-to="opacity-0"
+                                >
+                                    <div
+                                        class="fixed inset-0 bg-black bg-opacity-50"
+                                    />
+                                </TransitionChild>
+
+                                <div class="fixed inset-0 overflow-y-auto">
+                                    <div
+                                        class="flex min-h-full items-center justify-center p-4 text-center"
+                                    >
+                                        <TransitionChild
+                                            as="template"
+                                            enter="duration-300 ease-out"
+                                            enter-from="opacity-0 scale-95"
+                                            enter-to="opacity-100 scale-100"
+                                            leave="duration-200 ease-in"
+                                            leave-from="opacity-100 scale-100"
+                                            leave-to="opacity-0 scale-95"
+                                        >
+                                            <DialogPanel
+                                                class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                                            >
+                                                <DialogTitle
+                                                    as="h3"
+                                                    class="text-lg font-medium leading-6 text-gray-900"
+                                                >
+                                                    Ajouter une
+                                                    {{
+                                                        structureActivite.titre
+                                                    }}
+                                                </DialogTitle>
+                                                <div
+                                                    class="mt-2 flex w-full space-x-4"
+                                                >
+                                                    <form
+                                                        @submit.prevent="submit"
+                                                        enctype="multipart/form-data"
+                                                        autocomplete="off"
+                                                    >
+                                                        <div>
+                                                            <!-- <label
+                                                                for="image"
+                                                                class="block text-sm font-medium text-gray-700"
+                                                                >Photo ou
+                                                                image:</label
+                                                            >
+                                                            <input
+                                                                class="mt-1 text-sm text-gray-700"
+                                                                type="file"
+                                                                id="image"
+                                                                @input="
+                                                                    form.image =
+                                                                        $event.target.files[0]
+                                                                "
+                                                            />
+                                                            <span
+                                                                class="mt-2 text-xs text-red-500"
+                                                                v-if="
+                                                                    errors.image
+                                                                "
+                                                                v-text="
+                                                                    errors
+                                                                        .image[0]
+                                                                "
+                                                            ></span> -->
+                                                        </div>
+                                                        <div
+                                                            class="flex flex-col space-y-4"
+                                                        >
+                                                            <div>
+                                                                <TextInput
+                                                                    id="titre"
+                                                                    type="text"
+                                                                    class="mt-1 block w-full flex-1 px-2 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
+                                                                    v-model="
+                                                                        form.titre
+                                                                    "
+                                                                    placeholder="titre..."
+                                                                />
+                                                            </div>
+                                                            <div></div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+
+                                                <div class="mt-4">
+                                                    <button
+                                                        type="button"
+                                                        class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                                                        @click="closeModal"
+                                                    >
+                                                        Annuler
+                                                    </button>
+                                                </div>
+                                            </DialogPanel>
+                                        </TransitionChild>
+                                    </div>
+                                </div>
+                            </Dialog>
+                        </TransitionRoot>
                     </div>
                     <div
                         class="flex h-full w-full flex-col space-y-3 rounded border border-gray-200"
@@ -253,58 +388,71 @@ const form = useForm({
                                 </p>
                             </div>
                         </div>
-                        <h3
-                            class="bg-gray-700 px-4 py-4 font-semibold text-white"
-                        >
-                            XX Produits / declinaisons
-                        </h3>
-
-                        <div class="grid grid-cols-6 place-items-center">
-                            <div class="col-span-1 flex items-center">
-                                <UsersIcon
-                                    class="mr-1 h-6 w-6 text-gray-600"
-                                />Tous Public
-                            </div>
-                            <div class="col-span-1 flex items-center">
-                                <AcademicCapIcon
-                                    class="mr-1 h-6 w-6 text-gray-600"
-                                />
-                                Tous Niveaux
-                            </div>
-                            <div class="col-span-1 flex items-center p-0.5">
-                                <MapPinIcon
-                                    class="mr-1 h-6 w-6 text-gray-600"
-                                />
-                                <div class="flex flex-col items-center">
-                                    {{ structure.adresse.address }},
-                                    {{ structure.adresse.zip_code }}
-                                    {{ structure.adresse.city }}
-                                </div>
-                            </div>
-                            <div class="col-span-1 flex items-center">
-                                <ClockIcon class="mr-1 h-6 w-6 text-gray-600" />
-                                Planning
-                            </div>
-                            <div class="col-span-1 flex items-center">
-                                <button
-                                    type="button"
-                                    class="flex w-full items-center justify-between rounded bg-green-600 px-3 py-2 text-sm text-white shadow-lg transition duration-100 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm"
-                                >
-                                    Tarifs
-                                </button>
-                            </div>
-                            <div
-                                class="col-span-1 flex items-center justify-between space-x-2"
+                        <Disclosure v-slot="{ open }">
+                            <DisclosureButton
+                                class="flex w-full justify-between bg-gray-200 px-4 py-4 font-semibold text-gray-800"
                             >
-                                <ArrowPathIcon
-                                    class="mr-1 h-6 w-6 text-gray-600"
+                                <span>1 Produits / déclinaisons</span>
+                                <ChevronUpIcon
+                                    :class="open ? 'rotate-180 transform' : ''"
+                                    class="h-5 w-5 text-gray-800"
                                 />
-                                <DocumentDuplicateIcon
-                                    class="mr-1 h-6 w-6 text-gray-600"
-                                />
-                                <TrashIcon class="mr-1 h-6 w-6 text-gray-600" />
-                            </div>
-                        </div>
+                            </DisclosureButton>
+
+                            <DisclosurePanel
+                                as="div"
+                                class="grid grid-cols-6 place-items-center"
+                            >
+                                <div class="col-span-1 flex items-center">
+                                    <UsersIcon
+                                        class="mr-1 h-6 w-6 text-gray-600"
+                                    />Tous Public
+                                </div>
+                                <div class="col-span-1 flex items-center">
+                                    <AcademicCapIcon
+                                        class="mr-1 h-6 w-6 text-gray-600"
+                                    />
+                                    Tous Niveaux
+                                </div>
+                                <div class="col-span-1 flex items-center p-0.5">
+                                    <MapPinIcon
+                                        class="mr-1 h-6 w-6 text-gray-600"
+                                    />
+                                    <div class="flex flex-col items-center">
+                                        {{ structure.adresse.address }},
+                                        {{ structure.adresse.zip_code }}
+                                        {{ structure.adresse.city }}
+                                    </div>
+                                </div>
+                                <div class="col-span-1 flex items-center">
+                                    <ClockIcon
+                                        class="mr-1 h-6 w-6 text-gray-600"
+                                    />
+                                    Planning
+                                </div>
+                                <div class="col-span-1 flex items-center">
+                                    <button
+                                        type="button"
+                                        class="flex w-full items-center justify-between rounded bg-green-600 px-3 py-2 text-sm text-white shadow-lg transition duration-100 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm"
+                                    >
+                                        Tarifs
+                                    </button>
+                                </div>
+                                <div
+                                    class="col-span-1 flex items-center justify-between space-x-2"
+                                >
+                                    <ArrowPathIcon
+                                        class="mr-1 h-6 w-6 text-gray-600"
+                                    />
+                                    <DocumentDuplicateIcon
+                                        class="mr-1 h-6 w-6 text-gray-600"
+                                    />
+                                    <TrashIcon
+                                        class="mr-1 h-6 w-6 text-gray-600"
+                                    />
+                                </div>
+                            </DisclosurePanel>
+                        </Disclosure>
                     </div>
                 </section>
 
