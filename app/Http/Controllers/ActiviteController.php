@@ -194,15 +194,22 @@ class ActiviteController extends Controller
         $activite = StructureCategorie::with(['structure','categorie', 'discipline'])
                         ->where('structure_id', $structure->id)
                         ->where('id', $activite)
+                        ->withCount('categorie')
                         ->first();
+
+        $structureActivite = StructureActivite::with(['structure','categorie', 'discipline'])
+                            ->where('structure_id', $structure->id)
+                            ->where('discipline_id', $activite->discipline->id)
+                            ->where('categorie_id', $activite->categorie->id)
+                            ->first();
 
         $categories = Categorie::with('disciplines')->select(['id', 'nom', 'ico'])->get();
         $categoriesListByDiscipline = LienDisciplineCategorie::where('discipline_id', $activite->discipline->id)->get();
 
-
         return Inertia::render('Structures/Activites/Edit', [
             'structure' => $structure,
             'activite' => $activite,
+            'structureActivite' => $structureActivite,
             'categories' => $categories,
             'categoriesListByDiscipline' => $categoriesListByDiscipline,
             'can' => [
@@ -224,7 +231,7 @@ class ActiviteController extends Controller
 
         $validated= request()->validate([
             'structure_id' => ['required', Rule::exists('structures', 'id')],
-            'name' => ['required', 'string', 'max:255'],
+            'title' => ['required', 'string', 'max:255'],
             'discipline_id' => ['required', Rule::exists('liste_disciplines', 'id')],
             'nivel_id' => ['required', Rule::exists('nivels', 'id')],
             'publictype_id' => ['required', Rule::exists('publictypes', 'id')],
@@ -245,7 +252,7 @@ class ActiviteController extends Controller
 
         // $activite->update($validated);
 
-        return Redirect::route('structures.show', $structure)->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
+        return Redirect::route('structures.activites.index', $structure)->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
     }
 
     /**

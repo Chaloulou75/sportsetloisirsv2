@@ -12,10 +12,16 @@ import {
     TrashIcon,
     UsersIcon,
 } from "@heroicons/vue/24/solid";
+import { Switch } from "@headlessui/vue";
+
+const enabledActif = computed(() => {
+    return form.actif.value === 1 ? true : false;
+});
 
 const props = defineProps({
     structure: Object,
     activite: Object,
+    structureActivite: Object,
     categories: Object,
     categoriesListByDiscipline: Object,
     can: Object,
@@ -23,6 +29,7 @@ const props = defineProps({
 
 const form = useForm({
     categorie_id: ref(props.activite.categorie_id),
+    actif: ref(props.structureActivite.actif),
 });
 
 // function submit() {
@@ -116,9 +123,9 @@ const form = useForm({
                                                 :value="categorie.id"
                                                 class="form-radio h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
                                             />
-                                            <span class="ml-2 text-gray-700">{{
-                                                categorie.nom_categorie
-                                            }}</span>
+                                            <span class="ml-2 text-gray-700">
+                                                {{ categorie.nom_categorie }}
+                                            </span>
                                         </div>
                                     </li>
                                 </ul>
@@ -184,39 +191,90 @@ const form = useForm({
                         </button>
                     </div>
                     <div
-                        class="flex h-96 w-full flex-col space-y-3 rounded border border-gray-200"
+                        class="flex h-full w-full flex-col space-y-3 rounded border border-gray-200"
                     >
                         <h2
-                            class="bg-gray-700 py-4 px-4 font-semibold text-white"
+                            class="bg-gray-700 px-4 py-4 font-semibold text-white"
                         >
                             {{ activite.categorie.nom_categorie }} de
                             {{ activite.discipline.name }}
                         </h2>
-                        <div class="flex w-full">
-                            <div class="h-full w-1/4 border border-gray-100">
-                                image
+                        <div class="flex w-full items-start">
+                            <div
+                                class="relative h-56 w-56 border border-gray-100"
+                            >
+                                <img
+                                    alt="logo"
+                                    src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                                    class="absolute inset-0 h-full w-full object-cover"
+                                />
                             </div>
-                            <div>
-                                <div>Actif</div>
-                                <p>Description:</p>
+                            <div
+                                class="flex flex-1 flex-col items-start space-y-6 px-2 py-2 md:px-4"
+                            >
+                                <div class="flex items-center space-x-2">
+                                    <Switch
+                                        v-model="form.actif"
+                                        :class="
+                                            form.actif
+                                                ? 'bg-green-600'
+                                                : 'bg-gray-200'
+                                        "
+                                        class="relative inline-flex h-6 w-11 items-center rounded-full"
+                                    >
+                                        <span class="sr-only">Actif</span>
+                                        <span
+                                            :class="
+                                                form.actif
+                                                    ? 'translate-x-6'
+                                                    : 'translate-x-1'
+                                            "
+                                            class="inline-block h-4 w-4 transform rounded-full bg-white transition"
+                                        />
+                                    </Switch>
+                                    <p
+                                        class="text-lg font-semibold text-green-600"
+                                        v-if="form.actif"
+                                    >
+                                        Actif
+                                    </p>
+                                    <p
+                                        class="text-lg font-semibold text-gray-600"
+                                        v-else
+                                    >
+                                        Inactif
+                                    </p>
+                                </div>
+                                <p class="whitespace-pre-line text-lg">
+                                    <span class="text-lg font-semibold"
+                                        >Description:</span
+                                    >
+                                    {{ activite.structure.presentation_courte }}
+                                </p>
                             </div>
                         </div>
                         <h3
-                            class="bg-gray-700 py-4 px-4 font-semibold text-white"
+                            class="bg-gray-700 px-4 py-4 font-semibold text-white"
                         >
                             XX Produits / declinaisons
                         </h3>
 
                         <div class="grid grid-cols-6 place-items-center">
                             <div class="col-span-1 flex items-center">
-                                <UsersIcon class="mr-1 h-4 w-4" />Tous Public
+                                <UsersIcon
+                                    class="mr-1 h-6 w-6 text-gray-600"
+                                />Tous Public
                             </div>
                             <div class="col-span-1 flex items-center">
-                                <AcademicCapIcon class="mr-1 h-4 w-4" />
+                                <AcademicCapIcon
+                                    class="mr-1 h-6 w-6 text-gray-600"
+                                />
                                 Tous Niveaux
                             </div>
                             <div class="col-span-1 flex items-center p-0.5">
-                                <MapPinIcon class="mr-1 h-5 w-5" />
+                                <MapPinIcon
+                                    class="mr-1 h-6 w-6 text-gray-600"
+                                />
                                 <div class="flex flex-col items-center">
                                     {{ structure.adresse.address }},
                                     {{ structure.adresse.zip_code }}
@@ -224,7 +282,7 @@ const form = useForm({
                                 </div>
                             </div>
                             <div class="col-span-1 flex items-center">
-                                <ClockIcon class="mr-1 h-4 w-4" />
+                                <ClockIcon class="mr-1 h-6 w-6 text-gray-600" />
                                 Planning
                             </div>
                             <div class="col-span-1 flex items-center">
@@ -235,10 +293,16 @@ const form = useForm({
                                     Tarifs
                                 </button>
                             </div>
-                            <div class="col-span-1 flex items-center space-x-2">
-                                <ArrowPathIcon class="mr-1 h-5 w-5" />
-                                <DocumentDuplicateIcon class="mr-1 h-5 w-5" />
-                                <TrashIcon class="mr-1 h-5 w-5" />
+                            <div
+                                class="col-span-1 flex items-center justify-between space-x-2"
+                            >
+                                <ArrowPathIcon
+                                    class="mr-1 h-6 w-6 text-gray-600"
+                                />
+                                <DocumentDuplicateIcon
+                                    class="mr-1 h-6 w-6 text-gray-600"
+                                />
+                                <TrashIcon class="mr-1 h-6 w-6 text-gray-600" />
                             </div>
                         </div>
                     </div>
