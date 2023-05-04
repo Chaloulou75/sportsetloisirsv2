@@ -72,7 +72,7 @@ class StructureController extends Controller
                             'departement_id' => $structure->departement_id,
                             'user' => $structure->creator,
                             // 'disciplines' => $structure->activites->pluck('discipline.name')->unique(),
-                            'logo' => $structure->logo ? asset('storage/'. $structure->logo) : 'https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
+                            'logo' => $structure->logo ? asset($structure->logo) : 'https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
                 ];
                         })->withQueryString(),
             'filters' => request()->all(['search']),
@@ -155,9 +155,11 @@ class StructureController extends Controller
         $newSlug = $structure->slug . '-' . $structure->id;
         $structure->update(['slug' => $newSlug]);
 
-        if($request->file('logo')) {
+        if($request->hasFile('logo')) {
+            request()->validate(['logo' => ['nullable','image','max:2048']]);
             $path = $request->file('logo')->store('public/structures/' . $structure->id);
-            $structure->update(['logo' => 'structures/' . $structure->id . '/' . $request->file('logo')->hashName()]);
+            $url = Storage::url($path);
+            $structure->update(['logo' => $url]);
         }
 
         $validatedAddress = [
@@ -221,7 +223,7 @@ class StructureController extends Controller
             ->where('slug', $structure->slug)
             ->first();
 
-        $logoUrl = asset('storage/'.$structure->logo);
+        $logoUrl = asset($structure->logo);
 
         // $disciplines = $structure->activites->pluck('discipline.name')->unique();
 
@@ -305,7 +307,6 @@ class StructureController extends Controller
             'presentation_longue' => ['nullable'],
             'abo_news' => ['nullable'],
             'abo_promo' => ['nullable'],
-            'logo' => ['nullable','image','max:2048'],
         ]);
 
         $name = $validated['name'];
@@ -330,13 +331,15 @@ class StructureController extends Controller
         $departement= Departement::where('numero', $departmentNumber)->firstOrFail();
         $validated['departement_id'] = $departement->id;
 
-        if($request->file('logo')) {
+        if($request->hasFile('logo')) {
             request()->validate(['logo' => ['nullable','image','max:2048']]);
             if($structure->logo !== null) {
-                Storage::disk('public')->delete('structures/' . $structure->id .'/'. $structure->logo);
+                Storage::delete('structures/' . $structure->id .'/'. $structure->logo);
             }
             $path = $request->file('logo')->store('public/structures/' . $structure->id);
-            $structure->update(['logo' => 'structures/' . $structure->id . '/' . $request->file('logo')->hashName()]);
+            $url = Storage::url($path);
+            $structure->update(['logo' => $url]);
+
         }
 
         $structure->update($validated);
@@ -387,7 +390,7 @@ class StructureController extends Controller
         }
 
         if($structure->logo) {
-            Storage::disk('public')->delete('public/structures/' . $structure->id .'/'. $structure->logo);
+            Storage::delete('structures/' . $structure->id .'/'. $structure->logo);
         }
 
         $structure->delete();

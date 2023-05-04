@@ -1,24 +1,10 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
-import { ref, computed } from "vue";
-import TextInput from "@/Components/TextInput.vue";
+import { ref } from "vue";
+import ActivityDisplay from "@/Components/Inscription/Activity/ActivityDisplay.vue";
+import { PlusIcon } from "@heroicons/vue/24/solid";
 import {
-    AcademicCapIcon,
-    ArrowPathIcon,
-    ClockIcon,
-    DocumentDuplicateIcon,
-    MapPinIcon,
-    PlusIcon,
-    TrashIcon,
-    UsersIcon,
-    ChevronUpIcon,
-} from "@heroicons/vue/24/solid";
-import {
-    Switch,
-    Disclosure,
-    DisclosureButton,
-    DisclosurePanel,
     TransitionRoot,
     TransitionChild,
     Dialog,
@@ -27,9 +13,10 @@ import {
 } from "@headlessui/vue";
 
 const props = defineProps({
+    errors: Object,
     structure: Object,
     activite: Object,
-    structureActivite: Object,
+    structureActivites: Object,
     categories: Object,
     categoriesListByDiscipline: Object,
     can: Object,
@@ -45,11 +32,9 @@ function openModal() {
 }
 
 const form = useForm({
-    categorie_id: ref(props.activite.categorie_id),
-    actif: ref(props.structureActivite.actif),
-    image: ref(null),
     titre: ref(null),
     description: ref(null),
+    image: ref(null),
 });
 
 // function submit() {
@@ -78,7 +63,7 @@ const form = useForm({
                     <h2
                         class="text-xl font-semibold leading-tight text-gray-800"
                     >
-                        Modifier votre activité
+                        Ajouter ou modifier votre activité
                         <span class="text-blue-700"></span>
                     </h2>
                 </div>
@@ -117,12 +102,6 @@ const form = useForm({
                         </h2>
                         <!-- categories -->
                         <div class="mt-4 w-full">
-                            <label
-                                for="categorie_id"
-                                class="mb-4 block text-sm font-medium text-gray-700"
-                            >
-                                Categories
-                            </label>
                             <div class="mt-1">
                                 <ul
                                     class="flex w-full flex-col items-start justify-between rounded-md border border-gray-300 bg-white px-3 py-2 shadow-md focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-base md:flex-row md:items-center"
@@ -135,26 +114,12 @@ const form = useForm({
                                         <div
                                             class="flex items-center justify-between"
                                         >
-                                            <input
-                                                name="categorie_id"
-                                                id="categorie_id"
-                                                type="radio"
-                                                v-model="form.categorie_id"
-                                                :value="categorie.id"
-                                                class="form-radio h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                            />
                                             <span class="ml-2 text-gray-700">
                                                 {{ categorie.nom_categorie }}
                                             </span>
                                         </div>
                                     </li>
                                 </ul>
-                            </div>
-                            <div
-                                v-if="form.errors.categories_id"
-                                class="mt-2 text-xs text-red-500"
-                            >
-                                {{ form.errors.categories_id }}
                             </div>
                         </div>
                     </div>
@@ -244,78 +209,96 @@ const form = useForm({
                                             leave-to="opacity-0 scale-95"
                                         >
                                             <DialogPanel
-                                                class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                                                class="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
                                             >
                                                 <DialogTitle
                                                     as="h3"
                                                     class="text-lg font-medium leading-6 text-gray-900"
                                                 >
-                                                    Ajouter une
-                                                    {{
-                                                        structureActivite.titre
-                                                    }}
+                                                    Ajouter une activité
                                                 </DialogTitle>
-                                                <div
-                                                    class="mt-2 flex w-full space-x-4"
-                                                >
+                                                <div class="mt-2 w-full">
                                                     <form
                                                         @submit.prevent="submit"
                                                         enctype="multipart/form-data"
                                                         autocomplete="off"
                                                     >
-                                                        <div>
-                                                            <!-- <label
-                                                                for="image"
-                                                                class="block text-sm font-medium text-gray-700"
-                                                                >Photo ou
-                                                                image:</label
-                                                            >
-                                                            <input
-                                                                class="mt-1 text-sm text-gray-700"
-                                                                type="file"
-                                                                id="image"
-                                                                @input="
-                                                                    form.image =
-                                                                        $event.target.files[0]
-                                                                "
-                                                            />
-                                                            <span
-                                                                class="mt-2 text-xs text-red-500"
-                                                                v-if="
-                                                                    errors.image
-                                                                "
-                                                                v-text="
-                                                                    errors
-                                                                        .image[0]
-                                                                "
-                                                            ></span> -->
-                                                        </div>
                                                         <div
-                                                            class="flex flex-col space-y-4"
+                                                            class="flex flex-col space-y-3"
                                                         >
                                                             <div>
-                                                                <TextInput
-                                                                    id="titre"
-                                                                    type="text"
-                                                                    class="mt-1 block w-full flex-1 px-2 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
-                                                                    v-model="
-                                                                        form.titre
-                                                                    "
-                                                                    placeholder="titre..."
-                                                                />
+                                                                <label
+                                                                    for="titre"
+                                                                    class="block text-sm font-medium text-gray-700"
+                                                                >
+                                                                    Titre de
+                                                                    l'activité
+                                                                </label>
+                                                                <div
+                                                                    class="mt-1 flex rounded-md"
+                                                                >
+                                                                    <input
+                                                                        v-model="
+                                                                            form.titre
+                                                                        "
+                                                                        type="text"
+                                                                        name="titre"
+                                                                        id="titre"
+                                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                                        placeholder=""
+                                                                        autocomplete="none"
+                                                                    />
+                                                                </div>
                                                             </div>
-                                                            <div></div>
+                                                            <div>
+                                                                <label
+                                                                    for="description"
+                                                                    class="block text-sm font-medium text-gray-700"
+                                                                >
+                                                                    Description
+                                                                </label>
+                                                                <div
+                                                                    class="mt-1"
+                                                                >
+                                                                    <textarea
+                                                                        v-model="
+                                                                            form.description
+                                                                        "
+                                                                        id="description"
+                                                                        name="description"
+                                                                        rows="2"
+                                                                        class="mt-1 block h-48 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                                        :class="{
+                                                                            errors: 'border-red-500 focus:ring focus:ring-red-200',
+                                                                        }"
+                                                                        placeholder="Presentez votre activité"
+                                                                        autocomplete="none"
+                                                                    />
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </form>
                                                 </div>
 
-                                                <div class="mt-4">
+                                                <div
+                                                    class="mt-4 flex w-full items-center justify-between"
+                                                >
                                                     <button
                                                         type="button"
                                                         class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
                                                         @click="closeModal"
                                                     >
                                                         Annuler
+                                                    </button>
+                                                    <button
+                                                        :disabled="
+                                                            form.processing
+                                                        "
+                                                        type="submit"
+                                                        class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                                                        @click="closeModal"
+                                                    >
+                                                        Enregistrer
                                                     </button>
                                                 </div>
                                             </DialogPanel>
@@ -325,135 +308,10 @@ const form = useForm({
                             </Dialog>
                         </TransitionRoot>
                     </div>
-                    <div
-                        class="flex h-full w-full flex-col space-y-3 rounded border border-gray-200"
-                    >
-                        <h2
-                            class="bg-gray-700 px-4 py-4 font-semibold text-white"
-                        >
-                            {{ activite.categorie.nom_categorie }} de
-                            {{ activite.discipline.name }}
-                        </h2>
-                        <div class="flex w-full items-start">
-                            <div
-                                class="relative h-56 w-56 border border-gray-100"
-                            >
-                                <img
-                                    alt="logo"
-                                    src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                                    class="absolute inset-0 h-full w-full object-cover"
-                                />
-                            </div>
-                            <div
-                                class="flex flex-1 flex-col items-start space-y-6 px-2 py-2 md:px-4"
-                            >
-                                <div class="flex items-center space-x-2">
-                                    <Switch
-                                        v-model="form.actif"
-                                        :class="
-                                            form.actif
-                                                ? 'bg-green-600'
-                                                : 'bg-gray-200'
-                                        "
-                                        class="relative inline-flex h-6 w-11 items-center rounded-full"
-                                    >
-                                        <span class="sr-only">Actif</span>
-                                        <span
-                                            :class="
-                                                form.actif
-                                                    ? 'translate-x-6'
-                                                    : 'translate-x-1'
-                                            "
-                                            class="inline-block h-4 w-4 transform rounded-full bg-white transition"
-                                        />
-                                    </Switch>
-                                    <p
-                                        class="text-lg font-semibold text-green-600"
-                                        v-if="form.actif"
-                                    >
-                                        Actif
-                                    </p>
-                                    <p
-                                        class="text-lg font-semibold text-gray-600"
-                                        v-else
-                                    >
-                                        Inactif
-                                    </p>
-                                </div>
-                                <p class="whitespace-pre-line text-lg">
-                                    <span class="text-lg font-semibold"
-                                        >Description:</span
-                                    >
-                                    {{ activite.structure.presentation_courte }}
-                                </p>
-                            </div>
-                        </div>
-                        <Disclosure v-slot="{ open }">
-                            <DisclosureButton
-                                class="flex w-full justify-between bg-gray-200 px-4 py-4 font-semibold text-gray-800"
-                            >
-                                <span>1 Produits / déclinaisons</span>
-                                <ChevronUpIcon
-                                    :class="open ? 'rotate-180 transform' : ''"
-                                    class="h-5 w-5 text-gray-800"
-                                />
-                            </DisclosureButton>
-
-                            <DisclosurePanel
-                                as="div"
-                                class="grid grid-cols-6 place-items-center"
-                            >
-                                <div class="col-span-1 flex items-center">
-                                    <UsersIcon
-                                        class="mr-1 h-6 w-6 text-gray-600"
-                                    />Tous Public
-                                </div>
-                                <div class="col-span-1 flex items-center">
-                                    <AcademicCapIcon
-                                        class="mr-1 h-6 w-6 text-gray-600"
-                                    />
-                                    Tous Niveaux
-                                </div>
-                                <div class="col-span-1 flex items-center p-0.5">
-                                    <MapPinIcon
-                                        class="mr-1 h-6 w-6 text-gray-600"
-                                    />
-                                    <div class="flex flex-col items-center">
-                                        {{ structure.adresse.address }},
-                                        {{ structure.adresse.zip_code }}
-                                        {{ structure.adresse.city }}
-                                    </div>
-                                </div>
-                                <div class="col-span-1 flex items-center">
-                                    <ClockIcon
-                                        class="mr-1 h-6 w-6 text-gray-600"
-                                    />
-                                    Planning
-                                </div>
-                                <div class="col-span-1 flex items-center">
-                                    <button
-                                        type="button"
-                                        class="flex w-full items-center justify-between rounded bg-green-600 px-3 py-2 text-sm text-white shadow-lg transition duration-100 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm"
-                                    >
-                                        Tarifs
-                                    </button>
-                                </div>
-                                <div
-                                    class="col-span-1 flex items-center justify-between space-x-2"
-                                >
-                                    <ArrowPathIcon
-                                        class="mr-1 h-6 w-6 text-gray-600"
-                                    />
-                                    <DocumentDuplicateIcon
-                                        class="mr-1 h-6 w-6 text-gray-600"
-                                    />
-                                    <TrashIcon
-                                        class="mr-1 h-6 w-6 text-gray-600"
-                                    />
-                                </div>
-                            </DisclosurePanel>
-                        </Disclosure>
-                    </div>
+                    <ActivityDisplay
+                        :structure="structure"
+                        :structureActivites="structureActivites"
+                    />
                 </section>
 
                 <div class="hidden sm:block" aria-hidden="true">

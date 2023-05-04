@@ -4,25 +4,26 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 
+use App\Models\Categorie;
+use App\Models\Structure;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\ListDiscipline;
+use Illuminate\Validation\Rule;
+use App\Models\StructureAddress;
+use App\Models\StructureProduit;
+use App\Models\StructureActivite;
+use App\Models\StructureCategorie;
+use App\Models\StructureDiscipline;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Validation\Rule;
-use App\Models\Categorie;
-use App\Models\Structure;
-use App\Models\StructureAddress;
-use App\Models\ListDiscipline;
-use App\Models\StructureDiscipline;
-use App\Models\StructureActivite;
-use App\Models\StructureCategorie;
 use App\Models\LienDisciplineCategorie;
+use App\Models\StructureProduitCritere;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Redirect;
 use App\Models\LienDisciplineCategorieCritere;
 use App\Models\LienDisciplineCategorieCritereValeur;
-use App\Models\StructureProduit;
-use App\Models\StructureProduitCritere;
 
 class ActiviteController extends Controller
 {
@@ -136,8 +137,9 @@ class ActiviteController extends Controller
                 'discipline_id' => $validated['discipline_id'],
                 'categorie_id' => $validated['categorie_id'],
             ]);
+            $structureActiviteCategorie->with('discipline')->first();
 
-            $titre = $lienActCat->nom_categorie;
+            $titre = $lienActCat->nom_categorie .' de '. $structureActiviteCategorie->discipline->name ;
 
             $structureActivite = StructureActivite::create([
                 'structure_id' => $validated['structure_id'],
@@ -197,11 +199,11 @@ class ActiviteController extends Controller
                         ->withCount('categorie')
                         ->first();
 
-        $structureActivite = StructureActivite::with(['structure','categorie', 'discipline'])
+        $structureActivites = StructureActivite::with(['structure','categorie', 'discipline'])
                             ->where('structure_id', $structure->id)
                             ->where('discipline_id', $activite->discipline->id)
                             ->where('categorie_id', $activite->categorie->id)
-                            ->first();
+                            ->get();
 
         $categories = Categorie::with('disciplines')->select(['id', 'nom', 'ico'])->get();
         $categoriesListByDiscipline = LienDisciplineCategorie::where('discipline_id', $activite->discipline->id)->get();
@@ -209,7 +211,7 @@ class ActiviteController extends Controller
         return Inertia::render('Structures/Activites/Edit', [
             'structure' => $structure,
             'activite' => $activite,
-            'structureActivite' => $structureActivite,
+            'structureActivites' => $structureActivites,
             'categories' => $categories,
             'categoriesListByDiscipline' => $categoriesListByDiscipline,
             'can' => [
@@ -222,37 +224,34 @@ class ActiviteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function update(Request $request, Structure $structure)
+    public function update(Request $request, Structure $structure, $activite)
     {
-
         if (! Gate::allows('update-structure', $structure)) {
             return Redirect::route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de modifier cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
 
-        $validated= request()->validate([
-            'structure_id' => ['required', Rule::exists('structures', 'id')],
-            'title' => ['required', 'string', 'max:255'],
-            'discipline_id' => ['required', Rule::exists('liste_disciplines', 'id')],
-            'nivel_id' => ['required', Rule::exists('nivels', 'id')],
-            'publictype_id' => ['required', Rule::exists('publictypes', 'id')],
-            'address' => ['nullable'],
-            'city' => ['nullable'],
-            'zip_code' => ['nullable'],
-            'country' => ['nullable'],
-            'address_lat' => ['nullable'],
-            'address_lng' => ['nullable'],
-            'description' => ['required', 'min:8'],
-        ]);
+        $request->validate([
+                'titre' => 'required|string',
+                'description' => 'nullable|string',
+                'image' => 'nullable|image|max:2048',
+                'actif' => 'required|boolean',
+            ]);
 
-        $name = $validated['name'];
-        $slug = Str::slug($name, '-');
-        // $validated['user_id'] = auth()->id();
-        $validated['slug'] = $slug;
-        // $validated['structure_id'] = $structure->id;
+        $structureActivite = StructureActivite::with(['structure','categorie', 'discipline'])
+                                    ->where('structure_id', $structure->id)
+                                    ->where('id', $activite)
+                                    ->first();
 
-        // $activite->update($validated);
+        $structureActivite->update($request->all());
 
-        return Redirect::route('structures.activites.index', $structure)->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('public/structures/' . $structure->id . '/activites/' . $structureActivite->id);
+
+            $url = Storage::url($path);
+            $structureActivite->update(['image' => $url]);
+        }
+
+        return Redirect::back()->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
     }
 
     /**
