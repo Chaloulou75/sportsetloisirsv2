@@ -242,14 +242,18 @@ class ActiviteController extends Controller
                                     ->where('id', $activite)
                                     ->first();
 
-        $structureActivite->update($request->all());
-
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('public/structures/' . $structure->id . '/activites/' . $structureActivite->id);
 
             $url = Storage::url($path);
             $structureActivite->update(['image' => $url]);
         }
+
+        $structureActivite->update([
+            'titre' => $request->titre,
+            'description' => $request->description,
+            'actif' => $request->actif
+        ]);
 
         return Redirect::back()->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
     }
@@ -270,5 +274,22 @@ class ActiviteController extends Controller
         // sleep(0.5);
 
         return redirect()->route('structures.show', $structure)->with('success', 'Activite supprimée.');
+    }
+
+    public function toggleactif(Request $request, Structure $structure, $activite)
+    {
+        $request->validate([
+            'actif' => 'required|boolean',
+        ]);
+
+        $structureActivite = StructureActivite::with(['structure','categorie', 'discipline'])
+                                            ->where('structure_id', $structure->id)
+                                            ->where('id', $activite)
+                                            ->first();
+
+        $structureActivite->update([
+                    'actif' => $request->actif
+                ]);
+        return Redirect::back();
     }
 }

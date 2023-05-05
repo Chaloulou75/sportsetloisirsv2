@@ -33,9 +33,6 @@ const form = useForm({
     description: ref(props.structureActivites[0].description),
     image: ref(null),
     actif: ref(props.structureActivites[0].actif),
-    errors: reactive({
-        image: null,
-    }),
 });
 
 const actifValue = computed({
@@ -58,6 +55,21 @@ function submitForm() {
             actif: form.actif,
         },
         {
+            structure: props.structure.slug,
+            activite: props.structureActivites[0].id,
+        }
+    );
+}
+
+function toggleActif() {
+    router.post(
+        `/structures/${props.structure.slug}/activites/${props.structureActivites[0].id}/toggleactif`,
+        {
+            _method: "put",
+            actif: form.actif,
+        },
+        {
+            preserveScroll: true,
             structure: props.structure.slug,
             activite: props.structureActivites[0].id,
         }
@@ -141,10 +153,11 @@ function openModal() {
                                                     <label
                                                         for="image"
                                                         class="block text-sm font-medium text-gray-700"
-                                                        >Photo ou image:</label
+                                                        >Ajouter ou modifier la
+                                                        photo ou l'image:</label
                                                     >
                                                     <input
-                                                        class="mt-1 text-sm text-gray-700"
+                                                        class="mt-1 text-sm text-gray-700 focus:outline-none"
                                                         type="file"
                                                         id="image"
                                                         @input="
@@ -258,6 +271,7 @@ function openModal() {
                 <div class="flex items-center space-x-2">
                     <Switch
                         v-model="actifValue"
+                        @click="toggleActif"
                         :class="form.actif ? 'bg-green-600' : 'bg-gray-200'"
                         class="relative inline-flex h-6 w-11 items-center rounded-full"
                     >
