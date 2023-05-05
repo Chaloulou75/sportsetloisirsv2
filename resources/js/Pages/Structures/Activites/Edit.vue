@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
+import { Head, Link, useForm, router } from "@inertiajs/vue3";
 import { ref } from "vue";
 import ActivityDisplay from "@/Components/Inscription/Activity/ActivityDisplay.vue";
 import { PlusIcon } from "@heroicons/vue/24/solid";
@@ -32,24 +32,35 @@ function openModal() {
 }
 
 const form = useForm({
-    titre: ref(),
-    description: ref(),
+    structure_id: ref(props.activite.structure_id),
+    discipline_id: ref(props.activite.discipline_id),
+    categorie_id: ref(props.activite.categorie_id),
+    titre: ref(null),
+    description: ref(null),
     image: ref(null),
     actif: ref(1),
 });
 
-// function submit() {
-//     // const structureValue = props.structure.value;
-//     const url = `/structures/${props.structure.slug}/activites/${props.activite.id}`;
-//     form.patch(
-//         url,
-//         {
-//             preserveScroll: true,
-//             onSuccess: () => form.reset(),
-//         },
-//         { structure: props.structure, activite: props.activite }
-//     );
-// }
+const onSubmit = () => {
+    router.post(
+        `/structures/${props.structure.slug}/activites/${props.activite.id}/newactivitystore`,
+        {
+            structure_id: form.structure_id,
+            discipline_id: form.discipline_id,
+            categorie_id: form.categorie_id,
+            titre: form.titre,
+            description: form.description,
+            image: form.image,
+            actif: form.actif,
+        },
+        {
+            preserveScroll: true,
+            onSuccess: () => form.reset(),
+            structure: props.structure.slug,
+            activite: props.activite.id,
+        }
+    );
+};
 </script>
 
 <template>
@@ -214,18 +225,18 @@ const form = useForm({
                                             <DialogPanel
                                                 class="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
                                             >
-                                                <DialogTitle
-                                                    as="h3"
-                                                    class="text-lg font-medium leading-6 text-gray-900"
+                                                <form
+                                                    @submit.prevent="onSubmit"
+                                                    enctype="multipart/form-data"
+                                                    autocomplete="off"
                                                 >
-                                                    Ajouter une activité
-                                                </DialogTitle>
-                                                <div class="mt-2 w-full">
-                                                    <form
-                                                        @submit.prevent="submit"
-                                                        enctype="multipart/form-data"
-                                                        autocomplete="off"
+                                                    <DialogTitle
+                                                        as="h3"
+                                                        class="text-lg font-medium leading-6 text-gray-900"
                                                     >
+                                                        Ajouter une activité
+                                                    </DialogTitle>
+                                                    <div class="mt-2 w-full">
                                                         <div
                                                             class="flex flex-col space-y-3"
                                                         >
@@ -312,30 +323,29 @@ const form = useForm({
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </form>
-                                                </div>
-
-                                                <div
-                                                    class="mt-4 flex w-full items-center justify-between"
-                                                >
-                                                    <button
-                                                        type="button"
-                                                        class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
-                                                        @click="closeModal"
+                                                    </div>
+                                                    <div
+                                                        class="mt-4 flex w-full items-center justify-between"
                                                     >
-                                                        Annuler
-                                                    </button>
-                                                    <button
-                                                        :disabled="
-                                                            form.processing
-                                                        "
-                                                        type="submit"
-                                                        class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
-                                                        @click="closeModal"
-                                                    >
-                                                        Enregistrer
-                                                    </button>
-                                                </div>
+                                                        <button
+                                                            type="button"
+                                                            class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                                                            @click="closeModal"
+                                                        >
+                                                            Annuler
+                                                        </button>
+                                                        <button
+                                                            :disabled="
+                                                                form.processing
+                                                            "
+                                                            type="submit"
+                                                            class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                                                            @click="closeModal"
+                                                        >
+                                                            Enregistrer
+                                                        </button>
+                                                    </div>
+                                                </form>
                                             </DialogPanel>
                                         </TransitionChild>
                                     </div>

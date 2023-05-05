@@ -203,6 +203,7 @@ class ActiviteController extends Controller
                             ->where('structure_id', $structure->id)
                             ->where('discipline_id', $activite->discipline->id)
                             ->where('categorie_id', $activite->categorie->id)
+                            ->latest()
                             ->get();
 
         $categories = Categorie::with('disciplines')->select(['id', 'nom', 'ico'])->get();
@@ -276,7 +277,7 @@ class ActiviteController extends Controller
         return redirect()->route('structures.show', $structure)->with('success', 'Activite supprimée.');
     }
 
-    public function toggleactif(Request $request, Structure $structure, $activite)
+    public function toggleactif(Request $request, Structure $structure, $activite): RedirectResponse
     {
         $request->validate([
             'actif' => 'required|boolean',
@@ -287,9 +288,44 @@ class ActiviteController extends Controller
                                             ->where('id', $activite)
                                             ->first();
 
-        $structureActivite->update([
-                    'actif' => $request->actif
-                ]);
+        $structureActivite->update(['actif' => $request->actif]);
         return Redirect::back();
+    }
+
+    public function newactivitystore(Request $request, Structure $structure, $activite): RedirectResponse
+    {
+        $request->validate([
+            'structure_id' => ['required', Rule::exists('structures', 'id')],
+            'discipline_id' => ['required', Rule::exists('liste_disciplines', 'id')],
+            'categorie_id' => ['required', Rule::exists('liens_disciplines_categories', 'id')],
+            'titre' => 'nullable|string',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|max:2048',
+            'actif' => 'required|boolean',
+        ]);
+
+        $activite = StructureCategorie::with(['structure','categorie', 'discipline'])
+                                ->where('structure_id', $structure->id)
+                                ->where('id', $activite)
+                                ->first();
+
+        // dd($activite);
+        $structureActivite = StructureActivite::create([
+            'structure_id' => $request->structure_id,
+            'discipline_id' => $request->discipline_id,
+            'categorie_id' => $request->categorie_id,
+            'titre' => $request->titre ?? $activite->categorie->nom_categorie.' de '. $activite->discipline->name,
+            'image' => "",
+            "actif" => 1,
+        ]);
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('public/structures/' . $structure->id . '/activites/' . $structureActivite->id);
+
+            $url = Storage::url($path);
+            $structureActivite->update(['image' => $url]);
+        }
+
+        return Redirect::back()->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
     }
 }
