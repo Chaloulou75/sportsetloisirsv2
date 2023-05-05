@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, reactive } from "vue";
+import { ref, computed, nextTick  } from "vue";
 import { useForm, router } from "@inertiajs/vue3";
 import {
     AcademicCapIcon,
@@ -55,13 +55,15 @@ function submitForm() {
             actif: form.actif,
         },
         {
+            preserveScroll: true,
             structure: props.structure.slug,
             activite: props.structureActivites[0].id,
         }
     );
 }
 
-function toggleActif() {
+async function toggleActif() {
+    await nextTick();
     router.post(
         `/structures/${props.structure.slug}/activites/${props.structureActivites[0].id}/toggleactif`,
         {
@@ -89,10 +91,10 @@ function openModal() {
     <div
         v-for="structureActivite in structureActivites"
         :key="structureActivite.id"
-        class="flex h-full w-full flex-col space-y-3 rounded border border-gray-200"
+        class="flex flex-col w-full h-full space-y-3 border border-gray-200 rounded"
     >
         <div
-            class="flex w-full items-center justify-between bg-gray-700 px-4 py-4"
+            class="flex items-center justify-between w-full px-4 py-4 bg-gray-700"
         >
             <h2 class="font-semibold text-white">
                 {{ structureActivite.titre }}
@@ -100,7 +102,7 @@ function openModal() {
             <button
                 type="button"
                 @click="openModal"
-                class="rounded-sm bg-white px-2 py-1 text-base text-gray-700 transition duration-100 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
+                class="px-2 py-1 text-base text-gray-700 transition duration-100 bg-white rounded-sm hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
             >
                 Editer l'activité
             </button>
@@ -125,7 +127,7 @@ function openModal() {
 
                         <div class="fixed inset-0 overflow-y-auto">
                             <div
-                                class="flex min-h-full items-center justify-center p-4 text-center"
+                                class="flex items-center justify-center min-h-full p-4 text-center"
                             >
                                 <TransitionChild
                                     as="template"
@@ -137,7 +139,7 @@ function openModal() {
                                     leave-to="opacity-0 scale-95"
                                 >
                                     <DialogPanel
-                                        class="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                                        class="w-full max-w-3xl p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
                                     >
                                         <DialogTitle
                                             as="h3"
@@ -145,7 +147,7 @@ function openModal() {
                                         >
                                             Modifier une activité
                                         </DialogTitle>
-                                        <div class="mt-2 w-full">
+                                        <div class="w-full mt-2">
                                             <div
                                                 class="flex flex-col space-y-3"
                                             >
@@ -181,14 +183,14 @@ function openModal() {
                                                         Titre de l'activité
                                                     </label>
                                                     <div
-                                                        class="mt-1 flex rounded-md"
+                                                        class="flex mt-1 rounded-md"
                                                     >
                                                         <input
                                                             v-model="form.titre"
                                                             type="text"
                                                             name="titre"
                                                             id="titre"
-                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                             :placeholder="
                                                                 structureActivite.titre
                                                             "
@@ -211,7 +213,7 @@ function openModal() {
                                                             id="description"
                                                             name="description"
                                                             rows="2"
-                                                            class="mt-1 block h-48 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                            class="block w-full h-48 min-h-full mt-1 placeholder-gray-400 placeholder-opacity-50 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                             :class="{
                                                                 errors: 'border-red-500 focus:ring focus:ring-red-200',
                                                             }"
@@ -224,11 +226,11 @@ function openModal() {
                                         </div>
 
                                         <div
-                                            class="mt-4 flex w-full items-center justify-between"
+                                            class="flex items-center justify-between w-full mt-4"
                                         >
                                             <button
                                                 type="button"
-                                                class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                                                class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
                                                 @click="closeModal"
                                             >
                                                 Annuler
@@ -237,7 +239,7 @@ function openModal() {
                                                 :disabled="form.processing"
                                                 @click="closeModal"
                                                 type="submit"
-                                                class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                                                class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                             >
                                                 Enregistrer
                                             </button>
@@ -250,37 +252,37 @@ function openModal() {
                 </Dialog>
             </TransitionRoot>
         </div>
-        <div class="flex w-full items-start">
-            <div class="relative h-56 w-56 border border-gray-100">
+        <div class="flex items-start w-full">
+            <div class="relative w-56 h-56 border border-gray-100">
                 <img
                     v-if="structureActivite.image"
                     alt="image"
                     :src="structureActivite.image"
-                    class="absolute inset-0 h-full w-full object-cover"
+                    class="absolute inset-0 object-cover w-full h-full"
                 />
                 <img
                     v-else
                     alt="image"
                     src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                    class="absolute inset-0 h-full w-full object-cover"
+                    class="absolute inset-0 object-cover w-full h-full"
                 />
             </div>
             <div
-                class="flex flex-1 flex-col items-start space-y-6 px-2 py-2 md:px-4"
+                class="flex flex-col items-start flex-1 px-2 py-2 space-y-6 md:px-4"
             >
                 <div class="flex items-center space-x-2">
                     <Switch
                         v-model="actifValue"
                         @click="toggleActif"
                         :class="form.actif ? 'bg-green-600' : 'bg-gray-200'"
-                        class="relative inline-flex h-6 w-11 items-center rounded-full"
+                        class="relative inline-flex items-center h-6 rounded-full w-11"
                     >
                         <span class="sr-only">Actif</span>
                         <span
                             :class="
                                 form.actif ? 'translate-x-6' : 'translate-x-1'
                             "
-                            class="inline-block h-4 w-4 transform rounded-full bg-white transition"
+                            class="inline-block w-4 h-4 transition transform bg-white rounded-full"
                         />
                     </Switch>
                     <p
@@ -293,7 +295,7 @@ function openModal() {
                         Inactif
                     </p>
                 </div>
-                <p class="whitespace-pre-line text-lg">
+                <p class="text-lg whitespace-pre-line">
                     <span class="text-lg font-semibold">Description:</span>
                     <span v-if="structureActivite.description">
                         {{ structureActivite.description }}
@@ -306,12 +308,12 @@ function openModal() {
         </div>
         <Disclosure v-slot="{ open }">
             <DisclosureButton
-                class="flex w-full justify-between bg-gray-200 px-4 py-4 font-semibold text-gray-800"
+                class="flex justify-between w-full px-4 py-4 font-semibold text-gray-800 bg-gray-200"
             >
                 <span>1 Produits / déclinaisons</span>
                 <ChevronUpIcon
                     :class="open ? 'rotate-180 transform' : ''"
-                    class="h-5 w-5 text-gray-800"
+                    class="w-5 h-5 text-gray-800"
                 />
             </DisclosureButton>
 
@@ -319,39 +321,39 @@ function openModal() {
                 as="div"
                 class="grid grid-cols-6 place-items-center"
             >
-                <div class="col-span-1 flex items-center">
-                    <UsersIcon class="mr-1 h-6 w-6 text-gray-600" />Tous Public
+                <div class="flex items-center col-span-1">
+                    <UsersIcon class="w-6 h-6 mr-1 text-gray-600" />Tous Public
                 </div>
-                <div class="col-span-1 flex items-center">
-                    <AcademicCapIcon class="mr-1 h-6 w-6 text-gray-600" />
+                <div class="flex items-center col-span-1">
+                    <AcademicCapIcon class="w-6 h-6 mr-1 text-gray-600" />
                     Tous Niveaux
                 </div>
                 <div class="col-span-1 flex items-center p-0.5">
-                    <MapPinIcon class="mr-1 h-6 w-6 text-gray-600" />
+                    <MapPinIcon class="w-6 h-6 mr-1 text-gray-600" />
                     <div class="flex flex-col items-center">
                         {{ structure.adresse.address }},
                         {{ structure.adresse.zip_code }}
                         {{ structure.adresse.city }}
                     </div>
                 </div>
-                <div class="col-span-1 flex items-center">
-                    <ClockIcon class="mr-1 h-6 w-6 text-gray-600" />
+                <div class="flex items-center col-span-1">
+                    <ClockIcon class="w-6 h-6 mr-1 text-gray-600" />
                     Planning
                 </div>
-                <div class="col-span-1 flex items-center">
+                <div class="flex items-center col-span-1">
                     <button
                         type="button"
-                        class="flex w-full items-center justify-between rounded bg-green-600 px-3 py-2 text-sm text-white shadow-lg transition duration-100 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm"
+                        class="flex items-center justify-between w-full px-3 py-2 text-sm text-white transition duration-100 bg-green-600 rounded shadow-lg hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm"
                     >
                         Tarifs
                     </button>
                 </div>
                 <div
-                    class="col-span-1 flex items-center justify-between space-x-2"
+                    class="flex items-center justify-between col-span-1 space-x-2"
                 >
-                    <ArrowPathIcon class="mr-1 h-6 w-6 text-gray-600" />
-                    <DocumentDuplicateIcon class="mr-1 h-6 w-6 text-gray-600" />
-                    <TrashIcon class="mr-1 h-6 w-6 text-gray-600" />
+                    <ArrowPathIcon class="w-6 h-6 mr-1 text-gray-600" />
+                    <DocumentDuplicateIcon class="w-6 h-6 mr-1 text-gray-600" />
+                    <TrashIcon class="w-6 h-6 mr-1 text-gray-600" />
                 </div>
             </DisclosurePanel>
         </Disclosure>
