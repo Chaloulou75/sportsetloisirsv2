@@ -171,7 +171,7 @@ class ActiviteController extends Controller
                     'discipline_id' => $validated['discipline_id'],
                     'categorie_id' => $validated['categorie_id'],
                     'activite_id' => $structureActivite->id,
-                    'declinaison_id' => $declinaison->id,
+                    'produit_id' => $declinaison->id,
                     'critere_id' => $disciplineCategorieCritere->id,
                     'valeur' => $ActCatCriVal->valeur ?? 'Tous',
                 ]);
@@ -306,6 +306,8 @@ class ActiviteController extends Controller
             'actif' => 'required|boolean',
         ]);
 
+        $structureAdresse = StructureAddress::where('structure_id', $structure->id)->firstOrfail();
+
         $activite = StructureCategorie::with(['structure','categorie', 'discipline'])
                                 ->where('structure_id', $structure->id)
                                 ->where('id', $activite)
@@ -327,6 +329,34 @@ class ActiviteController extends Controller
 
             $url = Storage::url($path);
             $structureActivite->update(['image' => $url]);
+        }
+
+        $structureProduit = StructureProduit::create([
+            'structure_id' => $request->structure_id,
+            'discipline_id' => $request->discipline_id,
+            'categorie_id' => $request->categorie_id,
+            'activite_id' => $structureActivite->id,
+            "actif" => 1,
+            'lieu_id' => $structureAdresse->id,
+            // 'horaire_id' => $structureHoraire->id,
+            // 'tarif_id' => $structureTarif->id,
+            'reservable' => 0,
+        ]);
+
+        $disciplineCategorieCriteres = LienDisciplineCategorieCritere::where('discipline_id', $request->discipline_id)->where('categorie_id', $request->categorie_id)->get();
+
+        foreach($disciplineCategorieCriteres as $disciplineCategorieCritere) {
+            $ActCatCriVal = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('activite_categorie_critere_id', $disciplineCategorieCritere->id)->first();
+
+            $structureProduitCritere = StructureProduitCritere::create([
+                'structure_id' => $structure->id,
+                'discipline_id' => $request->discipline_id,
+                'categorie_id' => $request->categorie_id,
+                'activite_id' => $structureActivite->id,
+                'produit_id' => $structureProduit->id,
+                'critere_id' => $disciplineCategorieCritere->id,
+                'valeur' => $ActCatCriVal->valeur ?? 'Tous',
+            ]);
         }
 
         return Redirect::back()->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
