@@ -227,6 +227,7 @@ class ActiviteController extends Controller
      */
     public function update(Request $request, Structure $structure, $activite)
     {
+
         if (! Gate::allows('update-structure', $structure)) {
             return Redirect::route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de modifier cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
@@ -235,13 +236,14 @@ class ActiviteController extends Controller
                 'titre' => 'required|string',
                 'description' => 'nullable|string',
                 'image' => 'nullable|image|max:2048',
-                'actif' => 'required|boolean',
+                'actif' => 'nullable|boolean',
             ]);
 
         $structureActivite = StructureActivite::with(['structure','categorie', 'discipline'])
                                     ->where('structure_id', $structure->id)
                                     ->where('id', $activite)
                                     ->first();
+
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('public/structures/' . $structure->id . '/activites/' . $structureActivite->id);
@@ -253,7 +255,7 @@ class ActiviteController extends Controller
         $structureActivite->update([
             'titre' => $request->titre,
             'description' => $request->description,
-            'actif' => $request->actif
+            'actif' => 1,
         ]);
 
         return Redirect::back()->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
@@ -315,6 +317,7 @@ class ActiviteController extends Controller
             'discipline_id' => $request->discipline_id,
             'categorie_id' => $request->categorie_id,
             'titre' => $request->titre ?? $activite->categorie->nom_categorie.' de '. $activite->discipline->name,
+            'description' => $request->description,
             'image' => "",
             "actif" => 1,
         ]);

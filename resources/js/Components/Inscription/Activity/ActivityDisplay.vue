@@ -44,23 +44,25 @@ const actifValue = computed({
     },
 });
 
-function submitForm(id) {
-    router.post(
-        `/structures/${props.structure.slug}/activites/${id}`,
-        {
-            _method: "put",
-            titre: form.titre,
-            description: form.description,
-            image: form.image,
-            actif: form.actif,
-        },
-        {
-            preserveScroll: true,
-            structure: props.structure.slug,
-            activite: id,
-        }
-    );
-}
+const submitForm = (id) => {
+    console.log(id),
+        router.post(
+            `/structures/${props.structure.slug}/activites/${id}`,
+            {
+                _method: "put",
+                titre: form.titre,
+                description: form.description,
+                image: form.image,
+                actif: form.actif,
+            },
+            {
+                preserveScroll: true,
+                onSuccess: () => form.reset(),
+                structure: props.structure.slug,
+                activite: id,
+            }
+        );
+};
 
 async function toggleActif(id) {
     await nextTick();
@@ -79,68 +81,74 @@ async function toggleActif(id) {
 }
 
 const isOpen = ref(false);
+const currentStructureActivite = ref(null);
 
-function closeModal() {
-    isOpen.value = false;
-}
-function openModal() {
+const openModal = (structureActivite) => {
     isOpen.value = true;
+    currentStructureActivite.value = structureActivite;
+};
+
+function closeModal(structureActivite) {
+    isOpen.value = false;
 }
 </script>
 <template>
     <div
-        v-for="(structureActivite, index) in structureActivites"
+        v-for="structureActivite in structureActivites"
         :key="structureActivite.id"
-        :index="index"
         class="flex h-full w-full flex-col space-y-3 rounded border border-gray-200"
     >
         <div
             class="flex w-full items-center justify-between bg-gray-700 px-4 py-4"
         >
             <h2 class="font-semibold text-white">
-                {{ structureActivite.titre }}
+                {{ structureActivite.titre }} - {{ structureActivite.id }}
             </h2>
             <button
                 type="button"
-                @click="openModal"
+                @click="openModal(structureActivite)"
                 class="rounded-sm bg-white px-2 py-1 text-base text-gray-700 transition duration-100 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
             >
                 Editer l'activité
             </button>
             <TransitionRoot appear :show="isOpen" as="template">
                 <Dialog as="div" @close="closeModal" class="relative z-10">
-                    <form
-                        @submit.prevent="submitForm(structureActivite.id)"
-                        enctype="multipart/form-data"
-                        autocomplete="off"
+                    <TransitionChild
+                        as="template"
+                        enter="duration-300 ease-out"
+                        enter-from="opacity-0"
+                        enter-to="opacity-100"
+                        leave="duration-200 ease-in"
+                        leave-from="opacity-100"
+                        leave-to="opacity-0"
                     >
-                        <TransitionChild
-                            as="template"
-                            enter="duration-300 ease-out"
-                            enter-from="opacity-0"
-                            enter-to="opacity-100"
-                            leave="duration-200 ease-in"
-                            leave-from="opacity-100"
-                            leave-to="opacity-0"
-                        >
-                            <div class="fixed inset-0 bg-black bg-opacity-50" />
-                        </TransitionChild>
+                        <div class="fixed inset-0 bg-black bg-opacity-50" />
+                    </TransitionChild>
 
-                        <div class="fixed inset-0 overflow-y-auto">
-                            <div
-                                class="flex min-h-full items-center justify-center p-4 text-center"
+                    <div class="fixed inset-0 overflow-y-auto">
+                        <div
+                            class="flex min-h-full items-center justify-center p-4 text-center"
+                        >
+                            <TransitionChild
+                                as="template"
+                                enter="duration-300 ease-out"
+                                enter-from="opacity-0 scale-95"
+                                enter-to="opacity-100 scale-100"
+                                leave="duration-200 ease-in"
+                                leave-from="opacity-100 scale-100"
+                                leave-to="opacity-0 scale-95"
                             >
-                                <TransitionChild
-                                    as="template"
-                                    enter="duration-300 ease-out"
-                                    enter-from="opacity-0 scale-95"
-                                    enter-to="opacity-100 scale-100"
-                                    leave="duration-200 ease-in"
-                                    leave-from="opacity-100 scale-100"
-                                    leave-to="opacity-0 scale-95"
+                                <DialogPanel
+                                    class="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
                                 >
-                                    <DialogPanel
-                                        class="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                                    <form
+                                        @submit.prevent="
+                                            submitForm(
+                                                currentStructureActivite.id
+                                            )
+                                        "
+                                        enctype="multipart/form-data"
+                                        autocomplete="off"
                                     >
                                         <DialogTitle
                                             as="h3"
@@ -245,11 +253,11 @@ function openModal() {
                                                 Enregistrer
                                             </button>
                                         </div>
-                                    </DialogPanel>
-                                </TransitionChild>
-                            </div>
+                                    </form>
+                                </DialogPanel>
+                            </TransitionChild>
                         </div>
-                    </form>
+                    </div>
                 </Dialog>
             </TransitionRoot>
         </div>

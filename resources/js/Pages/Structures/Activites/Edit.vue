@@ -291,7 +291,11 @@ const onSubmit = () => {
                                                                         name="titre"
                                                                         id="titre"
                                                                         class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                                        placeholder=""
+                                                                        :placeholder="
+                                                                            activite
+                                                                                .categorie
+                                                                                .nom_categorie
+                                                                        "
                                                                         autocomplete="none"
                                                                     />
                                                                 </div>
@@ -339,8 +343,8 @@ const onSubmit = () => {
                                                                 form.processing
                                                             "
                                                             type="submit"
-                                                            class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                                             @click="closeModal"
+                                                            class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                                         >
                                                             Enregistrer
                                                         </button>
