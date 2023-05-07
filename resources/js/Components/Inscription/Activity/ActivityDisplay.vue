@@ -45,37 +45,37 @@ const actifValue = computed({
 });
 
 const submitForm = (id) => {
-    console.log(id),
-        router.post(
-            `/structures/${props.structure.slug}/activites/${id}`,
-            {
-                _method: "put",
-                titre: form.titre,
-                description: form.description,
-                image: form.image,
-                actif: form.actif,
-            },
-            {
-                preserveScroll: true,
-                onSuccess: () => form.reset(),
-                structure: props.structure.slug,
-                activite: id,
-            }
-        );
-};
-
-async function toggleActif(id) {
-    await nextTick();
     router.post(
-        `/structures/${props.structure.slug}/activites/${id}/toggleactif`,
+        `/structures/${props.structure.slug}/activites/${id}`,
         {
             _method: "put",
+            titre: form.titre,
+            description: form.description,
+            image: form.image,
             actif: form.actif,
         },
         {
             preserveScroll: true,
+            onSuccess: () => form.reset(),
             structure: props.structure.slug,
             activite: id,
+        }
+    );
+};
+
+async function toggleActif(structureActivite) {
+    await nextTick();
+    router.post(
+        `/structures/${props.structure.slug}/activites/${structureActivite.id}/toggleactif`,
+        {
+            _method: "put",
+            actif: structureActivite.actif,
+        },
+        {
+            preserveScroll: true,
+            onSuccess: () => form.reset(),
+            structure: props.structure.slug,
+            activite: structureActivite.id,
         }
     );
 }
@@ -88,9 +88,9 @@ const openModal = (structureActivite) => {
     currentStructureActivite.value = structureActivite;
 };
 
-function closeModal(structureActivite) {
+const closeModal = () => {
     isOpen.value = false;
-}
+};
 </script>
 <template>
     <div
@@ -281,22 +281,28 @@ function closeModal(structureActivite) {
             >
                 <div class="flex items-center space-x-2">
                     <Switch
-                        v-model="actifValue"
-                        @click="toggleActif(structureActivite.id)"
-                        :class="form.actif ? 'bg-green-600' : 'bg-gray-200'"
+                        v-model="structureActivite.actif"
+                        @click="toggleActif(structureActivite)"
+                        :class="
+                            structureActivite.actif
+                                ? 'bg-green-600'
+                                : 'bg-gray-200'
+                        "
                         class="relative inline-flex h-6 w-11 items-center rounded-full"
                     >
                         <span class="sr-only">Actif</span>
                         <span
                             :class="
-                                form.actif ? 'translate-x-6' : 'translate-x-1'
+                                structureActivite.actif
+                                    ? 'translate-x-6'
+                                    : 'translate-x-1'
                             "
                             class="inline-block h-4 w-4 transform rounded-full bg-white transition"
                         />
                     </Switch>
                     <p
                         class="text-lg font-semibold text-green-600"
-                        v-if="form.actif"
+                        v-if="structureActivite.actif"
                     >
                         Actif
                     </p>
