@@ -199,21 +199,18 @@ class ActiviteController extends Controller
                         ->withCount('categorie')
                         ->first();
 
-        $structureActivites = StructureActivite::with(['structure','categorie', 'discipline'])
+        $categoriesListByDiscipline = LienDisciplineCategorie::where('discipline_id', $activite->discipline->id)->get();
+
+        $structureActivites = StructureActivite::with(['structure', 'categorie', 'discipline'])
                             ->where('structure_id', $structure->id)
                             ->where('discipline_id', $activite->discipline->id)
-                            ->where('categorie_id', $activite->categorie->id)
                             ->latest()
                             ->get();
-
-        $categories = Categorie::with('disciplines')->select(['id', 'nom', 'ico'])->get();
-        $categoriesListByDiscipline = LienDisciplineCategorie::where('discipline_id', $activite->discipline->id)->get();
 
         return Inertia::render('Structures/Activites/Edit', [
             'structure' => $structure,
             'activite' => $activite,
             'structureActivites' => $structureActivites,
-            'categories' => $categories,
             'categoriesListByDiscipline' => $categoriesListByDiscipline,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),

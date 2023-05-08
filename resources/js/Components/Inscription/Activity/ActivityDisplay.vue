@@ -102,7 +102,7 @@ const closeModal = () => {
             class="flex w-full items-center justify-between bg-gray-700 px-4 py-4"
         >
             <h2 class="font-semibold text-white">
-                {{ structureActivite.titre }} - {{ structureActivite.id }}
+                {{ structureActivite.titre }}
             </h2>
             <button
                 type="button"

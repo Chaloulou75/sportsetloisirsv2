@@ -156,7 +156,7 @@ function destroy(activite) {
                             <img
                                 v-if="structure.logo"
                                 alt="img"
-                                :src="logoUrl"
+                                :src="structure.logo"
                                 class="h-14 w-14 shrink-0 rounded-full object-cover object-center md:h-20 md:w-20"
                             />
                             <img
