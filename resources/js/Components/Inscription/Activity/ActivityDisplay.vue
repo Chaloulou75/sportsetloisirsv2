@@ -25,6 +25,7 @@ import {
 
 const props = defineProps({
     structureActivites: Object,
+    structureProduits: Object,
     structure: Object,
 });
 
@@ -91,6 +92,19 @@ const openModal = (structureActivite) => {
 const closeModal = () => {
     isOpen.value = false;
 };
+
+const filteredStructureProduits = computed(() => {
+    const filteredProduits = {};
+    for (const produitId in props.structureProduits) {
+        const produit = props.structureProduits[produitId];
+        for (const structureActivite of props.structureActivites) {
+            if (produit.activite_id === structureActivite.id) {
+                filteredProduits[produitId] = produit;
+            }
+        }
+    }
+    return filteredProduits;
+});
 </script>
 <template>
     <div
@@ -338,50 +352,69 @@ const closeModal = () => {
             <DisclosureButton
                 class="flex w-full justify-between bg-gray-200 px-4 py-4 font-semibold text-gray-800"
             >
-                <span>1 Produits / déclinaisons</span>
+                <span>1 Produits</span>
                 <ChevronUpIcon
                     :class="open ? 'rotate-180 transform' : ''"
                     class="h-5 w-5 text-gray-800"
                 />
             </DisclosureButton>
 
-            <DisclosurePanel
-                as="div"
-                class="grid grid-cols-6 place-items-center"
-            >
-                <div class="col-span-1 flex items-center">
-                    <UsersIcon class="mr-1 h-6 w-6 text-gray-600" />Tous Public
-                </div>
-                <div class="col-span-1 flex items-center">
-                    <AcademicCapIcon class="mr-1 h-6 w-6 text-gray-600" />
-                    Tous Niveaux
-                </div>
-                <div class="col-span-1 flex items-center p-0.5">
-                    <MapPinIcon class="mr-1 h-6 w-6 text-gray-600" />
-                    <div class="flex flex-col items-center">
-                        {{ structure.adresse.address }},
-                        {{ structure.adresse.zip_code }}
-                        {{ structure.adresse.city }}
-                    </div>
-                </div>
-                <div class="col-span-1 flex items-center">
-                    <ClockIcon class="mr-1 h-6 w-6 text-gray-600" />
-                    Planning
-                </div>
-                <div class="col-span-1 flex items-center">
-                    <button
-                        type="button"
-                        class="flex w-full items-center justify-between rounded bg-green-600 px-3 py-2 text-sm text-white shadow-lg transition duration-100 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm"
-                    >
-                        Tarifs
-                    </button>
-                </div>
+            <DisclosurePanel as="div">
                 <div
-                    class="col-span-1 flex items-center justify-between space-x-2"
+                    v-for="produit in filteredStructureProduits"
+                    :key="produit.id"
+                    class="grid grid-cols-6 place-items-center gap-2 py-4 odd:bg-white even:bg-slate-100"
                 >
-                    <ArrowPathIcon class="mr-1 h-6 w-6 text-gray-600" />
-                    <DocumentDuplicateIcon class="mr-1 h-6 w-6 text-gray-600" />
-                    <TrashIcon class="mr-1 h-6 w-6 text-gray-600" />
+                    <div class="col-span-1 flex items-center">
+                        <UsersIcon class="mr-1 h-6 w-6 text-gray-600" />
+                        <span class="text-sm text-gray-600">Tous public</span>
+                    </div>
+                    <div class="col-span-1 flex items-center">
+                        <AcademicCapIcon class="mr-1 h-6 w-6 text-gray-600" />
+                        <span class="text-sm text-gray-600">Tous Niveaux</span>
+                    </div>
+                    <div class="col-span-1 flex items-center p-0.5">
+                        <MapPinIcon class="mr-1 h-6 w-6 text-gray-600" />
+                        <div
+                            class="flex flex-col items-center text-sm text-gray-600"
+                        >
+                            {{ produit.adresse.address }},
+                            {{ produit.adresse.zip_code }}
+                            {{ produit.adresse.city }}
+                        </div>
+                    </div>
+                    <div class="col-span-1 flex items-center">
+                        <ClockIcon class="mr-1 h-6 w-6 text-gray-600" />
+                        <span class="text-sm text-gray-600">Planning</span>
+                    </div>
+                    <div class="col-span-1 flex items-center">
+                        <button
+                            type="button"
+                            class="flex w-full items-center justify-between rounded bg-green-600 px-3 py-2 text-sm text-white shadow-lg transition duration-100 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm"
+                        >
+                            Tarifs
+                        </button>
+                    </div>
+                    <div
+                        class="col-span-1 flex items-center justify-between space-x-2"
+                    >
+                        <button type="button">
+                            <ArrowPathIcon
+                                class="mr-1 h-6 w-6 text-gray-600 hover:text-gray-800"
+                            />
+                        </button>
+                        <button type="button" @click="duplicate(produit)">
+                            <DocumentDuplicateIcon
+                                class="mr-1 h-6 w-6 text-gray-600 hover:text-gray-800"
+                            />
+                        </button>
+
+                        <button type="button">
+                            <TrashIcon
+                                class="mr-1 h-6 w-6 text-gray-600 hover:text-gray-800"
+                            />
+                        </button>
+                    </div>
                 </div>
             </DisclosurePanel>
         </Disclosure>

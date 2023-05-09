@@ -22,6 +22,7 @@ const props = defineProps({
     structure: Object,
     activite: Object,
     structureActivites: Object,
+    structureProduits: Object,
     categoriesListByDiscipline: Object,
     can: Object,
 });
@@ -412,6 +413,7 @@ const onSubmit = () => {
                             <ActivityDisplay
                                 :structure="structure"
                                 :structureActivites="filteredActivites"
+                                :structureProduits="structureProduits"
                             />
                         </TabPanel>
                     </TabPanels>

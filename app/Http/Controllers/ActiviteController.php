@@ -176,7 +176,6 @@ class ActiviteController extends Controller
             }
         }
 
-
         return Redirect::route('structures.activites.index', $structure)->with('success', 'Activité créée, vous pouvez ajouter d\'autres activités à votre structure.');
     }
 
@@ -199,7 +198,13 @@ class ActiviteController extends Controller
 
         $categoriesListByDiscipline = LienDisciplineCategorie::where('discipline_id', $activite->discipline->id)->get();
 
-        $structureActivites = StructureActivite::with(['structure', 'categorie', 'discipline'])
+        $structureActivites = StructureActivite::with(['structure:id,name,slug', 'categorie:id,nom_categorie', 'discipline:id,name'])
+                            ->where('structure_id', $structure->id)
+                            ->where('discipline_id', $activite->discipline->id)
+                            ->latest()
+                            ->get();
+
+        $structureProduits = StructureProduit::with('structure:id,name,slug', 'categorie:id,nom_categorie', 'discipline:id,name', 'adresse:id,address,city,country,zip_code')
                             ->where('structure_id', $structure->id)
                             ->where('discipline_id', $activite->discipline->id)
                             ->latest()
@@ -209,6 +214,7 @@ class ActiviteController extends Controller
             'structure' => $structure,
             'activite' => $activite,
             'structureActivites' => $structureActivites,
+            'structureProduits' => $structureProduits,
             'categoriesListByDiscipline' => $categoriesListByDiscipline,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
