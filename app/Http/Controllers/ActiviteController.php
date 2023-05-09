@@ -64,8 +64,6 @@ class ActiviteController extends Controller
             ];
         });
 
-        // dd($actByDiscAndCategorie);
-
         $categories = Categorie::with('disciplines')->select(['id', 'nom', 'ico'])->get();
 
         $dejaUsedDisciplines= $structure->disciplines->unique()->pluck('id');
@@ -310,7 +308,6 @@ class ActiviteController extends Controller
                                 ->where('id', $activite)
                                 ->first();
 
-        // dd($activite);
         $structureActivite = StructureActivite::create([
             'structure_id' => $request->structure_id,
             'discipline_id' => $request->discipline_id,
@@ -323,7 +320,6 @@ class ActiviteController extends Controller
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('public/structures/' . $structure->id . '/activites/' . $structureActivite->id);
-
             $url = Storage::url($path);
             $structureActivite->update(['image' => $url]);
         }

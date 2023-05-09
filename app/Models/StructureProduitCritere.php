@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class StructureProduitCritere extends Model
 {
@@ -17,4 +18,34 @@ class StructureProduitCritere extends Model
      * @var array
      */
     protected $guarded = [];
+
+    public function structure(): BelongsTo
+    {
+        return $this->belongsTo(Structure::class);
+    }
+
+    public function categorie(): BelongsTo
+    {
+        return $this->belongsTo(LienDisciplineCategorie::class, 'categorie_id');
+    }
+
+    public function discipline(): BelongsTo
+    {
+        return $this->belongsTo(ListDiscipline::class, 'discipline_id');
+    }
+
+    public function activite(): BelongsTo
+    {
+        return $this->belongsTo(StructureActivite::class, 'activite_id');
+    }
+
+    public function produit(): BelongsTo
+    {
+        return $this->belongsTo(StructureProduit::class, 'produit_id');
+    }
+
+    public function critere(): BelongsTo
+    {
+        return $this->belongsTo(LienDisciplineCategorieCritere::class, 'critere_id');
+    }
 }

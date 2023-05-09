@@ -133,14 +133,16 @@ const onSubmit = () => {
                 <TabGroup :defaultIndex="defaultTabIndex">
                     <section class="space-y-4 text-gray-700">
                         <div>
-                            <h2 class="text-3xl font-bold uppercase">
+                            <h2
+                                class="text-center text-3xl font-bold uppercase md:text-left"
+                            >
                                 {{ activite.discipline.name }}
                             </h2>
                             <!-- categories -->
-                            <div class="mt-4 w-full">
+                            <div class="my-4 w-full">
                                 <div class="mt-1">
                                     <TabList
-                                        class="flex w-full flex-col items-start justify-between space-x-1 rounded-xl border border-gray-300 bg-green-900/20 p-1 px-3 py-2 shadow-md focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-base md:flex-row md:items-center"
+                                        class="space-x- flex w-full flex-col items-start justify-between space-y-1 divide-y divide-green-600 rounded-sm border border-gray-300 bg-white/20 px-3 py-2 shadow-md focus:border-indigo-500 focus:outline-none sm:text-base md:flex-row md:items-center md:space-x-1 md:space-y-0 md:divide-x md:divide-y-0"
                                     >
                                         <Tab
                                             v-for="categorie in categoriesListByDiscipline"
@@ -156,11 +158,10 @@ const onSubmit = () => {
                                                         categorie.id
                                                 "
                                                 :class="[
-                                                    'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-gray-700',
-                                                    'ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-400 focus:outline-none focus:ring-2',
+                                                    'w-full py-3 px-2 text-sm font-medium leading-5 text-gray-700 ring-white ring-opacity-10 ring-offset-2 ring-offset-green-200 focus:outline-none focus:ring-2',
                                                     selected
-                                                        ? 'bg-white shadow'
-                                                        : 'text-gray-700 hover:bg-white/[0.12] hover:text-gray-800',
+                                                        ? 'bg-green-600 text-white'
+                                                        : 'text-gray-700 hover:bg-white/50 hover:text-gray-800',
                                                 ]"
                                             >
                                                 {{ categorie.nom_categorie }}
@@ -182,11 +183,12 @@ const onSubmit = () => {
                         >
                             <!-- buttons -->
                             <div
-                                class="flex flex-col items-start justify-start space-x-0 space-y-3 md:flex-row md:space-y-0 md:space-x-4"
+                                class="flex flex-col items-start justify-start space-x-0 space-y-2 px-2 md:flex-row md:space-y-0 md:space-x-4 md:px-0"
                             >
                                 <button
+                                    @click="openModal"
                                     type="button"
-                                    class="flex w-full items-center justify-between rounded bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
+                                    class="flex w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
                                 >
                                     Ajouter
                                     {{ categorie.nom_categorie }}
@@ -194,29 +196,29 @@ const onSubmit = () => {
                                 </button>
                                 <button
                                     type="button"
-                                    class="flex w-full items-center justify-between rounded bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
+                                    class="flex w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
                                 >
                                     Voir le planning
                                 </button>
                                 <button
                                     type="button"
-                                    class="flex w-full items-center justify-between rounded bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
+                                    class="flex w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
                                 >
                                     Ajouter un tarif
                                 </button>
                             </div>
                             <div
-                                class="flex w-full items-center justify-between py-6"
+                                class="flex w-full flex-col items-center justify-between space-y-2 px-2 py-6 md:flex-row md:space-y-0 md:px-0"
                             >
                                 <div
-                                    class="text-lg font-semibold text-gray-700"
+                                    class="text-center text-lg font-semibold text-gray-700 md:text-left"
                                 >
                                     {{ categorie.nom_categorie }}
                                 </div>
                                 <button
                                     type="button"
                                     @click="openModal"
-                                    class="flex w-full items-center justify-between rounded bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
+                                    class="flex w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
                                 >
                                     Ajouter
                                     <PlusIcon class="ml-2 h-5 w-5" />
@@ -283,6 +285,7 @@ const onSubmit = () => {
                                                                 <div
                                                                     class="flex flex-col space-y-3"
                                                                 >
+                                                                    <!-- image -->
                                                                     <div>
                                                                         <label
                                                                             for="image"
@@ -318,6 +321,7 @@ const onSubmit = () => {
                                                                             }}</span
                                                                         >
                                                                     </div>
+                                                                    <!-- titre -->
                                                                     <div>
                                                                         <label
                                                                             for="titre"
@@ -338,15 +342,12 @@ const onSubmit = () => {
                                                                                 name="titre"
                                                                                 id="titre"
                                                                                 class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                                                :placeholder="
-                                                                                    activite
-                                                                                        .categorie
-                                                                                        .nom_categorie
-                                                                                "
+                                                                                :placeholder="`${categorie.nom_categorie} de ${activite.discipline.name}`"
                                                                                 autocomplete="none"
                                                                             />
                                                                         </div>
                                                                     </div>
+                                                                    <!-- description -->
                                                                     <div>
                                                                         <label
                                                                             for="description"

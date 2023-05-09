@@ -38,4 +38,12 @@ class StructureProduit extends Model
     {
         return $this->belongsTo(StructureActivite::class, 'activite_id');
     }
+
+    public function adresse(): BelongsTo
+    {
+        return $this->belongsTo(StructureAddress::class, 'lieu_id');
+    }
+
+    // horaire
+    // tarif
 }

@@ -1,12 +1,11 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import TabsComponent from "@/Components/TabsComponent.vue";
 import ModalDeleteStructure from "@/Components/ModalDeleteStructure.vue";
 import LeafletMap from "@/Components/LeafletMap.vue";
 import {
-    CheckIcon,
     UserIcon,
     AtSymbolIcon,
     GlobeAltIcon,

@@ -28,7 +28,7 @@ const props = defineProps({
     structure: Object,
 });
 
-const form = useForm({
+const formEdit = useForm({
     titre: ref(null),
     description: ref(null),
     image: ref(null),
@@ -37,10 +37,10 @@ const form = useForm({
 
 const actifValue = computed({
     get() {
-        return Boolean(form.actif);
+        return Boolean(formEdit.actif);
     },
     set(value) {
-        form.actif = Number(value);
+        formEdit.actif = Number(value);
     },
 });
 
@@ -49,14 +49,14 @@ const submitForm = (id) => {
         `/structures/${props.structure.slug}/activites/${id}`,
         {
             _method: "put",
-            titre: form.titre,
-            description: form.description,
-            image: form.image,
-            actif: form.actif,
+            titre: formEdit.titre,
+            description: formEdit.description,
+            image: formEdit.image,
+            actif: formEdit.actif,
         },
         {
             preserveScroll: true,
-            onSuccess: () => form.reset(),
+            onSuccess: () => formEdit.reset(),
             structure: props.structure.slug,
             activite: id,
         }
@@ -73,7 +73,7 @@ async function toggleActif(structureActivite) {
         },
         {
             preserveScroll: true,
-            onSuccess: () => form.reset(),
+            onSuccess: () => formEdit.reset(),
             structure: props.structure.slug,
             activite: structureActivite.id,
         }
@@ -99,7 +99,7 @@ const closeModal = () => {
         class="flex h-full w-full flex-col space-y-3 rounded border border-gray-200"
     >
         <div
-            class="flex w-full items-center justify-between bg-gray-700 px-4 py-4"
+            class="flex w-full items-center justify-between bg-gray-700 px-2 py-4"
         >
             <h2 class="font-semibold text-white">
                 {{ structureActivite.titre }}
@@ -172,15 +172,19 @@ const closeModal = () => {
                                                         type="file"
                                                         id="image"
                                                         @input="
-                                                            form.image =
+                                                            formEdit.image =
                                                                 $event.target.files[0]
                                                         "
                                                     />
                                                     <span
-                                                        v-if="form.errors.image"
+                                                        v-if="
+                                                            formEdit.errors
+                                                                .image
+                                                        "
                                                         class="mt-2 text-xs text-red-500"
                                                         >{{
-                                                            form.errors.image[0]
+                                                            formEdit.errors
+                                                                .image[0]
                                                         }}</span
                                                     >
                                                 </div>
@@ -195,7 +199,9 @@ const closeModal = () => {
                                                         class="mt-1 flex rounded-md"
                                                     >
                                                         <input
-                                                            v-model="form.titre"
+                                                            v-model="
+                                                                formEdit.titre
+                                                            "
                                                             type="text"
                                                             name="titre"
                                                             id="titre"
@@ -217,7 +223,7 @@ const closeModal = () => {
                                                     <div class="mt-1">
                                                         <textarea
                                                             v-model="
-                                                                form.description
+                                                                formEdit.description
                                                             "
                                                             id="description"
                                                             name="description"
@@ -226,7 +232,9 @@ const closeModal = () => {
                                                             :class="{
                                                                 errors: 'border-red-500 focus:ring focus:ring-red-200',
                                                             }"
-                                                            placeholder="Presentez votre activité"
+                                                            :placeholder="
+                                                                structureActivite.description
+                                                            "
                                                             autocomplete="none"
                                                         />
                                                     </div>
@@ -245,7 +253,7 @@ const closeModal = () => {
                                                 Annuler
                                             </button>
                                             <button
-                                                :disabled="form.processing"
+                                                :disabled="formEdit.processing"
                                                 @click="closeModal"
                                                 type="submit"
                                                 class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
@@ -261,23 +269,25 @@ const closeModal = () => {
                 </Dialog>
             </TransitionRoot>
         </div>
-        <div class="flex w-full items-start">
-            <div class="relative h-56 w-56 border border-gray-100">
+        <div class="flex w-full flex-col items-start md:flex-row">
+            <div
+                class="mx-auto h-60 w-full border border-gray-100 bg-purple-300 md:w-auto"
+            >
                 <img
                     v-if="structureActivite.image"
                     alt="image"
                     :src="structureActivite.image"
-                    class="absolute inset-0 h-full w-full object-cover"
+                    class="h-full w-full object-cover"
                 />
                 <img
                     v-else
                     alt="image"
                     src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                    class="absolute inset-0 h-full w-full object-cover"
+                    class="h-full w-full object-cover"
                 />
             </div>
             <div
-                class="flex flex-1 flex-col items-start space-y-6 px-2 py-2 md:px-4"
+                class="flex flex-1 flex-col items-start space-y-3 px-2 py-2 md:space-y-6 md:px-4"
             >
                 <div class="flex items-center space-x-2">
                     <Switch
@@ -310,15 +320,18 @@ const closeModal = () => {
                         Inactif
                     </p>
                 </div>
-                <p class="whitespace-pre-line text-lg">
-                    <span class="text-lg font-semibold">Description:</span>
-                    <span v-if="structureActivite.description">
+                <div class="text-lg">
+                    <h4 class="font-semibold">Description:</h4>
+                    <p
+                        v-if="structureActivite.description"
+                        class="whitespace-pre-line break-all"
+                    >
                         {{ structureActivite.description }}
-                    </span>
-                    <span v-else>{{
-                        structureActivite.structure.presentation_courte
-                    }}</span>
-                </p>
+                    </p>
+                    <p v-else class="whitespace-pre-line break-all">
+                        {{ structureActivite.structure.presentation_courte }}
+                    </p>
+                </div>
             </div>
         </div>
         <Disclosure v-slot="{ open }">
