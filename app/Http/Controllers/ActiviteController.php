@@ -198,13 +198,13 @@ class ActiviteController extends Controller
 
         $categoriesListByDiscipline = LienDisciplineCategorie::where('discipline_id', $activite->discipline->id)->get();
 
-        $structureActivites = StructureActivite::with(['structure:id,name,slug', 'categorie:id,nom_categorie', 'discipline:id,name'])
+        $structureActivites = StructureActivite::with(['structure:id,name,slug', 'categorie:id,nom_categorie', 'discipline:id,name', 'produits'])
                             ->where('structure_id', $structure->id)
                             ->where('discipline_id', $activite->discipline->id)
                             ->latest()
                             ->get();
 
-        $structureProduits = StructureProduit::with('structure:id,name,slug', 'categorie:id,nom_categorie', 'discipline:id,name', 'adresse:id,address,city,country,zip_code')
+        $structureProduits = StructureProduit::with('structure:id,name,slug', 'categorie:id,nom_categorie', 'discipline:id,name', 'adresse:id,address,city,country,zip_code', 'activite')
                             ->where('structure_id', $structure->id)
                             ->where('discipline_id', $activite->discipline->id)
                             ->latest()
@@ -237,7 +237,7 @@ class ActiviteController extends Controller
                 'titre' => 'required|string',
                 'description' => 'nullable|string',
                 'image' => 'nullable|image|max:2048',
-                'actif' => 'nullable|boolean',
+                // 'actif' => 'nullable|boolean',
             ]);
 
         $structureActivite = StructureActivite::with(['structure','categorie', 'discipline'])
@@ -256,7 +256,7 @@ class ActiviteController extends Controller
         $structureActivite->update([
             'titre' => $request->titre,
             'description' => $request->description,
-            'actif' => 1,
+            // 'actif' => 1,
         ]);
 
         return Redirect::back()->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');

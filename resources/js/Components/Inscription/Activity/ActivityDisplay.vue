@@ -33,16 +33,7 @@ const formEdit = useForm({
     titre: ref(null),
     description: ref(null),
     image: ref(null),
-    actif: ref(null),
-});
-
-const actifValue = computed({
-    get() {
-        return Boolean(formEdit.actif);
-    },
-    set(value) {
-        formEdit.actif = Number(value);
-    },
+    // actif: ref(null),
 });
 
 const submitForm = (id) => {
@@ -53,7 +44,7 @@ const submitForm = (id) => {
             titre: formEdit.titre,
             description: formEdit.description,
             image: formEdit.image,
-            actif: formEdit.actif,
+            // actif: formEdit.actif,
         },
         {
             preserveScroll: true,
@@ -93,18 +84,28 @@ const closeModal = () => {
     isOpen.value = false;
 };
 
-const filteredStructureProduits = computed(() => {
-    const filteredProduits = {};
-    for (const produitId in props.structureProduits) {
-        const produit = props.structureProduits[produitId];
-        for (const structureActivite of props.structureActivites) {
-            if (produit.activite_id === structureActivite.id) {
-                filteredProduits[produitId] = produit;
-            }
-        }
-    }
-    return filteredProduits;
-});
+// const filteredStructureProduits = computed(() => {
+//     const filteredProduits = {};
+//     for (const produitId in props.structureProduits) {
+//         const produit = props.structureProduits[produitId];
+//         for (const structureActivite of props.structureActivites) {
+//             if (produit.activite_id === structureActivite.id) {
+//                 filteredProduits[produitId] = produit;
+//             }
+//         }
+//     }
+//     return filteredProduits;
+// });
+
+// const filteredStructureProduits = computed(() => {
+//     return props.structureProduits.filter(
+//         (produit) => produit.activite_id === produit.activite.id.value
+//     );
+// });
+
+// const produitsCount = computed(() => {
+//     return Object.keys(filteredStructureProduits.value).length;
+// });
 </script>
 <template>
     <div
@@ -220,9 +221,7 @@ const filteredStructureProduits = computed(() => {
                                                             name="titre"
                                                             id="titre"
                                                             class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                            :placeholder="
-                                                                structureActivite.titre
-                                                            "
+                                                            :placeholder="`${structureActivite.categorie.nom_categorie} de ${structureActivite.discipline.name}`"
                                                             autocomplete="none"
                                                         />
                                                     </div>
@@ -247,10 +246,13 @@ const filteredStructureProduits = computed(() => {
                                                                 errors: 'border-red-500 focus:ring focus:ring-red-200',
                                                             }"
                                                             :placeholder="
-                                                                structureActivite.description
+                                                                currentStructureActivite.description
                                                             "
                                                             autocomplete="none"
-                                                        />
+                                                            >{{
+                                                                currentStructureActivite.description
+                                                            }}</textarea
+                                                        >
                                                     </div>
                                                 </div>
                                             </div>
@@ -352,7 +354,13 @@ const filteredStructureProduits = computed(() => {
             <DisclosureButton
                 class="flex w-full justify-between bg-gray-200 px-4 py-4 font-semibold text-gray-800"
             >
-                <span>1 Produits</span>
+                <span>
+                    {{ structureActivite.produits.length }}
+                    <span v-if="structureActivite.produits.length > 1"
+                        >produits</span
+                    >
+                    <span v-else>produit</span>
+                </span>
                 <ChevronUpIcon
                     :class="open ? 'rotate-180 transform' : ''"
                     class="h-5 w-5 text-gray-800"
@@ -361,7 +369,7 @@ const filteredStructureProduits = computed(() => {
 
             <DisclosurePanel as="div">
                 <div
-                    v-for="produit in filteredStructureProduits"
+                    v-for="produit in structureActivite.produits"
                     :key="produit.id"
                     class="grid grid-cols-6 place-items-center gap-2 py-4 odd:bg-white even:bg-slate-100"
                 >
@@ -378,9 +386,9 @@ const filteredStructureProduits = computed(() => {
                         <div
                             class="flex flex-col items-center text-sm text-gray-600"
                         >
-                            {{ produit.adresse.address }},
-                            {{ produit.adresse.zip_code }}
-                            {{ produit.adresse.city }}
+                            {{ structure.adresse.address }},
+                            {{ structure.adresse.zip_code }}
+                            {{ structure.adresse.city }}
                         </div>
                     </div>
                     <div class="col-span-1 flex items-center">

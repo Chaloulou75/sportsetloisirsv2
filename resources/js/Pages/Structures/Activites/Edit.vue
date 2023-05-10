@@ -57,6 +57,15 @@ const filteredActivites = computed(() => {
     );
 });
 
+const filteredProduits = computed(() => {
+    if (!selectedCategoryId.value) {
+        return props.structureProduits.value;
+    }
+    return props.structureProduits.filter(
+        (produit) => produit.categorie_id === selectedCategoryId.value
+    );
+});
+
 const form = useForm({
     structure_id: ref(props.activite.structure_id),
     discipline_id: ref(props.activite.discipline_id),
@@ -413,7 +422,7 @@ const onSubmit = () => {
                             <ActivityDisplay
                                 :structure="structure"
                                 :structureActivites="filteredActivites"
-                                :structureProduits="structureProduits"
+                                :structureProduits="filteredProduits"
                             />
                         </TabPanel>
                     </TabPanels>
