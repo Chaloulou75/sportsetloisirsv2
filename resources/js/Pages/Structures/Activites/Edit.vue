@@ -392,12 +392,14 @@ const onSubmit = () => {
                                                                             filteredCriteres.length >
                                                                             0
                                                                         "
+                                                                        class="flex w-full flex-col items-center justify-between space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
                                                                     >
                                                                         <div
                                                                             v-for="critere in filteredCriteres"
                                                                             :key="
                                                                                 critere.id
                                                                             "
+                                                                            class="w-full"
                                                                         >
                                                                             <!-- select -->
                                                                             <div
@@ -405,7 +407,6 @@ const onSubmit = () => {
                                                                                     critere.type_champ_form ===
                                                                                     'select'
                                                                                 "
-                                                                                class="flex w-full flex-col items-center justify-between space-y-2 md:flex-row md:space-y-0"
                                                                             >
                                                                                 <div>
                                                                                     <label
