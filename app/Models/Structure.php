@@ -140,9 +140,9 @@ class Structure extends Model
         return $this->belongsToMany(StructureActivite::class, 'structures_produits', 'structure_id', 'activite_id')->withTimestamps();
     }
 
-    public function adresse(): HasOne
+    public function adresses(): HasMany
     {
-        return $this->hasOne(StructureAddress::class);
+        return $this->hasMany(StructureAddress::class, 'structure_id');
     }
 
 }

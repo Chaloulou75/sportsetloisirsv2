@@ -75,6 +75,7 @@ const form = useForm({
     image: ref(null),
     actif: ref(1),
     criteres: ref([]),
+    adresse: ref(null),
 });
 
 const onSubmit = () => {
@@ -89,6 +90,7 @@ const onSubmit = () => {
             image: form.image,
             actif: form.actif,
             criteres: form.criteres,
+            adresse: form.adresse,
         },
         {
             preserveScroll: true,
@@ -377,7 +379,7 @@ const onSubmit = () => {
                                                                                 id="description"
                                                                                 name="description"
                                                                                 rows="2"
-                                                                                class="mt-1 block h-48 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                                                class="mt-1 block h-32 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                                                 :class="{
                                                                                     errors: 'border-red-500 focus:ring focus:ring-red-200',
                                                                                 }"
@@ -594,6 +596,54 @@ const onSubmit = () => {
                                                                                     />
                                                                                 </div>
                                                                             </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- Adresse -->
+                                                                    <div>
+                                                                        <label
+                                                                            :for="
+                                                                                adresse
+                                                                            "
+                                                                            class="block text-sm font-medium text-gray-700"
+                                                                        >
+                                                                            Adresse
+                                                                        </label>
+                                                                        <div
+                                                                            class="mt-1 flex rounded-md"
+                                                                        >
+                                                                            <select
+                                                                                :name="
+                                                                                    adresse
+                                                                                "
+                                                                                :id="
+                                                                                    adresse
+                                                                                "
+                                                                                v-model="
+                                                                                    form.adresse
+                                                                                "
+                                                                                class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                                            >
+                                                                                <option
+                                                                                    v-for="adresse in structure.adresses"
+                                                                                    :key="
+                                                                                        adresse.id
+                                                                                    "
+                                                                                    :value="
+                                                                                        adresse.id
+                                                                                    "
+                                                                                >
+                                                                                    {{
+                                                                                        adresse.address
+                                                                                    }}
+                                                                                    -
+                                                                                    {{
+                                                                                        adresse.zip_code
+                                                                                    }},
+                                                                                    {{
+                                                                                        adresse.city
+                                                                                    }}
+                                                                                </option>
+                                                                            </select>
                                                                         </div>
                                                                     </div>
                                                                 </div>

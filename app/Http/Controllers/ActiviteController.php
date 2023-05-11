@@ -162,7 +162,7 @@ class ActiviteController extends Controller
             $disciplineCategorieCriteres = LienDisciplineCategorieCritere::where('discipline_id', $validated['discipline_id'])->where('categorie_id', $validated['categorie_id'])->get();
 
             foreach($disciplineCategorieCriteres as $disciplineCategorieCritere) {
-                $ActCatCriVal = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('activite_categorie_critere_id', $disciplineCategorieCritere->id)->first();
+                $ActCatCriVal = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $disciplineCategorieCritere->id)->first();
 
                 $critere = StructureProduitCritere::create([
                     'structure_id' => $validated['structure_id'],
@@ -188,7 +188,7 @@ class ActiviteController extends Controller
             return Redirect::route('structures.activites.index', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
 
-        $structure = Structure::with('adresse')->select(['id', 'name', 'slug'])->where('slug', $structure->slug)->first();
+        $structure = Structure::with('adresses')->select(['id', 'name', 'slug'])->where('slug', $structure->slug)->first();
 
         $activite = StructureCategorie::with(['structure','categorie', 'discipline'])
                         ->where('structure_id', $structure->id)
@@ -198,7 +198,7 @@ class ActiviteController extends Controller
 
         $categoriesListByDiscipline = LienDisciplineCategorie::where('discipline_id', $activite->discipline->id)->get();
 
-        $structureActivites = StructureActivite::with(['structure:id,name,slug', 'categorie:id,nom_categorie', 'discipline:id,name', 'produits'])
+        $structureActivites = StructureActivite::with(['structure:id,name,slug', 'categorie:id,nom_categorie', 'discipline:id,name', 'produits', 'produits.adresse'])
                             ->where('structure_id', $structure->id)
                             ->where('discipline_id', $activite->discipline->id)
                             ->latest()
@@ -301,6 +301,7 @@ class ActiviteController extends Controller
             'image' => 'nullable|image|max:2048',
             'actif' => 'required|boolean',
             'criteres' => 'nullable',
+            'adresse' => ['nullable', Rule::exists('structure_adresse', 'id')],
         ]);
 
         $structureAdresse = StructureAddress::where('structure_id', $structure->id)->firstOrfail();
@@ -332,7 +333,7 @@ class ActiviteController extends Controller
             'categorie_id' => $request->categorie_id,
             'activite_id' => $structureActivite->id,
             "actif" => 1,
-            'lieu_id' => $structureAdresse->id,
+            'lieu_id' => $request->adresse,
             // 'horaire_id' => $structureHoraire->id,
             // 'tarif_id' => $structureTarif->id,
             'reservable' => 0,

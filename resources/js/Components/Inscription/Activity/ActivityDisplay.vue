@@ -82,29 +82,6 @@ const openModal = (structureActivite) => {
 const closeModal = () => {
     isOpen.value = false;
 };
-
-// const filteredStructureProduits = computed(() => {
-//     const filteredProduits = {};
-//     for (const produitId in props.structureProduits) {
-//         const produit = props.structureProduits[produitId];
-//         for (const structureActivite of props.structureActivites) {
-//             if (produit.activite_id === structureActivite.id) {
-//                 filteredProduits[produitId] = produit;
-//             }
-//         }
-//     }
-//     return filteredProduits;
-// });
-
-// const filteredStructureProduits = computed(() => {
-//     return props.structureProduits.filter(
-//         (produit) => produit.activite_id === produit.activite.id.value
-//     );
-// });
-
-// const produitsCount = computed(() => {
-//     return Object.keys(filteredStructureProduits.value).length;
-// });
 </script>
 <template>
     <div
@@ -385,9 +362,9 @@ const closeModal = () => {
                         <div
                             class="flex flex-col items-center text-sm text-gray-600"
                         >
-                            {{ structure.adresse.address }},
-                            {{ structure.adresse.zip_code }}
-                            {{ structure.adresse.city }}
+                            {{ produit.adresse.address }},
+                            {{ produit.adresse.zip_code }}
+                            {{ produit.adresse.city }}
                         </div>
                     </div>
                     <div class="col-span-1 flex items-center">
