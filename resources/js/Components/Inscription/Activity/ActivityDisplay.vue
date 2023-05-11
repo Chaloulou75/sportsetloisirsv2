@@ -25,7 +25,6 @@ import {
 
 const props = defineProps({
     structureActivites: Object,
-    structureProduits: Object,
     structure: Object,
 });
 

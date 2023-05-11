@@ -204,17 +204,13 @@ class ActiviteController extends Controller
                             ->latest()
                             ->get();
 
-        $structureProduits = StructureProduit::with('structure:id,name,slug', 'categorie:id,nom_categorie', 'discipline:id,name', 'adresse:id,address,city,country,zip_code', 'activite')
-                            ->where('structure_id', $structure->id)
-                            ->where('discipline_id', $activite->discipline->id)
-                            ->latest()
-                            ->get();
+        $criteres = LienDisciplineCategorieCritere::with('valeurs')->where('discipline_id', $activite->discipline->id)->get();
 
         return Inertia::render('Structures/Activites/Edit', [
             'structure' => $structure,
             'activite' => $activite,
             'structureActivites' => $structureActivites,
-            'structureProduits' => $structureProduits,
+            'criteres' => $criteres,
             'categoriesListByDiscipline' => $categoriesListByDiscipline,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
@@ -228,7 +224,6 @@ class ActiviteController extends Controller
      */
     public function update(Request $request, Structure $structure, $activite)
     {
-
         if (! Gate::allows('update-structure', $structure)) {
             return Redirect::route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de modifier cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
@@ -305,6 +300,7 @@ class ActiviteController extends Controller
             'description' => 'nullable|string',
             'image' => 'nullable|image|max:2048',
             'actif' => 'required|boolean',
+            'criteres' => 'nullable',
         ]);
 
         $structureAdresse = StructureAddress::where('structure_id', $structure->id)->firstOrfail();
@@ -342,20 +338,24 @@ class ActiviteController extends Controller
             'reservable' => 0,
         ]);
 
-        $disciplineCategorieCriteres = LienDisciplineCategorieCritere::where('discipline_id', $request->discipline_id)->where('categorie_id', $request->categorie_id)->get();
+        $criteres = LienDisciplineCategorieCritere::where('discipline_id', $request->discipline_id)->where('categorie_id', $request->categorie_id)->get();
 
-        foreach($disciplineCategorieCriteres as $disciplineCategorieCritere) {
-            $ActCatCriVal = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('activite_categorie_critere_id', $disciplineCategorieCritere->id)->first();
+        $criteresValues = $request->criteres;
 
-            $structureProduitCritere = StructureProduitCritere::create([
-                'structure_id' => $structure->id,
-                'discipline_id' => $request->discipline_id,
-                'categorie_id' => $request->categorie_id,
-                'activite_id' => $structureActivite->id,
-                'produit_id' => $structureProduit->id,
-                'critere_id' => $disciplineCategorieCritere->id,
-                'valeur' => $ActCatCriVal->valeur ?? 'Tous',
-            ]);
+        foreach ($criteresValues as $key => $critereValue) {
+            $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $key)->first();
+
+            if (isset($critereValue)) {
+                $structureProduitCriteres = StructureProduitCritere::create([
+                                'structure_id' => $structure->id,
+                                'discipline_id' => $request->discipline_id,
+                                'categorie_id' => $request->categorie_id,
+                                'activite_id' => $structureActivite->id,
+                                'produit_id' => $structureProduit->id,
+                                'critere_id' => $key,
+                                'valeur' => $critereValue ?? $defaut->valeur,
+                            ]);
+            }
         }
 
         return Redirect::back()->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');

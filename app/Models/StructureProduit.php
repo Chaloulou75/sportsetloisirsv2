@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -42,6 +43,12 @@ class StructureProduit extends Model
     public function adresse(): BelongsTo
     {
         return $this->belongsTo(StructureAddress::class, 'lieu_id');
+    }
+
+    public function criteres(): HasMany
+    {
+        return $this->hasMany(StructureProduitCritere::class, 'critere_id');
+
     }
 
     // horaire

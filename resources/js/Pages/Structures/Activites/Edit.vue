@@ -22,7 +22,7 @@ const props = defineProps({
     structure: Object,
     activite: Object,
     structureActivites: Object,
-    structureProduits: Object,
+    criteres: Object,
     categoriesListByDiscipline: Object,
     can: Object,
 });
@@ -50,19 +50,19 @@ const defaultTabIndex = computed(() => {
 
 const filteredActivites = computed(() => {
     if (!selectedCategoryId.value) {
-        return props.structureActivites.value;
+        return [];
     }
     return props.structureActivites.filter(
         (activity) => activity.categorie_id === selectedCategoryId.value
     );
 });
 
-const filteredProduits = computed(() => {
+const filteredCriteres = computed(() => {
     if (!selectedCategoryId.value) {
-        return props.structureProduits.value;
+        return [];
     }
-    return props.structureProduits.filter(
-        (produit) => produit.categorie_id === selectedCategoryId.value
+    return props.criteres.filter(
+        (critere) => critere.categorie_id === selectedCategoryId.value
     );
 });
 
@@ -74,6 +74,7 @@ const form = useForm({
     description: ref(null),
     image: ref(null),
     actif: ref(1),
+    criteres: ref([]),
 });
 
 const onSubmit = () => {
@@ -87,6 +88,7 @@ const onSubmit = () => {
             description: form.description,
             image: form.image,
             actif: form.actif,
+            criteres: form.criteres,
         },
         {
             preserveScroll: true,
@@ -384,6 +386,215 @@ const onSubmit = () => {
                                                                             />
                                                                         </div>
                                                                     </div>
+                                                                    <!-- Criteres -->
+                                                                    <div
+                                                                        v-if="
+                                                                            filteredCriteres.length >
+                                                                            0
+                                                                        "
+                                                                    >
+                                                                        <div
+                                                                            v-for="critere in filteredCriteres"
+                                                                            :key="
+                                                                                critere.id
+                                                                            "
+                                                                        >
+                                                                            <!-- select -->
+                                                                            <div
+                                                                                v-if="
+                                                                                    critere.type_champ_form ===
+                                                                                    'select'
+                                                                                "
+                                                                                class="flex w-full flex-col items-center justify-between space-y-2 md:flex-row md:space-y-0"
+                                                                            >
+                                                                                <div>
+                                                                                    <label
+                                                                                        :for="
+                                                                                            critere.nom
+                                                                                        "
+                                                                                        class="block text-sm font-medium text-gray-700"
+                                                                                    >
+                                                                                        {{
+                                                                                            critere.nom
+                                                                                        }}
+                                                                                    </label>
+                                                                                    <div
+                                                                                        class="mt-1 flex rounded-md"
+                                                                                    >
+                                                                                        <select
+                                                                                            :name="
+                                                                                                critere.nom
+                                                                                            "
+                                                                                            :id="
+                                                                                                critere.nom
+                                                                                            "
+                                                                                            v-model="
+                                                                                                form
+                                                                                                    .criteres[
+                                                                                                    critere
+                                                                                                        .id
+                                                                                                ]
+                                                                                            "
+                                                                                            class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                                                        >
+                                                                                            <option
+                                                                                                v-for="(
+                                                                                                    option,
+                                                                                                    index
+                                                                                                ) in critere.valeurs"
+                                                                                                :key="
+                                                                                                    index
+                                                                                                "
+                                                                                                :value="
+                                                                                                    option.valeur
+                                                                                                "
+                                                                                            >
+                                                                                                {{
+                                                                                                    option.valeur
+                                                                                                }}
+                                                                                            </option>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <!-- checkbox -->
+                                                                            <div
+                                                                                v-if="
+                                                                                    critere.type_champ_form ===
+                                                                                    'checkbox'
+                                                                                "
+                                                                            >
+                                                                                <div
+                                                                                    class="flex items-center"
+                                                                                >
+                                                                                    <input
+                                                                                        v-model="
+                                                                                            form
+                                                                                                .criteres[
+                                                                                                critere
+                                                                                                    .id
+                                                                                            ]
+                                                                                        "
+                                                                                        :id="
+                                                                                            critere.nom
+                                                                                        "
+                                                                                        type="checkbox"
+                                                                                        class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
+                                                                                    />
+                                                                                    <label
+                                                                                        :for="
+                                                                                            critere.nom
+                                                                                        "
+                                                                                        class="ml-2 text-sm font-medium text-gray-700"
+                                                                                        >{{
+                                                                                            critere.nom
+                                                                                        }}</label
+                                                                                    >
+                                                                                </div>
+                                                                            </div>
+                                                                            <!-- radio -->
+                                                                            <div
+                                                                                v-if="
+                                                                                    critere.type_champ_form ===
+                                                                                    'radio'
+                                                                                "
+                                                                            >
+                                                                                <label
+                                                                                    :for="
+                                                                                        critere.nom
+                                                                                    "
+                                                                                    class="block text-sm font-medium text-gray-700"
+                                                                                >
+                                                                                    {{
+                                                                                        critere.nom
+                                                                                    }}
+                                                                                </label>
+
+                                                                                <div
+                                                                                    class="mt-1 flex rounded-md"
+                                                                                >
+                                                                                    <div>
+                                                                                        <label
+                                                                                            class="inline-flex items-center"
+                                                                                            v-for="(
+                                                                                                option,
+                                                                                                index
+                                                                                            ) in critere.valeurs"
+                                                                                            :key="
+                                                                                                index
+                                                                                            "
+                                                                                        >
+                                                                                            <input
+                                                                                                v-model="
+                                                                                                    form
+                                                                                                        .criteres[
+                                                                                                        critere
+                                                                                                            .id
+                                                                                                    ]
+                                                                                                "
+                                                                                                type="radio"
+                                                                                                class="form-radio"
+                                                                                                :name="
+                                                                                                    option.valeur
+                                                                                                "
+                                                                                                :value="
+                                                                                                    option.valeur
+                                                                                                "
+                                                                                                checked
+                                                                                            />
+                                                                                            <span
+                                                                                                class="ml-2"
+                                                                                                >{{
+                                                                                                    option.valeur
+                                                                                                }}</span
+                                                                                            >
+                                                                                        </label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <!-- input text -->
+                                                                            <div
+                                                                                v-if="
+                                                                                    critere.type_champ_form ===
+                                                                                    'text'
+                                                                                "
+                                                                            >
+                                                                                <label
+                                                                                    :for="
+                                                                                        critere.nom
+                                                                                    "
+                                                                                    class="block text-sm font-medium text-gray-700"
+                                                                                >
+                                                                                    {{
+                                                                                        critere.nom
+                                                                                    }}
+                                                                                </label>
+                                                                                <div
+                                                                                    class="mt-1 flex rounded-md"
+                                                                                >
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        v-model="
+                                                                                            form
+                                                                                                .criteres[
+                                                                                                critere
+                                                                                                    .id
+                                                                                            ]
+                                                                                        "
+                                                                                        :name="
+                                                                                            critere.nom
+                                                                                        "
+                                                                                        :id="
+                                                                                            critere.nom
+                                                                                        "
+                                                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                                                        placeholder=""
+                                                                                        autocomplete="none"
+                                                                                    />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div
@@ -422,7 +633,6 @@ const onSubmit = () => {
                             <ActivityDisplay
                                 :structure="structure"
                                 :structureActivites="filteredActivites"
-                                :structureProduits="filteredProduits"
                             />
                         </TabPanel>
                     </TabPanels>

@@ -56,4 +56,10 @@ class StructureActivite extends Model
         return $this->hasMany(StructureProduit::class, 'activite_id');
 
     }
+
+    public function criteres(): HasMany
+    {
+        return $this->hasMany(StructureProduitCritere::class, 'critere_id');
+
+    }
 }
