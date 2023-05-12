@@ -294,7 +294,7 @@ const onSubmit = () => {
                                                     leave-to="opacity-0 scale-95"
                                                 >
                                                     <DialogPanel
-                                                        class="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                                                        class="w-full max-w-6xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
                                                     >
                                                         <form
                                                             @submit.prevent="
@@ -620,6 +620,9 @@ const onSubmit = () => {
                                                                         class="flex w-full items-end justify-between space-x-4"
                                                                     >
                                                                         <div
+                                                                            v-if="
+                                                                                !addAddress
+                                                                            "
                                                                             class="flex-1"
                                                                         >
                                                                             <label
