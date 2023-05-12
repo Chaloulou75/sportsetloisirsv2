@@ -35,7 +35,7 @@ class ProduitActiviteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(StructureProduit $structureProduit)
+    public function show(StructureProduit $produit)
     {
         //
     }
@@ -43,7 +43,7 @@ class ProduitActiviteController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(StructureProduit $structureProduit)
+    public function edit(StructureProduit $produit)
     {
         //
     }
@@ -51,7 +51,7 @@ class ProduitActiviteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, StructureProduit $structureProduit)
+    public function update(Request $request, StructureProduit $produit)
     {
         //
     }
@@ -59,28 +59,23 @@ class ProduitActiviteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(StructureProduit $structureProduit)
+    public function destroy(StructureProduit $produit)
     {
-        //
+        $produit = StructureProduit::where('id', $produit->id)->firstOrFail();
+        $produit->delete();
+
+        return Redirect::back()->with('success', "Le produit a bien été supprimé");
     }
 
-    public function duplicateProduit($produitId)
+    public function duplicate(StructureProduit $produit)
     {
-        $originalProduit = StructureProduit::findOrFail($produitId);
 
-        // Create a new instance of the StructureProduit model
-        $newProduit = new StructureProduit;
-
-        // Copy the properties of the original produit to the new produit
+        $originalProduit = StructureProduit::where('id', $produit->id)->firstOrFail();
+        $newProduit = new StructureProduit();
         $newProduit->fill($originalProduit->toArray());
-
-        // Set the new produit's ID to null to create a new record
         $newProduit->id = null;
-
-        // Save the new produit to the database
         $newProduit->save();
 
-        // Redirect to the index page or wherever you want to go
-        return Redirect::back();
+        return Redirect::back()->with('success', "Le produit a bien été dupliqué");
     }
 }

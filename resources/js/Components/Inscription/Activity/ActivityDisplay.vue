@@ -82,6 +82,21 @@ const openModal = (structureActivite) => {
 const closeModal = () => {
     isOpen.value = false;
 };
+
+function duplicate(produit) {
+    router.post(`/produits/${produit.id}/duplicate`, {
+        preserveScroll: true,
+        produit: produit.id,
+    });
+}
+
+function destroy(produit) {
+    const url = `/produits/${produit.id}`;
+    router.delete(url, {
+        preserveScroll: true,
+        produit: produit.id,
+    });
+}
 </script>
 <template>
     <div
@@ -407,7 +422,7 @@ const closeModal = () => {
                                 />
                             </button>
 
-                            <button type="button">
+                            <button type="button" @click="destroy(produit)">
                                 <TrashIcon
                                     class="w-6 h-6 mr-1 text-gray-600 hover:text-gray-800"
                                 />
