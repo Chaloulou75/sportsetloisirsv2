@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, nextTick } from "vue";
 import { useForm, router } from "@inertiajs/vue3";
+import ModalDeleteActivite from "@/Components/ModalDeleteActivite.vue";
 import {
     AcademicCapIcon,
     ArrowPathIcon,
@@ -71,8 +72,14 @@ async function toggleActif(structureActivite) {
     );
 }
 
-const isOpen = ref(false);
 const currentStructureActivite = ref(null);
+const isOpen = ref(false);
+const showDeleteActiviteModal = ref(false);
+
+const openDeleteModal = (structureActivite) => {
+    showDeleteActiviteModal.value = true;
+    currentStructureActivite.value = structureActivite;
+};
 
 const openModal = (structureActivite) => {
     isOpen.value = true;
@@ -110,13 +117,29 @@ function destroy(produit) {
             <h2 class="font-semibold text-white">
                 {{ structureActivite.titre }}
             </h2>
-            <button
-                type="button"
-                @click="openModal(structureActivite)"
-                class="px-2 py-1 text-base text-gray-700 transition duration-100 bg-white rounded-sm hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
-            >
-                Editer l'activité
-            </button>
+            <div class="flex items-center space-x-4">
+                <button
+                    type="button"
+                    @click="openModal(structureActivite)"
+                    class="px-2 py-1 text-base text-gray-700 transition duration-100 bg-white rounded-sm hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
+                >
+                    Editer l'activité
+                </button>
+                <button
+                    type="button"
+                    @click="openDeleteModal(structureActivite)"
+                >
+                    <TrashIcon
+                        class="w-6 h-6 mr-1 text-gray-100 hover:text-red-500"
+                    />
+                </button>
+                <ModalDeleteActivite
+                    :structure="structure"
+                    :structureActivite="currentStructureActivite"
+                    :show="showDeleteActiviteModal"
+                    @close="showDeleteActiviteModal = false"
+                />
+            </div>
             <TransitionRoot appear :show="isOpen" as="template">
                 <Dialog as="div" @close="closeModal" class="relative z-10">
                     <TransitionChild

@@ -262,19 +262,33 @@ class ActiviteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Structure $structure): RedirectResponse
+    public function destroy(Structure $structure, $activite): RedirectResponse
     {
-        // $activite = Activite::where('id', $activite->id)->first();
+        $activite = StructureActivite::where('id', $activite)->first();
 
-        // if (! Gate::allows('destroy-activite', $activite)) {
-        //     return Redirect::route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de supprimer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
-        // }
-        // $structure = Structure::where('slug', $structure->slug)->firstOrFail();
+        $produits = optional(StructureProduit::where('activite_id', $activite->id)->get());
 
-        // $activite->delete();
-        // sleep(0.5);
+        $criteres = optional(StructureProduitCritere::where('activite_id', $activite->id)->get());
 
-        return redirect()->route('structures.show', $structure)->with('success', 'Activite supprimée.');
+        if($criteres->isNotEmpty()) {
+            foreach($criteres as $critere) {
+                $critere->delete;
+            }
+        }
+
+        if($produits->isNotEmpty()) {
+            foreach($produits as $produit) {
+                $produit->delete;
+            }
+        }
+
+        if($activite->image !== null) {
+            Storage::delete($activite->image);
+        }
+
+        $activite->delete();
+
+        return Redirect::back()->with('success', 'Activite supprimée.');
     }
 
     public function toggleactif(Request $request, Structure $structure, $activite): RedirectResponse

@@ -12,15 +12,19 @@ use App\Models\Departement;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
+use App\Models\StructureUser;
 use App\Mail\StructureCreated;
 use App\Models\ListDiscipline;
 use Illuminate\Validation\Rule;
 use App\Models\StructureAddress;
+use App\Models\StructureProduit;
+use App\Models\StructureActivite;
 use App\Models\StructureTypeInfo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\RedirectResponse;
+use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 
@@ -385,16 +389,66 @@ class StructureController extends Controller
     {
         $structure = Structure::where('id', $structure->id)->first();
 
+        $adresses = optional(StructureAddress::where('structure_id', $structure->id)->get());
+
+        $users = optional(StructureUser::where('structure_id', $structure->id)->get());
+
+        $typeInfos = optional(StructureTypeInfo::where('structure_id', $structure->id)->get());
+
+        $activites = optional(StructureActivite::where('structure_id', $structure->id)->get());
+
+        $produits = optional(StructureProduit::where('structure_id', $structure->id)->get());
+
+        $criteres = optional(StructureProduitCritere::where('structure_id', $structure->id)->get());
+
         if (! Gate::allows('destroy-structure', $structure)) {
             return Redirect::route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de supprimer cette fiche, vous devez être le créateur de la structure ou un administrateur.');
         }
 
+        if($criteres->isNotEmpty()) {
+            foreach($criteres as $critere) {
+                $critere->delete;
+            }
+        }
+
+        if($produits->isNotEmpty()) {
+            foreach($produits as $produit) {
+                $produit->delete;
+            }
+        }
+
+        if($activites->isNotEmpty()) {
+            foreach($activites as $activite) {
+
+                if($activite->image !== null) {
+                    Storage::delete($activite->image);
+                }
+
+                $activite->delete;
+            }
+        }
+        if($adresses->isNotEmpty()) {
+            foreach($adresses as $adresse) {
+                $adresse->delete;
+            }
+        }
+        if($typeInfos->isNotEmpty()) {
+            foreach($typeInfos as $typeInfo) {
+                $typeInfo->delete;
+            }
+        }
+        if($users->isNotEmpty) {
+            foreach($users as $user) {
+                $user->delete;
+            }
+        }
+
+
         if($structure->logo) {
-            Storage::delete('structures/' . $structure->id .'/'. $structure->logo);
+            Storage::delete($structure->logo);
         }
 
         $structure->delete();
-        sleep(0.5);
 
         return redirect()->route('structures.index')->with('success', 'Structure supprimée.');
     }
