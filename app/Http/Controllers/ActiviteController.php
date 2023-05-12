@@ -393,10 +393,6 @@ class ActiviteController extends Controller
 
         }
 
-
-
-
-
         return Redirect::back()->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
     }
 }

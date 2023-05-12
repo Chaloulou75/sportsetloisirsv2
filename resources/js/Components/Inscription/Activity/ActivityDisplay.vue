@@ -326,7 +326,7 @@ const closeModal = () => {
                 </div>
             </div>
         </div>
-        <Disclosure v-slot="{ open }">
+        <Disclosure v-slot="{ open }" defaultOpen>
             <DisclosureButton
                 class="flex justify-between w-full px-4 py-4 font-semibold text-gray-800 bg-gray-200"
             >
