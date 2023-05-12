@@ -312,7 +312,7 @@ class ActiviteController extends Controller
             'address_lng' => ['nullable'],
         ]);
 
-        $structure = Structure::where('id', $request->structure_id)->firstOrfail();
+        $structure = Structure::with('adresses')->where('id', $request->structure_id)->firstOrfail();
 
         $activite = StructureCategorie::with(['structure','categorie', 'discipline'])
                                 ->where('structure_id', $structure->id)
@@ -341,7 +341,7 @@ class ActiviteController extends Controller
             'categorie_id' => $request->categorie_id,
             'activite_id' => $structureActivite->id,
             "actif" => 1,
-            'lieu_id' => $request->adresse,
+            'lieu_id' => $request->adresse ?? $structure->adresses->first()->id,
             // 'horaire_id' => $structureHoraire->id,
             // 'tarif_id' => $structureTarif->id,
             'reservable' => 0,
