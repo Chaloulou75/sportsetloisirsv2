@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, useForm, router } from "@inertiajs/vue3";
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, defineAsyncComponent } from "vue";
 import ActivityDisplay from "@/Components/Inscription/Activity/ActivityDisplay.vue";
 import { PlusIcon } from "@heroicons/vue/24/solid";
 import {
@@ -17,6 +17,10 @@ import {
     TabPanel,
 } from "@headlessui/vue";
 
+const AddressForm = defineAsyncComponent(() =>
+    import("@/Components/Google/AddressForm.vue")
+);
+
 const props = defineProps({
     errors: Object,
     structure: Object,
@@ -27,6 +31,7 @@ const props = defineProps({
     can: Object,
 });
 
+const addAddress = ref(false);
 const isOpen = ref(false);
 
 function closeModal() {
@@ -76,6 +81,12 @@ const form = useForm({
     actif: ref(1),
     criteres: ref([]),
     adresse: ref(null),
+    address: ref(null),
+    city: ref(null),
+    zip_code: ref(null),
+    country: ref(null),
+    address_lat: ref(null),
+    address_lng: ref(null),
 });
 
 const onSubmit = () => {
@@ -91,6 +102,12 @@ const onSubmit = () => {
             actif: form.actif,
             criteres: form.criteres,
             adresse: form.adresse,
+            address: form.address,
+            city: form.city,
+            zip_code: form.zip_code,
+            country: form.country,
+            address_lat: form.address_lat,
+            address_lng: form.address_lng,
         },
         {
             preserveScroll: true,
@@ -599,53 +616,106 @@ const onSubmit = () => {
                                                                         </div>
                                                                     </div>
                                                                     <!-- Adresse -->
-                                                                    <div>
-                                                                        <label
-                                                                            :for="
-                                                                                adresse
-                                                                            "
-                                                                            class="block text-sm font-medium text-gray-700"
-                                                                        >
-                                                                            Adresse
-                                                                        </label>
+                                                                    <div
+                                                                        class="flex w-full items-end justify-between space-x-4"
+                                                                    >
                                                                         <div
-                                                                            class="mt-1 flex rounded-md"
+                                                                            class="flex-1"
                                                                         >
-                                                                            <select
-                                                                                :name="
+                                                                            <label
+                                                                                :for="
                                                                                     adresse
                                                                                 "
-                                                                                :id="
-                                                                                    adresse
-                                                                                "
-                                                                                v-model="
-                                                                                    form.adresse
-                                                                                "
-                                                                                class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                                                class="block text-sm font-medium text-gray-700"
                                                                             >
-                                                                                <option
-                                                                                    v-for="adresse in structure.adresses"
-                                                                                    :key="
-                                                                                        adresse.id
+                                                                                Adresse
+                                                                            </label>
+                                                                            <div
+                                                                                class="mt-1 flex rounded-md"
+                                                                            >
+                                                                                <select
+                                                                                    :name="
+                                                                                        adresse
                                                                                     "
-                                                                                    :value="
-                                                                                        adresse.id
+                                                                                    :id="
+                                                                                        adresse
                                                                                     "
+                                                                                    v-model="
+                                                                                        form.adresse
+                                                                                    "
+                                                                                    class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                                                                 >
-                                                                                    {{
-                                                                                        adresse.address
-                                                                                    }}
-                                                                                    -
-                                                                                    {{
-                                                                                        adresse.zip_code
-                                                                                    }},
-                                                                                    {{
-                                                                                        adresse.city
-                                                                                    }}
-                                                                                </option>
-                                                                            </select>
+                                                                                    <option
+                                                                                        v-for="adresse in structure.adresses"
+                                                                                        :key="
+                                                                                            adresse.id
+                                                                                        "
+                                                                                        :value="
+                                                                                            adresse.id
+                                                                                        "
+                                                                                    >
+                                                                                        {{
+                                                                                            adresse.address
+                                                                                        }}
+                                                                                        -
+                                                                                        {{
+                                                                                            adresse.zip_code
+                                                                                        }},
+                                                                                        {{
+                                                                                            adresse.city
+                                                                                        }}
+                                                                                    </option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div
+                                                                            class="flex items-center"
+                                                                        >
+                                                                            <input
+                                                                                v-model="
+                                                                                    addAddress
+                                                                                "
+                                                                                id="addAddress"
+                                                                                type="checkbox"
+                                                                                class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                                            />
+                                                                            <label
+                                                                                for="addAddress"
+                                                                                class="ml-2 text-sm font-medium text-gray-700"
+                                                                                >Ajouter
+                                                                                une
+                                                                                adresse</label
+                                                                            >
                                                                         </div>
                                                                     </div>
+
+                                                                    <!-- newAddress -->
+                                                                    <AddressForm
+                                                                        v-if="
+                                                                            addAddress
+                                                                        "
+                                                                        :errors="
+                                                                            errors
+                                                                        "
+                                                                        v-model:address="
+                                                                            form.address
+                                                                        "
+                                                                        v-model:city="
+                                                                            form.city
+                                                                        "
+                                                                        v-model:zip_code="
+                                                                            form.zip_code
+                                                                        "
+                                                                        v-model:country="
+                                                                            form.country
+                                                                        "
+                                                                        v-model:address_lat="
+                                                                            form.address_lat
+                                                                        "
+                                                                        v-model:address_lng="
+                                                                            form.address_lng
+                                                                        "
+                                                                    />
                                                                 </div>
                                                             </div>
                                                             <div

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
+use App\Models\City;
 
+use Inertia\Inertia;
 use App\Models\Categorie;
 use App\Models\Structure;
+use App\Models\Departement;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
@@ -302,9 +304,15 @@ class ActiviteController extends Controller
             'actif' => 'required|boolean',
             'criteres' => 'nullable',
             'adresse' => ['nullable', Rule::exists('structure_adresse', 'id')],
+            'address' => ['nullable'],
+            'city' => ['nullable'],
+            'zip_code' => ['nullable'],
+            'country' => ['nullable'],
+            'address_lat' => ['nullable'],
+            'address_lng' => ['nullable'],
         ]);
 
-        $structureAdresse = StructureAddress::where('structure_id', $structure->id)->firstOrfail();
+        $structure = Structure::where('id', $request->structure_id)->firstOrfail();
 
         $activite = StructureCategorie::with(['structure','categorie', 'discipline'])
                                 ->where('structure_id', $structure->id)
@@ -312,7 +320,7 @@ class ActiviteController extends Controller
                                 ->first();
 
         $structureActivite = StructureActivite::create([
-            'structure_id' => $request->structure_id,
+            'structure_id' => $structure->id,
             'discipline_id' => $request->discipline_id,
             'categorie_id' => $request->categorie_id,
             'titre' => $request->titre ?? $activite->categorie->nom_categorie.' de '. $activite->discipline->name,
@@ -328,7 +336,7 @@ class ActiviteController extends Controller
         }
 
         $structureProduit = StructureProduit::create([
-            'structure_id' => $request->structure_id,
+            'structure_id' => $structure->id,
             'discipline_id' => $request->discipline_id,
             'categorie_id' => $request->categorie_id,
             'activite_id' => $structureActivite->id,
@@ -358,6 +366,36 @@ class ActiviteController extends Controller
                             ]);
             }
         }
+
+        // newAdresse
+        if($request->address) {
+            $city= City::where('code_postal', $request->zip_code)->firstOrFail();
+            $cityId = $city->id;
+
+            $validatedAddress = [
+                        'structure_id' => $structure->id,
+                        'name' => $structure->name,
+                        'address' => $request->address,
+                        'zip_code' => $request->zip_code,
+                        'city' => $request->city,
+                        'country' => $request->country,
+                        'city_id' => $cityId,
+                        'country_id' => $structure->country_id,
+                        'address_lat' => $request->address_lat,
+                        'address_lng' => $request->address_lng,
+                        'phone' => $structure->phone1,
+                        'email' => $structure->email,
+                    ];
+
+            $structureAddress = StructureAddress::create($validatedAddress);
+
+            $structureProduit->update(['lieu_id' => $structureAddress->id]);
+
+        }
+
+
+
+
 
         return Redirect::back()->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
     }
