@@ -7,7 +7,10 @@ import {
     TransitionChild,
     TransitionRoot,
 } from "@headlessui/vue";
-import { ExclamationTriangleIcon } from "@heroicons/vue/24/solid";
+import {
+    ExclamationTriangleIcon,
+    XCircleIcon,
+} from "@heroicons/vue/24/outline";
 const props = defineProps({
     structure: Object,
     show: Boolean,
@@ -35,13 +38,13 @@ function destroy(id) {
                     leave-to="opacity-0"
                 >
                     <div
-                        class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
+                        class="fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity"
                     />
                 </TransitionChild>
 
                 <div class="fixed inset-0 z-10 overflow-y-auto">
                     <div
-                        class="flex items-end justify-center min-h-full p-4 text-center sm:items-center sm:p-0"
+                        class="flex min-h-full items-end justify-center p-4 text-center md:items-center md:p-0"
                     >
                         <TransitionChild
                             as="template"
@@ -53,31 +56,48 @@ function destroy(id) {
                             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                         >
                             <DialogPanel
-                                class="relative overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:w-full sm:max-w-lg"
+                                class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all md:my-8 md:w-full md:max-w-xl"
                             >
                                 <div
-                                    class="px-4 pt-5 pb-4 bg-white sm:p-6 sm:pb-4"
+                                    class="bg-white px-4 pt-5 pb-4 md:p-6 md:pb-4"
                                 >
-                                    <div class="sm:flex sm:items-start">
+                                    <div class="md:flex md:items-start">
                                         <div
-                                            class="flex items-center justify-center flex-shrink-0 w-12 h-12 mx-auto bg-red-100 rounded-full sm:mx-0 sm:h-10 sm:w-10"
+                                            class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 md:mx-0 md:h-10 md:w-10"
                                         >
                                             <ExclamationTriangleIcon
-                                                class="w-6 h-6 text-red-600"
+                                                class="h-6 w-6 text-red-600"
                                                 aria-hidden="true"
                                             />
                                         </div>
                                         <div
-                                            class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left"
+                                            class="mt-3 text-center md:mt-0 md:ml-4 md:text-left"
                                         >
                                             <DialogTitle
-                                                as="h3"
-                                                class="text-lg font-medium leading-6 text-gray-900"
-                                                >Suppression de la structure
-                                                <span class="text-blue-600">
-                                                    {{ structure.name }}</span
-                                                ></DialogTitle
+                                                as="div"
+                                                class="flex w-full items-start justify-between"
                                             >
+                                                <h3
+                                                    class="w-full text-center text-lg font-medium leading-6 text-gray-800 md:text-left"
+                                                >
+                                                    Suppression de la structure
+                                                    <span class="text-blue-600">
+                                                        {{
+                                                            structure.name
+                                                        }}</span
+                                                    >
+                                                </h3>
+
+                                                <button
+                                                    type="button"
+                                                    class="hidden md:block"
+                                                >
+                                                    <XCircleIcon
+                                                        @click="$emit('close')"
+                                                        class="h-6 w-6 text-gray-500 hover:text-gray-800"
+                                                    />
+                                                </button>
+                                            </DialogTitle>
                                             <div class="mt-2">
                                                 <p
                                                     class="text-sm text-gray-500"
@@ -93,22 +113,22 @@ function destroy(id) {
                                     </div>
                                 </div>
                                 <div
-                                    class="px-4 py-3 bg-gray-50 sm:flex sm:flex-row-reverse sm:px-6"
+                                    class="space-y-2 bg-gray-50 px-4 py-3 md:flex md:justify-between md:space-y-0 md:px-6"
                                 >
                                     <button
                                         type="button"
-                                        class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                                        @click="destroy(structure.id)"
-                                    >
-                                        Supprimer
-                                    </button>
-                                    <button
-                                        type="button"
-                                        class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                                        class="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                                         @click="$emit('close')"
                                         ref="cancelButtonRef"
                                     >
                                         Annuler
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+                                        @click="destroy(structure.id)"
+                                    >
+                                        Supprimer
                                     </button>
                                 </div>
                             </DialogPanel>

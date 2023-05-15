@@ -190,7 +190,12 @@ class ActiviteController extends Controller
             return Redirect::route('structures.activites.index', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
 
-        $structure = Structure::with('adresses')->select(['id', 'name', 'slug'])->where('slug', $structure->slug)->first();
+        $structure = Structure::with(['adresses' => function ($query) {
+            $query->latest();
+        }])
+        ->select(['id', 'name', 'slug'])
+        ->where('slug', $structure->slug)
+        ->first();
 
         $activite = StructureCategorie::with(['structure','categorie', 'discipline'])
                         ->where('structure_id', $structure->id)
@@ -206,7 +211,11 @@ class ActiviteController extends Controller
                             ->latest()
                             ->get();
 
-        $criteres = LienDisciplineCategorieCritere::with('valeurs')->where('discipline_id', $activite->discipline->id)->get();
+        $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
+            $query->orderBy('defaut', 'desc');
+        }])
+                                                    ->where('discipline_id', $activite->discipline->id)
+                                                    ->get();
 
         return Inertia::render('Structures/Activites/Edit', [
             'structure' => $structure,
@@ -231,7 +240,7 @@ class ActiviteController extends Controller
         }
 
         $request->validate([
-                'titre' => 'required|string',
+                'titre' => 'required|string|min:3',
                 'description' => 'nullable|string',
                 'image' => 'nullable|image|max:2048',
                 // 'actif' => 'nullable|boolean',
@@ -312,7 +321,7 @@ class ActiviteController extends Controller
             'structure_id' => ['required', Rule::exists('structures', 'id')],
             'discipline_id' => ['required', Rule::exists('liste_disciplines', 'id')],
             'categorie_id' => ['required', Rule::exists('liens_disciplines_categories', 'id')],
-            'titre' => 'nullable|string',
+            'titre' => 'nullable|string|min:3',
             'description' => 'nullable|string',
             'image' => 'nullable|image|max:2048',
             'actif' => 'required|boolean',
@@ -327,6 +336,15 @@ class ActiviteController extends Controller
         ]);
 
         $structure = Structure::with('adresses')->where('id', $request->structure_id)->firstOrfail();
+
+        //check if address exist
+        if($structure->id === $request->structure_id) {
+            foreach($structure->adresses as $address) {
+                if (($address->address_lat === $request->address_lat) && ($address->address_lng === $request->address_lng)) {
+                    return Redirect::back()->with('error', 'Cette adresse existe déjà dans votre liste d\'adresses');
+                }
+            }
+        }
 
         $activite = StructureCategorie::with(['structure','categorie', 'discipline'])
                                 ->where('structure_id', $structure->id)
@@ -383,6 +401,7 @@ class ActiviteController extends Controller
 
         // newAdresse
         if($request->address) {
+
             $city= City::where('code_postal', $request->zip_code)->firstOrFail();
             $cityId = $city->id;
 

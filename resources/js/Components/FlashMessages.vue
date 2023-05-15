@@ -25,11 +25,11 @@ watch(
         >
             <div
                 v-if="$page.props.flash.success && show"
-                class="flex items-center justify-between max-w-lg mb-2 text-white bg-blue-700 rounded-lg"
+                class="mb-2 flex max-w-lg items-center justify-between rounded-lg bg-blue-700 text-white"
             >
                 <div class="flex items-center">
                     <svg
-                        class="w-4 h-4 ml-4 mr-2 text-white fill-current shrink-0"
+                        class="ml-4 mr-2 h-4 w-4 shrink-0 fill-current text-white"
                         viewBox="0 0 20 20"
                     >
                         <polygon points="0 11 2 9 7 14 18 3 20 5 7 18" />
@@ -40,12 +40,12 @@ watch(
                 </div>
                 <button
                     type="button"
-                    class="p-2 mr-2 group"
+                    class="group mr-2 p-2"
                     @click="show = false"
                 >
                     <!-- fill-green-800 -->
                     <svg
-                        class="block w-2 h-2 text-white fill-current"
+                        class="block h-2 w-2 fill-current text-white"
                         width="235.908"
                         height="235.908"
                         viewBox="278.046 126.846 235.908 235.908"
@@ -63,11 +63,11 @@ watch(
                         Object.keys($page.props.errors).length > 0) &&
                     show
                 "
-                class="flex items-center justify-between max-w-lg mb-8 text-white bg-red-500 rounded-lg"
+                class="mb-2 flex max-w-lg items-center justify-between rounded-lg bg-red-500 text-white"
             >
                 <div class="flex items-center">
                     <svg
-                        class="w-4 h-4 ml-4 mr-2 text-white fill-current shrink-0"
+                        class="ml-4 mr-2 h-4 w-4 shrink-0 fill-current text-white"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 20 20"
                     >
@@ -95,11 +95,11 @@ watch(
                 </div>
                 <button
                     type="button"
-                    class="p-2 mr-2 group"
+                    class="group mr-2 p-2"
                     @click="show = false"
                 >
                     <svg
-                        class="block w-2 h-2 text-white fill-current"
+                        class="block h-2 w-2 fill-current text-white"
                         width="235.908"
                         height="235.908"
                         viewBox="278.046 126.846 235.908 235.908"
