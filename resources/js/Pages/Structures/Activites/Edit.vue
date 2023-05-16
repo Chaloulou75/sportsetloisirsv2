@@ -37,10 +37,7 @@ const addAddress = ref(false);
 
 const date = ref(null);
 
-const time = ref({
-    hours: new Date().getHours(),
-    minutes: new Date().getMinutes(),
-});
+const time = ref(null);
 
 const isOpen = ref(false);
 
@@ -59,7 +56,17 @@ onMounted(() => {
 
     const startDate = new Date();
     const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
-    date.value = [startDate, endDate];
+    form.date = [startDate, endDate];
+
+    const startTime = {
+        hours: 10,
+        minutes: 0,
+    };
+    const endTime = {
+        hours: 20,
+        minutes: 0,
+    };
+    form.time = [startTime, endTime];
 });
 
 const defaultTabIndex = computed(() => {
@@ -110,6 +117,8 @@ const form = useForm({
     country: ref(null),
     address_lat: ref(null),
     address_lng: ref(null),
+    date: ref(null),
+    time: ref(null),
 });
 
 const onSubmit = () => {
@@ -131,6 +140,8 @@ const onSubmit = () => {
             country: form.country,
             address_lat: form.address_lat,
             address_lng: form.address_lng,
+            date: form.date,
+            time: form.time,
         },
         {
             preserveScroll: true,
@@ -462,56 +473,6 @@ const onSubmit = () => {
                                                                             }}
                                                                         </div>
                                                                     </div>
-                                                                    <div
-                                                                        class="flex w-full items-center justify-between space-x-0 md:space-x-6"
-                                                                    >
-                                                                        <div
-                                                                            class="z-10 w-full"
-                                                                        >
-                                                                            <label
-                                                                                for="date"
-                                                                                class="block text-sm font-medium text-gray-700"
-                                                                            >
-                                                                                Dates
-                                                                                d'ouvertures
-                                                                            </label>
-                                                                            <VueDatePicker
-                                                                                v-model="
-                                                                                    date
-                                                                                "
-                                                                                range
-                                                                                multi-calendars
-                                                                                locale="fr"
-                                                                                :format="'dd/MM/yyyy'"
-                                                                                :enableTimePicker="
-                                                                                    false
-                                                                                "
-                                                                                cancelText="annuler"
-                                                                                selectText="confirmer"
-                                                                                placeholder="Selectionner vos dates"
-                                                                            ></VueDatePicker>
-                                                                        </div>
-
-                                                                        <div
-                                                                            class="w-full"
-                                                                        >
-                                                                            <label
-                                                                                for="time"
-                                                                                class="block text-sm font-medium text-gray-700"
-                                                                            >
-                                                                                Horaires
-                                                                                d'ouverture
-                                                                            </label>
-                                                                            <VueDatePicker
-                                                                                v-model="
-                                                                                    time
-                                                                                "
-                                                                                time-picker
-                                                                                range
-                                                                                placeholder="Selectionnez vos horaires"
-                                                                            />
-                                                                        </div>
-                                                                    </div>
 
                                                                     <!-- Criteres -->
                                                                     <div
@@ -837,6 +798,60 @@ const onSubmit = () => {
                                                                             form.address_lng
                                                                         "
                                                                     />
+                                                                    <!-- Jours et Heures -->
+                                                                    <div
+                                                                        class="flex w-full items-center justify-between space-x-0 md:space-x-6"
+                                                                    >
+                                                                        <div
+                                                                            class="z-10 w-full"
+                                                                        >
+                                                                            <label
+                                                                                for="date"
+                                                                                class="block text-sm font-medium text-gray-700"
+                                                                            >
+                                                                                Dates
+                                                                                d'ouvertures
+                                                                            </label>
+                                                                            <VueDatePicker
+                                                                                v-model="
+                                                                                    form.date
+                                                                                "
+                                                                                range
+                                                                                multi-calendars
+                                                                                locale="fr"
+                                                                                :format="'dd/MM/yyyy'"
+                                                                                :enableTimePicker="
+                                                                                    false
+                                                                                "
+                                                                                cancelText="annuler"
+                                                                                selectText="confirmer"
+                                                                                placeholder="Selectionner vos dates"
+                                                                            ></VueDatePicker>
+                                                                        </div>
+
+                                                                        <div
+                                                                            class="w-full"
+                                                                        >
+                                                                            <label
+                                                                                for="time"
+                                                                                class="block text-sm font-medium text-gray-700"
+                                                                            >
+                                                                                Horaires
+                                                                                d'ouverture
+                                                                            </label>
+                                                                            <VueDatePicker
+                                                                                v-model="
+                                                                                    form.time
+                                                                                "
+                                                                                time-picker
+                                                                                range
+                                                                                locale="fr"
+                                                                                cancelText="annuler"
+                                                                                selectText="confirmer"
+                                                                                placeholder="Selectionnez vos horaires"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div

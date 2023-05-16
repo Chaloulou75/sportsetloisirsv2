@@ -333,7 +333,10 @@ class ActiviteController extends Controller
             'country' => ['nullable'],
             'address_lat' => ['nullable'],
             'address_lng' => ['nullable'],
+            'date' => ['nullable'],
+            'time' => ['nullable'],
         ]);
+
 
         $structure = Structure::with('adresses')->where('id', $request->structure_id)->firstOrfail();
 
