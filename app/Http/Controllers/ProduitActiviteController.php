@@ -63,6 +63,15 @@ class ProduitActiviteController extends Controller
     public function destroy(StructureProduit $produit)
     {
         $produit = StructureProduit::where('id', $produit->id)->firstOrFail();
+
+        $produitCriteres = StructureProduitCritere::where('produit_id', $produit->id)->get();
+
+        if(isset($produitsCriteres)) {
+            foreach($produitCriteres as $critere) {
+                $critere->delete();
+            }
+        }
+
         $produit->delete();
 
         return Redirect::back()->with('success', "Le produit a bien été supprimé");

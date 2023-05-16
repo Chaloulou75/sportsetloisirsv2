@@ -3,6 +3,8 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, useForm, router } from "@inertiajs/vue3";
 import { ref, computed, onMounted, defineAsyncComponent } from "vue";
 import ActivityDisplay from "@/Components/Inscription/Activity/ActivityDisplay.vue";
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 import { PlusIcon, XCircleIcon } from "@heroicons/vue/24/outline";
 import {
     TransitionRoot,
@@ -32,6 +34,14 @@ const props = defineProps({
 });
 
 const addAddress = ref(false);
+
+const date = ref(null);
+
+const time = ref({
+    hours: new Date().getHours(),
+    minutes: new Date().getMinutes(),
+});
+
 const isOpen = ref(false);
 
 const openModal = () => {
@@ -46,6 +56,10 @@ const selectedCategoryId = ref(props.activite.categorie_id);
 
 onMounted(() => {
     selectedCategoryId.value = props.activite.categorie_id;
+
+    const startDate = new Date();
+    const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
+    date.value = [startDate, endDate];
 });
 
 const defaultTabIndex = computed(() => {
@@ -448,6 +462,57 @@ const onSubmit = () => {
                                                                             }}
                                                                         </div>
                                                                     </div>
+                                                                    <div
+                                                                        class="flex w-full items-center justify-between space-x-0 md:space-x-6"
+                                                                    >
+                                                                        <div
+                                                                            class="z-10 w-full"
+                                                                        >
+                                                                            <label
+                                                                                for="date"
+                                                                                class="block text-sm font-medium text-gray-700"
+                                                                            >
+                                                                                Dates
+                                                                                d'ouvertures
+                                                                            </label>
+                                                                            <VueDatePicker
+                                                                                v-model="
+                                                                                    date
+                                                                                "
+                                                                                range
+                                                                                multi-calendars
+                                                                                locale="fr"
+                                                                                :format="'dd/MM/yyyy'"
+                                                                                :enableTimePicker="
+                                                                                    false
+                                                                                "
+                                                                                cancelText="annuler"
+                                                                                selectText="confirmer"
+                                                                                placeholder="Selectionner vos dates"
+                                                                            ></VueDatePicker>
+                                                                        </div>
+
+                                                                        <div
+                                                                            class="w-full"
+                                                                        >
+                                                                            <label
+                                                                                for="time"
+                                                                                class="block text-sm font-medium text-gray-700"
+                                                                            >
+                                                                                Horaires
+                                                                                d'ouverture
+                                                                            </label>
+                                                                            <VueDatePicker
+                                                                                v-model="
+                                                                                    time
+                                                                                "
+                                                                                time-picker
+                                                                                range
+                                                                                placeholder="Selectionnez vos horaires"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+
                                                                     <!-- Criteres -->
                                                                     <div
                                                                         v-if="
@@ -822,3 +887,9 @@ const onSubmit = () => {
         </div>
     </AppLayout>
 </template>
+
+<style>
+.vc-select select {
+    background-image: unset;
+}
+</style>
