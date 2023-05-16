@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class StructureProduit extends Model
 {
@@ -47,8 +48,7 @@ class StructureProduit extends Model
 
     public function criteres(): HasMany
     {
-        return $this->hasMany(StructureProduitCritere::class, 'critere_id');
-
+        return $this->hasMany(StructureProduitCritere::class, 'produit_id');
     }
 
     // horaire

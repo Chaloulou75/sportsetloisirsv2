@@ -424,20 +424,33 @@ function destroy(produit) {
                     <div
                         v-for="produit in structureActivite.produits"
                         :key="produit.id"
-                        class="grid grid-cols-6 place-items-center gap-2 py-4 odd:bg-white even:bg-slate-100"
+                        class="grid grid-flow-row grid-cols-3 place-items-center gap-2 py-4 odd:bg-white even:bg-slate-100 md:grid-cols-6"
                     >
-                        <div class="col-span-1 flex items-center">
-                            <UsersIcon class="mr-1 h-6 w-6 text-gray-600" />
-                            <span class="text-sm text-gray-600"
-                                >Tous public</span
-                            >
-                        </div>
-                        <div class="col-span-1 flex items-center">
-                            <AcademicCapIcon
+                        <div
+                            v-for="critere in produit.criteres"
+                            :key="critere.id"
+                            class="col-span-1 flex items-center"
+                        >
+                            <UsersIcon
+                                v-if="critere.critere_id === 1"
                                 class="mr-1 h-6 w-6 text-gray-600"
                             />
-                            <span class="text-sm text-gray-600"
-                                >Tous Niveaux</span
+                            <AcademicCapIcon
+                                v-else-if="critere.critere_id === 2"
+                                class="mr-1 h-6 w-6 text-gray-600"
+                            />
+                            <UsersIcon
+                                v-else
+                                class="mr-1 h-6 w-6 text-gray-600"
+                            />
+
+                            <span
+                                v-if="critere.valeur"
+                                class="text-sm text-gray-600"
+                                >{{ critere.valeur }}</span
+                            >
+                            <span v-else class="text-sm text-gray-600"
+                                >Tous</span
                             >
                         </div>
                         <div class="col-span-1 flex items-center p-0.5">

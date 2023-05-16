@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\StructureProduit;
+use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Redirect;
 
 class ProduitActiviteController extends Controller
@@ -70,11 +71,36 @@ class ProduitActiviteController extends Controller
     public function duplicate(StructureProduit $produit)
     {
 
-        $originalProduit = StructureProduit::where('id', $produit->id)->firstOrFail();
+        $originalProduit = StructureProduit::with('criteres')->where('id', $produit->id)->firstOrFail();
+
+        $originalProduitCriteres = StructureProduitCritere::where('produit_id', $originalProduit->id)->get();
+
         $newProduit = new StructureProduit();
-        $newProduit->fill($originalProduit->toArray());
+        $newProduit->structure_id = $originalProduit->structure_id;
+        $newProduit->discipline_id = $originalProduit->discipline_id;
+        $newProduit->categorie_id = $originalProduit->categorie_id;
+        $newProduit->activite_id = $originalProduit->activite_id;
+        $newProduit->lieu_id = $originalProduit->lieu_id;
+        $newProduit->actif = $originalProduit->actif;
+        $newProduit->horaire_id = $originalProduit->horaire_id;
+        $newProduit->tarif_id = $originalProduit->tarif_id;
+        $newProduit->reservable = $originalProduit->reservable;
         $newProduit->id = null;
         $newProduit->save();
+
+        foreach($originalProduitCriteres as $produitCritere) {
+            $newProduitCritere = new StructureProduitCritere();
+            $newProduitCritere->structure_id = $produitCritere->structure_id;
+            $newProduitCritere->discipline_id = $produitCritere->discipline_id;
+            $newProduitCritere->categorie_id = $produitCritere->categorie_id;
+            $newProduitCritere->activite_id = $produitCritere->activite_id;
+            $newProduitCritere->produit_id = $newProduit->id;
+            $newProduitCritere->critere_id = $produitCritere->critere_id;
+            $newProduitCritere->valeur = $produitCritere->valeur;
+            $newProduitCritere->defaut = $produitCritere->defaut;
+            $newProduitCritere->id = null;
+            $newProduitCritere->save();
+        }
 
         return Redirect::back()->with('success', "Le produit a bien été dupliqué");
     }
