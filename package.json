@@ -28,6 +28,7 @@
         "@heroicons/vue": "^2.0.17",
         "@vuepic/vue-datepicker": "^5.1.0",
         "@vueuse/core": "^10.1.2",
+        "dayjs": "^1.11.7",
         "esbuild": "^0.17.14"
     }
 }

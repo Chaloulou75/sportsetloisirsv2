@@ -17,6 +17,7 @@ use App\Mail\StructureCreated;
 use App\Models\ListDiscipline;
 use Illuminate\Validation\Rule;
 use App\Models\StructureAddress;
+use App\Models\StructureHoraire;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Models\StructureTypeInfo;
@@ -391,6 +392,8 @@ class StructureController extends Controller
 
         $adresses = optional(StructureAddress::where('structure_id', $structure->id)->get());
 
+        $horaires = optional(StructureHoraire::where('structure_id', $structure->id)->get());
+
         $users = optional(StructureUser::where('structure_id', $structure->id)->get());
 
         $typeInfos = optional(StructureTypeInfo::where('structure_id', $structure->id)->get());
@@ -443,6 +446,11 @@ class StructureController extends Controller
             }
         }
 
+        if($horaires->isNotEmpty) {
+            foreach($horaires as $horaire) {
+                $horaire->delete;
+            }
+        }
 
         if($structure->logo) {
             Storage::delete($structure->logo);

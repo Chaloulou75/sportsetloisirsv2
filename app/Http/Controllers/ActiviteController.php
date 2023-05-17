@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\City;
+use Carbon\Carbon;
 
+use App\Models\City;
 use Inertia\Inertia;
 use App\Models\Categorie;
 use App\Models\Structure;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use Illuminate\Validation\Rule;
 use App\Models\StructureAddress;
+use App\Models\StructureHoraire;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Models\StructureCategorie;
@@ -205,7 +207,7 @@ class ActiviteController extends Controller
 
         $categoriesListByDiscipline = LienDisciplineCategorie::where('discipline_id', $activite->discipline->id)->get();
 
-        $structureActivites = StructureActivite::with(['structure:id,name,slug', 'categorie:id,nom_categorie', 'discipline:id,name', 'produits', 'produits.adresse', 'produits.criteres'])
+        $structureActivites = StructureActivite::with(['structure:id,name,slug,presentation_courte', 'categorie:id,nom_categorie', 'discipline:id,name', 'produits', 'produits.adresse', 'produits.criteres', 'produits.horaires'])
                             ->where('structure_id', $structure->id)
                             ->where('discipline_id', $activite->discipline->id)
                             ->latest()
@@ -337,6 +339,8 @@ class ActiviteController extends Controller
             'time' => ['nullable'],
         ]);
 
+        // dd($request->time);
+
 
         $structure = Structure::with('adresses')->where('id', $request->structure_id)->firstOrfail();
 
@@ -348,6 +352,31 @@ class ActiviteController extends Controller
                 }
             }
         }
+
+        if($request->date || $request->time) {
+
+            $dayopen = Carbon::parse($request->date[0])->format('Y-m-d');
+            $dayclose = Carbon::parse($request->date[1])->format('Y-m-d');
+
+            $heureopen = $request->time[0]['hours'];
+            $minuteopen = $request->time[0]['minutes'];
+            // Construct the time string in HH:ii:ss format
+            $houropen = sprintf('%02d:%02d', $heureopen, $minuteopen);
+
+            $heureclose = $request->time[1]['hours'];
+            $minuteclose = $request->time[1]['minutes'];
+            // Construct the time string in HH:ii:ss format
+            $hourclose = sprintf('%02d:%02d', $heureclose, $minuteclose);
+
+            $dayTime = StructureHoraire::firstOrCreate([
+                'structure_id' => $structure->id,
+                'dayopen' => $dayopen,
+                'dayclose' => $dayclose,
+                'houropen' => $houropen,
+                'hourclose' => $hourclose,
+            ]);
+        }
+
 
         $activite = StructureActivite::with(['structure:id,name,slug','categorie:id,nom_categorie', 'discipline:id,name,slug'])
                                 ->where('structure_id', $structure->id)
@@ -377,7 +406,7 @@ class ActiviteController extends Controller
             'activite_id' => $structureActivite->id,
             "actif" => 1,
             'lieu_id' => $request->adresse ?? $structure->adresses->first()->id,
-            // 'horaire_id' => $structureHoraire->id,
+            'horaire_id' => $dayTime->id,
             // 'tarif_id' => $structureTarif->id,
             'reservable' => 0,
         ]);

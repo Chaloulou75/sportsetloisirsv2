@@ -2,6 +2,11 @@
 import { ref, computed, nextTick } from "vue";
 import { useForm, router } from "@inertiajs/vue3";
 import ModalDeleteActivite from "@/Components/ModalDeleteActivite.vue";
+import dayjs from "dayjs";
+import "dayjs/locale/fr"; // Import the French locale
+import localeData from "dayjs/plugin/localeData"; // Import the localeData plugin
+dayjs.locale("fr"); // Set the locale to French
+dayjs.extend(localeData);
 import {
     AcademicCapIcon,
     ArrowPathIcon,
@@ -79,6 +84,15 @@ async function toggleActif(structureActivite) {
 const currentStructureActivite = ref(null);
 const isOpen = ref(false);
 const showDeleteActiviteModal = ref(false);
+
+const formatDate = (dateTime) => {
+    return dayjs(dateTime).locale("fr").format("DD MMMM YYYY");
+};
+
+const formatTime = (time) => {
+    const formattedTime = time.substring(0, 5); // Extract the first 5 characters (HH:mm)
+    return formattedTime;
+};
 
 const openDeleteModal = (structureActivite) => {
     showDeleteActiviteModal.value = true;
@@ -489,7 +503,30 @@ function destroy(produit) {
                         </div>
                         <div class="flex items-center col-span-1">
                             <ClockIcon class="w-6 h-6 mr-1 text-gray-600" />
-                            <span class="text-sm text-gray-600">Planning</span>
+                            <div
+                                v-if="produit.horaire_id"
+                                class="flex flex-col"
+                            >
+                                <span class="text-sm text-gray-600"
+                                    >Ouvert du
+                                    {{ formatDate(produit.horaires.dayopen) }}
+                                    au
+                                    {{
+                                        formatDate(produit.horaires.dayclose)
+                                    }}</span
+                                >
+                                <span class="text-sm text-gray-600"
+                                    >De
+                                    {{ formatTime(produit.horaires.houropen) }}
+                                    à
+                                    {{
+                                        formatTime(produit.horaires.hourclose)
+                                    }}</span
+                                >
+                            </div>
+                            <span v-else class="text-sm text-gray-600"
+                                >Planning</span
+                            >
                         </div>
                         <div class="flex items-center col-span-1">
                             <button
