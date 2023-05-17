@@ -7,8 +7,6 @@ use App\Models\City;
 use Inertia\Inertia;
 use App\Models\Categorie;
 use App\Models\Structure;
-use App\Models\Departement;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use Illuminate\Validation\Rule;
@@ -42,7 +40,7 @@ class ActiviteController extends Controller
                     ->where('id', $structure->id)
                     ->first();
 
-        $activites = StructureCategorie::with(['structure','categorie', 'discipline'])
+        $activites = StructureActivite::with(['structure','categorie', 'discipline'])
             ->where('structure_id', $structure->id)
             ->latest()
             ->get();
@@ -65,6 +63,8 @@ class ActiviteController extends Controller
                 'categories' => $categories,
             ];
         });
+
+        // dd($actByDiscAndCategorie);
 
         $categories = Categorie::with('disciplines')->select(['id', 'nom', 'ico'])->get();
 
@@ -199,7 +199,7 @@ class ActiviteController extends Controller
 
         $activite = StructureCategorie::with(['structure','categorie', 'discipline'])
                         ->where('structure_id', $structure->id)
-                        ->where('id', $activite)
+                        ->where('categorie_id', $activite)
                         ->withCount('categorie')
                         ->first();
 
@@ -349,7 +349,7 @@ class ActiviteController extends Controller
             }
         }
 
-        $activite = StructureCategorie::with(['structure','categorie', 'discipline'])
+        $activite = StructureActivite::with(['structure:id,name,slug','categorie:id,nom_categorie', 'discipline:id,name,slug'])
                                 ->where('structure_id', $structure->id)
                                 ->where('id', $activite)
                                 ->first();

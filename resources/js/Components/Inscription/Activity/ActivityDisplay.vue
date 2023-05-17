@@ -113,10 +113,10 @@ function destroy(produit) {
     <div
         v-for="structureActivite in structureActivites"
         :key="structureActivite.id"
-        class="flex h-full w-full flex-col space-y-3 rounded border border-gray-200"
+        class="flex flex-col w-full h-full space-y-3 border border-gray-200 rounded"
     >
         <div
-            class="flex w-full items-center justify-between bg-gray-700 px-2 py-4"
+            class="flex items-center justify-between w-full px-2 py-4 bg-gray-700"
         >
             <h2 class="font-semibold text-white">
                 {{ structureActivite.titre }}
@@ -125,7 +125,7 @@ function destroy(produit) {
                 <button
                     type="button"
                     @click="openModal(structureActivite)"
-                    class="rounded-sm bg-white px-2 py-1 text-base text-gray-700 transition duration-100 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
+                    class="px-2 py-1 text-base text-gray-700 transition duration-100 bg-white rounded-sm hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
                 >
                     Editer l'activité
                 </button>
@@ -134,7 +134,7 @@ function destroy(produit) {
                     @click="openDeleteModal(structureActivite)"
                 >
                     <TrashIcon
-                        class="mr-1 h-6 w-6 text-gray-100 hover:text-red-500"
+                        class="w-6 h-6 mr-1 text-gray-100 hover:text-red-500"
                     />
                 </button>
                 <ModalDeleteActivite
@@ -160,7 +160,7 @@ function destroy(produit) {
 
                     <div class="fixed inset-0 overflow-y-auto">
                         <div
-                            class="flex min-h-full items-center justify-center p-4 text-center"
+                            class="flex items-center justify-center min-h-full p-4 text-center"
                         >
                             <TransitionChild
                                 as="template"
@@ -172,7 +172,7 @@ function destroy(produit) {
                                 leave-to="opacity-0 scale-95"
                             >
                                 <DialogPanel
-                                    class="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                                    class="w-full max-w-3xl p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
                                 >
                                     <form
                                         @submit.prevent="
@@ -185,7 +185,7 @@ function destroy(produit) {
                                     >
                                         <DialogTitle
                                             as="div"
-                                            class="flex w-full items-center justify-between"
+                                            class="flex items-center justify-between w-full"
                                         >
                                             <h3
                                                 class="text-lg font-medium leading-6 text-gray-800"
@@ -195,11 +195,11 @@ function destroy(produit) {
                                             <button type="button">
                                                 <XCircleIcon
                                                     @click="closeModal"
-                                                    class="h-6 w-6 text-gray-600 hover:text-gray-800"
+                                                    class="w-6 h-6 text-gray-600 hover:text-gray-800"
                                                 />
                                             </button>
                                         </DialogTitle>
-                                        <div class="mt-2 w-full">
+                                        <div class="w-full mt-2">
                                             <div
                                                 class="flex flex-col space-y-3"
                                             >
@@ -239,7 +239,7 @@ function destroy(produit) {
                                                         Titre de l'activité
                                                     </label>
                                                     <div
-                                                        class="mt-1 flex rounded-md"
+                                                        class="flex mt-1 rounded-md"
                                                     >
                                                         <input
                                                             v-model="
@@ -248,7 +248,7 @@ function destroy(produit) {
                                                             type="text"
                                                             name="titre"
                                                             id="titre"
-                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                             :placeholder="`${structureActivite.categorie.nom_categorie} de ${structureActivite.discipline.name}`"
                                                             autocomplete="none"
                                                         />
@@ -275,7 +275,7 @@ function destroy(produit) {
                                                             id="description"
                                                             name="description"
                                                             rows="2"
-                                                            class="mt-1 block h-48 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                            class="block w-full h-48 min-h-full mt-1 placeholder-gray-400 placeholder-opacity-50 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                             :class="{
                                                                 errors: 'border-red-500 focus:ring focus:ring-red-200',
                                                             }"
@@ -305,11 +305,11 @@ function destroy(produit) {
                                         </div>
 
                                         <div
-                                            class="mt-4 flex w-full items-center justify-between"
+                                            class="flex items-center justify-between w-full mt-4"
                                         >
                                             <button
                                                 type="button"
-                                                class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                                                class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
                                                 @click="closeModal"
                                             >
                                                 Annuler
@@ -317,7 +317,7 @@ function destroy(produit) {
                                             <button
                                                 :disabled="formEdit.processing"
                                                 type="submit"
-                                                class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                                                class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                             >
                                                 Enregistrer
                                             </button>
@@ -330,25 +330,25 @@ function destroy(produit) {
                 </Dialog>
             </TransitionRoot>
         </div>
-        <div class="flex w-full flex-col items-start md:flex-row">
+        <div class="flex flex-col items-start w-full md:flex-row">
             <div
-                class="mx-auto h-60 w-full border border-gray-100 bg-purple-300 md:w-auto"
+                class="w-full mx-auto bg-purple-300 border border-gray-100 h-60 md:w-auto"
             >
                 <img
                     v-if="structureActivite.image"
                     alt="image"
                     :src="structureActivite.image"
-                    class="h-full w-full object-cover"
+                    class="object-cover w-full h-full"
                 />
                 <img
                     v-else
                     alt="image"
                     src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                    class="h-full w-full object-cover"
+                    class="object-cover w-full h-full"
                 />
             </div>
             <div
-                class="flex flex-1 flex-col items-start space-y-3 px-2 py-2 md:space-y-6 md:px-4"
+                class="flex flex-col items-start flex-1 px-2 py-2 space-y-3 md:space-y-6 md:px-4"
             >
                 <div class="flex items-center space-x-2">
                     <Switch
@@ -359,7 +359,7 @@ function destroy(produit) {
                                 ? 'bg-green-600'
                                 : 'bg-gray-200'
                         "
-                        class="relative inline-flex h-6 w-11 items-center rounded-full"
+                        class="relative inline-flex items-center h-6 rounded-full w-11"
                     >
                         <span class="sr-only">Actif</span>
                         <span
@@ -368,7 +368,7 @@ function destroy(produit) {
                                     ? 'translate-x-6'
                                     : 'translate-x-1'
                             "
-                            class="inline-block h-4 w-4 transform rounded-full bg-white transition"
+                            class="inline-block w-4 h-4 transition transform bg-white rounded-full"
                         />
                     </Switch>
                     <p
@@ -385,11 +385,11 @@ function destroy(produit) {
                     <h4 class="font-semibold">Description:</h4>
                     <p
                         v-if="structureActivite.description"
-                        class="whitespace-pre-line break-all"
+                        class="break-all whitespace-pre-line"
                     >
                         {{ structureActivite.description }}
                     </p>
-                    <p v-else class="whitespace-pre-line break-all">
+                    <p v-else class="break-all whitespace-pre-line">
                         {{ structureActivite.structure.presentation_courte }}
                     </p>
                 </div>
@@ -397,7 +397,7 @@ function destroy(produit) {
         </div>
         <Disclosure v-slot="{ open }" defaultOpen>
             <DisclosureButton
-                class="flex w-full justify-between bg-gray-200 px-4 py-4 font-semibold text-gray-800"
+                class="flex justify-between w-full px-4 py-4 font-semibold text-gray-800 bg-gray-200"
             >
                 <span>
                     {{ structureActivite.produits.length }}
@@ -408,7 +408,7 @@ function destroy(produit) {
                 </span>
                 <ChevronUpIcon
                     :class="open ? 'rotate-180 transform' : ''"
-                    class="h-5 w-5 text-gray-800"
+                    class="w-5 h-5 text-gray-800"
                 />
             </DisclosureButton>
 
@@ -424,37 +424,61 @@ function destroy(produit) {
                     <div
                         v-for="produit in structureActivite.produits"
                         :key="produit.id"
-                        class="grid grid-flow-row grid-cols-3 place-items-center gap-2 py-4 odd:bg-white even:bg-slate-100 md:grid-cols-6"
+                        class="grid grid-flow-row grid-cols-3 gap-2 py-4 place-items-center odd:bg-white even:bg-slate-100 md:grid-cols-6"
                     >
                         <div
-                            v-for="critere in produit.criteres"
-                            :key="critere.id"
-                            class="col-span-1 flex items-center"
+                            v-if="produit.criteres.length > 0"
+                            class="grid w-full h-full grid-cols-2 col-span-2 gap-2 place-items-center"
                         >
-                            <UsersIcon
-                                v-if="critere.critere_id === 1"
-                                class="mr-1 h-6 w-6 text-gray-600"
-                            />
-                            <AcademicCapIcon
-                                v-else-if="critere.critere_id === 2"
-                                class="mr-1 h-6 w-6 text-gray-600"
-                            />
-                            <UsersIcon
-                                v-else
-                                class="mr-1 h-6 w-6 text-gray-600"
-                            />
+                            <div
+                                v-for="critere in produit.criteres"
+                                :key="critere.id"
+                                class="flex items-center col-span-1"
+                            >
+                                <UsersIcon
+                                    v-if="critere.critere_id === 1"
+                                    class="w-6 h-6 mr-1 text-gray-600"
+                                />
+                                <AcademicCapIcon
+                                    v-else-if="critere.critere_id === 2"
+                                    class="w-6 h-6 mr-1 text-gray-600"
+                                />
+                                <UsersIcon
+                                    v-else
+                                    class="w-6 h-6 mr-1 text-gray-600"
+                                />
 
-                            <span
-                                v-if="critere.valeur"
-                                class="text-sm text-gray-600"
-                                >{{ critere.valeur }}</span
-                            >
-                            <span v-else class="text-sm text-gray-600"
-                                >Tous</span
-                            >
+                                <span
+                                    v-if="critere.valeur"
+                                    class="text-sm text-gray-600"
+                                    >{{ critere.valeur }}</span
+                                >
+                                <span v-else class="text-sm text-gray-600"
+                                    >Tous</span
+                                >
+                            </div>
+                        </div>
+                        <div
+                            v-else
+                            class="grid w-full h-full grid-cols-2 col-span-2 gap-2 place-items-center"
+                        >
+                            <div class="flex items-center col-span-1">
+                                <UsersIcon class="w-6 h-6 mr-1 text-gray-600" />
+                                <span class="text-sm text-gray-600"
+                                    >Tous Public</span
+                                >
+                            </div>
+                            <div class="flex items-center col-span-1">
+                                <AcademicCapIcon
+                                    class="w-6 h-6 mr-1 text-gray-600"
+                                />
+                                <span class="text-sm text-gray-600"
+                                    >Tous Niveaux</span
+                                >
+                            </div>
                         </div>
                         <div class="col-span-1 flex items-center p-0.5">
-                            <MapPinIcon class="mr-1 h-6 w-6 text-gray-600" />
+                            <MapPinIcon class="w-6 h-6 mr-1 text-gray-600" />
                             <div
                                 class="flex flex-col items-center text-sm text-gray-600"
                             >
@@ -463,35 +487,35 @@ function destroy(produit) {
                                 {{ produit.adresse.city }}
                             </div>
                         </div>
-                        <div class="col-span-1 flex items-center">
-                            <ClockIcon class="mr-1 h-6 w-6 text-gray-600" />
+                        <div class="flex items-center col-span-1">
+                            <ClockIcon class="w-6 h-6 mr-1 text-gray-600" />
                             <span class="text-sm text-gray-600">Planning</span>
                         </div>
-                        <div class="col-span-1 flex items-center">
+                        <div class="flex items-center col-span-1">
                             <button
                                 type="button"
-                                class="flex w-full items-center justify-between rounded bg-green-600 px-3 py-2 text-sm text-white shadow-lg transition duration-100 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm"
+                                class="flex items-center justify-between w-full px-3 py-2 text-sm text-white transition duration-100 bg-green-600 rounded shadow-lg hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm"
                             >
                                 Tarifs
                             </button>
                         </div>
                         <div
-                            class="col-span-1 flex items-center justify-between space-x-2"
+                            class="flex items-center justify-between col-span-1 space-x-2"
                         >
                             <button type="button">
                                 <ArrowPathIcon
-                                    class="mr-1 h-6 w-6 text-gray-600 hover:text-gray-800"
+                                    class="w-6 h-6 mr-1 text-gray-600 hover:text-gray-800"
                                 />
                             </button>
                             <button type="button" @click="duplicate(produit)">
                                 <DocumentDuplicateIcon
-                                    class="mr-1 h-6 w-6 text-gray-600 hover:text-gray-800"
+                                    class="w-6 h-6 mr-1 text-gray-600 hover:text-gray-800"
                                 />
                             </button>
 
                             <button type="button" @click="destroy(produit)">
                                 <TrashIcon
-                                    class="mr-1 h-6 w-6 text-gray-600 hover:text-gray-800"
+                                    class="w-6 h-6 mr-1 text-gray-600 hover:text-gray-800"
                                 />
                             </button>
                         </div>

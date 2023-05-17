@@ -35,10 +35,6 @@ const props = defineProps({
 
 const addAddress = ref(false);
 
-const date = ref(null);
-
-const time = ref(null);
-
 const isOpen = ref(false);
 
 const openModal = () => {
