@@ -440,13 +440,13 @@ class StructureController extends Controller
                 $typeInfo->delete();
             }
         }
-        if($users->isNotEmpty) {
+        if($users->isNotEmpty()) {
             foreach($users as $user) {
                 $user->delete();
             }
         }
 
-        if($horaires->isNotEmpty) {
+        if($horaires->isNotEmpty()) {
             foreach($horaires as $horaire) {
                 $horaire->delete();
             }

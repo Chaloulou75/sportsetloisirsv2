@@ -301,7 +301,6 @@ class ActiviteController extends Controller
             $activite->delete();
         }
 
-
         return Redirect::back()->with('success', 'l\'activité a été supprimée.');
     }
 
