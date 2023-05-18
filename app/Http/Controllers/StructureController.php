@@ -410,13 +410,13 @@ class StructureController extends Controller
 
         if($criteres->isNotEmpty()) {
             foreach($criteres as $critere) {
-                $critere->delete;
+                $critere->delete();
             }
         }
 
         if($produits->isNotEmpty()) {
             foreach($produits as $produit) {
-                $produit->delete;
+                $produit->delete();
             }
         }
 
@@ -427,28 +427,28 @@ class StructureController extends Controller
                     Storage::delete($activite->image);
                 }
 
-                $activite->delete;
+                $activite->delete();
             }
         }
         if($adresses->isNotEmpty()) {
             foreach($adresses as $adresse) {
-                $adresse->delete;
+                $adresse->delete();
             }
         }
         if($typeInfos->isNotEmpty()) {
             foreach($typeInfos as $typeInfo) {
-                $typeInfo->delete;
+                $typeInfo->delete();
             }
         }
         if($users->isNotEmpty) {
             foreach($users as $user) {
-                $user->delete;
+                $user->delete();
             }
         }
 
         if($horaires->isNotEmpty) {
             foreach($horaires as $horaire) {
-                $horaire->delete;
+                $horaire->delete();
             }
         }
 

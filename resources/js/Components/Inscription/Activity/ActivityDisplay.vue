@@ -40,7 +40,6 @@ const formEdit = useForm({
     titre: ref(null),
     description: ref(null),
     image: ref(null),
-    // actif: ref(null),
 });
 
 const submitForm = (id) => {
@@ -51,7 +50,6 @@ const submitForm = (id) => {
             titre: formEdit.titre,
             description: formEdit.description,
             image: formEdit.image,
-            // actif: formEdit.actif,
         },
         {
             preserveScroll: true,

@@ -13,6 +13,7 @@ use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\DepartementController;
 use App\Http\Controllers\CityDisciplineController;
 use App\Http\Controllers\ProduitActiviteController;
+use App\Http\Controllers\StructureDisciplineController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,9 +56,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/structures/{structure:slug}/activites/{activite:id}/toggleactif', [ActiviteController::class, 'toggleactif']);
     Route::resource('structures.activites', ActiviteController::class)->scoped(['structure' => 'slug','activite' => 'id']);
 
-
     Route::post('/produits/{produit}/duplicate', [ProduitActiviteController::class, 'duplicate'])->name('produits.duplicate');
     Route::resource('produits', ProduitActiviteController::class);
+
+    Route::resource('structures.disciplines', StructureDisciplineController::class)->scoped(['structure' => 'slug','discipline' => 'id']);
 
     Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
     Route::post('/structures', [StructureController::class, 'store'])->name('structures.store');

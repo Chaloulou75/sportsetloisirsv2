@@ -60,7 +60,7 @@ class ActiviteController extends Controller
 
             return [
                 'discipline_id' => $disciplineCategories->first()->discipline->id,
-                'name' => $disciplineCategories->first()->discipline->name,
+                'disciplineName' => $disciplineCategories->first()->discipline->name,
                 'count' => $disciplineCategories->count(),
                 'categories' => $categories,
             ];
@@ -283,13 +283,13 @@ class ActiviteController extends Controller
 
         if($criteres->isNotEmpty()) {
             foreach($criteres as $critere) {
-                $critere->delete;
+                $critere->delete();
             }
         }
 
         if($produits->isNotEmpty()) {
             foreach($produits as $produit) {
-                $produit->delete;
+                $produit->delete();
             }
         }
 
@@ -376,7 +376,6 @@ class ActiviteController extends Controller
                 'hourclose' => $hourclose,
             ]);
         }
-
 
         $activite = StructureActivite::with(['structure:id,name,slug','categorie:id,nom_categorie', 'discipline:id,name,slug'])
                                 ->where('structure_id', $structure->id)
