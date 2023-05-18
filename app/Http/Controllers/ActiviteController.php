@@ -277,9 +277,9 @@ class ActiviteController extends Controller
     {
         $activite = StructureActivite::where('id', $activite)->first();
 
-        $produits = optional(StructureProduit::where('activite_id', $activite->id)->get());
+        $produits = StructureProduit::where('activite_id', $activite->id)->get();
 
-        $criteres = optional(StructureProduitCritere::where('activite_id', $activite->id)->get());
+        $criteres = StructureProduitCritere::where('activite_id', $activite->id)->get();
 
         if($criteres->isNotEmpty()) {
             foreach($criteres as $critere) {
@@ -297,9 +297,12 @@ class ActiviteController extends Controller
             Storage::delete($activite->image);
         }
 
-        $activite->delete();
+        if($activite) {
+            $activite->delete();
+        }
 
-        return Redirect::back()->with('success', 'Activite supprimée.');
+
+        return Redirect::back()->with('success', 'l\'activité a été supprimée.');
     }
 
     public function toggleactif(Request $request, Structure $structure, $activite): RedirectResponse

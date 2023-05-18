@@ -3,7 +3,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, useForm, router } from "@inertiajs/vue3";
 import { ref, watch, defineAsyncComponent } from "vue";
 import { TrashIcon } from "@heroicons/vue/24/solid";
-import ModalDeleteDiscipline from "@/Components/ModalDeleteDiscipline.vue";
+import ModalDeleteDiscipline from "@/Components/Modals/ModalDeleteDiscipline.vue";
 const AutocompleteActiviteFormSmall = defineAsyncComponent(() =>
     import("@/Components/Inscription/AutocompleteActiviteFormSmall.vue")
 );

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Structure;
 use Illuminate\Http\Request;
 use App\Models\StructureProduit;
+use App\Models\StructureActivite;
 use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Redirect;
 
-class ProduitActiviteController extends Controller
+class StructureActiviteProduitController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -28,9 +30,9 @@ class ProduitActiviteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Structure $structure, StructureActivite $activite)
     {
-        //
+        dd($activite);
     }
 
     /**
@@ -60,7 +62,7 @@ class ProduitActiviteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(StructureProduit $produit)
+    public function destroy(Structure $structure, StructureActivite $activite, StructureProduit $produit)
     {
         $produit = StructureProduit::where('id', $produit->id)->firstOrFail();
 
@@ -77,9 +79,8 @@ class ProduitActiviteController extends Controller
         return Redirect::back()->with('success', "Le produit a bien été supprimé");
     }
 
-    public function duplicate(StructureProduit $produit)
+    public function duplicate(Structure $structure, StructureActivite $activite, StructureProduit $produit)
     {
-
         $originalProduit = StructureProduit::with('criteres')->where('id', $produit->id)->firstOrFail();
 
         $originalProduitCriteres = StructureProduitCritere::where('produit_id', $originalProduit->id)->get();

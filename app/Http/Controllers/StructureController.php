@@ -390,19 +390,19 @@ class StructureController extends Controller
     {
         $structure = Structure::where('id', $structure->id)->first();
 
-        $adresses = optional(StructureAddress::where('structure_id', $structure->id)->get());
+        $adresses = StructureAddress::where('structure_id', $structure->id)->get();
 
-        $horaires = optional(StructureHoraire::where('structure_id', $structure->id)->get());
+        $horaires = StructureHoraire::where('structure_id', $structure->id)->get();
 
-        $users = optional(StructureUser::where('structure_id', $structure->id)->get());
+        $users = StructureUser::where('structure_id', $structure->id)->get();
 
-        $typeInfos = optional(StructureTypeInfo::where('structure_id', $structure->id)->get());
+        $typeInfos = StructureTypeInfo::where('structure_id', $structure->id)->get();
 
-        $activites = optional(StructureActivite::where('structure_id', $structure->id)->get());
+        $activites = StructureActivite::where('structure_id', $structure->id)->get();
 
-        $produits = optional(StructureProduit::where('structure_id', $structure->id)->get());
+        $produits = StructureProduit::where('structure_id', $structure->id)->get();
 
-        $criteres = optional(StructureProduitCritere::where('structure_id', $structure->id)->get());
+        $criteres = StructureProduitCritere::where('structure_id', $structure->id)->get();
 
         if (! Gate::allows('destroy-structure', $structure)) {
             return Redirect::route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de supprimer cette fiche, vous devez être le créateur de la structure ou un administrateur.');
@@ -456,7 +456,10 @@ class StructureController extends Controller
             Storage::delete($structure->logo);
         }
 
-        $structure->delete();
+        if($structure) {
+            $structure->delete();
+        }
+
 
         return redirect()->route('structures.index')->with('success', 'Structure supprimée.');
     }

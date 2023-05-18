@@ -2,7 +2,7 @@
 import DangerButton from "@/Components/DangerButton.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
-import Modal from "@/Components/Modal.vue";
+import Modal from "@/Components/Modals/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { useForm } from "@inertiajs/vue3";
@@ -80,7 +80,7 @@ const closeModal = () => {
                         ref="passwordInput"
                         v-model="form.password"
                         type="password"
-                        class="block w-3/4 mt-1"
+                        class="mt-1 block w-3/4"
                         placeholder="Password"
                         @keyup.enter="deleteUser"
                     />
@@ -88,7 +88,7 @@ const closeModal = () => {
                     <InputError :message="form.errors.password" class="mt-2" />
                 </div>
 
-                <div class="flex justify-end mt-6">
+                <div class="mt-6 flex justify-end">
                     <SecondaryButton @click="closeModal">
                         Annuler
                     </SecondaryButton>
