@@ -702,7 +702,7 @@ const onSubmit = () => {
                                                                             class="flex-1"
                                                                         >
                                                                             <label
-                                                                                :for="
+                                                                                for="
                                                                                     adresse
                                                                                 "
                                                                                 class="block text-sm font-medium text-gray-700"
@@ -713,10 +713,10 @@ const onSubmit = () => {
                                                                                 class="mt-1 flex rounded-md"
                                                                             >
                                                                                 <select
-                                                                                    :name="
+                                                                                    name="
                                                                                         adresse
                                                                                     "
-                                                                                    :id="
+                                                                                    id="
                                                                                         adresse
                                                                                     "
                                                                                     v-model="
@@ -798,7 +798,7 @@ const onSubmit = () => {
 
                                                                     <!-- Jours et Heures -->
                                                                     <div
-                                                                        class="flex w-full items-center justify-between space-x-0 md:space-x-6"
+                                                                        class="flex w-full flex-col items-center justify-between space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
                                                                     >
                                                                         <div
                                                                             class="z-10 w-full"
@@ -835,7 +835,9 @@ const onSubmit = () => {
                                                                                 class="block text-sm font-medium text-gray-700"
                                                                             >
                                                                                 Horaires
-                                                                                d'ouverture
+                                                                                (ouverture
+                                                                                /
+                                                                                fermeture)
                                                                             </label>
                                                                             <VueDatePicker
                                                                                 v-model="

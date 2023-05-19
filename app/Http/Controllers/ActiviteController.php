@@ -341,9 +341,6 @@ class ActiviteController extends Controller
             'time' => ['nullable'],
         ]);
 
-        // dd($request->time);
-
-
         $structure = Structure::with('adresses')->where('id', $request->structure_id)->firstOrfail();
 
         //check if address exist

@@ -12,6 +12,8 @@ import {
     XCircleIcon,
 } from "@heroicons/vue/24/outline";
 
+const emit = defineEmits(["close"]);
+
 const props = defineProps({
     structure: Object,
     structureActivite: Object,
@@ -23,7 +25,7 @@ function destroyActivite(structureActivite) {
     router.delete(url, {
         preserveScroll: true,
         onSuccess: () => {
-            $emit("close");
+            emit("close");
         },
         structure: props.structure,
         activite: structureActivite,
