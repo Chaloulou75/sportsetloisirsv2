@@ -8,13 +8,15 @@ import {
     AcademicCapIcon,
     ArrowPathIcon,
     ClockIcon,
-    DocumentDuplicateIcon,
     MapPinIcon,
-    TrashIcon,
     UsersIcon,
     ChevronUpIcon,
 } from "@heroicons/vue/24/solid";
-import { XCircleIcon } from "@heroicons/vue/24/outline";
+import {
+    DocumentDuplicateIcon,
+    XCircleIcon,
+    TrashIcon,
+} from "@heroicons/vue/24/outline";
 import {
     Switch,
     Disclosure,

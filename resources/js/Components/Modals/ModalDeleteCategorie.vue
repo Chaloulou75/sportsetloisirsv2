@@ -16,19 +16,19 @@ const emit = defineEmits("close");
 
 const props = defineProps({
     structure: Object,
-    activite: Object,
+    categorie: Object,
     show: Boolean,
 });
 
-function destroyDiscipline(discipline) {
-    const url = `/structures/${props.structure.slug}/disciplines/${discipline}`;
+function destroyCategorie(categorie) {
+    const url = `/structures/${props.structure.slug}/categories/${categorie.categorie_id}`;
     router.delete(url, {
         preserveScroll: true,
         onSuccess: () => {
             emit("close");
         },
         structure: props.structure.slug,
-        discipline: discipline,
+        categorie: categorie.categorie_id,
     });
 }
 </script>
@@ -89,10 +89,10 @@ function destroyDiscipline(discipline) {
                                                 <h3
                                                     class="w-full text-lg font-medium leading-6 text-center text-gray-800 md:text-left"
                                                 >
-                                                    Suppression de la discipline
+                                                    Suppression de la catégorie
                                                     <span class="text-blue-600">
                                                         {{
-                                                            activite.disciplineName
+                                                            categorie.name
                                                         }}</span
                                                     >
                                                 </h3>
@@ -113,7 +113,7 @@ function destroyDiscipline(discipline) {
                                                     class="text-sm text-gray-500"
                                                 >
                                                     Etes vous sûr de vouloir
-                                                    supprimer cette discipline?
+                                                    supprimer cette catégorie?
                                                     Attention, cette action
                                                     supprimera toutes les
                                                     activités associées.
@@ -136,11 +136,7 @@ function destroyDiscipline(discipline) {
                                     <button
                                         type="button"
                                         class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                                        @click="
-                                            destroyDiscipline(
-                                                activite.discipline_id
-                                            )
-                                        "
+                                        @click="destroyCategorie(categorie)"
                                     >
                                         Supprimer
                                     </button>

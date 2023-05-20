@@ -12,7 +12,7 @@ import {
     XCircleIcon,
 } from "@heroicons/vue/24/outline";
 
-const emit = defineEmits(["close"]);
+const emit = defineEmits("close");
 
 const props = defineProps({
     structure: Object,
@@ -80,7 +80,7 @@ function destroyActivite(structureActivite) {
                                             />
                                         </div>
                                         <div
-                                            class="mt-3 text-center md:mt-0 md:ml-4 md:text-left"
+                                            class="mt-3 text-center md:ml-4 md:mt-0 md:text-left"
                                         >
                                             <DialogTitle
                                                 as="div"
@@ -127,7 +127,7 @@ function destroyActivite(structureActivite) {
                                 >
                                     <button
                                         type="button"
-                                        class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                                        class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm"
                                         @click="$emit('close')"
                                         ref="cancelButtonRef"
                                     >
