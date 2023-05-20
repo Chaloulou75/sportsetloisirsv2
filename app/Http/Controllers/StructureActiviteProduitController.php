@@ -150,7 +150,7 @@ class StructureActiviteProduitController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(StructureProduit $produit)
+    public function edit(Structure $structure, StructureActivite $activite, StructureProduit $produit)
     {
         //
     }
@@ -158,9 +158,9 @@ class StructureActiviteProduitController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, StructureProduit $produit)
+    public function update(Request $request, Structure $structure, StructureActivite $activite, StructureProduit $produit)
     {
-        //
+        dd($request->all());
     }
 
     /**

@@ -22,6 +22,7 @@ const props = defineProps({
     errors: Object,
     structure: Object,
     structureActivite: Object,
+    produit: Object,
     show: Boolean,
     filteredCriteres: Object,
     latestAdresseId: Number,
@@ -30,7 +31,7 @@ const props = defineProps({
 onMounted(() => {
     const startDate = new Date();
     const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
-    formAddProduit.date = [startDate, endDate];
+    formEditProduit.date = [startDate, endDate];
 
     const startTime = {
         hours: 10,
@@ -40,17 +41,17 @@ onMounted(() => {
         hours: 20,
         minutes: 0,
     };
-    formAddProduit.time = [startTime, endTime];
+    formEditProduit.time = [startTime, endTime];
 });
 
-const addProduitAddress = ref(false);
+const editProduitAddress = ref(false);
 
-const formAddProduit = useForm({
+const formEditProduit = useForm({
     structure_id: ref(props.structure.id),
-    discipline_id: ref(null),
-    categorie_id: ref(null),
+    discipline_id: ref(),
+    categorie_id: ref(),
     criteres: ref([]),
-    adresse: ref(props.latestAdresseId),
+    adresse: ref(),
     address: ref(null),
     city: ref(null),
     zip_code: ref(null),
@@ -61,32 +62,34 @@ const formAddProduit = useForm({
     time: ref(null),
 });
 
-const onSubmitAddProduitForm = () => {
+const onSubmitEditProduitForm = () => {
     router.post(
-        `/structures/${props.structure.slug}/activites/${props.structureActivite.id}/produits`,
+        `/structures/${props.structure.slug}/activites/${props.structureActivite.id}/produits/produits/${produit.id}`,
         {
-            structure_id: formAddProduit.structure_id,
-            discipline_id: props.structureActivite.discipline_id,
-            categorie_id: props.structureActivite.categorie_id,
-            criteres: formAddProduit.criteres,
-            adresse: formAddProduit.adresse,
-            address: formAddProduit.address,
-            city: formAddProduit.city,
-            zip_code: formAddProduit.zip_code,
-            country: formAddProduit.country,
-            address_lat: formAddProduit.address_lat,
-            address_lng: formAddProduit.address_lng,
-            date: formAddProduit.date,
-            time: formAddProduit.time,
+            _method: "put",
+            structure_id: formEditProduit.structure_id,
+            discipline_id: formEditProduit.discipline_id,
+            categorie_id: formEditProduit.categorie_id,
+            criteres: formEditProduit.criteres,
+            adresse: formEditProduit.adresse,
+            address: formEditProduit.address,
+            city: formEditProduit.city,
+            zip_code: formEditProduit.zip_code,
+            country: formEditProduit.country,
+            address_lat: formEditProduit.address_lat,
+            address_lng: formEditProduit.address_lng,
+            date: formEditProduit.date,
+            time: formEditProduit.time,
         },
         {
             preserveScroll: true,
             onSuccess: () => {
-                formAddProduit.reset();
+                formEditProduit.reset();
                 emit("close");
             },
             structure: props.structure.slug,
             activite: props.structureActivite.id,
+            produit: props.produit.id,
         }
     );
 };
@@ -124,7 +127,7 @@ const onSubmitAddProduitForm = () => {
                                 class="min-h-full w-full max-w-6xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
                             >
                                 <form
-                                    @submit.prevent="onSubmitAddProduitForm()"
+                                    @submit.prevent="onSubmitEditProduitForm()"
                                     enctype="multipart/form-data"
                                     autocomplete="off"
                                 >
@@ -135,7 +138,7 @@ const onSubmitAddProduitForm = () => {
                                         <h3
                                             class="text-lg font-medium leading-6 text-gray-800"
                                         >
-                                            Ajouter un produit à
+                                            Modifier un produit à
                                             <span class="text-blue-700">
                                                 {{
                                                     structureActivite.titre
@@ -196,7 +199,7 @@ const onSubmitAddProduitForm = () => {
                                                                             critere.nom
                                                                         "
                                                                         v-model="
-                                                                            formAddProduit
+                                                                            formEditProduit
                                                                                 .criteres[
                                                                                 critere
                                                                                     .id
@@ -246,7 +249,7 @@ const onSubmitAddProduitForm = () => {
                                                             >
                                                                 <input
                                                                     v-model="
-                                                                        formAddProduit
+                                                                        formEditProduit
                                                                             .criteres[
                                                                             critere
                                                                                 .id
@@ -303,7 +306,7 @@ const onSubmitAddProduitForm = () => {
                                                                     >
                                                                         <input
                                                                             v-model="
-                                                                                formAddProduit
+                                                                                formEditProduit
                                                                                     .criteres[
                                                                                     critere
                                                                                         .id
@@ -352,7 +355,7 @@ const onSubmitAddProduitForm = () => {
                                                                 <input
                                                                     type="text"
                                                                     v-model="
-                                                                        formAddProduit
+                                                                        formEditProduit
                                                                             .criteres[
                                                                             critere
                                                                                 .id
@@ -379,7 +382,7 @@ const onSubmitAddProduitForm = () => {
                                                 >
                                                     <div
                                                         v-if="
-                                                            !addProduitAddress
+                                                            !editProduitAddress
                                                         "
                                                         class="flex-1"
                                                     >
@@ -396,7 +399,7 @@ const onSubmitAddProduitForm = () => {
                                                                 name="adresse"
                                                                 id="adresse"
                                                                 v-model="
-                                                                    formAddProduit.adresse
+                                                                    formEditProduit.adresse
                                                                 "
                                                                 class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                                             >
@@ -428,7 +431,7 @@ const onSubmitAddProduitForm = () => {
                                                     >
                                                         <input
                                                             v-model="
-                                                                addProduitAddress
+                                                                editProduitAddress
                                                             "
                                                             id="addAddress"
                                                             type="checkbox"
@@ -445,25 +448,25 @@ const onSubmitAddProduitForm = () => {
 
                                                 <!-- newAddress -->
                                                 <AddressForm
-                                                    v-if="addProduitAddress"
+                                                    v-if="editProduitAddress"
                                                     :errors="errors"
                                                     v-model:address="
-                                                        formAddProduit.address
+                                                        formEditProduit.address
                                                     "
                                                     v-model:city="
-                                                        formAddProduit.city
+                                                        formEditProduit.city
                                                     "
                                                     v-model:zip_code="
-                                                        formAddProduit.zip_code
+                                                        formEditProduit.zip_code
                                                     "
                                                     v-model:country="
-                                                        formAddProduit.country
+                                                        formEditProduit.country
                                                     "
                                                     v-model:address_lat="
-                                                        formAddProduit.address_lat
+                                                        formEditProduit.address_lat
                                                     "
                                                     v-model:address_lng="
-                                                        formAddProduit.address_lng
+                                                        formEditProduit.address_lng
                                                     "
                                                 />
 
@@ -480,7 +483,7 @@ const onSubmitAddProduitForm = () => {
                                                         </label>
                                                         <VueDatePicker
                                                             v-model="
-                                                                formAddProduit.date
+                                                                formEditProduit.date
                                                             "
                                                             range
                                                             multi-calendars
@@ -505,7 +508,7 @@ const onSubmitAddProduitForm = () => {
                                                         </label>
                                                         <VueDatePicker
                                                             v-model="
-                                                                formAddProduit.time
+                                                                formEditProduit.time
                                                             "
                                                             time-picker
                                                             range
@@ -532,7 +535,7 @@ const onSubmitAddProduitForm = () => {
                                         </button>
                                         <button
                                             :disabled="
-                                                formAddProduit.processing
+                                                formEditProduit.processing
                                             "
                                             type="submit"
                                             class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"

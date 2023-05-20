@@ -2,7 +2,6 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, useForm, router } from "@inertiajs/vue3";
 import { ref, computed, onMounted, defineAsyncComponent } from "vue";
-import ActivityDisplay from "@/Components/Inscription/Activity/ActivityDisplay.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { PlusIcon, XCircleIcon } from "@heroicons/vue/24/outline";
@@ -21,6 +20,10 @@ import {
 
 const AddressForm = defineAsyncComponent(() =>
     import("@/Components/Google/AddressForm.vue")
+);
+
+const ActivityDisplay = defineAsyncComponent(() =>
+    import("@/Components/Inscription/Activity/ActivityDisplay.vue")
 );
 
 const props = defineProps({
@@ -222,7 +225,7 @@ const onSubmit = () => {
                                                         categorie.id
                                                 "
                                                 :class="[
-                                                    'w-full py-3 px-2 text-sm font-medium leading-5 text-gray-700 ring-white ring-opacity-10 ring-offset-2 ring-offset-green-200 focus:outline-none focus:ring-2',
+                                                    'w-full px-2 py-3 text-sm font-medium leading-5 text-gray-700 ring-white ring-opacity-10 ring-offset-2 ring-offset-green-200 focus:outline-none focus:ring-2',
                                                     selected
                                                         ? 'bg-green-600 text-white'
                                                         : 'text-gray-700 hover:bg-white/50 hover:text-gray-800',
@@ -247,7 +250,7 @@ const onSubmit = () => {
                         >
                             <!-- buttons -->
                             <div
-                                class="flex flex-col items-start justify-start space-x-0 space-y-2 px-2 md:flex-row md:space-y-0 md:space-x-4 md:px-0"
+                                class="flex flex-col items-start justify-start space-x-0 space-y-2 px-2 md:flex-row md:space-x-4 md:space-y-0 md:px-0"
                             >
                                 <button
                                     @click="openModal"
