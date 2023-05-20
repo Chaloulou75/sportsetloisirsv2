@@ -1,5 +1,5 @@
 <script setup>
-import { CheckCircleIcon, MailIcon } from "@heroicons/vue/24/solid";
+import { CheckCircleIcon, EnvelopeIcon } from "@heroicons/vue/24/outline";
 import BreezeApplicationLogo from "@/Components/ApplicationLogo.vue";
 import { Link } from "@inertiajs/vue3";
 </script>
@@ -60,7 +60,7 @@ import { Link } from "@inertiajs/vue3";
                     cours collectifs de sports et loisirs.
                 </p>
                 <Link href="#" class="flex items-center">
-                    <MailIcon class="mr-3 h-5 w-5 text-green-700" />
+                    <EnvelopeIcon class="mr-3 h-5 w-5 text-green-700" />
                     Contactez nous
                 </Link>
             </div>

@@ -7,7 +7,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { CheckIcon } from "@heroicons/vue/24/solid";
-import { LoginIcon } from "@heroicons/vue/24/outline";
+import { ArrowRightOnRectangleIcon } from "@heroicons/vue/24/outline";
 
 defineProps({
     canResetPassword: Boolean,
@@ -35,9 +35,9 @@ const submit = () => {
     <AppLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                <LoginIcon
+                <ArrowRightOnRectangleIcon
                     class="mr-2 inline-block h-6 w-6 text-gray-600"
-                ></LoginIcon
+                ></ArrowRightOnRectangleIcon
                 >Connexion à mon compte
             </h2>
         </template>

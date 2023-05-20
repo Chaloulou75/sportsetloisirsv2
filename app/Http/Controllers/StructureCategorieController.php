@@ -100,7 +100,7 @@ class StructureCategorieController extends Controller
             $structureCategorie->delete();
         }
 
-        //supprimer StructureDiscipline if no categories!
+        //supprimer StructureDiscipline basé sur structureCategorie if no categories!
 
         return Redirect::route('structures.activites.index', $structure)->with('success', 'Discipline supprimée de votre liste.');
 
