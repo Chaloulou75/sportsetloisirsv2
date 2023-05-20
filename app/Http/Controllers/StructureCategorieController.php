@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Models\StructureCategorie;
+use App\Models\StructureDiscipline;
 use Illuminate\Http\RedirectResponse;
 use App\Models\LienDisciplineCategorie;
 use App\Models\StructureProduitCritere;
@@ -72,6 +73,8 @@ class StructureCategorieController extends Controller
 
         $structureCategorie = StructureCategorie::where('structure_id', $structure->id)->where('categorie_id', $categorie->id)->first();
 
+        $discipline = $structureCategorie->discipline;
+
         $activites = StructureActivite::where('structure_id', $structure->id)->where('categorie_id', $categorie->id)->get();
 
         $produits = StructureProduit::where('structure_id', $structure->id)->where('categorie_id', $categorie->id)->get();
@@ -100,7 +103,13 @@ class StructureCategorieController extends Controller
             $structureCategorie->delete();
         }
 
-        //supprimer StructureDiscipline basé sur structureCategorie if no categories!
+        //supprimer StructureDiscipline basé sur structureCategorie if no categories
+        $structureDiscipline = StructureDiscipline::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->first();
+        $categories = StructureCategorie::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->get();
+
+        if($categories->isEmpty()) {
+            $structureDiscipline->delete();
+        };
 
         return Redirect::route('structures.activites.index', $structure)->with('success', 'Discipline supprimée de votre liste.');
 
