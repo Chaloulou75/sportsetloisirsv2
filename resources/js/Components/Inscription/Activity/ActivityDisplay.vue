@@ -68,24 +68,25 @@ const formatTime = (time) => {
 };
 
 const openDeleteModal = (structureActivite) => {
-    showDeleteActiviteModal.value = true;
     currentStructureActivite.value = structureActivite;
+    showDeleteActiviteModal.value = true;
 };
 
 const openAddProduitModal = (structureActivite) => {
-    showAddProduitModal.value = true;
     currentStructureActivite.value = structureActivite;
+    showAddProduitModal.value = true;
 };
 
 const openEditProduitModal = (structureActivite, produit) => {
-    showEditProduitModal.value = true;
     currentStructureActivite.value = structureActivite;
     currentProduit.value = produit;
+    showEditProduitModal.value = true;
+    console.log(currentProduit.value);
 };
 
 const openEditModal = (structureActivite) => {
-    isOpen.value = true;
     currentStructureActivite.value = structureActivite;
+    isOpen.value = true;
 };
 
 const closeEditModal = () => {
@@ -589,7 +590,7 @@ function destroy(structureActivite, produit) {
                                 "
                             >
                                 <ArrowPathIcon
-                                    class="mr-1 h-6 w-6 text-gray-600 hover:text-gray-800"
+                                    class="mr-1 h-6 w-6 text-gray-600 transition-all duration-200 hover:-rotate-90 hover:text-gray-800"
                                 />
                             </button>
                             <button

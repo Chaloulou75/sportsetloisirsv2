@@ -81,6 +81,7 @@ const onSubmitAddProduitForm = () => {
         },
         {
             preserveScroll: true,
+            remember: false,
             onSuccess: () => {
                 formAddProduit.reset();
                 emit("close");

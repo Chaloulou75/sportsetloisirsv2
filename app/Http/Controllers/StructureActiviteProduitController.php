@@ -137,6 +137,7 @@ class StructureActiviteProduitController extends Controller
             $structureProduit->update(['lieu_id' => $structureAddress->id]);
 
         }
+        return Redirect::back();
     }
 
     /**
@@ -160,7 +161,97 @@ class StructureActiviteProduitController extends Controller
      */
     public function update(Request $request, Structure $structure, StructureActivite $activite, StructureProduit $produit)
     {
-        dd($request->all());
+        $request->validate([
+            'criteres' => 'nullable',
+            'adresse' => ['nullable', Rule::exists('structure_adresse', 'id')],
+            'address' => ['nullable'],
+            'city' => ['nullable'],
+            'zip_code' => ['nullable'],
+            'country' => ['nullable'],
+            'address_lat' => ['nullable'],
+            'address_lng' => ['nullable'],
+            'date' => ['nullable'],
+            'time' => ['nullable'],
+        ]);
+
+        $structureProduit = StructureProduit::where('id', $produit->id)->firstOrFail();
+
+        if(isset($request->date) || isset($request->time)) {
+
+            $dayopen = Carbon::parse($request->date[0])->format('Y-m-d');
+            $dayclose = Carbon::parse($request->date[1])->format('Y-m-d');
+
+            $heureopen = $request->time[0]['hours'];
+            $minuteopen = $request->time[0]['minutes'];
+            // Construct the time string in HH:ii:ss format
+            $houropen = sprintf('%02d:%02d', $heureopen, $minuteopen);
+
+            $heureclose = $request->time[1]['hours'];
+            $minuteclose = $request->time[1]['minutes'];
+            // Construct the time string in HH:ii:ss format
+            $hourclose = sprintf('%02d:%02d', $heureclose, $minuteclose);
+
+            $dayTime = StructureHoraire::firstOrCreate([
+                'structure_id' => $structure->id,
+                'dayopen' => $dayopen,
+                'dayclose' => $dayclose,
+                'houropen' => $houropen,
+                'hourclose' => $hourclose,
+            ]);
+        }
+
+        $structureProduit->update([
+                "actif" => 1,
+                'lieu_id' => $request->adresse ?? $structureProduit->lieu_id,
+                'horaire_id' => $dayTime->id ?? $structureProduit->horaire_id,
+        ]);
+
+        $criteresValues = $request->criteres;
+        foreach ($criteresValues as $key => $critereValue) {
+            $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $key)->first();
+
+            if ($critereValue) {
+                $structureProduitCriteres = StructureProduitCritere::where([
+                    'structure_id' => $structure->id,
+                    'discipline_id' => $structureProduit->discipline_id,
+                    'categorie_id' => $structureProduit->categorie_id,
+                    'activite_id' => $activite->id,
+                    'produit_id' => $structureProduit->id,
+                    'critere_id' => $key,
+                ])->update([
+                    'valeur' => $critereValue ?? $defaut->valeur
+                ]);
+            }
+        }
+
+        // newAdresse
+        if($request->address) {
+
+            $city= City::where('code_postal', $request->zip_code)->firstOrFail();
+            $cityId = $city->id;
+
+            $validatedAddress = [
+                'structure_id' => $structure->id,
+                'name' => $structure->name,
+                'address' => $request->address,
+                'zip_code' => $request->zip_code,
+                'city' => $request->city,
+                'country' => $request->country,
+                'city_id' => $cityId,
+                'country_id' => $structure->country_id,
+                'address_lat' => $request->address_lat,
+                'address_lng' => $request->address_lng,
+                'phone' => $structure->phone1,
+                'email' => $structure->email,
+            ];
+
+            $structureAddress = StructureAddress::create($validatedAddress);
+
+            $structureProduit->update(['lieu_id' => $structureAddress->id]);
+
+        }
+        return Redirect::back();
+
     }
 
     /**

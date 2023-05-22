@@ -112,6 +112,5 @@ class StructureCategorieController extends Controller
         };
 
         return Redirect::route('structures.activites.index', $structure)->with('success', 'Discipline supprimée de votre liste.');
-
     }
 }

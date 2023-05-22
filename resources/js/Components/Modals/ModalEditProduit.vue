@@ -1,6 +1,6 @@
 <script setup>
 import { useForm, router } from "@inertiajs/vue3";
-import { ref, onMounted, defineAsyncComponent } from "vue";
+import { ref, reactive, onMounted, defineAsyncComponent, nextTick } from "vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { XCircleIcon } from "@heroicons/vue/24/outline";
@@ -13,10 +13,6 @@ import {
 } from "@headlessui/vue";
 
 const emit = defineEmits("close");
-
-const AddressForm = defineAsyncComponent(() =>
-    import("@/Components/Google/AddressForm.vue")
-);
 
 const props = defineProps({
     errors: Object,
@@ -44,14 +40,15 @@ onMounted(() => {
     formEditProduit.time = [startTime, endTime];
 });
 
+const AddressForm = defineAsyncComponent(() =>
+    import("@/Components/Google/AddressForm.vue")
+);
+
 const editProduitAddress = ref(false);
 
-const formEditProduit = useForm({
-    structure_id: ref(props.structure.id),
-    discipline_id: ref(),
-    categorie_id: ref(),
+const formEditProduit = reactive({
     criteres: ref([]),
-    adresse: ref(),
+    adresse: ref(null),
     address: ref(null),
     city: ref(null),
     zip_code: ref(null),
@@ -63,13 +60,10 @@ const formEditProduit = useForm({
 });
 
 const onSubmitEditProduitForm = () => {
-    router.post(
-        `/structures/${props.structure.slug}/activites/${props.structureActivite.id}/produits/produits/${produit.id}`,
+    router.put(
+        `/structures/${props.structure.slug}/activites/${props.structureActivite.id}/produits/${props.produit.id}`,
         {
             _method: "put",
-            structure_id: formEditProduit.structure_id,
-            discipline_id: formEditProduit.discipline_id,
-            categorie_id: formEditProduit.categorie_id,
             criteres: formEditProduit.criteres,
             adresse: formEditProduit.adresse,
             address: formEditProduit.address,
@@ -83,8 +77,9 @@ const onSubmitEditProduitForm = () => {
         },
         {
             preserveScroll: true,
+            remember: false,
             onSuccess: () => {
-                formEditProduit.reset();
+                // formEditProduit.reset();
                 emit("close");
             },
             structure: props.structure.slug,
@@ -128,7 +123,6 @@ const onSubmitEditProduitForm = () => {
                             >
                                 <form
                                     @submit.prevent="onSubmitEditProduitForm()"
-                                    enctype="multipart/form-data"
                                     autocomplete="off"
                                 >
                                     <DialogTitle

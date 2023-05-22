@@ -78,6 +78,12 @@ watch(
     }
 );
 
+const removeDiscipline = (disciplineId) => {
+    dejaUsedDisciplinesRef.value = dejaUsedDisciplinesRef.value.filter(
+        (id) => id !== disciplineId
+    );
+};
+
 function submit() {
     // const structureValue = props.structure.value;
     const url = `/structures/${props.structure.slug}/activites`;
@@ -144,7 +150,9 @@ function submit() {
                                 <AutocompleteActiviteFormSmall
                                     class="h-full w-full md:w-1/2"
                                     :disciplines="listDisciplines"
-                                    :dejaUsedDisciplines="dejaUsedDisciplines"
+                                    :dejaUsedDisciplines="
+                                        dejaUsedDisciplinesRef
+                                    "
                                     :errors="form.errors"
                                     v-model:discipline="form.discipline_id"
                                     :selectedDiscipline="selectedDiscipline"
@@ -321,16 +329,6 @@ function submit() {
                                                     class="mr-1 h-6 w-6 text-gray-600 hover:text-red-600"
                                                 />
                                             </button>
-                                            <ModalDeleteDiscipline
-                                                :structure="structure"
-                                                :activite="currentActivite"
-                                                :show="
-                                                    showDeleteDisciplineModal
-                                                "
-                                                @close="
-                                                    showDeleteDisciplineModal = false
-                                                "
-                                            />
                                         </div>
                                         <div
                                             v-if="activite.categories"
@@ -382,18 +380,6 @@ function submit() {
                                                         class="mr-1 h-6 w-6"
                                                     />
                                                 </button>
-                                                <ModalDeleteCategorie
-                                                    :structure="structure"
-                                                    :categorie="
-                                                        currentCategorie
-                                                    "
-                                                    :show="
-                                                        showDeleteCategorieModal
-                                                    "
-                                                    @close="
-                                                        showDeleteCategorieModal = false
-                                                    "
-                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -411,4 +397,17 @@ function submit() {
             </div>
         </div>
     </AppLayout>
+    <ModalDeleteCategorie
+        :structure="structure"
+        :categorie="currentCategorie"
+        :show="showDeleteCategorieModal"
+        @close="showDeleteCategorieModal = false"
+    />
+    <ModalDeleteDiscipline
+        :structure="structure"
+        :activite="currentActivite"
+        :show="showDeleteDisciplineModal"
+        @close="showDeleteDisciplineModal = false"
+        @deleteDiscipline="removeDiscipline"
+    />
 </template>
