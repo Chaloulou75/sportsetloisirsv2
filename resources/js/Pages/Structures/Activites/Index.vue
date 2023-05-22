@@ -82,9 +82,10 @@ const removeDiscipline = (disciplineId) => {
     dejaUsedDisciplinesRef.value = dejaUsedDisciplinesRef.value.filter(
         (id) => id !== disciplineId
     );
+    selectedDiscipline.value = "";
 };
 
-function submit() {
+const submit = () => {
     // const structureValue = props.structure.value;
     const url = `/structures/${props.structure.slug}/activites`;
     form.post(
@@ -95,7 +96,7 @@ function submit() {
         },
         props.structure
     );
-}
+};
 </script>
 
 <template>
@@ -114,20 +115,20 @@ function submit() {
                         <span class="text-blue-700">{{ structure.name }}</span>
                     </h2>
                 </div>
-                <div class="mt-4 w-full md:mt-0 md:w-1/4">
+                <div class="w-full mt-4 md:mt-0 md:w-1/4">
                     <div
                         class="flex flex-col justify-between space-y-4 md:ml-4 md:space-y-6"
                     >
                         <Link
                             :href="route('structures.show', structure.slug)"
-                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-3 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                            class="flex flex-col items-center justify-center px-4 py-3 overflow-hidden text-xs text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                         >
                             Voir la structure</Link
                         >
                         <Link
                             :href="route('structures.edit', structure.slug)"
                             v-if="can.update"
-                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                            class="flex flex-col items-center justify-center px-4 py-2 overflow-hidden text-xs text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                         >
                             Editer la structure</Link
                         >
@@ -144,11 +145,11 @@ function submit() {
                             class="min-h-screen shadow-md shadow-sky-700 sm:overflow-hidden sm:rounded-md"
                         >
                             <div
-                                class="flex w-full flex-col items-start justify-start bg-white px-4 py-5 md:flex-row md:px-6 md:py-10"
+                                class="flex flex-col items-start justify-start w-full px-4 py-5 bg-white md:flex-row md:px-6 md:py-10"
                             >
                                 <!-- discipline -->
                                 <AutocompleteActiviteFormSmall
-                                    class="h-full w-full md:w-1/2"
+                                    class="w-full h-full md:w-1/2"
                                     :disciplines="listDisciplines"
                                     :dejaUsedDisciplines="
                                         dejaUsedDisciplinesRef
@@ -172,7 +173,7 @@ function submit() {
                                         Les disciplines similaires
                                     </h2>
                                     <div
-                                        class="grid auto-cols-auto grid-flow-col gap-4 text-gray-700"
+                                        class="grid grid-flow-col gap-4 text-gray-700 auto-cols-auto"
                                     >
                                         <div
                                             v-for="discipline in activiteSimilairesList"
@@ -184,7 +185,7 @@ function submit() {
                                                         discipline.id
                                                     ),
                                             }"
-                                            class="flex flex-col items-center justify-center overflow-hidden rounded px-2 py-4 text-center text-lg shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
+                                            class="flex flex-col items-center justify-center px-2 py-4 overflow-hidden text-lg text-center transition duration-150 rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
                                         >
                                             <button
                                                 type="button"
@@ -215,7 +216,7 @@ function submit() {
                             >
                                 <label
                                     for="categories"
-                                    class="mb-4 block text-lg font-medium text-gray-700"
+                                    class="block mb-4 text-lg font-medium text-gray-700"
                                 >
                                     Categories d'activité
                                     <span class="text-base italic text-gray-600"
@@ -225,7 +226,7 @@ function submit() {
                                 </label>
                                 <div class="mt-1">
                                     <ul
-                                        class="flex w-full flex-col items-start justify-between rounded-md border border-gray-300 bg-white px-3 py-2 shadow-md focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-base md:flex-row md:items-center"
+                                        class="flex flex-col items-start justify-between w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-md focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-base md:flex-row md:items-center"
                                     >
                                         <li
                                             v-for="categorie in categoriesList"
@@ -247,7 +248,7 @@ function submit() {
                                                             categorie.id
                                                         )
                                                     "
-                                                    class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded form-checkbox focus:ring-blue-500"
                                                 />
                                                 <span
                                                     class="ml-2 text-gray-700"
@@ -273,7 +274,7 @@ function submit() {
                                 <button
                                     :disabled="form.processing"
                                     type="submit"
-                                    class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                    class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                 >
                                     Enregistrer
                                 </button>
@@ -281,7 +282,7 @@ function submit() {
 
                             <section
                                 v-if="activites.length > 0"
-                                class="mx-auto my-4 max-w-7xl space-y-4 px-2 py-6 sm:px-4 lg:px-8"
+                                class="px-2 py-6 mx-auto my-4 space-y-4 max-w-7xl sm:px-4 lg:px-8"
                             >
                                 <h2 class="text-xl font-bold">Les activités</h2>
                                 <div
@@ -290,14 +291,14 @@ function submit() {
                                     ) in actByDiscAndCategorie"
                                     :key="activite.id"
                                     :index="index"
-                                    class="flex w-full flex-col justify-between space-y-4 rounded-lg border border-gray-200 px-2 py-4 text-gray-700 shadow-md md:flex-row md:space-y-0"
+                                    class="flex flex-col justify-between w-full px-2 py-4 space-y-4 text-gray-700 border border-gray-200 rounded-lg shadow-md md:flex-row md:space-y-0"
                                 >
                                     <div
-                                        class="flex w-full flex-col justify-start space-y-2"
+                                        class="flex flex-col justify-start w-full space-y-2"
                                     >
                                         <div
                                             v-if="activite"
-                                            class="flex w-full items-center justify-between px-2 text-lg font-semibold text-gray-700"
+                                            class="flex items-center justify-between w-full px-2 text-lg font-semibold text-gray-700"
                                         >
                                             <p>
                                                 {{ activite.disciplineName }}
@@ -326,16 +327,16 @@ function submit() {
                                                     >supprimer discipline</span
                                                 >
                                                 <TrashIcon
-                                                    class="mr-1 h-6 w-6 text-gray-600 hover:text-red-600"
+                                                    class="w-6 h-6 mr-1 text-gray-600 hover:text-red-600"
                                                 />
                                             </button>
                                         </div>
                                         <div
                                             v-if="activite.categories"
-                                            class="grid grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-4"
+                                            class="grid grid-cols-1 gap-4 place-items-stretch sm:grid-cols-2 lg:grid-cols-4"
                                         >
                                             <div
-                                                class="flex flex-col items-center justify-between rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                                                class="flex flex-col items-center justify-between px-4 py-3 text-lg text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                                                 v-for="(
                                                     categorie, index
                                                 ) in activite.categories"
@@ -377,7 +378,7 @@ function submit() {
                                                         categorie</span
                                                     >
                                                     <TrashIcon
-                                                        class="mr-1 h-6 w-6"
+                                                        class="w-6 h-6 mr-1"
                                                     />
                                                 </button>
                                             </div>
