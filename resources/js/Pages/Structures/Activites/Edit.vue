@@ -36,6 +36,8 @@ const props = defineProps({
     can: Object,
 });
 
+const selectedCategoryId = ref(props.activite.categorie_id);
+
 const addAddress = ref(false);
 
 const isOpen = ref(false);
@@ -48,10 +50,8 @@ const closeModal = () => {
     isOpen.value = false;
 };
 
-const selectedCategoryId = ref(null);
-
 onMounted(() => {
-    selectedCategoryId.value = props.activite.categorie_id;
+    selectedCategoryId.value = ref(props.activite.categorie_id);
 
     const startDate = new Date();
     const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
@@ -171,7 +171,7 @@ function onSubmit() {
                         <span class="text-blue-700"></span>
                     </h2>
                 </div>
-                <div class="w-full mt-4 md:mt-0 md:w-1/4">
+                <div class="mt-4 w-full md:mt-0 md:w-1/4">
                     <div
                         class="flex flex-col justify-between space-y-4 md:ml-4 md:space-y-6"
                     >
@@ -180,13 +180,13 @@ function onSubmit() {
                                 route('structures.activites.index', structure)
                             "
                             v-if="can.update"
-                            class="flex flex-col items-center justify-center px-4 py-2 overflow-hidden text-xs text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                         >
                             Mes activités</Link
                         >
                         <Link
                             :href="route('structures.show', structure.slug)"
-                            class="flex flex-col items-center justify-center px-4 py-2 overflow-hidden text-xs text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                         >
                             Voir la structure</Link
                         >
@@ -201,15 +201,15 @@ function onSubmit() {
                     <section class="space-y-4 text-gray-700">
                         <div>
                             <h2
-                                class="text-3xl font-bold text-center uppercase md:text-left"
+                                class="text-center text-3xl font-bold uppercase md:text-left"
                             >
                                 {{ activite.discipline.name }}
                             </h2>
                             <!-- categories -->
-                            <div class="w-full my-4">
+                            <div class="my-4 w-full">
                                 <div class="mt-1">
                                     <TabList
-                                        class="flex flex-col items-stretch justify-between w-full px-3 py-2 border border-gray-300 divide-y divide-green-600 rounded-sm shadow-md bg-white/20 focus:border-indigo-500 focus:outline-none sm:text-base md:flex-row md:items-center md:divide-y-0"
+                                        class="flex w-full flex-col items-stretch justify-between divide-y divide-green-600 rounded-sm border border-gray-300 bg-white/20 px-3 py-2 shadow-md focus:border-indigo-500 focus:outline-none sm:text-base md:flex-row md:items-center md:divide-y-0"
                                     >
                                         <Tab
                                             v-for="categorie in categoriesListByDiscipline"
@@ -240,7 +240,7 @@ function onSubmit() {
                         </div>
                     </section>
 
-                    <TabPanels class="py-6 mx-auto text-gray-700 max-w-7xl">
+                    <TabPanels class="mx-auto max-w-7xl py-6 text-gray-700">
                         <TabPanel
                             v-for="(
                                 categorie, idx
@@ -250,45 +250,45 @@ function onSubmit() {
                         >
                             <!-- buttons -->
                             <div
-                                class="flex flex-col items-start justify-start px-2 space-x-0 space-y-2 md:flex-row md:space-x-4 md:space-y-0 md:px-0"
+                                class="flex flex-col items-start justify-start space-x-0 space-y-2 px-2 md:flex-row md:space-x-4 md:space-y-0 md:px-0"
                             >
                                 <button
                                     @click="openModal"
                                     type="button"
-                                    class="flex items-center justify-between w-full px-4 py-3 text-lg text-white transition duration-150 bg-green-600 rounded-sm shadow-lg hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
+                                    class="flex w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
                                 >
                                     Ajouter
                                     {{ categorie.nom_categorie }}
-                                    <PlusIcon class="w-5 h-5 ml-2" />
+                                    <PlusIcon class="ml-2 h-5 w-5" />
                                 </button>
                                 <button
                                     type="button"
-                                    class="flex items-center justify-between w-full px-4 py-3 text-lg text-white transition duration-150 bg-green-600 rounded-sm shadow-lg hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
+                                    class="flex w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
                                 >
                                     Voir le planning
                                 </button>
                                 <button
                                     type="button"
-                                    class="flex items-center justify-between w-full px-4 py-3 text-lg text-white transition duration-150 bg-green-600 rounded-sm shadow-lg hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
+                                    class="flex w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
                                 >
                                     Ajouter un tarif
                                 </button>
                             </div>
                             <div
-                                class="flex flex-col items-center justify-between w-full px-2 py-6 space-y-2 md:flex-row md:space-y-0 md:px-0"
+                                class="flex w-full flex-col items-center justify-between space-y-2 px-2 py-6 md:flex-row md:space-y-0 md:px-0"
                             >
                                 <div
-                                    class="text-lg font-semibold text-center text-gray-700 md:text-left"
+                                    class="text-center text-lg font-semibold text-gray-700 md:text-left"
                                 >
                                     {{ categorie.nom_categorie }}
                                 </div>
                                 <button
                                     type="button"
                                     @click="openModal"
-                                    class="flex items-center justify-between w-full px-4 py-3 text-lg text-white transition duration-150 bg-green-600 rounded-sm shadow-lg hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
+                                    class="flex w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
                                 >
                                     Ajouter
-                                    <PlusIcon class="w-5 h-5 ml-2" />
+                                    <PlusIcon class="ml-2 h-5 w-5" />
                                 </button>
                                 <TransitionRoot
                                     appear
@@ -318,7 +318,7 @@ function onSubmit() {
                                             class="fixed inset-0 overflow-y-auto"
                                         >
                                             <div
-                                                class="flex items-center justify-center min-h-full p-4 text-center"
+                                                class="flex min-h-full items-center justify-center p-4 text-center"
                                             >
                                                 <TransitionChild
                                                     as="template"
@@ -330,7 +330,7 @@ function onSubmit() {
                                                     leave-to="opacity-0 scale-95"
                                                 >
                                                     <DialogPanel
-                                                        class="w-full max-w-6xl p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
+                                                        class="w-full max-w-6xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
                                                     >
                                                         <form
                                                             @submit.prevent="
@@ -341,7 +341,7 @@ function onSubmit() {
                                                         >
                                                             <DialogTitle
                                                                 as="div"
-                                                                class="flex items-center justify-between w-full"
+                                                                class="flex w-full items-center justify-between"
                                                             >
                                                                 <h3
                                                                     class="text-lg font-medium leading-6 text-gray-800"
@@ -356,12 +356,12 @@ function onSubmit() {
                                                                         @click="
                                                                             closeModal
                                                                         "
-                                                                        class="w-6 h-6 text-gray-600 hover:text-gray-800"
+                                                                        class="h-6 w-6 text-gray-600 hover:text-gray-800"
                                                                     />
                                                                 </button>
                                                             </DialogTitle>
                                                             <div
-                                                                class="w-full mt-2"
+                                                                class="mt-2 w-full"
                                                             >
                                                                 <div
                                                                     class="flex flex-col space-y-3"
@@ -410,7 +410,7 @@ function onSubmit() {
                                                                             l'activité
                                                                         </label>
                                                                         <div
-                                                                            class="flex mt-1 rounded-md"
+                                                                            class="mt-1 flex rounded-md"
                                                                         >
                                                                             <input
                                                                                 v-model="
@@ -419,7 +419,7 @@ function onSubmit() {
                                                                                 type="text"
                                                                                 name="titre"
                                                                                 id="titre"
-                                                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                                                 :placeholder="`${categorie.nom_categorie} de ${activite.discipline.name}`"
                                                                                 autocomplete="none"
                                                                             />
@@ -453,7 +453,7 @@ function onSubmit() {
                                                                                 id="description"
                                                                                 name="description"
                                                                                 rows="2"
-                                                                                class="block w-full h-32 min-h-full mt-1 placeholder-gray-400 placeholder-opacity-50 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                                                class="mt-1 block h-32 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                                                 :class="{
                                                                                     errors: 'border-red-500 focus:ring focus:ring-red-200',
                                                                                 }"
@@ -479,7 +479,7 @@ function onSubmit() {
                                                                             filteredCriteres.length >
                                                                             0
                                                                         "
-                                                                        class="flex flex-col items-center justify-between w-full space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
+                                                                        class="flex w-full flex-col items-center justify-between space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
                                                                     >
                                                                         <div
                                                                             v-for="critere in filteredCriteres"
@@ -507,7 +507,7 @@ function onSubmit() {
                                                                                         }}
                                                                                     </label>
                                                                                     <div
-                                                                                        class="flex mt-1 rounded-md"
+                                                                                        class="mt-1 flex rounded-md"
                                                                                     >
                                                                                         <select
                                                                                             :name="
@@ -523,7 +523,7 @@ function onSubmit() {
                                                                                                         .id
                                                                                                 ]
                                                                                             "
-                                                                                            class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
+                                                                                            class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                                                                         >
                                                                                             <option
                                                                                                 disabled
@@ -577,7 +577,7 @@ function onSubmit() {
                                                                                             critere.nom
                                                                                         "
                                                                                         type="checkbox"
-                                                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600"
+                                                                                        class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
                                                                                     />
                                                                                     <label
                                                                                         :for="
@@ -609,7 +609,7 @@ function onSubmit() {
                                                                                 </label>
 
                                                                                 <div
-                                                                                    class="flex mt-1 rounded-md"
+                                                                                    class="mt-1 flex rounded-md"
                                                                                 >
                                                                                     <div>
                                                                                         <label
@@ -668,7 +668,7 @@ function onSubmit() {
                                                                                     }}
                                                                                 </label>
                                                                                 <div
-                                                                                    class="flex mt-1 rounded-md"
+                                                                                    class="mt-1 flex rounded-md"
                                                                                 >
                                                                                     <input
                                                                                         type="text"
@@ -685,7 +685,7 @@ function onSubmit() {
                                                                                         :id="
                                                                                             critere.nom
                                                                                         "
-                                                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                                                         placeholder=""
                                                                                         autocomplete="none"
                                                                                     />
@@ -696,7 +696,7 @@ function onSubmit() {
 
                                                                     <!-- Adresse -->
                                                                     <div
-                                                                        class="flex items-end justify-between w-full space-x-4"
+                                                                        class="flex w-full items-end justify-between space-x-4"
                                                                     >
                                                                         <div
                                                                             v-if="
@@ -713,7 +713,7 @@ function onSubmit() {
                                                                                 Adresse
                                                                             </label>
                                                                             <div
-                                                                                class="flex mt-1 rounded-md"
+                                                                                class="mt-1 flex rounded-md"
                                                                             >
                                                                                 <select
                                                                                     name="
@@ -725,7 +725,7 @@ function onSubmit() {
                                                                                     v-model="
                                                                                         form.adresse
                                                                                     "
-                                                                                    class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
+                                                                                    class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                                                                 >
                                                                                     <option
                                                                                         v-for="adresse in structure.adresses"
@@ -759,7 +759,7 @@ function onSubmit() {
                                                                                 "
                                                                                 id="addAddress"
                                                                                 type="checkbox"
-                                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded form-checkbox focus:ring-blue-500"
+                                                                                class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
                                                                             />
                                                                             <label
                                                                                 for="addAddress"
@@ -801,7 +801,7 @@ function onSubmit() {
 
                                                                     <!-- Jours et Heures -->
                                                                     <div
-                                                                        class="flex flex-col items-center justify-between w-full space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
+                                                                        class="flex w-full flex-col items-center justify-between space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
                                                                     >
                                                                         <div
                                                                             class="z-10 w-full"
@@ -858,11 +858,11 @@ function onSubmit() {
                                                                 </div>
                                                             </div>
                                                             <div
-                                                                class="flex items-center justify-between w-full mt-4"
+                                                                class="mt-4 flex w-full items-center justify-between"
                                                             >
                                                                 <button
                                                                     type="button"
-                                                                    class="inline-flex justify-center px-4 py-2 text-sm font-normal text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                                                                    class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-normal text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
                                                                     @click="
                                                                         closeModal
                                                                     "
@@ -874,7 +874,7 @@ function onSubmit() {
                                                                         form.processing
                                                                     "
                                                                     type="submit"
-                                                                    class="inline-flex justify-center px-4 py-2 text-sm font-normal text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                                                                    class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-normal text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                                                 >
                                                                     Enregistrer
                                                                 </button>
