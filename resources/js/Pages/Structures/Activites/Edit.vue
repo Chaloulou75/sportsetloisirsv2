@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, useForm, router } from "@inertiajs/vue3";
-import { ref, computed, onMounted, defineAsyncComponent } from "vue";
+import { ref, watch, computed, onMounted, defineAsyncComponent } from "vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { PlusIcon, XCircleIcon } from "@heroicons/vue/24/outline";
@@ -90,6 +90,17 @@ const filteredCriteres = computed(() => {
     return props.criteres.filter(
         (critere) => critere.categorie_id === selectedCategoryId.value
     );
+});
+
+watch(filteredCriteres, (newFilteredCriteres) => {
+    newFilteredCriteres.forEach((critere) => {
+        if (
+            critere.type_champ_form === "select" &&
+            critere.valeurs.length > 0
+        ) {
+            form.criteres[critere.id] = critere.valeurs[0].valeur;
+        }
+    });
 });
 
 const latestAdresseId = computed(() => {

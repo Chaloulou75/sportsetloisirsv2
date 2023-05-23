@@ -41,6 +41,15 @@ onMounted(() => {
         minutes: 0,
     };
     formAddProduit.time = [startTime, endTime];
+
+    props.filteredCriteres.forEach((critere) => {
+        if (
+            critere.type_champ_form === "select" &&
+            critere.valeurs.length > 0
+        ) {
+            formAddProduit.criteres[critere.id] = critere.valeurs[0].valeur;
+        }
+    });
 });
 
 const addProduitAddress = ref(false);

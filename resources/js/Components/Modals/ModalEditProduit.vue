@@ -53,6 +53,10 @@ watch(
         if (newValue) {
             formEditProduit.adresse = newValue.lieu_id;
             formEditProduit.actif = newValue.actif;
+            formEditProduit.criteres = {};
+            newValue.criteres.forEach((critere) => {
+                formEditProduit.criteres[critere.critere_id] = critere.valeur;
+            });
         }
     }
 );
