@@ -172,6 +172,7 @@ class StructureActiviteProduitController extends Controller
             'address_lng' => ['nullable'],
             'date' => ['nullable'],
             'time' => ['nullable'],
+            'actif' => ['nullable'],
         ]);
 
         $structureProduit = StructureProduit::where('id', $produit->id)->firstOrFail();
@@ -200,8 +201,10 @@ class StructureActiviteProduitController extends Controller
             ]);
         }
 
+        $actifValue = $request->actif ? "1" : "0";
+
         $structureProduit->update([
-                "actif" => 1,
+                "actif" => $actifValue,
                 'lieu_id' => $request->adresse ?? $structureProduit->lieu_id,
                 'horaire_id' => $dayTime->id ?? $structureProduit->horaire_id,
         ]);

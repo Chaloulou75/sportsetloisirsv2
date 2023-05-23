@@ -1,6 +1,6 @@
 <script setup>
 import { useForm, router } from "@inertiajs/vue3";
-import { ref, reactive, onMounted, defineAsyncComponent, nextTick } from "vue";
+import { ref, watch, computed, onMounted, defineAsyncComponent } from "vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { XCircleIcon } from "@heroicons/vue/24/outline";
@@ -10,6 +10,7 @@ import {
     Dialog,
     DialogPanel,
     DialogTitle,
+    Switch,
 } from "@headlessui/vue";
 
 const emit = defineEmits("close");
@@ -46,7 +47,17 @@ const AddressForm = defineAsyncComponent(() =>
 
 const editProduitAddress = ref(false);
 
-const formEditProduit = reactive({
+watch(
+    () => props.produit,
+    (newValue) => {
+        if (newValue) {
+            formEditProduit.adresse = newValue.lieu_id;
+            formEditProduit.actif = newValue.actif;
+        }
+    }
+);
+
+const formEditProduit = useForm({
     criteres: ref([]),
     adresse: ref(null),
     address: ref(null),
@@ -57,6 +68,7 @@ const formEditProduit = reactive({
     address_lng: ref(null),
     date: ref(null),
     time: ref(null),
+    actif: ref(null),
 });
 
 const onSubmitEditProduitForm = () => {
@@ -74,12 +86,13 @@ const onSubmitEditProduitForm = () => {
             address_lng: formEditProduit.address_lng,
             date: formEditProduit.date,
             time: formEditProduit.time,
+            actif: formEditProduit.actif,
         },
         {
             preserveScroll: true,
             remember: false,
             onSuccess: () => {
-                // formEditProduit.reset();
+                formEditProduit.reset();
                 emit("close");
             },
             structure: props.structure.slug,
@@ -151,6 +164,47 @@ const onSubmitEditProduitForm = () => {
                                             <div
                                                 class="flex flex-col space-y-3"
                                             >
+                                                <div
+                                                    class="flex items-center space-x-2"
+                                                >
+                                                    <Switch
+                                                        v-model="
+                                                            formEditProduit.actif
+                                                        "
+                                                        :class="
+                                                            formEditProduit.actif
+                                                                ? 'bg-green-600'
+                                                                : 'bg-gray-200'
+                                                        "
+                                                        class="relative inline-flex h-6 w-11 items-center rounded-full"
+                                                    >
+                                                        <span class="sr-only"
+                                                            >Actif</span
+                                                        >
+                                                        <span
+                                                            :class="
+                                                                formEditProduit.actif
+                                                                    ? 'translate-x-6'
+                                                                    : 'translate-x-1'
+                                                            "
+                                                            class="inline-block h-4 w-4 transform rounded-full bg-white transition"
+                                                        />
+                                                    </Switch>
+                                                    <p
+                                                        class="text-lg font-semibold text-green-600"
+                                                        v-if="
+                                                            formEditProduit.actif
+                                                        "
+                                                    >
+                                                        Actif
+                                                    </p>
+                                                    <p
+                                                        class="text-lg font-semibold text-gray-600"
+                                                        v-else
+                                                    >
+                                                        Inactif
+                                                    </p>
+                                                </div>
                                                 <!-- Criteres -->
                                                 <div
                                                     v-if="

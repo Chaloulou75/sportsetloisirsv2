@@ -11,7 +11,7 @@ const props = defineProps({
 
 let searchTerm = ref("");
 
-const dejaUsedDisciplinesRef = ref(props.dejaUsedDisciplines);
+const dejaUsedDisciplinesRef = computed(() => props.dejaUsedDisciplines);
 
 const searchDisciplines = computed(() => {
     if (searchTerm.value === "") {
