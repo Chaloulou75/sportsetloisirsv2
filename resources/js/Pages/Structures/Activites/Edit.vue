@@ -51,7 +51,7 @@ const closeModal = () => {
 };
 
 onMounted(() => {
-    selectedCategoryId.value = ref(props.activite.categorie_id);
+    selectedCategoryId.value = props.activite.categorie_id;
 
     const startDate = new Date();
     const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
