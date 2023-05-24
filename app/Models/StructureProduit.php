@@ -56,6 +56,5 @@ class StructureProduit extends Model
         return $this->belongsTo(StructureHoraire::class, 'horaire_id');
     }
 
-    // horaire
     // tarif
 }

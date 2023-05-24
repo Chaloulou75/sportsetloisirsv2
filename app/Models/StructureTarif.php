@@ -43,5 +43,10 @@ class StructureTarif extends Model
     {
         return $this->belongsTo(StructureProduit::class, 'produit_id');
     }
+
+    public function tarifType(): BelongsTo
+    {
+        return $this->belongsTo(ListeTarifType::class, 'type_id');
+    }
     //tarif type
 }

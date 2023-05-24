@@ -27,7 +27,7 @@ class DisciplineController extends Controller
                             request(['search'])
                         )
                         // ->orderByDesc('activites_count')
-                        ->paginate(15)
+                        ->paginate(12)
                         ->withQueryString();
 
         return Inertia::render('Disciplines/Index', [

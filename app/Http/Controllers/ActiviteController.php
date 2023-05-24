@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\LienDisciplineCategorieCritere;
 use App\Models\LienDisciplineCategorieCritereValeur;
+use App\Models\ListeTarifType;
 
 class ActiviteController extends Controller
 {
@@ -36,8 +37,6 @@ class ActiviteController extends Controller
     {
         $structure = Structure::with([
                         'activites',
-                        'activites.disciplines',
-                        'activites.disciplines.categoriesByActivite',
                     ])->select(['id', 'name', 'slug'])
                     ->where('id', $structure->id)
                     ->first();
@@ -192,12 +191,21 @@ class ActiviteController extends Controller
             return Redirect::route('structures.activites.index', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
 
-        $structure = Structure::with(['adresses' => function ($query) {
-            $query->latest();
-        }])
+        $structure = Structure::with([
+            'adresses' => function ($query) {
+                $query->latest();
+            },
+            'disciplines',
+            'activites',
+            'activites.discipline',
+            'activites.categorie',
+            'produits'
+        ])
         ->select(['id', 'name', 'slug'])
         ->where('slug', $structure->slug)
         ->first();
+
+        // dd($structure);
 
         $activite = StructureCategorie::with(['structure','categorie', 'discipline'])
                         ->where('structure_id', $structure->id)
@@ -219,12 +227,15 @@ class ActiviteController extends Controller
                                                     ->where('discipline_id', $activite->discipline->id)
                                                     ->get();
 
+        $tarifTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();
+
         return Inertia::render('Structures/Activites/Edit', [
             'structure' => $structure,
             'activite' => $activite,
             'structureActivites' => $structureActivites,
             'criteres' => $criteres,
             'categoriesListByDiscipline' => $categoriesListByDiscipline,
+            'tarifTypes'=> $tarifTypes,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),
