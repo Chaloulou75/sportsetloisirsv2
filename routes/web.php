@@ -11,6 +11,7 @@ use App\Http\Controllers\ActiviteController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\DepartementController;
+use App\Http\Controllers\StructureTarifController;
 use App\Http\Controllers\StructureCategorieController;
 use App\Http\Controllers\StructureDisciplineController;
 use App\Http\Controllers\StructureActiviteProduitController;
@@ -59,6 +60,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/structures/{structure:slug}/activites/{activite:id}/produits/{produit:id}/duplicate', [StructureActiviteProduitController::class, 'duplicate'])->name('produits.duplicate');
     Route::resource('structures.activites.produits', StructureActiviteProduitController::class)->scoped(['structure' => 'slug', 'activite' => 'id', 'produit' => 'id']);
 
+    Route::resource('structures.tarifs', StructureTarifController::class)->scoped(['structure' => 'slug','tarif' => 'id']);
     Route::resource('structures.disciplines', StructureDisciplineController::class)->scoped(['structure' => 'slug','discipline' => 'id']);
     Route::resource('structures.categories', StructureCategorieController::class)->scoped(['structure' => 'slug','categorie' => 'id']);
 

@@ -46,7 +46,6 @@ class ActiviteController extends Controller
             ->latest()
             ->get();
 
-
         $actByDiscAndCategorie = $activites->groupBy('discipline.name')->map(function ($disciplineCategories) {
             $categories = $disciplineCategories->groupBy('categorie.nom_categorie')->map(function ($categorieItems) {
                 return [
@@ -195,11 +194,6 @@ class ActiviteController extends Controller
             'adresses' => function ($query) {
                 $query->latest();
             },
-            'disciplines',
-            'activites',
-            'activites.discipline',
-            'activites.categorie',
-            'produits'
         ])
         ->select(['id', 'name', 'slug'])
         ->where('slug', $structure->slug)
@@ -221,6 +215,7 @@ class ActiviteController extends Controller
                             ->latest()
                             ->get();
 
+
         $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
             $query->orderBy('defaut', 'desc');
         }])
@@ -229,6 +224,41 @@ class ActiviteController extends Controller
 
         $tarifTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();
 
+        $activiteForTarifs = StructureActivite::with(['structure:id,name,slug', 'categorie:id,nom_categorie', 'discipline:id,name', 'produits'])
+            ->where('structure_id', $structure->id)
+            ->latest()
+            ->get()
+            ->groupBy('discipline.name')
+            ->map(function ($disciplineActivites, $disciplineName) {
+                $disciplineId = $disciplineActivites->first()->discipline->id;
+                return [
+                    'id' => $disciplineId,
+                    'disciplineName' => $disciplineName,
+                    'categories' => $disciplineActivites->groupBy('categorie.nom_categorie')->map(function ($categorieItems, $categorieName) {
+                        $categoryId = $categorieItems->first()->categorie->id;
+                        $activites = $categorieItems->map(function ($activiteItem) {
+                            return [
+                                'id' => $activiteItem->id,
+                                'titre' =>$activiteItem->titre,
+                                'produits' => $activiteItem->produits->map(function ($produitItem) {
+                                    return [
+                                        'id' => $produitItem->id,
+                                        'activite_id' => $produitItem->activite_id,
+                                    ];
+                                })
+                            ];
+                        });
+                        return [
+                            'id' => $categoryId,
+                            'name' => $categorieItems->first()->categorie->nom_categorie ?? 'Sans Catégorie',
+                            'activites' => $activites,
+                        ];
+                    }),
+                ];
+            });
+
+        // dd($activiteForTarifs);
+
         return Inertia::render('Structures/Activites/Edit', [
             'structure' => $structure,
             'activite' => $activite,
@@ -236,6 +266,7 @@ class ActiviteController extends Controller
             'criteres' => $criteres,
             'categoriesListByDiscipline' => $categoriesListByDiscipline,
             'tarifTypes'=> $tarifTypes,
+            'activiteForTarifs' => $activiteForTarifs,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),
