@@ -56,5 +56,10 @@ class StructureProduit extends Model
         return $this->belongsTo(StructureHoraire::class, 'horaire_id');
     }
 
+    public function tarif(): BelongsTo
+    {
+        return $this->belongsTo(StructureTarif::class, 'tarif_id');
+    }
+
     // tarif
 }

@@ -56,7 +56,8 @@ const formAddTarif = useForm({
 });
 
 
-watch(formAddTarif.disciplines, (newDisciplines) => {
+watch(formAddTarif.disciplines, async (newDisciplines) => {
+    console.log(newDisciplines);
     newDisciplines.forEach((disciplineId) => {
         // Set all related category checkboxes to true
         const categories = formAddTarif.categories.value[disciplineId];
@@ -157,7 +158,7 @@ const onSubmitAddTarifForm = () => {
                                                     <div class="relative mt-1">
                                                         <label for="tarifType"
                                                             class="block text-sm font-medium text-gray-700">
-                                                            Type de tarif *
+                                                            Type de tarif
                                                         </label>
                                                         <ListboxButton
                                                             class="relative w-full py-2 pl-3 pr-10 mt-1 text-left bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
@@ -247,7 +248,7 @@ const onSubmitAddTarifForm = () => {
                                                             <ListboxButton
                                                                 class="relative w-full py-2 pl-3 pr-10 mt-1 text-left bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                                                                 <span class="block truncate">
-                                                                    {{ selectedUniteeDuree }}
+                                                                    {{ selectedUniteeDuree.name }}
                                                                 </span>
                                                                 <span
                                                                     class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
@@ -262,7 +263,7 @@ const onSubmitAddTarifForm = () => {
                                                                     class="absolute w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                                                                     <ListboxOption v-slot="{ active, selected }"
                                                                         v-for="unite in uniteDurees" :key="unite.id"
-                                                                        :value="unite.name" as="template">
+                                                                        :value="unite" as="template">
                                                                         <li :class="[
                                                                             active
                                                                                 ? 'bg-amber-100 text-amber-900'

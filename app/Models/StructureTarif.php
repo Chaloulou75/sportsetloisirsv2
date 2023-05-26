@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -48,5 +49,9 @@ class StructureTarif extends Model
     {
         return $this->belongsTo(ListeTarifType::class, 'type_id');
     }
-    //tarif type
+
+    public function tarifs(): HasMany
+    {
+        return $this->hasMany(StructureTarif::class, 'tarif_id');
+    }
 }

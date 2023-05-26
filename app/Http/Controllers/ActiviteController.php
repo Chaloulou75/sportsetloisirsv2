@@ -215,7 +215,6 @@ class ActiviteController extends Controller
                             ->latest()
                             ->get();
 
-
         $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
             $query->orderBy('defaut', 'desc');
         }])

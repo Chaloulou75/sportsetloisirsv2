@@ -4,6 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Structure;
 use Illuminate\Http\Request;
+use App\Models\ListeTarifType;
+use App\Models\StructureTarif;
+use Illuminate\Validation\Rule;
+use App\Models\StructureProduit;
+use App\Models\StructureTarifTypeInfo;
+use Illuminate\Support\Facades\Redirect;
 
 class StructureTarifController extends Controller
 {
@@ -28,7 +34,61 @@ class StructureTarifController extends Controller
      */
     public function store(Request $request, Structure $structure)
     {
-        dd($request->all());
+        $request->validate([
+            'structure_id' => ['nullable', Rule::exists('structures', 'id')],
+            'titre' => ['nullable', 'string'],
+            'description' => ['nullable', 'string'],
+            'tarifType' => ['nullable', Rule::exists('liste_tarifs_types', 'id')],
+            'attributs' => ['nullable'],
+            'amount' => ['required', 'numeric'],
+            'disciplines' => ['nullable'],
+            'categories' => ['nullable'],
+            'activites' => ['nullable'],
+            'produits' => ['required'],
+            'uniteDuree' => ['nullable'],
+        ]);
+
+        $structure = Structure::with(['disciplines', 'categories', 'activites', 'produits'])->where('id', $structure->id)->firstOrFail();
+
+        foreach($request->produits as $key => $produitId) {
+            if($produitId === true) {
+                $structureProduit = StructureProduit::where('id', $key)->first();
+
+                $structureTarif = StructureTarif::create([
+                    'structure_id' => $structure->id,
+                    'discipline_id' => $structureProduit->discipline_id,
+                    'categorie_id' => $structureProduit->categorie_id,
+                    'activite_id' => $structureProduit->activite_id,
+                    'produit_id' => $structureProduit->id,
+                    'type_id' => $request->tarifType,
+                    'titre' => $request->titre,
+                    'description' => $request->description,
+                    'amount' => $request->amount,
+                ]);
+
+                $tarifType = ListeTarifType::with('tariftypeattributs')->where('id', $structureTarif->type_id)->first();
+
+                foreach($request->attributs as $key => $valeur) {
+                    foreach($tarifType->tariftypeattributs as $tariftypeattribut) {
+                        if($tariftypeattribut->id === $key) {
+                            $tarifAttribut = StructureTarifTypeInfo::create([
+                                'structure_id' => $structure->id,
+                                'tarif_id' => $structureTarif->id,
+                                'type_id' => $tarifType->id,
+                                'attribut_id' => $key,
+                                'valeur' => $valeur,
+                            ]);
+                            if($tariftypeattribut->attribut === 'Duree') {
+                                $tarifAttribut->update(['valeur'=> $valeur . ' ' . $request->uniteDuree['name']]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return Redirect::back()->with('success', "Le tarif a bien été enregistré pour vos produits");
+
     }
 
     /**
