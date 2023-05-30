@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class StructureProduit extends Model
@@ -51,15 +52,14 @@ class StructureProduit extends Model
         return $this->hasMany(StructureProduitCritere::class, 'produit_id');
     }
 
-    public function horaires(): BelongsTo
+    public function horaire(): BelongsTo
     {
         return $this->belongsTo(StructureHoraire::class, 'horaire_id');
     }
 
-    public function tarif(): BelongsTo
+    public function tarifs(): HasMany
     {
-        return $this->belongsTo(StructureTarif::class, 'tarif_id');
+        return $this->hasMany(StructureTarif::class, 'produit_id');
     }
 
-    // tarif
 }

@@ -25,30 +25,15 @@ class StructureActivite extends Model
         return $this->belongsTo(Structure::class);
     }
 
-    // public function structures(): BelongsToMany
-    // {
-    //     return $this->belongsToMany(Structure::class, 'structures_produits', 'activite_id', 'structure_id')->withTimestamps();
-    // }
-
     public function categorie(): BelongsTo
     {
         return $this->belongsTo(LienDisciplineCategorie::class, 'categorie_id');
     }
 
-    // public function categories(): BelongsToMany
-    // {
-    //     return $this->belongsToMany(LienDisciplineCategorie::class, 'structures_produits', 'activite_id', 'categorie_id')->withTimestamps();
-    // }
-
     public function discipline(): BelongsTo
     {
         return $this->belongsTo(ListDiscipline::class, 'discipline_id');
     }
-
-    // public function disciplines(): BelongsToMany
-    // {
-    //     return $this->belongsToMany(ListDiscipline::class, 'structures_produits', 'activite_id', 'discipline_id')->withTimestamps();
-    // }
 
     public function produits(): HasMany
     {

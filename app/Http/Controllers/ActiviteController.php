@@ -209,7 +209,7 @@ class ActiviteController extends Controller
 
         $categoriesListByDiscipline = LienDisciplineCategorie::where('discipline_id', $activite->discipline->id)->get();
 
-        $structureActivites = StructureActivite::with(['structure:id,name,slug,presentation_courte', 'categorie:id,nom_categorie', 'discipline:id,name', 'produits', 'produits.adresse', 'produits.criteres', 'produits.horaires'])
+        $structureActivites = StructureActivite::with(['structure:id,name,slug,presentation_courte', 'categorie:id,nom_categorie', 'discipline:id,name', 'produits', 'produits.adresse', 'produits.criteres', 'produits.horaire', 'produits.tarifs', 'produits.tarifs.structureTarifTypeInfos', 'produits.tarifs.tarifType'])
                             ->where('structure_id', $structure->id)
                             ->where('discipline_id', $activite->discipline->id)
                             ->latest()

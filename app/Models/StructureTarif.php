@@ -50,8 +50,9 @@ class StructureTarif extends Model
         return $this->belongsTo(ListeTarifType::class, 'type_id');
     }
 
-    public function tarifs(): HasMany
+    public function structureTarifTypeInfos(): HasMany
     {
-        return $this->hasMany(StructureTarif::class, 'tarif_id');
+        return $this->hasMany(StructureTarifTypeInfo::class, 'tarif_id');
     }
+
 }

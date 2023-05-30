@@ -66,6 +66,8 @@ class StructureTarifController extends Controller
                     'amount' => $request->amount,
                 ]);
 
+                $structureProduit->update(['tarif_id' => $structureTarif->id]);
+
                 $tarifType = ListeTarifType::with('tariftypeattributs')->where('id', $structureTarif->type_id)->first();
 
                 foreach($request->attributs as $key => $valeur) {
@@ -118,8 +120,29 @@ class StructureTarifController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Structure $structure, $tarif)
     {
-        //
+        $tarif = StructureTarif::with('structureTarifTypeInfos')->where('id', $tarif)->where('structure_id', $structure->id)->firstOrFail();
+
+        $infos = StructureTarifTypeInfo::where('tarif_id', $tarif->id)->get();
+
+        $produits = StructureProduit::where('structure_id', $structure->id)->where('tarif_id', $tarif->id)->get();
+
+        if($produits->isNotEmpty()) {
+            foreach($produits as $produit) {
+                $produit->update(['tarif_id' => null]);
+            }
+        }
+
+        if($infos->isNotEmpty()) {
+            foreach($infos as $info) {
+                $info->delete();
+            }
+        }
+
+        $tarif->delete();
+
+        return Redirect::back()->with('success', 'Le tarif a bien été supprimé');
+
     }
 }

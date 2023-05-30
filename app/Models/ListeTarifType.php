@@ -19,4 +19,10 @@ class ListeTarifType extends Model
         return $this->hasMany(ListeTarifTypeAttribut::class, 'type_id');
 
     }
+
+    public function tarifs(): HasMany
+    {
+        return $this->hasMany(StructureTarif::class, 'type_id');
+
+    }
 }

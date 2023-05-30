@@ -20,7 +20,7 @@ import {
     ListboxOption,
 } from "@headlessui/vue";
 
-const emit = defineEmits("close");
+const emit = defineEmits(["close"]);
 
 const props = defineProps({
     errors: Object,
@@ -55,29 +55,39 @@ const formAddTarif = useForm({
     uniteDuree: ref(selectedUniteeDuree.value),
 });
 
+watch(() => formAddTarif.disciplines,
+    async (newDisciplines) => {
+        newDisciplines.forEach((disciplineId) => {
+            // Set all related category checkboxes to true
+            console.log(disciplineId);
+            const categories = ref(formAddTarif.categories[disciplineId]);
+            if (categories.value) {
+                Object.keys(categories.value).forEach((categoryId) => {
+                    categories.value[categoryId] = true;
+                });
+            }
 
-watch(formAddTarif.disciplines, async (newDisciplines) => {
-    console.log(newDisciplines);
-    newDisciplines.forEach((disciplineId) => {
-        // Set all related category checkboxes to true
-        const categories = formAddTarif.categories.value[disciplineId];
-        Object.keys(categories).forEach((categoryId) => {
-            categories[categoryId] = true;
-        });
+            // Set all related activite checkboxes to true
+            const activites = ref(formAddTarif.activites[disciplineId]);
+            if (activites.value) {
+                Object.keys(activites.value).forEach((activiteId) => {
+                    activites.value[activiteId] = true;
+                });
+            }
 
-        // Set all related activite checkboxes to true
-        const activites = formAddTarif.activites.value[disciplineId];
-        Object.keys(activites).forEach((activiteId) => {
-            activites[activiteId] = true;
+            // Set all related produit checkboxes to true
+            const produits = ref(formAddTarif.produits[disciplineId]);
+            if (produits.value) {
+                Object.keys(produits.value).forEach((produitId) => {
+                    produits.value[produitId] = true;
+                });
+            }
         });
-
-        // Set all related produit checkboxes to true
-        const produits = formAddTarif.produits.value[disciplineId];
-        Object.keys(produits).forEach((produitId) => {
-            produits[produitId] = true;
-        });
-    });
-});
+    },
+    {
+        deep: true,
+    }
+);
 
 const onSubmitAddTarifForm = () => {
     router.post(
