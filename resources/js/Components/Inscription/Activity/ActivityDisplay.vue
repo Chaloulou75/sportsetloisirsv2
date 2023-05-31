@@ -1,5 +1,5 @@
 <script setup>
-import { ref, nextTick, defineAsyncComponent } from "vue";
+import { ref, computed, nextTick, defineAsyncComponent } from "vue";
 import { useForm, router } from "@inertiajs/vue3";
 import dayjs from "dayjs";
 import "dayjs/locale/fr"; // Import the French locale
@@ -67,6 +67,24 @@ const formatDate = (dateTime) => {
 const formatTime = (time) => {
     const formattedTime = time.substring(0, 5); // Extract the first 5 characters (HH:mm)
     return formattedTime;
+};
+
+const formatCurrency = (value) => {
+    // Remove the non-numeric characters from the currency value
+    const numericValue = Number(value.replace(/[^0-9.-]+/g, ''));
+    // Check if the numeric value is a valid number
+    if (!isNaN(numericValue)) {
+        // Check if the numeric value has decimal places
+        if (numericValue % 1 === 0) {
+            // No decimal places, return as integer
+            return numericValue.toLocaleString() + ' €';
+        } else {
+            // Decimal places present, format with two decimal places
+            return numericValue.toFixed(2) + ' €';
+        }
+    }
+    // Return the original value if conversion failed
+    return value;
 };
 
 const openDeleteModal = (structureActivite) => {
@@ -138,7 +156,7 @@ async function toggleActif(structureActivite) {
     );
 }
 
-function duplicate(structureActivite, produit) {
+const duplicate = (structureActivite, produit) => {
     router.post(
         `/structures/${props.structure.slug}/activites/${structureActivite.id}/produits/${produit.id}/duplicate`,
         {
@@ -158,6 +176,26 @@ const destroy = (structureActivite, produit) => {
         activite: structureActivite.id,
         produit: produit.id,
     });
+}
+
+const openTarifToggle = (produit) => {
+    currentProduit.value = produit;
+    openTarif.value = !openTarif.value;
+}
+
+const isOpenTarif = (produit) => {
+    return currentProduit.value === produit && openTarif.value;
+};
+
+const duplicateTarif = (tarif) => {
+    router.post(
+        `/structures/${props.structure.slug}/tarifs/${tarif.id}/duplicate`,
+        {
+            preserveScroll: true,
+            structure: props.structure.slug,
+            tarif: tarif.id,
+        }
+    );
 }
 
 const destroyTarif = (tarif) => {
@@ -356,7 +394,7 @@ const destroyTarif = (tarif) => {
                 leave-from-class="transform opacity-100" leave-to-class="transform opacity-0">
                 <DisclosurePanel as="div">
                     <div v-for="produit in structureActivite.produits" :key="produit.id"
-                        class="grid grid-flow-row grid-cols-3 gap-2 py-2 place-items-center odd:bg-white even:bg-slate-50 md:grid-cols-6">
+                        class="grid grid-flow-row grid-cols-3 gap-2 py-4 place-items-center odd:bg-white even:bg-slate-50 md:grid-cols-6">
 
                         <div v-if="produit.criteres.length > 0"
                             class="grid w-full h-full grid-cols-2 col-span-2 gap-2 place-items-center">
@@ -406,7 +444,7 @@ const destroyTarif = (tarif) => {
                             <span v-else class="text-sm text-gray-600">Planning</span>
                         </div>
                         <div class="flex items-center col-span-1">
-                            <button @click="openTarif = !openTarif" type="button"
+                            <button @click="() => openTarifToggle(produit)" type="button"
                                 class="flex items-center justify-between w-full px-3 py-2 text-sm text-white transition duration-100 bg-green-600 rounded shadow-lg hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm">
                                 Tarifs
                             </button>
@@ -431,11 +469,15 @@ const destroyTarif = (tarif) => {
                             </button>
                         </div>
 
-                        <div v-show="openTarif" class="w-full h-full col-span-3 md:col-span-6">
+                        <div v-show="isOpenTarif(produit) && (produit.tarifs.length > 0)"
+                            class="w-full h-full col-span-3 md:col-span-6 border border-green-200 py-2">
+                            <h3 class="w-full text-gray-700 font-semibold px-2 md:px-4 py-2 text-sm">Liste des tarifs
+                                pour ce produit:</h3>
                             <div v-for="tarif in produit.tarifs" :key="tarif.id"
-                                class="grid grid-flow-row grid-cols-3 gap-2 py-4 place-items-center odd:bg-slate-100 even:bg-white md:grid-cols-6">
+                                class="grid grid-flow-row grid-cols-3 gap-2 py-4 place-items-center odd:bg-white even:bg-slate-100 md:grid-cols-6">
                                 <div v-if="tarif.structure_tarif_type_infos.length > 0"
-                                    class="grid w-full h-full grid-cols-2 col-span-2 gap-2 place-items-center">
+                                    class="grid w-full h-full grid-cols-2 col-span-2 gap-2 py-2 place-items-center">
+
                                     <div v-for="info in tarif.structure_tarif_type_infos" :key="info.id"
                                         class="flex items-center col-span-1">
                                         <ClockIcon v-if="[1, 2, 5, 7].includes(info.attribut_id)"
@@ -445,7 +487,7 @@ const destroyTarif = (tarif) => {
                                         <UsersIcon v-else class="w-6 h-6 mr-1 text-gray-600" />
 
                                         <span v-if="info.valeur" class="text-sm text-gray-600">{{ info.valeur }}</span>
-                                        <span v-else class="text-sm text-gray-600">Pas défini</span>
+                                        <span v-else class="text-sm text-gray-600"></span>
                                     </div>
                                 </div>
                                 <div v-else class="grid w-full h-full grid-cols-2 col-span-2 gap-2 place-items-center">
@@ -459,15 +501,17 @@ const destroyTarif = (tarif) => {
                                     </div>
                                 </div>
 
-                                <div class="flex items-center col-span-1">{{ tarif.titre }}</div>
+                                <div class="flex items-center col-span-1 font-semibold">{{ tarif.titre }}</div>
                                 <div class="flex items-center col-span-1 font-semibold">{{ tarif.tarif_type.type }}</div>
-                                <div class="flex items-center col-span-1 font-semibold"> {{ tarif.amount }} €</div>
+                                <div class="flex items-center col-span-1 font-semibold">{{ formatCurrency(tarif.amount) }}
+                                </div>
                                 <div class="flex items-center justify-between col-span-1 space-x-2">
                                     <button type="button">
                                         <ArrowPathIcon
                                             class="w-6 h-6 mr-1 text-gray-600 transition-all duration-200 hover:-rotate-90 hover:text-gray-800" />
                                     </button>
-                                    <button type="button">
+                                    <button type="button" @click="() => duplicateTarif(tarif)
+                                        ">
                                         <DocumentDuplicateIcon class="w-6 h-6 mr-1 text-gray-600 hover:text-gray-800" />
                                     </button>
 

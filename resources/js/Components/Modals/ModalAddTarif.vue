@@ -1,7 +1,6 @@
 <script setup>
+import { ref, reactive, computed, watch } from "vue";
 import { useForm, router } from "@inertiajs/vue3";
-import { ref, reactive, watch } from "vue";
-import Checkbox from "@/Components/Checkbox.vue";
 import {
     XCircleIcon,
     ChevronUpDownIcon,
@@ -30,64 +29,64 @@ const props = defineProps({
     activiteForTarifs: Object
 });
 
-const uniteDurees = [
+const uniteDurees = reactive([
     { id: 1, name: "Heures" },
     { id: 2, name: "Jours" },
     { id: 3, name: "Mois" },
     { id: 4, name: "Années" },
-];
+]);
 
-const checkAll = ref(true);
 const selectedUniteeDuree = ref(uniteDurees[0]);
 const selectedTarifType = ref(props.tarifTypes[0]);
 
-const formAddTarif = useForm({
+const formAddTarif = reactive({
     structure_id: ref(props.structure.id),
     titre: ref(null),
     description: ref(null),
     tarifType: ref(selectedTarifType.value),
     attributs: ref([]),
     amount: ref(null),
-    disciplines: ref([]),
-    categories: ref([]),
-    activites: ref([]),
-    produits: ref([]),
+    disciplines: ref({}),
+    categories: ref({}),
+    activites: ref({}),
+    produits: ref({}),
     uniteDuree: ref(selectedUniteeDuree.value),
 });
 
-watch(() => formAddTarif.disciplines,
-    async (newDisciplines) => {
-        newDisciplines.forEach((disciplineId) => {
-            // Set all related category checkboxes to true
-            console.log(disciplineId);
-            const categories = ref(formAddTarif.categories[disciplineId]);
-            if (categories.value) {
-                Object.keys(categories.value).forEach((categoryId) => {
-                    categories.value[categoryId] = true;
-                });
-            }
+const checkAll = ref(true);
 
-            // Set all related activite checkboxes to true
-            const activites = ref(formAddTarif.activites[disciplineId]);
-            if (activites.value) {
-                Object.keys(activites.value).forEach((activiteId) => {
-                    activites.value[activiteId] = true;
-                });
-            }
+watch(() => formAddTarif, (newValue) => {
+    if (newValue.disciplines) {
 
-            // Set all related produit checkboxes to true
-            const produits = ref(formAddTarif.produits[disciplineId]);
-            if (produits.value) {
-                Object.keys(produits.value).forEach((produitId) => {
-                    produits.value[produitId] = true;
-                });
+        formAddTarif.categories = {};
+        formAddTarif.activites = {};
+        formAddTarif.produits = {};
+        // Set related checkboxes to true based on the discipline selection
+        for (const disciplineId in newValue.disciplines) {
+            const discipline = newValue.disciplines[disciplineId];
+            if (discipline) {
+                const disciplineData = props.activiteForTarifs[disciplineId];
+
+                if (disciplineData) {
+                    const categories = disciplineData.categories;
+
+                    for (const categoryId in categories) {
+                        formAddTarif.categories[categoryId] = true;
+                        const category = categories[categoryId];
+
+                        for (const activity of category.activites) {
+                            formAddTarif.activites[activity.id] = true;
+
+                            for (const product of activity.produits) {
+                                formAddTarif.produits[product.id] = true;
+                            }
+                        }
+                    }
+                }
             }
-        });
-    },
-    {
-        deep: true,
+        }
     }
-);
+}, { deep: true });
 
 const onSubmitAddTarifForm = () => {
     router.post(
@@ -103,13 +102,13 @@ const onSubmitAddTarifForm = () => {
             categories: formAddTarif.categories,
             activites: formAddTarif.activites,
             produits: formAddTarif.produits,
-            uniteDuree: formAddTarif.uniteDuree
+            uniteDuree: selectedUniteeDuree.value
         },
         {
             preserveScroll: true,
             remember: false,
             onSuccess: () => {
-                formAddTarif.reset();
+                // formAddTarif.reset();
                 emit("close");
             },
             structure: props.structure.slug,
@@ -247,7 +246,6 @@ const onSubmitAddTarifForm = () => {
                                                         </div>
                                                     </div>
 
-
                                                     <Listbox v-if="attribut.attribut === 'Duree'"
                                                         v-model="selectedUniteeDuree" class="w-56">
                                                         <div class="relative">
@@ -297,12 +295,6 @@ const onSubmitAddTarifForm = () => {
                                                             </transition>
                                                         </div>
                                                     </Listbox>
-                                                    <!-- <div
-                                                        v-if="errors.titre"
-                                                        class="mt-2 text-xs text-red-500"
-                                                    >
-                                                        {{ errors.titre }}
-                                                    </div> -->
                                                 </div>
                                             </div>
                                             <!-- Amount -->
@@ -327,15 +319,19 @@ const onSubmitAddTarifForm = () => {
                                                 </p>
 
                                                 <label class="flex items-center">
-                                                    <Checkbox name="Tout" v-model="checkAll" />
+                                                    <input type="checkbox" name="Tout" v-model="checkAll"
+                                                        class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500" />
                                                     <span class="ml-2 text-sm text-gray-600">Tout sélectionner</span>
                                                 </label>
 
                                                 <div v-for="discipline in props.activiteForTarifs" :key="discipline.id"
                                                     class="ml-2 md:ml-4">
                                                     <label class="flex items-center">
-                                                        <Checkbox :name="discipline.disciplineName"
-                                                            v-model="formAddTarif.disciplines[discipline.id]" />
+                                                        <input type="checkbox" :id="discipline.id" :value="discipline.id"
+                                                            :name="discipline.disciplineName"
+                                                            v-model="formAddTarif.disciplines[discipline.id]"
+                                                            class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500" />
+
                                                         <span class="ml-2 text-sm text-gray-600">{{
                                                             discipline.disciplineName
                                                         }}</span>
@@ -343,8 +339,10 @@ const onSubmitAddTarifForm = () => {
                                                     <div v-for="category in discipline.categories" :key="category.id"
                                                         class="ml-4 md:ml-8">
                                                         <label class="flex items-center">
-                                                            <Checkbox :name="category.name"
-                                                                v-model="formAddTarif.categories[category.id]" />
+                                                            <input type="checkbox" :id="category.id" :value="category.id"
+                                                                :name="category.name"
+                                                                v-model="formAddTarif.categories[category.id]"
+                                                                class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500" />
                                                             <span class="ml-2 text-sm text-gray-600">{{
                                                                 category.name
                                                             }}</span>
@@ -353,8 +351,10 @@ const onSubmitAddTarifForm = () => {
                                                         <div v-for="activite in category.activites" :key="activite.id"
                                                             class="ml-6 md:ml-12">
                                                             <label class="flex items-center">
-                                                                <Checkbox :name="activite.titre"
-                                                                    v-model="formAddTarif.activites[activite.id]" />
+                                                                <input type="checkbox" :id="activite.id"
+                                                                    :value="activite.id" :name="activite.titre"
+                                                                    v-model="formAddTarif.activites[activite.id]"
+                                                                    class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500" />
                                                                 <span class="ml-2 text-sm text-gray-600">{{ activite.titre
                                                                 }}</span>
                                                             </label>
@@ -363,8 +363,10 @@ const onSubmitAddTarifForm = () => {
                                                                 class="flex flex-col items-center ml-8 space-x-0 space-y-3 md:flex-row md:space-x-8 md:space-y-0 md:ml-16">
                                                                 <label v-for="produit in activite.produits"
                                                                     :key="produit.id" class="flex items-center">
-                                                                    <Checkbox :name="produit.id"
-                                                                        v-model="formAddTarif.produits[produit.id]" />
+                                                                    <input type="checkbox" :id="produit.id"
+                                                                        :value="produit.id" :name="produit.id"
+                                                                        v-model="formAddTarif.produits[produit.id]"
+                                                                        class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500" />
                                                                     <span class="ml-2 text-sm text-gray-600">Produit n° {{
                                                                         produit.id }}</span>
                                                                 </label>

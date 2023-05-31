@@ -36,8 +36,8 @@ class StructureTarifController extends Controller
     {
         $request->validate([
             'structure_id' => ['nullable', Rule::exists('structures', 'id')],
-            'titre' => ['nullable', 'string'],
-            'description' => ['nullable', 'string'],
+            'titre' => ['nullable'],
+            'description' => ['nullable'],
             'tarifType' => ['nullable', Rule::exists('liste_tarifs_types', 'id')],
             'attributs' => ['nullable'],
             'amount' => ['required', 'numeric'],
@@ -47,6 +47,8 @@ class StructureTarifController extends Controller
             'produits' => ['required'],
             'uniteDuree' => ['nullable'],
         ]);
+
+        dd($request->produits);
 
         $structure = Structure::with(['disciplines', 'categories', 'activites', 'produits'])->where('id', $structure->id)->firstOrFail();
 
@@ -61,8 +63,8 @@ class StructureTarifController extends Controller
                     'activite_id' => $structureProduit->activite_id,
                     'produit_id' => $structureProduit->id,
                     'type_id' => $request->tarifType,
-                    'titre' => $request->titre,
-                    'description' => $request->description,
+                    'titre' => $request->titre ?? "",
+                    'description' => $request->description ?? "",
                     'amount' => $request->amount,
                 ]);
 
@@ -143,6 +145,38 @@ class StructureTarifController extends Controller
         $tarif->delete();
 
         return Redirect::back()->with('success', 'Le tarif a bien été supprimé');
+    }
 
+    public function duplicate(Structure $structure, $tarif)
+    {
+        $originalTarif = StructureTarif::with('structureTarifTypeInfos')->where('id', $tarif)->where('structure_id', $structure->id)->firstOrFail();
+
+        $originalInfos = StructureTarifTypeInfo::where('tarif_id', $originalTarif->id)->get();
+
+        $newTarif = new StructureTarif();
+        $newTarif->structure_id = $originalTarif->structure_id;
+        $newTarif->discipline_id = $originalTarif->discipline_id;
+        $newTarif->categorie_id = $originalTarif->categorie_id;
+        $newTarif->activite_id = $originalTarif->activite_id;
+        $newTarif->produit_id = $originalTarif->produit_id;
+        $newTarif->type_id = $originalTarif->type_id;
+        $newTarif->titre = $originalTarif->titre;
+        $newTarif->description = $originalTarif->description;
+        $newTarif->amount = $originalTarif->amount;
+        $newTarif->id = null;
+        $newTarif->save();
+
+        foreach($originalInfos as $tarifInfo) {
+            $newTarifInfo = new StructureTarifTypeInfo();
+            $newTarifInfo->structure_id = $tarifInfo->structure_id;
+            $newTarifInfo->tarif_id = $newTarif->id;
+            $newTarifInfo->type_id = $tarifInfo->type_id;
+            $newTarifInfo->attribut_id = $tarifInfo->attribut_id;
+            $newTarifInfo->valeur = $tarifInfo->valeur;
+            $newTarifInfo->id = null;
+            $newTarifInfo->save();
+        }
+
+        return Redirect::back()->with('success', "Le tarif a bien été dupliqué");
     }
 }

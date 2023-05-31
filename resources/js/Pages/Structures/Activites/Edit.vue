@@ -263,7 +263,7 @@ function onSubmit() {
                                     {{ categorie.nom_categorie }}
                                 </div>
                                 <button type="button" @click="openModal"
-                                    class="flex w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto">
+                                    class="hidden md:flex w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto">
                                     Ajouter
                                     <PlusIcon class="ml-2 h-5 w-5" />
                                 </button>
@@ -331,7 +331,8 @@ function onSubmit() {
                                                                         </label>
                                                                         <div class="mt-1 flex rounded-md">
                                                                             <input v-model="form.titre
-                                                                                    " type="text" name="titre" id="titre"
+                                                                                    " type="text" name="titre"
+                                                                                id="titre"
                                                                                 class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                                                 :placeholder="`${categorie.nom_categorie} de ${activite.discipline.name}`"
                                                                                 autocomplete="none" />
@@ -351,8 +352,8 @@ function onSubmit() {
                                                                         </label>
                                                                         <div class="mt-1">
                                                                             <textarea v-model="form.description
-                                                                                    " id="description" name="description"
-                                                                                rows="2"
+                                                                                    " id="description"
+                                                                                name="description" rows="2"
                                                                                 class="mt-1 block h-32 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                                                 :class="{
                                                                                     errors: 'border-red-500 focus:ring focus:ring-red-200',
@@ -391,12 +392,11 @@ function onSubmit() {
                                                                                         <select :name="critere.nom
                                                                                                 " :id="critere.nom
             " v-model="form
-            .criteres[
+        .criteres[
         critere
             .id
-        ]
-        "
-                                                                                            class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm">
+    ]
+        " class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm">
                                                                                             <option disabled value="">
                                                                                                 Selectionner
                                                                                                 un
@@ -425,13 +425,12 @@ function onSubmit() {
                                                                                 ">
                                                                                 <div class="flex items-center">
                                                                                     <input v-model="form
-                                                                                            .criteres[
+                                                                                        .criteres[
                                                                                         critere
                                                                                             .id
-                                                                                        ]
+                                                                                    ]
                                                                                         " :id="critere.nom
-        " type="checkbox"
-                                                                                        class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600" />
+        " type="checkbox" class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600" />
                                                                                     <label :for="critere.nom
                                                                                         "
                                                                                         class="ml-2 text-sm font-medium text-gray-700">{{
@@ -461,10 +460,10 @@ function onSubmit() {
                                                                                             ) in critere.valeurs" :key="option.id
                                                                                                 ">
                                                                                             <input v-model="form
-                                                                                                    .criteres[
+                                                                                                .criteres[
                                                                                                 critere
                                                                                                     .id
-                                                                                                ]
+                                                                                            ]
                                                                                                 " type="radio"
                                                                                                 class="form-radio" :name="option.valeur
                                                                                                     " :value="option.valeur
@@ -495,8 +494,7 @@ function onSubmit() {
                                                                                             ]
                                                                                             " :name="critere.nom
             " :id="critere.nom
-        "
-                                                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+        " class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                                                         placeholder=""
                                                                                         autocomplete="none" />
                                                                                 </div>
