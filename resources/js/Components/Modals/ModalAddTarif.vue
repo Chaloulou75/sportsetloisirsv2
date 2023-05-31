@@ -55,15 +55,15 @@ const formAddTarif = reactive({
 
 const checkAll = ref(true);
 
-watch(() => formAddTarif, (newValue) => {
-    if (newValue.disciplines) {
+watch(() => formAddTarif.disciplines, (newValue) => {
+    if (newValue) {
 
         formAddTarif.categories = {};
         formAddTarif.activites = {};
         formAddTarif.produits = {};
         // Set related checkboxes to true based on the discipline selection
-        for (const disciplineId in newValue.disciplines) {
-            const discipline = newValue.disciplines[disciplineId];
+        for (const disciplineId in newValue) {
+            const discipline = newValue[disciplineId];
             if (discipline) {
                 const disciplineData = props.activiteForTarifs[disciplineId];
 
