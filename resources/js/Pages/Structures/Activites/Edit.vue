@@ -618,7 +618,8 @@ function onSubmit() {
                                 </TransitionRoot>
                             </div>
                             <ActivityDisplay :errors="errors" :structure="structure" :structureActivites="filteredActivites"
-                                :filteredCriteres="filteredCriteres" :latestAdresseId="latestAdresseId" />
+                                :filteredCriteres="filteredCriteres" :latestAdresseId="latestAdresseId"
+                                :tarif-types="tarifTypes" :activiteForTarifs="activiteForTarifs" />
                         </TabPanel>
                     </TabPanels>
                 </TabGroup>

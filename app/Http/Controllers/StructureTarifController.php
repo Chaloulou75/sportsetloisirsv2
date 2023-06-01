@@ -83,7 +83,7 @@ class StructureTarifController extends Controller
                                 'valeur' => $valeur,
                             ]);
                             if($tariftypeattribut->attribut === 'Duree') {
-                                $tarifAttribut->update(['valeur'=> $valeur . ' ' . $request->uniteDuree['name']]);
+                                $tarifAttribut->update(['unite'=> $request->uniteDuree['name']]);
                             }
                         }
                     }

@@ -44,21 +44,29 @@ const ModalDeleteActivite = defineAsyncComponent(() =>
     import("@/Components/Modals/ModalDeleteActivite.vue")
 );
 
+const ModalEditTarif = defineAsyncComponent(() =>
+    import("@/Components/Modals/ModalEditTarif.vue")
+);
+
 const props = defineProps({
     structureActivites: Object,
     structure: Object,
     errors: Object,
     filteredCriteres: Object,
     latestAdresseId: Number,
+    tarifTypes: Object,
+    activiteForTarifs: Object,
 });
 
 const currentStructureActivite = ref(null);
 const currentProduit = ref(null);
 const isOpen = ref(false);
-const openTarif = ref(false);
 const showDeleteActiviteModal = ref(false);
 const showAddProduitModal = ref(false);
 const showEditProduitModal = ref(false);
+const openTarif = ref(false);
+const currentTarif = ref(null);
+const showEditTarifModal = ref(false);
 
 const formatDate = (dateTime) => {
     return dayjs(dateTime).locale("fr").format("DD MMMM YYYY");
@@ -101,7 +109,11 @@ const openEditProduitModal = (structureActivite, produit) => {
     currentStructureActivite.value = structureActivite;
     currentProduit.value = produit;
     showEditProduitModal.value = true;
-    console.log(currentProduit.value);
+};
+
+const openEditTarifModal = (tarif) => {
+    currentTarif.value = tarif;
+    showEditTarifModal.value = true;
 };
 
 const openEditModal = (structureActivite) => {
@@ -470,8 +482,8 @@ const destroyTarif = (tarif) => {
                         </div>
 
                         <div v-show="isOpenTarif(produit) && (produit.tarifs.length > 0)"
-                            class="w-full h-full col-span-3 md:col-span-6 border border-green-200 py-2">
-                            <h3 class="w-full text-gray-700 font-semibold px-2 md:px-4 py-2 text-sm">Liste des tarifs
+                            class="w-full h-full col-span-3 py-2 border border-green-200 md:col-span-6">
+                            <h3 class="w-full px-2 py-2 text-sm font-semibold text-gray-700 md:px-4">Liste des tarifs
                                 pour ce produit:</h3>
                             <div v-for="tarif in produit.tarifs" :key="tarif.id"
                                 class="grid grid-flow-row grid-cols-3 gap-2 py-4 place-items-center odd:bg-white even:bg-slate-100 md:grid-cols-6">
@@ -486,8 +498,10 @@ const destroyTarif = (tarif) => {
                                             class="w-6 h-6 mr-1 text-gray-600" />
                                         <UsersIcon v-else class="w-6 h-6 mr-1 text-gray-600" />
 
-                                        <span v-if="info.valeur" class="text-sm text-gray-600">{{ info.valeur }}</span>
-                                        <span v-else class="text-sm text-gray-600"></span>
+                                        <span v-if="info.valeur" class="text-sm text-gray-600">{{ info.valeur }}
+                                            <span v-if="info.unite">{{ info.unite }}</span>
+                                        </span>
+                                        <span v-else></span>
                                     </div>
                                 </div>
                                 <div v-else class="grid w-full h-full grid-cols-2 col-span-2 gap-2 place-items-center">
@@ -506,7 +520,7 @@ const destroyTarif = (tarif) => {
                                 <div class="flex items-center col-span-1 font-semibold">{{ formatCurrency(tarif.amount) }}
                                 </div>
                                 <div class="flex items-center justify-between col-span-1 space-x-2">
-                                    <button type="button">
+                                    <button type="button" @click="openEditTarifModal(tarif)">
                                         <ArrowPathIcon
                                             class="w-6 h-6 mr-1 text-gray-600 transition-all duration-200 hover:-rotate-90 hover:text-gray-800" />
                                     </button>
@@ -534,4 +548,6 @@ const destroyTarif = (tarif) => {
     <ModalEditProduit :errors="errors" :structure="structure" :structureActivite="currentStructureActivite"
         :produit="currentProduit" :show="showEditProduitModal" @close="showEditProduitModal = false"
         :filteredCriteres="filteredCriteres" :latestAdresseId="latestAdresseId" />
+    <ModalEditTarif :errors="errors" :structure="structure" :tarif="currentTarif" :tarif-types="tarifTypes"
+        :activiteForTarifs="activiteForTarifs" :show="showEditTarifModal" @close="showEditTarifModal = false" />
 </template>

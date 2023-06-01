@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\City;
 use App\Models\Structure;
 use Illuminate\Http\Request;
+use App\Models\StructureTarif;
 use Illuminate\Validation\Rule;
 use App\Models\StructureAddress;
 use App\Models\StructureHoraire;
@@ -15,6 +16,7 @@ use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\LienDisciplineCategorieCritere;
 use App\Models\LienDisciplineCategorieCritereValeur;
+use App\Models\StructureTarifTypeInfo;
 
 class StructureActiviteProduitController extends Controller
 {
@@ -265,10 +267,24 @@ class StructureActiviteProduitController extends Controller
         $produit = StructureProduit::where('id', $produit->id)->firstOrFail();
 
         $produitCriteres = StructureProduitCritere::where('produit_id', $produit->id)->get();
+        $produitTarifs = StructureTarif::where('produit_id', $produit->id)->get();
+        $produitTarifInfos = StructureTarifTypeInfo::where('produit_id', $produit->id)->get();
 
         if(isset($produitsCriteres)) {
             foreach($produitCriteres as $critere) {
                 $critere->delete();
+            }
+        }
+
+        if(isset($produitTarifInfos)) {
+            foreach($produitTarifInfos as $info) {
+                $info->delete();
+            }
+        }
+
+        if(isset($produitTarifs)) {
+            foreach($produitTarifs as $tarif) {
+                $tarif->delete();
             }
         }
 
