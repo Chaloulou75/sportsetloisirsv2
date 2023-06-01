@@ -114,9 +114,76 @@ class StructureTarifController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Structure $structure, $tarif)
     {
-        //
+        $request->validate([
+                    'structure_id' => ['nullable', Rule::exists('structures', 'id')],
+                    'titre' => ['nullable'],
+                    'description' => ['nullable'],
+                    'tarifType' => ['nullable', Rule::exists('liste_tarifs_types', 'id')],
+                    'attributs' => ['nullable'],
+                    'amount' => ['required', 'numeric'],
+                    'disciplines' => ['nullable'],
+                    'categories' => ['nullable'],
+                    'activites' => ['nullable'],
+                    'produits' => ['required'],
+                    'uniteDuree' => ['nullable'],
+                ]);
+
+        // dd($request->all());
+
+        $structure = Structure::with(['disciplines', 'categories', 'activites', 'produits'])->where('id', $structure->id)->firstOrFail();
+
+        foreach($request->produits as $key => $produitId) {
+            if($produitId === true) {
+                $structureProduit = StructureProduit::where('id', $key)->first();
+
+                $structureTarif = StructureTarif::updateOrCreate(
+                    [
+                    'id' => $tarif,
+                    'structure_id' => $structure->id,
+                    'discipline_id' => $structureProduit->discipline_id,
+                    'categorie_id' => $structureProduit->categorie_id,
+                    'activite_id' => $structureProduit->activite_id,
+                    'produit_id' => $structureProduit->id,
+                ],
+                    [
+                    'type_id' => $request->tarifType,
+                    'titre' => $request->titre ?? "",
+                    'description' => $request->description ?? "",
+                    'amount' => $request->amount,
+                ]
+                );
+
+                $structureProduit->update(['tarif_id' => $structureTarif->id]);
+
+                $tarifType = ListeTarifType::with('tariftypeattributs')->where('id', $structureTarif->type_id)->first();
+
+                foreach($request->attributs as $key => $valeur) {
+                    foreach($tarifType->tariftypeattributs as $tariftypeattribut) {
+                        if($tariftypeattribut->id === $key) {
+                            $tarifAttribut = StructureTarifTypeInfo::updateOrCreate(
+                                [
+                                'structure_id' => $structure->id,
+                                'tarif_id' => $structureTarif->id
+                            ],
+                                [
+                                'type_id' => $tarifType->id,
+                                'attribut_id' => $key,
+                                'valeur' => $valeur,
+                            ]
+                            );
+                            if($tariftypeattribut->attribut === 'Duree') {
+                                $tarifAttribut->update(['unite'=> $request->uniteDuree['name']]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return Redirect::back()->with('success', "Le tarif a bien été mis à jour pour vos produits");
+
     }
 
     /**

@@ -223,45 +223,6 @@ class ActiviteController extends Controller
 
         $tarifTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();
 
-        // $activiteForTarifs = StructureActivite::with(['structure:id,name,slug', 'categorie:id,nom_categorie', 'discipline:id,name', 'produits'])
-        //     ->where('structure_id', $structure->id)
-        //     ->latest()
-        //     ->get()
-        //     ->groupBy('discipline.name')
-        //     ->map(function ($disciplineActivites, $disciplineName) {
-        //         $disciplineId = $disciplineActivites->first()->discipline->id;
-        //         return [
-        //             'id' => $disciplineId,
-        //             'disciplineName' => $disciplineName,
-        //             'categories' => $disciplineActivites->groupBy('categorie.nom_categorie')->map(function ($categorieItems, $categorieName) {
-        //                 $categoryId = $categorieItems->first()->categorie->id;
-        //                 $activites = $categorieItems->map(function ($activiteItem) {
-        //                     return [
-        //                         'id' => $activiteItem->id,
-        //                         'titre' =>$activiteItem->titre,
-        //                         'disciplineId' => $activiteItem->discipline_id,
-        //                         'categorieId' => $activiteItem->categorie_id,
-        //                         'produits' => $activiteItem->produits->map(function ($produitItem) {
-        //                             return [
-        //                                 'id' => $produitItem->id,
-        //                                 'disciplineId' => $produitItem->discipline_id,
-        //                                 'categorieId' => $produitItem->categorie_id,
-        //                                 'activiteId' => $produitItem->activite_id,
-        //                             ];
-        //                         })
-        //                     ];
-        //                 });
-        //                 return [
-        //                     'id' => $categoryId,
-        //                     'disciplineId' => $categorieItems->first()->discipline->id,
-        //                     'name' => $categorieItems->first()->categorie->nom_categorie ?? 'Sans Catégorie',
-        //                     'activites' => $activites,
-        //                 ];
-        //             }),
-        //         ];
-        //     });
-
-
         $activiteForTarifs = StructureActivite::with(['structure:id,name,slug', 'categorie:id,nom_categorie', 'discipline:id,name', 'produits'])
             ->where('structure_id', $structure->id)
             ->latest()
@@ -284,6 +245,7 @@ class ActiviteController extends Controller
                                         'disciplineId' => $produitItem->discipline_id,
                                         'categorieId' => $produitItem->categorie_id,
                                         'activiteId' => $produitItem->activite_id,
+                                        'tarifId' => $produitItem->tarif_id,
                                     ];
                                 }),
                             ];

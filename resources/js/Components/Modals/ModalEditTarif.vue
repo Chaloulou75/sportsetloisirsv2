@@ -37,9 +37,6 @@ const uniteDurees = reactive([
     { id: 4, name: "Années" },
 ]);
 
-// const selectedUniteeDuree = ref(uniteDurees[0]);
-// const selectedTarifType = ref(props.tarifTypes.find((type) => type.id === props.tarif.type_id));
-
 watch(
     () => props.tarif,
     (newValue) => {
@@ -58,6 +55,20 @@ watch(
                 acc[attribut.attribut_id] = attribut.valeur;
                 return acc;
             }, {});
+
+            for (const disciplineId in props.activiteForTarifs) {
+                const disciplineData = props.activiteForTarifs[disciplineId];
+                for (const categoryId in disciplineData.categories) {
+                    const categoryData = disciplineData.categories[categoryId];
+                    for (const activity of categoryData.activites) {
+                        for (const produit of activity.produits) {
+                            if (produit.tarifId === newValue.id) {
+                                formEditTarif.produits[produit.id] = true;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 );
@@ -167,9 +178,10 @@ watch(() => formEditTarif.activites, (newValue) => {
 }, { deep: true });
 
 const onSubmitAddTarifForm = () => {
-    router.post(
-        `/structures/${props.structure.slug}/tarifs`,
+    router.put(
+        `/structures/${props.structure.slug}/tarifs/${props.tarif.id}`,
         {
+            _method: "put",
             structure_id: formEditTarif.structure_id,
             titre: formEditTarif.titre,
             description: formEditTarif.description,
@@ -190,6 +202,7 @@ const onSubmitAddTarifForm = () => {
                 emit("close");
             },
             structure: props.structure.slug,
+            structure: props.tarif.id,
         }
     );
 };
