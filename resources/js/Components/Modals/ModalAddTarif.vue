@@ -88,6 +88,61 @@ watch(() => formAddTarif.disciplines, (newValue) => {
     }
 }, { deep: true });
 
+watch(() => formAddTarif.categories, (newValue) => {
+    if (newValue) {
+        formAddTarif.activites = {};
+        formAddTarif.produits = {};
+        // Set related checkboxes to true based on the categorie selection
+        for (const categoryId in newValue) {
+            const category = newValue[categoryId];
+
+            if (category) {
+                for (const disciplineId in props.activiteForTarifs) {
+                    const disciplineData = props.activiteForTarifs[disciplineId];
+                    const categoryData = disciplineData.categories[categoryId];
+
+                    if (categoryData) {
+                        const activites = categoryData.activites;
+
+                        for (const activity of activites) {
+                            formAddTarif.activites[activity.id] = true;
+
+                            for (const product of activity.produits) {
+                                formAddTarif.produits[product.id] = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}, { deep: true });
+
+watch(() => formAddTarif.activites, (newValue) => {
+    if (newValue) {
+        formAddTarif.produits = {};
+
+        // Set related checkboxes to true based on the activity selection
+        for (const disciplineId in props.activiteForTarifs) {
+            const disciplineData = props.activiteForTarifs[disciplineId];
+
+            for (const categoryId in disciplineData.categories) {
+                const categoryData = disciplineData.categories[categoryId];
+
+                for (const activity of categoryData.activites) {
+                    if (newValue[activity.id]) {
+                        formAddTarif.activites[activity.id] = true;
+
+                        for (const product of activity.produits) {
+                            formAddTarif.produits[product.id] = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}, { deep: true });
+
 const onSubmitAddTarifForm = () => {
     router.post(
         `/structures/${props.structure.slug}/tarifs`,
