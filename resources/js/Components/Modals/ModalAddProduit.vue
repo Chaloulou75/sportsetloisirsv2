@@ -12,7 +12,7 @@ import {
     DialogTitle,
 } from "@headlessui/vue";
 
-const emit = defineEmits(["close"]);
+const emit = defineEmits(['close']);
 
 const AddressForm = defineAsyncComponent(() =>
     import("@/Components/Google/AddressForm.vue")
@@ -93,7 +93,7 @@ const onSubmitAddProduitForm = () => {
             remember: false,
             onSuccess: () => {
                 formAddProduit.reset();
-                emit("close");
+                emit('close');
             },
             structure: props.structure.slug,
             activite: props.structureActivite.id,
@@ -157,12 +157,11 @@ const onSubmitAddProduitForm = () => {
                                                                     <select :name="critere.nom
                                                                             " :id="critere.nom
             " v-model="formAddProduit
-            .criteres[
+        .criteres[
         critere
             .id
-        ]
-        "
-                                                                        class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm">
+    ]
+        " class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm">
                                                                         <option disabled value="">
                                                                             Selectionner
                                                                             un
@@ -190,13 +189,12 @@ const onSubmitAddProduitForm = () => {
                                                             ">
                                                             <div class="flex items-center">
                                                                 <input v-model="formAddProduit
-                                                                        .criteres[
+                                                                    .criteres[
                                                                     critere
                                                                         .id
-                                                                    ]
+                                                                ]
                                                                     " :id="critere.nom
-        " type="checkbox"
-                                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600" />
+        " type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600" />
                                                                 <label :for="critere.nom
                                                                     " class="ml-2 text-sm font-medium text-gray-700">{{
         critere.nom
@@ -222,10 +220,10 @@ const onSubmitAddProduitForm = () => {
                                                                         ) in critere.valeurs" :key="option.id
                                                                             ">
                                                                         <input v-model="formAddProduit
-                                                                                .criteres[
+                                                                            .criteres[
                                                                             critere
                                                                                 .id
-                                                                            ]
+                                                                        ]
                                                                             " type="radio" class="form-radio" :name="option.valeur
         " :value="option.valeur
         " checked />
@@ -254,8 +252,7 @@ const onSubmitAddProduitForm = () => {
                                                                         ]
                                                                         " :name="critere.nom
             " :id="critere.nom
-        "
-                                                                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+        " class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                                     placeholder="" autocomplete="none" />
                                                             </div>
                                                         </div>

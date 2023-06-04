@@ -36,6 +36,7 @@ class ActiviteController extends Controller
     public function index(Structure $structure)
     {
         $structure = Structure::with([
+                        'disciplines',
                         'activites',
                     ])->select(['id', 'name', 'slug'])
                     ->where('id', $structure->id)
@@ -68,7 +69,7 @@ class ActiviteController extends Controller
 
         $categories = Categorie::with('disciplines')->select(['id', 'nom', 'ico'])->get();
 
-        $dejaUsedDisciplines= $structure->disciplines->unique()->pluck('id');
+        $dejaUsedDisciplines= $structure->disciplines->unique()->pluck('discipline_id');
 
         $listDisciplines = ListDiscipline::with(['categories'])->select(['id', 'name', 'slug'])->get();
 

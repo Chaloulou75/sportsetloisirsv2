@@ -140,7 +140,6 @@ class StructureTarifController extends Controller
 
                 $structureTarif = StructureTarif::updateOrCreate(
                     [
-                    'id' => $tarif,
                     'structure_id' => $structure->id,
                     'discipline_id' => $structureProduit->discipline_id,
                     'categorie_id' => $structureProduit->categorie_id,

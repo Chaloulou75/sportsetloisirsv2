@@ -62,6 +62,7 @@ watch(
                     const categoryData = disciplineData.categories[categoryId];
                     for (const activity of categoryData.activites) {
                         for (const produit of activity.produits) {
+                            console.log(produit.tarifId, newValue.id);
                             if (produit.tarifId === newValue.id) {
                                 formEditTarif.produits[produit.id] = true;
                             }
