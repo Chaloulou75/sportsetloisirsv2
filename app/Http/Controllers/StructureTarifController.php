@@ -48,8 +48,6 @@ class StructureTarifController extends Controller
             'uniteDuree' => ['nullable'],
         ]);
 
-        // dd($request->produits);
-
         $structure = Structure::with(['disciplines', 'categories', 'activites', 'produits'])->where('id', $structure->id)->firstOrFail();
 
         foreach($request->produits as $key => $produitId) {
@@ -129,8 +127,6 @@ class StructureTarifController extends Controller
                     'produits' => ['required'],
                     'uniteDuree' => ['nullable'],
                 ]);
-
-        // dd($request->all());
 
         $structure = Structure::with(['disciplines', 'categories', 'activites', 'produits'])->where('id', $structure->id)->firstOrFail();
 

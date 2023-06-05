@@ -29,6 +29,7 @@
         "@vuepic/vue-datepicker": "^5.1.2",
         "@vueuse/core": "^10.1.2",
         "dayjs": "^1.11.7",
-        "esbuild": "^0.17.19"
+        "esbuild": "^0.17.19",
+        "vue-cal": "^4.8.1"
     }
 }

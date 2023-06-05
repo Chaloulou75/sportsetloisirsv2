@@ -27,6 +27,10 @@ const ActivityDisplay = defineAsyncComponent(() =>
     import("@/Components/Inscription/Activity/ActivityDisplay.vue")
 );
 
+const ModalWeekHourPlanning = defineAsyncComponent(() =>
+    import("@/Components/Modals/ModalWeekHourPlanning.vue")
+);
+
 const props = defineProps({
     errors: Object,
     structure: Object,
@@ -57,6 +61,12 @@ const showAddTarifModal = ref(false);
 
 const openAddTarifModal = (structure) => {
     showAddTarifModal.value = true;
+};
+
+const showModalWeekHourPlanning = ref(false);
+
+const openPlanning = () => {
+    showModalWeekHourPlanning.value = true;
 };
 
 onMounted(() => {
@@ -248,7 +258,7 @@ function onSubmit() {
                                     {{ categorie.nom_categorie }}
                                     <PlusIcon class="w-5 h-5 ml-2" />
                                 </button>
-                                <button type="button"
+                                <button type="button" @click="openPlanning()"
                                     class="flex items-center justify-between w-full px-4 py-3 text-lg text-white transition duration-150 bg-green-600 rounded-sm shadow-lg hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto">
                                     Voir le planning
                                 </button>
@@ -633,6 +643,8 @@ function onSubmit() {
         </div>
         <ModalAddTarif :errors="errors" :structure="structure" :tarif-types="tarifTypes"
             :activiteForTarifs="activiteForTarifs" :show="showAddTarifModal" @close="showAddTarifModal = false" />
+
+        <ModalWeekHourPlanning :show="showModalWeekHourPlanning" @close="showModalWeekHourPlanning = false" />
     </AppLayout>
 </template>
 
