@@ -133,21 +133,17 @@ class StructureTarifController extends Controller
         foreach($request->produits as $key => $produitId) {
             if($produitId === true) {
                 $structureProduit = StructureProduit::where('id', $key)->first();
-
+                dd($structureProduit);
                 $structureTarif = StructureTarif::updateOrCreate(
-                    [
-                    'structure_id' => $structure->id,
-                    'discipline_id' => $structureProduit->discipline_id,
+                    ['structure_id' => $structure->id],
+                    ['discipline_id' => $structureProduit->discipline_id,
                     'categorie_id' => $structureProduit->categorie_id,
                     'activite_id' => $structureProduit->activite_id,
                     'produit_id' => $structureProduit->id,
-                ],
-                    [
                     'type_id' => $request->tarifType,
                     'titre' => $request->titre ?? "",
                     'description' => $request->description ?? "",
-                    'amount' => $request->amount,
-                ]
+                    'amount' => $request->amount]
                 );
 
                 $structureProduit->update(['tarif_id' => $structureTarif->id]);
@@ -158,15 +154,11 @@ class StructureTarifController extends Controller
                     foreach($tarifType->tariftypeattributs as $tariftypeattribut) {
                         if($tariftypeattribut->id === $key) {
                             $tarifAttribut = StructureTarifTypeInfo::updateOrCreate(
-                                [
-                                'structure_id' => $structure->id,
-                                'tarif_id' => $structureTarif->id
-                            ],
-                                [
-                                'type_id' => $tarifType->id,
-                                'attribut_id' => $key,
-                                'valeur' => $valeur,
-                            ]
+                                [ 'structure_id' => $structure->id ],
+                                [ 'tarif_id' => $structureTarif->id,
+                                 'type_id' => $tarifType->id,
+                                 'attribut_id' => $key,
+                                 'valeur' => $valeur ]
                             );
                             if($tariftypeattribut->attribut === 'Duree') {
                                 $tarifAttribut->update(['unite'=> $request->uniteDuree['name']]);

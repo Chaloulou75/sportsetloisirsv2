@@ -19,7 +19,7 @@ import {
     ListboxOption,
 } from "@headlessui/vue";
 
-const emit = defineEmits(["close"]);
+const emit = defineEmits(['close']);
 
 const props = defineProps({
     errors: Object,
@@ -36,6 +36,22 @@ const uniteDurees = reactive([
     { id: 3, name: "Mois" },
     { id: 4, name: "Années" },
 ]);
+
+const formEditTarif = reactive({
+    structure_id: ref(props.structure.id),
+    titre: ref(null),
+    description: ref(null),
+    tarifType: ref(null),
+    attributs: ref([]),
+    amount: ref(null),
+    disciplines: ref({}),
+    categories: ref({}),
+    activites: ref({}),
+    produits: ref({}),
+    uniteDuree: ref(null),
+});
+
+const checkAll = ref(false);
 
 watch(
     () => props.tarif,
@@ -62,7 +78,6 @@ watch(
                     const categoryData = disciplineData.categories[categoryId];
                     for (const activity of categoryData.activites) {
                         for (const produit of activity.produits) {
-                            console.log(produit.tarifId, newValue.id);
                             if (produit.tarifId === newValue.id) {
                                 formEditTarif.produits[produit.id] = true;
                             }
@@ -73,22 +88,6 @@ watch(
         }
     }
 );
-
-const formEditTarif = reactive({
-    structure_id: ref(props.structure.id),
-    titre: ref(null),
-    description: ref(null),
-    tarifType: ref(null),
-    attributs: ref([]),
-    amount: ref(null),
-    disciplines: ref({}),
-    categories: ref({}),
-    activites: ref({}),
-    produits: ref({}),
-    uniteDuree: ref(null),
-});
-
-const checkAll = ref(true);
 
 watch(() => formEditTarif.disciplines, (newValue) => {
     if (newValue) {
@@ -200,7 +199,7 @@ const onSubmitAddTarifForm = () => {
             remember: false,
             onSuccess: () => {
                 // formEditTarif.reset();
-                emit("close");
+                emit('close');
             },
             structure: props.structure.slug,
             structure: props.tarif.id,

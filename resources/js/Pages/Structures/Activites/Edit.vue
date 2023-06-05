@@ -644,7 +644,8 @@ function onSubmit() {
         <ModalAddTarif :errors="errors" :structure="structure" :tarif-types="tarifTypes"
             :activiteForTarifs="activiteForTarifs" :show="showAddTarifModal" @close="showAddTarifModal = false" />
 
-        <ModalWeekHourPlanning :show="showModalWeekHourPlanning" @close="showModalWeekHourPlanning = false" />
+        <ModalWeekHourPlanning :structure="structure" :structureActivites="structureActivites"
+            :show="showModalWeekHourPlanning" @close="showModalWeekHourPlanning = false" />
     </AppLayout>
 </template>
 
