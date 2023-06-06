@@ -121,7 +121,7 @@ export default {
             >
                 Adresse *
             </label>
-            <div class="mt-1 flex rounded-md shadow-sm">
+            <div class="flex mt-1 rounded-md shadow-sm">
                 <input
                     @input="$emit('update:address', $event.target.value)"
                     :value="address"
@@ -131,7 +131,7 @@ export default {
                     id="address"
                     autocomplete="off"
                     data-lpignore="true"
-                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     placeholder="33 rue des pins..."
                 />
             </div>
@@ -153,7 +153,7 @@ export default {
                 id="city"
                 autocomplete="off"
                 data-lpignore="true"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             />
             <div v-if="errors.city" class="mt-2 text-xs text-red-500">
                 {{ errors.city }}
@@ -175,7 +175,7 @@ export default {
                 id="zip_code"
                 autocomplete="off"
                 data-lpignore="true"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             />
             <div v-if="errors.zip_code" class="mt-2 text-xs text-red-500">
                 {{ errors.zip_code }}
@@ -228,7 +228,7 @@ export default {
                 id="country"
                 name="country"
                 autocomplete="off"
-                class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                class="block w-full px-3 py-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
             >
                 <option value="France">France</option>
             </select>

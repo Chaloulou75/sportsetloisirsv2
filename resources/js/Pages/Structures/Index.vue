@@ -75,7 +75,7 @@ watch(
             <!-- search box -->
 
             <div
-                class="mx-auto mt-4 mb-8 flex w-full max-w-3xl flex-col items-center justify-center px-2 md:flex-row"
+                class="mx-auto mb-8 mt-4 flex w-full max-w-3xl flex-col items-center justify-center px-2 md:flex-row"
             >
                 <label
                     for="search"
@@ -136,7 +136,7 @@ watch(
                                     v-else
                                     alt="photo"
                                     src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                                    class="absolute inset-0 h-full w-full object-cover opacity-75 transition-opacity group-hover:opacity-50"
+                                    class="absolute inset-0 object-cover w-full h-full transition-opacity opacity-75 group-hover:opacity-50"
                                 /> -->
 
                                 <div
@@ -161,7 +161,7 @@ watch(
                                             class="translate-y-8 transform opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100"
                                         >
                                             <p
-                                                class="mb-3 text-base text-white line-clamp-3"
+                                                class="mb-3 line-clamp-3 text-base text-white"
                                             >
                                                 <span
                                                     class="font-semibold"
@@ -175,7 +175,7 @@ watch(
                                                 </span>
                                             </p>
                                             <p
-                                                class="mb-3 text-base text-white line-clamp-3"
+                                                class="mb-3 line-clamp-3 text-base text-white"
                                             >
                                                 {{
                                                     structure.presentation_courte

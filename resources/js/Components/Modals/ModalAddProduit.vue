@@ -12,7 +12,7 @@ import {
     DialogTitle,
 } from "@headlessui/vue";
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(["close"]);
 
 const AddressForm = defineAsyncComponent(() =>
     import("@/Components/Google/AddressForm.vue")
@@ -93,7 +93,7 @@ const onSubmitAddProduitForm = () => {
             remember: false,
             onSuccess: () => {
                 formAddProduit.reset();
-                emit('close');
+                emit("close");
             },
             structure: props.structure.slug,
             activite: props.structureActivite.id,
@@ -105,76 +105,137 @@ const onSubmitAddProduitForm = () => {
     <div>
         <TransitionRoot appear :show="show" as="template">
             <Dialog as="div" @close="open = false" class="relative z-10">
-                <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100"
-                    leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">
+                <TransitionChild
+                    as="template"
+                    enter="duration-300 ease-out"
+                    enter-from="opacity-0"
+                    enter-to="opacity-100"
+                    leave="duration-200 ease-in"
+                    leave-from="opacity-100"
+                    leave-to="opacity-0"
+                >
                     <div class="fixed inset-0 bg-gray-800 bg-opacity-50" />
                 </TransitionChild>
 
                 <div class="fixed inset-0 overflow-y-auto">
-                    <div class="flex items-center justify-center min-h-full p-4 text-center h-5/6">
-                        <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0 scale-95"
-                            enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100"
-                            leave-to="opacity-0 scale-95">
+                    <div
+                        class="flex h-5/6 min-h-full items-center justify-center p-4 text-center"
+                    >
+                        <TransitionChild
+                            as="template"
+                            enter="duration-300 ease-out"
+                            enter-from="opacity-0 scale-95"
+                            enter-to="opacity-100 scale-100"
+                            leave="duration-200 ease-in"
+                            leave-from="opacity-100 scale-100"
+                            leave-to="opacity-0 scale-95"
+                        >
                             <DialogPanel
-                                class="w-full max-w-6xl min-h-full p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
-                                <form @submit.prevent="onSubmitAddProduitForm()" enctype="multipart/form-data"
-                                    autocomplete="off">
-                                    <DialogTitle as="div" class="flex items-center justify-between w-full">
-                                        <h3 class="text-lg font-medium leading-6 text-gray-800">
+                                class="min-h-full w-full max-w-6xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                            >
+                                <form
+                                    @submit.prevent="onSubmitAddProduitForm()"
+                                    enctype="multipart/form-data"
+                                    autocomplete="off"
+                                >
+                                    <DialogTitle
+                                        as="div"
+                                        class="flex w-full items-center justify-between"
+                                    >
+                                        <h3
+                                            class="text-lg font-medium leading-6 text-gray-800"
+                                        >
                                             Ajouter un produit à
                                             <span class="text-blue-700">
                                                 {{
                                                     structureActivite.titre
-                                                }}</span>
+                                                }}</span
+                                            >
                                         </h3>
                                         <button type="button">
-                                            <XCircleIcon @click="emit('close')"
-                                                class="w-6 h-6 text-gray-600 hover:text-gray-800" />
+                                            <XCircleIcon
+                                                @click="emit('close')"
+                                                class="h-6 w-6 text-gray-600 hover:text-gray-800"
+                                            />
                                         </button>
                                     </DialogTitle>
-                                    <div class="w-full mt-2">
+                                    <div class="mt-2 w-full">
                                         <div class="flex flex-col space-y-3">
-                                            <div class="flex flex-col space-y-3">
+                                            <div
+                                                class="flex flex-col space-y-3"
+                                            >
                                                 <!-- Criteres -->
-                                                <div v-if="filteredCriteres.length >
-                                                    0
+                                                <div
+                                                    v-if="
+                                                        filteredCriteres.length >
+                                                        0
                                                     "
-                                                    class="flex flex-col items-center justify-between w-full space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0">
-                                                    <div v-for="critere in filteredCriteres" :key="critere.id"
-                                                        class="w-full">
+                                                    class="flex w-full flex-col items-center justify-between space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
+                                                >
+                                                    <div
+                                                        v-for="critere in filteredCriteres"
+                                                        :key="critere.id"
+                                                        class="w-full"
+                                                    >
                                                         <!-- select -->
-                                                        <div v-if="critere.type_champ_form ===
-                                                            'select'
-                                                            ">
+                                                        <div
+                                                            v-if="
+                                                                critere.type_champ_form ===
+                                                                'select'
+                                                            "
+                                                        >
                                                             <div>
-                                                                <label :for="critere.nom
-                                                                    " class="block text-sm font-medium text-gray-700">
+                                                                <label
+                                                                    :for="
+                                                                        critere.nom
+                                                                    "
+                                                                    class="block text-sm font-medium text-gray-700"
+                                                                >
                                                                     {{
                                                                         critere.nom
                                                                     }}
                                                                 </label>
-                                                                <div class="flex mt-1 rounded-md">
-                                                                    <select :name="critere.nom
-                                                                            " :id="critere.nom
-            " v-model="formAddProduit
-        .criteres[
-        critere
-            .id
-    ]
-        " class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm">
-                                                                        <option disabled value="">
+                                                                <div
+                                                                    class="mt-1 flex rounded-md"
+                                                                >
+                                                                    <select
+                                                                        :name="
+                                                                            critere.nom
+                                                                        "
+                                                                        :id="
+                                                                            critere.nom
+                                                                        "
+                                                                        v-model="
+                                                                            formAddProduit
+                                                                                .criteres[
+                                                                                critere
+                                                                                    .id
+                                                                            ]
+                                                                        "
+                                                                        class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                                    >
+                                                                        <option
+                                                                            disabled
+                                                                            value=""
+                                                                        >
                                                                             Selectionner
                                                                             un
                                                                             {{
                                                                                 critere.nom
                                                                             }}
                                                                         </option>
-                                                                        <option v-for="(
+                                                                        <option
+                                                                            v-for="(
                                                                                 option,
-                                                                                        index
-                                                                            ) in critere.valeurs" :key="option.id
-                                                                                " :value="option.valeur
-        ">
+                                                                                index
+                                                                            ) in critere.valeurs"
+                                                                            :key="
+                                                                                option.id
+                                                                            "
+                                                                            :value="
+                                                                                option.valeur
+                                                                            "
+                                                                        >
                                                                             {{
                                                                                 option.valeur
                                                                             }}
@@ -184,76 +245,139 @@ const onSubmitAddProduitForm = () => {
                                                             </div>
                                                         </div>
                                                         <!-- checkbox -->
-                                                        <div v-if="critere.type_champ_form ===
-                                                            'checkbox'
-                                                            ">
-                                                            <div class="flex items-center">
-                                                                <input v-model="formAddProduit
-                                                                    .criteres[
-                                                                    critere
-                                                                        .id
-                                                                ]
-                                                                    " :id="critere.nom
-        " type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600" />
-                                                                <label :for="critere.nom
-                                                                    " class="ml-2 text-sm font-medium text-gray-700">{{
-        critere.nom
-    }}</label>
+                                                        <div
+                                                            v-if="
+                                                                critere.type_champ_form ===
+                                                                'checkbox'
+                                                            "
+                                                        >
+                                                            <div
+                                                                class="flex items-center"
+                                                            >
+                                                                <input
+                                                                    v-model="
+                                                                        formAddProduit
+                                                                            .criteres[
+                                                                            critere
+                                                                                .id
+                                                                        ]
+                                                                    "
+                                                                    :id="
+                                                                        critere.nom
+                                                                    "
+                                                                    type="checkbox"
+                                                                    class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
+                                                                />
+                                                                <label
+                                                                    :for="
+                                                                        critere.nom
+                                                                    "
+                                                                    class="ml-2 text-sm font-medium text-gray-700"
+                                                                    >{{
+                                                                        critere.nom
+                                                                    }}</label
+                                                                >
                                                             </div>
                                                         </div>
                                                         <!-- radio -->
-                                                        <div v-if="critere.type_champ_form ===
+                                                        <div
+                                                            v-if="
+                                                                critere.type_champ_form ===
                                                                 'radio'
-                                                                ">
-                                                            <label :for="critere.nom
-                                                                " class="block text-sm font-medium text-gray-700">
+                                                            "
+                                                        >
+                                                            <label
+                                                                :for="
+                                                                    critere.nom
+                                                                "
+                                                                class="block text-sm font-medium text-gray-700"
+                                                            >
                                                                 {{
                                                                     critere.nom
                                                                 }}
                                                             </label>
 
-                                                            <div class="flex mt-1 rounded-md">
+                                                            <div
+                                                                class="mt-1 flex rounded-md"
+                                                            >
                                                                 <div>
-                                                                    <label class="inline-flex items-center" v-for="(
+                                                                    <label
+                                                                        class="inline-flex items-center"
+                                                                        v-for="(
                                                                             option,
-                                                                                    index
-                                                                        ) in critere.valeurs" :key="option.id
-                                                                            ">
-                                                                        <input v-model="formAddProduit
-                                                                            .criteres[
-                                                                            critere
-                                                                                .id
-                                                                        ]
-                                                                            " type="radio" class="form-radio" :name="option.valeur
-        " :value="option.valeur
-        " checked />
-                                                                        <span class="ml-2">{{
-                                                                            option.valeur
-                                                                        }}</span>
+                                                                            index
+                                                                        ) in critere.valeurs"
+                                                                        :key="
+                                                                            option.id
+                                                                        "
+                                                                    >
+                                                                        <input
+                                                                            v-model="
+                                                                                formAddProduit
+                                                                                    .criteres[
+                                                                                    critere
+                                                                                        .id
+                                                                                ]
+                                                                            "
+                                                                            type="radio"
+                                                                            class="form-radio"
+                                                                            :name="
+                                                                                option.valeur
+                                                                            "
+                                                                            :value="
+                                                                                option.valeur
+                                                                            "
+                                                                            checked
+                                                                        />
+                                                                        <span
+                                                                            class="ml-2"
+                                                                            >{{
+                                                                                option.valeur
+                                                                            }}</span
+                                                                        >
                                                                     </label>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <!-- input text -->
-                                                        <div v-if="critere.type_champ_form ===
-                                                            'text'
-                                                            ">
-                                                            <label :for="critere.nom
-                                                                " class="block text-sm font-medium text-gray-700">
+                                                        <div
+                                                            v-if="
+                                                                critere.type_champ_form ===
+                                                                'text'
+                                                            "
+                                                        >
+                                                            <label
+                                                                :for="
+                                                                    critere.nom
+                                                                "
+                                                                class="block text-sm font-medium text-gray-700"
+                                                            >
                                                                 {{
                                                                     critere.nom
                                                                 }}
                                                             </label>
-                                                            <div class="flex mt-1 rounded-md">
-                                                                <input type="text" v-model="formAddProduit
+                                                            <div
+                                                                class="mt-1 flex rounded-md"
+                                                            >
+                                                                <input
+                                                                    type="text"
+                                                                    v-model="
+                                                                        formAddProduit
                                                                             .criteres[
-                                                                        critere
-                                                                            .id
+                                                                            critere
+                                                                                .id
                                                                         ]
-                                                                        " :name="critere.nom
-            " :id="critere.nom
-        " class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
-                                                                    placeholder="" autocomplete="none" />
+                                                                    "
+                                                                    :name="
+                                                                        critere.nom
+                                                                    "
+                                                                    :id="
+                                                                        critere.nom
+                                                                    "
+                                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                                    placeholder=""
+                                                                    autocomplete="none"
+                                                                />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -261,20 +385,40 @@ const onSubmitAddProduitForm = () => {
 
                                                 <!-- Adresse -->
                                                 <div
-                                                    class="flex flex-col items-end justify-between w-full space-x-0 space-y-2 md:flex-row md:space-x-4 md:space-y-0">
-                                                    <div v-if="!addProduitAddress
-                                                        " class="flex-1">
-                                                        <label for="adresse"
-                                                            class="block text-sm font-medium text-gray-700">
+                                                    class="flex w-full flex-col items-end justify-between space-x-0 space-y-2 md:flex-row md:space-x-4 md:space-y-0"
+                                                >
+                                                    <div
+                                                        v-if="
+                                                            !addProduitAddress
+                                                        "
+                                                        class="flex-1"
+                                                    >
+                                                        <label
+                                                            for="adresse"
+                                                            class="block text-sm font-medium text-gray-700"
+                                                        >
                                                             Adresse
                                                         </label>
-                                                        <div class="flex mt-1 rounded-md">
-                                                            <select name="adresse" id="adresse" v-model="formAddProduit.adresse
+                                                        <div
+                                                            class="mt-1 flex rounded-md"
+                                                        >
+                                                            <select
+                                                                name="adresse"
+                                                                id="adresse"
+                                                                v-model="
+                                                                    formAddProduit.adresse
                                                                 "
-                                                                class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm">
-                                                                <option v-for="adresse in structure.adresses" :key="adresse.id
-                                                                    " :value="adresse.id
-        ">
+                                                                class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                            >
+                                                                <option
+                                                                    v-for="adresse in structure.adresses"
+                                                                    :key="
+                                                                        adresse.id
+                                                                    "
+                                                                    :value="
+                                                                        adresse.id
+                                                                    "
+                                                                >
                                                                     {{
                                                                         adresse.address
                                                                     }}
@@ -289,63 +433,120 @@ const onSubmitAddProduitForm = () => {
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="flex items-center">
-                                                        <input v-model="addProduitAddress
-                                                            " id="addAddress" type="checkbox"
-                                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded form-checkbox focus:ring-blue-500" />
-                                                        <label for="addAddress"
-                                                            class="ml-2 text-sm font-medium text-gray-700">Ajouter une
-                                                            adresse</label>
+                                                    <div
+                                                        class="flex items-center"
+                                                    >
+                                                        <input
+                                                            v-model="
+                                                                addProduitAddress
+                                                            "
+                                                            id="addAddress"
+                                                            type="checkbox"
+                                                            class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                        />
+                                                        <label
+                                                            for="addAddress"
+                                                            class="ml-2 text-sm font-medium text-gray-700"
+                                                            >Ajouter une
+                                                            adresse</label
+                                                        >
                                                     </div>
                                                 </div>
 
                                                 <!-- newAddress -->
-                                                <AddressForm v-if="addProduitAddress" :errors="errors" v-model:address="formAddProduit.address
-                                                    " v-model:city="formAddProduit.city
-        " v-model:zip_code="formAddProduit.zip_code
-        " v-model:country="formAddProduit.country
-        " v-model:address_lat="formAddProduit.address_lat
-        " v-model:address_lng="formAddProduit.address_lng
-        " />
+                                                <AddressForm
+                                                    v-if="addProduitAddress"
+                                                    :errors="errors"
+                                                    v-model:address="
+                                                        formAddProduit.address
+                                                    "
+                                                    v-model:city="
+                                                        formAddProduit.city
+                                                    "
+                                                    v-model:zip_code="
+                                                        formAddProduit.zip_code
+                                                    "
+                                                    v-model:country="
+                                                        formAddProduit.country
+                                                    "
+                                                    v-model:address_lat="
+                                                        formAddProduit.address_lat
+                                                    "
+                                                    v-model:address_lng="
+                                                        formAddProduit.address_lng
+                                                    "
+                                                />
 
                                                 <!-- Jours et Heures -->
                                                 <div
-                                                    class="flex flex-col items-center justify-between w-full space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0">
+                                                    class="flex w-full flex-col items-center justify-between space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
+                                                >
                                                     <div class="w-full">
-                                                        <label for="date" class="block text-sm font-medium text-gray-700">
+                                                        <label
+                                                            for="date"
+                                                            class="block text-sm font-medium text-gray-700"
+                                                        >
                                                             Dates d'ouvertures
                                                         </label>
-                                                        <VueDatePicker v-model="formAddProduit.date
-                                                            " range multi-calendars locale="fr" :format="'dd/MM/yyyy'"
-                                                            :enableTimePicker="false
-                                                                " cancelText="annuler" selectText="confirmer"
-                                                            placeholder="Selectionner vos dates"></VueDatePicker>
+                                                        <VueDatePicker
+                                                            v-model="
+                                                                formAddProduit.date
+                                                            "
+                                                            range
+                                                            multi-calendars
+                                                            locale="fr"
+                                                            :format="'dd/MM/yyyy'"
+                                                            :enableTimePicker="
+                                                                false
+                                                            "
+                                                            cancelText="annuler"
+                                                            selectText="confirmer"
+                                                            placeholder="Selectionner vos dates"
+                                                        ></VueDatePicker>
                                                     </div>
 
                                                     <div class="w-full">
-                                                        <label for="time" class="block text-sm font-medium text-gray-700">
+                                                        <label
+                                                            for="time"
+                                                            class="block text-sm font-medium text-gray-700"
+                                                        >
                                                             Horaires (ouverture
                                                             / fermeture)
                                                         </label>
-                                                        <VueDatePicker v-model="formAddProduit.time
-                                                            " time-picker range locale="fr" cancelText="annuler"
+                                                        <VueDatePicker
+                                                            v-model="
+                                                                formAddProduit.time
+                                                            "
+                                                            time-picker
+                                                            range
+                                                            locale="fr"
+                                                            cancelText="annuler"
                                                             selectText="confirmer"
-                                                            placeholder="Selectionnez vos horaires" />
+                                                            placeholder="Selectionnez vos horaires"
+                                                        />
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="flex items-center justify-between w-full mt-4">
-                                        <button type="button"
-                                            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
-                                            @click="emit('close')">
+                                    <div
+                                        class="mt-4 flex w-full items-center justify-between"
+                                    >
+                                        <button
+                                            type="button"
+                                            class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                                            @click="emit('close')"
+                                        >
                                             Annuler
                                         </button>
-                                        <button :disabled="formAddProduit.processing
-                                            " type="submit"
-                                            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2">
+                                        <button
+                                            :disabled="
+                                                formAddProduit.processing
+                                            "
+                                            type="submit"
+                                            class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                                        >
                                             Enregistrer
                                         </button>
                                     </div>
