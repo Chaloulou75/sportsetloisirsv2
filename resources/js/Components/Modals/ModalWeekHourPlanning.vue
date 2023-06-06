@@ -1,6 +1,6 @@
 <script setup>
-import { ref, reactive, computed, watch } from "vue";
-import { useForm, router } from "@inertiajs/vue3";
+import { ref, reactive } from "vue";
+import { router } from "@inertiajs/vue3";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 
@@ -21,30 +21,33 @@ const props = defineProps({
     structureActivites: Object,
 });
 
-const events = reactive([
-    {
-        start: "2023-06-06 14:00",
-        end: "2023-06-06 15:15",
-        title: "Badminton",
-        content: "",
-    },
-    {
-        start: "2023-06-07 16:00",
-        end: "2023-06-07 17:15",
-        title: "Golf",
-        content: "",
-    },
-    {
-        start: "2023-06-06 18:00",
-        end: "2023-06-06 19:15",
-        title: "Produit 1",
-        content: "",
-    },
-]);
+const getEvents = () => {
+    const events = [];
+
+    for (const structureActivite of props.structureActivites) {
+        for (const produit of structureActivite.produits) {
+            if (produit.horaire) {
+                const event = {
+                    start: `${produit.horaire.dayopen} ${produit.horaire.houropen}`,
+                    end: `${produit.horaire.dayclose} ${produit.horaire.hourclose}`,
+                    title: structureActivite.titre,
+                    content: structureActivite.description,
+                    produitId: produit.id,
+                };
+
+                events.push(event);
+            }
+        }
+    }
+
+    return events;
+};
+
+const events = getEvents();
 
 const formPlanning = reactive({
     structure_id: ref(props.structure.id),
-    titre: ref(null),
+    events: ref(events),
 });
 
 const onSubmitPlanningForm = () => {
@@ -52,6 +55,7 @@ const onSubmitPlanningForm = () => {
         `/structures/${props.structure.slug}/plannings`,
         {
             structure_id: formPlanning.structure_id,
+            events: formPlanning.events,
         },
         {
             preserveScroll: true,
@@ -120,6 +124,7 @@ const onSubmitPlanningForm = () => {
                                     </DialogTitle>
 
                                     <vue-cal
+                                        small
                                         :time-from="6 * 60"
                                         :time-to="24 * 60"
                                         :time-step="30"
@@ -128,13 +133,16 @@ const onSubmitPlanningForm = () => {
                                         :disable-views="['years', 'year']"
                                         :editable-events="{
                                             title: true,
+                                            start: true,
+                                            end: true,
                                             drag: true,
                                             resize: true,
                                             delete: true,
                                             create: true,
                                         }"
                                         :drag-to-create-threshold="15"
-                                        :events="events"
+                                        :events="getEvents()"
+                                        
                                     />
 
                                     <div

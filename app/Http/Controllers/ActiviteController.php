@@ -200,8 +200,6 @@ class ActiviteController extends Controller
         ->where('slug', $structure->slug)
         ->first();
 
-        // dd($structure);
-
         $activite = StructureCategorie::with(['structure','categorie', 'discipline'])
                         ->where('structure_id', $structure->id)
                         ->where('categorie_id', $activite)
@@ -260,8 +258,6 @@ class ActiviteController extends Controller
                     }),
                 ];
             });
-
-        // dd($activiteForTarifs);
 
         return Inertia::render('Structures/Activites/Edit', [
             'structure' => $structure,
