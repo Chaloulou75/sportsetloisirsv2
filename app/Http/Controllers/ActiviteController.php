@@ -222,7 +222,7 @@ class ActiviteController extends Controller
 
         $tarifTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();
 
-        $activiteForTarifs = StructureActivite::with(['structure:id,name,slug', 'categorie:id,nom_categorie', 'discipline:id,name', 'produits'])
+        $activiteForTarifs = StructureActivite::with(['structure:id,name,slug', 'categorie:id,nom_categorie', 'discipline:id,name', 'produits', 'produits.tarifs'])
             ->where('structure_id', $structure->id)
             ->latest()
             ->get()
@@ -244,7 +244,16 @@ class ActiviteController extends Controller
                                         'disciplineId' => $produitItem->discipline_id,
                                         'categorieId' => $produitItem->categorie_id,
                                         'activiteId' => $produitItem->activite_id,
-                                        'tarifId' => $produitItem->tarif_id,
+                                        'tarifs' => $produitItem->tarifs->map(function ($tarifItem) {
+                                            return [
+                                                'id' => $tarifItem->id,
+                                                'typeId' => $tarifItem->type_id,
+                                                'titre' => $tarifItem->titre,
+                                                'description' => $tarifItem->description,
+                                                'amount' => $tarifItem->amount,
+                                                'produits' => $tarifItem->produits,
+                                            ];
+                                        }),
                                     ];
                                 }),
                             ];

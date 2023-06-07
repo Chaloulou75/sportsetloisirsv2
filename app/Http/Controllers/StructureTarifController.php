@@ -50,40 +50,37 @@ class StructureTarifController extends Controller
 
         $structure = Structure::with(['disciplines', 'categories', 'activites', 'produits'])->where('id', $structure->id)->firstOrFail();
 
-        foreach($request->produits as $key => $produitId) {
-            if($produitId === true) {
-                $structureProduit = StructureProduit::where('id', $key)->first();
+        $structureTarif = StructureTarif::create([
+            'structure_id' => $structure->id,
+            'type_id' => $request->tarifType,
+            'titre' => $request->titre ?? "",
+            'description' => $request->description ?? "",
+            'amount' => $request->amount,
+        ]);
 
-                $structureTarif = StructureTarif::create([
-                    'structure_id' => $structure->id,
-                    'discipline_id' => $structureProduit->discipline_id,
-                    'categorie_id' => $structureProduit->categorie_id,
-                    'activite_id' => $structureProduit->activite_id,
-                    'produit_id' => $structureProduit->id,
-                    'type_id' => $request->tarifType,
-                    'titre' => $request->titre ?? "",
-                    'description' => $request->description ?? "",
-                    'amount' => $request->amount,
-                ]);
+        foreach($request->produits as $key => $value) {
+            $structureProduit = StructureProduit::where('id', $key)->first();
+            if($value === true) {
+                $structureTarif->produits()->attach($structureProduit->id);
+            } else {
+                $structureTarif->produits()->detach($structureProduit->id);
+            }
+        }
 
-                $structureProduit->update(['tarif_id' => $structureTarif->id]);
+        $tarifType = ListeTarifType::with('tariftypeattributs')->where('id', $structureTarif->type_id)->first();
 
-                $tarifType = ListeTarifType::with('tariftypeattributs')->where('id', $structureTarif->type_id)->first();
-
-                foreach($request->attributs as $key => $valeur) {
-                    foreach($tarifType->tariftypeattributs as $tariftypeattribut) {
-                        if($tariftypeattribut->id === $key) {
-                            $tarifAttribut = StructureTarifTypeInfo::create([
-                                'structure_id' => $structure->id,
-                                'tarif_id' => $structureTarif->id,
-                                'type_id' => $tarifType->id,
-                                'attribut_id' => $key,
-                                'valeur' => $valeur,
-                            ]);
-                            if($tariftypeattribut->attribut === 'Duree') {
-                                $tarifAttribut->update(['unite'=> $request->uniteDuree['name']]);
-                            }
-                        }
+        foreach($request->attributs as $key => $valeur) {
+            foreach($tarifType->tariftypeattributs as $tariftypeattribut) {
+                if($tariftypeattribut->id === $key) {
+                    $tarifAttribut = StructureTarifTypeInfo::create([
+                        'structure_id' => $structure->id,
+                        'tarif_id' => $structureTarif->id,
+                        'type_id' => $tarifType->id,
+                        'attribut_id' => $key,
+                        'valeur' => $valeur,
+                    ]);
+                    if($tariftypeattribut->attribut === 'Duree') {
+                        $tarifAttribut->update(['unite'=> $request->uniteDuree['name']]);
                     }
                 }
             }
@@ -130,40 +127,37 @@ class StructureTarifController extends Controller
 
         $structure = Structure::with(['disciplines', 'categories', 'activites', 'produits'])->where('id', $structure->id)->firstOrFail();
 
-        foreach($request->produits as $key => $produitId) {
-            if($produitId === true) {
-                $structureProduit = StructureProduit::where('id', $key)->first();
-                dd($structureProduit);
-                $structureTarif = StructureTarif::updateOrCreate(
-                    ['structure_id' => $structure->id],
-                    ['discipline_id' => $structureProduit->discipline_id,
-                    'categorie_id' => $structureProduit->categorie_id,
-                    'activite_id' => $structureProduit->activite_id,
-                    'produit_id' => $structureProduit->id,
-                    'type_id' => $request->tarifType,
-                    'titre' => $request->titre ?? "",
-                    'description' => $request->description ?? "",
-                    'amount' => $request->amount]
-                );
+        $structureTarif = StructureTarif::updateOrCreate(
+            ['structure_id' => $structure->id,],
+            ['type_id' => $request->tarifType,
+            'titre' => $request->titre ?? "",
+            'description' => $request->description ?? "",
+            'amount' => $request->amount]
+        );
 
-                $structureProduit->update(['tarif_id' => $structureTarif->id]);
+        foreach($request->produits as $key => $value) {
+            $structureProduit = StructureProduit::where('id', $key)->first();
+            if($value === true) {
+                $structureTarif->produits()->attach($structureProduit->id);
+            } else {
+                $structureTarif->produits()->detach($structureProduit->id);
+            }
+        }
 
-                $tarifType = ListeTarifType::with('tariftypeattributs')->where('id', $structureTarif->type_id)->first();
+        $tarifType = ListeTarifType::with('tariftypeattributs')->where('id', $structureTarif->type_id)->first();
 
-                foreach($request->attributs as $key => $valeur) {
-                    foreach($tarifType->tariftypeattributs as $tariftypeattribut) {
-                        if($tariftypeattribut->id === $key) {
-                            $tarifAttribut = StructureTarifTypeInfo::updateOrCreate(
-                                [ 'structure_id' => $structure->id ],
-                                [ 'tarif_id' => $structureTarif->id,
-                                 'type_id' => $tarifType->id,
-                                 'attribut_id' => $key,
-                                 'valeur' => $valeur ]
-                            );
-                            if($tariftypeattribut->attribut === 'Duree') {
-                                $tarifAttribut->update(['unite'=> $request->uniteDuree['name']]);
-                            }
-                        }
+        foreach($request->attributs as $key => $valeur) {
+            foreach($tarifType->tariftypeattributs as $tariftypeattribut) {
+                if($tariftypeattribut->id === $key) {
+                    $tarifAttribut = StructureTarifTypeInfo::updateOrCreate(
+                        [ 'structure_id' => $structure->id ],
+                        [ 'tarif_id' => $structureTarif->id,
+                        'type_id' => $tarifType->id,
+                        'attribut_id' => $key,
+                        'valeur' => $valeur ]
+                    );
+                    if($tariftypeattribut->attribut === 'Duree') {
+                        $tarifAttribut->update(['unite'=> $request->uniteDuree['name']]);
                     }
                 }
             }
@@ -182,13 +176,15 @@ class StructureTarifController extends Controller
 
         $infos = StructureTarifTypeInfo::where('tarif_id', $tarif->id)->get();
 
-        $produits = StructureProduit::where('structure_id', $structure->id)->where('tarif_id', $tarif->id)->get();
+        // $produits = StructureProduit::where('structure_id', $structure->id)->where('tarif_id', $tarif->id)->get();
 
-        if($produits->isNotEmpty()) {
-            foreach($produits as $produit) {
-                $produit->update(['tarif_id' => null]);
-            }
-        }
+        $tarif->produits()->detach();
+
+        // if($produits->isNotEmpty()) {
+        //     foreach($produits as $produit) {
+        //         $produit->update(['tarif_id' => null]);
+        //     }
+        // }
 
         if($infos->isNotEmpty()) {
             foreach($infos as $info) {
@@ -209,16 +205,16 @@ class StructureTarifController extends Controller
 
         $newTarif = new StructureTarif();
         $newTarif->structure_id = $originalTarif->structure_id;
-        $newTarif->discipline_id = $originalTarif->discipline_id;
-        $newTarif->categorie_id = $originalTarif->categorie_id;
-        $newTarif->activite_id = $originalTarif->activite_id;
-        $newTarif->produit_id = $originalTarif->produit_id;
         $newTarif->type_id = $originalTarif->type_id;
         $newTarif->titre = $originalTarif->titre;
         $newTarif->description = $originalTarif->description;
         $newTarif->amount = $originalTarif->amount;
         $newTarif->id = null;
         $newTarif->save();
+
+        foreach($originalTarif->produits as $produit) {
+            $newTarif->produits()->attach($produit->id);
+        }
 
         foreach($originalInfos as $tarifInfo) {
             $newTarifInfo = new StructureTarifTypeInfo();

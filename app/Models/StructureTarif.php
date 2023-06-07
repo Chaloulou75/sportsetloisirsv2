@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class StructureTarif extends Model
 {
@@ -25,24 +26,9 @@ class StructureTarif extends Model
         return $this->belongsTo(Structure::class);
     }
 
-    public function categorie(): BelongsTo
+    public function produits(): BelongsToMany
     {
-        return $this->belongsTo(LienDisciplineCategorie::class, 'categorie_id');
-    }
-
-    public function discipline(): BelongsTo
-    {
-        return $this->belongsTo(ListDiscipline::class, 'discipline_id');
-    }
-
-    public function activite(): BelongsTo
-    {
-        return $this->belongsTo(StructureActivite::class, 'activite_id');
-    }
-
-    public function produit(): BelongsTo
-    {
-        return $this->belongsTo(StructureProduit::class, 'produit_id');
+        return $this->belongsToMany(StructureProduit::class, 'produit_tarif', 'produit_id', 'tarif_id');
     }
 
     public function tarifType(): BelongsTo

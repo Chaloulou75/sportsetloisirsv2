@@ -267,7 +267,7 @@ class StructureActiviteProduitController extends Controller
         $produit = StructureProduit::where('id', $produit->id)->firstOrFail();
 
         $produitCriteres = StructureProduitCritere::where('produit_id', $produit->id)->get();
-        $produitTarifs = StructureTarif::where('produit_id', $produit->id)->get();
+
         $produitTarifInfos = StructureTarifTypeInfo::where('produit_id', $produit->id)->get();
 
         if(isset($produitsCriteres)) {
@@ -276,15 +276,11 @@ class StructureActiviteProduitController extends Controller
             }
         }
 
+        $produit->tarifs()->detach();
+
         if(isset($produitTarifInfos)) {
             foreach($produitTarifInfos as $info) {
                 $info->delete();
-            }
-        }
-
-        if(isset($produitTarifs)) {
-            foreach($produitTarifs as $tarif) {
-                $tarif->delete();
             }
         }
 
@@ -307,10 +303,14 @@ class StructureActiviteProduitController extends Controller
         $newProduit->lieu_id = $originalProduit->lieu_id;
         $newProduit->actif = $originalProduit->actif;
         $newProduit->horaire_id = $originalProduit->horaire_id;
-        $newProduit->tarif_id = $originalProduit->tarif_id;
+        // $newProduit->tarif_id = $originalProduit->tarif_id;
         $newProduit->reservable = $originalProduit->reservable;
         $newProduit->id = null;
         $newProduit->save();
+
+        foreach($originalProduit->tarifs() as $tarif) {
+            $newProduit->attach($tarif->id);
+        }
 
         foreach($originalProduitCriteres as $produitCritere) {
             $newProduitCritere = new StructureProduitCritere();

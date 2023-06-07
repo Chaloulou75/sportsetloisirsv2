@@ -86,8 +86,11 @@ watch(
                     const categoryData = disciplineData.categories[categoryId];
                     for (const activity of categoryData.activites) {
                         for (const produit of activity.produits) {
-                            if (produit.tarifId === newValue.id) {
-                                formEditTarif.produits[produit.id] = true;
+                            for (const tarif of produit.tarifs) {
+                                if (tarif.id === newValue.id) {
+                                    console.log(tarif.id);
+                                    formEditTarif.produits[produit.id] = true;
+                                }
                             }
                         }
                     }
@@ -241,7 +244,6 @@ const onSubmitAddTarifForm = () => {
             preserveScroll: true,
             remember: false,
             onSuccess: () => {
-                // formEditTarif.reset();
                 emit("close");
             },
             structure: props.structure.slug,
@@ -293,7 +295,7 @@ const onSubmitAddTarifForm = () => {
                                         <h3
                                             class="text-lg font-medium leading-6 text-gray-800"
                                         >
-                                            Editer un tarif de
+                                            Editer un tarif {{ tarif.id }} de
                                             <span class="text-blue-700">
                                                 {{ structure.name }}</span
                                             >
@@ -806,10 +808,21 @@ const onSubmitAddTarifForm = () => {
                                                                     />
                                                                     <span
                                                                         class="ml-2 text-sm text-gray-600"
-                                                                        >Produit
+                                                                    >
+                                                                        Produit
                                                                         n°
                                                                         {{
                                                                             produit.id
+                                                                        }}</span
+                                                                    >
+                                                                    <span
+                                                                        v-for="tarif in produit.tarifs"
+                                                                        :key="
+                                                                            tarif.id
+                                                                        "
+                                                                        class="px-2 text-xs italic"
+                                                                        >{{
+                                                                            tarif.id
                                                                         }}</span
                                                                     >
                                                                 </label>

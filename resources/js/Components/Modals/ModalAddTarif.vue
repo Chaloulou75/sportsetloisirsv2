@@ -198,8 +198,19 @@ const onSubmitAddTarifForm = () => {
             remember: false,
             onSuccess: () => {
                 // formAddTarif.reset();
+                formAddTarif.titre = "";
+                formAddTarif.attributs = [];
+                formAddTarif.amount = "";
+                formAddTarif.tarifType = props.tarifTypes[0];
+                formAddTarif.uniteDuree = uniteDurees[0];
+                formAddTarif.disciplines = {};
+                formAddTarif.categories = {};
+                formAddTarif.activites = {};
+                formAddTarif.produits = {};
+                checkAll.value = false;
                 emit("close");
             },
+
             structure: props.structure.slug,
         }
     );
