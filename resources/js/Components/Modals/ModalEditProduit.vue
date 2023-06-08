@@ -124,7 +124,7 @@ const onSubmitEditProduitForm = () => {
 
                 <div class="fixed inset-0 overflow-y-auto">
                     <div
-                        class="flex h-5/6 min-h-full items-center justify-center p-4 text-center"
+                        class="flex h-screen min-h-full items-center justify-center p-4 text-center"
                     >
                         <TransitionChild
                             as="template"
@@ -136,7 +136,7 @@ const onSubmitEditProduitForm = () => {
                             leave-to="opacity-0 scale-95"
                         >
                             <DialogPanel
-                                class="min-h-full w-full max-w-6xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                                class="min-h-full w-full max-w-6xl transform rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
                             >
                                 <form
                                     @submit.prevent="onSubmitEditProduitForm()"
@@ -534,6 +534,7 @@ const onSubmitEditProduitForm = () => {
                                                             Dates d'ouvertures
                                                         </label>
                                                         <VueDatePicker
+                                                            class="z-20"
                                                             v-model="
                                                                 formEditProduit.date
                                                             "

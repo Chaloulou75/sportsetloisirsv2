@@ -62,8 +62,6 @@ class StructureTarifController extends Controller
             $structureProduit = StructureProduit::where('id', $key)->first();
             if($value === true) {
                 $structureTarif->produits()->attach($structureProduit->id);
-            } else {
-                $structureTarif->produits()->detach($structureProduit->id);
             }
         }
 
