@@ -135,12 +135,12 @@ class StructureTarifController extends Controller
             'amount' => $request->amount]
         );
 
+        $structureTarif->produits()->detach();
+
         foreach($request->produits as $key => $value) {
             $structureProduit = StructureProduit::where('id', $key)->first();
             if($value === true) {
                 $structureTarif->produits()->attach($structureProduit->id);
-            } else {
-                $structureTarif->produits()->detach($structureProduit->id);
             }
         }
 
@@ -170,35 +170,32 @@ class StructureTarifController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Structure $structure, $tarif)
+    public function destroy(Structure $structure, $tarif, $produit)
     {
+        //On ne fait que délier le tarif au produit, sans supprimer totalement le tarif
+        $produit = StructureProduit::where('id', $produit)->firstOrFail();
+
         $tarif = StructureTarif::with('structureTarifTypeInfos')->where('id', $tarif)->where('structure_id', $structure->id)->firstOrFail();
 
-        $infos = StructureTarifTypeInfo::where('tarif_id', $tarif->id)->get();
+        $tarif->produits()->detach($produit->id);
 
-        // $produits = StructureProduit::where('structure_id', $structure->id)->where('tarif_id', $tarif->id)->get();
-
-        $tarif->produits()->detach();
-
-        // if($produits->isNotEmpty()) {
-        //     foreach($produits as $produit) {
-        //         $produit->update(['tarif_id' => null]);
+        //Si on veut supprimer entierement le tarif:
+        // $infos = StructureTarifTypeInfo::where('tarif_id', $tarif->id)->get();
+        // if($infos->isNotEmpty()) {
+        //     foreach($infos as $info) {
+        //         $info->delete();
         //     }
         // }
-
-        if($infos->isNotEmpty()) {
-            foreach($infos as $info) {
-                $info->delete();
-            }
-        }
-
-        $tarif->delete();
+        // $tarif->produits()->detach();
+        // $tarif->delete();
 
         return Redirect::back()->with('success', 'Le tarif a bien été supprimé');
     }
 
-    public function duplicate(Structure $structure, $tarif)
+    public function duplicate(Structure $structure, $tarif, $produit)
     {
+        $produit = StructureProduit::where('id', $produit)->firstOrFail();
+
         $originalTarif = StructureTarif::with('structureTarifTypeInfos')->where('id', $tarif)->where('structure_id', $structure->id)->firstOrFail();
 
         $originalInfos = StructureTarifTypeInfo::where('tarif_id', $originalTarif->id)->get();
@@ -212,9 +209,7 @@ class StructureTarifController extends Controller
         $newTarif->id = null;
         $newTarif->save();
 
-        foreach($originalTarif->produits as $produit) {
-            $newTarif->produits()->attach($produit->id);
-        }
+        $newTarif->produits()->attach($produit->id);
 
         foreach($originalInfos as $tarifInfo) {
             $newTarifInfo = new StructureTarifTypeInfo();

@@ -28,7 +28,7 @@ class StructureTarif extends Model
 
     public function produits(): BelongsToMany
     {
-        return $this->belongsToMany(StructureProduit::class, 'produit_tarif', 'produit_id', 'tarif_id');
+        return $this->belongsToMany(StructureProduit::class, 'produit_tarif', 'tarif_id', 'produit_id');
     }
 
     public function tarifType(): BelongsTo

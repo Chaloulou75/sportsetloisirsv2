@@ -88,7 +88,6 @@ watch(
                         for (const produit of activity.produits) {
                             for (const tarif of produit.tarifs) {
                                 if (tarif.id === newValue.id) {
-                                    console.log(tarif.id);
                                     formEditTarif.produits[produit.id] = true;
                                 }
                             }
