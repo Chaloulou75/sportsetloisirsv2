@@ -33,6 +33,10 @@ const getEvents = () => {
                     title: structureActivite.titre,
                     content: structureActivite.description,
                     produitId: produit.id,
+                    class: "course",
+                    deletable: true,
+                    resizable: true,
+                    draggable: true,
                 };
 
                 events.push(event);
@@ -44,6 +48,18 @@ const getEvents = () => {
 };
 
 const events = getEvents();
+
+const handleEventDeleted = (event) => {
+    const url = `/structures/${props.structure.slug}/plannings/${event.produitId}`;
+    router.delete(url, {
+        preserveScroll: true,
+        onSuccess: () => {
+            emit("close");
+        },
+        structure: props.structure.slug,
+        planning: event.produitId,
+    });
+};
 
 const formPlanning = reactive({
     structure_id: ref(props.structure.id),
@@ -113,7 +129,11 @@ const onSubmitPlanningForm = () => {
                                             class="text-lg font-medium leading-6 text-gray-800"
                                         >
                                             Planning de vos activités
-                                            <span class="text-blue-700"> </span>
+                                            <span class="text-xs text-blue-700">
+                                                Supprimer un événement (en
+                                                cliquant et en maintenant un
+                                                événement)
+                                            </span>
                                         </h3>
                                         <button type="button">
                                             <XCircleIcon
@@ -133,16 +153,15 @@ const onSubmitPlanningForm = () => {
                                         :disable-views="['years', 'year']"
                                         :editable-events="{
                                             title: true,
-                                            start: true,
-                                            end: true,
                                             drag: true,
                                             resize: true,
                                             delete: true,
                                             create: true,
                                         }"
                                         :drag-to-create-threshold="15"
+                                        class="vuecal--full-height-delete"
                                         :events="getEvents()"
-                                        
+                                        @event-delete="handleEventDeleted"
                                     />
 
                                     <div
@@ -172,3 +191,8 @@ const onSubmitPlanningForm = () => {
         </TransitionRoot>
     </div>
 </template>
+<style>
+.course {
+    @apply bg-green-300 text-blue-700;
+}
+</style>

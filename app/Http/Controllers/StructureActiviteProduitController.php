@@ -268,8 +268,6 @@ class StructureActiviteProduitController extends Controller
 
         $produitCriteres = StructureProduitCritere::where('produit_id', $produit->id)->get();
 
-        $produitTarifInfos = StructureTarifTypeInfo::where('produit_id', $produit->id)->get();
-
         if(isset($produitsCriteres)) {
             foreach($produitCriteres as $critere) {
                 $critere->delete();
@@ -277,12 +275,6 @@ class StructureActiviteProduitController extends Controller
         }
 
         $produit->tarifs()->detach();
-
-        if(isset($produitTarifInfos)) {
-            foreach($produitTarifInfos as $info) {
-                $info->delete();
-            }
-        }
 
         $produit->delete();
 

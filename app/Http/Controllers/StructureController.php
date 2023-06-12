@@ -111,7 +111,7 @@ class StructureController extends Controller
         $validated= request()->validate([
             'name' => ['required', 'string', 'max:255'],
             'structuretype_id' => ['required', Rule::exists('structuretypes', 'id')],
-            'email' => ['required', 'max:50', 'email', 'unique:structures,email'],
+            'email' => ['required', 'max:50', 'email:filter', 'unique:structures,email'],
             'website' => ['nullable', 'url'],
             'phone1' => ['required', 'regex:/^0[1-9](?:[\-\s]?[0-9]{2}){4}$/'],
             'phone2' => ['nullable', 'regex:/^0[1-9](?:[\-\s]?[0-9]{2}){4}$/'],
@@ -293,7 +293,7 @@ class StructureController extends Controller
         $validated= request()->validate([
             'name' => ['required', 'string', 'max:255'],
             'structuretype_id' => ['required', Rule::exists('structuretypes', 'id')],
-            'email' => ['required', 'max:50', 'email'],
+            'email' => ['required', 'max:50', 'email:filter'],
             'website' => ['nullable', 'url'],
             'phone1' => ['required', 'regex:/^0[1-9](?:[\-\s]?[0-9]{2}){4}$/'],
             'phone2' => ['nullable', 'regex:/^0[1-9](?:[\-\s]?[0-9]{2}){4}$/'],
