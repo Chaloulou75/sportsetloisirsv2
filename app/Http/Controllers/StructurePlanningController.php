@@ -33,7 +33,7 @@ class StructurePlanningController extends Controller
      */
     public function store(Structure $structure, Request $request)
     {
-        dd($request->all());
+        //
     }
 
     /**
@@ -57,7 +57,7 @@ class StructurePlanningController extends Controller
      */
     public function update(Request $request, Structure $structure, $event)
     {
-        dd($request->all());
+        //
     }
 
     /**

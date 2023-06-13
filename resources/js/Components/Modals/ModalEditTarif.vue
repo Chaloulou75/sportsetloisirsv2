@@ -814,16 +814,7 @@ const onSubmitAddTarifForm = () => {
                                                                             produit.id
                                                                         }}</span
                                                                     >
-                                                                    <span
-                                                                        v-for="tarif in produit.tarifs"
-                                                                        :key="
-                                                                            tarif.id
-                                                                        "
-                                                                        class="px-2 text-xs italic"
-                                                                        >{{
-                                                                            tarif.id
-                                                                        }}</span
-                                                                    >
+
                                                                 </label>
                                                             </div>
                                                         </div>

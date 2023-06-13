@@ -144,7 +144,7 @@ const submitForm = (id) => {
             preserveScroll: true,
             onSuccess: () => {
                 formEdit.reset();
-                closeModal();
+                closeEditModal();
             },
             structure: props.structure.slug,
             activite: id,
