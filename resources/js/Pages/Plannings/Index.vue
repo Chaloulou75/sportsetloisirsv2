@@ -1,7 +1,8 @@
 <script setup>
-import { ref, reactive } from "vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
+import { ref, reactive } from "vue";
 import { Head, Link } from "@inertiajs/vue3";
+import ButtonsActiviteEdit from "@/Components/Inscription/Activity/ButtonsActiviteEdit.vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 import { XCircleIcon } from "@heroicons/vue/24/outline";
@@ -153,7 +154,8 @@ const formPlanning = reactive({
         </template>
 
         <div class="py-12">
-            <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 py-6">
+                <ButtonsActiviteEdit :structure="structure"/>
                 <vue-cal
                     small
                     :time-from="6 * 60"

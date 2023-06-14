@@ -7,7 +7,7 @@ const props = defineProps({
 </script>
 <template>
 <div
-    class="flex flex-col items-start justify-start space-x-0 space-y-2 px-2 md:flex-row md:space-x-4 md:space-y-0 md:px-0"
+    class="flex flex-col items-start justify-start space-x-0 space-y-2 px-2 md:flex-row md:space-x-4 md:space-y-0 md:px-0 my-4"
 >
     <Link
         :href="route('structures.activites.index', structure)"

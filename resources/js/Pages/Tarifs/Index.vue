@@ -1,6 +1,7 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
+import ButtonsActiviteEdit from "@/Components/Inscription/Activity/ButtonsActiviteEdit.vue";
 import {
     DocumentDuplicateIcon,
     XCircleIcon,
@@ -84,8 +85,10 @@ const formatCurrency = (value) => {
         </template>
 
         <div class="py-12">
-            <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 py-6">
+                <ButtonsActiviteEdit :structure="structure"/>
                 <div class="min-h-full w-full rounded-xl shadow-lg">
+
                     <div class="bg-slate-50 flex items-center justify-between w-full px-2 md:px-4 py-2">
                         <h3
                             class="w-full px-2 py-2 text-sm font-semibold text-gray-700 md:px-4"

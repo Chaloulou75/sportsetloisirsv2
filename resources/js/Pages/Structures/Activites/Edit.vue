@@ -276,9 +276,7 @@ function onSubmit() {
                             :key="categorie.id"
                             class="flex flex-col space-y-4"
                         >
-                            <!-- buttons -->
                             <ButtonsActiviteEdit :structure="structure"/>
-
                             <div
                                 class="flex w-full flex-col items-center justify-between space-y-2 px-2 py-6 md:flex-row md:space-y-0 md:px-0"
                             >
