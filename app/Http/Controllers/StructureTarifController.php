@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
 use App\Models\Structure;
 use Illuminate\Http\Request;
 use App\Models\ListeTarifType;
@@ -16,9 +17,21 @@ class StructureTarifController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Structure $structure)
     {
-        //
+        $structure = Structure::with(['produits', 'tarifs', 'tarifs.tarifType', 'tarifs.structureTarifTypeInfos', 'tarifs.structureTarifTypeInfos.tarifTypeAttribut'])
+        ->select('id', 'name', 'slug')
+        ->where('id', $structure->id)
+        ->firstOrFail();
+
+
+        $tarifTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();
+
+        return Inertia::render('Tarifs/Index', [
+            'structure' => $structure,
+            'tarifTypes' => $tarifTypes,
+        ]);
+
     }
 
     /**

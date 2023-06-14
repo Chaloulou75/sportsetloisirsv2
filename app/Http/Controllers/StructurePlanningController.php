@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
 use App\Models\Structure;
 use Illuminate\Http\Request;
 use App\Models\StructureHoraire;
 use App\Models\StructureProduit;
-use App\Models\StructureTarifTypeInfo;
 use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Redirect;
 
@@ -15,9 +15,14 @@ class StructurePlanningController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Structure $structure)
     {
-        //
+        $structure = Structure::with(['disciplines', 'categories', 'activites', 'produits'])->where('id', $structure->id)->firstOrFail();
+
+        return Inertia::render('Plannings/Index', [
+            'structure' => $structure,
+        ]);
+
     }
 
     /**

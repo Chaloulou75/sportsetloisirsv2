@@ -1,22 +1,24 @@
 <script setup>
 import { ref, computed, nextTick, defineAsyncComponent } from "vue";
 import { useForm, router } from "@inertiajs/vue3";
+import ModalAddTarif from "@/Components/Modals/ModalAddTarif.vue";
 import dayjs from "dayjs";
 import "dayjs/locale/fr"; // Import the French locale
 import localeData from "dayjs/plugin/localeData"; // Import the localeData plugin
 import {
+
+} from "@heroicons/vue/24/solid";
+import {
     AcademicCapIcon,
     ArrowPathIcon,
     MapPinIcon,
-    UsersIcon,
     ChevronUpIcon,
-    UserGroupIcon,
-    ClockIcon,
-} from "@heroicons/vue/24/solid";
-import {
     DocumentDuplicateIcon,
     XCircleIcon,
     TrashIcon,
+    UsersIcon,
+    UserGroupIcon,
+    ClockIcon,
 } from "@heroicons/vue/24/outline";
 import {
     Switch,
@@ -67,6 +69,11 @@ const showEditProduitModal = ref(false);
 const openTarif = ref(false);
 const currentTarif = ref(null);
 const showEditTarifModal = ref(false);
+const showAddTarifModal = ref(false);
+
+const openAddTarifModal = (structure) => {
+    showAddTarifModal.value = true;
+};
 
 const formatDate = (dateTime) => {
     return dayjs(dateTime).locale("fr").format("DD MMMM YYYY");
@@ -687,11 +694,20 @@ const destroyTarif = (tarif, produit) => {
                             "
                             class="col-span-3 h-full w-full border border-green-200 py-2 md:col-span-6"
                         >
-                            <h3
-                                class="w-full px-2 py-2 text-sm font-semibold text-gray-700 md:px-4"
-                            >
-                                Liste des tarifs pour ce produit:
-                            </h3>
+                            <div class="flex items-center justify-between w-full px-2 md:px-4 py-2">
+                                <h3
+                                    class="w-full px-2 py-2 text-sm font-semibold text-gray-700 md:px-4"
+                                >
+                                    Liste des tarifs pour ce produit:
+                                </h3>
+                                <button
+                                    type="button"
+                                    @click="openAddTarifModal(structure)"
+                                    class="rounded bg-green-600 px-2 py-1.5 text-xs text-white shadow-lg transition duration-100 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 w-auto"
+                                >
+                                    Ajouter un tarif
+                                </button>
+                            </div>
                             <div
                                 v-for="tarif in produit.tarifs"
                                 :key="tarif.id"
@@ -709,13 +725,14 @@ const destroyTarif = (tarif, produit) => {
                                         :key="info.id"
                                         class="col-span-1 flex items-center"
                                     >
+                                        <div v-if="info">
                                         <ClockIcon
                                             v-if="
                                                 [1, 2, 5, 7].includes(
                                                     info.attribut_id
                                                 )
                                             "
-                                            class="mr-1 h-6 w-6 text-gray-600"
+                                            class="mr-1 h-5 w-5 text-slate-500"
                                         />
                                         <UserGroupIcon
                                             v-else-if="
@@ -723,22 +740,31 @@ const destroyTarif = (tarif, produit) => {
                                                     info.attribut_id
                                                 )
                                             "
-                                            class="mr-1 h-6 w-6 text-gray-600"
+                                            class="mr-1 h-5 w-5 text-slate-500"
                                         />
                                         <UsersIcon
                                             v-else
-                                            class="mr-1 h-6 w-6 text-gray-600"
+                                            class="mr-1 h-5 w-5 text-slate-500"
                                         />
 
+                                    </div>
+                                    <div v-else>
+                                        <UsersIcon
+                                            class="mr-1 h-5 w-5 text-slate-500"
+                                        />
+                                    </div>
+
+                                    <div>
                                         <span
-                                            v-if="info.valeur"
-                                            class="text-sm text-gray-600"
-                                            >{{ info.valeur }}
-                                            <span v-if="info.unite">{{
-                                                info.unite
-                                            }}</span>
-                                        </span>
-                                        <span v-else></span>
+                                        v-if="info.valeur"
+                                        class="text-sm font-semibold text-gray-600"
+                                        >{{ info.tarif_type_attribut.attribut }}: {{ info.valeur }}
+                                        <span v-if="info.unite">{{
+                                            info.unite
+                                        }}</span>
+                                    </span>
+                                    <span v-else class="text-sm font-semibold text-gray-600">Pas de valeur</span>
+                                    </div>
                                     </div>
                                 </div>
                                 <div
@@ -842,6 +868,14 @@ const destroyTarif = (tarif, produit) => {
         @close="showEditProduitModal = false"
         :filteredCriteres="filteredCriteres"
         :latestAdresseId="latestAdresseId"
+    />
+    <ModalAddTarif
+        :errors="errors"
+        :structure="structure"
+        :tarif-types="tarifTypes"
+        :activiteForTarifs="activiteForTarifs"
+        :show="showAddTarifModal"
+        @close="showAddTarifModal = false"
     />
     <ModalEditTarif
         :errors="errors"

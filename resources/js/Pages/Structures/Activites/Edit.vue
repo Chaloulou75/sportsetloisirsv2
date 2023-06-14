@@ -4,7 +4,6 @@ import { Head, Link, useForm, router } from "@inertiajs/vue3";
 import { ref, watch, computed, onMounted, defineAsyncComponent } from "vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import ModalAddTarif from "@/Components/Modals/ModalAddTarif.vue";
 import { PlusIcon, XCircleIcon } from "@heroicons/vue/24/outline";
 import {
     TransitionRoot,
@@ -55,12 +54,6 @@ const openModal = () => {
 
 const closeModal = () => {
     isOpen.value = false;
-};
-
-const showAddTarifModal = ref(false);
-
-const openAddTarifModal = (structure) => {
-    showAddTarifModal.value = true;
 };
 
 const showModalWeekHourPlanning = ref(false);
@@ -298,13 +291,18 @@ function onSubmit() {
                                 >
                                     Voir le planning
                                 </button>
-                                <button
-                                    type="button"
-                                    @click="openAddTarifModal(structure)"
+                                <Link
+                                    :href="route('structures.plannings.index', structure)"
                                     class="flex w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
                                 >
-                                    Ajouter un tarif
-                                </button>
+                                    Mon planning
+                                </Link>
+                                <Link
+                                    :href="route('structures.tarifs.index', structure)"
+                                    class="flex w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:w-auto"
+                                >
+                                    Mes tarifs
+                                </Link>
                             </div>
                             <div
                                 class="flex w-full flex-col items-center justify-between space-y-2 px-2 py-6 md:flex-row md:space-y-0 md:px-0"
@@ -940,15 +938,6 @@ function onSubmit() {
                 </div>
             </div>
         </div>
-        <ModalAddTarif
-            :errors="errors"
-            :structure="structure"
-            :tarif-types="tarifTypes"
-            :activiteForTarifs="activiteForTarifs"
-            :show="showAddTarifModal"
-            @close="showAddTarifModal = false"
-        />
-
         <ModalWeekHourPlanning
             :structure="structure"
             :structureActivites="structureActivites"

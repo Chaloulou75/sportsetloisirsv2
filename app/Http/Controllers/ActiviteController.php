@@ -208,7 +208,7 @@ class ActiviteController extends Controller
 
         $categoriesListByDiscipline = LienDisciplineCategorie::where('discipline_id', $activite->discipline->id)->get();
 
-        $structureActivites = StructureActivite::with(['structure:id,name,slug,presentation_courte', 'categorie:id,nom_categorie', 'discipline:id,name', 'produits', 'produits.adresse', 'produits.criteres', 'produits.horaire', 'produits.tarifs', 'produits.tarifs.structureTarifTypeInfos', 'produits.tarifs.tarifType'])
+        $structureActivites = StructureActivite::with(['structure:id,name,slug,presentation_courte', 'categorie:id,nom_categorie', 'discipline:id,name', 'produits', 'produits.adresse', 'produits.criteres', 'produits.horaire', 'produits.tarifs', 'produits.tarifs.structureTarifTypeInfos', 'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut', 'produits.tarifs.tarifType'])
                             ->where('structure_id', $structure->id)
                             ->where('discipline_id', $activite->discipline->id)
                             ->latest()
@@ -222,7 +222,7 @@ class ActiviteController extends Controller
 
         $tarifTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();
 
-        $activiteForTarifs = StructureActivite::with(['structure:id,name,slug', 'categorie:id,nom_categorie', 'discipline:id,name', 'produits', 'produits.tarifs'])
+        $activiteForTarifs = StructureActivite::with(['structure:id,name,slug', 'categorie:id,nom_categorie', 'discipline:id,name', 'produits', 'produits.tarifs', 'produits.tarifs.structureTarifTypeInfos', 'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut'])
             ->where('structure_id', $structure->id)
             ->latest()
             ->get()
@@ -252,6 +252,15 @@ class ActiviteController extends Controller
                                                 'description' => $tarifItem->description,
                                                 'amount' => $tarifItem->amount,
                                                 'produits' => $tarifItem->produits,
+                                                'infos' => $tarifItem->structureTarifTypeInfos->map(function ($infoItem) {
+                                                    return [
+                                                        'id' => $infoItem->id,
+                                                        'attribut_id' => $infoItem->attribut_id,
+                                                        'valeur' => $infoItem->valeur,
+                                                        'unite'=> $infoItem->unite,
+                                                        'tarifTypeAttribut' => $infoItem->tarifTypeAttribut
+                                                    ];
+                                                }),
                                             ];
                                         }),
                                     ];
