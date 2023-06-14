@@ -153,7 +153,7 @@ const formatCurrency = (value) => {
                                 </td>
                                 <td class="text-center border-b border-slate-100 p-4 pl-8 text-slate-500">{{ tarif.titre }}</td>
                                 <td class="text-center border-b border-slate-100 p-4 pl-8 text-slate-500">{{ tarif.tarif_type.type }}</td>
-                                <td class="text-center border-b border-slate-100 p-4 pl-8 text-slate-500">{{ tarif.description }}</td>
+                                <td class="text-center border-b border-slate-100 p-4 pl-8 text-slate-500 truncate">{{ tarif.description }}</td>
                                 <td class="text-center border-b border-slate-100 p-4 pl-8 text-slate-500">{{ formatCurrency(tarif.amount) }}</td>
                             </tr>
                         </tbody>
