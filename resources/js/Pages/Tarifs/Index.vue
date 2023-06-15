@@ -1,6 +1,7 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { Head, Link } from "@inertiajs/vue3";
+import { ref, defineAsyncComponent } from "vue";
+import { Head, Link, router } from "@inertiajs/vue3";
 import ButtonsActiviteEdit from "@/Components/Inscription/Activity/ButtonsActiviteEdit.vue";
 import {
     DocumentDuplicateIcon,
@@ -9,13 +10,27 @@ import {
     UsersIcon,
     UserGroupIcon,
     ClockIcon,
+    ArrowPathIcon,
 } from "@heroicons/vue/24/outline";
 
 const props = defineProps({
     errors: Object,
     structure: Object,
     tarifTypes: Object,
+    activiteForTarifs: Object,
 });
+
+const ModalEditTarif = defineAsyncComponent(() =>
+    import("@/Components/Modals/ModalEditTarif.vue")
+);
+
+const currentTarif = ref(null);
+const showEditTarifModal = ref(false);
+
+const openEditTarifModal = (tarif) => {
+    currentTarif.value = tarif;
+    showEditTarifModal.value = true;
+};
 
 const formatCurrency = (value) => {
     // Remove the non-numeric characters from the currency value
@@ -34,11 +49,20 @@ const formatCurrency = (value) => {
     // Return the original value if conversion failed
     return value;
 };
+
+const destroyTarif = (tarif) => {
+    const url = `/structures/${props.structure.slug}/tarifs/${tarif.id}`;
+    router.delete(url, {
+        preserveScroll: true,
+        structure: props.structure.slug,
+        tarif: tarif.id,
+    });
+};
 </script>
 
 <template>
     <Head
-        title="Les tarifs"
+        title="Gestion des tarifs"
         :description="
             'Trouvez un club de sport ou un cours collectif parmi plus de ' +
              +
@@ -47,7 +71,6 @@ const formatCurrency = (value) => {
             ' clubs sur notre site prêts à vous accueillir.'
         "
     />
-
     <AppLayout>
         <template #header>
             <div
@@ -57,7 +80,7 @@ const formatCurrency = (value) => {
                     <h2
                         class="text-xl font-semibold leading-tight text-gray-800"
                     >
-                        La liste des tarifs pour votre structure
+                        Gestion des tarifs pour votre structure
                         <span class="text-blue-700"> {{ structure.name }}</span>
                     </h2>
                 </div>
@@ -87,82 +110,115 @@ const formatCurrency = (value) => {
         <div class="py-12">
             <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 py-6">
                 <ButtonsActiviteEdit :structure="structure"/>
-                <div class="min-h-full w-full rounded-xl shadow-lg">
-
-                    <div class="bg-slate-50 flex items-center justify-between w-full px-2 md:px-4 py-2">
-                        <h3
-                            class="w-full px-2 py-2 text-sm font-semibold text-gray-700 md:px-4"
-                        >
+                <div class="min-h-full w-full rounded-xl shadow-lg mt-6 overflow-x-auto">
+                    <table class="table-fixed border-collapse text-sm font-semibold text-gray-700 w-full ">
+                        <caption class="bg-slate-50 caption-top text-sm font-semibold text-slate-600 py-6">
                             Liste des tarifs de votre structure:
-                        </h3>
-                    </div>
-                    <table class="table-auto text-sm font-semibold text-gray-700 w-full">
+                        </caption>
                         <thead class="bg-slate-50">
                             <tr class="border-b font-medium text-slate-400 text-center">
-                                <th>Infos</th>
-                                <th>Titre</th>
-                                <th>Type</th>
-                                <th>Description</th>
-                                <th>Montant</th>
+                                <th class="p-5">Infos</th>
+                                <th class="p-5">Titre</th>
+                                <th class="p-5">Type</th>
+                                <th class="p-5">Description</th>
+                                <th class="p-5">Montant</th>
+                                <th class="p-5">Gestion</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="tarif in structure.tarifs" :key="tarif.id">
-                                <td
-                                    v-for="info in tarif.structure_tarif_type_infos"
-                                    :key="info.id"
-                                    class="text-center border-b border-slate-100 p-4 pl-8 text-slate-500 flex items-center justify-center"
-                                >
-                                    <div v-if="info">
-                                        <ClockIcon
-                                            v-if="
-                                                [1, 2, 5, 7].includes(
-                                                    info.attribut_id
-                                                )
-                                            "
-                                            class="mr-1 h-5 w-5 text-slate-500"
-                                        />
-                                        <UserGroupIcon
-                                            v-else-if="
-                                                [3, 6].includes(
-                                                    info.attribut_id
-                                                )
-                                            "
-                                            class="mr-1 h-5 w-5 text-slate-500"
-                                        />
-                                        <UsersIcon
-                                            v-else
-                                            class="mr-1 h-5 w-5 text-slate-500"
-                                        />
+                            <tr class="text-slate-500 text-center border-b border-slate-100" v-for="tarif in structure.tarifs" :key="tarif.id">
+                                <td class="p-5 flex flex-col items-center justify-center">
+                                <div v-for="info in tarif.structure_tarif_type_infos"
+                                    :key="info.id" class="flex items-center justify-center">
+                                    <ClockIcon
+                                        v-if="
+                                            [1, 2, 5, 7].includes(
+                                                info.attribut_id
+                                            )
+                                        "
+                                        class="mr-1 h-5 w-5"
+                                    />
+                                    <UserGroupIcon
+                                        v-else-if="
+                                            [3, 6].includes(
+                                                info.attribut_id
+                                            )
+                                        "
+                                        class="mr-1 h-5 w-5 text-slate-500"
+                                    />
+                                    <UsersIcon
+                                        v-else-if="
+                                            [4].includes(
+                                                info.attribut_id
+                                            )
+                                        "
+                                        class="mr-1 h-5 w-5"
+                                    />
 
-                                    </div>
-                                    <div v-else>
-                                        <UsersIcon
-                                            class="mr-1 h-5 w-5 text-slate-500"
-                                        />
-                                    </div>
+                                    <UsersIcon v-else
+                                        class="mr-1 h-5 w-5"
+                                    />
 
-                                    <div>
-                                        <span
-                                        v-if="info.valeur"
-                                        class="text-xs font-thin text-slate-500"
-                                        >{{ info.tarif_type_attribut.attribut }}: {{ info.valeur }}
-                                        <span v-if="info.unite">{{
-                                            info.unite
-                                        }}</span>
+                                    <span v-if="info.valeur"
+                                            class="text-sm font-thin">
+                                        {{ info.tarif_type_attribut.attribut }}: {{ info.valeur }}
+                                            <span v-if="info.unite">{{
+                                                info.unite
+                                            }}</span>
                                     </span>
-                                    <span v-else class="text-xs font-thin text-slate-500">Pas de valeur</span>
+                                    <span v-else class="text-sm font-thin">Pas de valeur</span>
                                     </div>
                                 </td>
-                                <td class="text-center border-b border-slate-100 p-4 pl-8 text-slate-500">{{ tarif.titre }}</td>
-                                <td class="text-center border-b border-slate-100 p-4 pl-8 text-slate-500">{{ tarif.tarif_type.type }}</td>
-                                <td class="text-center border-b border-slate-100 p-4 pl-8 text-slate-500 truncate">{{ tarif.description }}</td>
-                                <td class="text-center border-b border-slate-100 p-4 pl-8 text-slate-500">{{ formatCurrency(tarif.amount) }}</td>
+                                <td class="p-5">{{ tarif.titre }}</td>
+                                <td class="p-5">{{ tarif.tarif_type.type }}</td>
+                                <td class="p-5"><p class="font-medium truncate">{{ tarif.description }}</p> </td>
+                                <td class="p-5">{{ formatCurrency(tarif.amount) }}</td>
+                                <td class="p-5">
+                                    <button
+                                        type="button"
+                                        @click="openEditTarifModal(tarif)"
+                                    >
+                                        <ArrowPathIcon
+                                            class="mr-1 h-6 w-6 text-slate-400 transition-all duration-200 hover:-rotate-90 hover:text-slate-600"
+                                        />
+                                    </button>
+                                    <!-- <button
+                                        type="button"
+                                        @click="
+                                            () => duplicateTarif(tarif)
+                                        "
+                                    >
+                                        <DocumentDuplicateIcon
+                                            class="mr-1 h-6 w-6 text-slate-400 hover:text-slate-600"
+                                        />
+                                    </button> -->
+
+                                    <button
+                                        type="button"
+                                        @click="
+                                            () => destroyTarif(tarif)
+                                        "
+                                    >
+                                        <TrashIcon
+                                            class="mr-1 h-6 w-6 text-slate-400 hover:text-slate-600"
+                                        />
+                                    </button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
+
+        <ModalEditTarif
+            :errors="errors"
+            :structure="structure"
+            :tarif="currentTarif"
+            :tarif-types="tarifTypes"
+            :activiteForTarifs="activiteForTarifs"
+            :show="showEditTarifModal"
+            @close="showEditTarifModal = false"
+        />
     </AppLayout>
 </template>

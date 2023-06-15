@@ -688,17 +688,19 @@ const destroyTarif = (tarif, produit) => {
                         </div>
 
                         <div
-                            v-show="
-                                isOpenTarif(produit) &&
-                                produit.tarifs.length > 0
-                            "
-                            class="col-span-3 h-full w-full border border-green-200 py-2 md:col-span-6"
+                            v-show="isOpenTarif(produit)"
+                            class="col-span-3 h-full w-full py-2 md:col-span-6"
                         >
                             <div class="flex items-center justify-between w-full px-2 md:px-4 py-2">
-                                <h3
+                                <h3 v-if="produit.tarifs.length > 0"
                                     class="w-full px-2 py-2 text-sm font-semibold text-gray-700 md:px-4"
                                 >
                                     Liste des tarifs pour ce produit:
+                                </h3>
+                                <h3 v-else
+                                    class="w-full px-2 py-2 text-sm font-semibold text-gray-700 md:px-4"
+                                >
+                                    Pas encore de tarif pour ce produit.
                                 </h3>
                                 <button
                                     type="button"
@@ -708,6 +710,7 @@ const destroyTarif = (tarif, produit) => {
                                     Ajouter un tarif
                                 </button>
                             </div>
+                            <div v-show="produit.tarifs.length > 0">
                             <div
                                 v-for="tarif in produit.tarifs"
                                 :key="tarif.id"
@@ -771,22 +774,8 @@ const destroyTarif = (tarif, produit) => {
                                     v-else
                                     class="col-span-2 grid h-full w-full grid-cols-2 place-items-center gap-2"
                                 >
-                                    <div class="col-span-1 flex items-center">
-                                        <ClockIcon
-                                            class="mr-1 h-6 w-6 text-gray-600"
-                                        />
-                                        <span
-                                            class="text-sm text-gray-600"
-                                        ></span>
-                                    </div>
-                                    <div class="col-span-1 flex items-center">
-                                        <UserGroupIcon
-                                            class="mr-1 h-6 w-6 text-gray-600"
-                                        />
-                                        <span
-                                            class="text-sm text-gray-600"
-                                        ></span>
-                                    </div>
+                                    <div class="col-span-1"></div>
+                                    <div class="col-span-1"></div>
                                 </div>
 
                                 <div
@@ -837,6 +826,7 @@ const destroyTarif = (tarif, produit) => {
                                         />
                                     </button>
                                 </div>
+                            </div>
                             </div>
                         </div>
                     </div>

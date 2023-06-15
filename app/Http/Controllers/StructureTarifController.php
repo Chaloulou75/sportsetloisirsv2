@@ -9,6 +9,7 @@ use App\Models\ListeTarifType;
 use App\Models\StructureTarif;
 use Illuminate\Validation\Rule;
 use App\Models\StructureProduit;
+use App\Models\StructureActivite;
 use App\Models\StructureTarifTypeInfo;
 use Illuminate\Support\Facades\Redirect;
 
@@ -27,9 +28,67 @@ class StructureTarifController extends Controller
 
         $tarifTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();
 
+
+        $activiteForTarifs = StructureActivite::with(['structure:id,name,slug', 'categorie:id,nom_categorie', 'discipline:id,name', 'produits', 'produits.tarifs', 'produits.tarifs.structureTarifTypeInfos', 'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut'])
+        ->where('structure_id', $structure->id)
+        ->latest()
+        ->get()
+        ->groupBy('discipline.id')
+        ->map(function ($disciplineActivites, $disciplineId) {
+            return [
+                'id' => $disciplineId,
+                'disciplineName' => $disciplineActivites->first()->discipline->name,
+                'categories' => $disciplineActivites->groupBy('categorie.id')->map(function ($categorieItems, $categoryId) {
+                    $activites = $categorieItems->map(function ($activiteItem) {
+                        return [
+                            'id' => $activiteItem->id,
+                            'titre' => $activiteItem->titre,
+                            'disciplineId' => $activiteItem->discipline_id,
+                            'categorieId' => $activiteItem->categorie_id,
+                            'produits' => $activiteItem->produits->map(function ($produitItem) {
+                                return [
+                                    'id' => $produitItem->id,
+                                    'disciplineId' => $produitItem->discipline_id,
+                                    'categorieId' => $produitItem->categorie_id,
+                                    'activiteId' => $produitItem->activite_id,
+                                    'tarifs' => $produitItem->tarifs->map(function ($tarifItem) {
+                                        return [
+                                            'id' => $tarifItem->id,
+                                            'typeId' => $tarifItem->type_id,
+                                            'titre' => $tarifItem->titre,
+                                            'description' => $tarifItem->description,
+                                            'amount' => $tarifItem->amount,
+                                            'produits' => $tarifItem->produits,
+                                            'infos' => $tarifItem->structureTarifTypeInfos->map(function ($infoItem) {
+                                                return [
+                                                    'id' => $infoItem->id,
+                                                    'attribut_id' => $infoItem->attribut_id,
+                                                    'valeur' => $infoItem->valeur,
+                                                    'unite'=> $infoItem->unite,
+                                                    'tarifTypeAttribut' => $infoItem->tarifTypeAttribut
+                                                ];
+                                            }),
+                                        ];
+                                    }),
+                                ];
+                            }),
+                        ];
+                    });
+                    return [
+                        'id' => $categoryId,
+                        'disciplineId' => $categorieItems->first()->discipline->id,
+                        'name' => $categorieItems->first()->categorie->nom_categorie ?? 'Sans Catégorie',
+                        'activites' => $activites,
+                    ];
+                }),
+            ];
+        });
+
+
         return Inertia::render('Tarifs/Index', [
             'structure' => $structure,
             'tarifTypes' => $tarifTypes,
+            'activiteForTarifs' => $activiteForTarifs,
         ]);
 
     }
@@ -83,7 +142,7 @@ class StructureTarifController extends Controller
         foreach($request->attributs as $key => $valeur) {
             foreach($tarifType->tariftypeattributs as $tariftypeattribut) {
                 if($tariftypeattribut->id === $key) {
-                    $tarifAttribut = StructureTarifTypeInfo::create([
+                    $tarifAttribut = $structureTarif->structureTarifTypeInfos()->create([
                         'structure_id' => $structure->id,
                         'tarif_id' => $structureTarif->id,
                         'type_id' => $tarifType->id,
@@ -138,7 +197,9 @@ class StructureTarifController extends Controller
 
         $structure = Structure::with(['disciplines', 'categories', 'activites', 'produits'])->where('id', $structure->id)->firstOrFail();
 
-        $structureTarif = StructureTarif::updateOrCreate(
+        $tarif = StructureTarif::with('structureTarifTypeInfos')->where('id', $tarif)->firstOrFail();
+
+        $structureTarif = $tarif->updateOrCreate(
             ['structure_id' => $structure->id,],
             ['type_id' => $request->tarifType,
             'titre' => $request->titre ?? "",
@@ -157,13 +218,17 @@ class StructureTarifController extends Controller
 
         $tarifType = ListeTarifType::with('tariftypeattributs')->where('id', $structureTarif->type_id)->first();
 
+        foreach($structureTarif->structureTarifTypeInfos as $info) {
+            $info->delete();
+        }
+
         foreach($request->attributs as $key => $valeur) {
             foreach($tarifType->tariftypeattributs as $tariftypeattribut) {
                 if($tariftypeattribut->id === $key) {
-                    $tarifAttribut = StructureTarifTypeInfo::updateOrCreate(
-                        [ 'structure_id' => $structure->id ],
-                        [ 'tarif_id' => $structureTarif->id,
-                        'type_id' => $tarifType->id,
+                    $tarifAttribut = $structureTarif->structureTarifTypeInfos()->create(
+                        [ 'structure_id' => $structure->id,
+                        'tarif_id' => $structureTarif->id,
+                        'type_id' => $structureTarif->type_id,
                         'attribut_id' => $key,
                         'valeur' => $valeur ]
                     );
@@ -199,6 +264,26 @@ class StructureTarifController extends Controller
         // }
         // $tarif->produits()->detach();
         // $tarif->delete();
+
+        return Redirect::back()->with('success', 'Le tarif pour ce produit a bien été supprimé');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroyTarif(Structure $structure, $tarif)
+    {
+        $tarif = StructureTarif::with('structureTarifTypeInfos')->where('id', $tarif)->where('structure_id', $structure->id)->firstOrFail();
+
+        // Si on veut supprimer entierement le tarif:
+        $infos = StructureTarifTypeInfo::where('tarif_id', $tarif->id)->get();
+        if($infos->isNotEmpty()) {
+            foreach($infos as $info) {
+                $info->delete();
+            }
+        }
+        $tarif->produits()->detach();
+        $tarif->delete();
 
         return Redirect::back()->with('success', 'Le tarif a bien été supprimé');
     }
