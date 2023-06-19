@@ -17,11 +17,6 @@ class StructurePlanningController extends Controller
      */
     public function index(Structure $structure)
     {
-        $structure = Structure::with(['disciplines', 'categories', 'activites', 'produits'])->where('id', $structure->id)->firstOrFail();
-
-        return Inertia::render('Plannings/Index', [
-            'structure' => $structure,
-        ]);
 
     }
 

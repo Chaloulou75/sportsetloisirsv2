@@ -28,6 +28,10 @@ const ModalAddActivite = defineAsyncComponent(() =>
     import("@/Components/Modals/ModalAddActivite.vue")
 );
 
+const ModalAddTarif = defineAsyncComponent(() =>
+    import("@/Components/Modals/ModalAddTarif.vue")
+);
+
 const ActivityDisplay = defineAsyncComponent(() =>
     import("@/Components/Inscription/Activity/ActivityDisplay.vue")
 );
@@ -48,6 +52,11 @@ const openAddActiviteModal = (categorie) => {
     currentCategorie.value = categorie;
     console.log(currentCategorie.value);
     showAddActiviteModal.value = true;
+};
+
+const showAddTarifModal = ref(false);
+const openAddTarifModal = (structure) => {
+    showAddTarifModal.value = true;
 };
 
 const displayActivity = ref(true);
@@ -210,9 +219,18 @@ onMounted(() => {
                                     v-if="displayActivity"
                                     type="button"
                                     @click="openAddActiviteModal(categorie)"
-                                    class="hidden w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:flex md:w-auto"
+                                    class="w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:flex md:w-auto"
                                 >
                                     Ajouter une activité
+                                    <PlusIcon class="ml-2 h-5 w-5" />
+                                </button>
+                                <button
+                                    v-if="displayTarif"
+                                    type="button"
+                                    @click="openAddTarifModal(structure)"
+                                    class="w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:flex md:w-auto"
+                                >
+                                    Ajouter un tarif
                                     <PlusIcon class="ml-2 h-5 w-5" />
                                 </button>
                             </div>
@@ -237,7 +255,7 @@ onMounted(() => {
                                 v-if="displayPlanning"
                                 :errors="errors"
                                 :structure="structure"
-                                :structureActivites="structureActivites"
+                                :structureActivites="filteredActivites"
                             />
                         </TabPanel>
                     </TabPanels>
@@ -258,6 +276,14 @@ onMounted(() => {
             :categorie="currentCategorie"
             :show="showAddActiviteModal"
             @close="showAddActiviteModal = false"
+        />
+        <ModalAddTarif
+            :errors="errors"
+            :structure="structure"
+            :tarif-types="tarifTypes"
+            :activiteForTarifs="activiteForTarifs"
+            :show="showAddTarifModal"
+            @close="showAddTarifModal = false"
         />
     </AppLayout>
 </template>
