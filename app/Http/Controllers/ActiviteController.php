@@ -194,7 +194,7 @@ class ActiviteController extends Controller
         $structure = Structure::with([
             'adresses' => function ($query) {
                 $query->latest();
-            },
+            }, 'produits', 'tarifs', 'tarifs.tarifType', 'tarifs.structureTarifTypeInfos', 'tarifs.structureTarifTypeInfos.tarifTypeAttribut'
         ])
         ->select(['id', 'name', 'slug'])
         ->where('slug', $structure->slug)
