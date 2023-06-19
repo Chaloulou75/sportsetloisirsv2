@@ -54,6 +54,20 @@ const handleEventDeleted = (event) => {
 </script>
 <template>
     <div class="min-h-full w-full rounded-xl shadow-lg mt-6 overflow-x-auto">
+        <div
+            class="mb-4 flex w-full items-center justify-between"
+        >
+            <h2
+                class="text-lg font-medium leading-6 text-gray-800"
+            >
+                Planning de vos activités
+                <span class="text-xs text-blue-700">
+                    Supprimer un événement (en
+                    cliquant et en maintenant un
+                    événement)
+                </span>
+            </h2>
+        </div>
         <vue-cal
             small
             :time-from="6 * 60"

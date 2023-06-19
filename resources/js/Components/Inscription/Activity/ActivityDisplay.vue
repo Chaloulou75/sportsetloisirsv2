@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed, nextTick, defineAsyncComponent } from "vue";
 import { useForm, router } from "@inertiajs/vue3";
-import ModalAddTarif from "@/Components/Modals/ModalAddTarif.vue";
 import dayjs from "dayjs";
 import "dayjs/locale/fr"; // Import the French locale
 import localeData from "dayjs/plugin/localeData"; // Import the localeData plugin
@@ -33,6 +32,10 @@ import {
 } from "@headlessui/vue";
 dayjs.locale("fr"); // Set the locale to French
 dayjs.extend(localeData);
+
+const ModalAddTarif = defineAsyncComponent(() =>
+    import("@/Components/Modals/ModalAddTarif.vue")
+);
 
 const ModalAddProduit = defineAsyncComponent(() =>
     import("@/Components/Modals/ModalAddProduit.vue")
@@ -229,6 +232,9 @@ const destroyTarif = (tarif, produit) => {
 };
 </script>
 <template>
+    <div v-if="structureActivites.length === 0">
+        <p class="font-semibold text-gray-700">Pas d'activité dans cette catégorie</p>
+    </div>
     <div
         v-for="structureActivite in structureActivites"
         :key="structureActivite.id"
@@ -834,6 +840,7 @@ const destroyTarif = (tarif, produit) => {
             </transition>
         </Disclosure>
     </div>
+
     <ModalDeleteActivite
         :structure="structure"
         :structureActivite="currentStructureActivite"
