@@ -717,122 +717,122 @@ const destroyTarif = (tarif, produit) => {
                                 </button>
                             </div>
                             <div v-show="produit.tarifs.length > 0">
-                            <div
-                                v-for="tarif in produit.tarifs"
-                                :key="tarif.id"
-                                class="grid grid-flow-row grid-cols-3 place-items-center gap-2 py-4 odd:bg-white even:bg-slate-100 md:grid-cols-6"
-                            >
                                 <div
-                                    v-if="
-                                        tarif.structure_tarif_type_infos
-                                            .length > 0
-                                    "
-                                    class="col-span-2 grid h-full w-full grid-cols-2 place-items-center gap-2 py-2"
+                                    v-for="tarif in produit.tarifs"
+                                    :key="tarif.id"
+                                    class="grid grid-flow-row grid-cols-3 place-items-center gap-2 py-4 odd:bg-white even:bg-slate-100 md:grid-cols-6"
                                 >
                                     <div
-                                        v-for="info in tarif.structure_tarif_type_infos"
-                                        :key="info.id"
-                                        class="col-span-1 flex items-center"
-                                    >
-                                        <div v-if="info">
-                                        <ClockIcon
-                                            v-if="
-                                                [1, 2, 5, 7].includes(
-                                                    info.attribut_id
-                                                )
-                                            "
-                                            class="mr-1 h-5 w-5 text-slate-500"
-                                        />
-                                        <UserGroupIcon
-                                            v-else-if="
-                                                [3, 6].includes(
-                                                    info.attribut_id
-                                                )
-                                            "
-                                            class="mr-1 h-5 w-5 text-slate-500"
-                                        />
-                                        <UsersIcon
-                                            v-else
-                                            class="mr-1 h-5 w-5 text-slate-500"
-                                        />
-
-                                    </div>
-                                    <div v-else>
-                                        <UsersIcon
-                                            class="mr-1 h-5 w-5 text-slate-500"
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <span
-                                        v-if="info.valeur"
-                                        class="text-sm font-semibold text-gray-600"
-                                        >{{ info.tarif_type_attribut.attribut }}: {{ info.valeur }}
-                                        <span v-if="info.unite">{{
-                                            info.unite
-                                        }}</span>
-                                    </span>
-                                    <span v-else class="text-sm font-semibold text-gray-600">Pas de valeur</span>
-                                    </div>
-                                    </div>
-                                </div>
-                                <div
-                                    v-else
-                                    class="col-span-2 grid h-full w-full grid-cols-2 place-items-center gap-2"
-                                >
-                                    <div class="col-span-1"></div>
-                                    <div class="col-span-1"></div>
-                                </div>
-
-                                <div
-                                    class="col-span-1 flex items-center font-semibold"
-                                >
-                                    {{ tarif.titre }}
-                                </div>
-                                <div
-                                    class="col-span-1 flex items-center font-semibold"
-                                >
-                                    {{ tarif.tarif_type.type }}
-                                </div>
-                                <div
-                                    class="col-span-1 flex items-center font-semibold"
-                                >
-                                    {{ formatCurrency(tarif.amount) }}
-                                </div>
-                                <div
-                                    class="col-span-1 flex items-center justify-between space-x-2"
-                                >
-                                    <button
-                                        type="button"
-                                        @click="openEditTarifModal(tarif)"
-                                    >
-                                        <ArrowPathIcon
-                                            class="mr-1 h-6 w-6 text-gray-600 transition-all duration-200 hover:-rotate-90 hover:text-gray-800"
-                                        />
-                                    </button>
-                                    <button
-                                        type="button"
-                                        @click="
-                                            () => duplicateTarif(tarif, produit)
+                                        v-if="
+                                            tarif.structure_tarif_type_infos
+                                                .length > 0
                                         "
+                                        class="col-span-2 grid h-full w-full grid-cols-2 place-items-center gap-2 py-2"
                                     >
-                                        <DocumentDuplicateIcon
-                                            class="mr-1 h-6 w-6 text-gray-600 hover:text-gray-800"
-                                        />
-                                    </button>
+                                        <div
+                                            v-for="info in tarif.structure_tarif_type_infos"
+                                            :key="info.id"
+                                            class="col-span-1 flex items-center"
+                                        >
+                                            <div v-if="info">
+                                            <ClockIcon
+                                                v-if="
+                                                    [1, 2, 5, 7].includes(
+                                                        info.attribut_id
+                                                    )
+                                                "
+                                                class="mr-1 h-5 w-5 text-slate-500"
+                                            />
+                                            <UserGroupIcon
+                                                v-else-if="
+                                                    [3, 6].includes(
+                                                        info.attribut_id
+                                                    )
+                                                "
+                                                class="mr-1 h-5 w-5 text-slate-500"
+                                            />
+                                            <UsersIcon
+                                                v-else
+                                                class="mr-1 h-5 w-5 text-slate-500"
+                                            />
 
-                                    <button
-                                        type="button"
-                                        @click="
-                                            () => destroyTarif(tarif, produit)
-                                        "
+                                        </div>
+                                        <div v-else>
+                                            <UsersIcon
+                                                class="mr-1 h-5 w-5 text-slate-500"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <span
+                                            v-if="info.valeur"
+                                            class="text-sm font-semibold text-gray-600"
+                                            >{{ info.tarif_type_attribut.attribut }}: {{ info.valeur }}
+                                            <span v-if="info.unite">{{
+                                                info.unite
+                                            }}</span>
+                                        </span>
+                                        <span v-else class="text-sm font-semibold text-gray-600">Pas de valeur</span>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        v-else
+                                        class="col-span-2 grid h-full w-full grid-cols-2 place-items-center gap-2"
                                     >
-                                        <TrashIcon
-                                            class="mr-1 h-6 w-6 text-gray-600 hover:text-gray-800"
-                                        />
-                                    </button>
+                                        <div class="col-span-1"></div>
+                                        <div class="col-span-1"></div>
+                                    </div>
+
+                                    <div
+                                        class="col-span-1 flex items-center font-semibold"
+                                    >
+                                        {{ tarif.titre }}
+                                    </div>
+                                    <div
+                                        class="col-span-1 flex items-center font-semibold"
+                                    >
+                                        {{ tarif.tarif_type.type }}
+                                    </div>
+                                    <div
+                                        class="col-span-1 flex items-center font-semibold"
+                                    >
+                                        {{ formatCurrency(tarif.amount) }}
+                                    </div>
+                                    <div
+                                        class="col-span-1 flex items-center justify-between space-x-2"
+                                    >
+                                        <button
+                                            type="button"
+                                            @click="openEditTarifModal(tarif)"
+                                        >
+                                            <ArrowPathIcon
+                                                class="mr-1 h-6 w-6 text-gray-600 transition-all duration-200 hover:-rotate-90 hover:text-gray-800"
+                                            />
+                                        </button>
+                                        <button
+                                            type="button"
+                                            @click="
+                                                () => duplicateTarif(tarif, produit)
+                                            "
+                                        >
+                                            <DocumentDuplicateIcon
+                                                class="mr-1 h-6 w-6 text-gray-600 hover:text-gray-800"
+                                            />
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            @click="
+                                                () => destroyTarif(tarif, produit)
+                                            "
+                                        >
+                                            <TrashIcon
+                                                class="mr-1 h-6 w-6 text-gray-600 hover:text-gray-800"
+                                            />
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
                             </div>
                         </div>
                     </div>

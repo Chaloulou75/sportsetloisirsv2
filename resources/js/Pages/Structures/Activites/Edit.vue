@@ -140,7 +140,7 @@ onMounted(() => {
                             v-if="can.update"
                             class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                         >
-                            Mes activités</Link
+                            Mes disciplines</Link
                         >
                         <Link
                             :href="route('structures.show', structure.slug)"
@@ -244,18 +244,19 @@ onMounted(() => {
                                 :tarif-types="tarifTypes"
                                 :activiteForTarifs="activiteForTarifs"
                             />
-                            <TarifDisplay
-                                v-if="displayTarif"
-                                :errors="errors"
-                                :structure="structure"
-                                :tarif-types="tarifTypes"
-                                :activiteForTarifs="activiteForTarifs"
-                            />
                             <PlanningDisplay
                                 v-if="displayPlanning"
                                 :errors="errors"
                                 :structure="structure"
                                 :structureActivites="filteredActivites"
+                            />
+                            <TarifDisplay
+                                v-if="displayTarif"
+                                :errors="errors"
+                                :structure="structure"
+                                :tarif-types="tarifTypes"
+                                :structureActivites="filteredActivites"
+                                :activiteForTarifs="activiteForTarifs"
                             />
                         </TabPanel>
                     </TabPanels>
