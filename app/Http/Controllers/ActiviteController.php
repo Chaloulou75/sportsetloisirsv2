@@ -473,19 +473,37 @@ class ActiviteController extends Controller
 
         $criteresValues = $request->criteres;
 
-        foreach ($criteresValues as $key => $critereValue) {
-            $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $key)->first();
+        if(isset($criteresValues)) {
+            foreach ($criteresValues as $key => $critereValue) {
+                $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $key)->first();
 
-            if (isset($critereValue)) {
-                $structureProduitCriteres = StructureProduitCritere::create([
-                                'structure_id' => $structure->id,
-                                'discipline_id' => $request->discipline_id,
-                                'categorie_id' => $request->categorie_id,
-                                'activite_id' => $structureActivite->id,
-                                'produit_id' => $structureProduit->id,
-                                'critere_id' => $key,
-                                'valeur' => $critereValue ?? $defaut->valeur,
-                            ]);
+                if (isset($critereValue)) {
+                    $structureProduitCriteres = StructureProduitCritere::create([
+                        'structure_id' => $structure->id,
+                        'discipline_id' => $request->discipline_id,
+                        'categorie_id' => $request->categorie_id,
+                        'activite_id' => $structureActivite->id,
+                        'produit_id' => $structureProduit->id,
+                        'critere_id' => $key,
+                        'valeur' => $critereValue ?? $defaut->valeur,
+                    ]);
+                }
+            }
+        } else {
+            foreach ($criteres as $key => $critere) {
+                $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $key)->first();
+
+                if (isset($critere)) {
+                    $structureProduitCriteres = StructureProduitCritere::create([
+                        'structure_id' => $structure->id,
+                        'discipline_id' => $request->discipline_id,
+                        'categorie_id' => $request->categorie_id,
+                        'activite_id' => $structureActivite->id,
+                        'produit_id' => $structureProduit->id,
+                        'critere_id' => $key,
+                        'valeur' => $critere ?? $defaut->valeur,
+                    ]);
+                }
             }
         }
 

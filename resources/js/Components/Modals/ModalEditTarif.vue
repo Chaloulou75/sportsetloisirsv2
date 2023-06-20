@@ -294,7 +294,7 @@ const onSubmitAddTarifForm = () => {
                                         <h3
                                             class="text-lg font-medium leading-6 text-gray-800"
                                         >
-                                            Editer un tarif {{ tarif.id }} de
+                                            Editer ce tarif lié à
                                             <span class="text-blue-700">
                                                 {{ structure.name }}</span
                                             >

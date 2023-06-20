@@ -233,7 +233,7 @@ const destroyTarif = (tarif, produit) => {
 </script>
 <template>
     <div v-if="structureActivites.length === 0">
-        <p class="font-semibold text-gray-700">Pas d'activité dans cette catégorie</p>
+        <p class="font-semibold text-gray-600 italic">Pas d'activité dans cette catégorie</p>
     </div>
     <div
         v-for="structureActivite in structureActivites"

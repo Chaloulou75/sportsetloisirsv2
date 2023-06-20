@@ -206,9 +206,14 @@ onMounted(() => {
                             :key="categorie.id"
                             class="flex flex-col space-y-4"
                         >
-                            <ButtonsActiviteEdit :structure="structure" @eventFromChild="handleButtonEvent"/>
+                            <ButtonsActiviteEdit
+                                :displayActivity="displayActivity"
+                                :displayTarif="displayTarif"
+                                :displayPlanning="displayPlanning"
+                                :structure="structure"
+                                @eventFromChild="handleButtonEvent"/>
                             <div
-                                class="flex w-full flex-col items-center justify-between space-y-2 px-2 py-6 md:flex-row md:space-y-0 md:px-0"
+                                class=" flex w-full flex-col items-center justify-between space-y-2 px-2 py-6 md:flex-row md:space-y-0 md:px-0 h-20"
                             >
                                 <div
                                     class="text-center text-lg font-semibold text-gray-700 md:text-left"
