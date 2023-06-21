@@ -189,7 +189,7 @@ onMounted(() => {
                                                         : 'text-gray-700 hover:bg-white/50 hover:text-gray-800',
                                                 ]"
                                             >
-                                                {{ categorie.nom_categorie }}
+                                                {{ categorie.nom_categorie_pro }}
                                             </button>
                                         </Tab>
                                     </TabList>
@@ -218,7 +218,7 @@ onMounted(() => {
                                 <div
                                     class="text-center text-lg font-semibold text-gray-700 md:text-left"
                                 >
-                                    {{ categorie.nom_categorie }}
+                                    {{ categorie.nom_categorie_pro }}
                                 </div>
                                 <button
                                     v-if="displayActivity"

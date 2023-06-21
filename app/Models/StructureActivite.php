@@ -41,4 +41,10 @@ class StructureActivite extends Model
 
     }
 
+    public function plannings(): HasMany
+    {
+        return $this->hasMany(StructurePlanning::class, 'activite_id');
+
+    }
+
 }

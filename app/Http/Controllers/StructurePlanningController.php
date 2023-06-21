@@ -6,12 +6,15 @@ use Carbon\Carbon;
 use Inertia\Inertia;
 use App\Models\Structure;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Models\StructureHoraire;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Models\StructurePlanning;
 use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Redirect;
+use App\Models\LienDisciplineCategorieCritere;
+use App\Models\LienDisciplineCategorieCritereValeur;
 
 class StructurePlanningController extends Controller
 {
@@ -36,43 +39,61 @@ class StructurePlanningController extends Controller
      */
     public function store(Structure $structure, Request $request)
     {
+        $request->validate([
+            'structure_id' => ['required', Rule::exists('structures', 'id')],
+            'discipline_id' => ['required', Rule::exists('liste_disciplines', 'id')],
+            'categorie_id' => ['required', Rule::exists('liens_disciplines_categories', 'id')],
+            'activite_id' => ['required', Rule::exists('structures_activites', 'id')],
+            'event' => 'required',
+        ]);
+
         $dateStart = $request->event['start'];
-        $startDate = Carbon::parse($dateStart)->toDateTimeString();
+        $startDate = Carbon::parse($dateStart)->setTimezone('Europe/Paris')->toDateTimeString();
 
         $dateEnd = $request->event['end'];
-        $endDate = Carbon::parse($dateEnd)->toDateTimeString();
-
-
-        dd($startDate, $endDate);
-
-
-        $activite = StructureActivite::create([
-            'structure_id' => $request->structure_id,
-            'discipline_id' => $request->discipline_id,
-            'categorie_id' => $request->categorie_id,
-            'titre' => $request->event['title'] ?? "",
-            'actif' => 1,
-        ]);
+        $endDate = Carbon::parse($dateEnd)->setTimezone('Europe/Paris')->toDateTimeString();
 
         $produit = StructureProduit::create([
             'structure_id' => $request->structure_id,
             'discipline_id' => $request->discipline_id,
             'categorie_id' => $request->categorie_id,
-            'activite_id' => $activite->id,
+            'activite_id' => $request->activite_id,
             'actif' => 1,
             'lieu_id' => $structure->adresses->first()->id,
+            'reservable' => 0,
         ]);
+
+        $criteres = LienDisciplineCategorieCritere::where('discipline_id', $request->discipline_id)->where('categorie_id', $request->categorie_id)->get();
+
+        foreach ($criteres as $key => $critereValue) {
+            $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $key)->first();
+
+            if (isset($critereValue)) {
+                $structureProduitCriteres = StructureProduitCritere::create([
+                    'structure_id' => $structure->id,
+                    'discipline_id' => $request->discipline_id,
+                    'categorie_id' => $request->categorie_id,
+                    'activite_id' => $request->activite_id,
+                    'produit_id' => $produit->id,
+                    'critere_id' => $key,
+                    'valeur' => $defaut->valeur,
+                ]);
+            }
+        }
 
         StructurePlanning::create([
             'structure_id' => $request->structure_id,
             'discipline_id' => $request->discipline_id,
             'categorie_id' => $request->categorie_id,
-            'activite_id' => $activite->id,
+            'activite_id' => $request->activite_id,
             'produit_id' => $produit->id,
             'title' => $request->event['title'] ?? "",
             'start' => $startDate ?? "",
             'end' => $endDate ?? "",
         ]);
+
+        return Redirect::back()->with('success', "Le produit a bien été ajouté au planning");
+
     }
 
     /**
@@ -104,9 +125,13 @@ class StructurePlanningController extends Controller
      */
     public function destroy(Structure $structure, $event)
     {
-        $produit = StructureProduit::where('id', $event)->firstOrFail();
+        $planning = StructurePlanning::findOrFail($event);
 
-        $produitCriteres = StructureProduitCritere::where('produit_id', $produit->id)->get();
+        $produit = StructureProduit::find($planning->produit_id);
+
+        $produitCriteres = StructureProduitCritere::where('produit_id', $planning->produit_id)->get();
+
+        $planning->delete();
 
         if(isset($produitsCriteres)) {
             foreach($produitCriteres as $critere) {
@@ -114,7 +139,9 @@ class StructurePlanningController extends Controller
             }
         }
 
-        $produit->tarifs()->detach();
+        if(isset($produit->tarifs)) {
+            $produit->tarifs()->detach();
+        }
 
         $produit->delete();
 

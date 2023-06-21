@@ -170,4 +170,9 @@ class Structure extends Model
         return $this->hasMany(StructureTarif::class, 'structure_id');
     }
 
+    public function plannings(): HasMany
+    {
+        return $this->hasMany(StructurePlanning::class, 'structure_id');
+    }
+
 }

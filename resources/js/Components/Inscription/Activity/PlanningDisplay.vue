@@ -1,6 +1,6 @@
 <script setup>
-import { ref, reactive } from "vue";
-import { router } from "@inertiajs/vue3";
+import { ref } from "vue";
+import { router, useForm } from "@inertiajs/vue3";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 import {
@@ -9,16 +9,23 @@ import {
     Dialog,
     DialogPanel,
     DialogTitle,
-} from "@headlessui/vue";
+    Listbox,
+    ListboxButton,
+    ListboxOptions,
+    ListboxOption,
+  } from '@headlessui/vue'
+  import { ChevronUpDownIcon, CheckCircleIcon } from '@heroicons/vue/20/solid'
 
 const emit = defineEmits(["close"]);
 
 const props = defineProps({
+    errors: Object,
     show: Boolean,
     structure: Object,
     structureActivites: Object,
 });
 
+const selectedActivite = ref(props.structureActivites[0]);
 const selectedEvent = ref({});
 const isOpen = ref(false);
 
@@ -35,14 +42,18 @@ const getEvents = () => {
     const events = [];
 
     for (const structureActivite of props.structureActivites) {
-        for (const produit of structureActivite.produits) {
-            if (produit.horaire) {
+        for (const planning of structureActivite.plannings) {
+            if (planning) {
                 const event = {
-                    start: `${produit.horaire.dayopen} ${produit.horaire.houropen}`,
-                    end: `${produit.horaire.dayclose} ${produit.horaire.hourclose}`,
+                    // start: `${produit.horaire.dayopen} ${produit.horaire.houropen}`,
+                    // end: `${produit.horaire.dayclose} ${produit.horaire.hourclose}`,
+                    start: planning.start,
+                    end:  planning.end,
                     title: structureActivite.titre,
                     content: structureActivite.description,
-                    produitId: produit.id,
+                    activiteId: structureActivite.id,
+                    produitId: planning.produit_id,
+                    planningId: planning.id,
                     class: "course",
                     deletable: true,
                     resizable: true,
@@ -59,17 +70,13 @@ const getEvents = () => {
 
 const events = getEvents();
 
-const handleEventDeleted = (event) => {
-    const url = `/structures/${props.structure.slug}/plannings/${event.produitId}`;
-    router.delete(url, {
-        preserveScroll: true,
-        onSuccess: () => {
-            emit("close");
-        },
-        structure: props.structure.slug,
-        planning: event.produitId,
-    });
-};
+const formPlanning = useForm({
+    structure_id: ref(props.structure.id),
+    discipline_id: ref(props.structureActivites && props.structureActivites.length > 0 ? props.structureActivites[0].discipline_id : null),
+    categorie_id: ref(props.structureActivites && props.structureActivites.length > 0 ? props.structureActivites[0].categorie_id : null),
+    activite: ref(selectedActivite.value),
+    events: ref(events),
+});
 
 const onEventCreate = (event, deleteEventFunction) => {
     selectedEvent.value = event;
@@ -79,7 +86,7 @@ const onEventCreate = (event, deleteEventFunction) => {
 };
 
 const onSubmitEventForm = () => {
-    console.log("Event created:", selectedEvent.value);
+    console.log(selectedEvent.value);
     const url = `/structures/${props.structure.slug}/plannings`;
     router.post(
         url,
@@ -87,6 +94,7 @@ const onSubmitEventForm = () => {
             structure_id: formPlanning.structure_id,
             discipline_id: formPlanning.discipline_id,
             categorie_id: formPlanning.categorie_id,
+            activite_id: formPlanning.activite.id,
             event: selectedEvent.value,
         },
         {
@@ -99,13 +107,19 @@ const onSubmitEventForm = () => {
     );
 };
 
-//il faut gerer le cas où pas d'activite
-const formPlanning = reactive({
-    structure_id: ref(props.structure.id),
-    discipline_id: ref(props.structureActivites && props.structureActivites.length > 0 ? props.structureActivites[0].discipline_id : null),
-    categorie_id: ref(props.structureActivites && props.structureActivites.length > 0 ? props.structureActivites[0].categorie_id : null),
-    events: ref(events),
-});
+const handleEventDeleted = (event) => {
+
+    const url = `/structures/${props.structure.slug}/plannings/${event.planningId}`;
+    router.delete(url, {
+        preserveScroll: true,
+        onSuccess: () => {
+            emit("close");
+        },
+        structure: props.structure.slug,
+        planning: event.planningId,
+    });
+};
+
 
 </script>
 <template>
@@ -190,14 +204,103 @@ const formPlanning = reactive({
                                         id="title"
                                         class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                         v-model="selectedEvent.title"
-                                        :placeholder="structureActivites && structureActivites[0] ? `${structureActivites[0].categorie.nom_categorie} de ${structureActivites[0].discipline.name}` : 'Titre'"
+                                        :placeholder="structureActivites && structureActivites[0] ? `${structureActivites[0].categorie.nom_categorie_pro} de ${structureActivites[0].discipline.name}` : 'Titre'"
                                     />
                                 </DialogTitle>
                                 <div class="mt-2">
                                     <p class="text-sm text-gray-500">
-                                        Ajoutez un produit <span class="font-semibold"> {{ structureActivites && structureActivites[0] ? structureActivites[0].categorie.nom_categorie + ' de ' + structureActivites[0].discipline.name : '' }}</span>.
+                                        Exemple: <span class="font-semibold"> {{ structureActivites && structureActivites[0] ? structureActivites[0].categorie.nom_categorie_pro + ' de ' + structureActivites[0].discipline.name : '' }}</span>.
                                     </p>
                                 </div>
+
+                                <Listbox
+                                    class="w-full mt-4"
+                                    v-model="selectedActivite"
+                                >
+                                    <div class="relative mt-1">
+                                        <label
+                                            for="activite"
+                                            class="block text-sm font-medium text-gray-700"
+                                        >
+                                            Activité liée:
+                                        </label>
+                                        <ListboxButton
+                                            class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                                        >
+                                            <span
+                                                class="block truncate"
+                                                >{{
+                                                    selectedActivite.titre
+                                                }}</span
+                                            >
+                                            <span
+                                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+                                            >
+                                                <ChevronUpDownIcon
+                                                    class="h-5 w-5 text-gray-400"
+                                                    aria-hidden="true"
+                                                />
+                                            </span>
+                                        </ListboxButton>
+
+                                        <transition
+                                            leave-active-class="transition duration-100 ease-in"
+                                            leave-from-class="opacity-100"
+                                            leave-to-class="opacity-0"
+                                        >
+                                            <ListboxOptions
+                                                class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                                            >
+                                                <ListboxOption
+                                                    v-slot="{
+                                                        active,
+                                                        selected,
+                                                    }"
+                                                    v-for="activite in props.structureActivites"
+                                                    :key="
+                                                        activite.id
+                                                    "
+                                                    :value="
+                                                        activite
+                                                    "
+                                                    as="template"
+                                                >
+                                                    <li
+                                                        :class="[
+                                                            active
+                                                                ? 'bg-amber-100 text-amber-900'
+                                                                : 'text-gray-900',
+                                                            'relative cursor-default select-none py-2 pl-10 pr-4',
+                                                        ]"
+                                                    >
+                                                        <span
+                                                            :class="[
+                                                                selected
+                                                                    ? 'font-medium'
+                                                                    : 'font-normal',
+                                                                'block truncate',
+                                                            ]"
+                                                            >{{
+                                                                activite.titre
+                                                            }}</span
+                                                        >
+                                                        <span
+                                                            v-if="
+                                                                selected
+                                                            "
+                                                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
+                                                        >
+                                                            <CheckCircleIcon
+                                                                class="h-5 w-5"
+                                                                aria-hidden="true"
+                                                            />
+                                                        </span>
+                                                    </li>
+                                                </ListboxOption>
+                                            </ListboxOptions>
+                                        </transition>
+                                    </div>
+                                </Listbox>
 
                                 <div class="mt-4 flex justify-between">
                                     <button

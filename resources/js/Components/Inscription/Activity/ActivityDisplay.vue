@@ -368,7 +368,7 @@ const destroyTarif = (tarif, produit) => {
                                                             name="titre"
                                                             id="titre"
                                                             class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                            :placeholder="`${structureActivite.categorie.nom_categorie} de ${structureActivite.discipline.name}`"
+                                                            :placeholder="`${structureActivite.categorie.nom_categorie_pro} de ${structureActivite.discipline.name}`"
                                                             autocomplete="none"
                                                         />
                                                     </div>

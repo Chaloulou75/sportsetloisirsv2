@@ -62,4 +62,9 @@ class StructureProduit extends Model
         return $this->belongsToMany(StructureTarif::class, 'produit_tarif', 'produit_id', 'tarif_id');
     }
 
+    public function plannings(): HasMany
+    {
+        return $this->hasMany(StructurePlanning::class, 'produit_id');
+    }
+
 }

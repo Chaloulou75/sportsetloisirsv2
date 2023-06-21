@@ -48,11 +48,11 @@ class ActiviteController extends Controller
             ->get();
 
         $actByDiscAndCategorie = $activites->groupBy('discipline.name')->map(function ($disciplineCategories) {
-            $categories = $disciplineCategories->groupBy('categorie.nom_categorie')->map(function ($categorieItems) {
+            $categories = $disciplineCategories->groupBy('categorie.nom_categorie_pro')->map(function ($categorieItems) {
                 return [
                             'id' => $categorieItems->first()->id,
                             'categorie_id' => $categorieItems->first()->categorie->id,
-                            'name' => $categorieItems->first()->categorie->nom_categorie ?? 'Sans Catégorie',
+                            'name' => $categorieItems->first()->categorie->nom_categorie_pro ?? 'Sans Catégorie',
                             'count' => $categorieItems->count(),
                         ];
             })->sortByDesc('count');
@@ -140,7 +140,7 @@ class ActiviteController extends Controller
             ]);
             $structureActiviteCategorie->with('discipline')->first();
 
-            $titre = $lienActCat->nom_categorie .' de '. $structureActiviteCategorie->discipline->name ;
+            $titre = $lienActCat->nom_categorie_pro .' de '. $structureActiviteCategorie->discipline->name ;
 
             $structureActivite = StructureActivite::create([
                 'structure_id' => $validated['structure_id'],
@@ -208,11 +208,12 @@ class ActiviteController extends Controller
 
         $categoriesListByDiscipline = LienDisciplineCategorie::where('discipline_id', $activite->discipline->id)->get();
 
-        $structureActivites = StructureActivite::with(['structure:id,name,slug,presentation_courte', 'categorie:id,nom_categorie', 'discipline:id,name', 'produits', 'produits.adresse', 'produits.criteres', 'produits.horaire', 'produits.tarifs', 'produits.tarifs.structureTarifTypeInfos', 'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut', 'produits.tarifs.tarifType'])
+        $structureActivites = StructureActivite::with(['structure:id,name,slug,presentation_courte', 'categorie:id,nom_categorie_pro', 'discipline:id,name', 'plannings', 'produits', 'produits.adresse', 'produits.criteres', 'produits.horaire', 'produits.tarifs', 'produits.tarifs.structureTarifTypeInfos', 'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut', 'produits.tarifs.tarifType'])
                             ->where('structure_id', $structure->id)
                             ->where('discipline_id', $activite->discipline->id)
                             ->latest()
                             ->get();
+        // dd($structureActivites);
 
         $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
             $query->orderBy('defaut', 'desc');
@@ -222,7 +223,7 @@ class ActiviteController extends Controller
 
         $tarifTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();
 
-        $activiteForTarifs = StructureActivite::with(['structure:id,name,slug', 'categorie:id,nom_categorie', 'discipline:id,name', 'produits', 'produits.tarifs', 'produits.tarifs.structureTarifTypeInfos', 'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut'])
+        $activiteForTarifs = StructureActivite::with(['structure:id,name,slug', 'categorie:id,nom_categorie_pro', 'discipline:id,name', 'produits', 'produits.tarifs', 'produits.tarifs.structureTarifTypeInfos', 'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut'])
             ->where('structure_id', $structure->id)
             ->latest()
             ->get()
@@ -270,7 +271,7 @@ class ActiviteController extends Controller
                         return [
                             'id' => $categoryId,
                             'disciplineId' => $categorieItems->first()->discipline->id,
-                            'name' => $categorieItems->first()->categorie->nom_categorie ?? 'Sans Catégorie',
+                            'name' => $categorieItems->first()->categorie->nom_categorie_pro ?? 'Sans Catégorie',
                             'activites' => $activites,
                         ];
                     }),
@@ -436,7 +437,7 @@ class ActiviteController extends Controller
             ]);
         }
 
-        $activite = StructureActivite::with(['structure:id,name,slug','categorie:id,nom_categorie', 'discipline:id,name,slug'])
+        $activite = StructureActivite::with(['structure:id,name,slug','categorie:id,nom_categorie_pro', 'discipline:id,name,slug'])
                                 ->where('structure_id', $structure->id)
                                 ->where('id', $activite)
                                 ->first();
@@ -445,7 +446,7 @@ class ActiviteController extends Controller
             'structure_id' => $structure->id,
             'discipline_id' => $request->discipline_id,
             'categorie_id' => $request->categorie_id,
-            'titre' => $request->titre ?? $activite->categorie->nom_categorie.' de '. $activite->discipline->name,
+            'titre' => $request->titre ?? $activite->categorie->nom_categorie_pro.' de '. $activite->discipline->name,
             'description' => $request->description,
             'image' => "",
             "actif" => 1,
