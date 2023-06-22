@@ -47,6 +47,8 @@ class StructurePlanningController extends Controller
             'event' => 'required',
         ]);
 
+        $activite = StructureActivite::findOrFail($request->activite_id);
+
         $dateStart = $request->event['start'];
         $startDate = Carbon::parse($dateStart)->setTimezone('Europe/Paris')->toDateTimeString();
 
@@ -87,7 +89,7 @@ class StructurePlanningController extends Controller
             'categorie_id' => $request->categorie_id,
             'activite_id' => $request->activite_id,
             'produit_id' => $produit->id,
-            'title' => $request->event['title'] ?? "",
+            'title' => $request->event['title'] ?? $activite->titre,
             'start' => $startDate ?? "",
             'end' => $endDate ?? "",
         ]);
@@ -117,7 +119,34 @@ class StructurePlanningController extends Controller
      */
     public function update(Request $request, Structure $structure, $event)
     {
-        //
+        $request->validate([
+            'event' => 'required',
+        ]);
+
+        $planning = StructurePlanning::findOrFail($event);
+
+        $activite = StructureActivite::findOrFail($planning->activite_id);
+
+        $title = $request->event['title'];
+
+        $dateStart = $request->event['start'];
+        $startDate = Carbon::parse($dateStart)->setTimezone('Europe/Paris')->toDateTimeString();
+
+        $dateEnd = $request->event['end'];
+        $endDate = Carbon::parse($dateEnd)->setTimezone('Europe/Paris')->toDateTimeString();
+
+        // $activite->update([
+        //     'titre' => $title,
+        // ]);
+
+        $planning->update([
+            'title' => $title,
+            'start' => $startDate,
+            'end' => $endDate,
+        ]);
+
+        return Redirect::back()->with('success', "Planning mis à jour");
+
     }
 
     /**

@@ -45,11 +45,9 @@ const getEvents = () => {
         for (const planning of structureActivite.plannings) {
             if (planning) {
                 const event = {
-                    // start: `${produit.horaire.dayopen} ${produit.horaire.houropen}`,
-                    // end: `${produit.horaire.dayclose} ${produit.horaire.hourclose}`,
                     start: planning.start,
                     end:  planning.end,
-                    title: structureActivite.titre,
+                    title: planning.title ?? structureActivite.titre,
                     content: structureActivite.description,
                     activiteId: structureActivite.id,
                     produitId: planning.produit_id,
@@ -99,8 +97,10 @@ const onSubmitEventForm = () => {
         },
         {
             preserveScroll: true,
+            remember: false,
             onSuccess: () => {
-                emit("close");
+                formPlanning.reset();
+                closeModal();
             },
             structure: props.structure.slug,
         }
@@ -108,15 +108,30 @@ const onSubmitEventForm = () => {
 };
 
 const handleEventDeleted = (event) => {
-
     const url = `/structures/${props.structure.slug}/plannings/${event.planningId}`;
     router.delete(url, {
         preserveScroll: true,
         onSuccess: () => {
-            emit("close");
+            closeModal();
         },
         structure: props.structure.slug,
         planning: event.planningId,
+    });
+};
+
+const handleEventChanged = (event) => {
+    selectedEvent.value = event.event;
+
+    const url = `/structures/${props.structure.slug}/plannings/${event.event.planningId}`;
+    router.put(url,
+    {
+        _method: "put",
+        event: selectedEvent.value,
+    },
+    {
+        preserveScroll: true,
+        structure: props.structure.slug,
+        planning: event.event.planningId,
     });
 };
 
@@ -159,6 +174,9 @@ const handleEventDeleted = (event) => {
             :on-event-create="onEventCreate"
             @event-drag-create="isOpen = true"
             @event-delete="handleEventDeleted"
+            @event-duration-change="handleEventChanged"
+            @event-drop="handleEventChanged"
+            @event-title-change="handleEventChanged"
         />
     </div>
     <TransitionRoot appear :show="isOpen" as="template">
