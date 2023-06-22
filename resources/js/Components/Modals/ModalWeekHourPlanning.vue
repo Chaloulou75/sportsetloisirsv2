@@ -82,7 +82,6 @@ const onEventCreate = (event, deleteEventFunction) => {
 };
 
 const onSubmitEventForm = () => {
-    console.log("Event created:", selectedEvent.value);
     const url = `/structures/${props.structure.slug}/plannings`;
     router.post(
         url,

@@ -50,7 +50,6 @@ const currentCategorie = ref({});
 const showAddActiviteModal = ref(false);
 const openAddActiviteModal = (categorie) => {
     currentCategorie.value = categorie;
-    console.log(currentCategorie.value);
     showAddActiviteModal.value = true;
 };
 

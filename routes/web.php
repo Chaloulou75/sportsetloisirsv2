@@ -70,7 +70,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('structures.disciplines', StructureDisciplineController::class)->scoped(['structure' => 'slug','discipline' => 'id'])->only(['destroy']);
     Route::resource('structures.categories', StructureCategorieController::class)->scoped(['structure' => 'slug','categorie' => 'id'])->only(['destroy']);
 
-
     Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
     Route::post('/structures', [StructureController::class, 'store'])->name('structures.store');
     Route::get('/structures/{structure:slug}/edit', [StructureController::class, 'edit'])->name('structures.edit');

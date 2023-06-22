@@ -218,9 +218,7 @@ class ActiviteController extends Controller
 
         $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
             $query->orderBy('defaut', 'desc');
-        }])
-                                                    ->where('discipline_id', $activite->discipline->id)
-                                                    ->get();
+        }])->where('discipline_id', $activite->discipline->id)->get();
 
         $tarifTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();
 

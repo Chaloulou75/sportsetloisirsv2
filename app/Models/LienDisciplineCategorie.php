@@ -26,6 +26,6 @@ class LienDisciplineCategorie extends Model
 
     public function categorie(): BelongsTo
     {
-        return $this->belongsTo(LienDisciplineCategorie::class, 'categorie_id');
+        return $this->belongsTo(Categorie::class, 'categorie_id');
     }
 }
