@@ -12,11 +12,12 @@ use App\Models\StructureAddress;
 use App\Models\StructureHoraire;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
+use App\Models\StructurePlanning;
+use App\Models\StructureTarifTypeInfo;
 use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\LienDisciplineCategorieCritere;
 use App\Models\LienDisciplineCategorieCritereValeur;
-use App\Models\StructureTarifTypeInfo;
 
 class StructureActiviteProduitController extends Controller
 {
@@ -267,6 +268,14 @@ class StructureActiviteProduitController extends Controller
         $produit = StructureProduit::where('id', $produit->id)->firstOrFail();
 
         $produitCriteres = StructureProduitCritere::where('produit_id', $produit->id)->get();
+
+        $plannings = StructurePlanning::where('produit_id', $produit->id)->get();
+
+        if($plannings->isNotEmpty()) {
+            foreach($plannings as $planning) {
+                $planning->delete();
+            }
+        }
 
         if(isset($produitsCriteres)) {
             foreach($produitCriteres as $critere) {

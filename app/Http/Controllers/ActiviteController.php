@@ -10,11 +10,13 @@ use App\Models\Categorie;
 use App\Models\Structure;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
+use App\Models\ListeTarifType;
 use Illuminate\Validation\Rule;
 use App\Models\StructureAddress;
 use App\Models\StructureHoraire;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
+use App\Models\StructurePlanning;
 use App\Models\StructureCategorie;
 use App\Models\StructureDiscipline;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +28,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\LienDisciplineCategorieCritere;
 use App\Models\LienDisciplineCategorieCritereValeur;
-use App\Models\ListeTarifType;
 
 class ActiviteController extends Controller
 {
@@ -341,6 +342,14 @@ class ActiviteController extends Controller
         $produits = StructureProduit::where('activite_id', $activite->id)->get();
 
         $criteres = StructureProduitCritere::where('activite_id', $activite->id)->get();
+
+        $plannings = StructurePlanning::where('activite_id', $activite->id)->get();
+
+        if($plannings->isNotEmpty()) {
+            foreach($plannings as $planning) {
+                $planning->delete();
+            }
+        }
 
         if($criteres->isNotEmpty()) {
             foreach($criteres as $critere) {

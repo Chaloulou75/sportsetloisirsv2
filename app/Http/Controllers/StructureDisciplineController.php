@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ListDiscipline;
 use App\Models\Structure;
 use Illuminate\Http\Request;
+use App\Models\ListDiscipline;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
+use App\Models\StructurePlanning;
 use App\Models\StructureCategorie;
 use App\Models\StructureDiscipline;
 use Illuminate\Http\RedirectResponse;
@@ -81,6 +82,14 @@ class StructureDisciplineController extends Controller
         $produits = StructureProduit::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->get();
 
         $criteres = StructureProduitCritere::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->get();
+
+        $plannings = StructurePlanning::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->get();
+
+        if($plannings->isNotEmpty()) {
+            foreach($plannings as $planning) {
+                $planning->delete();
+            }
+        }
 
         if($criteres->isNotEmpty()) {
             foreach($criteres as $critere) {

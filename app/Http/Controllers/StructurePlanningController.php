@@ -162,13 +162,13 @@ class StructurePlanningController extends Controller
 
         $planning->delete();
 
-        if(isset($produitsCriteres)) {
+        if($produitCriteres->isNotEmpty()) {
             foreach($produitCriteres as $critere) {
                 $critere->delete();
             }
         }
 
-        if(isset($produit->tarifs)) {
+        if($produit->tarifs->isNotEmpty()) {
             $produit->tarifs()->detach();
         }
 

@@ -20,6 +20,7 @@ use App\Models\StructureAddress;
 use App\Models\StructureHoraire;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
+use App\Models\StructurePlanning;
 use App\Models\StructureTypeInfo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -404,8 +405,18 @@ class StructureController extends Controller
 
         $criteres = StructureProduitCritere::where('structure_id', $structure->id)->get();
 
+        $plannings = StructurePlanning::where('structure_id', $structure->id)->get();
+
+
         if (! Gate::allows('destroy-structure', $structure)) {
             return Redirect::route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de supprimer cette fiche, vous devez être le créateur de la structure ou un administrateur.');
+        }
+
+
+        if($plannings->isNotEmpty()) {
+            foreach($plannings as $planning) {
+                $planning->delete();
+            }
         }
 
         if($criteres->isNotEmpty()) {
