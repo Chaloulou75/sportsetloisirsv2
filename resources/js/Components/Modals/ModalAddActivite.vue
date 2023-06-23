@@ -401,32 +401,22 @@ onMounted(() => {
                                                             'checkbox'
                                                         "
                                                     >
-                                                        <div
-                                                            class="flex items-center"
-                                                        >
-                                                            <input
-                                                                v-model="
-                                                                    form
-                                                                        .criteres[
-                                                                        critere
-                                                                            .id
-                                                                    ]
-                                                                "
-                                                                :id="
-                                                                    critere.nom
-                                                                "
-                                                                type="checkbox"
-                                                                class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
-                                                            />
-                                                            <label
-                                                                :for="
-                                                                    critere.nom
-                                                                "
-                                                                class="ml-2 text-sm font-medium text-gray-700"
-                                                                >{{
-                                                                    critere.nom
-                                                                }}</label
-                                                            >
+                                                        <div class="block">
+                                                            <span class="text-sm font-medium text-gray-700">{{ critere.nom }}</span>
+                                                            <div class="mt-2">
+                                                                <div v-for="(valeur, index) in critere.valeurs" :key="valeur.id" >
+                                                                <label class="inline-flex items-center">
+                                                                <input
+                                                                    v-model="form.criteres[valeur.id]"
+                                                                    :id="valeur.valeur"
+                                                                    :value="valeur.valeur"
+                                                                    type="checkbox"
+                                                                    class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
+                                                                    />
+                                                                    <span class="ml-2 text-sm font-medium text-gray-700">{{ valeur.valeur }}</span>
+                                                                </label>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <!-- radio -->

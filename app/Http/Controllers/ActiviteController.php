@@ -209,12 +209,11 @@ class ActiviteController extends Controller
 
         $categoriesListByDiscipline = LienDisciplineCategorie::where('discipline_id', $activite->discipline->id)->get();
 
-        $structureActivites = StructureActivite::with(['structure:id,name,slug,presentation_courte', 'categorie:id,nom_categorie_pro', 'discipline:id,name', 'plannings', 'produits', 'produits.adresse', 'produits.criteres', 'produits.horaire', 'produits.tarifs', 'produits.tarifs.structureTarifTypeInfos', 'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut', 'produits.tarifs.tarifType'])
+        $structureActivites = StructureActivite::with(['structure:id,name,slug,presentation_courte', 'categorie:id,nom_categorie_pro', 'discipline:id,name', 'plannings', 'produits', 'produits.adresse', 'produits.criteres', 'produits.criteres.valeurs','produits.horaire', 'produits.tarifs', 'produits.tarifs.structureTarifTypeInfos', 'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut', 'produits.tarifs.tarifType'])
                             ->where('structure_id', $structure->id)
                             ->where('discipline_id', $activite->discipline->id)
                             ->latest()
                             ->get();
-        // dd($structureActivites);
 
         $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
             $query->orderBy('defaut', 'desc');
@@ -411,6 +410,8 @@ class ActiviteController extends Controller
 
         $structure = Structure::with('adresses')->where('id', $request->structure_id)->firstOrfail();
 
+        $categorieDiscName = LienDisciplineCategorie::with('discipline')->where('id', $request->categorie_id)->first();
+
         //check if address exist
         if($structure->id === $request->structure_id) {
             foreach($structure->adresses as $address) {
@@ -437,23 +438,18 @@ class ActiviteController extends Controller
 
             $dayTime = StructureHoraire::firstOrCreate([
                 'structure_id' => $structure->id,
-                'dayopen' => $dayopen,
-                'dayclose' => $dayclose,
-                'houropen' => $houropen,
-                'hourclose' => $hourclose,
+                'dayopen' => $dayopen ?? "",
+                'dayclose' => $dayclose ?? "",
+                'houropen' => $houropen ?? "",
+                'hourclose' => $hourclose ?? "",
             ]);
         }
-
-        $activite = StructureActivite::with(['structure:id,name,slug','categorie:id,nom_categorie_pro', 'discipline:id,name,slug'])
-                                ->where('structure_id', $structure->id)
-                                ->where('id', $activite)
-                                ->first();
 
         $structureActivite = StructureActivite::create([
             'structure_id' => $structure->id,
             'discipline_id' => $request->discipline_id,
             'categorie_id' => $request->categorie_id,
-            'titre' => $request->titre ?? $activite->categorie->nom_categorie_pro.' de '. $activite->discipline->name,
+            'titre' => $request->titre ?? $categorieDiscName->nom_categorie_pro.' de '. $categorieDiscName->discipline->name,
             'description' => $request->description,
             'image' => "",
             "actif" => 1,
@@ -477,7 +473,7 @@ class ActiviteController extends Controller
             'reservable' => 0,
         ]);
 
-        $criteres = LienDisciplineCategorieCritere::where('discipline_id', $request->discipline_id)->where('categorie_id', $request->categorie_id)->get();
+        $criteres = LienDisciplineCategorieCritere::with('valeurs')->where('discipline_id', $request->discipline_id)->where('categorie_id', $request->categorie_id)->get();
 
         $criteresValues = $request->criteres;
 

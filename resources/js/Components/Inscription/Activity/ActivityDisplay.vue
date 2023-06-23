@@ -567,26 +567,23 @@ const destroyTarif = (tarif, produit) => {
                                 class="col-span-1 flex items-center"
                             >
                                 <UsersIcon
-                                    v-if="critere.critere_id === 1"
                                     class="mr-1 h-6 w-6 text-gray-600"
                                 />
-                                <AcademicCapIcon
-                                    v-else-if="critere.critere_id === 2"
-                                    class="mr-1 h-6 w-6 text-gray-600"
-                                />
-                                <UsersIcon
-                                    v-else
-                                    class="mr-1 h-6 w-6 text-gray-600"
-                                />
-
+                                <span
+                                    v-if="critere.critere.nom"
+                                    class="text-sm text-gray-600"
+                                    >{{ critere.critere.nom }}</span
+                                >
                                 <span
                                     v-if="critere.valeur"
                                     class="text-sm text-gray-600"
                                     >{{ critere.valeur }}</span
                                 >
-                                <span v-else class="text-sm text-gray-600"
+                                <!-- <span v-else class="text-sm text-gray-600"
                                     >Tous</span
                                 >
+                                <p v-for="value in critere.valeurs" :key="value.id" class="text-sm text-gray-600">
+                                {{ value.valeur }}</p> -->
                             </div>
                         </div>
                         <div

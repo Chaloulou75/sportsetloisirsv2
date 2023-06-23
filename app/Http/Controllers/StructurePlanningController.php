@@ -78,7 +78,7 @@ class StructurePlanningController extends Controller
                     'activite_id' => $request->activite_id,
                     'produit_id' => $produit->id,
                     'critere_id' => $key,
-                    'valeur' => $defaut->valeur,
+                    'valeur' => $defaut->valeur ?? "",
                 ]);
             }
         }
