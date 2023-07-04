@@ -212,7 +212,7 @@ onMounted(() => {
                                 :structure="structure"
                                 @eventFromChild="handleButtonEvent"/>
                             <div
-                                class=" flex w-full flex-col items-center justify-between space-y-2 px-2 py-6 md:flex-row md:space-y-0 md:px-0 h-20"
+                                class=" flex w-full flex-col items-center justify-between space-y-2 px-2 py-3 md:py-6 md:flex-row md:space-y-0 md:px-0 md:h-20"
                             >
                                 <div
                                     class="text-center text-lg font-semibold text-gray-700 md:text-left"
@@ -223,7 +223,7 @@ onMounted(() => {
                                     v-if="displayActivity"
                                     type="button"
                                     @click="openAddActiviteModal(categorie)"
-                                    class="w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:flex md:w-auto"
+                                    class="w-full flex items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:flex md:w-auto"
                                 >
                                     Ajouter une activité
                                     <PlusIcon class="ml-2 h-5 w-5" />

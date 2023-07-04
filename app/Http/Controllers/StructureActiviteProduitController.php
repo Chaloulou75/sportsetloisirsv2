@@ -178,6 +178,8 @@ class StructureActiviteProduitController extends Controller
             'actif' => ['nullable'],
         ]);
 
+        dd($request->criteres);
+
         $structureProduit = StructureProduit::where('id', $produit->id)->firstOrFail();
 
         if(isset($request->date) || isset($request->time)) {
@@ -217,16 +219,31 @@ class StructureActiviteProduitController extends Controller
             $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $key)->first();
 
             if ($critereValue) {
-                $structureProduitCriteres = StructureProduitCritere::where([
-                    'structure_id' => $structure->id,
-                    'discipline_id' => $structureProduit->discipline_id,
-                    'categorie_id' => $structureProduit->categorie_id,
-                    'activite_id' => $activite->id,
-                    'produit_id' => $structureProduit->id,
-                    'critere_id' => $key,
-                ])->update([
-                    'valeur' => $critereValue ?? $defaut->valeur
-                ]);
+                if (is_array($critereValue)) {
+                    foreach ($critereValue as $value) {
+                        $structureProduitCriteres = StructureProduitCritere::where([
+                            'structure_id' => $structure->id,
+                            'discipline_id' => $structureProduit->discipline_id,
+                            'categorie_id' => $structureProduit->categorie_id,
+                            'activite_id' => $activite->id,
+                            'produit_id' => $structureProduit->id,
+                        ])->update([
+                            'critere_id' => $key,
+                            'valeur' => $value ?? $defaut->valeur
+                        ]);
+                    }
+                } else {
+                    $structureProduitCriteres = StructureProduitCritere::where([
+                        'structure_id' => $structure->id,
+                        'discipline_id' => $structureProduit->discipline_id,
+                        'categorie_id' => $structureProduit->categorie_id,
+                        'activite_id' => $activite->id,
+                        'produit_id' => $structureProduit->id,
+                        'critere_id' => $key,
+                    ])->update([
+                        'valeur' => $critereValue ?? $defaut->valeur
+                    ]);
+                }
             }
         }
 

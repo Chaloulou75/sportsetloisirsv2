@@ -50,7 +50,7 @@ const form = useForm({
     description: ref(null),
     image: ref(null),
     actif: ref(1),
-    criteres: ref([]),
+    criteres: ref({}),
     adresse: ref(latestAdresseId.value),
     address: ref(null),
     city: ref(null),
@@ -62,6 +62,29 @@ const form = useForm({
     time: ref(null),
 });
 
+const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
+    if (checked) {
+        if (!form.criteres[critereId]) {
+            // If the critereId doesn't exist in the form object, create a new array with the optionValue
+            form.criteres[critereId] = [optionValue];
+        } else {
+            // If the critereId exists, push the optionValue to the existing array
+            form.criteres[critereId].push(optionValue);
+        }
+    } else {
+        // Remove the optionValue from the array
+        const index = form.criteres[critereId].indexOf(optionValue);
+        if (index !== -1) {
+            form.criteres[critereId].splice(index, 1);
+        }
+    }
+};
+
+// Check if a checkbox is selected
+const isCheckboxSelected = (critereId, optionValue) => {
+    return form.criteres[critereId] && form.criteres[critereId].includes(optionValue);
+};
+
 watch(
     filteredCriteres,
     (newFilteredCriteres) => {
@@ -72,12 +95,14 @@ watch(
             ) {
                 form.criteres[critere.id] = critere.valeurs[0].valeur;
             }
+
         });
     },
     { immediate: true }
 );
 
 function onSubmit() {
+
     router.post(
         `/structures/${props.structure.slug}/activites/${props.activite.id}/newactivitystore`,
         {
@@ -101,8 +126,6 @@ function onSubmit() {
         },
         {
             preserveScroll: true,
-
-
             onSuccess: () => {
                 form.reset();
                 emit("close");
@@ -404,17 +427,19 @@ onMounted(() => {
                                                         <div class="block">
                                                             <span class="text-sm font-medium text-gray-700">{{ critere.nom }}</span>
                                                             <div class="mt-2">
-                                                                <div v-for="(valeur, index) in critere.valeurs" :key="valeur.id" >
-                                                                <label class="inline-flex items-center">
-                                                                <input
-                                                                    v-model="form.criteres[valeur.id]"
-                                                                    :id="valeur.valeur"
-                                                                    :value="valeur.valeur"
-                                                                    type="checkbox"
-                                                                    class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
-                                                                    />
-                                                                    <span class="ml-2 text-sm font-medium text-gray-700">{{ valeur.valeur }}</span>
-                                                                </label>
+                                                                <div v-for="(option, index) in critere.valeurs" :key="option.id">
+                                                                    <label class="inline-flex items-center" :for="option.valeur">
+                                                                    <input
+                                                                        :checked="isCheckboxSelected(critere.id, option.valeur)"
+                                                                        @change="updateSelectedCheckboxes(critere.id, option.valeur, $event.target.checked)"
+                                                                        :id="option.valeur"
+                                                                        :value="option.valeur"
+                                                                        :name="option.valeur"
+                                                                        type="checkbox"
+                                                                        class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
+                                                                        />
+                                                                        <span class="ml-2 text-sm font-medium text-gray-700">{{ option.valeur }}</span>
+                                                                    </label>
                                                                 </div>
                                                             </div>
                                                         </div>

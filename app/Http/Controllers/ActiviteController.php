@@ -209,7 +209,7 @@ class ActiviteController extends Controller
 
         $categoriesListByDiscipline = LienDisciplineCategorie::where('discipline_id', $activite->discipline->id)->get();
 
-        $structureActivites = StructureActivite::with(['structure:id,name,slug,presentation_courte', 'categorie:id,nom_categorie_pro', 'discipline:id,name', 'plannings', 'produits', 'produits.adresse', 'produits.criteres', 'produits.criteres.valeurs','produits.horaire', 'produits.tarifs', 'produits.tarifs.structureTarifTypeInfos', 'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut', 'produits.tarifs.tarifType'])
+        $structureActivites = StructureActivite::with(['structure:id,name,slug,presentation_courte', 'categorie:id,nom_categorie_pro', 'discipline:id,name', 'plannings', 'produits', 'produits.adresse', 'produits.criteres', 'produits.criteres.critere', 'produits.horaire', 'produits.tarifs', 'produits.tarifs.structureTarifTypeInfos', 'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut', 'produits.tarifs.tarifType'])
                             ->where('structure_id', $structure->id)
                             ->where('discipline_id', $activite->discipline->id)
                             ->latest()
@@ -406,7 +406,10 @@ class ActiviteController extends Controller
             'address_lng' => ['nullable'],
             'date' => ['nullable'],
             'time' => ['nullable'],
+            'selectedCheckboxes' => ['nullable'],
         ]);
+
+        // dd($request->criteres);
 
         $structure = Structure::with('adresses')->where('id', $request->structure_id)->firstOrfail();
 
@@ -482,15 +485,29 @@ class ActiviteController extends Controller
                 $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $key)->first();
 
                 if (isset($critereValue)) {
-                    $structureProduitCriteres = StructureProduitCritere::create([
-                        'structure_id' => $structure->id,
-                        'discipline_id' => $request->discipline_id,
-                        'categorie_id' => $request->categorie_id,
-                        'activite_id' => $structureActivite->id,
-                        'produit_id' => $structureProduit->id,
-                        'critere_id' => $key,
-                        'valeur' => $critereValue ?? $defaut->valeur,
-                    ]);
+                    if (is_array($critereValue)) {
+                        foreach ($critereValue as $value) {
+                            $structureProduitCriteres = StructureProduitCritere::create([
+                                'structure_id' => $structure->id,
+                                'discipline_id' => $request->discipline_id,
+                                'categorie_id' => $request->categorie_id,
+                                'activite_id' => $structureActivite->id,
+                                'produit_id' => $structureProduit->id,
+                                'critere_id' => $key,
+                                'valeur' => $value,
+                            ]);
+                        }
+                    } else {
+                        $structureProduitCriteres = StructureProduitCritere::create([
+                            'structure_id' => $structure->id,
+                            'discipline_id' => $request->discipline_id,
+                            'categorie_id' => $request->categorie_id,
+                            'activite_id' => $structureActivite->id,
+                            'produit_id' => $structureProduit->id,
+                            'critere_id' => $key,
+                            'valeur' => $critereValue ?? $defaut->valeur,
+                        ]);
+                    }
                 }
             }
         } else {

@@ -18,6 +18,7 @@ import {
     UsersIcon,
     UserGroupIcon,
     ClockIcon,
+InformationCircleIcon,
 } from "@heroicons/vue/24/outline";
 import {
     Switch,
@@ -555,7 +556,7 @@ const destroyTarif = (tarif, produit) => {
                     <div
                         v-for="produit in structureActivite.produits"
                         :key="produit.id"
-                        class="grid grid-flow-row grid-cols-3 place-items-center gap-2 py-4 odd:bg-white even:bg-slate-50 md:grid-cols-6"
+                        class="grid grid-flow-row grid-cols-2 place-items-center gap-2 py-4 odd:bg-white even:bg-slate-50 md:grid-cols-6"
                     >
                         <div
                             v-if="produit.criteres.length > 0"
@@ -564,39 +565,37 @@ const destroyTarif = (tarif, produit) => {
                             <div
                                 v-for="critere in produit.criteres"
                                 :key="critere.id"
-                                class="col-span-1 flex items-center"
+                                class="col-span-1 flex items-start"
                             >
-                                <UsersIcon
-                                    class="mr-1 h-6 w-6 text-gray-600"
+                                <InformationCircleIcon
+                                    class="mr-1 h-5 w-5 text-gray-600"
                                 />
-                                <span
+                                <div class="flex flex-col items-center">
+                                    <span
                                     v-if="critere.critere.nom"
                                     class="text-sm text-gray-600"
-                                    >{{ critere.critere.nom }}</span
-                                >
+                                    >
+                                    {{ critere.critere.nom }}:
+                                </span>
                                 <span
                                     v-if="critere.valeur"
-                                    class="text-sm text-gray-600"
-                                    >{{ critere.valeur }}</span
-                                >
-                                <!-- <span v-else class="text-sm text-gray-600"
-                                    >Tous</span
-                                >
-                                <p v-for="value in critere.valeurs" :key="value.id" class="text-sm text-gray-600">
-                                {{ value.valeur }}</p> -->
+                                    class="text-sm text-gray-600 font-semibold"
+                                    >{{ critere.valeur }}</span>
+                                </div>
+
                             </div>
                         </div>
                         <div
                             v-else
                             class="col-span-2 grid h-full w-full grid-cols-2 place-items-center gap-2"
                         >
-                            <div class="col-span-1 flex items-center">
+                            <div class="col-span-1 flex items-start">
                                 <UsersIcon class="mr-1 h-6 w-6 text-gray-600" />
                                 <span class="text-sm text-gray-600"
                                     >Tous Public</span
                                 >
                             </div>
-                            <div class="col-span-1 flex items-center">
+                            <div class="col-span-1 flex items-start">
                                 <AcademicCapIcon
                                     class="mr-1 h-6 w-6 text-gray-600"
                                 />
