@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch } from "vue";
+import MazPhoneNumberInput from 'maz-ui/components/MazPhoneNumberInput'
 import { GlobeAltIcon } from "@heroicons/vue/24/solid";
 
 const props = defineProps({
@@ -26,6 +27,8 @@ const emit = defineEmits([
     'update:youtube',
     'update:tiktok',
 ]);
+
+const results = ref();
 
 const website = ref(props.website);
 const email = ref(props.email);
@@ -131,13 +134,36 @@ watch(tiktok, (value) => {
                 Numéro de téléphone *
             </label>
             <div class="flex mt-1 rounded-md shadow-sm">
-                <input v-model="phone1" type="tel" name="phone1" id="phone1"
+                <!-- <input v-model="phone1" type="tel" name="phone1" id="phone1"
                     class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    placeholder="02 10 ..." autocomplete="none" />
+                    placeholder="02 10 ..." autocomplete="none" /> -->
+                    <MazPhoneNumberInput
+                        v-model="phone1"
+                        show-code-on-list
+                        color="info"
+                        :only-countries="['FR', 'BE', 'LU']"
+                        @update="results = $event"
+                        :success="results?.isValid"
+                        :noSearch="true"
+                        :translations="{
+                            countrySelector: {
+                                placeholder: 'code pays',
+                                error: 'Choisir un pays',
+                            },
+                            phoneInput: {
+                                placeholder: 'Télephone',
+                                example: 'Exemple:',
+                            },
+                        }"
+                    />
+                    <!-- <code>
+                        {{ results }}
+                    </code> -->
             </div>
             <div v-if="errors.phone1" class="mt-2 text-xs text-red-500">
                 {{ errors.phone1 }}
             </div>
+
         </div>
 
         <!-- Phone2 -->
@@ -146,9 +172,28 @@ watch(tiktok, (value) => {
                 Numéro de téléphone de sauvegarde
             </label>
             <div class="flex mt-1 rounded-md shadow-sm">
-                <input v-model="phone2" type="tel" name="phone2" id="phone2"
+                <!-- <input v-model="phone2" type="tel" name="phone2" id="phone2"
                     class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    placeholder="02 10 ..." autocomplete="none" />
+                    placeholder="02 10 ..." autocomplete="none" /> -->
+                <MazPhoneNumberInput
+                        v-model="phone2"
+                        show-code-on-list
+                        color="info"
+                        :only-countries="['FR', 'BE', 'LU']"
+                        @update="results = $event"
+                        :success="results?.isValid"
+                        :noSearch="true"
+                        :translations="{
+                            countrySelector: {
+                                placeholder: 'code pays',
+                                error: 'Choisir un pays',
+                            },
+                            phoneInput: {
+                                placeholder: 'Télephone',
+                                example: 'Exemple:',
+                            },
+                        }"
+                    />
             </div>
             <div v-if="errors.phone2" class="mt-2 text-xs text-red-500">
                 {{ errors.phone2 }}

@@ -109,6 +109,7 @@ return [
         'symbols'       => 'Le champ :attribute doit contenir au moins un symbole.',
         'uncompromised' => 'La valeur du champ :attribute est apparue dans une fuite de données. Veuillez choisir une valeur différente.',
     ],
+    'phone'                => 'Le champ :attribute doit être un numéro valide.',
     'present'              => 'Le champ :attribute doit être présent.',
     'prohibited'           => 'Le champ :attribute est interdit.',
     'prohibited_if'        => 'Le champ :attribute est interdit quand :other a la valeur :value.',

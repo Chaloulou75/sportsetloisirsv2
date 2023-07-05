@@ -1,4 +1,5 @@
 import "./bootstrap";
+import "maz-ui/css/main.css";
 import "../css/app.css";
 
 import { createApp, h } from "vue";

@@ -55,8 +55,34 @@ watch(
             formEditProduit.actif = newValue.actif;
             formEditProduit.criteres = {};
             newValue.criteres.forEach((critere) => {
-                formEditProduit.criteres[critere.critere_id] = critere.valeur;
+                const critereId = critere.critere_id;
+                const critereValue = critere.valeur;
+
+                if (Array.isArray(critereValue)) {
+                    // For checkboxes with multiple values
+                    if (!Array.isArray(formEditProduit.criteres[critereId])) {
+                    // If the critereId doesn't exist in the form object, create a new array with the critereValue
+                    formEditProduit.criteres[critereId] = critereValue.slice();
+                    } else {
+                    // If the critereId exists, append the critereValue to the existing array
+                    formEditProduit.criteres[critereId].push(...critereValue);
+                    }
+                } else {
+                    // For other types of fields
+                    if (!formEditProduit.criteres[critereId]) {
+                    // If the critereId doesn't exist in the form object, assign the critereValue as a single value
+                    formEditProduit.criteres[critereId] = critereValue;
+                    } else {
+                    // If the critereId exists, convert the existing value to an array and push the new critereValue
+                    const existingValue = formEditProduit.criteres[critereId];
+                    if (!Array.isArray(existingValue)) {
+                        formEditProduit.criteres[critereId] = [existingValue];
+                    }
+                    formEditProduit.criteres[critereId].push(critereValue);
+                    }
+                }
             });
+
         }
     }
 );
@@ -68,7 +94,7 @@ const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
             formEditProduit.criteres[critereId] = [optionValue];
         } else {
             // If the critereId exists, push the optionValue to the existing array
-            formEditProduit.criteres[critereId].push(optionValue);
+            formEditProduit.criteres[critereId].push(optionValue); // PB HERE
         }
     } else {
         // Remove the optionValue from the array

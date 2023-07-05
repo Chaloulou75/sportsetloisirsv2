@@ -54,6 +54,29 @@ onMounted(() => {
 
 const addProduitAddress = ref(false);
 
+const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
+    if (checked) {
+        if (!formAddProduit.criteres[critereId]) {
+            // If the critereId doesn't exist in the form object, create a new array with the optionValue
+            formAddProduit.criteres[critereId] = [optionValue];
+        } else {
+            // If the critereId exists, push the optionValue to the existing array
+            formAddProduit.criteres[critereId].push(optionValue);
+        }
+    } else {
+        // Remove the optionValue from the array
+        const index = formAddProduit.criteres[critereId].indexOf(optionValue);
+        if (index !== -1) {
+            formAddProduit.criteres[critereId].splice(index, 1);
+        }
+    }
+};
+
+// Check if a checkbox is selected
+const isCheckboxSelected = (critereId, optionValue) => {
+    return formAddProduit.criteres[critereId] && formAddProduit.criteres[critereId].includes(optionValue);
+};
+
 const formAddProduit = useForm({
     structure_id: ref(props.structure.id),
     discipline_id: ref(null),
@@ -246,39 +269,31 @@ const onSubmitAddProduitForm = () => {
                                                         </div>
                                                         <!-- checkbox -->
                                                         <div
-                                                            v-if="
-                                                                critere.type_champ_form ===
-                                                                'checkbox'
-                                                            "
-                                                        >
-                                                            <div
-                                                                class="flex items-center"
-                                                            >
-                                                                <input
-                                                                    v-model="
-                                                                        formAddProduit
-                                                                            .criteres[
-                                                                            critere
-                                                                                .id
-                                                                        ]
-                                                                    "
-                                                                    :id="
-                                                                        critere.nom
-                                                                    "
-                                                                    type="checkbox"
-                                                                    class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
-                                                                />
-                                                                <label
-                                                                    :for="
-                                                                        critere.nom
-                                                                    "
-                                                                    class="ml-2 text-sm font-medium text-gray-700"
-                                                                    >{{
-                                                                        critere.nom
-                                                                    }}</label
-                                                                >
+                                                        v-if="
+                                                            critere.type_champ_form ===
+                                                            'checkbox'
+                                                        "
+                                                    >
+                                                        <div class="block">
+                                                            <span class="text-sm font-medium text-gray-700">{{ critere.nom }}</span>
+                                                            <div class="mt-2">
+                                                                <div v-for="(option, index) in critere.valeurs" :key="option.id">
+                                                                    <label class="inline-flex items-center" :for="option.valeur">
+                                                                    <input
+                                                                        :checked="isCheckboxSelected(critere.id, option.valeur)"
+                                                                        @change="updateSelectedCheckboxes(critere.id, option.valeur, $event.target.checked)"
+                                                                        :id="option.valeur"
+                                                                        :value="option.valeur"
+                                                                        :name="option.valeur"
+                                                                        type="checkbox"
+                                                                        class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
+                                                                        />
+                                                                        <span class="ml-2 text-sm font-medium text-gray-700">{{ option.valeur }}</span>
+                                                                    </label>
+                                                                </div>
                                                             </div>
                                                         </div>
+                                                    </div>
                                                         <!-- radio -->
                                                         <div
                                                             v-if="

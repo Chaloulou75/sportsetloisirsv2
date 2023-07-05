@@ -153,7 +153,7 @@ class ActiviteController extends Controller
                 "actif" => 1,
             ]);
 
-            $declinaison = StructureProduit::create([
+            $produit = StructureProduit::create([
                 'structure_id' => $validated['structure_id'],
                 'discipline_id' => $validated['discipline_id'],
                 'categorie_id' => $validated['categorie_id'],
@@ -173,7 +173,7 @@ class ActiviteController extends Controller
                     'discipline_id' => $validated['discipline_id'],
                     'categorie_id' => $validated['categorie_id'],
                     'activite_id' => $structureActivite->id,
-                    'produit_id' => $declinaison->id,
+                    'produit_id' => $produit->id,
                     'critere_id' => $disciplineCategorieCritere->id,
                     'valeur' => $ActCatCriVal->valeur ?? 'Tous',
                 ]);
@@ -406,7 +406,7 @@ class ActiviteController extends Controller
             'address_lng' => ['nullable'],
             'date' => ['nullable'],
             'time' => ['nullable'],
-            'selectedCheckboxes' => ['nullable'],
+            // 'selectedCheckboxes' => ['nullable'],
         ]);
 
         // dd($request->criteres);
@@ -508,22 +508,6 @@ class ActiviteController extends Controller
                             'valeur' => $critereValue ?? $defaut->valeur,
                         ]);
                     }
-                }
-            }
-        } else {
-            foreach ($criteres as $key => $critere) {
-                $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $key)->first();
-
-                if (isset($critere)) {
-                    $structureProduitCriteres = StructureProduitCritere::create([
-                        'structure_id' => $structure->id,
-                        'discipline_id' => $request->discipline_id,
-                        'categorie_id' => $request->categorie_id,
-                        'activite_id' => $structureActivite->id,
-                        'produit_id' => $structureProduit->id,
-                        'critere_id' => $key,
-                        'valeur' => $critere ?? $defaut->valeur,
-                    ]);
                 }
             }
         }
