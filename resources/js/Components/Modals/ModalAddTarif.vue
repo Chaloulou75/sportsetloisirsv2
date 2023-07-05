@@ -27,6 +27,7 @@ const props = defineProps({
     show: Boolean,
     tarifTypes: Object,
     activiteForTarifs: Object,
+    structureActivites: Object,
 });
 
 const uniteDurees = reactive([

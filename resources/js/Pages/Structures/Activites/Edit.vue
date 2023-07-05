@@ -287,6 +287,7 @@ onMounted(() => {
             :structure="structure"
             :tarif-types="tarifTypes"
             :activiteForTarifs="activiteForTarifs"
+            :structureActivites="filteredActivites"
             :show="showAddTarifModal"
             @close="showAddTarifModal = false"
         />
