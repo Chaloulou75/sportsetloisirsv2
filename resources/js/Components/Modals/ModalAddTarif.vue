@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, watch } from "vue";
+import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useForm, router } from "@inertiajs/vue3";
 import {
     XCircleIcon,
@@ -54,6 +54,23 @@ const formAddTarif = reactive({
     produits: ref({}),
     uniteDuree: ref(selectedUniteeDuree.value),
 });
+
+watch(
+    () => props.structureActivites,
+    (newStructureActivites) => {
+        if(newStructureActivites){
+            for (const activite of props.structureActivites) {
+                for (const produit of activite.produits) {
+                    formAddTarif.produits[produit.id] = true;
+                }
+            }
+        }
+    },
+    {
+    immediate: true,
+    deep: true
+    }
+);
 
 watch(
     () => formAddTarif.disciplines,
