@@ -182,7 +182,7 @@ class StructureActiviteProduitController extends Controller
     public function update(Request $request, Structure $structure, StructureActivite $activite, StructureProduit $produit)
     {
         $request->validate([
-            'criteres' => 'nullable',
+            'criteres' => ['nullable'],
             'adresse' => ['nullable', Rule::exists('structure_adresse', 'id')],
             'address' => ['nullable'],
             'city' => ['nullable'],

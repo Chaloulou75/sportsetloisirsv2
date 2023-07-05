@@ -88,21 +88,22 @@ watch(
 );
 
 const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
-    if (checked) {
-        if (!formEditProduit.criteres[critereId]) {
-            // If the critereId doesn't exist in the form object, create a new array with the optionValue
-            formEditProduit.criteres[critereId] = [optionValue];
-        } else {
-            // If the critereId exists, push the optionValue to the existing array
-            formEditProduit.criteres[critereId].push(optionValue); // PB HERE
-        }
-    } else {
-        // Remove the optionValue from the array
-        const index = formEditProduit.criteres[critereId].indexOf(optionValue);
-        if (index !== -1) {
-            formEditProduit.criteres[critereId].splice(index, 1);
-        }
+  if (checked) {
+    if (!Array.isArray(formEditProduit.criteres[critereId])) {
+      // If the critereId exists but is not an array, convert it to an array and assign the new array with the optionValue
+      formEditProduit.criteres[critereId] = [formEditProduit.criteres[critereId]];
     }
+    // Push the optionValue to the array
+    formEditProduit.criteres[critereId].push(optionValue);
+  } else {
+    // Remove the optionValue from the array
+    if (Array.isArray(formEditProduit.criteres[critereId])) {
+      const index = formEditProduit.criteres[critereId].indexOf(optionValue);
+      if (index !== -1) {
+        formEditProduit.criteres[critereId].splice(index, 1);
+      }
+    }
+  }
 };
 
 // Check if a checkbox is selected
