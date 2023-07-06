@@ -26,7 +26,7 @@ const props = defineProps({
 });
 
 const selectedActivite = ref(props.structureActivites[0]);
-const selectedProduct = ref(props.structureActivites[0].produits[0]);
+const selectedProduct = ref(props.structureActivites[0]?.produits?.[0] ?? "");
 const selectedEvent = ref({});
 const isOpen = ref(false);
 
@@ -162,7 +162,7 @@ const handleEventChanged = (event) => {
 </script>
 <template>
     <div v-if="structureActivites.length === 0">
-        <p class="font-semibold text-gray-600 italic">Pas d'activité lié à cette catégorie</p>
+        <p class="font-semibold text-gray-600 italic">Pas d'activité lié à cette catégorie.</p>
     </div>
     <div v-else class="mb-4 flex w-full items-center justify-between">
         <h2 class="text-lg font-medium leading-6 text-gray-800">

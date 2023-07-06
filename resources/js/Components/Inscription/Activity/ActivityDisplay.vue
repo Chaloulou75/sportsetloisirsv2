@@ -474,31 +474,17 @@ const destroyTarif = (tarif, produit) => {
                     <Switch
                         v-model="structureActivite.actif"
                         @click="toggleActif(structureActivite)"
-                        :class="
-                            structureActivite.actif
-                                ? 'bg-green-600'
-                                : 'bg-gray-200'
-                        "
+                        :class="structureActivite.actif ? 'bg-green-600' : 'bg-gray-200'"
                         class="relative inline-flex h-6 w-11 items-center rounded-full"
                     >
                         <span class="sr-only">Actif</span>
                         <span
-                            :class="
-                                structureActivite.actif
-                                    ? 'translate-x-6'
-                                    : 'translate-x-1'
-                            "
+                            :class="structureActivite.actif ? 'translate-x-6' : 'translate-x-1'"
                             class="inline-block h-4 w-4 transform rounded-full bg-white transition"
                         />
                     </Switch>
-                    <p
-                        class="text-lg font-semibold text-green-600"
-                        v-if="structureActivite.actif"
-                    >
-                        Actif
-                    </p>
-                    <p class="text-lg font-semibold text-gray-600" v-else>
-                        Inactif
+                    <p class="text-lg font-semibold" :class="structureActivite.actif ? 'text-green-600' : 'text-gray-600'">
+                        {{ structureActivite.actif ? 'Actif' : 'Inactif' }}
                     </p>
                 </div>
                 <div class="text-lg">
