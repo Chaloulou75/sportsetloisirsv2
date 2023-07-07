@@ -47,6 +47,17 @@ class StructureController extends Controller
                     'city:id,ville,ville_formatee,code_postal',
                     'departement:id,departement,numero',
                     'structuretype:id,name,slug',
+                    'disciplines',
+                    'categories',
+                    'activites',
+                    'activites.discipline',
+                    'activites.categorie',
+                    'produits',
+                    'produits.criteres',
+                    'tarifs',
+                    'tarifs.tarifType',
+                    'tarifs.structureTarifTypeInfos',
+                    'plannings',
                 ])
                         ->filter(
                             request(['search'])
@@ -79,6 +90,11 @@ class StructureController extends Controller
                             'user' => $structure->creator,
                             // 'disciplines' => $structure->activites->pluck('discipline.name')->unique(),
                             'logo' => $structure->logo ? asset($structure->logo) : 'https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
+                            'categories' =>$structure->categories,
+                            'disciplines' =>$structure->disciplines,
+                            'activites' => $structure->activites,
+                            'produits' => $structure->produits,
+                            'tarifs' => $structure->tarifs,
                 ];
                         })->withQueryString(),
             'filters' => request()->all(['search']),

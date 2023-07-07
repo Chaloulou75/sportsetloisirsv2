@@ -6,6 +6,12 @@ import BreezeNavLink from "@/Components/NavLink.vue";
 import { debounce } from "lodash";
 import TextInput from "@/Components/TextInput.vue";
 import { ArrowSmallRightIcon, CheckIcon } from "@heroicons/vue/24/solid";
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
 const props = defineProps({
     familles: Object,
@@ -19,6 +25,17 @@ const props = defineProps({
     topDepartements: Object,
     filters: Object,
 });
+
+const modules = ref([Autoplay, Pagination, Navigation]);
+
+const imagePaths = ref([]);
+
+// Set the image paths
+imagePaths.value = [
+    '/images/badminton.jpg',
+    '/images/basket.jpg',
+    '/images/piscine.jpg',
+];
 
 let search = ref(props.filters.search);
 let localite = ref(props.filters.localite);
@@ -120,7 +137,29 @@ watch(
                 </div>
             </section>
             <section
-                class="relative flex flex-col items-center justify-center min-h-full mx-auto my-16 bg-transparent font-Mochiy max-w-7xl md:my-0 md:min-h-screen"
+                class="min-h-full mx-auto my-16 max-w-7xl md:my-0 md:min-h-screen"
+            >
+                <swiper
+                    :slides-per-view="1"
+                    :space-between="30"
+                    :loop="true"
+                    :centeredSlides="true"
+                    :autoplay="{
+                        delay: 2600,
+                    }"
+                    :modules="modules"
+                    class="mySwiper"
+                >
+                    <swiper-slide v-for="(image, index) in imagePaths">
+                        <img
+                            :src="image" :key="index" alt="Image"
+                            class=" object-cover h-full w-auto"
+                        />
+                    </swiper-slide>
+                </swiper>
+            </section>
+            <section
+                class="relative flex flex-col items-center justify-center min-h-full mx-auto my-16 bg-transparent max-w-7xl md:my-0 md:min-h-screen"
             >
                 <div
                     class="max-w-sm text-5xl font-black text-center text-white -rotate-3 md:max-w-3xl md:text-8xl"

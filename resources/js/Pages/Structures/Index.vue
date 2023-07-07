@@ -1,11 +1,14 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { router, Head, Link } from "@inertiajs/vue3";
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { debounce } from "lodash";
 import { defineAsyncComponent } from "vue";
 import TextInput from "@/Components/TextInput.vue";
 import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
+import {
+    MapPinIcon,
+} from "@heroicons/vue/24/outline";
 
 let props = defineProps({
     structures: Object,
@@ -31,6 +34,28 @@ function showTooltip(structure) {
 function hideTooltip() {
     hoveredStructure.value = null;
 }
+
+const getUniqueActivitesDiscipline = (activites) => {
+    const uniqueNames = new Set();
+    return activites.filter((activite) => {
+        if (!uniqueNames.has(activite.discipline.name)) {
+          uniqueNames.add(activite.discipline.name);
+          return true;
+        }
+        return false;
+    });
+};
+
+const getUniqueActivitesTitre = (activites) => {
+    const uniqueNames = new Set();
+    return activites.filter((activite) => {
+        if (!uniqueNames.has(activite.titre)) {
+          uniqueNames.add(activite.titre);
+          return true;
+        }
+        return false;
+    });
+};
 
 watch(
     search,
@@ -73,7 +98,6 @@ watch(
 
         <div class="py-12">
             <!-- search box -->
-
             <div
                 class="mx-auto mb-8 mt-4 flex w-full max-w-3xl flex-col items-center justify-center px-2 md:flex-row"
             >
@@ -89,7 +113,7 @@ watch(
                     type="text"
                     class="mt-1 block w-full flex-1 px-2 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
                     v-model="search"
-                    placeholder="structure, club, famille, ville..."
+                    placeholder="structure, club, rubrique, ville..."
                 />
 
                 <button type="button" @click="resetSearch">
@@ -114,6 +138,134 @@ watch(
                         <div
                             class="grid h-auto grid-cols-1 place-items-stretch gap-4 md:grid-cols-2"
                         >
+                            <Link
+                                v-for="(structure, index) in structures.data"
+                                :key="structure.id"
+                                :index="index"
+                                :href="route('structures.show', structure.slug)"
+                                :active="
+                                    route().current(
+                                        'structures.show',
+                                        structure.slug
+                                    )
+                                "
+                                class="block rounded-lg p-4 shadow-sm shadow-indigo-100"
+                                @mouseover="showTooltip(structure)"
+                                @mouseout="hideTooltip()"
+                                >
+                                <img
+                                    alt="Home"
+                                    src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                                    class="h-56 w-full rounded-md object-cover"
+                                />
+
+                                <div class="mt-2">
+                                    <dl>
+                                        <p
+                                            class="text-sm font-medium uppercase tracking-widest text-pink-500"
+                                        >
+                                            {{ structure.structuretype.name }}
+                                        </p>
+                                        <span
+                                            class="font-semibold text-sm"
+                                            v-for="(activite, index) in getUniqueActivitesTitre(structure.activites)"
+                                            :key="activite.id"
+                                        >
+                                            {{ activite.titre }}
+                                            <span v-if="index < getUniqueActivitesTitre(structure.activites).length - 1"> | </span>
+                                        </span>
+                                    <div class="py-1.5">
+                                        <dt class="sr-only">tarif</dt>
+
+                                        <span
+                                            v-for="(tarif, index) in structure.tarifs"
+                                            :key="tarif.id"
+                                        >
+                                            <dd class="text-sm text-gray-500">{{ tarif.tarif_type.type }}: <span class="font-semibold">{{ tarif.amount }} €</span> </dd>
+                                            <span v-if="index < structure.tarifs.length - 1"> | </span>
+
+                                        </span>
+                                    </div>
+
+                                    <div class="flex items-center">
+                                        <dt class="sr-only">Ville</dt>
+                                        <MapPinIcon class="mr-1 h-5 w-5 text-gray-600" />
+                                        <dd class="font-medium text-sm">{{ structure.city }} ({{ structure.zip_code }})</dd>
+                                    </div>
+                                    </dl>
+
+                                    <div class="mt-6 flex items-center gap-8 text-xs">
+                                        <div class="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
+                                            <svg
+                                            class="h-4 w-4 text-indigo-700"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"
+                                            />
+                                            </svg>
+
+                                            <div class="mt-1.5 sm:mt-0">
+                                            <p class="text-gray-500">Parking</p>
+
+                                            <p class="font-medium">2 spaces</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
+                                            <svg
+                                            class="h-4 w-4 text-indigo-700"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                                            />
+                                            </svg>
+
+                                            <div class="mt-1.5 sm:mt-0">
+                                            <p class="text-gray-500">Bathroom</p>
+
+                                            <p class="font-medium">2 rooms</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
+                                            <svg
+                                            class="h-4 w-4 text-indigo-700"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                                            />
+                                            </svg>
+
+                                            <div class="mt-1.5 sm:mt-0">
+                                            <p class="text-gray-500">Bedroom</p>
+
+                                            <p class="font-medium">4 rooms</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Link>
                             <Link
                                 v-for="(structure, index) in structures.data"
                                 :key="structure.id"
@@ -165,13 +317,11 @@ watch(
                                             >
                                                 <span
                                                     class="font-semibold"
-                                                    v-for="(
-                                                        discipline, index
-                                                    ) in structure.disciplines"
-                                                    :key="index"
+                                                    v-for="(activite, index) in getUniqueActivitesDiscipline(structure.activites)"
+                                                    :key="activite.id"
                                                 >
-                                                    {{ discipline }}
-                                                    <span> | </span>
+                                                    {{ activite.discipline.name }}
+                                                    <span v-if="index < getUniqueActivitesDiscipline(structure.activites).length - 1"> | </span>
                                                 </span>
                                             </p>
                                             <p
@@ -190,33 +340,6 @@ watch(
                                     </div>
                                 </div>
                             </Link>
-                            <!-- <Link
-                                :href="route('structure.show', structure.slug)"
-                                :active="
-                                    route().current(
-                                        'structure.show',
-                                        structure.slug
-                                    )
-                                "
-                                class="block p-4 bg-white rounded-xl sm:p-6 lg:p-8"
-                            >
-                                <div class="mt-16">
-                                    <h3
-                                        class="text-lg font-bold text-gray-900 sm:text-xl"
-                                    >
-                                        {{ structure.name }}
-                                    </h3>
-
-                                    <p class="mt-2 text-sm text-gray-500">
-                                        {{ structure.famille.name }}
-                                    </p>
-                                    <p class="mt-2 text-xs text-gray-500">
-                                        {{ structure.city }} ({{
-                                            structure.zip_code
-                                        }})
-                                    </p>
-                                </div>
-                            </Link> -->
                         </div>
                         <div class="flex justify-end p-10">
                             <Pagination :links="structures.links" />
@@ -234,7 +357,7 @@ watch(
                     class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8"
                 >
                     <p class="font-medium text-gray-700">
-                        Dommage, il n'y a pas encore de structures inscrites
+                        Il n'y a pas encore de structures inscrites
                         pour cette requète.
                     </p>
                 </div>

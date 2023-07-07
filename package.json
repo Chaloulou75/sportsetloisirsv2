@@ -32,6 +32,7 @@
         "esbuild": "^0.17.19",
         "libphonenumber-js": "^1.10.37",
         "maz-ui": "^3.9.0",
+        "swiper": "^10.0.3",
         "vue-cal": "^4.8.1"
     }
 }

@@ -5,9 +5,6 @@ import dayjs from "dayjs";
 import "dayjs/locale/fr"; // Import the French locale
 import localeData from "dayjs/plugin/localeData"; // Import the localeData plugin
 import {
-
-} from "@heroicons/vue/24/solid";
-import {
     AcademicCapIcon,
     ArrowPathIcon,
     MapPinIcon,
