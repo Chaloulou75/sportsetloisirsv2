@@ -126,10 +126,11 @@ watch(
                             >
                             <span v-else>structure</span>)
                         </div>
-                        <div v-else class="text-xs">
+                        <div v-else class="text-xs italic">
                             (Pas encore de structure inscrite)
                         </div>
                     </Link>
+
                 </div>
                 <div class="flex justify-end p-10">
                     <Pagination :links="cities.links" />

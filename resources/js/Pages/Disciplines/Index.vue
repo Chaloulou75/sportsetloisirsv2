@@ -88,20 +88,20 @@ watch(
                         :active="route().current('disciplines.show', discipline.slug)"
                         v-for="(discipline, index) in disciplines.data" :key="discipline.id" :index="index"
                         class="flex flex-col items-center justify-center rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg">
-                    <div>{{ discipline.name }}</div>
-                    <!-- <div
-                                v-if="discipline.activites_count > 0"
-                                class="text-xs"
+                        <div>{{ discipline.name }}</div>
+                        <div
+                            v-if="discipline.structures_count > 0"
+                            class="text-xs"
+                        >
+                            ({{ discipline.structures_count }}
+                            <span v-if="discipline.structures_count > 1"
+                                >structures</span
                             >
-                                ({{ discipline.activites_count }}
-                                <span v-if="discipline.activites_count > 1"
-                                    >activités</span
-                                >
-                                <span v-else>activité</span>)
-                            </div>
-                            <div v-else class="text-xs">
-                                (Pas encore d'activité inscrite)
-                            </div> -->
+                            <span v-else>structure</span>)
+                        </div>
+                        <div v-else class="text-xs">
+                            (Pas encore de structure inscrite)
+                        </div>
                     </Link>
                 </div>
 

@@ -20,8 +20,10 @@ use App\Models\StructureAddress;
 use App\Models\StructureHoraire;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
+use App\Models\StructureCategorie;
 use App\Models\StructurePlanning;
 use App\Models\StructureTypeInfo;
+use App\Models\StructureDiscipline;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
@@ -65,6 +67,10 @@ class StructureController extends Controller
                         ->latest()
                         ->paginate(9)
                         ->through(function ($structure) {
+                            $disciplinesCount = $structure->disciplines->count();
+                            $activitiesCount = $structure->activites->count();
+                            $produitsCount = $structure->produits->count();
+
                             return [
                             'id' => $structure->id,
                             'name' => $structure->name,
@@ -95,6 +101,9 @@ class StructureController extends Controller
                             'activites' => $structure->activites,
                             'produits' => $structure->produits,
                             'tarifs' => $structure->tarifs,
+                            'disciplines_count' => $disciplinesCount,
+                            'activites_count' => $activitiesCount,
+                            'produits_count' => $produitsCount,
                 ];
                         })->withQueryString(),
             'filters' => request()->all(['search']),
@@ -415,6 +424,10 @@ class StructureController extends Controller
 
         $typeInfos = StructureTypeInfo::where('structure_id', $structure->id)->get();
 
+        $disciplines = StructureDiscipline::where('structure_id', $structure->id)->get();
+
+        $categories = StructureCategorie::where('structure_id', $structure->id)->get();
+
         $activites = StructureActivite::where('structure_id', $structure->id)->get();
 
         $produits = StructureProduit::where('structure_id', $structure->id)->get();
@@ -457,6 +470,7 @@ class StructureController extends Controller
                 $activite->delete();
             }
         }
+
         if($adresses->isNotEmpty()) {
             foreach($adresses as $adresse) {
                 $adresse->delete();
@@ -478,6 +492,20 @@ class StructureController extends Controller
                 $horaire->delete();
             }
         }
+
+
+        if($categories->isNotEmpty()) {
+            foreach($categories as $categorie) {
+                $categorie->delete();
+            }
+        }
+
+        if($disciplines->isNotEmpty()) {
+            foreach($disciplines as $discipline) {
+                $discipline->delete();
+            }
+        }
+
 
         if($structure->logo) {
             Storage::delete($structure->logo);

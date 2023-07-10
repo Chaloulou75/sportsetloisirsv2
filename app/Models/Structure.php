@@ -33,7 +33,7 @@ class Structure extends Model
                     ->orWhere('city', 'like', '%' . $search . '%')
                     ->orWhere('zip_code', 'like', '%' . $search . '%')
             )
-            // ->orWhereHas('activites.disciplines', function ($query) use ($search) {
+            // ->orWhereHas('disciplines', function ($query) use ($search) {
             //     $query->where('name', 'like', '%' . $search . '%')
             //           ->orWhere('slug', 'like', '%' . $search . '%');
             // })

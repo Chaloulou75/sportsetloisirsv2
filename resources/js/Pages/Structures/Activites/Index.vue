@@ -172,7 +172,7 @@ const submit = () => {
                                         Les disciplines similaires
                                     </h2>
                                     <div
-                                        class="grid auto-cols-auto grid-flow-col gap-4 text-gray-700"
+                                        class="grid grid-cols-3 gap-2 text-gray-700"
                                     >
                                         <div
                                             v-for="discipline in activiteSimilairesList"

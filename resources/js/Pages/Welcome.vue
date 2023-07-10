@@ -153,7 +153,7 @@ watch(
                     <swiper-slide v-for="(image, index) in imagePaths">
                         <img
                             :src="image" :key="index" alt="Image"
-                            class=" object-cover h-full w-auto"
+                            class="rounded-2xl h-full w-full object-cover opacity-95"
                         />
                     </swiper-slide>
                 </swiper>

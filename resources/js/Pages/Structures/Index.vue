@@ -1,11 +1,11 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { router, Head, Link } from "@inertiajs/vue3";
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, defineAsyncComponent} from "vue";
 import { debounce } from "lodash";
-import { defineAsyncComponent } from "vue";
 import TextInput from "@/Components/TextInput.vue";
 import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
+import StructureCard from "@/Components/Structures/StructureCard.vue";
 import {
     MapPinIcon,
 } from "@heroicons/vue/24/outline";
@@ -113,7 +113,7 @@ watch(
                     type="text"
                     class="mt-1 block w-full flex-1 px-2 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
                     v-model="search"
-                    placeholder="structure, club, rubrique, ville..."
+                    placeholder="structure, discipline, ville..."
                 />
 
                 <button type="button" @click="resetSearch">
@@ -136,210 +136,16 @@ watch(
                 >
                     <div class="md:w-1/2">
                         <div
-                            class="grid h-auto grid-cols-1 place-items-stretch gap-4 md:grid-cols-2"
+                            class="grid grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-2 h-auto"
                         >
-                            <Link
+                            <StructureCard
                                 v-for="(structure, index) in structures.data"
                                 :key="structure.id"
                                 :index="index"
-                                :href="route('structures.show', structure.slug)"
-                                :active="
-                                    route().current(
-                                        'structures.show',
-                                        structure.slug
-                                    )
-                                "
-                                class="block rounded-lg p-4 shadow-sm shadow-indigo-100"
+                                :structure="structure"
                                 @mouseover="showTooltip(structure)"
                                 @mouseout="hideTooltip()"
-                                >
-                                <img
-                                    alt="Home"
-                                    src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                                    class="h-56 w-full rounded-md object-cover"
-                                />
-
-                                <div class="mt-2">
-                                    <dl>
-                                        <p
-                                            class="text-sm font-medium uppercase tracking-widest text-pink-500"
-                                        >
-                                            {{ structure.structuretype.name }}
-                                        </p>
-                                        <span
-                                            class="font-semibold text-sm"
-                                            v-for="(activite, index) in getUniqueActivitesTitre(structure.activites)"
-                                            :key="activite.id"
-                                        >
-                                            {{ activite.titre }}
-                                            <span v-if="index < getUniqueActivitesTitre(structure.activites).length - 1"> | </span>
-                                        </span>
-                                    <div class="py-1.5">
-                                        <dt class="sr-only">tarif</dt>
-
-                                        <span
-                                            v-for="(tarif, index) in structure.tarifs"
-                                            :key="tarif.id"
-                                        >
-                                            <dd class="text-sm text-gray-500">{{ tarif.tarif_type.type }}: <span class="font-semibold">{{ tarif.amount }} €</span> </dd>
-                                            <span v-if="index < structure.tarifs.length - 1"> | </span>
-
-                                        </span>
-                                    </div>
-
-                                    <div class="flex items-center">
-                                        <dt class="sr-only">Ville</dt>
-                                        <MapPinIcon class="mr-1 h-5 w-5 text-gray-600" />
-                                        <dd class="font-medium text-sm">{{ structure.city }} ({{ structure.zip_code }})</dd>
-                                    </div>
-                                    </dl>
-
-                                    <div class="mt-6 flex items-center gap-8 text-xs">
-                                        <div class="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
-                                            <svg
-                                            class="h-4 w-4 text-indigo-700"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                            >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"
-                                            />
-                                            </svg>
-
-                                            <div class="mt-1.5 sm:mt-0">
-                                            <p class="text-gray-500">Parking</p>
-
-                                            <p class="font-medium">2 spaces</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
-                                            <svg
-                                            class="h-4 w-4 text-indigo-700"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                            >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-                                            />
-                                            </svg>
-
-                                            <div class="mt-1.5 sm:mt-0">
-                                            <p class="text-gray-500">Bathroom</p>
-
-                                            <p class="font-medium">2 rooms</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
-                                            <svg
-                                            class="h-4 w-4 text-indigo-700"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                            >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                                            />
-                                            </svg>
-
-                                            <div class="mt-1.5 sm:mt-0">
-                                            <p class="text-gray-500">Bedroom</p>
-
-                                            <p class="font-medium">4 rooms</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
-                            <Link
-                                v-for="(structure, index) in structures.data"
-                                :key="structure.id"
-                                :index="index"
-                                :href="route('structures.show', structure.slug)"
-                                :active="
-                                    route().current(
-                                        'structures.show',
-                                        structure.slug
-                                    )
-                                "
-                                class="group relative block bg-black"
-                            >
-                                <img
-                                    alt="logo"
-                                    :src="structure.logo"
-                                    class="absolute inset-0 h-full w-full object-cover opacity-75 transition-opacity group-hover:opacity-50"
-                                />
-                                <!-- <img
-                                    v-else
-                                    alt="photo"
-                                    src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                                    class="absolute inset-0 object-cover w-full h-full transition-opacity opacity-75 group-hover:opacity-50"
-                                /> -->
-
-                                <div
-                                    @mouseover="showTooltip(structure)"
-                                    @mouseout="hideTooltip()"
-                                    class="relative p-4 sm:p-6 lg:p-8"
-                                >
-                                    <p
-                                        class="text-sm font-medium uppercase tracking-widest text-pink-500"
-                                    >
-                                        {{ structure.structuretype.name }}
-                                    </p>
-
-                                    <p
-                                        class="text-xl font-bold text-white sm:text-2xl"
-                                    >
-                                        {{ structure.name }}
-                                    </p>
-
-                                    <div class="mt-32 sm:mt-48 lg:mt-64">
-                                        <div
-                                            class="translate-y-8 transform opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100"
-                                        >
-                                            <p
-                                                class="mb-3 line-clamp-3 text-base text-white"
-                                            >
-                                                <span
-                                                    class="font-semibold"
-                                                    v-for="(activite, index) in getUniqueActivitesDiscipline(structure.activites)"
-                                                    :key="activite.id"
-                                                >
-                                                    {{ activite.discipline.name }}
-                                                    <span v-if="index < getUniqueActivitesDiscipline(structure.activites).length - 1"> | </span>
-                                                </span>
-                                            </p>
-                                            <p
-                                                class="mb-3 line-clamp-3 text-base text-white"
-                                            >
-                                                {{
-                                                    structure.presentation_courte
-                                                }}
-                                            </p>
-                                            <p class="text-base text-white">
-                                                {{ structure.city }} ({{
-                                                    structure.zip_code
-                                                }})
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
+                            />
                         </div>
                         <div class="flex justify-end p-10">
                             <Pagination :links="structures.links" />

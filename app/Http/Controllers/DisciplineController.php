@@ -11,6 +11,7 @@ use App\Models\LienDisciplineSimilaire;
 use App\Http\Resources\CategorieResource;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Resources\ListDisciplineResource;
+use App\Models\LienDisciplineCategorie;
 
 class DisciplineController extends Controller
 {
@@ -22,11 +23,11 @@ class DisciplineController extends Controller
         $structuresCount = Structure::count();
 
         $disciplines = ListDiscipline::select(['id', 'name', 'slug'])
-                        // ->withCount('activites')
+                        ->withCount('structures')
                         ->filter(
                             request(['search'])
                         )
-                        // ->orderByDesc('activites_count')
+                        ->orderByDesc('structures_count')
                         ->paginate(12)
                         ->withQueryString();
 
@@ -58,19 +59,80 @@ class DisciplineController extends Controller
      */
     public function show(ListDiscipline $discipline)
     {
+
         $discipline = ListDiscipline::where('slug', $discipline->slug)
             ->select(['id', 'name', 'slug', 'view_count'])
             // ->withCount('activites')
             ->first();
 
-        $structures = $discipline->structures->load('structuretype')->unique();
+        $categories = LienDisciplineCategorie::where('discipline_id', $discipline->id)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
+
+        $structures = $discipline->structures->load([
+            'famille:id,name',
+            'creator:id,name',
+            'users:id,name',
+            'city:id,ville,ville_formatee,code_postal',
+            'departement:id,departement,numero',
+            'structuretype:id,name,slug',
+            'disciplines',
+            'categories',
+            'activites',
+            'activites.discipline',
+            'activites.categorie',
+            'produits',
+            'produits.criteres',
+            'tarifs',
+            'tarifs.tarifType',
+            'tarifs.structureTarifTypeInfos',
+            'plannings',
+        ])
+        ->map(function ($structure) {
+            $disciplinesCount = $structure->disciplines->count();
+            $activitiesCount = $structure->activites->count();
+            $produitsCount = $structure->produits->count();
+
+            return [
+                'id' => $structure->id,
+                'name' => $structure->name,
+                'slug' => $structure->slug,
+                'website' => $structure->website,
+                'email' => $structure->email,
+                'facebook' => $structure->facebook,
+                'instagram' => $structure->instagram,
+                'youtube' => $structure->youtube,
+                'tiktok' => $structure->tiktok,
+                'phone1' => $structure->phone1,
+                'phone2' => $structure->phone2,
+                'address' => $structure->address,
+                'zip_code' => $structure->zip_code,
+                'city' => $structure->city,
+                'country' => $structure->country,
+                'address_lat' => $structure->address_lat,
+                'address_lng' => $structure->address_lng,
+                'presentation_courte' => $structure->presentation_courte,
+                'presentation_longue' => $structure->presentation_longue,
+                'structuretype' => $structure->structuretype,
+                'departement_id' => $structure->departement_id,
+                'user' => $structure->creator,
+                'logo' => $structure->logo ? asset($structure->logo) : 'https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
+                'categories' => $structure->categories,
+                'disciplines' => $structure->disciplines,
+                'activites' => $structure->activites,
+                'produits' => $structure->produits,
+                'tarifs' => $structure->tarifs,
+                'disciplines_count' => $disciplinesCount,
+                'activites_count' => $activitiesCount,
+                'produits_count' => $produitsCount,
+            ];
+        })->unique();
 
         $discipline->timestamps = false;
         $discipline->increment('view_count');
 
         return Inertia::render('Disciplines/Show', [
             'discipline'=> $discipline,
-            'structures' => $structures
+            'structures'=> $structures,
+            'categories' => $categories,
         ]);
     }
 
