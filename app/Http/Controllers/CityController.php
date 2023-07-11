@@ -16,7 +16,7 @@ class CityController extends Controller
     {
         $structuresCount = Structure::count();
 
-        $cities = City::select(['id', 'ville', 'ville_formatee'])
+        $cities = City::with('structures')->select(['id', 'ville', 'ville_formatee'])
                         ->withCount('structures')
                         ->filter(
                             request(['search'])
@@ -53,19 +53,78 @@ class CityController extends Controller
      */
     public function show(City $city)
     {
-        $city = City::with(['structures:id,name,slug,structuretype_id,presentation_courte,city,zip_code,address,address_lat,address_lng,logo', 'structures.structuretype:id,name'
-        ])
-                            ->where('ville_formatee', $city->ville_formatee)
-                            ->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count'])
-                            ->withCount('structures')
-                            ->first();
+        $city = City::with('structures')
+                    ->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count'])
+                    ->where('id', $city->id)
+                    ->withCount('structures')
+                    ->first();
 
+        $structures = $city->structures->load([
+            'famille:id,name',
+            'creator:id,name',
+            'users:id,name',
+            'city:id,ville,ville_formatee,code_postal',
+            'departement:id,departement,numero',
+            'structuretype:id,name,slug',
+            'disciplines',
+            'categories',
+            'activites',
+            'activites.discipline',
+            'activites.categorie',
+            'produits',
+            'produits.criteres',
+            'tarifs',
+            'tarifs.tarifType',
+            'tarifs.structureTarifTypeInfos',
+            'plannings',
+        ])
+        ->map(function ($structure) {
+            $disciplinesCount = $structure->disciplines->count();
+            $activitiesCount = $structure->activites->count();
+            $produitsCount = $structure->produits->count();
+
+            return [
+                'id' => $structure->id,
+                'name' => $structure->name,
+                'slug' => $structure->slug,
+                'website' => $structure->website,
+                'email' => $structure->email,
+                'facebook' => $structure->facebook,
+                'instagram' => $structure->instagram,
+                'youtube' => $structure->youtube,
+                'tiktok' => $structure->tiktok,
+                'phone1' => $structure->phone1,
+                'phone2' => $structure->phone2,
+                'address' => $structure->address,
+                'zip_code' => $structure->zip_code,
+                'city' => $structure->city,
+                'city_id' => $structure->city_id,
+                'country' => $structure->country,
+                'address_lat' => $structure->address_lat,
+                'address_lng' => $structure->address_lng,
+                'presentation_courte' => $structure->presentation_courte,
+                'presentation_longue' => $structure->presentation_longue,
+                'structuretype' => $structure->structuretype,
+                'departement_id' => $structure->departement_id,
+                'user' => $structure->creator,
+                'logo' => $structure->logo ? asset($structure->logo) : 'https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
+                'categories' => $structure->categories,
+                'disciplines' => $structure->disciplines,
+                'activites' => $structure->activites,
+                'produits' => $structure->produits,
+                'tarifs' => $structure->tarifs,
+                'disciplines_count' => $disciplinesCount,
+                'activites_count' => $activitiesCount,
+                'produits_count' => $produitsCount,
+            ];
+        })->unique();
 
         $city->timestamp = false;
         $city->increment('view_count');
 
         return Inertia::render('Villes/Show', [
             'city'=> $city,
+            'structures' => $structures,
             'filters' => request()->all(['discipline']),
         ]);
     }

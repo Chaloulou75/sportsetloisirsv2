@@ -67,7 +67,7 @@ class City extends Model
 
     public function structures(): HasMany
     {
-        return $this->hasMany(Structure::class, 'zip_code', 'code_postal');
+        return $this->hasMany(Structure::class);
     }
 
     // public function structures(): BelongsToMany
