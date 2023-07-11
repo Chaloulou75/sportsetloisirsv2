@@ -53,13 +53,19 @@ class CityController extends Controller
      */
     public function show(City $city)
     {
-
+        //city by id (means code_postal)
         $city = City::with('structures')
                     ->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count'])
                     ->where('id', $city->id)
                     ->withCount('structures')
                     ->first();
 
+        // par nom de la ville (plusieurs en db)
+        $cities = City::with('structures')
+                    ->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count'])
+                    ->where('ville_formatee', $city->ville_formatee)
+                    ->withCount('structures')
+                    ->get();
 
         $structures = $city->structures->load([
             'famille:id,name',
