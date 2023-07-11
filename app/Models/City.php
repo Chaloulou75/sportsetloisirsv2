@@ -33,7 +33,7 @@ class City extends Model
      */
     public function getRouteKeyName(): String
     {
-        return 'ville_formatee';
+        return 'id';
     }
 
     public function scopeFilter($query, array $filters)

@@ -109,16 +109,16 @@ watch(
                     class="grid h-auto grid-cols-1 gap-4 place-items-stretch sm:grid-cols-2 md:grid-cols-3"
                 >
                     <Link
-                        :href="route('villes.show', city.ville_formatee)"
+                        :href="route('villes.show', city.id)"
                         :active="
-                            route().current('villes.show', city.ville_formatee)
+                            route().current('villes.show', city.id)
                         "
                         v-for="(city, index) in cities.data"
                         :key="city.id"
                         :index="index"
                         class="flex flex-col items-center justify-center px-4 py-3 text-lg text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
                     >
-                        <div>{{ formatCityName(city.ville) }}</div>
+                        <div>{{ formatCityName(city.ville) }} <span class="text-xs">({{ city.code_postal }})</span></div>
                         <div v-if="city.structures_count > 0" class="text-xs">
                             ({{ city.structures_count }}
                             <span v-if="city.structures_count > 1"

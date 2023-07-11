@@ -16,7 +16,7 @@ class CityController extends Controller
     {
         $structuresCount = Structure::count();
 
-        $cities = City::with('structures')->select(['id', 'ville', 'ville_formatee'])
+        $cities = City::with('structures')->select(['id', 'ville', 'ville_formatee', 'code_postal'])
                         ->withCount('structures')
                         ->filter(
                             request(['search'])
@@ -53,11 +53,13 @@ class CityController extends Controller
      */
     public function show(City $city)
     {
+
         $city = City::with('structures')
                     ->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count'])
                     ->where('id', $city->id)
                     ->withCount('structures')
                     ->first();
+
 
         $structures = $city->structures->load([
             'famille:id,name',
