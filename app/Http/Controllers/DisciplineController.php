@@ -65,6 +65,8 @@ class DisciplineController extends Controller
             // ->withCount('activites')
             ->first();
 
+        $disciplinesSimilaires = $discipline->disciplinesSimilaires;
+
         $categories = LienDisciplineCategorie::where('discipline_id', $discipline->id)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
 
         $structures = $discipline->structures->load([
@@ -131,6 +133,7 @@ class DisciplineController extends Controller
 
         return Inertia::render('Disciplines/Show', [
             'discipline'=> $discipline,
+            'disciplinesSimilaires' => $disciplinesSimilaires,
             'structures'=> $structures,
             'categories' => $categories,
         ]);

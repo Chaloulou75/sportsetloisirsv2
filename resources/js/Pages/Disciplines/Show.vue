@@ -3,6 +3,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { ref, watch, computed, defineAsyncComponent, onMounted } from "vue";
 import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
+import DisciplinesSimilaires from "@/Components/Disciplines/DisciplinesSimilaires.vue";
 import NavLink from "@/Components/NavLink.vue";
 import {
     TabGroup,
@@ -14,6 +15,7 @@ import {
 
 const props = defineProps({
     discipline: Object,
+    disciplinesSimilaires: Object,
     structures: Object,
     categories: Object,
 });
@@ -93,7 +95,6 @@ onMounted(() => {
     />
 
     <AppLayout>
-
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
                 {{ discipline.name }}
@@ -191,20 +192,26 @@ onMounted(() => {
                                         <Pagination :links="structures.links" />
                                     </div> -->
                                 </div>
-                                <LeafletMapMultiple
-                                    class="md:sticky md:top-2 md:w-1/2"
-                                    :structures="filteredStructures"
-                                    :hovered-structure="hoveredStructure"
-                                />
+                                <div class="md:w-1/2 md:sticky space-y-4">
+                                    <LeafletMapMultiple class="md:top-2"
+                                        :structures="filteredStructures"
+                                        :hovered-structure="hoveredStructure"
+                                    />
+                                    <DisciplinesSimilaires :disciplinesSimilaires="disciplinesSimilaires" />
+                                </div>
                             </div>
                         </template>
                         <template v-else>
                             <div
-                                class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8 py-12"
+                                class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8 py-12 flex flex-col md:flex-row"
                             >
-                                <p class="font-medium text-gray-700">
+                                <p class="font-medium text-gray-700 w-full md:w-2/3">
                                     Il n'y a pas encore de structures inscrites en <span class="font-semibold">{{ discipline.name }}</span> pour la catégorie <span class="font-semibold">{{ categorie.nom_categorie_client }}</span>.
                                 </p>
+                                <div class="px-4 w-full md:w-1/3">
+                                    <DisciplinesSimilaires :disciplinesSimilaires="disciplinesSimilaires" />
+                                </div>
+
                             </div>
                         </template>
                     </TabPanel>
@@ -213,11 +220,14 @@ onMounted(() => {
         </template>
         <template v-else>
             <div
-                class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8 py-12"
+                class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8 py-12 flex flex-col md:flex-row"
             >
-                <p class="font-medium text-gray-700">
+                <p class="font-medium text-gray-700 w-full md:w-2/3">
                     Il n'y a pas encore de structures inscrites en <span class="font-semibold">{{ discipline.name }}</span>.
                 </p>
+                <div class="px-4 w-full md:w-1/3">
+                    <DisciplinesSimilaires :disciplinesSimilaires="disciplinesSimilaires" />
+                </div>
             </div>
         </template>
     </AppLayout>
