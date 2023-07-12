@@ -43,9 +43,32 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+
+Route::get('/rub-{rubriqueWithPlus}-{id}.{extension?}', function ($rubriqueWithPlus, $id, $extension = null) {
+    $famille = str_replace('+', '-', strtolower($rubriqueWithPlus));
+    return redirect('/familles/' . $famille, 301);
+});
+
 Route::resource('familles', FamilleController::class);
+
+Route::get('/dis-{disciplineWithPlus}-{id}.{extension?}', function ($disciplineWithPlus, $id, $extension = null) {
+    $discipline = str_replace('+', '-', strtolower($disciplineWithPlus));
+    return redirect('/disciplines/' . $discipline, 301);
+});
 Route::resource('disciplines', DisciplineController::class);
+
+Route::get('/{departementWithPlus}-{id}-2.{extension?}', function ($departementWithPlus, $id, $extension = null) {
+    $departement = str_replace('+', '-', strtolower($departementWithPlus));
+    return redirect('/departements/' . $id, 301);
+});
+
 Route::resource('departements', DepartementController::class);
+
+
+Route::get('/{villeWithPlus}-{id}-1.{extension?}', function ($villeWithPlus, $id, $extension = null) {
+    $ville = str_replace('+', '-', strtolower($villeWithPlus));
+    return redirect('/villes/' . $id, 301);
+});
 
 Route::resource('villes', CityController::class, [
     'parameters' => [

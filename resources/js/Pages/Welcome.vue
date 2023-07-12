@@ -307,9 +307,9 @@ watch(
                     class="mb-8 grid h-auto grid-cols-1 place-items-stretch gap-4 px-1.5 sm:grid-cols-2 md:grid-cols-3 md:px-0 lg:grid-cols-4"
                 >
                     <Link
-                        :href="route('villes.show', city.ville_formatee)"
+                        :href="route('villes.show', city.id)"
                         :active="
-                            route().current('villes.show', city.ville_formatee)
+                            route().current('villes.show', city.id)
                         "
                         v-for="city in topVilles"
                         :key="city.id"
@@ -338,11 +338,11 @@ watch(
                     class="mb-8 grid h-auto grid-cols-1 place-items-stretch gap-4 px-1.5 sm:grid-cols-2 md:grid-cols-3 md:px-0 lg:grid-cols-4"
                 >
                     <Link
-                        :href="route('departements.show', departement.numero)"
+                        :href="route('departements.show', departement.id)"
                         :active="
                             route().current(
                                 'departements.show',
-                                departement.numero
+                                departement.id
                             )
                         "
                         v-for="departement in topDepartements"

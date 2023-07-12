@@ -88,7 +88,9 @@ const getUniqueActivitesTitre = (activites) => {
     <AppLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Les structures disponibles à {{ city.ville }}
+                Les structures disponibles à {{ city.ville }} <span class="text-sm text-gray-600"
+                    >({{ city.code_postal }})
+                </span>
                 <span class="text-xs italic text-gray-600"
                     >({{ city.view_count }} vues)
                 </span>
