@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use Inertia\Inertia;
 use App\Models\Structure;
-use App\Models\City;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CityController extends Controller
 {
@@ -53,18 +54,24 @@ class CityController extends Controller
      */
     public function show(City $city)
     {
-        //city by id (means code_postal)
         $city = City::with('structures')
-                    ->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count'])
+                    ->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
                     ->where('id', $city->id)
                     ->withCount('structures')
                     ->first();
 
-        // par nom de la ville (plusieurs en db)
-        $cities = City::with('structures')
-                    ->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count'])
-                    ->where('ville_formatee', $city->ville_formatee)
-                    ->withCount('structures')
+        $citiesAround =  City::with('structures')
+                    ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
+                    ->selectRaw("
+                        (6366 * acos(
+                            cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) +
+                            sin(radians({$city->latitude})) * sin(radians(latitude))
+                        )) AS distance
+                    ")
+                    ->where('id', '!=', $city->id)
+                    ->havingRaw('distance <= ?', [$city->tolerance_rayon])
+                    ->orderBy('distance', 'ASC')
+                    ->limit(10)
                     ->get();
 
         $structures = $city->structures->load([
@@ -132,6 +139,7 @@ class CityController extends Controller
 
         return Inertia::render('Villes/Show', [
             'city'=> $city,
+            'citiesAround' => $citiesAround,
             'structures' => $structures,
             'filters' => request()->all(['discipline']),
         ]);
@@ -160,4 +168,11 @@ class CityController extends Controller
     {
         //
     }
+
+
+    public function radians($degrees)
+    {
+        return $degrees * pi() / 180;
+    }
+
 }

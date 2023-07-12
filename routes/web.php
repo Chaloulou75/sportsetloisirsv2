@@ -44,32 +44,44 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
+Route::get('/rubrique/index.{extension?}', function ($extension = null) {
+    return redirect('/familles/', 301);
+});
 Route::get('/rub-{rubriqueWithPlus}-{id}.{extension?}', function ($rubriqueWithPlus, $id, $extension = null) {
     $famille = str_replace('+', '-', strtolower($rubriqueWithPlus));
     return redirect('/familles/' . $famille, 301);
 });
-
 Route::resource('familles', FamilleController::class);
 
+
+Route::get('/discipline/index.{extension?}', function ($extension = null) {
+    return redirect('/disciplines/', 301);
+});
 Route::get('/dis-{disciplineWithPlus}-{id}.{extension?}', function ($disciplineWithPlus, $id, $extension = null) {
     $discipline = str_replace('+', '-', strtolower($disciplineWithPlus));
     return redirect('/disciplines/' . $discipline, 301);
 });
 Route::resource('disciplines', DisciplineController::class);
 
+
+Route::get('/localite-2/index.{extension?}', function ($extension = null) {
+    return redirect('/departements/', 301);
+});
+
 Route::get('/{departementWithPlus}-{id}-2.{extension?}', function ($departementWithPlus, $id, $extension = null) {
     $departement = str_replace('+', '-', strtolower($departementWithPlus));
     return redirect('/departements/' . $id, 301);
 });
-
 Route::resource('departements', DepartementController::class);
 
 
+Route::get('/localite-1/index.{extension?}', function ($extension = null) {
+    return redirect('/villes/', 301);
+});
 Route::get('/{villeWithPlus}-{id}-1.{extension?}', function ($villeWithPlus, $id, $extension = null) {
     $ville = str_replace('+', '-', strtolower($villeWithPlus));
     return redirect('/villes/' . $id, 301);
 });
-
 Route::resource('villes', CityController::class, [
     'parameters' => [
         'villes' => 'city'

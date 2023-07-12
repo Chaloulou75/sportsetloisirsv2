@@ -5,9 +5,11 @@ import { ref, watch, defineAsyncComponent } from "vue";
 import { debounce } from "lodash";
 import TextInput from "@/Components/TextInput.vue";
 import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
+import CitiesAround from "@/Components/Cities/CitiesAround.vue";
 
 let props = defineProps({
     city: Object,
+    citiesAround: Object,
     structures: Object,
     filters: Object,
 });
@@ -135,11 +137,15 @@ const getUniqueActivitesTitre = (activites) => {
                         <Pagination :links="structures.links" />
                     </div> -->
                 </div>
-                <LeafletMapMultiple
-                    class="md:sticky md:top-2 md:w-1/2"
-                    :structures="structures"
-                    :hovered-structure="hoveredStructure"
-                />
+                <div class="md:w-1/2 md:sticky space-y-4">
+                    <LeafletMapMultiple
+                        class="md:top-2"
+                        :structures="structures"
+                        :hovered-structure="hoveredStructure"
+                    />
+                    <CitiesAround :citiesAround="citiesAround" />
+
+                </div>
             </div>
         </template>
         <template v-else>
