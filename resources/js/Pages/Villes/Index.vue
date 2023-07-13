@@ -116,7 +116,7 @@ watch(
                         v-for="(city, index) in cities.data"
                         :key="city.id"
                         :index="index"
-                        class="flex flex-col items-center justify-center px-4 py-3 text-lg text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                        class="flex flex-col items-center justify-center rounded border border-indigo-600 px-12 py-3 text-sm font-medium text-indigo-700 hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg"
                     >
                         <div>{{ formatCityName(city.ville) }} <span class="text-xs">({{ city.code_postal }})</span></div>
                         <div v-if="city.structures_count > 0" class="text-xs">

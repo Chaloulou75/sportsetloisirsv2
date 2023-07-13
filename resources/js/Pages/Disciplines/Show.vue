@@ -196,6 +196,7 @@ onMounted(() => {
                                     <LeafletMapMultiple class="md:top-2"
                                         :structures="filteredStructures"
                                         :hovered-structure="hoveredStructure"
+                                        :zoom="11"
                                     />
                                     <DisciplinesSimilaires :disciplinesSimilaires="disciplinesSimilaires" />
                                 </div>

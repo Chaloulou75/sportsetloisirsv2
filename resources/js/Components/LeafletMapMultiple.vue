@@ -6,6 +6,7 @@ import "leaflet/dist/leaflet.css";
 const props = defineProps({
     structures: Object,
     hoveredStructure: Number,
+    zoom : Number,
 });
 
 const center = ref([
@@ -13,7 +14,7 @@ const center = ref([
     props.structures[0].address_lng,
 ]);
 
-const zoom = ref(6);
+const zoom = ref(props.zoom ? props.zoom : 7);
 
 watch(
     () => props.hoveredStructure,

@@ -1,16 +1,64 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { router, Head, Link } from "@inertiajs/vue3";
-import { ref, watch } from "vue";
+import { ref, watch, computed, defineAsyncComponent } from "vue";
 import { debounce } from "lodash";
 import TextInput from "@/Components/TextInput.vue";
-// import { defineAsyncComponent } from "vue";
 import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
+
+const StructureCard = defineAsyncComponent(() =>
+    import("@/Components/Structures/StructureCard.vue")
+);
 
 let props = defineProps({
     departement: Object,
+    structures: Object,
     filters: Object,
 });
+
+const flattenedDisciplines = computed(() => {
+  const uniqueDisciplines = new Map();
+  props.structures.forEach((structure) => {
+    structure.disciplines.forEach((discipline) => {
+      const disciplineId = discipline.discipline_id;
+      if (!uniqueDisciplines.has(disciplineId)) {
+        uniqueDisciplines.set(disciplineId, discipline.discipline);
+      }
+    });
+  });
+  return Array.from(uniqueDisciplines.values());
+});
+
+const hoveredStructure = ref(null);
+
+function showTooltip(structure) {
+    hoveredStructure.value = structure.id;
+}
+function hideTooltip() {
+    hoveredStructure.value = null;
+}
+
+const getUniqueActivitesDiscipline = (activites) => {
+    const uniqueNames = new Set();
+    return activites.filter((activite) => {
+        if (!uniqueNames.has(activite.discipline.name)) {
+          uniqueNames.add(activite.discipline.name);
+          return true;
+        }
+        return false;
+    });
+};
+
+const getUniqueActivitesTitre = (activites) => {
+    const uniqueNames = new Set();
+    return activites.filter((activite) => {
+        if (!uniqueNames.has(activite.titre)) {
+          uniqueNames.add(activite.titre);
+          return true;
+        }
+        return false;
+    });
+};
 
 let discipline = ref("");
 
@@ -74,114 +122,51 @@ watch(
         </template>
 
         <template v-if="departement.structures_count > 0">
-            <div class="py-12">
-                <!-- discipline box -->
-                <div
-                    class="mx-auto mt-4 mb-8 flex w-full max-w-3xl flex-col items-center justify-center px-2 md:flex-row"
-                >
-                    <label
-                        for="discipline"
-                        value="Rechercher dans votre discipline:"
-                        class="mb-1 pr-2 text-sm font-medium text-gray-800"
-                        >Rechercher une discipline:</label
-                    >
-
-                    <TextInput
-                        id="discipline"
-                        type="text"
-                        class="mt-1 block w-full flex-1 px-2 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
-                        v-model="discipline"
-                        placeholder="discipline..."
-                    />
-
-                    <!-- <button type="button" @click="reset">
-                    <svg
-                        class="w-6 h-6 my-2 text-gray-300 hover:text-gray-200 lg:my-0 lg:h-8 lg:w-8"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
-                            clip-rule="evenodd"
-                        />
-                    </svg>
-                </button> -->
-                </div>
-                <div
-                    class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8"
-                >
-                    <div
-                        class="mx-auto flex min-h-screen max-w-7xl flex-col px-2 sm:px-6 md:flex-row md:space-x-4 lg:px-8"
-                    >
-                        <div class="md:w-1/2">
-                            <div
-                                class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-2"
+            <div class="mx-auto max-w-full px-2 sm:px-6 md:space-x-4 lg:px-8 py-6">
+                <h3 class="text-center text-gray-600 font-semibold mb-4">Les disciplines pratiquées {{ departement.prefixe }} {{ departement.departement }}</h3>
+                <div class="text-gray-600 w-full flex flex-col md:flex-row justify-center md:space-x-4 space-y-2 md:space-y-0 items-center">
+                    <div v-for="discipline in flattenedDisciplines" :key="discipline.id">
+                        <Link :href="route('disciplines.show', discipline.slug)"
+                                :active="
+                                    route().current(
+                                        'disciplines.show',
+                                        discipline.slug
+                                    )"
+                                class="inline-block rounded border border-indigo-600 px-12 py-3 text-sm font-medium text-indigo-600 hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg"
                             >
-                                <Link
-                                    v-for="(
-                                        structure, index
-                                    ) in departement.structures"
-                                    :key="structure.id"
-                                    :index="index"
-                                    :href="
-                                        route('structures.show', structure.slug)
-                                    "
-                                    :active="
-                                        route().current(
-                                            'structures.show',
-                                            structure.slug
-                                        )
-                                    "
-                                    class="group relative block bg-black"
-                                >
-                                    <img
-                                        alt="logo"
-                                        src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                                        class="absolute inset-0 h-full w-full object-cover opacity-75 transition-opacity group-hover:opacity-50"
-                                    />
-
-                                    <div class="relative p-4 sm:p-6 lg:p-8">
-                                        <p
-                                            class="text-sm font-medium uppercase tracking-widest text-pink-500"
-                                        >
-                                            {{ structure.structuretype.name }}
-                                        </p>
-
-                                        <p
-                                            class="text-xl font-bold text-white sm:text-2xl"
-                                        >
-                                            {{ structure.name }}
-                                        </p>
-
-                                        <div class="mt-32 sm:mt-48 lg:mt-64">
-                                            <div
-                                                class="translate-y-8 transform opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100"
-                                            >
-                                                <p
-                                                    class="text-sm text-white line-clamp-3"
-                                                >
-                                                    {{
-                                                        structure.presentation_courte
-                                                    }}
-                                                </p>
-                                                <p class="text-sm text-white">
-                                                    {{ structure.departement }}
-                                                    ({{ structure.zip_code }})
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Link>
-                            </div>
-                            <!-- <div class="flex justify-end p-10">
-                                <Pagination :links="city.structures.links" />
-                            </div> -->
+                            {{ discipline.name }}
+                        </Link>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8 py-12"
+            >
+                <div
+                    class="mx-auto flex min-h-screen max-w-7xl flex-col px-2 sm:px-6 md:flex-row md:space-x-4 lg:px-8"
+                >
+                    <div class="md:w-1/2">
+                        <div class="grid grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-2 h-auto">
+                            <StructureCard
+                                v-for="(structure, index) in structures"
+                                :key="structure.id"
+                                :index="index"
+                                :structure="structure"
+                                @mouseover="showTooltip(structure)"
+                                @mouseout="hideTooltip()"
+                            />
                         </div>
-                        <LeafletMapMultiple
-                            class="md:w-1/2"
-                            :structures="departement.structures"
+                        <!-- <div class="flex justify-end p-10">
+                            <Pagination :links="city.structures.links" />
+                        </div> -->
+                    </div>
+                    <div class="md:w-1/2 md:sticky space-y-4">
+                        <LeafletMapMultiple class="md:top-2"
+                            :structures="structures"
+                            :hovered-structure="hoveredStructure"
+                            :zoom="11"
                         />
+
                     </div>
                 </div>
             </div>

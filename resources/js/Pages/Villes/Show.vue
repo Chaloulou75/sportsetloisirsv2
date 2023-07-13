@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { router, Head, Link } from "@inertiajs/vue3";
-import { ref, watch, defineAsyncComponent } from "vue";
+import { ref, watch, computed, defineAsyncComponent } from "vue";
 import { debounce } from "lodash";
 import TextInput from "@/Components/TextInput.vue";
 import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
@@ -37,6 +37,27 @@ const StructureCard = defineAsyncComponent(() =>
 const Pagination = defineAsyncComponent(() =>
     import("@/Components/Pagination.vue")
 );
+
+// const flattenedDisciplines = computed(() => {
+//     return props.structures.flatMap((structure) => {
+//         return structure.disciplines.map((discipline) => {
+//             return discipline.discipline;
+//         });
+//     });
+// });
+
+const flattenedDisciplines = computed(() => {
+  const uniqueDisciplines = new Map();
+  props.structures.forEach((structure) => {
+    structure.disciplines.forEach((discipline) => {
+      const disciplineId = discipline.discipline_id;
+      if (!uniqueDisciplines.has(disciplineId)) {
+        uniqueDisciplines.set(disciplineId, discipline.discipline);
+      }
+    });
+  });
+  return Array.from(uniqueDisciplines.values());
+});
 
 const hoveredStructure = ref(null);
 
@@ -118,6 +139,25 @@ const getUniqueActivitesTitre = (activites) => {
 
         <template v-if="structures.length > 0">
             <div
+                class="mx-auto max-w-full px-2 sm:px-6 md:space-x-4 lg:px-8 py-6"
+            >
+                <h3 class="text-center text-gray-600 font-semibold mb-4">Les disciplines pratiquées à {{ city.ville }}</h3>
+                <div class="text-gray-600 w-full flex flex-col md:flex-row justify-center md:space-x-4 space-y-2 md:space-y-0 items-center">
+                    <div v-for="discipline in flattenedDisciplines" :key="discipline.id">
+                        <Link :href="route('disciplines.show', discipline.slug)"
+                                :active="
+                                    route().current(
+                                        'disciplines.show',
+                                        discipline.slug
+                                    )"
+                                class="inline-block rounded border border-indigo-600 px-12 py-3 text-sm font-medium text-indigo-600 hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg"
+                            >
+                            {{ discipline.name }}
+                        </Link>
+                    </div>
+                </div>
+            </div>
+            <div
                 class="mx-auto flex min-h-screen max-w-full flex-col px-2 sm:px-6 md:flex-row md:space-x-4 lg:px-8 py-12"
             >
                 <div class="md:w-1/2">
@@ -142,6 +182,7 @@ const getUniqueActivitesTitre = (activites) => {
                         class="md:top-2"
                         :structures="structures"
                         :hovered-structure="hoveredStructure"
+                        :zoom="11"
                     />
                     <CitiesAround :citiesAround="citiesAround" />
 

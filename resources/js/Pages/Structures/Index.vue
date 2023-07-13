@@ -155,6 +155,7 @@ watch(
                         class="md:sticky md:top-2 md:w-1/2"
                         :structures="structures.data"
                         :hovered-structure="hoveredStructure"
+                        :zoom="7"
                     />
                 </div>
             </template>
