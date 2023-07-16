@@ -37,20 +37,20 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                                     />
                                 </DisclosureButton>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Pour cherche un club, un cours, un lieux, ou
                                     un professeur, il vous suffit d'utiliser le
                                     menu de navigation en haut de la page clubs.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Préciser le type de discipline que vous
                                     souhaitez pratiquer, ou bien votre localité.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     La liste des structure inscrites
                                     s'afficheront alors, puis la liste des
@@ -76,7 +76,7 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                                     />
                                 </DisclosureButton>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     L'ensemble des structures qui apparaissent
                                     sur ce site se sont pour la plupart
@@ -106,12 +106,12 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                                     />
                                 </DisclosureButton>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Si vous n'êtes pas encore dans l'annuaire
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     - Vous ne vous êtes pas inscrit, dans ce
                                     cas, vous pouvez vous
@@ -120,7 +120,7 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                                     </Link>
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     - Vous vous êtes inscrit, mais vous n'avez
                                     pas validé votre inscription. Pour cela, il
@@ -143,7 +143,7 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                                     />
                                 </DisclosureButton>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Pour inscrire un club, il vous faut d'abord
                                     ouvrir un compte utilisateur,
@@ -153,13 +153,13 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                                     .
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Vous recevrez un mail avec un lien
                                     permettant de valider votre inscription.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Une fois votre inscription validée, vous
                                     pourrez vous connecter sur votre espace
@@ -169,7 +169,7 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                                     les tarifs, une présentation détaillée...
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Vous pourrez également annoncer vos
                                     événements, comme des stages,
@@ -193,7 +193,7 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                                     />
                                 </DisclosureButton>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Oui l'inscription est entièrement gratuite.
                                     Notre rémunération est issue des revenus
@@ -218,7 +218,7 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                                     />
                                 </DisclosureButton>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     La publication de la fiche de votre
                                     structure sur notre site vous assure une
@@ -229,7 +229,7 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                                     recherchent pour faciliter leur choix.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Aussi, un lien vers votre site web permettra
                                     d'augmenter votre référencement, et de mieux
@@ -237,7 +237,7 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                                     à votre discipline dans votre secteur.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     En bref, avoir une fiche sur notre site
                                     augmente votre nombre d'édhérents
@@ -262,13 +262,13 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                                     />
                                 </DisclosureButton>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Si vous n'arrivez pas à vous connecter sur
                                     votre espace, plusieurs raisons possibles:
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     - Vous vous êtes trompé d'email ou de mot de
                                     passe. Vous pouvez
@@ -277,7 +277,7 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                                     >.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     - Vous vous êtes inscrit, mais vous n'avez
                                     pas validé votre inscription. Pour cela, il
@@ -285,7 +285,7 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                                     l'email utilisé lors de votre inscription.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     - Vous avez changé votre email de connection
                                     via votre espace. Vous avez été déconnecté,
@@ -296,7 +296,7 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                                     valider votre inscription.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     - Votre navigateur n'accepte pas les
                                     cookies. Il faut les accepter, car les
@@ -323,7 +323,7 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                                     />
                                 </DisclosureButton>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Pour mettre à jour vos informations, il faut
                                     vous connecter sur votre espace. Vous
@@ -331,7 +331,7 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                                     et modifier des informations.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Sachez que plus votre fiche est actualisée,
                                     plus le classement dans nos pages sera
@@ -353,14 +353,14 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                                     />
                                 </DisclosureButton>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Si vous ne recevez pas nos mails, c'est
                                     probablement que votre service de messagerie
                                     nous considère comme spam.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Pensez à regarder dans votre boite "courrier
                                     indésirable", et indiquez à votre messagerie
@@ -382,14 +382,14 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                                     />
                                 </DisclosureButton>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Si vous ne recevez pas nos mails, c'est
                                     probablement que votre service de messagerie
                                     nous considère comme spam.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Pensez à regarder dans votre boite "courrier
                                     indésirable", et indiquez à votre messagerie
@@ -414,7 +414,7 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                                     />
                                 </DisclosureButton>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Pour supprimer la fiche de votre structure,
                                     ou pour supprimer votre compte, il faut dans
@@ -422,7 +422,7 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                                     espace.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Sur la page de votre club, et si vous êtes
                                     l'auteur de la fiche, un bouton vous permet

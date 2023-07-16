@@ -33,7 +33,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     />
                                 </DisclosureButton>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Merci de consulter le site
                                     Sports-et-loisirs.fr. Le présent document
@@ -49,7 +49,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     figure au bas du présent document.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Ces conditions forment l'ensemble des droits
                                     et obligations liant Sports-et-loisirs.fr et
@@ -77,7 +77,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     />
                                 </DisclosureButton>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Ne sont pas acceptés dans l' annuaire
                                     Sports-et-loisirs.fr les sites contraire à
@@ -111,7 +111,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     personnes et des biens.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Dans un autre ordre, sports-et-loisirs.fr
                                     n'étant pas un annuaire généraliste, les
@@ -137,7 +137,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     />
                                 </DisclosureButton>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Sports-et-loisirs.fr est propriétaire de la
                                     totalité du contenu de ce site Web, qu'il
@@ -184,7 +184,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     moraux dont jouit Sports-et-loisirs.fr.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Sports-et-loisirs.fr ne concède aucune
                                     licence autre que celle énoncée ci-haut, et
@@ -193,7 +193,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     présent site.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     L'utilisateur de ce site consent à ce que
                                     Sports-et-loisirs.fr utilise ou exploite
@@ -238,7 +238,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     />
                                 </DisclosureButton>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Sports-et-loisirs.fr s'efforce de faire en
                                     sorte que l'information disponible dans ce
@@ -251,7 +251,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     d'autres lacunes.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     En conséquence, ce site Web et l'intégralité
                                     de son contenu sont mis à la disposition du
@@ -274,7 +274,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     l'accès.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Sports-et-loisirs.fr ne peut être tenu
                                     responsable de quelque dommage que ce soit,
@@ -301,7 +301,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     dépenses.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Tout utilisateur du présent site Web le fait
                                     à ses propres risques et s'engage à
@@ -335,7 +335,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     />
                                 </DisclosureButton>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Sports-et-loisirs.fr n'autorise pas les
                                     utilisateurs de ce site Web à en modifier,
@@ -348,7 +348,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     Sports-et-loisirs.fr.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     De plus, il est strictement interdit
                                     d'afficher dans ce site Web, ou de
@@ -380,7 +380,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     />
                                 </DisclosureButton>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Ce site contient des hyperliens, lesquels
                                     donnent rapidement accès à des sites
@@ -419,7 +419,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     />
                                 </DisclosureButton>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Aucun utilisateur de ce site n'est tenu de
                                     fournir quelque renseignement personnel que
@@ -436,7 +436,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     pratiquants en attente.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Les renseignements personnels créés,
                                     recueillis ou conservés par
@@ -449,7 +449,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     Sports-et-loisirs.fr.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Sports-et-loisirs.fr ne vend, loue, échange,
                                     prête ou cède aucun renseignement personnel
@@ -461,7 +461,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     décision d'un tribunal compétent.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Lorsqu'un utilisateur accède à ce site, un
                                     échange de données s'effectue
@@ -477,7 +477,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     du site Internet référent, le cas échéant.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Cet échange de données est indispensable
                                     afin que le serveur de Sports-et-loisirs.fr
@@ -495,7 +495,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     aux conditions d'utilisation de ce site.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     De façon générale, ce site Web ne comporte
                                     pas de fichiers témoins ( cookies ).
@@ -510,7 +510,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     services ou documents offerts dans ce site.
                                 </DisclosurePanel>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Ce site Web ne comporte aucune zone dite
                                     sécurisée, permettant d'établir un dialogue
@@ -571,7 +571,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
                                     />
                                 </DisclosureButton>
                                 <DisclosurePanel
-                                    class="px-4 pt-4 pb-2 text-base text-gray-600"
+                                    class="px-4 pb-2 pt-4 text-base text-gray-600"
                                 >
                                     Ce site est entièrement conçu et géré par
                                     Sports-et-loisirs.fr. Prière de communiquer

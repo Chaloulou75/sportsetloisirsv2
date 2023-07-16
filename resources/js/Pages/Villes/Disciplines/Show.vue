@@ -6,7 +6,6 @@ import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
 import CitiesAround from "@/Components/Cities/CitiesAround.vue";
 import DisciplinesSimilaires from "@/Components/Disciplines/DisciplinesSimilaires.vue";
 
-
 let props = defineProps({
     city: Object,
     citiesAround: Object,
@@ -32,8 +31,8 @@ const getUniqueActivitesDiscipline = (activites) => {
     const uniqueNames = new Set();
     return activites.filter((activite) => {
         if (!uniqueNames.has(activite.discipline.name)) {
-          uniqueNames.add(activite.discipline.name);
-          return true;
+            uniqueNames.add(activite.discipline.name);
+            return true;
         }
         return false;
     });
@@ -43,13 +42,12 @@ const getUniqueActivitesTitre = (activites) => {
     const uniqueNames = new Set();
     return activites.filter((activite) => {
         if (!uniqueNames.has(activite.titre)) {
-          uniqueNames.add(activite.titre);
-          return true;
+            uniqueNames.add(activite.titre);
+            return true;
         }
         return false;
     });
 };
-
 </script>
 
 <template>
@@ -70,7 +68,8 @@ const getUniqueActivitesTitre = (activites) => {
     <AppLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                {{ discipline.name }} à {{ city.ville }} <span class="text-sm text-gray-600"
+                {{ discipline.name }} à {{ city.ville }}
+                <span class="text-sm text-gray-600"
                     >({{ city.code_postal }})
                 </span>
                 <span class="text-xs italic text-gray-600"
@@ -91,18 +90,18 @@ const getUniqueActivitesTitre = (activites) => {
                     >{{ city.structures_count }}
                 </span>
                 structures disponibles, comparez services, tarifs et horaires en
-                2 clics ! Pratiquer du {{ discipline.name }} à {{ city.ville }} n'a jamais été
-                aussi simple!
+                2 clics ! Pratiquer du {{ discipline.name }} à
+                {{ city.ville }} n'a jamais été aussi simple!
             </p>
         </template>
 
         <template v-if="structures.length > 0">
             <div
-                class="mx-auto flex min-h-screen max-w-full flex-col px-2 sm:px-6 md:flex-row md:space-x-4 lg:px-8 py-12"
+                class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-12 sm:px-6 md:flex-row md:space-x-4 lg:px-8"
             >
                 <div class="md:w-1/2">
                     <div
-                        class="grid grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-2 h-auto"
+                        class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-2"
                     >
                         <StructureCard
                             v-for="(structure, index) in structures"
@@ -114,21 +113,23 @@ const getUniqueActivitesTitre = (activites) => {
                         />
                     </div>
                 </div>
-                <div class="md:w-1/2 md:sticky space-y-4">
+                <div class="space-y-4 md:sticky md:w-1/2">
                     <LeafletMapMultiple
                         class="md:top-2"
                         :structures="structures"
                         :hovered-structure="hoveredStructure"
                         :zoom="11"
                     />
-                    <DisciplinesSimilaires :disciplinesSimilaires="disciplinesSimilaires" />
+                    <DisciplinesSimilaires
+                        :disciplinesSimilaires="disciplinesSimilaires"
+                    />
                     <CitiesAround :citiesAround="citiesAround" />
                 </div>
             </div>
         </template>
         <template v-else>
             <div
-                class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8 py-12"
+                class="mx-auto min-h-screen max-w-7xl px-2 py-12 sm:px-6 lg:px-8"
             >
                 <p class="font-medium text-gray-700">
                     Dommage, il n'y a pas encore de structures inscrites à

@@ -64,7 +64,7 @@ defineProps({
                         "
                         v-for="discipline in famille.disciplines"
                         :key="discipline.id"
-                        class="flex flex-col items-center justify-center rounded border border-indigo-600 px-12 py-3 text-sm font-medium text-indigo-700 hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg"
+                        class="flex flex-col items-center justify-center rounded border border-indigo-600 px-12 py-3 text-sm font-medium text-indigo-700 shadow-sm hover:bg-indigo-600 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                     >
                         {{ discipline.name }}
                         <!-- <div

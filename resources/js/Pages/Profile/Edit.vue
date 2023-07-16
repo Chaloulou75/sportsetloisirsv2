@@ -4,7 +4,6 @@ import DeleteUserForm from "./Partials/DeleteUserForm.vue";
 import UpdatePasswordForm from "./Partials/UpdatePasswordForm.vue";
 import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm.vue";
 import { Link, Head } from "@inertiajs/vue3";
-import { ArrowSmallRightIcon } from "@heroicons/vue/24/solid";
 
 defineProps({
     mustVerifyEmail: Boolean,

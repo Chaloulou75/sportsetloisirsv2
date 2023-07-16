@@ -1,14 +1,12 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { router, Head, Link } from "@inertiajs/vue3";
-import { ref, watch, computed, defineAsyncComponent} from "vue";
+import { ref, watch, computed, defineAsyncComponent } from "vue";
 import { debounce } from "lodash";
 import TextInput from "@/Components/TextInput.vue";
 import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
 import StructureCard from "@/Components/Structures/StructureCard.vue";
-import {
-    MapPinIcon,
-} from "@heroicons/vue/24/outline";
+import { MapPinIcon } from "@heroicons/vue/24/outline";
 
 let props = defineProps({
     structures: Object,
@@ -39,8 +37,8 @@ const getUniqueActivitesDiscipline = (activites) => {
     const uniqueNames = new Set();
     return activites.filter((activite) => {
         if (!uniqueNames.has(activite.discipline.name)) {
-          uniqueNames.add(activite.discipline.name);
-          return true;
+            uniqueNames.add(activite.discipline.name);
+            return true;
         }
         return false;
     });
@@ -50,8 +48,8 @@ const getUniqueActivitesTitre = (activites) => {
     const uniqueNames = new Set();
     return activites.filter((activite) => {
         if (!uniqueNames.has(activite.titre)) {
-          uniqueNames.add(activite.titre);
-          return true;
+            uniqueNames.add(activite.titre);
+            return true;
         }
         return false;
     });
@@ -136,7 +134,7 @@ watch(
                 >
                     <div class="md:w-1/2">
                         <div
-                            class="grid grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-2 h-auto"
+                            class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-2"
                         >
                             <StructureCard
                                 v-for="(structure, index) in structures.data"
@@ -164,8 +162,8 @@ watch(
                     class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8"
                 >
                     <p class="font-medium text-gray-700">
-                        Il n'y a pas encore de structures inscrites
-                        pour cette requète.
+                        Il n'y a pas encore de structures inscrites pour cette
+                        requète.
                     </p>
                 </div>
             </template>

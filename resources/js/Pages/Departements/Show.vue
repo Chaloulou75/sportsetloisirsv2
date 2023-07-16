@@ -17,16 +17,16 @@ let props = defineProps({
 });
 
 const flattenedDisciplines = computed(() => {
-  const uniqueDisciplines = new Map();
-  props.structures.forEach((structure) => {
-    structure.disciplines.forEach((discipline) => {
-      const disciplineId = discipline.discipline_id;
-      if (!uniqueDisciplines.has(disciplineId)) {
-        uniqueDisciplines.set(disciplineId, discipline.discipline);
-      }
+    const uniqueDisciplines = new Map();
+    props.structures.forEach((structure) => {
+        structure.disciplines.forEach((discipline) => {
+            const disciplineId = discipline.discipline_id;
+            if (!uniqueDisciplines.has(disciplineId)) {
+                uniqueDisciplines.set(disciplineId, discipline.discipline);
+            }
+        });
     });
-  });
-  return Array.from(uniqueDisciplines.values());
+    return Array.from(uniqueDisciplines.values());
 });
 
 const hoveredStructure = ref(null);
@@ -42,8 +42,8 @@ const getUniqueActivitesDiscipline = (activites) => {
     const uniqueNames = new Set();
     return activites.filter((activite) => {
         if (!uniqueNames.has(activite.discipline.name)) {
-          uniqueNames.add(activite.discipline.name);
-          return true;
+            uniqueNames.add(activite.discipline.name);
+            return true;
         }
         return false;
     });
@@ -53,8 +53,8 @@ const getUniqueActivitesTitre = (activites) => {
     const uniqueNames = new Set();
     return activites.filter((activite) => {
         if (!uniqueNames.has(activite.titre)) {
-          uniqueNames.add(activite.titre);
-          return true;
+            uniqueNames.add(activite.titre);
+            return true;
         }
         return false;
     });
@@ -122,31 +122,45 @@ watch(
         </template>
 
         <template v-if="departement.structures_count > 0">
-            <div class="mx-auto max-w-full px-2 sm:px-6 md:space-x-4 lg:px-8 py-6">
-                <h3 class="text-center text-gray-600 font-semibold mb-4">Les disciplines pratiquées {{ departement.prefixe }} {{ departement.departement }}</h3>
-                <div class="text-gray-600 w-full flex flex-col md:flex-row justify-center md:space-x-4 space-y-2 md:space-y-0 items-center">
-                    <div v-for="discipline in flattenedDisciplines" :key="discipline.id">
-                        <Link :href="route('disciplines.show', discipline.slug)"
-                                :active="
-                                    route().current(
-                                        'disciplines.show',
-                                        discipline.slug
-                                    )"
-                                class="inline-block rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg hover:border-gray-100"
-                            >
+            <div
+                class="mx-auto max-w-full px-2 py-6 sm:px-6 md:space-x-4 lg:px-8"
+            >
+                <h3 class="mb-4 text-center font-semibold text-gray-600">
+                    Les disciplines pratiquées {{ departement.prefixe }}
+                    {{ departement.departement }}
+                </h3>
+                <div
+                    class="flex w-full flex-col items-center justify-center space-y-2 text-gray-600 md:flex-row md:space-x-4 md:space-y-0"
+                >
+                    <div
+                        v-for="discipline in flattenedDisciplines"
+                        :key="discipline.id"
+                    >
+                        <Link
+                            :href="route('disciplines.show', discipline.slug)"
+                            :active="
+                                route().current(
+                                    'disciplines.show',
+                                    discipline.slug
+                                )
+                            "
+                            class="inline-block rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                        >
                             {{ discipline.name }}
                         </Link>
                     </div>
                 </div>
             </div>
             <div
-                class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8 py-12"
+                class="mx-auto min-h-screen max-w-7xl px-2 py-12 sm:px-6 lg:px-8"
             >
                 <div
                     class="mx-auto flex min-h-screen max-w-7xl flex-col px-2 sm:px-6 md:flex-row md:space-x-4 lg:px-8"
                 >
                     <div class="md:w-1/2">
-                        <div class="grid grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-2 h-auto">
+                        <div
+                            class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-2"
+                        >
                             <StructureCard
                                 v-for="(structure, index) in structures"
                                 :key="structure.id"
@@ -160,13 +174,13 @@ watch(
                             <Pagination :links="city.structures.links" />
                         </div> -->
                     </div>
-                    <div class="md:w-1/2 md:sticky space-y-4">
-                        <LeafletMapMultiple class="md:top-2"
+                    <div class="space-y-4 md:sticky md:w-1/2">
+                        <LeafletMapMultiple
+                            class="md:top-2"
                             :structures="structures"
                             :hovered-structure="hoveredStructure"
                             :zoom="11"
                         />
-
                     </div>
                 </div>
             </div>

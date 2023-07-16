@@ -4,13 +4,7 @@ import { Head, Link } from "@inertiajs/vue3";
 import { ref, computed, onMounted, defineAsyncComponent } from "vue";
 import ButtonsActiviteEdit from "@/Components/Inscription/Activity/ButtonsActiviteEdit.vue";
 import { PlusIcon } from "@heroicons/vue/24/outline";
-import {
-    TabGroup,
-    TabList,
-    Tab,
-    TabPanels,
-    TabPanel,
-} from "@headlessui/vue";
+import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 
 const props = defineProps({
     errors: Object,
@@ -63,19 +57,19 @@ const displayTarif = ref(false);
 const displayPlanning = ref(false);
 
 const handleButtonEvent = (message) => {
-  if (message === 'Mon planning') {
-    displayActivity.value = false;
-    displayTarif.value = false;
-    displayPlanning.value = true;
-  } else if (message === 'Mes tarifs') {
-    displayActivity.value = false;
-    displayPlanning.value = false;
-    displayTarif.value = true;
-  }else if (message === 'Mes activites') {
-    displayActivity.value = true;
-    displayPlanning.value = false;
-    displayTarif.value = false;
-  }
+    if (message === "Mon planning") {
+        displayActivity.value = false;
+        displayTarif.value = false;
+        displayPlanning.value = true;
+    } else if (message === "Mes tarifs") {
+        displayActivity.value = false;
+        displayPlanning.value = false;
+        displayTarif.value = true;
+    } else if (message === "Mes activites") {
+        displayActivity.value = true;
+        displayPlanning.value = false;
+        displayTarif.value = false;
+    }
 };
 
 const defaultTabIndex = computed(() => {
@@ -188,7 +182,9 @@ onMounted(() => {
                                                         : 'text-gray-700 hover:bg-white/50 hover:text-gray-800',
                                                 ]"
                                             >
-                                                {{ categorie.nom_categorie_pro }}
+                                                {{
+                                                    categorie.nom_categorie_pro
+                                                }}
                                             </button>
                                         </Tab>
                                     </TabList>
@@ -210,9 +206,10 @@ onMounted(() => {
                                 :displayTarif="displayTarif"
                                 :displayPlanning="displayPlanning"
                                 :structure="structure"
-                                @eventFromChild="handleButtonEvent"/>
+                                @eventFromChild="handleButtonEvent"
+                            />
                             <div
-                                class=" flex w-full flex-col items-center justify-between space-y-2 px-2 py-3 md:py-6 md:flex-row md:space-y-0 md:px-0 md:h-20"
+                                class="flex w-full flex-col items-center justify-between space-y-2 px-2 py-3 md:h-20 md:flex-row md:space-y-0 md:px-0 md:py-6"
                             >
                                 <div
                                     class="text-center text-lg font-semibold text-gray-700 md:text-left"
@@ -223,7 +220,7 @@ onMounted(() => {
                                     v-if="displayActivity"
                                     type="button"
                                     @click="openAddActiviteModal(categorie)"
-                                    class="w-full flex items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:flex md:w-auto"
+                                    class="flex w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:flex md:w-auto"
                                 >
                                     Ajouter une activité
                                     <PlusIcon class="ml-2 h-5 w-5" />

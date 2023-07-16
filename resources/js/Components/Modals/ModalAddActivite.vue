@@ -82,7 +82,10 @@ const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
 
 // Check if a checkbox is selected
 const isCheckboxSelected = (critereId, optionValue) => {
-    return form.criteres[critereId] && form.criteres[critereId].includes(optionValue);
+    return (
+        form.criteres[critereId] &&
+        form.criteres[critereId].includes(optionValue)
+    );
 };
 
 watch(
@@ -95,14 +98,12 @@ watch(
             ) {
                 form.criteres[critere.id] = critere.valeurs[0].valeur;
             }
-
         });
     },
     { immediate: true }
 );
 
 function onSubmit() {
-
     router.post(
         `/structures/${props.structure.slug}/activites/${props.activite.id}/newactivitystore`,
         {
@@ -154,16 +155,8 @@ onMounted(() => {
 </script>
 <template>
     <div>
-        <TransitionRoot
-            appear
-            :show="show"
-            as="template"
-        >
-            <Dialog
-                as="div"
-                @close="open = false"
-                class="relative z-10"
-            >
+        <TransitionRoot appear :show="show" as="template">
+            <Dialog as="div" @close="open = false" class="relative z-10">
                 <TransitionChild
                     as="template"
                     enter="duration-300 ease-out"
@@ -173,14 +166,10 @@ onMounted(() => {
                     leave-from="opacity-100"
                     leave-to="opacity-0"
                 >
-                    <div
-                        class="fixed inset-0 bg-black bg-opacity-50"
-                    />
+                    <div class="fixed inset-0 bg-black bg-opacity-50" />
                 </TransitionChild>
 
-                <div
-                    class="fixed inset-0 overflow-y-auto"
-                >
+                <div class="fixed inset-0 overflow-y-auto">
                     <div
                         class="flex min-h-full items-center justify-center p-4 text-center"
                     >
@@ -197,9 +186,7 @@ onMounted(() => {
                                 class="w-full max-w-6xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
                             >
                                 <form
-                                    @submit.prevent="
-                                        onSubmit
-                                    "
+                                    @submit.prevent="onSubmit"
                                     enctype="multipart/form-data"
                                     autocomplete="off"
                                 >
@@ -210,36 +197,24 @@ onMounted(() => {
                                         <h3
                                             class="text-lg font-medium leading-6 text-gray-800"
                                         >
-                                            Ajouter une
-                                            activité
+                                            Ajouter une activité
                                         </h3>
-                                        <button
-                                            type="button"
-                                        >
+                                        <button type="button">
                                             <XCircleIcon
                                                 @click="emit('close')"
                                                 class="h-6 w-6 text-gray-600 hover:text-gray-800"
                                             />
                                         </button>
                                     </DialogTitle>
-                                    <div
-                                        class="mt-2 w-full"
-                                    >
-                                        <div
-                                            class="flex flex-col space-y-3"
-                                        >
+                                    <div class="mt-2 w-full">
+                                        <div class="flex flex-col space-y-3">
                                             <!-- image -->
                                             <div>
                                                 <label
                                                     for="image"
                                                     class="block text-sm font-medium text-gray-700"
-                                                    >Ajouter
-                                                    ou
-                                                    modifier
-                                                    la
-                                                    photo
-                                                    ou
-                                                    l'image:</label
+                                                    >Ajouter ou modifier la
+                                                    photo ou l'image:</label
                                                 >
                                                 <input
                                                     class="mt-1 text-sm text-gray-700 focus:outline-none"
@@ -251,14 +226,9 @@ onMounted(() => {
                                                     "
                                                 />
                                                 <span
-                                                    v-if="
-                                                        errors.image
-                                                    "
+                                                    v-if="errors.image"
                                                     class="mt-2 text-xs text-red-500"
-                                                    >{{
-                                                        errors
-                                                            .image[0]
-                                                    }}</span
+                                                    >{{ errors.image[0] }}</span
                                                 >
                                             </div>
                                             <!-- titre -->
@@ -267,17 +237,13 @@ onMounted(() => {
                                                     for="titre"
                                                     class="block text-sm font-medium text-gray-700"
                                                 >
-                                                    Titre
-                                                    de
-                                                    l'activité
+                                                    Titre de l'activité
                                                 </label>
                                                 <div
                                                     class="mt-1 flex rounded-md"
                                                 >
                                                     <input
-                                                        v-model="
-                                                            form.titre
-                                                        "
+                                                        v-model="form.titre"
                                                         type="text"
                                                         name="titre"
                                                         id="titre"
@@ -287,14 +253,10 @@ onMounted(() => {
                                                     />
                                                 </div>
                                                 <div
-                                                    v-if="
-                                                        errors.titre
-                                                    "
+                                                    v-if="errors.titre"
                                                     class="mt-2 text-xs text-red-500"
                                                 >
-                                                    {{
-                                                        errors.titre
-                                                    }}
+                                                    {{ errors.titre }}
                                                 </div>
                                             </div>
                                             <!-- description -->
@@ -305,9 +267,7 @@ onMounted(() => {
                                                 >
                                                     Description
                                                 </label>
-                                                <div
-                                                    class="mt-1"
-                                                >
+                                                <div class="mt-1">
                                                     <textarea
                                                         v-model="
                                                             form.description
@@ -324,30 +284,23 @@ onMounted(() => {
                                                     />
                                                 </div>
                                                 <div
-                                                    v-if="
-                                                        errors.description
-                                                    "
+                                                    v-if="errors.description"
                                                     class="mt-2 text-xs text-red-500"
                                                 >
-                                                    {{
-                                                        errors.description
-                                                    }}
+                                                    {{ errors.description }}
                                                 </div>
                                             </div>
 
                                             <!-- Criteres -->
                                             <div
                                                 v-if="
-                                                    filteredCriteres.length >
-                                                    0
+                                                    filteredCriteres.length > 0
                                                 "
                                                 class="flex w-full flex-col items-center justify-between space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
                                             >
                                                 <div
                                                     v-for="critere in filteredCriteres"
-                                                    :key="
-                                                        critere.id
-                                                    "
+                                                    :key="critere.id"
                                                     class="w-full"
                                                 >
                                                     <!-- select -->
@@ -425,20 +378,62 @@ onMounted(() => {
                                                         "
                                                     >
                                                         <div class="block">
-                                                            <span class="text-sm font-medium text-gray-700">{{ critere.nom }}</span>
+                                                            <span
+                                                                class="text-sm font-medium text-gray-700"
+                                                                >{{
+                                                                    critere.nom
+                                                                }}</span
+                                                            >
                                                             <div class="mt-2">
-                                                                <div v-for="(option, index) in critere.valeurs" :key="option.id">
-                                                                    <label class="inline-flex items-center" :for="option.valeur">
-                                                                    <input
-                                                                        :checked="isCheckboxSelected(critere.id, option.valeur)"
-                                                                        @change="updateSelectedCheckboxes(critere.id, option.valeur, $event.target.checked)"
-                                                                        :id="option.valeur"
-                                                                        :value="option.valeur"
-                                                                        :name="option.valeur"
-                                                                        type="checkbox"
-                                                                        class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
+                                                                <div
+                                                                    v-for="(
+                                                                        option,
+                                                                        index
+                                                                    ) in critere.valeurs"
+                                                                    :key="
+                                                                        option.id
+                                                                    "
+                                                                >
+                                                                    <label
+                                                                        class="inline-flex items-center"
+                                                                        :for="
+                                                                            option.valeur
+                                                                        "
+                                                                    >
+                                                                        <input
+                                                                            :checked="
+                                                                                isCheckboxSelected(
+                                                                                    critere.id,
+                                                                                    option.valeur
+                                                                                )
+                                                                            "
+                                                                            @change="
+                                                                                updateSelectedCheckboxes(
+                                                                                    critere.id,
+                                                                                    option.valeur,
+                                                                                    $event
+                                                                                        .target
+                                                                                        .checked
+                                                                                )
+                                                                            "
+                                                                            :id="
+                                                                                option.valeur
+                                                                            "
+                                                                            :value="
+                                                                                option.valeur
+                                                                            "
+                                                                            :name="
+                                                                                option.valeur
+                                                                            "
+                                                                            type="checkbox"
+                                                                            class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
                                                                         />
-                                                                        <span class="ml-2 text-sm font-medium text-gray-700">{{ option.valeur }}</span>
+                                                                        <span
+                                                                            class="ml-2 text-sm font-medium text-gray-700"
+                                                                            >{{
+                                                                                option.valeur
+                                                                            }}</span
+                                                                        >
                                                                     </label>
                                                                 </div>
                                                             </div>
@@ -452,14 +447,10 @@ onMounted(() => {
                                                         "
                                                     >
                                                         <label
-                                                            :for="
-                                                                critere.nom
-                                                            "
+                                                            :for="critere.nom"
                                                             class="block text-sm font-medium text-gray-700"
                                                         >
-                                                            {{
-                                                                critere.nom
-                                                            }}
+                                                            {{ critere.nom }}
                                                         </label>
 
                                                         <div
@@ -512,14 +503,10 @@ onMounted(() => {
                                                         "
                                                     >
                                                         <label
-                                                            :for="
-                                                                critere.nom
-                                                            "
+                                                            :for="critere.nom"
                                                             class="block text-sm font-medium text-gray-700"
                                                         >
-                                                            {{
-                                                                critere.nom
-                                                            }}
+                                                            {{ critere.nom }}
                                                         </label>
                                                         <div
                                                             class="mt-1 flex rounded-md"
@@ -553,9 +540,7 @@ onMounted(() => {
                                                 class="flex w-full items-end justify-between space-x-4"
                                             >
                                                 <div
-                                                    v-if="
-                                                        !addAddress
-                                                    "
+                                                    v-if="!addAddress"
                                                     class="flex-1"
                                                 >
                                                     <label
@@ -604,13 +589,9 @@ onMounted(() => {
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div
-                                                    class="flex items-center"
-                                                >
+                                                <div class="flex items-center">
                                                     <input
-                                                        v-model="
-                                                            addAddress
-                                                        "
+                                                        v-model="addAddress"
                                                         id="addAddress"
                                                         type="checkbox"
                                                         class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
@@ -618,8 +599,7 @@ onMounted(() => {
                                                     <label
                                                         for="addAddress"
                                                         class="ml-2 text-sm font-medium text-gray-700"
-                                                        >Ajouter
-                                                        une
+                                                        >Ajouter une
                                                         adresse</label
                                                     >
                                                 </div>
@@ -627,24 +607,12 @@ onMounted(() => {
 
                                             <!-- newAddress -->
                                             <AddressForm
-                                                v-if="
-                                                    addAddress
-                                                "
-                                                :errors="
-                                                    errors
-                                                "
-                                                v-model:address="
-                                                    form.address
-                                                "
-                                                v-model:city="
-                                                    form.city
-                                                "
-                                                v-model:zip_code="
-                                                    form.zip_code
-                                                "
-                                                v-model:country="
-                                                    form.country
-                                                "
+                                                v-if="addAddress"
+                                                :errors="errors"
+                                                v-model:address="form.address"
+                                                v-model:city="form.city"
+                                                v-model:zip_code="form.zip_code"
+                                                v-model:country="form.country"
                                                 v-model:address_lat="
                                                     form.address_lat
                                                 "
@@ -657,20 +625,15 @@ onMounted(() => {
                                             <div
                                                 class="flex w-full flex-col items-center justify-between space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
                                             >
-                                                <div
-                                                    class="z-10 w-full"
-                                                >
+                                                <div class="z-10 w-full">
                                                     <label
                                                         for="date"
                                                         class="block text-sm font-medium text-gray-700"
                                                     >
-                                                        Dates
-                                                        d'ouvertures
+                                                        Dates d'ouvertures
                                                     </label>
                                                     <VueDatePicker
-                                                        v-model="
-                                                            form.date
-                                                        "
+                                                        v-model="form.date"
                                                         range
                                                         multi-calendars
                                                         locale="fr"
@@ -685,22 +648,16 @@ onMounted(() => {
                                                     </VueDatePicker>
                                                 </div>
 
-                                                <div
-                                                    class="w-full"
-                                                >
+                                                <div class="w-full">
                                                     <label
                                                         for="time"
                                                         class="block text-sm font-medium text-gray-700"
                                                     >
-                                                        Horaires
-                                                        (ouverture
-                                                        /
+                                                        Horaires (ouverture /
                                                         fermeture)
                                                     </label>
                                                     <VueDatePicker
-                                                        v-model="
-                                                            form.time
-                                                        "
+                                                        v-model="form.time"
                                                         time-picker
                                                         range
                                                         locale="fr"
@@ -723,9 +680,7 @@ onMounted(() => {
                                             Annuler
                                         </button>
                                         <button
-                                            :disabled="
-                                                form.processing
-                                            "
+                                            :disabled="form.processing"
                                             type="submit"
                                             class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-normal text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                         >

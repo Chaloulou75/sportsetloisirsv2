@@ -251,7 +251,10 @@ const submit = () => {
                                                 />
                                                 <span
                                                     class="ml-2 text-gray-700"
-                                                    >{{ categorie.pivot.nom_categorie_pro }}</span
+                                                    >{{
+                                                        categorie.pivot
+                                                            .nom_categorie_pro
+                                                    }}</span
                                                 >
                                             </div>
                                         </li>

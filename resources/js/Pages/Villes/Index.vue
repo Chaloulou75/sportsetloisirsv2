@@ -73,26 +73,26 @@ watch(
         <div class="py-12">
             <!-- search box -->
             <div
-                class="flex flex-col items-center justify-center w-full max-w-3xl px-2 mx-auto mt-4 mb-8 md:flex-row"
+                class="mx-auto mb-8 mt-4 flex w-full max-w-3xl flex-col items-center justify-center px-2 md:flex-row"
             >
                 <label
                     for="search"
                     value="Rechercher dans votre ville:"
-                    class="pr-2 mb-1 text-sm font-medium text-gray-800"
+                    class="mb-1 pr-2 text-sm font-medium text-gray-800"
                     >Rechercher une ville:</label
                 >
 
                 <TextInput
                     id="search"
                     type="text"
-                    class="flex-1 block w-full px-2 mt-1 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
+                    class="mt-1 block w-full flex-1 px-2 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
                     v-model="search"
                     placeholder="ville..."
                 />
 
                 <button type="button" @click="resetSearch">
                     <svg
-                        class="w-6 h-6 my-3 ml-2 text-gray-400 hover:text-gray-700 lg:my-0 lg:h-8 lg:w-8"
+                        class="my-3 ml-2 h-6 w-6 text-gray-400 hover:text-gray-700 lg:my-0 lg:h-8 lg:w-8"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                     >
@@ -104,21 +104,24 @@ watch(
                     </svg>
                 </button>
             </div>
-            <div class="min-h-screen px-2 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8">
                 <div
-                    class="grid h-auto grid-cols-1 gap-4 place-items-stretch sm:grid-cols-2 md:grid-cols-3"
+                    class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                 >
                     <Link
                         :href="route('villes.show', city.id)"
-                        :active="
-                            route().current('villes.show', city.id)
-                        "
+                        :active="route().current('villes.show', city.id)"
                         v-for="(city, index) in cities.data"
                         :key="city.id"
                         :index="index"
-                        class="flex flex-col items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg hover:border-gray-100"
+                        class="flex flex-col items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                     >
-                        <div>{{ formatCityName(city.ville) }} <span class="text-xs">({{ city.code_postal }})</span></div>
+                        <div>
+                            {{ formatCityName(city.ville) }}
+                            <span class="text-xs"
+                                >({{ city.code_postal }})</span
+                            >
+                        </div>
                         <div v-if="city.structures_count > 0" class="text-xs">
                             ({{ city.structures_count }}
                             <span v-if="city.structures_count > 1"
@@ -130,7 +133,6 @@ watch(
                             (Pas encore de structure inscrite)
                         </div>
                     </Link>
-
                 </div>
                 <div class="flex justify-end p-10">
                     <Pagination :links="cities.links" />
