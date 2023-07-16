@@ -11,6 +11,7 @@ use App\Http\Controllers\ActiviteController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\DepartementController;
+use App\Http\Controllers\CityDisciplineController;
 use App\Http\Controllers\StructureTarifController;
 use App\Http\Controllers\StructurePlanningController;
 use App\Http\Controllers\StructureCategorieController;
@@ -43,7 +44,6 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-
 Route::get('/rubrique/index.{extension?}', function ($extension = null) {
     return redirect('/familles/', 301);
 });
@@ -53,6 +53,11 @@ Route::get('/rub-{rubriqueWithPlus}-{id}.{extension?}', function ($rubriqueWithP
 });
 Route::resource('familles', FamilleController::class);
 
+Route::get('/villes/{city}/disciplines/{discipline:slug}', [CityDisciplineController::class, 'show'], [
+    'parameters' => [
+        'villes' => 'city'
+    ]
+])->name('villes.disciplines.show');
 
 Route::get('/discipline/index.{extension?}', function ($extension = null) {
     return redirect('/disciplines/', 301);
@@ -73,7 +78,6 @@ Route::get('/{departementWithPlus}-{id}-2.{extension?}', function ($departementW
     return redirect('/departements/' . $id, 301);
 });
 Route::resource('departements', DepartementController::class);
-
 
 Route::get('/localite-1/index.{extension?}', function ($extension = null) {
     return redirect('/villes/', 301);

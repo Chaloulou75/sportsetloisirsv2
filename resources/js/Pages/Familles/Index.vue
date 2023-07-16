@@ -58,7 +58,7 @@ defineProps({
                         :active="route().current('familles.show', famille.slug)"
                         v-for="famille in familles"
                         :key="famille.id"
-                        class="flex flex-col items-center justify-center rounded border border-indigo-600 px-12 py-3 text-sm font-medium text-indigo-700 hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg"
+                        class="flex flex-col items-center justify-center rounded border border-gray-600 hover:border-gray-100 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg"
                     >
                         {{ famille.name }}
                     </Link>

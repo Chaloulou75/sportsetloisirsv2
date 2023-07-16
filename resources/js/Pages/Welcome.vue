@@ -281,7 +281,7 @@ watch(
                         "
                         v-for="discipline in disciplines"
                         :key="discipline.id"
-                        class="flex items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-green-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg"
+                        class="flex items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg hover:border-gray-100"
                     >
                         {{ discipline.name }}
                     </Link>
@@ -289,7 +289,7 @@ watch(
                 <div class="flex items-center justify-center mb-4">
                     <Link
                         :href="route('disciplines.index')"
-                        class="flex items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-green-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg"
+                        class="flex items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg hover:border-gray-100"
                     >
                         Et beaucoup d'autres
                         <span>
@@ -313,14 +313,14 @@ watch(
                         "
                         v-for="city in topVilles"
                         :key="city.id"
-                        class="flex items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-green-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg"
+                        class="flex items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg hover:border-gray-100"
                         >{{ formatCityName(city.ville) }}</Link
                     >
                 </div>
                 <div class="flex items-center justify-center mb-4">
                     <Link
                         :href="route('villes.index')"
-                        class="flex items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-green-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg"
+                        class="flex items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg hover:border-gray-100"
                     >
                         Et beaucoup d'autres
                         <span>
@@ -347,14 +347,14 @@ watch(
                         "
                         v-for="departement in topDepartements"
                         :key="departement.id"
-                        class="flex items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-green-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg"
+                        class="flex items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg hover:border-gray-100"
                         >{{ formatCityName(departement.departement) }}</Link
                     >
                 </div>
                 <div class="flex items-center justify-center mb-4">
                     <Link
                         :href="route('departements.index')"
-                        class="flex items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-green-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg"
+                        class="flex items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg hover:border-gray-100"
                     >
                         Et beaucoup d'autres
                         <span>
@@ -384,7 +384,7 @@ watch(
                             "
                             v-for="structure in lastStructures"
                             :key="structure.id"
-                            class="flex flex-col items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-green-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg"
+                            class="flex flex-col items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg hover:border-gray-100"
                         >
                             <div class="mb-1 text-center">
                                 {{ structure.name }}
@@ -400,7 +400,7 @@ watch(
                     <div class="flex items-center justify-center mb-4">
                         <Link
                             :href="route('structures.index')"
-                            class="flex items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-green-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg"
+                            class="flex items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg hover:border-gray-100"
                         >
                             Et beaucoup d'autres
                             <span>
@@ -456,7 +456,7 @@ watch(
                         <Link
                             v-if="$page.props.auth.user"
                             :href="route('structures.create')"
-                            class="flex items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-green-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg"
+                            class="flex items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg hover:border-gray-100"
                         >
                             Créer votre structure
                             <span>
@@ -466,7 +466,7 @@ watch(
                         <Link
                             v-else
                             :href="route('register')"
-                            class="flex items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-green-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg"
+                            class="flex items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg hover:border-gray-100"
                         >
                             S'inscrire
                             <span>

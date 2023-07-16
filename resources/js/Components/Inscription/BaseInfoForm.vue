@@ -133,7 +133,7 @@ watch(tiktok, (value) => {
             <label for="phone1" class="block text-sm font-medium text-gray-700">
                 Numéro de téléphone *
             </label>
-            <div class="flex mt-1 rounded-md shadow-sm">
+            <div class="flex mt-1 w-full">
                 <!-- <input v-model="phone1" type="tel" name="phone1" id="phone1"
                     class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     placeholder="02 10 ..." autocomplete="none" /> -->
@@ -171,7 +171,7 @@ watch(tiktok, (value) => {
             <label for="phone2" class="block text-sm font-medium text-gray-700">
                 Numéro de téléphone de sauvegarde
             </label>
-            <div class="flex mt-1 rounded-md shadow-sm">
+            <div class="flex mt-1 w-full">
                 <!-- <input v-model="phone2" type="tel" name="phone2" id="phone2"
                     class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     placeholder="02 10 ..." autocomplete="none" /> -->

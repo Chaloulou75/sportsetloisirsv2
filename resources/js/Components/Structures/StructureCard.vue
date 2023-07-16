@@ -83,7 +83,7 @@ const formatCurrency = (value) => {
                     :key="activite.id"
                 >
                     {{ activite.titre }}
-                    <span v-if="index < getUniqueActivitesTitre(structure.activites).length - 1"> | </span>
+                    <span v-if="index < getUniqueActivitesTitre(structure.activites).length - 1"> - </span>
                 </span>
                 <div class="py-1.5">
                     <dt class="sr-only">tarif</dt>
@@ -106,57 +106,55 @@ const formatCurrency = (value) => {
                     <dd class="font-medium text-sm">{{ structure.city }} ({{ structure.zip_code }})</dd>
                 </div>
 
-                <div class="mt-auto">
-                    <div class="mt-6 flex items-center gap-2 text-xs">
-                        <div class="inline-flex shrink-0 items-center gap-2">
-                            <svg
-                            class="h-4 w-4 text-indigo-700"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"
-                            />
-                            </svg>
-                            <p class="text-gray-600 font-medium">{{ structure.disciplines_count }}    <span v-if="structure.disciplines_count > 1" >Disciplines</span>
-                            <span v-else>Discipline</span>
-                            </p>
-                        </div>
+                <div class="mt-6 flex items-center gap-1 text-xs">
+                    <div class="inline-flex shrink-0 items-center">
+                        <svg
+                        class="h-4 w-4 text-indigo-700"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"
+                        />
+                        </svg>
+                        <p class="text-gray-600 font-medium">{{ structure.disciplines_count }}    <span v-if="structure.disciplines_count > 1" >Disciplines</span>
+                        <span v-else>Discipline</span>
+                        </p>
+                    </div>
 
-                        <div class="inline-flex shrink-0 items-center gap-2">
-                            <svg
-                            class="h-4 w-4 text-indigo-700"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-                            />
-                            </svg>
+                    <div class="inline-flex shrink-0 items-center">
+                        <svg
+                        class="h-4 w-4 text-indigo-700"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                        />
+                        </svg>
 
-                            <p class="text-gray-600 font-medium">{{ structure.activites_count }}
-                                <span v-if="structure.activites_count > 1">Activités</span>
-                                <span v-else>Activité</span>
-                            </p>
-                        </div>
+                        <p class="text-gray-600 font-medium">{{ structure.activites_count }}
+                            <span v-if="structure.activites_count > 1">Activités</span>
+                            <span v-else>Activité</span>
+                        </p>
+                    </div>
 
-                        <div class="inline-flex shrink-0 items-center gap-2">
-                            <BookmarkIcon class="h-4 w-4 text-indigo-700" />
-                            <p class="text-gray-600 font-medium">{{ structure.produits_count }}
-                                <span v-if="structure.produits_count > 1">Produits</span>
-                                <span v-else>Produit</span>
-                            </p>
-                        </div>
+                    <div class="inline-flex shrink-0 items-center">
+                        <BookmarkIcon class="h-4 w-4 text-indigo-700" />
+                        <p class="text-gray-600 font-medium">{{ structure.produits_count }}
+                            <span v-if="structure.produits_count > 1">Produits</span>
+                            <span v-else>Produit</span>
+                        </p>
                     </div>
                 </div>
             </dl>

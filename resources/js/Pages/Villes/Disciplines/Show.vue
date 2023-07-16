@@ -1,63 +1,23 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { router, Head, Link } from "@inertiajs/vue3";
-import { ref, watch, computed, defineAsyncComponent } from "vue";
-import { debounce } from "lodash";
-import TextInput from "@/Components/TextInput.vue";
+import { Head, Link } from "@inertiajs/vue3";
+import { ref, defineAsyncComponent } from "vue";
 import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
 import CitiesAround from "@/Components/Cities/CitiesAround.vue";
+import DisciplinesSimilaires from "@/Components/Disciplines/DisciplinesSimilaires.vue";
+
 
 let props = defineProps({
     city: Object,
     citiesAround: Object,
     structures: Object,
-    filters: Object,
+    discipline: Object,
+    disciplinesSimilaires: Object,
 });
-
-let discipline = ref("");
-function resetSearch() {
-    discipline.value = "";
-}
-
-watch(
-    discipline,
-    debounce(function (value) {
-        router.get(
-            `/villes/${city.ville_formatee}`,
-            { discipline: value },
-            { preserveState: true, replace: true }
-        );
-    }, 500)
-);
 
 const StructureCard = defineAsyncComponent(() =>
     import("@/Components/Structures/StructureCard.vue")
 );
-
-const Pagination = defineAsyncComponent(() =>
-    import("@/Components/Pagination.vue")
-);
-
-// const flattenedDisciplines = computed(() => {
-//     return props.structures.flatMap((structure) => {
-//         return structure.disciplines.map((discipline) => {
-//             return discipline.discipline;
-//         });
-//     });
-// });
-
-const flattenedDisciplines = computed(() => {
-  const uniqueDisciplines = new Map();
-  props.structures.forEach((structure) => {
-    structure.disciplines.forEach((discipline) => {
-      const disciplineId = discipline.discipline_id;
-      if (!uniqueDisciplines.has(disciplineId)) {
-        uniqueDisciplines.set(disciplineId, discipline.discipline);
-      }
-    });
-  });
-  return Array.from(uniqueDisciplines.values());
-});
 
 const hoveredStructure = ref(null);
 
@@ -90,16 +50,15 @@ const getUniqueActivitesTitre = (activites) => {
     });
 };
 
-// const Pagination = defineAsyncComponent(() =>
-//     import("@/Components/Pagination.vue")
-// );
 </script>
 
 <template>
     <Head
         :title="city.ville"
         :description="
-            'Envie de faire du sport à ' +
+            'Envie de faire du ' +
+            discipline.name +
+            ' à ' +
             city.ville +
             '? Choisissez parmi plus de ' +
             city.structures_count +
@@ -111,7 +70,7 @@ const getUniqueActivitesTitre = (activites) => {
     <AppLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Les structures disponibles à {{ city.ville }} <span class="text-sm text-gray-600"
+                {{ discipline.name }} à {{ city.ville }} <span class="text-sm text-gray-600"
                     >({{ city.code_postal }})
                 </span>
                 <span class="text-xs italic text-gray-600"
@@ -120,7 +79,7 @@ const getUniqueActivitesTitre = (activites) => {
             </h2>
 
             <p class="py-2 text-base font-medium leading-tight text-gray-700">
-                Trouvez un club de sport à
+                Trouvez un club de {{ discipline.name }} à
                 <span class="font-semibold text-gray-800"
                     >{{ city.ville }}
                 </span>
@@ -132,26 +91,12 @@ const getUniqueActivitesTitre = (activites) => {
                     >{{ city.structures_count }}
                 </span>
                 structures disponibles, comparez services, tarifs et horaires en
-                2 clics ! Pratiquer un sport à {{ city.ville }} n'a jamais été
+                2 clics ! Pratiquer du {{ discipline.name }} à {{ city.ville }} n'a jamais été
                 aussi simple!
             </p>
         </template>
 
         <template v-if="structures.length > 0">
-            <div
-                class="mx-auto max-w-full px-2 sm:px-6 md:space-x-4 lg:px-8 py-6"
-            >
-                <h3 class="text-center text-gray-600 font-semibold mb-4">Les disciplines pratiquées à <span class="text-indigo-700">{{ city.ville }}</span> <span class="text-xs text-gray-600">({{ city.code_postal }})</span></h3>
-                <div class="text-gray-600 w-full flex flex-col md:flex-row justify-center md:space-x-4 space-y-2 md:space-y-0 items-center">
-                    <div v-for="discipline in flattenedDisciplines" :key="discipline.id">
-                        <Link :href="route('villes.disciplines.show', { city: city.id, discipline: discipline.slug })"
-                                class="inline-block rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg hover:border-gray-100"
-                            >
-                            {{ discipline.name }}
-                        </Link>
-                    </div>
-                </div>
-            </div>
             <div
                 class="mx-auto flex min-h-screen max-w-full flex-col px-2 sm:px-6 md:flex-row md:space-x-4 lg:px-8 py-12"
             >
@@ -168,9 +113,6 @@ const getUniqueActivitesTitre = (activites) => {
                             @mouseout="hideTooltip()"
                         />
                     </div>
-                    <!-- <div class="flex justify-end p-10">
-                        <Pagination :links="structures.links" />
-                    </div> -->
                 </div>
                 <div class="md:w-1/2 md:sticky space-y-4">
                     <LeafletMapMultiple
@@ -179,8 +121,8 @@ const getUniqueActivitesTitre = (activites) => {
                         :hovered-structure="hoveredStructure"
                         :zoom="11"
                     />
+                    <DisciplinesSimilaires :disciplinesSimilaires="disciplinesSimilaires" />
                     <CitiesAround :citiesAround="citiesAround" />
-
                 </div>
             </div>
         </template>

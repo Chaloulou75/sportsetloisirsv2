@@ -122,7 +122,7 @@ watch(
                         v-for="(departement, index) in departements.data"
                         :key="departement.id"
                         :index="index"
-                        class="flex flex-col items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-green-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg"
+                        class="flex flex-col items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring active:bg-indigo-500 shadow-sm hover:shadow-lg hover:border-gray-100"
                     >
                         <div>{{ formatCityName(departement.departement) }}</div>
                         <div

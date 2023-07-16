@@ -54,13 +54,13 @@ class CityController extends Controller
      */
     public function show(City $city)
     {
-        $city = City::with('structures')
+        $city = City::with(['structures', 'structures.disciplines', 'structures.disciplines.discipline'])
                     ->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
                     ->where('id', $city->id)
                     ->withCount('structures')
                     ->first();
 
-        $citiesAround =  City::with('structures')
+        $citiesAround = City::with('structures')
                     ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
                     ->selectRaw("
                         (6366 * acos(
