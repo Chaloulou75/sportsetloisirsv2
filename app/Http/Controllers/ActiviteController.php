@@ -471,7 +471,7 @@ class ActiviteController extends Controller
             'activite_id' => $structureActivite->id,
             "actif" => 1,
             'lieu_id' => $request->adresse ?? $structure->adresses->first()->id,
-            'horaire_id' => $dayTime->id,
+            'horaire_id' => $dayTime->id ?? null,
             // 'tarif_id' => $structureTarif->id,
             'reservable' => 0,
         ]);
