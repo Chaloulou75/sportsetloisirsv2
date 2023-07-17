@@ -61,34 +61,39 @@ const formatCurrency = (value) => {
         />
 
         <div class="mt-2 p-3">
-            <dl>
+            <dl class="flex flex-col">
                 <p
                     class="text-sm font-medium uppercase tracking-widest text-pink-500"
                 >
                     {{ structure.structuretype.name }}
                 </p>
-                <p class="text-sm font-medium tracking-widest text-gray-600">
+                <p
+                    class="py-1.5 text-sm font-medium tracking-widest text-gray-600"
+                >
                     {{ structure.name }}
                 </p>
-                <span
-                    class="text-sm font-semibold"
-                    v-for="(activite, index) in getUniqueActivitesTitre(
-                        structure.activites
-                    )"
-                    :key="activite.id"
-                >
-                    {{ activite.titre }}
+                <div class="py-1.5">
                     <span
-                        v-if="
-                            index <
-                            getUniqueActivitesTitre(structure.activites)
-                                .length -
-                                1
-                        "
+                        class="text-sm font-semibold"
+                        v-for="(activite, index) in getUniqueActivitesTitre(
+                            structure.activites
+                        )"
+                        :key="activite.id"
                     >
-                        -
+                        {{ activite.titre }}
+                        <span
+                            v-if="
+                                index <
+                                getUniqueActivitesTitre(structure.activites)
+                                    .length -
+                                    1
+                            "
+                        >
+                            -
+                        </span>
                     </span>
-                </span>
+                </div>
+
                 <div class="py-1.5">
                     <dt class="sr-only">tarif</dt>
 
@@ -108,7 +113,7 @@ const formatCurrency = (value) => {
                     </span>
                 </div>
 
-                <div class="flex items-center">
+                <div class="flex items-center py-1.5">
                     <dt class="sr-only">Ville</dt>
                     <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
                     <dd class="text-sm font-medium">
@@ -116,7 +121,9 @@ const formatCurrency = (value) => {
                     </dd>
                 </div>
 
-                <div class="mt-6 flex items-center gap-1 text-xs">
+                <div
+                    class="mt-auto flex items-center justify-around gap-1 py-1.5 text-xs"
+                >
                     <div class="inline-flex shrink-0 items-center">
                         <svg
                             class="h-4 w-4 text-indigo-700"

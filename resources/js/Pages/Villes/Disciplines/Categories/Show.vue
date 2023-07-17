@@ -39,16 +39,7 @@ function hideTooltip() {
 <template>
     <Head
         :title="city.ville"
-        :description="
-            'Envie de faire du ' +
-            discipline.name +
-            ' à ' +
-            city.ville +
-            '? Choisissez parmi plus de ' +
-            city.structures_count +
-            ' structures pour pratiquer une activité sportive ou de loisirs à ' +
-            city.ville
-        "
+        :description="`${category.nom_categorie_client} de ${discipline.name} à ${city.ville}. Choisissez parmi plus de ${city.structures_count} structures pour pratiquer une activité sportive ou de loisirs à ${city.ville}`"
     />
 
     <AppLayout>
@@ -60,7 +51,8 @@ function hideTooltip() {
                 <h1
                     class="text-xl font-semibold uppercase leading-tight tracking-widest text-gray-800"
                 >
-                    {{ discipline.name }} <span class="lowercase">à</span>
+                    {{ category.nom_categorie_client }} de {{ discipline.name }}
+                    <span class="lowercase">à</span>
                     {{ formatCityName(city.ville) }}
                     <span class="text-sm text-gray-600"
                         >({{ city.code_postal }})
@@ -158,14 +150,17 @@ function hideTooltip() {
             </div>
 
             <p class="py-2 text-base font-medium leading-tight text-gray-700">
-                Trouvez un club de
-                <span class="font-semibold text-gray-800">{{
-                    discipline.name
-                }}</span>
-                à
                 <span class="font-semibold text-gray-800"
-                    >{{ formatCityName(city.ville) }}
+                    >{{ category.nom_categorie_client }}
                 </span>
+                de
+                <span class="font-semibold text-gray-800"
+                    >{{ category.nom_categorie_client }}
+                </span>
+                à
+                <span class="font-semibold text-gray-800">{{
+                    formatCityName(city.ville)
+                }}</span>
                 en France. <br />
                 Consultez la liste des
                 <span
@@ -205,7 +200,14 @@ function hideTooltip() {
                                         }
                                     )
                                 "
-                                class="w-full px-2 py-3 text-center text-sm font-medium leading-5 text-gray-700 ring-white ring-opacity-10 ring-offset-2 ring-offset-green-200 hover:bg-green-600 hover:text-white focus:bg-green-600 focus:text-white focus:outline-none focus:ring-2"
+                                :class="[
+                                    'w-full px-2 py-3 text-center text-sm font-medium leading-5 text-gray-700 ring-white ring-opacity-10 ring-offset-2 ring-offset-green-200 focus:outline-none focus:ring-2',
+                                    route().current(
+                                        'villes.disciplines.categories.show'
+                                    ) && category.id === categorie.id
+                                        ? 'bg-green-600 text-white'
+                                        : 'text-gray-700 hover:bg-white/50 hover:text-gray-800',
+                                ]"
                             >
                                 {{ categorie.nom_categorie_client }}
                             </Link>
@@ -221,7 +223,7 @@ function hideTooltip() {
             >
                 <div class="md:w-1/2">
                     <div
-                        class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-2"
+                        class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
                     >
                         <StructureCard
                             v-for="(structure, index) in structures"
@@ -252,7 +254,16 @@ function hideTooltip() {
                 class="mx-auto min-h-screen max-w-full px-2 py-12 sm:px-6 lg:px-8"
             >
                 <p class="font-medium text-gray-700">
-                    Dommage, il n'y a pas encore de structures inscrites à
+                    Dommage, il n'y a pas encore de structures inscrites dand la
+                    catégorie
+                    <span class="font-semibold text-gray-800">{{
+                        category.nom_categorie_client
+                    }}</span>
+                    en
+                    <span class="font-semibold text-gray-800">{{
+                        discipline.name
+                    }}</span>
+                    à
                     <span class="font-semibold text-gray-800">{{
                         formatCityName(city.ville)
                     }}</span>

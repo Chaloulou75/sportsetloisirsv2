@@ -81,7 +81,7 @@ class CityDisciplineCategorieController extends Controller
             },
             'activites' => function ($query) use ($discipline, $category) {
                 $query->where('discipline_id', $discipline->id)
-                        ->where('categorie_id', $category->id);
+                    ->where('categorie_id', $category->id);
             },
             'activites.discipline',
             'activites.categorie',
@@ -91,8 +91,9 @@ class CityDisciplineCategorieController extends Controller
             'tarifs.tarifType',
             'tarifs.structureTarifTypeInfos',
             'plannings',
-        ])
-        ->map(function ($structure) {
+        ])->filter(function ($structure) {
+            return $structure->activites->isNotEmpty();
+        })->map(function ($structure) {
             $disciplinesCount = $structure->disciplines->count();
             $activitiesCount = $structure->activites->count();
             $produitsCount = $structure->produits->count();
