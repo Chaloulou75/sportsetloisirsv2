@@ -6,7 +6,7 @@ import { Link } from "@inertiajs/vue3";
 <template>
     <div class="mx-auto h-full max-w-full bg-white px-2 py-16 sm:px-3 lg:px-6">
         <div
-            class="mx-auto grid max-w-7xl grid-cols-1 place-items-start gap-6 border-b border-gray-700 px-2 pb-6 text-sm text-gray-700 sm:grid-cols-2 lg:grid-cols-4"
+            class="mx-auto grid max-w-full grid-cols-1 place-items-start gap-6 border-b border-gray-700 px-2 pb-6 text-sm text-gray-700 sm:grid-cols-2 lg:grid-cols-4"
         >
             <div class="flex flex-col items-start justify-between space-y-4">
                 <h4 class="font-semibold">Annoncer sur le site</h4>
@@ -66,7 +66,7 @@ import { Link } from "@inertiajs/vue3";
             </div>
         </div>
         <div
-            class="mx-auto flex max-w-7xl flex-col items-start justify-between space-y-4 px-2 pt-8 text-sm text-gray-600 sm:flex-row sm:items-center sm:space-y-0 sm:px-3 lg:px-6"
+            class="mx-auto flex max-w-full flex-col items-start justify-between space-y-4 px-2 pt-8 text-sm text-gray-600 sm:flex-row sm:items-center sm:space-y-0 sm:px-3 lg:px-6"
         >
             <p>2006-{{ new Date().getFullYear() }} © sports-et-loisirs.fr</p>
 

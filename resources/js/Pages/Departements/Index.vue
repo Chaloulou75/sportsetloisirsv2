@@ -5,9 +5,11 @@ import { ref, watch, computed } from "vue";
 import { debounce } from "lodash";
 import { defineAsyncComponent } from "vue";
 import TextInput from "@/Components/TextInput.vue";
+import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
 
 let props = defineProps({
     departements: Object,
+    familles: Object,
     filters: Object,
     structuresCount: Number,
 });
@@ -54,6 +56,7 @@ watch(
 
     <AppLayout>
         <template #header>
+            <FamilleNavigation :familles="familles" />
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
                 Departements
             </h2>
@@ -107,7 +110,7 @@ watch(
                     </svg>
                 </button>
             </div>
-            <div class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8">
+            <div class="mx-auto min-h-screen max-w-full px-2 sm:px-6 lg:px-8">
                 <div
                     class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                 >

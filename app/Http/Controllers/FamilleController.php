@@ -60,14 +60,11 @@ class FamilleController extends Controller
                             ->withCount(['disciplines'])
                             ->first();
 
-        // $totalActivites = $famille->disciplines->sum('activites_count');
-
         $famille->timestamps = false;
         $famille->increment('view_count');
 
         return Inertia::render('Familles/Show', [
             'famille'=> $famille,
-            // 'totalActivites' => $totalActivites,
         ]);
     }
 

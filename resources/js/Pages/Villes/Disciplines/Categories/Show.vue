@@ -1,65 +1,30 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { router, Head, Link } from "@inertiajs/vue3";
-import { ref, watch, computed, defineAsyncComponent } from "vue";
-import { debounce } from "lodash";
-import TextInput from "@/Components/TextInput.vue";
-import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
+import { Head, Link } from "@inertiajs/vue3";
+import { ref, defineAsyncComponent } from "vue";
 import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
+import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
 import CitiesAround from "@/Components/Cities/CitiesAround.vue";
+import DisciplinesSimilaires from "@/Components/Disciplines/DisciplinesSimilaires.vue";
 
 let props = defineProps({
     familles: Object,
+    category: Object,
+    categories: Object,
     city: Object,
     citiesAround: Object,
     structures: Object,
-    filters: Object,
+    discipline: Object,
+    disciplinesSimilaires: Object,
 });
-
-let discipline = ref("");
-function resetSearch() {
-    discipline.value = "";
-}
-
-watch(
-    discipline,
-    debounce(function (value) {
-        router.get(
-            `/villes/${city.ville_formatee}`,
-            { discipline: value },
-            { preserveState: true, replace: true }
-        );
-    }, 500)
-);
 
 const StructureCard = defineAsyncComponent(() =>
     import("@/Components/Structures/StructureCard.vue")
 );
 
-const Pagination = defineAsyncComponent(() =>
-    import("@/Components/Pagination.vue")
-);
-
-// const flattenedDisciplines = computed(() => {
-//     return props.structures.flatMap((structure) => {
-//         return structure.disciplines.map((discipline) => {
-//             return discipline.discipline;
-//         });
-//     });
-// });
-
-const flattenedDisciplines = computed(() => {
-    const uniqueDisciplines = new Map();
-    props.structures.forEach((structure) => {
-        structure.disciplines.forEach((discipline) => {
-            const disciplineId = discipline.discipline_id;
-            if (!uniqueDisciplines.has(disciplineId)) {
-                uniqueDisciplines.set(disciplineId, discipline.discipline);
-            }
-        });
-    });
-    return Array.from(uniqueDisciplines.values());
-});
+const formatCityName = (ville) => {
+    return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
+};
 
 const hoveredStructure = ref(null);
 
@@ -69,17 +34,15 @@ function showTooltip(structure) {
 function hideTooltip() {
     hoveredStructure.value = null;
 }
-
-const formatCityName = (ville) => {
-    return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
-};
 </script>
 
 <template>
     <Head
         :title="city.ville"
         :description="
-            'Envie de faire du sport à ' +
+            'Envie de faire du ' +
+            discipline.name +
+            ' à ' +
             city.ville +
             '? Choisissez parmi plus de ' +
             city.structures_count +
@@ -95,14 +58,12 @@ const formatCityName = (ville) => {
                 class="my-4 flex w-full flex-col items-center justify-center space-y-2"
             >
                 <h1
-                    class="text-xl font-semibold leading-tight tracking-widest text-gray-800"
+                    class="text-xl font-semibold uppercase leading-tight tracking-widest text-gray-800"
                 >
+                    {{ discipline.name }} <span class="lowercase">à</span>
                     {{ formatCityName(city.ville) }}
                     <span class="text-sm text-gray-600"
                         >({{ city.code_postal }})
-                    </span>
-                    <span class="text-xs italic tracking-tight text-gray-600"
-                        >({{ city.view_count }} vues)
                     </span>
                 </h1>
                 <nav aria-label="Breadcrumb" class="flex">
@@ -150,11 +111,58 @@ const formatCityName = (ville) => {
                                 {{ formatCityName(city.ville) }}
                             </Link>
                         </li>
+                        <li class="relative flex items-center">
+                            <span
+                                class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
+                            >
+                            </span>
+
+                            <Link
+                                preserve-scroll
+                                :href="
+                                    route('villes.disciplines.show', {
+                                        city: city.id,
+                                        discipline: discipline.slug,
+                                    })
+                                "
+                                class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                            >
+                                {{ discipline.name }}
+                            </Link>
+                        </li>
+                        <li class="relative flex items-center">
+                            <span
+                                class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
+                            >
+                            </span>
+
+                            <Link
+                                preserve-scroll
+                                :href="
+                                    route(
+                                        'villes.disciplines.categories.show',
+                                        {
+                                            city: city.id,
+                                            discipline: discipline.slug,
+                                            category: category.id,
+                                        }
+                                    )
+                                "
+                                class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                            >
+                                {{ category.nom_categorie_client }}
+                            </Link>
+                        </li>
                     </ol>
                 </nav>
             </div>
+
             <p class="py-2 text-base font-medium leading-tight text-gray-700">
-                Trouvez une activité à
+                Trouvez un club de
+                <span class="font-semibold text-gray-800">{{
+                    discipline.name
+                }}</span>
+                à
                 <span class="font-semibold text-gray-800"
                     >{{ formatCityName(city.ville) }}
                 </span>
@@ -166,50 +174,48 @@ const formatCityName = (ville) => {
                     >{{ city.structures_count }}
                 </span>
                 structures disponibles, comparez services, tarifs et horaires en
-                2 clics ! Pratiquer un sport à
+                2 clics ! Pratiquer du
+                <span class="font-semibold text-gray-800">{{
+                    discipline.name
+                }}</span>
+                à
                 <span class="font-semibold text-gray-800">{{
                     formatCityName(city.ville)
                 }}</span>
                 n'a jamais été aussi simple!
             </p>
         </template>
-
-        <template v-if="structures.length > 0">
-            <div
-                class="mx-auto max-w-full px-2 py-6 sm:px-6 md:space-x-4 lg:px-8"
-            >
-                <h3
-                    class="mb-4 text-center text-lg font-semibold text-gray-600"
-                >
-                    Les disciplines pratiquées à
-                    <span class="text-indigo-700">{{
-                        formatCityName(city.ville)
-                    }}</span>
-                    <span class="text-xs text-gray-600">
-                        ({{ city.code_postal }})</span
-                    >
-                </h3>
-                <div
-                    class="flex w-full flex-col items-center justify-center space-y-2 text-gray-600 md:flex-row md:space-x-4 md:space-y-0"
-                >
-                    <div
-                        v-for="discipline in flattenedDisciplines"
-                        :key="discipline.id"
-                    >
-                        <Link
-                            :href="
-                                route('villes.disciplines.show', {
-                                    city: city.id,
-                                    discipline: discipline.slug,
-                                })
-                            "
-                            class="inline-block rounded border border-gray-600 px-12 py-3 text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+        <div class="mx-auto max-w-full px-2 py-4 sm:px-3 lg:px-6">
+            <div class="flex items-center justify-around space-x-4">
+                <div class="my-4 w-full">
+                    <div class="mt-1">
+                        <nav
+                            class="flex w-full flex-col items-stretch justify-between divide-y divide-green-600 rounded-sm border border-gray-300 bg-white/20 px-3 py-2 shadow-md focus:border-indigo-500 focus:outline-none sm:text-base md:flex-row md:items-center md:divide-y-0"
                         >
-                            {{ discipline.name }}
-                        </Link>
+                            <Link
+                                v-for="categorie in categories"
+                                :key="categorie.id"
+                                :href="
+                                    route(
+                                        'villes.disciplines.categories.show',
+                                        {
+                                            city: city.id,
+                                            discipline: discipline.slug,
+                                            category: categorie.id,
+                                        }
+                                    )
+                                "
+                                class="w-full px-2 py-3 text-center text-sm font-medium leading-5 text-gray-700 ring-white ring-opacity-10 ring-offset-2 ring-offset-green-200 hover:bg-green-600 hover:text-white focus:bg-green-600 focus:text-white focus:outline-none focus:ring-2"
+                            >
+                                {{ categorie.nom_categorie_client }}
+                            </Link>
+                        </nav>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <template v-if="structures.length > 0">
             <div
                 class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-12 sm:px-6 md:flex-row md:space-x-4 lg:px-8"
             >
@@ -226,18 +232,18 @@ const formatCityName = (ville) => {
                             @mouseout="hideTooltip()"
                         />
                     </div>
-                    <!-- <div class="flex justify-end p-10">
-                        <Pagination :links="structures.links" />
-                    </div> -->
                 </div>
                 <div class="space-y-4 md:sticky md:w-1/2">
                     <LeafletMapMultiple
                         class="md:top-2"
                         :structures="structures"
                         :hovered-structure="hoveredStructure"
-                        :zoom="11"
+                        :zoom="12"
                     />
                     <CitiesAround :citiesAround="citiesAround" />
+                    <DisciplinesSimilaires
+                        :disciplinesSimilaires="disciplinesSimilaires"
+                    />
                 </div>
             </div>
         </template>

@@ -137,7 +137,7 @@ const submit = () => {
         </template>
 
         <div class="py-12">
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-full sm:px-6 lg:px-8">
                 <div>
                     <form @submit.prevent="submit" autocomplete="off">
                         <div
@@ -284,7 +284,7 @@ const submit = () => {
 
                             <section
                                 v-if="activites.length > 0"
-                                class="mx-auto my-4 max-w-7xl space-y-4 px-2 py-6 sm:px-4 lg:px-8"
+                                class="mx-auto my-4 max-w-full space-y-4 px-2 py-6 sm:px-4 lg:px-8"
                             >
                                 <h2 class="text-xl font-bold">Les activités</h2>
                                 <div

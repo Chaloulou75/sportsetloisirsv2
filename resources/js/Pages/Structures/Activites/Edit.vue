@@ -147,7 +147,7 @@ onMounted(() => {
         </template>
 
         <div class="py-12">
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-full sm:px-6 lg:px-8">
                 <TabGroup :defaultIndex="defaultTabIndex">
                     <section class="space-y-4 text-gray-700">
                         <div>
@@ -193,7 +193,7 @@ onMounted(() => {
                         </div>
                     </section>
 
-                    <TabPanels class="mx-auto max-w-7xl py-6 text-gray-700">
+                    <TabPanels class="mx-auto max-w-full py-6 text-gray-700">
                         <TabPanel
                             v-for="(
                                 categorie, idx

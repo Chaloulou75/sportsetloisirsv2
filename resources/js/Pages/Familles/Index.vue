@@ -1,6 +1,7 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
+import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
 defineProps({
     familles: Object,
     disciplinesCount: Number,
@@ -24,6 +25,7 @@ defineProps({
 
     <AppLayout>
         <template #header>
+            <FamilleNavigation :familles="familles" />
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
                 Les familles d'activités
             </h2>
@@ -49,7 +51,7 @@ defineProps({
         </template>
 
         <div class="py-12">
-            <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-full px-2 sm:px-6 lg:px-8">
                 <div
                     class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                 >

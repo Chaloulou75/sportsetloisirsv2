@@ -152,10 +152,10 @@ watch(
                 </div>
             </div>
             <div
-                class="mx-auto min-h-screen max-w-7xl px-2 py-12 sm:px-6 lg:px-8"
+                class="mx-auto min-h-screen max-w-full px-2 py-12 sm:px-6 lg:px-8"
             >
                 <div
-                    class="mx-auto flex min-h-screen max-w-7xl flex-col px-2 sm:px-6 md:flex-row md:space-x-4 lg:px-8"
+                    class="mx-auto flex min-h-screen max-w-full flex-col px-2 sm:px-6 md:flex-row md:space-x-4 lg:px-8"
                 >
                     <div class="md:w-1/2">
                         <div
@@ -188,7 +188,7 @@ watch(
         <template v-else>
             <div class="py-12">
                 <div
-                    class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8"
+                    class="mx-auto min-h-screen max-w-full px-2 sm:px-6 lg:px-8"
                 >
                     <p class="font-medium text-gray-700">
                         Dommage, il n'y a pas encore de structures inscrites

@@ -50,28 +50,6 @@ function hideTooltip() {
     hoveredStructure.value = null;
 }
 
-const getUniqueActivitesDiscipline = (activites) => {
-    const uniqueNames = new Set();
-    return activites.filter((activite) => {
-        if (!uniqueNames.has(activite.discipline.name)) {
-            uniqueNames.add(activite.discipline.name);
-            return true;
-        }
-        return false;
-    });
-};
-
-const getUniqueActivitesTitre = (activites) => {
-    const uniqueNames = new Set();
-    return activites.filter((activite) => {
-        if (!uniqueNames.has(activite.titre)) {
-            uniqueNames.add(activite.titre);
-            return true;
-        }
-        return false;
-    });
-};
-
 onMounted(() => {
     if (props.categories && props.categories.length > 0) {
         selectedCategoryId.value = props.categories[0].id;
@@ -124,7 +102,7 @@ onMounted(() => {
         </template>
         <template v-if="categories.length > 0">
             <TabGroup :defaultIndex="defaultTabIndex">
-                <div class="mx-auto max-w-7xl px-2 py-4 sm:px-3 lg:px-6">
+                <div class="mx-auto max-w-full px-2 py-4 sm:px-3 lg:px-6">
                     <div class="flex items-center justify-around space-x-4">
                         <div class="my-4 w-full">
                             <div class="mt-1">
@@ -159,7 +137,7 @@ onMounted(() => {
                         </div>
                     </div>
                 </div>
-                <TabPanels class="mx-auto max-w-7xl py-6 text-gray-700">
+                <TabPanels class="mx-auto max-w-full py-6 text-gray-700">
                     <TabPanel
                         v-for="(categorie, idx) in categories"
                         :key="categorie.id"
@@ -204,7 +182,7 @@ onMounted(() => {
                         </template>
                         <template v-else>
                             <div
-                                class="mx-auto flex min-h-screen max-w-7xl flex-col px-2 py-12 sm:px-6 md:flex-row lg:px-8"
+                                class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-12 sm:px-6 md:flex-row lg:px-8"
                             >
                                 <p
                                     class="w-full font-medium text-gray-700 md:w-2/3"
@@ -235,7 +213,7 @@ onMounted(() => {
         </template>
         <template v-else>
             <div
-                class="mx-auto flex min-h-screen max-w-7xl flex-col px-2 py-12 sm:px-6 md:flex-row lg:px-8"
+                class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-12 sm:px-6 md:flex-row lg:px-8"
             >
                 <p class="w-full font-medium text-gray-700 md:w-2/3">
                     Il n'y a pas encore de structures inscrites en

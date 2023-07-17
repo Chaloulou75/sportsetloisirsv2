@@ -13,10 +13,10 @@ const isShowing = ref(true);
         <MainNavigation />
         <!-- Page Heading -->
         <header
-            class="bg-white shadow-lg shadow-sky-600/20"
+            class="h-full w-full bg-gradient-to-br from-green-100 to-blue-100 shadow-lg shadow-sky-600/20"
             v-if="$slots.header"
         >
-            <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-full px-2 py-4 sm:px-3 lg:px-6">
                 <slot name="header" />
             </div>
         </header>

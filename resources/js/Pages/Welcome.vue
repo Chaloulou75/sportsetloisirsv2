@@ -2,7 +2,7 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { ref, onMounted, watch } from "vue";
 import { router, Head, Link } from "@inertiajs/vue3";
-import BreezeNavLink from "@/Components/NavLink.vue";
+import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
 import { debounce } from "lodash";
 import TextInput from "@/Components/TextInput.vue";
 import { ArrowSmallRightIcon, CheckIcon } from "@heroicons/vue/24/solid";
@@ -80,27 +80,11 @@ watch(
 
     <AppLayout>
         <header>
-            <div class="hidden bg-white shadow-lg shadow-sky-600/20 sm:block">
-                <div class="mx-auto max-w-7xl px-2 py-6 sm:px-3 lg:px-6">
-                    <div
-                        class="grid grid-cols-1 place-items-start gap-2 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-10 lg:place-items-center"
-                    >
-                        <BreezeNavLink
-                            :href="route('familles.show', famille.slug)"
-                            :active="
-                                route().current('familles.show', famille.slug)
-                            "
-                            v-for="(famille, index) in familles"
-                            :key="index"
-                            >{{ famille.name }}</BreezeNavLink
-                        >
-                    </div>
-                </div>
-            </div>
+            <FamilleNavigation :familles="familles" />
         </header>
         <div>
             <section
-                class="mx-auto flex w-full max-w-7xl flex-col items-center justify-center space-x-0 space-y-4 px-2 py-8 md:flex-row md:space-x-4 md:space-y-0"
+                class="mx-auto flex w-full max-w-full flex-col items-center justify-center space-x-0 space-y-4 px-2 py-8 md:flex-row md:space-x-4 md:space-y-0"
             >
                 <div class="w-full md:w-1/3">
                     <label
@@ -137,7 +121,7 @@ watch(
                 </div>
             </section>
             <!-- <section
-                class="min-h-full mx-auto my-16 max-w-7xl md:my-0 md:min-h-screen"
+                class="min-h-full mx-auto my-16 max-w-full md:my-0 md:min-h-screen"
             >
                 <swiper
                     :slides-per-view="1"
@@ -159,7 +143,7 @@ watch(
                 </swiper>
             </section>
             <section
-                class="relative flex flex-col items-center justify-center min-h-full mx-auto my-16 bg-transparent max-w-7xl md:my-0 md:min-h-screen"
+                class="relative flex flex-col items-center justify-center min-h-full mx-auto my-16 bg-transparent max-w-full md:my-0 md:min-h-screen"
             >
                 <div
                     class="max-w-sm text-5xl font-black text-center text-white -rotate-3 md:max-w-3xl md:text-8xl"
@@ -210,7 +194,7 @@ watch(
             </section> -->
 
             <section
-                class="mx-auto max-w-7xl bg-transparent px-2 py-8 md:py-20"
+                class="mx-auto max-w-full bg-transparent px-2 py-8 md:py-20"
             >
                 <div
                     class="flex flex-col items-start justify-between space-y-12 md:flex-row md:space-x-20 md:space-y-0"
@@ -267,7 +251,7 @@ watch(
                 </div>
             </section>
 
-            <section class="mx-auto max-w-7xl px-2 py-8 md:py-20">
+            <section class="mx-auto max-w-full px-2 py-8 md:py-20">
                 <h3 class="pb-6 text-2xl font-semibold text-gray-700">
                     Besoin d'inspiration:
                 </h3>
@@ -299,7 +283,7 @@ watch(
                 </div>
             </section>
 
-            <section class="mx-auto max-w-7xl px-2 py-8 md:py-20">
+            <section class="mx-auto max-w-full px-2 py-8 md:py-20">
                 <h3 class="pb-6 text-2xl font-semibold text-gray-700">
                     Top villes:
                 </h3>
@@ -328,7 +312,7 @@ watch(
                 </div>
             </section>
 
-            <section class="mx-auto max-w-7xl px-2 py-8 md:py-20">
+            <section class="mx-auto max-w-full px-2 py-8 md:py-20">
                 <h3 class="pb-6 text-2xl font-semibold text-gray-700">
                     Top departements:
                 </h3>
@@ -360,7 +344,7 @@ watch(
             </section>
 
             <section
-                class="mx-auto flex max-w-7xl flex-col justify-between px-2 py-8 md:flex-row md:py-20"
+                class="mx-auto flex max-w-full flex-col justify-between px-2 py-8 md:flex-row md:py-20"
             >
                 <div class="mb-6 max-w-full grow sm:mb-0">
                     <h3 class="pb-6 text-2xl font-semibold text-gray-700">

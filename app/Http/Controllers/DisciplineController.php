@@ -3,15 +3,16 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use App\Models\Famille;
 use App\Models\Categorie;
 use App\Models\Structure;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
+use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineSimilaire;
 use App\Http\Resources\CategorieResource;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Resources\ListDisciplineResource;
-use App\Models\LienDisciplineCategorie;
 
 class DisciplineController extends Controller
 {
@@ -21,6 +22,8 @@ class DisciplineController extends Controller
     public function index()
     {
         $structuresCount = Structure::count();
+
+        $familles = Famille::select(['id', 'name', 'slug'])->get();
 
         $disciplines = ListDiscipline::select(['id', 'name', 'slug'])
                         ->withCount('structures')
@@ -33,6 +36,7 @@ class DisciplineController extends Controller
 
         return Inertia::render('Disciplines/Index', [
             'disciplines' => $disciplines,
+            'familles' => $familles,
             'structuresCount' => $structuresCount,
             'filters' => request()->all(['search']),
         ]);

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use Inertia\Inertia;
+use App\Models\Famille;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
+use App\Models\LienDisciplineCategorie;
 
 class CityDisciplineController extends Controller
 {
@@ -37,10 +39,14 @@ class CityDisciplineController extends Controller
      */
     public function show(City $city, $discipline)
     {
+        $familles = Famille::select(['id', 'name', 'slug'])->get();
+
         $discipline = ListDiscipline::where('slug', $discipline)
                             ->select(['id', 'name', 'slug', 'view_count'])
                             ->first();
         $disciplinesSimilaires = $discipline->disciplinesSimilaires;
+
+        $categories = LienDisciplineCategorie::where('discipline_id', $discipline->id)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
 
         $city = City::with(['structures'])->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
                             ->where('id', $city->id)
@@ -67,7 +73,7 @@ class CityDisciplineController extends Controller
                 $query->where('discipline_id', $discipline->id);
             },
             'disciplines.discipline:id,name,slug',
-            'categories:id,categorie_id',
+            'categories',
             'activites' => function ($query) use ($discipline) {
                 $query->where('discipline_id', $discipline->id);
             },
@@ -115,6 +121,7 @@ class CityDisciplineController extends Controller
                 'activites' => $structure->activites,
                 'produits' => $structure->produits,
                 'tarifs' => $structure->tarifs,
+                'plannings' => $structure->plannings,
                 'disciplines_count' => $disciplinesCount,
                 'activites_count' => $activitiesCount,
                 'produits_count' => $produitsCount,
@@ -125,6 +132,8 @@ class CityDisciplineController extends Controller
         $city->increment('view_count');
 
         return Inertia::render('Villes/Disciplines/Show', [
+            'familles' => $familles,
+            'categories' => $categories,
             'city'=> $city,
             'citiesAround' => $citiesAround,
             'disciplinesSimilaires' => $disciplinesSimilaires,

@@ -6,10 +6,12 @@ import { debounce } from "lodash";
 import TextInput from "@/Components/TextInput.vue";
 import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
 import StructureCard from "@/Components/Structures/StructureCard.vue";
+import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
 import { MapPinIcon } from "@heroicons/vue/24/outline";
 
 let props = defineProps({
     structures: Object,
+    familles: Object,
     filters: Object,
     structuresCount: Number,
 });
@@ -32,28 +34,6 @@ function showTooltip(structure) {
 function hideTooltip() {
     hoveredStructure.value = null;
 }
-
-const getUniqueActivitesDiscipline = (activites) => {
-    const uniqueNames = new Set();
-    return activites.filter((activite) => {
-        if (!uniqueNames.has(activite.discipline.name)) {
-            uniqueNames.add(activite.discipline.name);
-            return true;
-        }
-        return false;
-    });
-};
-
-const getUniqueActivitesTitre = (activites) => {
-    const uniqueNames = new Set();
-    return activites.filter((activite) => {
-        if (!uniqueNames.has(activite.titre)) {
-            uniqueNames.add(activite.titre);
-            return true;
-        }
-        return false;
-    });
-};
 
 watch(
     search,
@@ -81,6 +61,7 @@ watch(
 
     <AppLayout>
         <template #header>
+            <FamilleNavigation :familles="familles" />
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
                 Structures, clubs de sport et cours collectifs
             </h2>
@@ -159,7 +140,7 @@ watch(
             </template>
             <template v-else>
                 <div
-                    class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8"
+                    class="mx-auto min-h-screen max-w-full px-2 sm:px-6 lg:px-8"
                 >
                     <p class="font-medium text-gray-700">
                         Il n'y a pas encore de structures inscrites pour cette

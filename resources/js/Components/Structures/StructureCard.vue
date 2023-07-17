@@ -52,7 +52,7 @@ const formatCurrency = (value) => {
     <Link
         :href="route('structures.show', structure.slug)"
         :active="route().current('structures.show', structure.slug)"
-        class="block rounded-lg p-4 shadow-sm shadow-indigo-200 hover:shadow-xl"
+        class="block rounded-lg shadow-sm shadow-indigo-200 hover:shadow-xl md:px-0"
     >
         <img
             alt="Home"
@@ -60,7 +60,7 @@ const formatCurrency = (value) => {
             class="h-56 w-full rounded-md object-cover"
         />
 
-        <div class="mt-2">
+        <div class="mt-2 p-3">
             <dl>
                 <p
                     class="text-sm font-medium uppercase tracking-widest text-pink-500"

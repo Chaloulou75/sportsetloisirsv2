@@ -120,7 +120,7 @@ const showModal = ref(false);
             </div>
         </template>
 
-        <section class="mx-auto my-4 max-w-7xl px-0 py-6 sm:px-4 lg:px-8">
+        <section class="mx-auto my-4 max-w-full px-0 py-6 sm:px-4 lg:px-8">
             <div
                 class="flex flex-col justify-between rounded-lg bg-white px-4 py-6 shadow-lg shadow-sky-700 md:flex-row"
             >
@@ -283,7 +283,7 @@ const showModal = ref(false);
         </section>
         <!-- <section
             v-if="structure.activites.length > 0"
-            class="px-2 py-6 mx-auto my-4 space-y-4 max-w-7xl sm:px-4 lg:px-8"
+            class="px-2 py-6 mx-auto my-4 space-y-4 max-w-full sm:px-4 lg:px-8"
         >
             <h2 class="text-xl font-bold">Nos activités</h2>
             <div

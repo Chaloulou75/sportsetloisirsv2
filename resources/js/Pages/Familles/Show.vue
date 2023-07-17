@@ -4,7 +4,6 @@ import { Head, Link } from "@inertiajs/vue3";
 
 defineProps({
     famille: Object,
-    // totalActivites: Number,
 });
 </script>
 
@@ -39,12 +38,8 @@ defineProps({
                     {{ famille.name }}
                 </span>
                 en France. <br />
-                Consultez la liste des
-                <span class="font-semibold text-gray-800">
-                    {{ totalActivites }}
-                </span>
-                activités disponibles, comparez services, tarifs et horaires en
-                2 clics ! Pratiquer un sport de
+                Consultez la liste des activités disponibles, comparez services,
+                tarifs et horaires en 2 clics ! Pratiquer un sport de
                 <span class="font-semibold text-gray-800">{{
                     famille.name
                 }}</span>
@@ -53,7 +48,7 @@ defineProps({
         </template>
 
         <div class="py-12">
-            <div class="mx-auto min-h-screen max-w-7xl px-2 sm:px-6 lg:px-8">
+            <div class="mx-auto min-h-screen max-w-full px-2 sm:px-6 lg:px-8">
                 <div
                     class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                 >
@@ -64,7 +59,7 @@ defineProps({
                         "
                         v-for="discipline in famille.disciplines"
                         :key="discipline.id"
-                        class="flex flex-col items-center justify-center rounded border border-indigo-600 px-12 py-3 text-sm font-medium text-indigo-700 shadow-sm hover:bg-indigo-600 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                        class="flex flex-col items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                     >
                         {{ discipline.name }}
                         <!-- <div

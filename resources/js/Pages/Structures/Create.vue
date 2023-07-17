@@ -97,7 +97,7 @@ function submit() {
         </template>
 
         <div class="py-12">
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 xl:max-w-full">
+            <div class="mx-auto max-w-full sm:px-6 lg:px-8 xl:max-w-full">
                 <div>
                     <div class="md:grid md:grid-cols-3 md:gap-6">
                         <div class="md:col-span-1">

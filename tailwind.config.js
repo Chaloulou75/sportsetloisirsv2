@@ -19,6 +19,9 @@ module.exports = {
                 midnight: "#121b4f",
                 gold: "#ffd700",
             },
+            backgroundImage: {
+                "badminton-hero": "url('/images/badminton.jpg')",
+            },
         },
     },
 

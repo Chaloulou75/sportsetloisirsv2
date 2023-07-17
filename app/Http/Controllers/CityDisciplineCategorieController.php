@@ -2,41 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use Inertia\Inertia;
 use App\Models\Famille;
-use App\Models\Structure;
-use App\Models\Departement;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\ListDiscipline;
+use App\Models\LienDisciplineCategorie;
 
-class DepartementController extends Controller
+class CityDisciplineCategorieController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $structuresCount = Structure::count();
-        $familles = Famille::select(['id', 'name', 'slug'])->get();
-
-        $departements = Departement::with([
-                            'structures:id,name,slug,presentation_courte,address,city,zip_code,address_lat,address_lng,departement_id'
-                        ])
-                        ->select(['id', 'departement', 'numero'])
-                        ->withCount('structures')
-                        ->filter(
-                            request(['search'])
-                        )
-                        ->orderByDesc('structures_count')
-                        ->paginate(15)
-                        ->withQueryString();
-
-        return Inertia::render('Departements/Index', [
-            'departements' => $departements,
-            'familles' => $familles,
-            'structuresCount' => $structuresCount,
-            'filters' => request()->all(['search']),
-        ]);
+        //
     }
 
     /**
@@ -58,30 +38,51 @@ class DepartementController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Departement $departement)
+    public function show(City $city, $discipline, $category)
     {
-        $departement = Departement::with(['cities',
-                                        'structures' => function ($query) {
-                                            $query->latest();
-                                        },
-                                        'structures.structuretype:id,name,slug'
-                                    ])
-                                    ->select(['id', 'numero', 'departement', 'prefixe', 'view_count'])
-                                    ->where('numero', $departement->numero)
-                                    ->withCount('structures')
-                                    ->first();
+        $familles = Famille::select(['id', 'name', 'slug'])->get();
 
-        $structures = $departement->structures->load([
+        $discipline = ListDiscipline::where('slug', $discipline)
+                            ->select(['id', 'name', 'slug', 'view_count'])
+                            ->first();
+        $disciplinesSimilaires = $discipline->disciplinesSimilaires;
+
+        $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('id', $category)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
+
+        $categories = LienDisciplineCategorie::where('discipline_id', $discipline->id)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
+
+        $city = City::with(['structures'])->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
+                            ->where('id', $city->id)
+                            ->withCount('structures')
+                            ->first();
+
+        $citiesAround = City::with('structures')
+                    ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
+                    ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
+                    ->where('id', '!=', $city->id)
+                    ->havingRaw('distance <= ?', [$city->tolerance_rayon])
+                    ->orderBy('distance', 'ASC')
+                    ->limit(10)
+                    ->get();
+
+        $structures = $city->structures->load([
             'famille:id,name',
             'creator:id,name',
             'users:id,name',
             'city:id,ville,ville_formatee,code_postal',
             'departement:id,departement,numero',
             'structuretype:id,name,slug',
-            'disciplines',
+            'disciplines' => function ($query) use ($discipline) {
+                $query->where('discipline_id', $discipline->id);
+            },
             'disciplines.discipline:id,name,slug',
-            'categories:id,categorie_id',
-            'activites',
+            'categories'=> function ($query) use ($category) {
+                $query->where('categorie_id', $category->id);
+            },
+            'activites' => function ($query) use ($discipline, $category) {
+                $query->where('discipline_id', $discipline->id)
+                        ->where('categorie_id', $category->id);
+            },
             'activites.discipline',
             'activites.categorie',
             'produits',
@@ -132,20 +133,26 @@ class DepartementController extends Controller
             ];
         })->unique();
 
+        $city->timestamp = false;
+        $city->increment('view_count');
 
-        $departement->timestamp = false;
-        $departement->increment('view_count');
-
-        return Inertia::render('Departements/Show', [
-            'departement'=> $departement,
+        return Inertia::render('Villes/Disciplines/Categories/Show', [
+            'familles' => $familles,
+            'category' => $category,
+            'categories' => $categories,
+            'city'=> $city,
+            'citiesAround' => $citiesAround,
+            'disciplinesSimilaires' => $disciplinesSimilaires,
             'structures' => $structures,
+            'discipline' => $discipline,
         ]);
+
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Departement $departement)
+    public function edit(string $id)
     {
         //
     }
@@ -153,7 +160,7 @@ class DepartementController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Departement $departement)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -161,7 +168,7 @@ class DepartementController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Departement $departement)
+    public function destroy(string $id)
     {
         //
     }

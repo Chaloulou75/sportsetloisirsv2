@@ -106,7 +106,7 @@ const destroyTarif = (tarif) => {
         </template>
 
         <div class="py-12">
-            <div class="mx-auto max-w-7xl px-2 py-6 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-full px-2 py-6 sm:px-6 lg:px-8">
                 <ButtonsActiviteEdit :structure="structure" />
                 <div
                     class="mt-6 min-h-full w-full overflow-x-auto rounded-xl shadow-lg"

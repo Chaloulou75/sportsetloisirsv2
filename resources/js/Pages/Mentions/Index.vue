@@ -16,7 +16,7 @@ import { ChevronUpIcon } from "@heroicons/vue/24/solid";
         </template>
 
         <div class="py-4">
-            <div class="mx-auto max-w-7xl px-2 md:px-4">
+            <div class="mx-auto max-w-full px-2 md:px-4">
                 <div class="flex flex-col justify-between md:flex-row">
                     <section class="flex-1 px-2 py-4 pr-0 md:mr-8">
                         <div id="conditions" class="mb-6 tracking-normal">

@@ -2,11 +2,14 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { ref, defineAsyncComponent } from "vue";
+import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
 import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
 import CitiesAround from "@/Components/Cities/CitiesAround.vue";
 import DisciplinesSimilaires from "@/Components/Disciplines/DisciplinesSimilaires.vue";
 
 let props = defineProps({
+    familles: Object,
+    categories: Object,
     city: Object,
     citiesAround: Object,
     structures: Object,
@@ -18,6 +21,10 @@ const StructureCard = defineAsyncComponent(() =>
     import("@/Components/Structures/StructureCard.vue")
 );
 
+const formatCityName = (ville) => {
+    return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
+};
+
 const hoveredStructure = ref(null);
 
 function showTooltip(structure) {
@@ -26,28 +33,6 @@ function showTooltip(structure) {
 function hideTooltip() {
     hoveredStructure.value = null;
 }
-
-const getUniqueActivitesDiscipline = (activites) => {
-    const uniqueNames = new Set();
-    return activites.filter((activite) => {
-        if (!uniqueNames.has(activite.discipline.name)) {
-            uniqueNames.add(activite.discipline.name);
-            return true;
-        }
-        return false;
-    });
-};
-
-const getUniqueActivitesTitre = (activites) => {
-    const uniqueNames = new Set();
-    return activites.filter((activite) => {
-        if (!uniqueNames.has(activite.titre)) {
-            uniqueNames.add(activite.titre);
-            return true;
-        }
-        return false;
-    });
-};
 </script>
 
 <template>
@@ -67,20 +52,95 @@ const getUniqueActivitesTitre = (activites) => {
 
     <AppLayout>
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                {{ discipline.name }} à {{ city.ville }}
-                <span class="text-sm text-gray-600"
-                    >({{ city.code_postal }})
-                </span>
-                <span class="text-xs italic text-gray-600"
-                    >({{ city.view_count }} vues)
-                </span>
-            </h2>
+            <FamilleNavigation :familles="familles" />
+            <div
+                class="my-4 flex w-full flex-col items-center justify-center space-y-2"
+            >
+                <h1
+                    class="text-xl font-semibold uppercase leading-tight tracking-widest text-gray-800"
+                >
+                    {{ discipline.name }} <span class="lowercase">à</span>
+                    {{ formatCityName(city.ville) }}
+                    <span class="text-sm text-gray-600"
+                        >({{ city.code_postal }})
+                    </span>
+                </h1>
+                <nav aria-label="Breadcrumb" class="flex">
+                    <ol
+                        class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600"
+                    >
+                        <li class="flex items-center">
+                            <Link
+                                preserve-scroll
+                                :href="route('welcome')"
+                                class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-4 w-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                                    />
+                                </svg>
+
+                                <span class="ms-1.5 text-xs font-medium">
+                                    Accueil
+                                </span>
+                            </Link>
+                        </li>
+
+                        <li class="relative flex items-center">
+                            <span
+                                class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
+                            >
+                            </span>
+
+                            <Link
+                                preserve-scroll
+                                :href="route('villes.show', city.id)"
+                                class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                            >
+                                {{ formatCityName(city.ville) }}
+                            </Link>
+                        </li>
+                        <li class="relative flex items-center">
+                            <span
+                                class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
+                            >
+                            </span>
+
+                            <Link
+                                preserve-scroll
+                                :href="
+                                    route('villes.disciplines.show', {
+                                        city: city.id,
+                                        discipline: discipline.slug,
+                                    })
+                                "
+                                class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                            >
+                                {{ discipline.name }}
+                            </Link>
+                        </li>
+                    </ol>
+                </nav>
+            </div>
 
             <p class="py-2 text-base font-medium leading-tight text-gray-700">
-                Trouvez un club de {{ discipline.name }} à
+                Trouvez un club de
+                <span class="font-semibold text-gray-800">{{
+                    discipline.name
+                }}</span>
+                à
                 <span class="font-semibold text-gray-800"
-                    >{{ city.ville }}
+                    >{{ formatCityName(city.ville) }}
                 </span>
                 en France. <br />
                 Consultez la liste des
@@ -90,10 +150,46 @@ const getUniqueActivitesTitre = (activites) => {
                     >{{ city.structures_count }}
                 </span>
                 structures disponibles, comparez services, tarifs et horaires en
-                2 clics ! Pratiquer du {{ discipline.name }} à
-                {{ city.ville }} n'a jamais été aussi simple!
+                2 clics ! Pratiquer du
+                <span class="font-semibold text-gray-800">{{
+                    discipline.name
+                }}</span>
+                à
+                <span class="font-semibold text-gray-800">{{
+                    formatCityName(city.ville)
+                }}</span>
+                n'a jamais été aussi simple!
             </p>
         </template>
+        <div class="mx-auto max-w-full px-2 py-4 sm:px-3 lg:px-6">
+            <div class="flex items-center justify-around space-x-4">
+                <div class="my-4 w-full">
+                    <div class="mt-1">
+                        <nav
+                            class="flex w-full flex-col items-stretch justify-between divide-y divide-green-600 rounded-sm border border-gray-300 bg-white/20 px-3 py-2 shadow-md focus:border-indigo-500 focus:outline-none sm:text-base md:flex-row md:items-center md:divide-y-0"
+                        >
+                            <Link
+                                v-for="categorie in categories"
+                                :key="categorie.id"
+                                :href="
+                                    route(
+                                        'villes.disciplines.categories.show',
+                                        {
+                                            city: city.id,
+                                            discipline: discipline.slug,
+                                            category: categorie.id,
+                                        }
+                                    )
+                                "
+                                class="w-full px-2 py-3 text-center text-sm font-medium leading-5 text-gray-700 ring-white ring-opacity-10 ring-offset-2 ring-offset-green-200 hover:bg-green-600 hover:text-white focus:bg-green-600 focus:text-white focus:outline-none focus:ring-2"
+                            >
+                                {{ categorie.nom_categorie_client }}
+                            </Link>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <template v-if="structures.length > 0">
             <div
@@ -118,23 +214,23 @@ const getUniqueActivitesTitre = (activites) => {
                         class="md:top-2"
                         :structures="structures"
                         :hovered-structure="hoveredStructure"
-                        :zoom="11"
+                        :zoom="12"
                     />
+                    <CitiesAround :citiesAround="citiesAround" />
                     <DisciplinesSimilaires
                         :disciplinesSimilaires="disciplinesSimilaires"
                     />
-                    <CitiesAround :citiesAround="citiesAround" />
                 </div>
             </div>
         </template>
         <template v-else>
             <div
-                class="mx-auto min-h-screen max-w-7xl px-2 py-12 sm:px-6 lg:px-8"
+                class="mx-auto min-h-screen max-w-full px-2 py-12 sm:px-6 lg:px-8"
             >
                 <p class="font-medium text-gray-700">
                     Dommage, il n'y a pas encore de structures inscrites à
                     <span class="font-semibold text-gray-800">{{
-                        city.ville
+                        formatCityName(city.ville)
                     }}</span>
                 </p>
             </div>
