@@ -22,40 +22,31 @@ const showingNavigationDropdown = ref(false);
                     <!-- Logo -->
                     <div class="flex shrink-0 items-center">
                         <Link :href="route('welcome')">
-                            <BreezeApplicationLogo class="block h-9 w-auto" />
+                        <BreezeApplicationLogo class="block h-9 w-auto" />
                         </Link>
                     </div>
 
                     <!-- Navigation Links -->
                     <div class="hidden space-x-8 lg:-my-px lg:ml-10 lg:flex">
-                        <BreezeNavLink
+                        <!-- <BreezeNavLink
                             :href="route('familles.index')"
                             :active="route().current('familles.index')"
                         >
                             Rubriques
-                        </BreezeNavLink>
-                        <BreezeNavLink
+                        </BreezeNavLink> -->
+                        <!-- <BreezeNavLink
                             :href="route('disciplines.index')"
                             :active="route().current('disciplines.index')"
                         >
                             Disciplines
-                        </BreezeNavLink>
-                        <BreezeNavLink
-                            :href="route('villes.index')"
-                            :active="route().current('villes.index')"
-                        >
+                        </BreezeNavLink> -->
+                        <BreezeNavLink :href="route('villes.index')" :active="route().current('villes.index')">
                             Villes
                         </BreezeNavLink>
-                        <BreezeNavLink
-                            :href="route('departements.index')"
-                            :active="route().current('departements.index')"
-                        >
+                        <BreezeNavLink :href="route('departements.index')" :active="route().current('departements.index')">
                             Departements
                         </BreezeNavLink>
-                        <BreezeNavLink
-                            :href="route('structures.index')"
-                            :active="route().current('structures.index')"
-                        >
+                        <BreezeNavLink :href="route('structures.index')" :active="route().current('structures.index')">
                             Structures
                         </BreezeNavLink>
                     </div>
@@ -67,85 +58,56 @@ const showingNavigationDropdown = ref(false);
                         <BreezeDropdown align="right" width="48">
                             <template #trigger>
                                 <span class="inline-flex rounded-md">
-                                    <button
-                                        type="button"
-                                        class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
-                                    >
+                                    <button type="button"
+                                        class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none">
                                         {{ $page.props.auth.user.name }}
 
-                                        <svg
-                                            class="-mr-0.5 ml-2 h-4 w-4"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20"
-                                            fill="currentColor"
-                                        >
-                                            <path
-                                                fill-rule="evenodd"
+                                        <svg class="-mr-0.5 ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd"
                                                 d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                clip-rule="evenodd"
-                                            />
+                                                clip-rule="evenodd" />
                                         </svg>
                                     </button>
                                 </span>
                             </template>
 
                             <template #content>
-                                <BreezeDropdownLink
-                                    v-if="
+                                <BreezeDropdownLink v-if="
                                         $page.props.auth.user &&
                                         $page.props.auth.user.structures
                                             .length > 0
-                                    "
-                                    :href="
+                                    " :href="
                                         route(
                                             'structures.edit',
                                             $page.props.auth.user.structures[0]
                                                 .slug
                                         )
-                                    "
-                                    :active="route().current('structures.edit')"
-                                >
+                                    " :active="route().current('structures.edit')">
                                     Editer ma structure
                                 </BreezeDropdownLink>
-                                <BreezeDropdownLink
-                                    v-if="
+                                <BreezeDropdownLink v-if="
                                         $page.props.auth.user &&
                                         !$page.props.auth.user.structures
                                             .length > 0
-                                    "
-                                    :href="route('structures.create')"
-                                >
+                                    " :href="route('structures.create')">
                                     Inscrire une structure
                                 </BreezeDropdownLink>
-                                <BreezeDropdownLink
-                                    :href="route('profile.edit')"
-                                >
+                                <BreezeDropdownLink :href="route('profile.edit')">
                                     Mon profil
                                 </BreezeDropdownLink>
-                                <BreezeDropdownLink
-                                    :href="route('logout')"
-                                    method="post"
-                                    as="button"
-                                >
+                                <BreezeDropdownLink :href="route('logout')" method="post" as="button">
                                     Se déconnecter
                                 </BreezeDropdownLink>
                             </template>
                         </BreezeDropdown>
                     </div>
                     <template v-else>
-                        <div
-                            class="hidden h-full space-x-4 lg:-my-px lg:ml-10 lg:flex"
-                        >
-                            <BreezeNavLink
-                                :href="route('login')"
-                                :active="route().current('login')"
-                            >
+                        <div class="hidden h-full space-x-4 lg:-my-px lg:ml-10 lg:flex">
+                            <BreezeNavLink :href="route('login')" :active="route().current('login')">
                                 Connexion
                             </BreezeNavLink>
-                            <BreezeNavLink
-                                :href="route('register')"
-                                :active="route().current('register')"
-                            >
+                            <BreezeNavLink :href="route('register')" :active="route().current('register')">
                                 Inscription
                             </BreezeNavLink>
                         </div>
@@ -154,39 +116,22 @@ const showingNavigationDropdown = ref(false);
 
                 <!-- Hamburger -->
                 <div class="-mr-2 flex items-center lg:hidden">
-                    <button
-                        @click="
+                    <button @click="
                             showingNavigationDropdown =
                                 !showingNavigationDropdown
                         "
-                        class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
-                    >
-                        <svg
-                            class="h-6 w-6"
-                            stroke="currentColor"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                :class="{
+                        class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none">
+                        <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                            <path :class="{
                                     hidden: showingNavigationDropdown,
                                     'inline-flex': !showingNavigationDropdown,
-                                }"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16"
-                            />
-                            <path
-                                :class="{
+                                }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                            <path :class="{
                                     hidden: !showingNavigationDropdown,
                                     'inline-flex': showingNavigationDropdown,
-                                }"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12"
-                            />
+                                }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
@@ -194,67 +139,45 @@ const showingNavigationDropdown = ref(false);
         </div>
 
         <!-- Responsive Navigation Menu -->
-        <div
-            :class="{
+        <div :class="{
                 block: showingNavigationDropdown,
                 hidden: !showingNavigationDropdown,
-            }"
-            class="lg:hidden"
-        >
+            }" class="lg:hidden">
             <div class="space-y-1 pb-3 pt-2">
-                <BreezeResponsiveNavLink
+                <!-- <BreezeResponsiveNavLink
                     :href="route('familles.index')"
                     :active="route().current('familles.index')"
                 >
                     Rubriques
-                </BreezeResponsiveNavLink>
-                <BreezeResponsiveNavLink
-                    :href="route('disciplines.index')"
-                    :active="route().current('disciplines.index')"
-                >
+                </BreezeResponsiveNavLink> -->
+                <BreezeResponsiveNavLink :href="route('disciplines.index')" :active="route().current('disciplines.index')">
                     Disciplines
                 </BreezeResponsiveNavLink>
-                <BreezeResponsiveNavLink
-                    :href="route('villes.index')"
-                    :active="route().current('villes.index')"
-                >
+                <BreezeResponsiveNavLink :href="route('villes.index')" :active="route().current('villes.index')">
                     Villes
                 </BreezeResponsiveNavLink>
-                <BreezeResponsiveNavLink
-                    :href="route('departements.index')"
-                    :active="route().current('departements.index')"
-                >
+                <BreezeResponsiveNavLink :href="route('departements.index')"
+                    :active="route().current('departements.index')">
                     Departements
                 </BreezeResponsiveNavLink>
-                <BreezeResponsiveNavLink
-                    :href="route('structures.index')"
-                    :active="route().current('structures.index')"
-                >
+                <BreezeResponsiveNavLink :href="route('structures.index')" :active="route().current('structures.index')">
                     Structures
                 </BreezeResponsiveNavLink>
-                <BreezeResponsiveNavLink
-                    v-if="
+                <BreezeResponsiveNavLink v-if="
                         $page.props.auth.user &&
                         !$page.props.auth.user.structures.length > 0
-                    "
-                    :href="route('structures.create')"
-                    :active="route().current('structures.create')"
-                >
+                    " :href="route('structures.create')" :active="route().current('structures.create')">
                     Inscrire votre structure
                 </BreezeResponsiveNavLink>
-                <BreezeResponsiveNavLink
-                    v-if="
+                <BreezeResponsiveNavLink v-if="
                         $page.props.auth.user &&
                         $page.props.auth.user.structures.length > 0
-                    "
-                    :href="
+                    " :href="
                         route(
                             'structures.edit',
                             $page.props.auth.user.structures[0].slug
                         )
-                    "
-                    :active="route().current('structures.edit')"
-                >
+                    " :active="route().current('structures.edit')">
                     Editer votre structure
                 </BreezeResponsiveNavLink>
             </div>
@@ -271,26 +194,16 @@ const showingNavigationDropdown = ref(false);
                 </div>
 
                 <div class="mt-3 space-y-1" v-if="$page.props.auth.user">
-                    <BreezeResponsiveNavLink
-                        :href="route('logout')"
-                        method="post"
-                        as="button"
-                    >
+                    <BreezeResponsiveNavLink :href="route('logout')" method="post" as="button">
                         Se déconnecter
                     </BreezeResponsiveNavLink>
                 </div>
 
                 <div v-else>
-                    <BreezeResponsiveNavLink
-                        :href="route('login')"
-                        :active="route().current('login')"
-                    >
+                    <BreezeResponsiveNavLink :href="route('login')" :active="route().current('login')">
                         Connexion
                     </BreezeResponsiveNavLink>
-                    <BreezeResponsiveNavLink
-                        :href="route('register')"
-                        :active="route().current('register')"
-                    >
+                    <BreezeResponsiveNavLink :href="route('register')" :active="route().current('register')">
                         Inscription
                     </BreezeResponsiveNavLink>
                 </div>

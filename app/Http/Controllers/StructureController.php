@@ -65,7 +65,7 @@ class StructureController extends Controller
                             request(['search'])
                         )
                         ->latest()
-                        ->paginate(9)
+                        ->paginate(6)
                         ->through(function ($structure) {
                             $disciplinesCount = $structure->disciplines->count();
                             $activitiesCount = $structure->activites->count();
@@ -94,7 +94,6 @@ class StructureController extends Controller
                             'structuretype' => $structure->structuretype,
                             'departement_id' => $structure->departement_id,
                             'user' => $structure->creator,
-                            // 'disciplines' => $structure->activites->pluck('discipline.name')->unique(),
                             'logo' => $structure->logo ? asset($structure->logo) : 'https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
                             'categories' =>$structure->categories,
                             'disciplines' =>$structure->disciplines,
@@ -244,11 +243,23 @@ class StructureController extends Controller
 
         $structure = Structure::with([
             'famille:id,name',
-            'creator:id,name,email',
+            'creator:id,name',
             'users:id,name',
-            'cities:id,ville,ville_formatee',
+            'city:id,ville,ville_formatee,code_postal',
             'departement:id,departement,numero',
             'structuretype:id,name,slug',
+            'disciplines',
+            'disciplines.discipline:id,name,slug',
+            'categories',
+            'activites',
+            'activites.discipline',
+            'activites.categorie',
+            'produits',
+            'produits.criteres',
+            'tarifs',
+            'tarifs.tarifType',
+            'tarifs.structureTarifTypeInfos',
+            'plannings',
             ])
             ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
             ->where('slug', $structure->slug)

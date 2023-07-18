@@ -6,17 +6,19 @@ use App\Models\City;
 use Inertia\Inertia;
 use App\Models\Famille;
 use Illuminate\Http\Request;
-use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Models\LienDisciplineCategorie;
+use App\Models\Structuretype;
+use App\Models\StructureTypeInfo;
 
-class CityDisciplineController extends Controller
+class CityDisciplineStructuretypeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        //
     }
 
     /**
@@ -38,7 +40,7 @@ class CityDisciplineController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(City $city, $discipline)
+    public function show(City $city, $discipline, $structuretype)
     {
         $familles = Famille::select(['id', 'name', 'slug'])->get();
 
@@ -47,9 +49,11 @@ class CityDisciplineController extends Controller
                             ->first();
         $disciplinesSimilaires = $discipline->disciplinesSimilaires;
 
-        $categories = LienDisciplineCategorie::where('discipline_id', $discipline->id)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
+        $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
 
         $allStructureTypes = Structuretype::select(['id', 'name', 'slug'])->get();
+
+        $categories = LienDisciplineCategorie::where('discipline_id', $discipline->id)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
 
         $city = City::with(['structures'])->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
                             ->where('id', $city->id)
@@ -65,16 +69,16 @@ class CityDisciplineController extends Controller
                     ->limit(10)
                     ->get();
 
-        $structures = $city->structures()->with([
+
+        $structures = $city->structures()->whereHas('disciplines', function ($query) use ($discipline) {
+            $query->where('discipline_id', $discipline->id);
+        })->where('structuretype_id', $structuretypeElected->id)->with([
             'famille:id,name',
             'creator:id,name',
             'users:id,name',
             'city:id,ville,ville_formatee,code_postal',
             'departement:id,departement,numero',
             'structuretype:id,name,slug',
-            'disciplines' => function ($query) use ($discipline) {
-                $query->where('discipline_id', $discipline->id);
-            },
             'disciplines.discipline:id,name,slug',
             'categories',
             'activites' => function ($query) use ($discipline) {
@@ -88,15 +92,18 @@ class CityDisciplineController extends Controller
             'tarifs.tarifType',
             'tarifs.structureTarifTypeInfos',
             'plannings',
-        ])->withCount('disciplines', 'produits', 'activites')->paginate(6);
+        ])->withCount('disciplines', 'produits', 'activites')
+        ->whereHas('activites')
+        ->paginate(6);
 
         $city->timestamp = false;
         $city->increment('view_count');
 
-        return Inertia::render('Villes/Disciplines/Show', [
+        return Inertia::render('Villes/Disciplines/Structuretypes/Show', [
             'familles' => $familles,
-            'categories' => $categories,
+            'structuretypeElected' => $structuretypeElected,
             'allStructureTypes' => $allStructureTypes,
+            'categories' => $categories,
             'city'=> $city,
             'citiesAround' => $citiesAround,
             'disciplinesSimilaires' => $disciplinesSimilaires,

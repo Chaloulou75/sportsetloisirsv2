@@ -6,6 +6,7 @@ use App\Models\City;
 use Inertia\Inertia;
 use App\Models\Famille;
 use Illuminate\Http\Request;
+use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Models\LienDisciplineCategorie;
 
@@ -51,6 +52,8 @@ class CityDisciplineCategorieController extends Controller
 
         $categories = LienDisciplineCategorie::where('discipline_id', $discipline->id)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
 
+        $allStructureTypes = Structuretype::select(['id', 'name', 'slug'])->get();
+
         $city = City::with(['structures'])->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
                             ->where('id', $city->id)
                             ->withCount('structures')
@@ -65,7 +68,7 @@ class CityDisciplineCategorieController extends Controller
                     ->limit(10)
                     ->get();
 
-        $structures = $city->structures->load([
+        $structures = $city->structures()->with([
             'famille:id,name',
             'creator:id,name',
             'users:id,name',
@@ -91,48 +94,12 @@ class CityDisciplineCategorieController extends Controller
             'tarifs.tarifType',
             'tarifs.structureTarifTypeInfos',
             'plannings',
-        ])->filter(function ($structure) {
-            return $structure->activites->isNotEmpty();
-        })->map(function ($structure) {
-            $disciplinesCount = $structure->disciplines->count();
-            $activitiesCount = $structure->activites->count();
-            $produitsCount = $structure->produits->count();
-
-            return [
-                'id' => $structure->id,
-                'name' => $structure->name,
-                'slug' => $structure->slug,
-                'website' => $structure->website,
-                'email' => $structure->email,
-                'facebook' => $structure->facebook,
-                'instagram' => $structure->instagram,
-                'youtube' => $structure->youtube,
-                'tiktok' => $structure->tiktok,
-                'phone1' => $structure->phone1,
-                'phone2' => $structure->phone2,
-                'address' => $structure->address,
-                'zip_code' => $structure->zip_code,
-                'city' => $structure->city,
-                'city_id' => $structure->city_id,
-                'country' => $structure->country,
-                'address_lat' => $structure->address_lat,
-                'address_lng' => $structure->address_lng,
-                'presentation_courte' => $structure->presentation_courte,
-                'presentation_longue' => $structure->presentation_longue,
-                'structuretype' => $structure->structuretype,
-                'departement_id' => $structure->departement_id,
-                'user' => $structure->creator,
-                'logo' => $structure->logo ? asset($structure->logo) : 'https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
-                'categories' => $structure->categories,
-                'disciplines' => $structure->disciplines,
-                'activites' => $structure->activites,
-                'produits' => $structure->produits,
-                'tarifs' => $structure->tarifs,
-                'disciplines_count' => $disciplinesCount,
-                'activites_count' => $activitiesCount,
-                'produits_count' => $produitsCount,
-            ];
-        })->unique();
+        ])->withCount('disciplines', 'produits', 'activites')
+        ->whereHas('activites', function ($query) use ($discipline, $category) {
+            $query->where('discipline_id', $discipline->id)
+                ->where('categorie_id', $category->id);
+        })
+        ->paginate(6);
 
         $city->timestamp = false;
         $city->increment('view_count');
@@ -141,6 +108,7 @@ class CityDisciplineCategorieController extends Controller
             'familles' => $familles,
             'category' => $category,
             'categories' => $categories,
+            'allStructureTypes' => $allStructureTypes,
             'city'=> $city,
             'citiesAround' => $citiesAround,
             'disciplinesSimilaires' => $disciplinesSimilaires,

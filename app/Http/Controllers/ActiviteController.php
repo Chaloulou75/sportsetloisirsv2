@@ -59,6 +59,7 @@ class ActiviteController extends Controller
             })->sortByDesc('count');
 
             return [
+                'id' => $disciplineCategories->first()->id,
                 'discipline_id' => $disciplineCategories->first()->discipline->id,
                 'disciplineName' => $disciplineCategories->first()->discipline->name,
                 'count' => $disciplineCategories->count(),
@@ -201,9 +202,9 @@ class ActiviteController extends Controller
         ->where('slug', $structure->slug)
         ->first();
 
-        $activite = StructureCategorie::with(['structure','categorie', 'discipline'])
+        $activite = StructureActivite::with(['structure','categorie', 'discipline'])
                         ->where('structure_id', $structure->id)
-                        ->where('categorie_id', $activite)
+                        ->where('id', $activite)
                         ->withCount('categorie')
                         ->first();
 
