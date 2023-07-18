@@ -111,36 +111,23 @@ onMounted(() => {
 
     <AppLayout>
         <template #header>
-            <div
-                class="flex flex-col items-start justify-between md:flex-row md:items-center"
-            >
+            <div class="flex flex-col items-start justify-between md:flex-row md:items-center">
                 <div>
-                    <h2
-                        class="text-xl font-semibold leading-tight text-gray-800"
-                    >
+                    <h2 class="text-xl font-semibold leading-tight text-gray-800">
                         Ajouter ou modifier votre activité
                         <span class="text-blue-700"></span>
                     </h2>
                 </div>
                 <div class="mt-4 w-full md:mt-0 md:w-1/4">
-                    <div
-                        class="flex flex-col justify-between space-y-4 md:ml-4 md:space-y-6"
-                    >
-                        <Link
-                            :href="
+                    <div class="flex flex-col justify-between space-y-4 md:ml-4 md:space-y-6">
+                        <Link :href="
                                 route('structures.activites.index', structure)
-                            "
-                            v-if="can.update"
-                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
-                        >
-                            Mes disciplines</Link
-                        >
-                        <Link
-                            :href="route('structures.show', structure.slug)"
-                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
-                        >
-                            Voir la structure</Link
-                        >
+                            " v-if="can.update"
+                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg">
+                        Mes disciplines</Link>
+                        <Link :href="route('structures.show', structure.slug)"
+                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg">
+                        Voir la structure</Link>
                     </div>
                 </div>
             </div>
@@ -151,39 +138,27 @@ onMounted(() => {
                 <TabGroup :defaultIndex="defaultTabIndex">
                     <section class="space-y-4 text-gray-700">
                         <div>
-                            <h2
-                                class="text-center text-3xl font-bold uppercase md:text-left"
-                            >
+                            <h2 class="text-center text-3xl font-bold uppercase md:text-left">
                                 {{ activite.discipline.name }}
                             </h2>
                             <!-- categories -->
                             <div class="my-4 w-full">
                                 <div class="mt-1">
                                     <TabList
-                                        class="flex w-full flex-col items-stretch justify-between divide-y divide-green-600 rounded-sm border border-gray-300 bg-white/20 px-3 py-2 shadow-md focus:border-indigo-500 focus:outline-none sm:text-base md:flex-row md:items-center md:divide-y-0"
-                                    >
-                                        <Tab
-                                            v-for="categorie in categoriesListByDiscipline"
-                                            :key="categorie.id"
-                                            as="template"
-                                            v-slot="{ selected }"
-                                            class="py-2"
-                                            v-model="selectedCategoryId"
-                                        >
-                                            <button
-                                                @click="
+                                        class="flex w-full flex-col items-stretch justify-between divide-y divide-green-600 rounded-sm border border-gray-300 bg-white/20 px-3 py-2 shadow-md focus:border-indigo-500 focus:outline-none sm:text-base md:flex-row md:items-center md:divide-y-0">
+                                        <Tab v-for="categorie in categoriesListByDiscipline" :key="categorie.id"
+                                            as="template" v-slot="{ selected }" class="py-2" v-model="selectedCategoryId">
+                                            <button @click="
                                                     selectedCategoryId =
                                                         categorie.id
-                                                "
-                                                :class="[
+                                                " :class="[
                                                     'w-full px-2 py-3 text-sm font-medium leading-5 text-gray-700 ring-white ring-opacity-10 ring-offset-2 ring-offset-green-200 focus:outline-none focus:ring-2',
                                                     selected
                                                         ? 'bg-green-600 text-white'
                                                         : 'text-gray-700 hover:bg-white/50 hover:text-gray-800',
-                                                ]"
-                                            >
+                                                ]">
                                                 {{
-                                                    categorie.nom_categorie_pro
+                                                categorie.nom_categorie_pro
                                                 }}
                                             </button>
                                         </Tab>
@@ -194,71 +169,37 @@ onMounted(() => {
                     </section>
 
                     <TabPanels class="mx-auto max-w-full py-6 text-gray-700">
-                        <TabPanel
-                            v-for="(
+                        <TabPanel v-for="(
                                 categorie, idx
-                            ) in categoriesListByDiscipline"
-                            :key="categorie.id"
-                            class="flex flex-col space-y-4"
-                        >
-                            <ButtonsActiviteEdit
-                                :displayActivity="displayActivity"
-                                :displayTarif="displayTarif"
-                                :displayPlanning="displayPlanning"
-                                :structure="structure"
-                                @eventFromChild="handleButtonEvent"
-                            />
+                            ) in categoriesListByDiscipline" :key="categorie.id" class="flex flex-col space-y-4">
+                            <ButtonsActiviteEdit :displayActivity="displayActivity" :displayTarif="displayTarif"
+                                :displayPlanning="displayPlanning" :structure="structure"
+                                @eventFromChild="handleButtonEvent" />
                             <div
-                                class="flex w-full flex-col items-center justify-between space-y-2 px-2 py-3 md:h-20 md:flex-row md:space-y-0 md:px-0 md:py-6"
-                            >
-                                <div
-                                    class="text-center text-lg font-semibold text-gray-700 md:text-left"
-                                >
+                                class="flex w-full flex-col items-center justify-between space-y-2 px-2 py-3 md:h-20 md:flex-row md:space-y-0 md:px-0 md:py-6">
+                                <div class="text-center text-lg font-semibold text-gray-700 md:text-left">
                                     {{ categorie.nom_categorie_pro }}
                                 </div>
-                                <button
-                                    v-if="displayActivity"
-                                    type="button"
-                                    @click="openAddActiviteModal(categorie)"
-                                    class="flex w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:flex md:w-auto"
-                                >
+                                <button v-if="displayActivity" type="button" @click="openAddActiviteModal(categorie)"
+                                    class="flex w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:flex md:w-auto">
                                     Ajouter une activité
                                     <PlusIcon class="ml-2 h-5 w-5" />
                                 </button>
-                                <button
-                                    v-if="displayTarif"
-                                    type="button"
-                                    @click="openAddTarifModal(structure)"
-                                    class="w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:flex md:w-auto"
-                                >
+                                <button v-if="displayTarif" type="button" @click="openAddTarifModal(structure)"
+                                    class="w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:flex md:w-auto">
                                     Ajouter un tarif
                                     <PlusIcon class="ml-2 h-5 w-5" />
                                 </button>
                             </div>
-                            <ActivityDisplay
-                                v-if="displayActivity"
-                                :errors="errors"
-                                :structure="structure"
-                                :structureActivites="filteredActivites"
-                                :filteredCriteres="filteredCriteres"
-                                :latestAdresseId="latestAdresseId"
-                                :tarif-types="tarifTypes"
-                                :activiteForTarifs="activiteForTarifs"
-                            />
-                            <PlanningDisplay
-                                v-if="displayPlanning"
-                                :errors="errors"
-                                :structure="structure"
-                                :structureActivites="filteredActivites"
-                            />
-                            <TarifDisplay
-                                v-if="displayTarif"
-                                :errors="errors"
-                                :structure="structure"
-                                :tarif-types="tarifTypes"
-                                :structureActivites="filteredActivites"
-                                :activiteForTarifs="activiteForTarifs"
-                            />
+                            <ActivityDisplay v-if="displayActivity" :errors="errors" :structure="structure"
+                                :structureActivites="filteredActivites" :filteredCriteres="filteredCriteres"
+                                :latestAdresseId="latestAdresseId" :tarif-types="tarifTypes"
+                                :activiteForTarifs="activiteForTarifs" />
+                            <PlanningDisplay v-if="displayPlanning" :errors="errors" :structure="structure"
+                                :structureActivites="filteredActivites" />
+                            <TarifDisplay v-if="displayTarif" :errors="errors" :structure="structure"
+                                :tarif-types="tarifTypes" :structureActivites="filteredActivites"
+                                :activiteForTarifs="activiteForTarifs" />
                         </TabPanel>
                     </TabPanels>
                 </TabGroup>
@@ -270,24 +211,11 @@ onMounted(() => {
                 </div>
             </div>
         </div>
-        <ModalAddActivite
-            :errors="errors"
-            :structure="structure"
-            :activite="activite"
-            :criteres="criteres"
-            :categorie="currentCategorie"
-            :show="showAddActiviteModal"
-            @close="showAddActiviteModal = false"
-        />
-        <ModalAddTarif
-            :errors="errors"
-            :structure="structure"
-            :tarif-types="tarifTypes"
-            :activiteForTarifs="activiteForTarifs"
-            :structureActivites="filteredActivites"
-            :show="showAddTarifModal"
-            @close="showAddTarifModal = false"
-        />
+        <ModalAddActivite :errors="errors" :structure="structure" :activite="activite" :criteres="criteres"
+            :categorie="currentCategorie" :show="showAddActiviteModal" @close="showAddActiviteModal = false" />
+        <ModalAddTarif :errors="errors" :structure="structure" :tarif-types="tarifTypes"
+            :activiteForTarifs="activiteForTarifs" :structureActivites="filteredActivites" :show="showAddTarifModal"
+            @close="showAddTarifModal = false" />
     </AppLayout>
 </template>
 

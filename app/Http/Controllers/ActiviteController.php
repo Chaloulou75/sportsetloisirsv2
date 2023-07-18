@@ -204,7 +204,7 @@ class ActiviteController extends Controller
 
         $activite = StructureActivite::with(['structure','categorie', 'discipline'])
                         ->where('structure_id', $structure->id)
-                        ->where('id', $activite)
+                        ->where('categorie_id', $activite)
                         ->withCount('categorie')
                         ->first();
 

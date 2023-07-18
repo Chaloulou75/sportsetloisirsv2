@@ -249,7 +249,7 @@ const submit = () => {
                                                                 structure:
                                                                     structure.slug,
                                                                 activite:
-                                                                    activite.id,
+                                                                    categorie.categorie_id,
                                                             }
                                                         )
                                                     " class="flex flex-col items-center justify-center">
