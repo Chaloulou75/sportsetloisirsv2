@@ -95,7 +95,7 @@ const showModal = ref(false);
 
         <section class="mx-auto my-4 max-w-full px-0 py-6 sm:px-4 lg:px-8">
             <div
-                class="flex flex-col justify-between rounded-lg bg-white px-4 py-6 shadow-lg shadow-sky-700 md:flex-row md:space-x-6">
+                class="flex flex-col-reverse justify-between rounded-lg bg-white px-4 py-6 shadow-lg shadow-sky-700 md:flex-row md:space-x-6">
                 <div class="w-full md:w-1/3">
                     <div class="my-4 flex items-center justify-center md:mb-8">
                         <h3 class="text-base font-semibold uppercase">
@@ -103,7 +103,7 @@ const showModal = ref(false);
                         </h3>
                     </div>
                     <LeafletMap :item="structure" />
-                    <div class="mb-4 space-y-6">
+                    <div class="my-4 space-y-6">
                         <p class="text-base font-semibold text-gray-700">
                             <UserIcon class="inline-block h-4 w-4" />
                             {{ structure.creator.name }}

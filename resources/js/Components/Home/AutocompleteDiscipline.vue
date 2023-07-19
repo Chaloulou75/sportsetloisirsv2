@@ -27,13 +27,6 @@ const searchDisciplines = computed(() => {
 
 let selectedDiscipline = ref(null);
 
-// watch(
-//     () => props.selectedDiscipline,
-//     (newVal) => {
-//         selectedDiscipline.value = newVal;
-//     }
-// );
-
 const selectDiscipline = (discipline) => {
     selectedDiscipline.value = discipline;
     searchTerm.value = "";
@@ -45,9 +38,10 @@ const selectDiscipline = (discipline) => {
     <div class="flex items-center justify-start">
         <div class="relative">
             <label for="search" class="text-lg font-medium text-gray-700">
-                Rechercher une discipline:
+                Rechercher une discipline: <span v-if="selectedDiscipline" class="text-base font-semibold text-blue-700">{{
+                    selectedDiscipline.name
+                    }}</span>
             </label>
-
             <input type="text" id="search" v-model="searchTerm" placeholder="rugby, randonnées..."
                 class="mb-0.5 w-full rounded border border-gray-300 p-3 placeholder-gray-400 placeholder-opacity-50 sm:text-sm" />
 
@@ -62,12 +56,6 @@ const selectDiscipline = (discipline) => {
                     {{ discipline.name }}
                 </li>
             </ul>
-            <p v-if="selectedDiscipline" class="pt-2 text-sm font-medium text-gray-700">
-                Vous avez selectionné:
-                <span class="text-base font-semibold text-blue-700">{{
-                    selectedDiscipline.name
-                    }}</span>
-            </p>
         </div>
     </div>
 </template>

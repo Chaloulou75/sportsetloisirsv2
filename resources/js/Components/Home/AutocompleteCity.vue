@@ -29,13 +29,6 @@ let selectedCity = ref(
     props.cities.find((city) => city.id === city)
 );
 
-// watch(
-//     () => props.selectedDiscipline,
-//     (newVal) => {
-//         selectedDiscipline.value = newVal;
-//     }
-// );
-
 const selectCity = (city) => {
     selectedCity.value = city;
     searchTerm.value = "";
@@ -51,7 +44,9 @@ const formatCityName = (ville) => {
     <div class="flex items-center justify-start">
         <div class="relative">
             <label for="search" class="text-lg font-medium text-gray-700">
-                Rechercher une ville:
+                Rechercher une ville: <span v-if="selectedCity" class="text-base font-semibold text-blue-700">{{
+                    formatCityName(selectedCity.ville)
+                    }}</span>
             </label>
 
             <input type="text" id="localite" v-model="searchTerm" placeholder="Toulouse"
@@ -68,12 +63,6 @@ const formatCityName = (ville) => {
                     {{ formatCityName(city.ville) }}
                 </li>
             </ul>
-            <p v-if="selectedCity" class="pt-2 text-sm font-medium text-gray-700">
-                Vous avez selectionné:
-                <span class="text-base font-semibold text-blue-700">{{
-                    formatCityName(selectedCity.ville)
-                    }}</span>
-            </p>
         </div>
     </div>
 </template>

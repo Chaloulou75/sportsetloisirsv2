@@ -1,19 +1,11 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { ref, onMounted, watch } from "vue";
-import { router, Head, Link, useForm } from "@inertiajs/vue3";
+import { ref } from "vue";
+import { router, Head, Link } from "@inertiajs/vue3";
 import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
-import { debounce } from "lodash";
-import TextInput from "@/Components/TextInput.vue";
 import AutocompleteDiscipline from "@/Components/Home/AutocompleteDiscipline.vue";
 import AutocompleteCity from "@/Components/Home/AutocompleteCity.vue";
 import { ArrowSmallRightIcon, CheckIcon } from "@heroicons/vue/24/solid";
-import { Swiper, SwiperSlide } from "swiper/vue";
-import { Autoplay, Pagination, Navigation } from "swiper/modules";
-// Import Swiper styles
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
 import { MagnifyingGlassIcon } from "@heroicons/vue/24/outline";
 
 const props = defineProps({
@@ -31,75 +23,38 @@ const props = defineProps({
     filters: Object,
 });
 
-// const modules = ref([Autoplay, Pagination, Navigation]);
-
-// const imagePaths = ref([]);
-
-// Set the image paths
-// imagePaths.value = [
-//     "/images/badminton.jpg",
-//     "/images/basket.jpg",
-//     "/images/piscine.jpg",
-// ];
-
 const search = ref(null);
 const localite = ref(null);
 const processing = ref(false);
-// const searchbox = ref(null);
 
 const submitForm = async () => {
-    // Disable the submit button while processing the request
     processing.value = true;
-
     try {
-        // Extract the values from the form fields
         const city = localite.value;
         const disciplineSlug = search.value;
 
-        router.get(`/villes/${city}/disciplines/${disciplineSlug}`);
+        if (city && disciplineSlug) {
+            router.get(`/villes/${city}/disciplines/${disciplineSlug}`);
+        } else if (city) {
+            router.get(`/villes/${city}`);
+        } else if (disciplineSlug) {
+            router.get(`/disciplines/${disciplineSlug}`);
+        }
 
-        // Reset the form and enable the submit button
+        // Reset the form
         localite.value = "";
         search.value = "";
         processing.value = false;
     } catch (error) {
-        // Handle errors if needed
         console.error("Error:", error);
-
-        // Enable the submit button again
         processing.value = false;
     }
 };
-
-// onMounted(() => {
-//     searchbox.value.focus();
-// });
 
 const formatCityName = (ville) => {
     return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
 };
 
-// watch(
-//     search,
-//     debounce(function (value) {
-//         router.get(
-//             "/disciplines",
-//             { search: value },
-//             { preserveState: true, replace: true }
-//         );
-//     }, 3600)
-// );
-
-// watch(
-//     localite,
-//     debounce(function (value) {
-//         router.get(
-//             "/villes",
-//             { localite: value },
-//             { preserveState: true, replace: true }
-//         );
-//     }, 3600)
-// );
 </script>
 
 <template>
@@ -112,31 +67,16 @@ const formatCityName = (ville) => {
         </header>
         <div>
             <section
-                class="mx-auto flex w-full max-w-full flex-col items-center justify-center space-x-0 space-y-4 px-2 py-8 md:flex-row md:space-x-4 md:space-y-0">
-                <!-- <div class="">
-                    <label for="localite" value="Rechercher une ville"
-                        class="mb-1 pr-2 text-lg font-medium text-gray-700">Rechercher une ville</label>
-
-                    <TextInput ref="searchbox" id="localite" type="text"
-                        class="mb-0.5 w-full rounded border border-gray-300 p-3 placeholder-gray-400 placeholder-opacity-50 sm:text-sm"
-                        v-model="localite" placeholder="Toulouse" />
-                </div> -->
+                class="bg-gray-100 mx-auto flex w-full max-w-full flex-col items-end justify-center space-x-0 space-y-4 px-2 md:px-8 py-8 md:flex-row md:space-x-4 md:space-y-0">
                 <AutocompleteCity :cities="allCities" v-model="localite" />
                 <AutocompleteDiscipline :disciplines="listDisciplines" v-model="search" />
-
-                <button @click="submitForm" :disabled="processing" type="submit"
-                    class="mb-0.5 self-end rounded border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-600 shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-                    <MagnifyingGlassIcon class="h-5 w-5" />
-                </button>
-                <!-- <div class="w-full md:w-1/3">
-                    <label for="search" value="Rechercher une discipline"
-                        class="mb-1 pr-2 text-xl font-medium text-gray-800">Rechercher une
-                        discipline</label>
-
-                    <TextInput id="search" type="text"
-                        class="mt-1 block h-20 w-full flex-1 px-2 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
-                        v-model="search" placeholder="Rugby" />
-                </div> -->
+                <div class="">
+                    <button @click="submitForm" :disabled="processing" type="submit"
+                        class="rounded border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-600 shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 mb-0.5">
+                        <MagnifyingGlassIcon class="h-5 w-5" />
+                        <span class="sr-only">Rechercher</span>
+                    </button>
+                </div>
 
             </section>
             <!-- <section
@@ -212,7 +152,7 @@ const formatCityName = (ville) => {
                 </div>
             </section> -->
 
-            <section class="mx-auto max-w-full bg-transparent px-2 py-8 md:py-20">
+            <section class="mx-auto max-w-full bg-transparent px-2 md:px-8 py-8 md:py-20">
                 <div class="flex flex-col items-start justify-between space-y-12 md:flex-row md:space-x-20 md:space-y-0">
                     <div class="rounded-lg bg-white px-6 py-4 shadow-xl shadow-red-500">
                         <h3
@@ -256,7 +196,7 @@ const formatCityName = (ville) => {
                 </div>
             </section>
 
-            <section class="mx-auto max-w-full px-2 py-8 md:py-20">
+            <section class="mx-auto max-w-full px-2 py-8 md:px-8 md:py-20">
                 <h3 class="pb-6 text-2xl font-semibold text-gray-700">
                     Besoin d'inspiration:
                 </h3>
@@ -280,7 +220,7 @@ const formatCityName = (ville) => {
                 </div>
             </section>
 
-            <section class="mx-auto max-w-full px-2 py-8 md:py-20">
+            <section class="mx-auto max-w-full px-2 py-8 md:px-8 md:py-20">
                 <h3 class="pb-6 text-2xl font-semibold text-gray-700">
                     Top villes:
                 </h3>
@@ -302,7 +242,7 @@ const formatCityName = (ville) => {
                 </div>
             </section>
 
-            <section class="mx-auto max-w-full px-2 py-8 md:py-20">
+            <section class="mx-auto max-w-full px-2 py-8 md:px-8 md:py-20">
                 <h3 class="pb-6 text-2xl font-semibold text-gray-700">
                     Top departements:
                 </h3>
@@ -325,7 +265,7 @@ const formatCityName = (ville) => {
                 </div>
             </section>
 
-            <section class="mx-auto flex max-w-full flex-col justify-between px-2 py-8 md:flex-row md:py-20">
+            <section class="mx-auto flex max-w-full flex-col justify-between px-2 md:px-8 py-8 md:flex-row md:py-20">
                 <div class="mb-6 max-w-full grow sm:mb-0">
                     <h3 class="pb-6 text-2xl font-semibold text-gray-700">
                         Les dernieres structures inscrites:

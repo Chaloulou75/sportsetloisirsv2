@@ -25,7 +25,6 @@ class HomeController extends Controller
 
         $listDisciplines = ListDiscipline::whereHas('structures')->select(['id', 'name', 'slug'])->get();
 
-
         $disciplines = ListDiscipline::whereHas('structures')->select(['id', 'name', 'slug'])
                         ->withCount('structures')
                         ->orderByDesc('structures_count')

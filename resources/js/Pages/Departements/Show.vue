@@ -143,16 +143,16 @@ watch(
                 <div class="mx-auto flex min-h-screen max-w-full flex-col px-2 sm:px-6 md:flex-row md:space-x-4 lg:px-8">
                     <div class="md:w-1/2">
                         <div class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-2">
-                            <StructureCard v-for="(structure, index) in structures" :key="structure.id" :index="index"
+                            <StructureCard v-for="(structure, index) in structures.data" :key="structure.id" :index="index"
                                 :structure="structure" @mouseover="showTooltip(structure)" @mouseout="hideTooltip()" />
                         </div>
-                        <!-- <div class="flex justify-end p-10">
-                            <Pagination :links="city.structures.links" />
-                        </div> -->
+                        <div class="flex justify-end p-10">
+                            <Pagination :links="structures.links" />
+                        </div>
                     </div>
                     <div class="space-y-4 md:sticky md:w-1/2">
-                        <LeafletMapMultiple class="md:top-2" :structures="structures" :hovered-structure="hoveredStructure"
-                            :zoom="11" />
+                        <LeafletMapMultiple class="md:top-2" :structures="structures.data"
+                            :hovered-structure="hoveredStructure" :zoom="11" />
                     </div>
                 </div>
             </div>
