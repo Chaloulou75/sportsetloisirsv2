@@ -23,20 +23,29 @@ class HomeController extends Controller
 
         $familles = Famille::select(['id', 'name', 'slug'])->get();
 
-        $disciplines = ListDiscipline::select(['id', 'name', 'slug'])
-                        // ->withCount('activites')
-                        // ->orderByDesc('activites_count')
+        $listDisciplines = ListDiscipline::whereHas('structures')->select(['id', 'name', 'slug'])->get();
+
+
+        $disciplines = ListDiscipline::whereHas('structures')->select(['id', 'name', 'slug'])
+                        ->withCount('structures')
+                        ->orderByDesc('structures_count')
                         ->limit(12)
                         ->get();
 
-        $topVilles = City::with(['departement', 'structures'])
+
+        $allCities = City::whereHas('structures')
+                                ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                                ->get();
+
+
+        $topVilles = City::with(['departement', 'structures'])->whereHas('structures')
                         ->select(['id', 'code_postal', 'ville', 'ville_formatee', 'departement', 'nom_departement'])
                         ->withCount('structures')
                         ->orderByDesc('structures_count')
                         ->limit(12)
                         ->get();
 
-        $topDepartements = Departement::with('structures')
+        $topDepartements = Departement::whereHas('structures')
                                 ->select(['id', 'departement', 'numero'])
                                 ->withCount('structures')
                                 ->orderByDesc('structures_count')
@@ -51,17 +60,19 @@ class HomeController extends Controller
 
         return Inertia::render('Welcome', [
             'familles' => $familles,
+            'listDisciplines' => $listDisciplines,
             'disciplines' => $disciplines,
             'familleCount' => $familleCount,
             'disciplinesCount' => $disciplinesCount,
             'structuresCount' => $structuresCount,
             'citiesCount'=> $citiesCount,
             'lastStructures' => $lastStructures,
+            'allCities' => $allCities,
             'topVilles' => $topVilles,
             'topDepartements' => $topDepartements,
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
-            'filters' => request()->all(['search']),
+            'filters' => request()->all(['search', 'localite']),
         ]);
     }
 }

@@ -22,6 +22,7 @@ class DepartementController extends Controller
         $departements = Departement::with([
                             'structures:id,name,slug,presentation_courte,address,city,zip_code,address_lat,address_lng,departement_id'
                         ])
+                        ->whereHas('structures')
                         ->select(['id', 'departement', 'numero'])
                         ->withCount('structures')
                         ->filter(
@@ -40,22 +41,6 @@ class DepartementController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(Departement $departement)
@@ -66,6 +51,7 @@ class DepartementController extends Controller
                                         },
                                         'structures.structuretype:id,name,slug'
                                     ])
+                                    ->whereHas('structures')
                                     ->select(['id', 'numero', 'departement', 'prefixe', 'view_count'])
                                     ->where('numero', $departement->numero)
                                     ->withCount('structures')
@@ -101,27 +87,4 @@ class DepartementController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Departement $departement)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Departement $departement)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Departement $departement)
-    {
-        //
-    }
 }

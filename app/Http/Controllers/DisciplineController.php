@@ -25,7 +25,7 @@ class DisciplineController extends Controller
 
         $familles = Famille::select(['id', 'name', 'slug'])->get();
 
-        $disciplines = ListDiscipline::select(['id', 'name', 'slug'])
+        $disciplines = ListDiscipline::whereHas('structures')->select(['id', 'name', 'slug'])
                         ->withCount('structures')
                         ->filter(
                             request(['search'])
@@ -40,22 +40,6 @@ class DisciplineController extends Controller
             'structuresCount' => $structuresCount,
             'filters' => request()->all(['search']),
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -101,30 +85,6 @@ class DisciplineController extends Controller
             'structures'=> $structures,
             'categories' => $categories,
         ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ListDiscipline $discipline)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, ListDiscipline $discipline)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ListDiscipline $discipline)
-    {
-        //
     }
 
     public function loadDisciplines()

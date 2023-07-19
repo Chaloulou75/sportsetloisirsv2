@@ -19,7 +19,7 @@ class CityController extends Controller
         $structuresCount = Structure::count();
         $familles = Famille::select(['id', 'name', 'slug'])->get();
 
-        $cities = City::with('structures')->select(['id', 'ville', 'ville_formatee', 'code_postal'])
+        $cities = City::whereHas('structures')->select(['id', 'ville', 'ville_formatee', 'code_postal'])
                         ->withCount('structures')
                         ->filter(
                             request(['search'])
@@ -34,22 +34,6 @@ class CityController extends Controller
             'structuresCount' => $structuresCount,
             'filters' => request()->all(['search']),
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -111,31 +95,6 @@ class CityController extends Controller
             'filters' => request()->all(['discipline']),
         ]);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(City $city)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, City $city)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(City $city)
-    {
-        //
-    }
-
 
     public function radians($degrees)
     {

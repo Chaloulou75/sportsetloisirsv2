@@ -51,7 +51,7 @@ class CityDisciplineStructuretypeController extends Controller
 
         $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
 
-        $allStructureTypes = Structuretype::select(['id', 'name', 'slug'])->get();
+        $allStructureTypes = Structuretype::whereHas('structures')->select(['id', 'name', 'slug'])->get();
 
         $categories = LienDisciplineCategorie::where('discipline_id', $discipline->id)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
 
