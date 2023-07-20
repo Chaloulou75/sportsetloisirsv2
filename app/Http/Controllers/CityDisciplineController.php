@@ -17,7 +17,14 @@ class CityDisciplineController extends Controller
      */
     public function show(City $city, $discipline)
     {
-        $familles = Famille::select(['id', 'name', 'slug'])->get();
+        $familles = Famille::with([
+            'disciplines' => function ($query) {
+                $query->whereHas('structures');
+            }
+        ])
+        ->whereHas('disciplines', function ($query) {
+            $query->whereHas('structures');
+        })->select(['id', 'name', 'slug'])->get();
 
         $discipline = ListDiscipline::where('slug', $discipline)
                             ->select(['id', 'name', 'slug', 'view_count'])

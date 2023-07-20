@@ -17,7 +17,14 @@ class DepartementController extends Controller
     public function index()
     {
         $structuresCount = Structure::count();
-        $familles = Famille::select(['id', 'name', 'slug'])->get();
+        $familles = Famille::with([
+            'disciplines' => function ($query) {
+                $query->whereHas('structures');
+            }
+        ])
+        ->whereHas('disciplines', function ($query) {
+            $query->whereHas('structures');
+        })->select(['id', 'name', 'slug'])->get();
 
         $departements = Departement::with([
                             'structures:id,name,slug,presentation_courte,address,city,zip_code,address_lat,address_lng,departement_id'
@@ -45,7 +52,14 @@ class DepartementController extends Controller
      */
     public function show(Departement $departement)
     {
-        $familles = Famille::select(['id', 'name', 'slug'])->get();
+        $familles = Famille::with([
+            'disciplines' => function ($query) {
+                $query->whereHas('structures');
+            }
+        ])
+        ->whereHas('disciplines', function ($query) {
+            $query->whereHas('structures');
+        })->select(['id', 'name', 'slug'])->get();
 
         $departement = Departement::with(['cities',
                                         'structures' => function ($query) {

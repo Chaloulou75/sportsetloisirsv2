@@ -23,7 +23,14 @@ class DisciplineController extends Controller
     {
         $structuresCount = Structure::count();
 
-        $familles = Famille::select(['id', 'name', 'slug'])->get();
+        $familles = Famille::with([
+            'disciplines' => function ($query) {
+                $query->whereHas('structures');
+            }
+        ])
+        ->whereHas('disciplines', function ($query) {
+            $query->whereHas('structures');
+        })->select(['id', 'name', 'slug'])->get();
 
         $disciplines = ListDiscipline::whereHas('structures')->select(['id', 'name', 'slug'])
                         ->withCount('structures')
@@ -47,6 +54,15 @@ class DisciplineController extends Controller
      */
     public function show(ListDiscipline $discipline)
     {
+
+        $familles = Famille::with([
+            'disciplines' => function ($query) {
+                $query->whereHas('structures');
+            }
+        ])
+        ->whereHas('disciplines', function ($query) {
+            $query->whereHas('structures');
+        })->select(['id', 'name', 'slug'])->get();
 
         $discipline = ListDiscipline::where('slug', $discipline->slug)
             ->select(['id', 'name', 'slug', 'view_count'])
@@ -80,6 +96,7 @@ class DisciplineController extends Controller
         $discipline->increment('view_count');
 
         return Inertia::render('Disciplines/Show', [
+            'familles' => $familles,
             'discipline'=> $discipline,
             'disciplinesSimilaires' => $disciplinesSimilaires,
             'structures'=> $structures,

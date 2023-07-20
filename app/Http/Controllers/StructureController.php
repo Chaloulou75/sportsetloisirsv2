@@ -39,7 +39,14 @@ class StructureController extends Controller
      */
     public function index()
     {
-        $familles = Famille::select(['id', 'name', 'slug'])->get();
+        $familles = Famille::with([
+            'disciplines' => function ($query) {
+                $query->whereHas('structures');
+            }
+        ])
+        ->whereHas('disciplines', function ($query) {
+            $query->whereHas('structures');
+        })->select(['id', 'name', 'slug'])->get();
 
         return Inertia::render('Structures/Index', [
             'structures'=> Structure::with([

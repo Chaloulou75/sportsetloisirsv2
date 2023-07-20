@@ -19,7 +19,14 @@ class FamilleController extends Controller
      */
     public function index()
     {
-        $familles = Famille::select(['id', 'name', 'slug'])->get();
+        $familles = Famille::with([
+            'disciplines' => function ($query) {
+                $query->whereHas('structures');
+            }
+        ])
+        ->whereHas('disciplines', function ($query) {
+            $query->whereHas('structures');
+        })->select(['id', 'name', 'slug'])->get();
 
         $familleCount = Famille::count();
         $disciplinesCount = ListDiscipline::count();
@@ -39,16 +46,33 @@ class FamilleController extends Controller
      */
     public function show(Famille $famille)
     {
-        $famille = Famille::with(['disciplines'])
-                            ->where('slug', $famille->slug)
-                            ->select(['id', 'name', 'slug', 'view_count'])
-                            ->withCount(['disciplines'])
-                            ->first();
+        $familles = Famille::with([
+            'disciplines' => function ($query) {
+                $query->whereHas('structures');
+            }
+        ])
+        ->whereHas('disciplines', function ($query) {
+            $query->whereHas('structures');
+        })->select(['id', 'name', 'slug'])->get();
+
+        $famille = Famille::with([
+            'disciplines' => function ($query) {
+                $query->whereHas('structures');
+            }
+        ])
+        ->whereHas('disciplines', function ($query) {
+            $query->whereHas('structures');
+        })
+        ->where('slug', $famille->slug)
+        ->select(['id', 'name', 'slug', 'view_count'])
+        ->withCount(['disciplines'])
+        ->first();
 
         $famille->timestamps = false;
         $famille->increment('view_count');
 
         return Inertia::render('Familles/Show', [
+            'familles' => $familles,
             'famille'=> $famille,
         ]);
     }
