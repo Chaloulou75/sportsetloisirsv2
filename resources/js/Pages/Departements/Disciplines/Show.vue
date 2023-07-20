@@ -11,7 +11,7 @@ let props = defineProps({
     familles: Object,
     categories: Object,
     allStructureTypes: Object,
-    city: Object,
+    departement: Object,
     citiesAround: Object,
     structures: Object,
     discipline: Object,
@@ -42,15 +42,15 @@ function hideTooltip() {
 </script>
 
 <template>
-    <Head :title="city.ville" :description="
+    <Head :title="departement.departement" :description="
             'Envie de faire du ' +
             discipline.name +
             ' à ' +
-            city.ville +
+            departement.departement +
             '? Choisissez parmi plus de ' +
-            city.structures_count +
+            departement.structures_count +
             ' structures pour pratiquer une activité sportive ou de loisirs à ' +
-            city.ville
+            departement.departement
         " />
 
     <AppLayout>
@@ -58,10 +58,8 @@ function hideTooltip() {
             <FamilleNavigation :familles="familles" />
             <div class="my-4 flex w-full flex-col items-center justify-center space-y-2">
                 <h1 class="text-xl font-semibold uppercase leading-tight tracking-widest text-gray-800 text-center">
-                    {{ discipline.name }} <span class="lowercase">à</span>
-                    {{ formatCityName(city.ville) }}
-                    <span class="text-sm text-gray-600">({{ city.code_postal }})
-                    </span>
+                    {{ discipline.name }} <span class="lowercase">{{ departement.prefixe }}</span>
+                    {{ departement.departement }}
                 </h1>
                 <nav aria-label="Breadcrumb" class="flex">
                     <ol class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600">
@@ -85,9 +83,9 @@ function hideTooltip() {
                                 class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180">
                             </span>
 
-                            <Link preserve-scroll :href="route('villes.show', city.id)"
+                            <Link preserve-scroll :href="route('departements.show', departement.id)"
                                 class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900">
-                            {{ formatCityName(city.ville) }}
+                            {{ departement.departement }}
                             </Link>
                         </li>
                         <li class="relative flex items-center">
@@ -96,8 +94,8 @@ function hideTooltip() {
                             </span>
 
                             <Link preserve-scroll :href="
-                                    route('villes.disciplines.show', {
-                                        city: city.id,
+                                    route('departements.disciplines.show', {
+                                        departement: departement.id,
                                         discipline: discipline.slug,
                                     })
                                 "
@@ -115,11 +113,12 @@ function hideTooltip() {
                     discipline.name
                     }}</span>
                 à
-                <span class="font-semibold text-gray-800">{{ formatCityName(city.ville) }}
+                <span class="font-semibold text-gray-800">{{ departement.departement }}
                 </span>
                 en France. <br />
                 Consultez la liste des
-                <span v-if="city.structures_count > 1" class="font-semibold text-gray-800">{{ city.structures_count }}
+                <span v-if="departement.structures_count > 1" class="font-semibold text-gray-800">{{
+                    departement.structures_count }}
                 </span>
                 structures disponibles, comparez services, tarifs et horaires en
                 2 clics ! Pratiquer du
@@ -128,7 +127,7 @@ function hideTooltip() {
                     }}</span>
                 à
                 <span class="font-semibold text-gray-800">{{
-                    formatCityName(city.ville)
+                    departement.departement
                     }}</span>
                 n'a jamais été aussi simple!
             </p>
@@ -141,9 +140,9 @@ function hideTooltip() {
                             class="flex w-full flex-col items-stretch justify-between divide-y divide-green-600 rounded-sm border border-gray-300 bg-white/20 px-3 py-2 shadow-md focus:border-indigo-500 focus:outline-none sm:text-base md:flex-row md:items-center md:divide-y-0">
                             <Link v-for="categorie in categories" :key="categorie.id" :href="
                                     route(
-                                        'villes.disciplines.categories.show',
+                                        'departements.disciplines.categories.show',
                                         {
-                                            city: city.id,
+                                            departement: departement.id,
                                             discipline: discipline.slug,
                                             category: categorie.id,
                                         }
@@ -153,9 +152,9 @@ function hideTooltip() {
                             {{ categorie.nom_categorie_client }}
                             </Link>
                             <Link v-for="structureType in allStructureTypes" :key="structureType.id" :href="route(
-                                        'villes.disciplines.structuretypes.show',
+                                        'departements.disciplines.structuretypes.show',
                                         {
-                                            city: city.id,
+                                            departement: departement.id,
                                             discipline: discipline.slug,
                                             structuretype: structureType.id,
                                         }
@@ -194,7 +193,7 @@ function hideTooltip() {
                 <p class="font-medium text-gray-700">
                     Dommage, il n'y a pas encore de structures inscrites à
                     <span class="font-semibold text-gray-800">{{
-                        formatCityName(city.ville)
+                        departement.departement
                         }}</span>
                 </p>
             </div>

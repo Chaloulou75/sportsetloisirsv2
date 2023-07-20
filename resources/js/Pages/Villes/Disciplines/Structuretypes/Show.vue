@@ -50,7 +50,7 @@ function hideTooltip() {
         <template #header>
             <FamilleNavigation :familles="familles" />
             <div class="my-4 flex w-full flex-col items-center justify-center space-y-2">
-                <h1 class="text-xl font-semibold uppercase leading-tight tracking-widest text-gray-800">
+                <h1 class="text-xl font-semibold uppercase leading-tight tracking-widest text-gray-800 text-center">
                     {{ structuretypeElected.name }} de {{ discipline.name }}
                     <span class="lowercase">à</span>
                     {{ formatCityName(city.ville) }}

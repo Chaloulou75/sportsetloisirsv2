@@ -16,9 +16,12 @@ use App\Http\Controllers\StructureTarifController;
 use App\Http\Controllers\StructurePlanningController;
 use App\Http\Controllers\StructureCategorieController;
 use App\Http\Controllers\StructureDisciplineController;
+use App\Http\Controllers\DepartementDisciplineController;
 use App\Http\Controllers\CityDisciplineCategorieController;
 use App\Http\Controllers\StructureActiviteProduitController;
 use App\Http\Controllers\CityDisciplineStructuretypeController;
+use App\Http\Controllers\DepartementDisciplineCategorieController;
+use App\Http\Controllers\DepartementDisciplineStructuretypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,6 +92,13 @@ Route::get('/{departementWithPlus}-{id}-2.{extension?}', function ($departementW
 Route::resource('departements', DepartementController::class)->only([
     'index', 'show'
 ]);
+
+Route::get('/departements/{departement}/disciplines/{discipline:slug}', [DepartementDisciplineController::class, 'show'])->name('departements.disciplines.show');
+
+Route::get('/departements/{departement}/disciplines/{discipline:slug}/categories/{category:id}', [DepartementDisciplineCategorieController::class, 'show'])->name('departements.disciplines.categories.show');
+
+Route::get('/departements/{departement}/disciplines/{discipline:slug}/structuretypes/{structuretype:id}', [DepartementDisciplineStructuretypeController::class, 'show'])->name('departements.disciplines.structuretypes.show');
+
 
 Route::get('/localite-1/index.{extension?}', function ($extension = null) {
     return redirect('/villes/', 301);

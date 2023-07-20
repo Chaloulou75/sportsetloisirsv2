@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\City;
 use Inertia\Inertia;
 use App\Models\Famille;
+use App\Models\Departement;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Models\LienDisciplineCategorie;
 
-class CityDisciplineController extends Controller
+class DepartementDisciplineCategorieController extends Controller
 {
     /**
      * Display the specified resource.
      */
-    public function show(City $city, $discipline)
+    public function show(Departement $departement, $discipline, $category)
     {
         $familles = Famille::select(['id', 'name', 'slug'])->get();
 
@@ -24,25 +24,25 @@ class CityDisciplineController extends Controller
                             ->first();
         $disciplinesSimilaires = $discipline->disciplinesSimilaires;
 
-        $categories = LienDisciplineCategorie::where('discipline_id', $discipline->id)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
+        $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('id', $category)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
 
-        $city = City::with(['structures'])->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
-                            ->where('id', $city->id)
-                            ->withCount('structures')
-                            ->first();
+        $categories = LienDisciplineCategorie::where('discipline_id', $discipline->id)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
 
         $allStructureTypes = Structuretype::whereHas('structures')->select(['id', 'name', 'slug'])->get();
 
-        $citiesAround = City::with('structures')
-                    ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
-                    ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
-                    ->where('id', '!=', $city->id)
-                    ->havingRaw('distance <= ?', [$city->tolerance_rayon])
-                    ->orderBy('distance', 'ASC')
-                    ->limit(10)
-                    ->get();
+        $departement = Departement::with(['structures'])->select(['id', 'numero', 'departement', 'prefixe', 'view_count', 'latitude', 'longitude'])
+                            ->where('id', $departement->id)
+                            ->withCount('structures')
+                            ->first();
 
-        $structures = $city->structures()->with([
+
+        $citiesAround = $departement->cities()->whereHas('structures')
+                            ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
+                            ->limit(10)
+                            ->get();
+
+
+        $structures = $departement->structures()->with([
             'famille:id,name',
             'creator:id,name',
             'users:id,name',
@@ -53,9 +53,12 @@ class CityDisciplineController extends Controller
                 $query->where('discipline_id', $discipline->id);
             },
             'disciplines.discipline:id,name,slug',
-            'categories',
-            'activites'=> function ($query) use ($discipline) {
-                $query->where('discipline_id', $discipline->id);
+            'categories'=> function ($query) use ($category) {
+                $query->where('categorie_id', $category->id);
+            },
+            'activites' => function ($query) use ($discipline, $category) {
+                $query->where('discipline_id', $discipline->id)
+                    ->where('categorie_id', $category->id);
             },
             'activites.discipline',
             'activites.categorie',
@@ -65,19 +68,22 @@ class CityDisciplineController extends Controller
             'tarifs.tarifType',
             'tarifs.structureTarifTypeInfos',
             'plannings',
-        ])->whereHas('activites', function ($query) use ($discipline) {
-            $query->where('discipline_id', $discipline->id);
-        })->withCount('disciplines', 'produits', 'activites')
+        ])->withCount('disciplines', 'produits', 'activites')
+        ->whereHas('activites', function ($query) use ($discipline, $category) {
+            $query->where('discipline_id', $discipline->id)
+                ->where('categorie_id', $category->id);
+        })
         ->paginate(6);
 
-        $city->timestamp = false;
-        $city->increment('view_count');
+        $departement->timestamp = false;
+        $departement->increment('view_count');
 
-        return Inertia::render('Villes/Disciplines/Show', [
+        return Inertia::render('Departements/Disciplines/Categories/Show', [
             'familles' => $familles,
+            'category' => $category,
             'categories' => $categories,
             'allStructureTypes' => $allStructureTypes,
-            'city'=> $city,
+            'departement'=> $departement,
             'citiesAround' => $citiesAround,
             'disciplinesSimilaires' => $disciplinesSimilaires,
             'structures' => $structures,
@@ -85,4 +91,5 @@ class CityDisciplineController extends Controller
         ]);
 
     }
+
 }

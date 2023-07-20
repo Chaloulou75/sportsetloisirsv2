@@ -9,9 +9,10 @@ import DisciplinesSimilaires from "@/Components/Disciplines/DisciplinesSimilaire
 
 let props = defineProps({
     familles: Object,
-    categories: Object,
+    structuretypeElected: Object,
     allStructureTypes: Object,
-    city: Object,
+    categories: Object,
+    departement: Object,
     citiesAround: Object,
     structures: Object,
     discipline: Object,
@@ -42,26 +43,17 @@ function hideTooltip() {
 </script>
 
 <template>
-    <Head :title="city.ville" :description="
-            'Envie de faire du ' +
-            discipline.name +
-            ' à ' +
-            city.ville +
-            '? Choisissez parmi plus de ' +
-            city.structures_count +
-            ' structures pour pratiquer une activité sportive ou de loisirs à ' +
-            city.ville
-        " />
+    <Head :title="departement.departement"
+        :description="`${structuretypeElected.name} de ${discipline.name} à ${departement.departement}. Choisissez parmi plus de ${departement.structures_count} structures pour pratiquer une activité sportive ou de loisirs à ${departement.departement}`" />
 
     <AppLayout>
         <template #header>
             <FamilleNavigation :familles="familles" />
             <div class="my-4 flex w-full flex-col items-center justify-center space-y-2">
                 <h1 class="text-xl font-semibold uppercase leading-tight tracking-widest text-gray-800 text-center">
-                    {{ discipline.name }} <span class="lowercase">à</span>
-                    {{ formatCityName(city.ville) }}
-                    <span class="text-sm text-gray-600">({{ city.code_postal }})
-                    </span>
+                    {{ structuretypeElected.name }} <span class="lowercase">de</span> {{ discipline.name }}
+                    <span class="lowercase">{{ departement.prefixe }}</span>
+                    {{ departement.departement }}
                 </h1>
                 <nav aria-label="Breadcrumb" class="flex">
                     <ol class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600">
@@ -85,19 +77,19 @@ function hideTooltip() {
                                 class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180">
                             </span>
 
-                            <Link preserve-scroll :href="route('villes.show', city.id)"
+                            <Link preserve-scroll :href="route('departements.show', departement.id)"
                                 class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900">
-                            {{ formatCityName(city.ville) }}
+                            {{ departement.departement }}
                             </Link>
                         </li>
                         <li class="relative flex items-center">
                             <span
-                                class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180">
+                                class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)]">
                             </span>
 
                             <Link preserve-scroll :href="
-                                    route('villes.disciplines.show', {
-                                        city: city.id,
+                                    route('departements.disciplines.show', {
+                                        departement: departement.id,
                                         discipline: discipline.slug,
                                     })
                                 "
@@ -105,30 +97,52 @@ function hideTooltip() {
                             {{ discipline.name }}
                             </Link>
                         </li>
+                        <li class="relative flex items-center">
+                            <span
+                                class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)]">
+                            </span>
+
+                            <Link preserve-scroll :href="
+                                    route(
+                                        'departements.disciplines.structuretypes.show',
+                                        {
+                                            departement: departement.id,
+                                            discipline: discipline.slug,
+                                            structuretype: structuretypeElected.id,
+                                        }
+                                    )
+                                "
+                                class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900">
+                            {{ structuretypeElected.name }}
+                            </Link>
+                        </li>
                     </ol>
                 </nav>
             </div>
 
             <p class="py-2 text-base font-medium leading-tight text-gray-700">
-                Trouvez un club de
-                <span class="font-semibold text-gray-800">{{
-                    discipline.name
-                    }}</span>
-                à
-                <span class="font-semibold text-gray-800">{{ formatCityName(city.ville) }}
+                <span class="font-semibold text-gray-800">{{ structuretypeElected.name }}
                 </span>
+                de
+                <span class="font-semibold text-gray-800">{{ discipline.name }}
+                </span>
+                {{ departement.prefixe }}
+                <span class="font-semibold text-gray-800">{{
+                    departement.departement
+                    }}</span>
                 en France. <br />
                 Consultez la liste des
-                <span v-if="city.structures_count > 1" class="font-semibold text-gray-800">{{ city.structures_count }}
+                <span v-if="departement.structures_count > 1" class="font-semibold text-gray-800">{{
+                    departement.structures_count }}
                 </span>
                 structures disponibles, comparez services, tarifs et horaires en
                 2 clics ! Pratiquer du
                 <span class="font-semibold text-gray-800">{{
                     discipline.name
                     }}</span>
-                à
+                {{ departement.prefixe }}
                 <span class="font-semibold text-gray-800">{{
-                    formatCityName(city.ville)
+                    departement.departement
                     }}</span>
                 n'a jamais été aussi simple!
             </p>
@@ -141,26 +155,38 @@ function hideTooltip() {
                             class="flex w-full flex-col items-stretch justify-between divide-y divide-green-600 rounded-sm border border-gray-300 bg-white/20 px-3 py-2 shadow-md focus:border-indigo-500 focus:outline-none sm:text-base md:flex-row md:items-center md:divide-y-0">
                             <Link v-for="categorie in categories" :key="categorie.id" :href="
                                     route(
-                                        'villes.disciplines.categories.show',
+                                        'departements.disciplines.categories.show',
                                         {
-                                            city: city.id,
+                                            departement: departement.id,
                                             discipline: discipline.slug,
                                             category: categorie.id,
                                         }
                                     )
-                                "
-                                class="w-full px-2 py-3 text-center text-sm font-medium leading-5 text-gray-700 ring-white ring-opacity-10 ring-offset-2 ring-offset-green-200 hover:bg-green-600 hover:text-white focus:bg-green-600 focus:text-white focus:outline-none focus:ring-2">
+                                " :class="[
+                                    'w-full px-2 py-3 text-center text-sm font-medium leading-5 text-gray-700 ring-white ring-opacity-10 ring-offset-2 ring-offset-green-200 focus:outline-none focus:ring-2',
+                                    route().current(
+                                        'departements.disciplines.categories.show'
+                                    )
+                                        ? 'bg-green-600 text-white'
+                                        : 'text-gray-700 hover:bg-white/50 hover:text-gray-800',
+                                ]">
                             {{ categorie.nom_categorie_client }}
                             </Link>
                             <Link v-for="structureType in allStructureTypes" :key="structureType.id" :href="route(
-                                        'villes.disciplines.structuretypes.show',
+                                        'departements.disciplines.structuretypes.show',
                                         {
-                                            city: city.id,
+                                            departement: departement.id,
                                             discipline: discipline.slug,
                                             structuretype: structureType.id,
                                         }
-                                    )"
-                                class="w-full px-2 py-3 text-center text-sm font-medium leading-5 text-gray-700 ring-white ring-opacity-10 ring-offset-2 ring-offset-green-200 hover:bg-green-600 hover:text-white focus:bg-green-600 focus:text-white focus:outline-none focus:ring-2">
+                                    )" :class="[
+                                    'w-full px-2 py-3 text-center text-sm font-medium leading-5 text-gray-700 ring-white ring-opacity-10 ring-offset-2 ring-offset-green-200 focus:outline-none focus:ring-2',
+                                    route().current(
+                                        'departements.disciplines.structuretypes.show'
+                                    ) && structuretypeElected.id === structureType.id
+                                        ? 'bg-green-600 text-white'
+                                        : 'text-gray-700 hover:bg-white/50 hover:text-gray-800',
+                                ]">
                             {{ structureType.name }}
                             </Link>
                         </nav>
@@ -172,10 +198,9 @@ function hideTooltip() {
         <template v-if="structures.data.length > 0">
             <div class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-12 sm:px-6 md:flex-row md:space-x-4 lg:px-8">
                 <div class="md:w-1/2">
-                    <div class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-2">
+                    <div class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2">
                         <StructureCard v-for="(structure, index) in structures.data" :key="structure.id" :index="index"
                             :structure="structure" @mouseover="showTooltip(structure)" @mouseout="hideTooltip()" />
-
                     </div>
                     <div class="flex justify-end p-10">
                         <Pagination :links="structures.links" />
@@ -192,9 +217,17 @@ function hideTooltip() {
         <template v-else>
             <div class="mx-auto min-h-screen max-w-full px-2 py-12 sm:px-6 lg:px-8">
                 <p class="font-medium text-gray-700">
-                    Dommage, il n'y a pas encore de structures inscrites à
+                    Dommage, il n'y a pas encore de structures inscrites de type
                     <span class="font-semibold text-gray-800">{{
-                        formatCityName(city.ville)
+                        structuretypeElected.name
+                        }}</span>
+                    en
+                    <span class="font-semibold text-gray-800">{{
+                        discipline.name
+                        }}</span>
+                    {{ departement.prefixe }}
+                    <span class="font-semibold text-gray-800">{{
+                        departement.departement
                         }}</span>
                 </p>
             </div>

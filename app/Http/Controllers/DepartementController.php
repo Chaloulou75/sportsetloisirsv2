@@ -45,6 +45,8 @@ class DepartementController extends Controller
      */
     public function show(Departement $departement)
     {
+        $familles = Famille::select(['id', 'name', 'slug'])->get();
+
         $departement = Departement::with(['cities',
                                         'structures' => function ($query) {
                                             $query->latest();
@@ -82,6 +84,7 @@ class DepartementController extends Controller
         $departement->increment('view_count');
 
         return Inertia::render('Departements/Show', [
+            'familles' => $familles,
             'departement'=> $departement,
             'structures' => $structures,
         ]);
