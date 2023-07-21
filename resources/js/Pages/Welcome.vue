@@ -67,7 +67,7 @@ const formatCityName = (ville) => {
         </header>
         <div>
             <section
-                class="bg-gray-100 mx-auto flex w-full max-w-full flex-col items-end justify-center space-x-0 space-y-4 px-2 md:px-8 py-8 md:flex-row md:space-x-4 md:space-y-0">
+                class="bg-gradient-to-br from-green-100 to-blue-100 mx-auto flex w-full max-w-full flex-col items-end justify-center space-x-0 space-y-4 px-2 md:px-8 py-8 md:flex-row md:space-x-4 md:space-y-0">
                 <AutocompleteCity :cities="allCities" v-model="localite" />
                 <AutocompleteDiscipline :disciplines="listDisciplines" v-model="search" />
                 <div class="">

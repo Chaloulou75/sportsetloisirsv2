@@ -68,7 +68,7 @@ class DisciplineController extends Controller
             ->select(['id', 'name', 'slug', 'view_count'])
             ->first();
 
-        $disciplinesSimilaires = $discipline->disciplinesSimilaires;
+        $disciplinesSimilaires = $discipline->disciplinesSimilaires()->select(['famille', 'name', 'slug'])->get();
 
         $categories = LienDisciplineCategorie::where('discipline_id', $discipline->id)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
 

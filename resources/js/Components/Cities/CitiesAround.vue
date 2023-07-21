@@ -8,17 +8,14 @@ const formatCityName = (ville) => {
 };
 </script>
 <template>
-    <div class="w-full px-4 text-gray-600">
-        <h3 class="mb-2 font-semibold">Les villes à proximités</h3>
+    <div class="w-full px-4 py-4 text-gray-600 mx-4">
+        <h3 class="mb-2 font-semibold text-center">Les localités à proximités</h3>
         <ul class="list-disc space-y-1.5">
             <li v-for="city in citiesAround" :key="city.id">
-                <Link
-                    :href="route('villes.show', city.id)"
-                    :active="route().current('villes.show', city.id)"
-                    class="hover:text-gray-800"
-                >
-                    {{ formatCityName(city.ville) }}
-                    <span class="text-xs">({{ city.code_postal }})</span>
+                <Link :href="route('villes.show', city.id)" :active="route().current('villes.show', city.id)"
+                    class="hover:text-gray-800 hover:underline">
+                {{ formatCityName(city.ville) }}
+                <span class="text-xs">({{ city.code_postal }})</span>
                 </Link>
             </li>
         </ul>

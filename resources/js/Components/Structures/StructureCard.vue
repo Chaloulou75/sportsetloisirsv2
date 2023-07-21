@@ -112,8 +112,8 @@ const formatCityName = (ville) => {
 
             <div class="mt-auto flex items-center justify-around gap-1 py-1.5 text-xs">
                 <div class="inline-flex shrink-0 items-center">
-                    <svg class="h-4 w-4 text-indigo-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
+                    <svg class="h-4 w-4 text-indigo-700 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
                     </svg>
@@ -125,8 +125,8 @@ const formatCityName = (ville) => {
                 </div>
 
                 <div class="inline-flex shrink-0 items-center">
-                    <svg class="h-4 w-4 text-indigo-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
+                    <svg class="h-4 w-4 text-indigo-700 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                     </svg>
@@ -139,7 +139,7 @@ const formatCityName = (ville) => {
                 </div>
 
                 <div class="inline-flex shrink-0 items-center">
-                    <BookmarkIcon class="h-4 w-4 text-indigo-700" />
+                    <BookmarkIcon class="h-4 w-4 text-indigo-700 mr-1" />
                     <p class="font-medium text-gray-600">
                         {{ structure.produits_count }}
                         <span v-if="structure.produits_count > 1">Produits</span>
