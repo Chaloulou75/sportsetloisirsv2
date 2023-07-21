@@ -191,8 +191,13 @@ const formatCityName = (ville) => {
                                 Coordonnées de la structure
                             </h3>
                         </div>
-                        <LeafletMap :item="structure" />
+                        <div>
+                            <h3 class="text-base font-semibold py-4">Localisation</h3>
+                            <LeafletMap :item="structure" />
+                        </div>
+
                         <div class="my-4 space-y-6">
+                            <h3 class="text-base font-semibold py-4">Activité proposé par:</h3>
                             <p class="text-base font-semibold text-gray-700">
                                 <UserIcon class="inline-block h-4 w-4" />
                                 {{ structure.creator.name }}
@@ -258,12 +263,11 @@ const formatCityName = (ville) => {
                         </div>
                         <TabsComponent :structure="structure"></TabsComponent>
                         <div class="space-y-4">
-                            <CitiesAround v-if="citiesAround.length > 0 " :citiesAround="citiesAround" />
-                            <DisciplinesSimilaires v-if="disciplinesSimilaires.length > 0 "
+                            <CitiesAround v-if="citiesAround.length > 0" :citiesAround="citiesAround" />
+                            <DisciplinesSimilaires v-if="disciplinesSimilaires.length > 0"
                                 :disciplinesSimilaires="disciplinesSimilaires" />
                         </div>
                     </div>
-
                 </div>
             </section>
         </template>

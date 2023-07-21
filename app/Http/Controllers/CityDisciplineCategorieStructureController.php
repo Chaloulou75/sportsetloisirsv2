@@ -79,7 +79,7 @@ class CityDisciplineCategorieStructureController extends Controller
             'tarifs.structureTarifTypeInfos',
             'plannings',
         ])->where('slug', $structure)
-        ->withCount('disciplines', 'produits', 'activites')
+        ->withCount('disciplines', 'activites', 'produits')
         ->whereHas('activites', function ($query) use ($discipline, $category) {
             $query->where('discipline_id', $discipline->id)
                 ->where('categorie_id', $category->id);
