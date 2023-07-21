@@ -3,9 +3,16 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { ref, computed, defineAsyncComponent } from "vue";
 import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
-import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
 import CitiesAround from "@/Components/Cities/CitiesAround.vue";
 import DisciplinesSimilaires from "@/Components/Disciplines/DisciplinesSimilaires.vue";
+import TabsComponent from "@/Components/TabsComponent.vue";
+import LeafletMap from "@/Components/LeafletMap.vue";
+import {
+    UserIcon,
+    AtSymbolIcon,
+    GlobeAltIcon,
+    PhoneIcon,
+} from "@heroicons/vue/24/solid";
 
 let props = defineProps({
     familles: Object,
@@ -14,31 +21,14 @@ let props = defineProps({
     allStructureTypes: Object,
     city: Object,
     citiesAround: Object,
-    structures: Object,
+    structure: Object,
     discipline: Object,
     disciplinesSimilaires: Object,
 });
 
-const StructureCard = defineAsyncComponent(() =>
-    import("@/Components/Structures/StructureCard.vue")
-);
-
-const Pagination = defineAsyncComponent(() =>
-    import("@/Components/Pagination.vue")
-);
-
 const formatCityName = (ville) => {
     return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
 };
-
-const hoveredStructure = ref(null);
-
-function showTooltip(structure) {
-    hoveredStructure.value = structure.id;
-}
-function hideTooltip() {
-    hoveredStructure.value = null;
-}
 
 </script>
 
@@ -190,48 +180,92 @@ function hideTooltip() {
             </div>
         </div>
 
-        <template v-if="structures.data.length > 0">
-            <div class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-12 sm:px-6 md:flex-row md:space-x-4 lg:px-8">
-                <div class="md:w-1/2">
-                    <div class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2">
-                        <StructureCard v-for="(structure, index) in structures.data" :key="structure.id" :index="index"
-                            :structure="structure" @mouseover="showTooltip(structure)" @mouseout="hideTooltip()" :link="route('villes.disciplines.categories.structures.show', {
-                                            city: city.id,
-                                            discipline: discipline.slug,
-                                            category: category.id,
-                                            structure: structure.slug
-                                        })" />
+        <template v-if="structure">
+            <section
+                class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-12 sm:px-6 md:flex-row md:space-x-4 lg:px-8">
+                <div
+                    class="w-full mx-auto flex flex-col-reverse justify-between rounded-lg bg-white px-4 shadow-md shadow-sky-700 md:flex-row md:space-x-6">
+                    <div class="w-full md:w-1/3">
+                        <div class="my-4 flex items-center justify-center md:mb-8">
+                            <h3 class="text-base font-semibold uppercase">
+                                Coordonnées de la structure
+                            </h3>
+                        </div>
+                        <LeafletMap :item="structure" />
+                        <div class="my-4 space-y-6">
+                            <p class="text-base font-semibold text-gray-700">
+                                <UserIcon class="inline-block h-4 w-4" />
+                                {{ structure.creator.name }}
+                            </p>
+                            <p v-if="structure.website" class="text-base font-medium text-gray-700">
+                                <GlobeAltIcon class="mr-1.5 inline-block h-4 w-4" />
+                                Site web:
+                                <a :href="structure.website" target="_blank"
+                                    class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline">
+                                    {{ structure.website }}
+                                </a>
+                            </p>
+                            <p v-if="structure.facebook" class="text-base font-medium text-gray-700">
+                                <GlobeAltIcon class="mr-1.5 inline-block h-4 w-4" />
+                                Facebook:
+                                <a :href="structure.facebook" target="_blank"
+                                    class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline">
+                                    {{ structure.facebook }}
+                                </a>
+                            </p>
+                            <p v-if="structure.instagram" class="text-base font-medium text-gray-700">
+                                <GlobeAltIcon class="mr-1.5 inline-block h-4 w-4" />
+                                Instagram:
+                                <a :href="structure.instagram" target="_blank"
+                                    class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline">
+                                    {{ structure.instagram }}
+                                </a>
+                            </p>
+                            <p v-if="structure.youtube" class="text-base font-medium text-gray-700">
+                                <GlobeAltIcon class="mr-1.5 inline-block h-4 w-4" />
+                                Youtube:
+                                <a :href="structure.youtube" target="_blank"
+                                    class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline">
+                                    {{ structure.youtube }}
+                                </a>
+                            </p>
+
+                            <p v-if="structure.phone1" class="text-base font-medium text-gray-700">
+                                <PhoneIcon class="inline-block h-4 w-4" />
+                                {{ structure.phone1 }}
+                            </p>
+                            <p v-if="structure.email" class="text-base font-medium text-gray-700">
+                                <AtSymbolIcon class="inline-block h-4 w-4" />
+                                {{ structure.email }}
+                            </p>
+                        </div>
                     </div>
-                    <div class="flex justify-end p-10">
-                        <Pagination :links="structures.links" />
+                    <div class="w-full space-y-4 md:w-2/3">
+                        <div class="relative mb-4 md:mb-6">
+                            <p class="mb-2 text-lg font-medium uppercase tracking-wider text-gray-500">
+                                {{ structure.structuretype.name }}
+                            </p>
+                            <div class="my-4 flex items-center justify-start space-x-4">
+                                <img v-if="structure.logo" alt="img" :src="structure.logo"
+                                    class="h-14 w-14 shrink-0 rounded-full object-cover object-center md:h-20 md:w-20" />
+                                <img v-else alt="img" src="https://via.placeholder.com/360x360.png/151f32?text=LOGO"
+                                    class="h-20 w-20 shrink-0 rounded-full object-cover object-center" />
+                                <h2
+                                    class="inline-block text-xl font-semibold text-black sm:text-2xl sm:leading-7 md:text-3xl">
+                                    {{ structure.name }} - {{ discipline.name }}
+                                </h2>
+                            </div>
+                        </div>
+                        <TabsComponent :structure="structure"></TabsComponent>
+                        <div class="space-y-4">
+                            <CitiesAround v-if="citiesAround.length > 0 " :citiesAround="citiesAround" />
+                            <DisciplinesSimilaires v-if="disciplinesSimilaires.length > 0 "
+                                :disciplinesSimilaires="disciplinesSimilaires" />
+                        </div>
                     </div>
+
                 </div>
-                <div class="space-y-4 md:sticky md:w-1/2">
-                    <LeafletMapMultiple class="md:top-2" :structures="structures.data" :hovered-structure="hoveredStructure"
-                        :zoom="12" />
-                    <CitiesAround :citiesAround="citiesAround" />
-                    <DisciplinesSimilaires :disciplinesSimilaires="disciplinesSimilaires" />
-                </div>
-            </div>
-        </template>
-        <template v-else>
-            <div class="mx-auto min-h-screen max-w-full px-2 py-12 sm:px-6 lg:px-8">
-                <p class="font-medium text-gray-700">
-                    Dommage, il n'y a pas encore de structures inscrites dans la
-                    catégorie
-                    <span class="font-semibold text-gray-800">{{
-                        category.nom_categorie_client
-                        }}</span>
-                    en
-                    <span class="font-semibold text-gray-800">{{
-                        discipline.name
-                        }}</span>
-                    à
-                    <span class="font-semibold text-gray-800">{{
-                        formatCityName(city.ville)
-                        }}</span>
-                </p>
-            </div>
+            </section>
         </template>
     </AppLayout>
 </template>

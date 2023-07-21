@@ -21,6 +21,7 @@ use App\Http\Controllers\CityDisciplineCategorieController;
 use App\Http\Controllers\StructureActiviteProduitController;
 use App\Http\Controllers\CityDisciplineStructuretypeController;
 use App\Http\Controllers\DepartementDisciplineCategorieController;
+use App\Http\Controllers\CityDisciplineCategorieStructureController;
 use App\Http\Controllers\DepartementDisciplineStructuretypeController;
 
 /*
@@ -69,6 +70,9 @@ Route::get('/villes/{city}/disciplines/{discipline:slug}', [CityDisciplineContro
 Route::get('/villes/{city}/disciplines/{discipline:slug}/categories/{category:id}', [CityDisciplineCategorieController::class, 'show'])->name('villes.disciplines.categories.show');
 
 Route::get('/villes/{city}/disciplines/{discipline:slug}/structuretypes/{structuretype:id}', [CityDisciplineStructuretypeController::class, 'show'])->name('villes.disciplines.structuretypes.show');
+
+Route::get('/villes/{city}/disciplines/{discipline:slug}/categories/{category:id}/structures/{structure}', [CityDisciplineCategorieStructureController::class, 'show'])->name('villes.disciplines.categories.structures.show');
+
 
 Route::get('/discipline/index.{extension?}', function ($extension = null) {
     return redirect('/disciplines/', 301);
