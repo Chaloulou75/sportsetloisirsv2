@@ -245,13 +245,24 @@ class StructureController extends Controller
      */
     public function show(Structure $structure)
     {
-        $structure->timestamps = false;
-        $structure->increment('view_count');
+        $familles = Famille::with([
+                    'disciplines' => function ($query) {
+                        $query->whereHas('structures');
+                    }
+                ])
+                ->whereHas('disciplines', function ($query) {
+                    $query->whereHas('structures');
+                })->select(['id', 'name', 'slug'])->get();
+
+
 
         $structure = Structure::with([
             'famille:id,name',
             'creator:id,name',
             'users:id,name',
+            'adresses'  => function ($query) {
+                $query->latest();
+            },
             'city:id,ville,ville_formatee,code_postal',
             'departement:id,departement,numero',
             'structuretype:id,name,slug',
@@ -274,11 +285,17 @@ class StructureController extends Controller
 
         $logoUrl = asset($structure->logo);
 
-        // $disciplines = $structure->activites->pluck('discipline.name')->unique();
+        $structure->timestamps = false;
+        $structure->increment('view_count');
+
+        $disciplines = $structure->activites->pluck('discipline')->unique();
+        $categories = $structure->activites->pluck('categorie')->unique();
 
         return Inertia::render('Structures/Show', [
             'structure'=> $structure,
-            // 'disciplines' => $disciplines,
+            'disciplines' => $disciplines,
+            'categories' => $categories,
+            'familles' => $familles,
             'logoUrl' => $logoUrl,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),

@@ -27,7 +27,7 @@ const categories = ref({
             id: 1,
             address: props.structure.address,
             zip_code: props.structure.zip_code,
-            city: props.structure.city?.ville ?? props.structure.city,
+            city: props.structure.adresses[0].city ?? props.structure.city,
             country: props.structure.country,
             structure: props.structure,
         },

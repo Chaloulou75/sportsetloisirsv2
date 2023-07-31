@@ -73,7 +73,7 @@ const formatCityName = (ville) => {
                 <div class="w-full md:w-auto ">
                     <button @click="submitForm" :disabled="processing" type="submit"
                         class="w-full md:w-auto flex items-center justify-center rounded border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-600 shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 mb-0.5">
-                        <span class="inline-block md:hidden mr-4">Rechercher</span>
+                        <span class="inline-block md:hidden mr-4">Trouver</span>
                         <MagnifyingGlassIcon class="h-5 w-5" />
                         <span class="sr-only">Rechercher</span>
                     </button>

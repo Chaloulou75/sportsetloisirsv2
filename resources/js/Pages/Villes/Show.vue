@@ -7,7 +7,7 @@ import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
 import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
 import CitiesAround from "@/Components/Cities/CitiesAround.vue";
 
-let props = defineProps({
+const props = defineProps({
     familles: Object,
     city: Object,
     citiesAround: Object,

@@ -59,6 +59,9 @@ class CityDisciplineStructuretypeController extends Controller
             'famille:id,name',
             'creator:id,name',
             'users:id,name',
+            'adresses'  => function ($query) {
+                $query->latest();
+            },
             'city:id,ville,ville_formatee,code_postal',
             'departement:id,departement,numero',
             'structuretype:id,name,slug',

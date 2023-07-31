@@ -7,7 +7,7 @@ import { defineAsyncComponent } from "vue";
 import TextInput from "@/Components/TextInput.vue";
 import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
 
-let props = defineProps({
+const props = defineProps({
     cities: Object,
     familles: Object,
     filters: Object,

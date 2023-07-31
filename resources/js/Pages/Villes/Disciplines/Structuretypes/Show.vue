@@ -7,7 +7,7 @@ import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
 import CitiesAround from "@/Components/Cities/CitiesAround.vue";
 import DisciplinesSimilaires from "@/Components/Disciplines/DisciplinesSimilaires.vue";
 
-let props = defineProps({
+const props = defineProps({
     familles: Object,
     structuretypeElected: Object,
     allStructureTypes: Object,
