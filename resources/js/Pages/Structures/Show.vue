@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
-import { ref, watch } from "vue";
+import { ref, computed } from "vue";
 import TabsComponent from "@/Components/TabsComponent.vue";
 import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
 import ModalDeleteStructure from "@/Components/Modals/ModalDeleteStructure.vue";
@@ -11,32 +11,97 @@ import {
     AtSymbolIcon,
     GlobeAltIcon,
     PhoneIcon,
-} from "@heroicons/vue/24/solid";
+    CheckCircleIcon,
+    ChevronUpDownIcon,
+} from "@heroicons/vue/24/outline";
+import {
+    Listbox,
+    ListboxLabel,
+    ListboxButton,
+    ListboxOptions,
+    ListboxOption,
+} from "@headlessui/vue";
+import ActiviteCard from "@/Components/Structures/ActiviteCard.vue";
 
 const props = defineProps({
     structure: Object,
     logoUrl: String,
-    disciplines: Object,
-    categories: Object,
     familles: Object,
+    criteres: Object,
     can: Object,
 });
 
 const showModal = ref(false);
 
-// watch(
-//     () => discipline_id,
-//     async (newDisciplineID) => {
-//         axios
-//             .get("/api/listdisciplines/" + newDisciplineID)
-//             .then((response) => {
-//                 categoriesList.value = response.data.data;
-//             })
-//             .catch((e) => {
-//                 console.log(e);
-//             });
-//     }
-// );
+const uniqueDisciplines = computed(() => {
+    const disciplinesMap = new Map();
+    props.structure.activites.forEach((activity) => {
+        const discipline = activity.discipline;
+        if (!disciplinesMap.has(discipline.id)) {
+            disciplinesMap.set(discipline.id, discipline);
+        }
+    });
+    return Array.from(disciplinesMap.values());
+});
+
+const selectedDiscipline = ref(null);
+const selectedCategory = ref(null);
+// const selectedCriteres = ref({});
+
+const handleDisciplineClick = (discipline) => {
+    selectedDiscipline.value = discipline;
+    selectedCategory.value = null;
+};
+
+const filteredCategories = computed(() => {
+    if (!selectedDiscipline) return [];
+
+    return props.structure.activites
+        .filter(
+            (activity) =>
+                activity.categorie.discipline_id === selectedDiscipline.value.id
+        )
+        .map((activity) => activity.categorie);
+});
+
+const handleCategoryClick = (category) => {
+    selectedCategory.value = category;
+};
+
+const filteredActivites = computed(() => {
+    if (!selectedDiscipline.value || !selectedCategory.value) return [];
+
+    return props.structure.activites.filter(
+        (activity) =>
+            activity.categorie.discipline_id === selectedDiscipline.value.id &&
+            activity.categorie_id === selectedCategory.value.id
+    );
+});
+
+const filteredCriteres = computed(() => {
+    if (!selectedDiscipline.value || !selectedCategory.value) return [];
+
+    return props.criteres.filter(
+        (critere) =>
+            critere.discipline_id === selectedDiscipline.value.id &&
+            critere.categorie_id === selectedCategory.value.id
+    );
+});
+
+const selectedCriteres = computed(() => {
+    if (!filteredCriteres.value || filteredCriteres.value.length === 0) {
+        return {};
+    }
+    const initialSelectedCriteres = {};
+    for (const critere of filteredCriteres.value) {
+        if (critere.valeurs.length > 0) {
+            initialSelectedCriteres[critere.id] = critere.valeurs[0];
+        } else {
+            initialSelectedCriteres[critere.id] = "";
+        }
+    }
+    return initialSelectedCriteres;
+});
 </script>
 
 <template>
@@ -293,120 +358,160 @@ const showModal = ref(false);
                         Les disciplines proposées:
                     </h3>
                     <div
-                        class="flex w-full flex-col items-center justify-start space-y-2 text-gray-600 md:flex-row md:space-x-4 md:space-y-0"
+                        class="grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3 lg:grid-cols-4 lg:gap-6"
                     >
                         <button
-                            v-for="discipline in disciplines"
+                            v-for="discipline in uniqueDisciplines"
                             :key="discipline.id"
-                            @click=""
-                            class="inline-block w-48 rounded border border-gray-600 px-12 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                            @click="handleDisciplineClick(discipline)"
+                            :class="{
+                                'rounded border border-gray-600 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500': true,
+                                'border-gray-100 bg-indigo-500 text-white':
+                                    selectedDiscipline === discipline,
+                            }"
                         >
                             {{ discipline.name }}
                         </button>
                     </div>
-                    <h3 class="my-4 text-lg font-semibold text-gray-700">
-                        Les catégories proposées:
+                    <h3
+                        v-if="selectedDiscipline"
+                        class="my-4 text-lg font-semibold text-gray-700"
+                    >
+                        Les catégories proposées pour
+                        <span class="text-indigo-500">{{
+                            selectedDiscipline.name
+                        }}</span>
+                        :
                     </h3>
                     <div
-                        class="flex w-full flex-col flex-wrap items-stretch justify-between space-y-2 text-gray-600 md:flex-row"
+                        v-if="selectedDiscipline"
+                        class="grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3 lg:grid-cols-4 lg:gap-6"
                     >
                         <button
-                            v-for="categorie in categories"
+                            v-for="categorie in filteredCategories"
                             :key="categorie.id"
-                            @click=""
-                            class="inline-block w-48 rounded border border-gray-600 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                            @click="handleCategoryClick(categorie)"
+                            :class="{
+                                'rounded border border-gray-600 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500': true,
+                                'border-gray-100 bg-indigo-500 text-white':
+                                    selectedCategory === categorie,
+                            }"
                         >
                             {{ categorie.nom_categorie_client }}
                         </button>
                     </div>
+                    <h3
+                        v-if="selectedCategory"
+                        class="my-4 text-lg font-semibold text-gray-700"
+                    >
+                        Les activités proposées en
+                        <span class="text-indigo-500">{{
+                            selectedDiscipline.name
+                        }}</span>
+                        dans la catégorie
+                        <span class="text-indigo-500">{{
+                            selectedCategory.nom_categorie_client
+                        }}</span
+                        >:
+                    </h3>
 
-                    <!-- <TabsComponent :structure="structure"></TabsComponent> -->
+                    <div
+                        v-if="selectedCategory"
+                        class="my-6 grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3"
+                    >
+                        <Listbox
+                            v-for="critere in filteredCriteres"
+                            :key="critere.id"
+                            class="w-full"
+                            v-model="selectedCriteres[critere.id]"
+                        >
+                            <div class="relative mt-1">
+                                <label
+                                    :for="critere.nom"
+                                    class="block text-sm font-medium text-gray-700"
+                                >
+                                    {{ critere.nom }}:
+                                </label>
+                                <ListboxButton
+                                    class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                                >
+                                    <span class="block truncate">
+                                        {{
+                                            selectedCriteres[critere.id].valeur
+                                        }}
+                                    </span>
+                                    <span
+                                        class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+                                    >
+                                        <ChevronUpDownIcon
+                                            class="h-5 w-5 text-gray-400"
+                                            aria-hidden="true"
+                                        />
+                                    </span>
+                                </ListboxButton>
+
+                                <transition
+                                    leave-active-class="transition duration-100 ease-in"
+                                    leave-from-class="opacity-100"
+                                    leave-to-class="opacity-0"
+                                >
+                                    <ListboxOptions
+                                        class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                                    >
+                                        <ListboxOption
+                                            v-slot="{ active, selected }"
+                                            v-for="value in critere.valeurs"
+                                            :key="value.id"
+                                            :value="value"
+                                            as="template"
+                                        >
+                                            <li
+                                                :class="[
+                                                    active
+                                                        ? 'bg-amber-100 text-amber-900'
+                                                        : 'text-gray-900',
+                                                    'relative cursor-default select-none py-2 pl-10 pr-4',
+                                                ]"
+                                            >
+                                                <span
+                                                    :class="[
+                                                        selected
+                                                            ? 'font-medium'
+                                                            : 'font-normal',
+                                                        'block truncate',
+                                                    ]"
+                                                    >{{ value.valeur }}</span
+                                                >
+                                                <span
+                                                    v-if="selected"
+                                                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
+                                                >
+                                                    <CheckCircleIcon
+                                                        class="h-5 w-5"
+                                                        aria-hidden="true"
+                                                    />
+                                                </span>
+                                            </li>
+                                        </ListboxOption>
+                                    </ListboxOptions>
+                                </transition>
+                            </div>
+                        </Listbox>
+                    </div>
+
+                    <div
+                        v-if="selectedCategory"
+                        class="my-6 grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3"
+                    >
+                        <ActiviteCard
+                            v-for="activite in filteredActivites"
+                            :key="activite.id"
+                            :activite="activite"
+                            :link="route('welcome')"
+                        />
+                    </div>
                 </div>
             </div>
         </section>
-        <!-- <section
-            v-if="structure.activites.length > 0"
-            class="px-2 py-6 mx-auto my-4 space-y-4 max-w-full sm:px-4 lg:px-8"
-        >
-            <h2 class="text-xl font-bold">Nos activités</h2>
-            <div
-                v-for="(activite, index) in structure.activites"
-                :key="activite.id"
-                :index="index"
-                class="flex flex-col justify-between w-full px-2 py-4 space-y-4 text-gray-800 border border-gray-500 rounded-lg shadow-md md:flex-row md:space-y-0"
-            >
-                <div class="flex flex-col justify-start w-full md:w-1/3">
-                    <h3 class="mb-3 text-lg font-semibold">{{ activite.name }}</h3>
-                    <p class="text-base font-semibold">
-                        Discipline pratiquée:
-                        <span class="font-normal">{{
-                            activite.discipline.name
-                        }}</span>
-                    </p>
-                    <p class="text-base font-semibold">
-                        Niveaux:
-                        <span class="font-normal">{{
-                            activite.nivel.name
-                        }}</span>
-                    </p>
-                    <p class="text-base font-semibold">
-                        Type d'activité:
-                        <span class="font-normal">{{
-                            activite.activitetype.name
-                        }}</span>
-                    </p>
-
-                    <p class="text-base font-semibold">
-                        Public:
-                        <span class="font-normal">{{
-                            activite.publictype.name
-                        }}</span>
-                    </p>
-                    <p class="text-base font-semibold">
-                        Description:
-                        <span class="font-medium leading-5 text-gray-700 whitespace-pre-line">{{
-                            activite.description
-                        }}</span>
-                    </p>
-                </div>
-                <div class="flex flex-col justify-start w-full md:w-1/3">
-                    <p class="text-base font-semibold">
-                        Adresse:
-                        <span class="font-normal">{{ activite.address }}</span>
-                    </p>
-                    <p class="text-base font-semibold">
-                        Code postal:
-                        <span class="font-normal">{{
-                            activite.zip_code
-                        }}</span>
-                    </p>
-                    <p class="text-base font-semibold">
-                        Ville:
-                        <span class="font-normal">{{
-                            activite.city
-                        }}</span>
-                    </p>
-                    <LeafletMap
-                        :item="activite"
-                    />
-                </div>
-                <div class="flex flex-col items-center justify-end px-4 space-y-2 md:ml-4 md:space-y-6 md:w:1/3">
-                    <Link
-                        :href="route('structures.activites.edit', {structure:structure.slug, activite: activite})"
-                        v-if="can.update"
-                        class="flex flex-col items-center justify-center w-full px-4 py-2 overflow-hidden text-xs text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
-                    >
-                            Editer l'activité
-                    </Link>
-                    <button
-                        v-if="can.delete"
-                        @click="destroy(activite)"
-                        class="flex flex-col items-center justify-center w-full px-4 py-2 overflow-hidden text-xs text-center text-gray-600 transition duration-150 bg-white rounded shadow-lg hover:bg-red-400 hover:text-white hover:ring-2 hover:ring-red-400 hover:ring-offset-2 focus:ring-2 focus:ring-red-400 focus:ring-offset-2 sm:rounded-lg"
-                    >
-                        Supprimer cette activité
-                    </button>
-                </div>
-            </div>
-        </section> -->
     </AppLayout>
 </template>

@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\StructureUser;
 use App\Mail\StructureCreated;
+use App\Models\LienDisciplineCategorieCritere;
 use App\Models\ListDiscipline;
 use Illuminate\Validation\Rule;
 use App\Models\StructureAddress;
@@ -255,7 +256,6 @@ class StructureController extends Controller
                 })->select(['id', 'name', 'slug'])->get();
 
 
-
         $structure = Structure::with([
             'famille:id,name',
             'creator:id,name',
@@ -270,13 +270,13 @@ class StructureController extends Controller
             'disciplines.discipline:id,name,slug',
             'categories',
             'activites',
-            'activites.discipline',
-            'activites.categorie',
-            'produits',
-            'produits.criteres',
-            'tarifs',
-            'tarifs.tarifType',
-            'tarifs.structureTarifTypeInfos',
+            'activites.discipline:id,name',
+            'activites.categorie:id,categorie_id,discipline_id,nom_categorie_client',
+            'activites.produits',
+            'activites.produits.criteres',
+            'activites.produits.tarifs',
+            'activites.produits.tarifs.tarifType',
+            'activites.produits.tarifs.structureTarifTypeInfos',
             'plannings',
             ])
             ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
@@ -285,17 +285,19 @@ class StructureController extends Controller
 
         $logoUrl = asset($structure->logo);
 
+        $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
+            $query->orderBy('defaut', 'desc');
+        }])
+        ->whereIn('discipline_id', $structure->disciplines->pluck('discipline_id'))->whereIn('categorie_id', $structure->categories->pluck('categorie_id'))
+        ->get();
+
         $structure->timestamps = false;
         $structure->increment('view_count');
 
-        $disciplines = $structure->activites->pluck('discipline')->unique();
-        $categories = $structure->activites->pluck('categorie')->unique();
-
         return Inertia::render('Structures/Show', [
             'structure'=> $structure,
-            'disciplines' => $disciplines,
-            'categories' => $categories,
             'familles' => $familles,
+            'criteres' => $criteres,
             'logoUrl' => $logoUrl,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
