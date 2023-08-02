@@ -46,71 +46,54 @@ const formatCityName = (ville) => {
                 class="h-56 w-full rounded-md object-cover"
             />
 
-            <div class="mt-2 p-3">
+            <div class="mt-2">
                 <dl class="flex flex-col">
                     <p
-                        class="py-1.5 text-sm font-medium tracking-widest text-gray-600"
+                        class="px-2 py-1.5 text-sm font-semibold tracking-wide text-gray-600"
                     >
                         {{ activite.titre }}
                     </p>
-                    <div class="py-1.5"></div>
 
-                    <div class="py-1.5">
+                    <div class="w-full divide-y divide-slate-200">
                         <dt class="sr-only">Produits</dt>
                         <div
+                            class="px-2 py-3 odd:bg-white even:bg-slate-50"
                             v-for="produit in activite.produits"
                             :key="produit.id"
                         >
-                            <p>{{ produit }}</p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center py-1.5">
-                        <dt class="sr-only">Ville</dt>
-                        <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
-                    </div>
-
-                    <div
-                        class="mt-auto flex items-center justify-around gap-1 py-1.5 text-xs"
-                    >
-                        <div class="inline-flex shrink-0 items-center">
-                            <svg
-                                class="mr-1 h-4 w-4 text-indigo-700"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"
+                            <p class="text-xs">Produit n° {{ produit.id }}:</p>
+                            <div class="flex items-center py-1.5 text-xs">
+                                <dt class="sr-only">Ville</dt>
+                                <MapPinIcon
+                                    class="mr-1 h-4 w-4 text-indigo-700"
                                 />
-                            </svg>
-                        </div>
-
-                        <div class="inline-flex shrink-0 items-center">
-                            <svg
-                                class="mr-1 h-4 w-4 text-indigo-700"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
+                                <p class="font-semibold">
+                                    {{ produit.adresse.city }} ({{
+                                        produit.adresse.zip_code
+                                    }})
+                                </p>
+                            </div>
+                            <p
+                                class="text-sm"
+                                v-for="critere in produit.criteres"
+                                :key="critere.id"
                             >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-                                />
-                            </svg>
-                        </div>
-
-                        <div class="inline-flex shrink-0 items-center">
-                            <BookmarkIcon
-                                class="mr-1 h-4 w-4 text-indigo-700"
-                            />
+                                {{ critere.critere.nom }}:
+                                <span class="font-semibold">{{
+                                    critere.valeur
+                                }}</span>
+                            </p>
+                            <p class="mt-2 text-sm">Tarifs:</p>
+                            <p
+                                class="text-sm"
+                                v-for="tarif in produit.tarifs"
+                                :key="tarif.id"
+                            >
+                                <span class="font-semibold">
+                                    {{ tarif.titre }}: {{ tarif.amount }} € /
+                                    {{ tarif.tarif_type.type }}</span
+                                >
+                            </p>
                         </div>
                     </div>
                 </dl>

@@ -1,8 +1,7 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { Head, Link, router } from "@inertiajs/vue3";
-import { ref, computed } from "vue";
-import TabsComponent from "@/Components/TabsComponent.vue";
+import { Head, Link } from "@inertiajs/vue3";
+import { ref, reactive, computed } from "vue";
 import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
 import ModalDeleteStructure from "@/Components/Modals/ModalDeleteStructure.vue";
 import LeafletMap from "@/Components/LeafletMap.vue";
@@ -68,15 +67,15 @@ const handleCategoryClick = (category) => {
     selectedCategory.value = category;
 };
 
-const filteredActivites = computed(() => {
-    if (!selectedDiscipline.value || !selectedCategory.value) return [];
+// const filteredActivites = computed(() => {
+//     if (!selectedDiscipline.value || !selectedCategory.value) return [];
 
-    return props.structure.activites.filter(
-        (activity) =>
-            activity.categorie.discipline_id === selectedDiscipline.value.id &&
-            activity.categorie_id === selectedCategory.value.id
-    );
-});
+//     return props.structure.activites.filter(
+//         (activity) =>
+//             activity.categorie.discipline_id === selectedDiscipline.value.id &&
+//             activity.categorie_id === selectedCategory.value.id
+//     );
+// });
 
 const filteredCriteres = computed(() => {
     if (!selectedDiscipline.value || !selectedCategory.value) return [];
@@ -100,7 +99,45 @@ const selectedCriteres = computed(() => {
             initialSelectedCriteres[critere.id] = "";
         }
     }
-    return initialSelectedCriteres;
+    return reactive(initialSelectedCriteres);
+});
+
+const filteredActivitesWithCriteres = computed(() => {
+    if (!selectedDiscipline.value || !selectedCategory.value) return [];
+
+    const filteredActivities = props.structure.activites.filter(
+        (activity) =>
+            activity.categorie.discipline_id === selectedDiscipline.value.id &&
+            activity.categorie_id === selectedCategory.value.id
+    );
+
+    // If no criteria is selected or no filtered activities, return the filtered activities as is
+    if (!selectedCriteres.value || filteredActivities.length === 0) {
+        return filteredActivities;
+    }
+
+    return filteredActivities.filter((activity) => {
+        let isMatch = true;
+        const products = activity.produits;
+
+        for (const critereId in selectedCriteres.value) {
+            const selectedCritereValue = selectedCriteres.value[critereId];
+
+            const product = products.find((produit) => {
+                return produit.criteres.some(
+                    (critere) =>
+                        critere.critere_id === parseInt(critereId) &&
+                        critere.valeur === selectedCritereValue.valeur
+                );
+            });
+
+            if (!product) {
+                isMatch = false; // Activity does not match selected criteria
+                break; // Exit the loop early since we already know it's not a match
+            }
+        }
+        return isMatch; // Activity matches all selected criteria
+    });
 });
 </script>
 
@@ -365,7 +402,7 @@ const selectedCriteres = computed(() => {
                             :key="discipline.id"
                             @click="handleDisciplineClick(discipline)"
                             :class="{
-                                'rounded border border-gray-600 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500': true,
+                                'rounded border border-gray-100 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500': true,
                                 'border-gray-100 bg-indigo-500 text-white':
                                     selectedDiscipline === discipline,
                             }"
@@ -392,7 +429,7 @@ const selectedCriteres = computed(() => {
                             :key="categorie.id"
                             @click="handleCategoryClick(categorie)"
                             :class="{
-                                'rounded border border-gray-600 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500': true,
+                                'rounded border border-gray-100 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500': true,
                                 'border-gray-100 bg-indigo-500 text-white':
                                     selectedCategory === categorie,
                             }"
@@ -460,9 +497,9 @@ const selectedCriteres = computed(() => {
                                     >
                                         <ListboxOption
                                             v-slot="{ active, selected }"
-                                            v-for="value in critere.valeurs"
-                                            :key="value.id"
-                                            :value="value"
+                                            v-for="critereValue in critere.valeurs"
+                                            :key="critereValue.id"
+                                            :value="critereValue"
                                             as="template"
                                         >
                                             <li
@@ -480,7 +517,9 @@ const selectedCriteres = computed(() => {
                                                             : 'font-normal',
                                                         'block truncate',
                                                     ]"
-                                                    >{{ value.valeur }}</span
+                                                    >{{
+                                                        critereValue.valeur
+                                                    }}</span
                                                 >
                                                 <span
                                                     v-if="selected"
@@ -504,7 +543,7 @@ const selectedCriteres = computed(() => {
                         class="my-6 grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3"
                     >
                         <ActiviteCard
-                            v-for="activite in filteredActivites"
+                            v-for="activite in filteredActivitesWithCriteres"
                             :key="activite.id"
                             :activite="activite"
                             :link="route('welcome')"
