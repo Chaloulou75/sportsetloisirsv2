@@ -58,200 +58,307 @@ const formatCityName = (ville) => {
 
 <template>
     <template v-if="link">
-        <Link :href="link" class="block rounded-lg shadow-sm shadow-indigo-200 hover:shadow-xl md:px-0">
-        <img alt="Home"
-            src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-            class="h-56 w-full rounded-md object-cover" />
+        <Link
+            :href="link"
+            class="block rounded-lg shadow-sm shadow-indigo-200 hover:shadow-xl md:px-0"
+        >
+            <img
+                alt="Home"
+                src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                class="h-56 w-full rounded-md object-cover"
+            />
 
-        <div class="mt-2 p-3">
-            <dl class="flex flex-col">
-                <p class="text-sm font-medium uppercase tracking-widest text-pink-500">
-                    {{ structure.structuretype.name }}
-                </p>
-                <p class="py-1.5 text-sm font-medium tracking-widest text-gray-600">
-                    {{ structure.name }}
-                </p>
-                <div class="py-1.5">
-                    <span class="text-sm font-semibold" v-for="(activite, index) in getUniqueActivitesTitre(
+            <div class="mt-2 p-3">
+                <dl class="flex flex-col">
+                    <p
+                        class="text-sm font-medium uppercase tracking-widest text-pink-500"
+                    >
+                        {{ structure.structuretype.name }}
+                    </p>
+                    <p
+                        class="py-1.5 text-sm font-medium tracking-widest text-gray-600"
+                    >
+                        {{ structure.name }}
+                    </p>
+                    <div class="py-1.5">
+                        <span
+                            class="text-sm font-semibold"
+                            v-for="(activite, index) in getUniqueActivitesTitre(
                                 structure.activites
-                            )" :key="activite.id">
-                        {{ activite.titre }}
-                        <span v-if="
+                            )"
+                            :key="activite.id"
+                        >
+                            {{ activite.titre }}
+                            <span
+                                v-if="
                                     index <
                                     getUniqueActivitesTitre(structure.activites)
                                         .length -
                                         1
-                                ">
-                            -
+                                "
+                            >
+                                -
+                            </span>
                         </span>
-                    </span>
-                </div>
+                    </div>
 
-                <div class="py-1.5">
-                    <dt class="sr-only">tarif</dt>
+                    <div class="py-1.5">
+                        <dt class="sr-only">tarif</dt>
 
-                    <span v-for="(tarif, index) in structure.tarifs" :key="tarif.id">
-                        <dd class="text-sm text-gray-500">
-                            {{ tarif.tarif_type.type }}:
-                            <span class="font-semibold">{{
-                                formatCurrency(tarif.amount)
+                        <span
+                            v-for="(tarif, index) in structure.tarifs"
+                            :key="tarif.id"
+                        >
+                            <dd class="text-sm text-gray-500">
+                                {{ tarif.tarif_type.type }}:
+                                <span class="font-semibold">{{
+                                    formatCurrency(tarif.amount)
                                 }}</span>
-                        </dd>
-                        <span v-if="index < structure.tarifs.length - 1">
-                            |
+                            </dd>
+                            <span v-if="index < structure.tarifs.length - 1">
+                                |
+                            </span>
                         </span>
-                    </span>
-                </div>
-
-                <div class="flex items-center py-1.5">
-                    <dt class="sr-only">Ville</dt>
-                    <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
-                    <dd v-if="structure.city.ville" class="text-sm font-medium">
-                        {{ formatCityName(structure.city.ville) }} <span class="text-xs">({{ structure.zip_code }})</span>
-                    </dd>
-                    <dd v-else class="text-sm font-medium">
-                        {{ formatCityName(structure.city) }} <span class="text-xs">({{ structure.zip_code }})</span>
-                    </dd>
-                </div>
-
-                <div class="mt-auto flex items-center justify-around gap-1 py-1.5 text-xs">
-                    <div class="inline-flex shrink-0 items-center">
-                        <svg class="h-4 w-4 text-indigo-700 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
-                        </svg>
-                        <p class="font-medium text-gray-600">
-                            {{ structure.disciplines_count }}
-                            <span v-if="structure.disciplines_count > 1">Disciplines</span>
-                            <span v-else>Discipline</span>
-                        </p>
                     </div>
 
-                    <div class="inline-flex shrink-0 items-center">
-                        <svg class="h-4 w-4 text-indigo-700 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                        </svg>
-
-                        <p class="font-medium text-gray-600">
-                            {{ structure.activites_count }}
-                            <span v-if="structure.activites_count > 1">Activités</span>
-                            <span v-else>Activité</span>
-                        </p>
+                    <div class="flex items-center py-1.5">
+                        <dt class="sr-only">Ville</dt>
+                        <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
+                        <dd
+                            v-if="structure.city.ville"
+                            class="text-sm font-medium"
+                        >
+                            {{ formatCityName(structure.city.ville) }}
+                            <span class="text-xs"
+                                >({{ structure.zip_code }})</span
+                            >
+                        </dd>
+                        <dd v-else class="text-sm font-medium">
+                            {{ formatCityName(structure.city) }}
+                            <span class="text-xs"
+                                >({{ structure.zip_code }})</span
+                            >
+                        </dd>
                     </div>
 
-                    <div class="inline-flex shrink-0 items-center">
-                        <BookmarkIcon class="h-4 w-4 text-indigo-700 mr-1" />
-                        <p class="font-medium text-gray-600">
-                            {{ structure.produits_count }}
-                            <span v-if="structure.produits_count > 1">Produits</span>
-                            <span v-else>Produit</span>
-                        </p>
+                    <div
+                        class="mt-auto flex items-center justify-around gap-1 py-1.5 text-xs"
+                    >
+                        <div class="inline-flex shrink-0 items-center">
+                            <svg
+                                class="mr-1 h-4 w-4 text-indigo-700"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"
+                                />
+                            </svg>
+                            <p class="font-medium text-gray-600">
+                                {{ structure.disciplines_count }}
+                                <span v-if="structure.disciplines_count > 1"
+                                    >Disciplines</span
+                                >
+                                <span v-else>Discipline</span>
+                            </p>
+                        </div>
+
+                        <div class="inline-flex shrink-0 items-center">
+                            <svg
+                                class="mr-1 h-4 w-4 text-indigo-700"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                                />
+                            </svg>
+
+                            <p class="font-medium text-gray-600">
+                                {{ structure.activites_count }}
+                                <span v-if="structure.activites_count > 1"
+                                    >Activités</span
+                                >
+                                <span v-else>Activité</span>
+                            </p>
+                        </div>
+
+                        <div class="inline-flex shrink-0 items-center">
+                            <BookmarkIcon
+                                class="mr-1 h-4 w-4 text-indigo-700"
+                            />
+                            <p class="font-medium text-gray-600">
+                                {{ structure.produits_count }}
+                                <span v-if="structure.produits_count > 1"
+                                    >Produits</span
+                                >
+                                <span v-else>Produit</span>
+                            </p>
+                        </div>
                     </div>
-                </div>
-            </dl>
-        </div>
+                </dl>
+            </div>
         </Link>
     </template>
     <template v-else>
-        <Link :href="route('structures.show', structure.slug)" :active="route().current('structures.show', structure.slug)"
-            class="block rounded-lg shadow-sm shadow-indigo-200 hover:shadow-xl md:px-0">
-        <img alt="Home"
-            src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-            class="h-56 w-full rounded-md object-cover" />
+        <Link
+            :href="route('structures.show', structure.slug)"
+            :active="route().current('structures.show', structure.slug)"
+            class="block rounded-lg shadow-sm shadow-indigo-200 hover:shadow-xl md:px-0"
+        >
+            <img
+                alt="Home"
+                src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                class="h-56 w-full rounded-md object-cover"
+            />
 
-        <div class="mt-2 p-3">
-            <dl class="flex flex-col">
-                <p class="text-sm font-medium uppercase tracking-widest text-pink-500">
-                    {{ structure.structuretype.name }}
-                </p>
-                <p class="py-1.5 text-sm font-medium tracking-widest text-gray-600">
-                    {{ structure.name }}
-                </p>
-                <div class="py-1.5">
-                    <span class="text-sm font-semibold" v-for="(activite, index) in getUniqueActivitesTitre(
+            <div class="mt-2 p-3">
+                <dl class="flex flex-col">
+                    <p
+                        class="text-sm font-medium uppercase tracking-widest text-pink-500"
+                    >
+                        {{ structure.structuretype.name }}
+                    </p>
+                    <p
+                        class="py-1.5 text-sm font-medium tracking-widest text-gray-600"
+                    >
+                        {{ structure.name }}
+                    </p>
+                    <div class="py-1.5">
+                        <span
+                            class="text-sm font-semibold"
+                            v-for="(activite, index) in getUniqueActivitesTitre(
                                 structure.activites
-                            )" :key="activite.id">
-                        {{ activite.titre }}
-                        <span v-if="
+                            )"
+                            :key="activite.id"
+                        >
+                            {{ activite.titre }}
+                            <span
+                                v-if="
                                     index <
                                     getUniqueActivitesTitre(structure.activites)
                                         .length -
                                         1
-                                ">
-                            -
+                                "
+                            >
+                                -
+                            </span>
                         </span>
-                    </span>
-                </div>
+                    </div>
 
-                <div class="py-1.5">
-                    <dt class="sr-only">tarif</dt>
+                    <div class="py-1.5">
+                        <dt class="sr-only">tarif</dt>
 
-                    <span v-for="(tarif, index) in structure.tarifs" :key="tarif.id">
-                        <dd class="text-sm text-gray-500">
-                            {{ tarif.tarif_type.type }}:
-                            <span class="font-semibold">{{
-                                formatCurrency(tarif.amount)
+                        <span
+                            v-for="(tarif, index) in structure.tarifs"
+                            :key="tarif.id"
+                        >
+                            <dd class="text-sm text-gray-500">
+                                {{ tarif.tarif_type.type }}:
+                                <span class="font-semibold">{{
+                                    formatCurrency(tarif.amount)
                                 }}</span>
-                        </dd>
-                        <span v-if="index < structure.tarifs.length - 1">
-                            |
+                            </dd>
                         </span>
-                    </span>
-                </div>
-
-                <div class="flex items-center py-1.5">
-                    <dt class="sr-only">Ville</dt>
-                    <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
-                    <dd v-if="structure.city.ville" class="text-sm font-medium">
-                        {{ formatCityName(structure.city.ville) }} <span class="text-xs">({{ structure.zip_code }})</span>
-                    </dd>
-                    <dd v-else class="text-sm font-medium">
-                        {{ formatCityName(structure.city) }} <span class="text-xs">({{ structure.zip_code }})</span>
-                    </dd>
-                </div>
-
-                <div class="mt-auto flex items-center justify-around gap-1 py-1.5 text-xs">
-                    <div class="inline-flex shrink-0 items-center">
-                        <svg class="h-4 w-4 text-indigo-700 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
-                        </svg>
-                        <p class="font-medium text-gray-600">
-                            {{ structure.disciplines_count }}
-                            <span v-if="structure.disciplines_count > 1">Disciplines</span>
-                            <span v-else>Discipline</span>
-                        </p>
                     </div>
 
-                    <div class="inline-flex shrink-0 items-center">
-                        <svg class="h-4 w-4 text-indigo-700 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                        </svg>
-
-                        <p class="font-medium text-gray-600">
-                            {{ structure.activites_count }}
-                            <span v-if="structure.activites_count > 1">Activités</span>
-                            <span v-else>Activité</span>
-                        </p>
+                    <div class="flex items-center py-1.5">
+                        <dt class="sr-only">Ville</dt>
+                        <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
+                        <dd
+                            v-if="structure.city.ville"
+                            class="text-sm font-medium"
+                        >
+                            {{ formatCityName(structure.city.ville) }}
+                            <span class="text-xs"
+                                >({{ structure.zip_code }})</span
+                            >
+                        </dd>
+                        <dd v-else class="text-sm font-medium">
+                            {{ formatCityName(structure.city) }}
+                            <span class="text-xs"
+                                >({{ structure.zip_code }})</span
+                            >
+                        </dd>
                     </div>
 
-                    <div class="inline-flex shrink-0 items-center">
-                        <BookmarkIcon class="h-4 w-4 text-indigo-700 mr-1" />
-                        <p class="font-medium text-gray-600">
-                            {{ structure.produits_count }}
-                            <span v-if="structure.produits_count > 1">Produits</span>
-                            <span v-else>Produit</span>
-                        </p>
+                    <div
+                        class="mt-auto flex items-center justify-around gap-1 py-1.5 text-xs"
+                    >
+                        <div class="inline-flex shrink-0 items-center">
+                            <svg
+                                class="mr-1 h-4 w-4 text-indigo-700"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"
+                                />
+                            </svg>
+                            <p class="font-medium text-gray-600">
+                                {{ structure.disciplines_count }}
+                                <span v-if="structure.disciplines_count > 1"
+                                    >Disciplines</span
+                                >
+                                <span v-else>Discipline</span>
+                            </p>
+                        </div>
+
+                        <div class="inline-flex shrink-0 items-center">
+                            <svg
+                                class="mr-1 h-4 w-4 text-indigo-700"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                                />
+                            </svg>
+
+                            <p class="font-medium text-gray-600">
+                                {{ structure.activites_count }}
+                                <span v-if="structure.activites_count > 1"
+                                    >Activités</span
+                                >
+                                <span v-else>Activité</span>
+                            </p>
+                        </div>
+
+                        <div class="inline-flex shrink-0 items-center">
+                            <BookmarkIcon
+                                class="mr-1 h-4 w-4 text-indigo-700"
+                            />
+                            <p class="font-medium text-gray-600">
+                                {{ structure.produits_count }}
+                                <span v-if="structure.produits_count > 1"
+                                    >Produits</span
+                                >
+                                <span v-else>Produit</span>
+                            </p>
+                        </div>
                     </div>
-                </div>
-            </dl>
-        </div>
+                </dl>
+            </div>
         </Link>
     </template>
 </template>

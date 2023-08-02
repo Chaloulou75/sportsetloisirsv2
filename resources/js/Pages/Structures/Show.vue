@@ -111,7 +111,6 @@ const filteredActivitesWithCriteres = computed(() => {
             activity.categorie_id === selectedCategory.value.id
     );
 
-    // If no criteria is selected or no filtered activities, return the filtered activities as is
     if (!selectedCriteres.value || filteredActivities.length === 0) {
         return filteredActivities;
     }
@@ -133,7 +132,7 @@ const filteredActivitesWithCriteres = computed(() => {
 
             if (!product) {
                 isMatch = false; // Activity does not match selected criteria
-                break; // Exit the loop early since we already know it's not a match
+                break; // Exit the loop early
             }
         }
         return isMatch; // Activity matches all selected criteria
@@ -353,7 +352,7 @@ const filteredActivitesWithCriteres = computed(() => {
                         </p>
                     </div>
                 </div>
-                <div class="w-full space-y-4 md:w-2/3 md:pr-10">
+                <div class="w-full space-y-8 md:w-2/3 md:pr-10">
                     <div class="relative mb-4 md:mb-6">
                         <p
                             class="mb-2 text-lg font-medium uppercase tracking-wider text-gray-500"
@@ -391,151 +390,158 @@ const filteredActivitesWithCriteres = computed(() => {
                             {{ structure.presentation_courte }}
                         </p>
                     </div>
-                    <h3 class="my-4 text-lg font-semibold text-gray-700">
-                        Les disciplines proposées:
-                    </h3>
-                    <div
-                        class="grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3 lg:grid-cols-4 lg:gap-6"
-                    >
-                        <button
-                            v-for="discipline in uniqueDisciplines"
-                            :key="discipline.id"
-                            @click="handleDisciplineClick(discipline)"
-                            :class="{
-                                'rounded border border-gray-100 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500': true,
-                                'border-gray-100 bg-indigo-500 text-white':
-                                    selectedDiscipline === discipline,
-                            }"
+                    <div>
+                        <h3 class="my-4 text-lg font-semibold text-gray-700">
+                            Les disciplines proposées:
+                        </h3>
+                        <div
+                            class="grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3 lg:grid-cols-4 lg:gap-6"
                         >
-                            {{ discipline.name }}
-                        </button>
+                            <button
+                                v-for="discipline in uniqueDisciplines"
+                                :key="discipline.id"
+                                @click="handleDisciplineClick(discipline)"
+                                :class="{
+                                    'rounded border border-gray-100 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500': true,
+                                    'border-gray-100 bg-indigo-500 text-white':
+                                        selectedDiscipline === discipline,
+                                }"
+                            >
+                                {{ discipline.name }}
+                            </button>
+                        </div>
                     </div>
-                    <h3
-                        v-if="selectedDiscipline"
-                        class="my-4 text-lg font-semibold text-gray-700"
-                    >
-                        Les catégories proposées pour
-                        <span class="text-indigo-500">{{
-                            selectedDiscipline.name
-                        }}</span>
-                        :
-                    </h3>
-                    <div
-                        v-if="selectedDiscipline"
-                        class="grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3 lg:grid-cols-4 lg:gap-6"
-                    >
-                        <button
-                            v-for="categorie in filteredCategories"
-                            :key="categorie.id"
-                            @click="handleCategoryClick(categorie)"
-                            :class="{
-                                'rounded border border-gray-100 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500': true,
-                                'border-gray-100 bg-indigo-500 text-white':
-                                    selectedCategory === categorie,
-                            }"
+                    <div>
+                        <h3
+                            v-if="selectedDiscipline"
+                            class="my-4 text-lg font-semibold text-gray-700"
                         >
-                            {{ categorie.nom_categorie_client }}
-                        </button>
+                            Les catégories proposées pour
+                            <span class="text-indigo-500">{{
+                                selectedDiscipline.name
+                            }}</span>
+                            :
+                        </h3>
+                        <div
+                            v-if="selectedDiscipline"
+                            class="grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3 lg:grid-cols-4 lg:gap-6"
+                        >
+                            <button
+                                v-for="categorie in filteredCategories"
+                                :key="categorie.id"
+                                @click="handleCategoryClick(categorie)"
+                                :class="{
+                                    'rounded border border-gray-100 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500': true,
+                                    'border-gray-100 bg-indigo-500 text-white':
+                                        selectedCategory === categorie,
+                                }"
+                            >
+                                {{ categorie.nom_categorie_client }}
+                            </button>
+                        </div>
                     </div>
-                    <h3
-                        v-if="selectedCategory"
-                        class="my-4 text-lg font-semibold text-gray-700"
-                    >
-                        Les activités proposées en
-                        <span class="text-indigo-500">{{
-                            selectedDiscipline.name
-                        }}</span>
-                        dans la catégorie
-                        <span class="text-indigo-500">{{
-                            selectedCategory.nom_categorie_client
-                        }}</span
-                        >:
-                    </h3>
-
-                    <div
-                        v-if="selectedCategory"
-                        class="my-6 grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3"
-                    >
-                        <Listbox
-                            v-for="critere in filteredCriteres"
-                            :key="critere.id"
-                            class="w-full"
-                            v-model="selectedCriteres[critere.id]"
+                    <div>
+                        <h3
+                            v-if="selectedCategory"
+                            class="my-4 text-lg font-semibold text-gray-700"
                         >
-                            <div class="relative mt-1">
-                                <label
-                                    :for="critere.nom"
-                                    class="block text-sm font-medium text-gray-700"
-                                >
-                                    {{ critere.nom }}:
-                                </label>
-                                <ListboxButton
-                                    class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
-                                >
-                                    <span class="block truncate">
-                                        {{
-                                            selectedCriteres[critere.id].valeur
-                                        }}
-                                    </span>
-                                    <span
-                                        class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
-                                    >
-                                        <ChevronUpDownIcon
-                                            class="h-5 w-5 text-gray-400"
-                                            aria-hidden="true"
-                                        />
-                                    </span>
-                                </ListboxButton>
+                            Les activités proposées pour
+                            <span class="text-indigo-500">{{
+                                selectedCategory.nom_categorie_client
+                            }}</span>
+                            de
+                            <span class="text-indigo-500">{{
+                                selectedDiscipline.name
+                            }}</span
+                            >:
+                        </h3>
 
-                                <transition
-                                    leave-active-class="transition duration-100 ease-in"
-                                    leave-from-class="opacity-100"
-                                    leave-to-class="opacity-0"
-                                >
-                                    <ListboxOptions
-                                        class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                        <div
+                            v-if="selectedCategory"
+                            class="my-6 grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3"
+                        >
+                            <Listbox
+                                v-for="critere in filteredCriteres"
+                                :key="critere.id"
+                                class="w-full"
+                                v-model="selectedCriteres[critere.id]"
+                            >
+                                <div class="relative mt-1">
+                                    <label
+                                        :for="critere.nom"
+                                        class="block text-sm font-medium text-gray-700"
                                     >
-                                        <ListboxOption
-                                            v-slot="{ active, selected }"
-                                            v-for="critereValue in critere.valeurs"
-                                            :key="critereValue.id"
-                                            :value="critereValue"
-                                            as="template"
+                                        {{ critere.nom }}:
+                                    </label>
+                                    <ListboxButton
+                                        class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                                    >
+                                        <span class="block truncate">
+                                            {{
+                                                selectedCriteres[critere.id]
+                                                    .valeur
+                                            }}
+                                        </span>
+                                        <span
+                                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
                                         >
-                                            <li
-                                                :class="[
-                                                    active
-                                                        ? 'bg-amber-100 text-amber-900'
-                                                        : 'text-gray-900',
-                                                    'relative cursor-default select-none py-2 pl-10 pr-4',
-                                                ]"
+                                            <ChevronUpDownIcon
+                                                class="h-5 w-5 text-gray-400"
+                                                aria-hidden="true"
+                                            />
+                                        </span>
+                                    </ListboxButton>
+
+                                    <transition
+                                        leave-active-class="transition duration-100 ease-in"
+                                        leave-from-class="opacity-100"
+                                        leave-to-class="opacity-0"
+                                    >
+                                        <ListboxOptions
+                                            class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                                        >
+                                            <ListboxOption
+                                                v-slot="{ active, selected }"
+                                                v-for="critereValue in critere.valeurs"
+                                                :key="critereValue.id"
+                                                :value="critereValue"
+                                                as="template"
                                             >
-                                                <span
+                                                <li
                                                     :class="[
-                                                        selected
-                                                            ? 'font-medium'
-                                                            : 'font-normal',
-                                                        'block truncate',
+                                                        active
+                                                            ? 'bg-amber-100 text-amber-900'
+                                                            : 'text-gray-900',
+                                                        'relative cursor-default select-none py-2 pl-10 pr-4',
                                                     ]"
-                                                    >{{
-                                                        critereValue.valeur
-                                                    }}</span
                                                 >
-                                                <span
-                                                    v-if="selected"
-                                                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
-                                                >
-                                                    <CheckCircleIcon
-                                                        class="h-5 w-5"
-                                                        aria-hidden="true"
-                                                    />
-                                                </span>
-                                            </li>
-                                        </ListboxOption>
-                                    </ListboxOptions>
-                                </transition>
-                            </div>
-                        </Listbox>
+                                                    <span
+                                                        :class="[
+                                                            selected
+                                                                ? 'font-medium'
+                                                                : 'font-normal',
+                                                            'block truncate',
+                                                        ]"
+                                                        >{{
+                                                            critereValue.valeur
+                                                        }}</span
+                                                    >
+                                                    <span
+                                                        v-if="selected"
+                                                        class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
+                                                    >
+                                                        <CheckCircleIcon
+                                                            class="h-5 w-5"
+                                                            aria-hidden="true"
+                                                        />
+                                                    </span>
+                                                </li>
+                                            </ListboxOption>
+                                        </ListboxOptions>
+                                    </transition>
+                                </div>
+                            </Listbox>
+                        </div>
                     </div>
 
                     <div
@@ -546,7 +552,12 @@ const filteredActivitesWithCriteres = computed(() => {
                             v-for="activite in filteredActivitesWithCriteres"
                             :key="activite.id"
                             :activite="activite"
-                            :link="route('welcome')"
+                            :link="
+                                route('structures.activites.show', {
+                                    structure: structure.slug,
+                                    activite: activite.id,
+                                })
+                            "
                         />
                     </div>
                 </div>

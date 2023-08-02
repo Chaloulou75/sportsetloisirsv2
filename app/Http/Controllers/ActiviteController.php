@@ -6,6 +6,7 @@ use Carbon\Carbon;
 
 use App\Models\City;
 use Inertia\Inertia;
+use App\Models\Famille;
 use App\Models\Categorie;
 use App\Models\Structure;
 use Illuminate\Http\Request;
@@ -182,6 +183,70 @@ class ActiviteController extends Controller
         }
 
         return Redirect::route('structures.activites.index', $structure)->with('success', 'Activité créée, vous pouvez ajouter d\'autres activités à votre structure.');
+    }
+
+    public function show(Structure $structure, $activite)
+    {
+        $familles = Famille::with([
+                    'disciplines' => function ($query) {
+                        $query->whereHas('structures');
+                    }
+                ])
+                ->whereHas('disciplines', function ($query) {
+                    $query->whereHas('structures');
+                })
+                ->select(['id', 'name', 'slug'])
+                ->get();
+
+        $structure = Structure::with([
+            'famille:id,name',
+            'creator:id,name',
+            'users:id,name',
+            'adresses'  => function ($query) {
+                $query->latest();
+            },
+            'city:id,ville,ville_formatee,code_postal',
+            'departement:id,departement,numero',
+            'structuretype:id,name,slug',
+            'disciplines',
+            'disciplines.discipline:id,name,slug',
+            'categories',
+            'activites',
+            'activites.discipline:id,name',
+            'activites.categorie:id,categorie_id,discipline_id,nom_categorie_client',
+            'activites.produits',
+            'activites.produits.adresse',
+            'activites.produits.criteres',
+            'activites.produits.criteres.critere',
+            'activites.produits.tarifs',
+            'activites.produits.tarifs.tarifType',
+            'activites.produits.tarifs.structureTarifTypeInfos',
+            'plannings',
+            ])
+            ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
+            ->where('slug', $structure->slug)
+            ->first();
+
+        $logoUrl = asset($structure->logo);
+
+        $activite = StructureActivite::with([
+            'discipline:id,name',
+            'categorie:id,categorie_id,discipline_id,nom_categorie_client',
+            'produits',
+            'produits.adresse',
+            'produits.criteres',
+            'produits.criteres.critere',
+            'produits.tarifs',
+            'produits.tarifs.tarifType',
+            'produits.tarifs.structureTarifTypeInfos',
+        ])->where('id', $activite)->first();
+
+        return Inertia::render('Structures/Activites/Show', [
+                    'structure' => $structure,
+                    'familles' => $familles,
+                    'logoUrl' => $logoUrl,
+                    'activite' => $activite,
+        ]);
     }
 
     /**
