@@ -221,7 +221,7 @@ class ActiviteController extends Controller
             'activites.produits.tarifs',
             'activites.produits.tarifs.tarifType',
             'activites.produits.tarifs.structureTarifTypeInfos',
-            'plannings',
+            'activites.produits.plannings',
             ])
             ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
             ->where('slug', $structure->slug)
@@ -239,13 +239,23 @@ class ActiviteController extends Controller
             'produits.tarifs',
             'produits.tarifs.tarifType',
             'produits.tarifs.structureTarifTypeInfos',
+            'produits.plannings',
         ])->where('id', $activite)->first();
+
+
+        $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
+            $query->orderBy('defaut', 'desc');
+        }])
+                ->whereIn('discipline_id', $structure->disciplines->pluck('discipline_id'))->whereIn('categorie_id', $structure->categories->pluck('categorie_id'))
+                ->get();
+
 
         return Inertia::render('Structures/Activites/Show', [
                     'structure' => $structure,
                     'familles' => $familles,
                     'logoUrl' => $logoUrl,
                     'activite' => $activite,
+                    'criteres' => $criteres,
         ]);
     }
 

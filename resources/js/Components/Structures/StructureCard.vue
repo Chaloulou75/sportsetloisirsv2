@@ -2,8 +2,11 @@
 import { Link } from "@inertiajs/vue3";
 import { ref } from "vue";
 import { BookmarkIcon, MapPinIcon } from "@heroicons/vue/24/outline";
+import { HeartIcon } from "@heroicons/vue/24/solid";
 
-let props = defineProps({
+const emit = defineEmits(["mouseover", "mouseout"]);
+
+const props = defineProps({
     structure: Object,
     link: {
         type: String,
@@ -60,12 +63,13 @@ const formatCityName = (ville) => {
     <template v-if="link">
         <Link
             :href="link"
-            class="block rounded-lg shadow-sm shadow-indigo-200 hover:shadow-xl md:px-0"
+            class="relative block rounded-lg shadow-sm shadow-indigo-200 hover:shadow-xl md:px-0"
         >
+            <HeartIcon class="absolute right-2 top-2 h-6 w-6 text-white" />
             <img
                 alt="Home"
                 src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                class="h-56 w-full rounded-md object-cover"
+                class="h-56 w-full rounded-md bg-opacity-75 object-cover"
             />
 
             <div class="mt-2 p-3">
@@ -214,12 +218,13 @@ const formatCityName = (ville) => {
         <Link
             :href="route('structures.show', structure.slug)"
             :active="route().current('structures.show', structure.slug)"
-            class="block rounded-lg shadow-sm shadow-indigo-200 hover:shadow-xl md:px-0"
+            class="relative block rounded-lg shadow-sm shadow-indigo-200 hover:shadow-xl md:px-0"
         >
+            <HeartIcon class="absolute right-2 top-2 h-6 w-6 text-white" />
             <img
                 alt="Home"
                 src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                class="h-56 w-full rounded-md object-cover"
+                class="h-56 w-full rounded-md bg-opacity-75 object-cover"
             />
 
             <div class="mt-2 p-3">

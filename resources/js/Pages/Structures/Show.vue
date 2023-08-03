@@ -5,6 +5,8 @@ import { ref, reactive, computed } from "vue";
 import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
 import ModalDeleteStructure from "@/Components/Modals/ModalDeleteStructure.vue";
 import LeafletMap from "@/Components/LeafletMap.vue";
+import VueCal from "vue-cal";
+import "vue-cal/dist/vuecal.css";
 import {
     UserIcon,
     AtSymbolIcon,
@@ -19,6 +21,11 @@ import {
     ListboxButton,
     ListboxOptions,
     ListboxOption,
+    TabGroup,
+    TabList,
+    Tab,
+    TabPanels,
+    TabPanel,
 } from "@headlessui/vue";
 import ActiviteCard from "@/Components/Structures/ActiviteCard.vue";
 
@@ -66,16 +73,6 @@ const filteredCategories = computed(() => {
 const handleCategoryClick = (category) => {
     selectedCategory.value = category;
 };
-
-// const filteredActivites = computed(() => {
-//     if (!selectedDiscipline.value || !selectedCategory.value) return [];
-
-//     return props.structure.activites.filter(
-//         (activity) =>
-//             activity.categorie.discipline_id === selectedDiscipline.value.id &&
-//             activity.categorie_id === selectedCategory.value.id
-//     );
-// });
 
 const filteredCriteres = computed(() => {
     if (!selectedDiscipline.value || !selectedCategory.value) return [];
@@ -138,6 +135,35 @@ const filteredActivitesWithCriteres = computed(() => {
         return isMatch; // Activity matches all selected criteria
     });
 });
+
+const getEvents = () => {
+    const events = [];
+
+    for (const activite of filteredActivitesWithCriteres.value) {
+        for (const produit of activite.produits) {
+            for (const planning of produit.plannings) {
+                if (planning) {
+                    const event = {
+                        start: planning.start,
+                        end: planning.end,
+                        title: planning.title ?? activite.titre,
+                        content: activite.description,
+                        activiteId: activite.id,
+                        produitId: planning.produit_id,
+                        planningId: planning.id,
+                        class: "course",
+                    };
+
+                    events.push(event);
+                }
+            }
+        }
+    }
+
+    return events;
+};
+
+const events = getEvents();
 </script>
 
 <template>
@@ -258,7 +284,7 @@ const filteredActivitesWithCriteres = computed(() => {
 
         <section class="mx-auto my-4 max-w-full px-0 py-6 sm:px-4 lg:px-8">
             <div
-                class="flex flex-col-reverse justify-between rounded-lg bg-white px-4 py-6 shadow-lg shadow-sky-700 md:flex-row md:space-x-6"
+                class="flex flex-col-reverse justify-between rounded-lg bg-white px-4 py-6 shadow md:flex-row md:space-x-6"
             >
                 <div class="w-full md:w-1/3">
                     <div class="my-4 flex items-center justify-center md:mb-8">
@@ -353,6 +379,7 @@ const filteredActivitesWithCriteres = computed(() => {
                     </div>
                 </div>
                 <div class="w-full space-y-8 md:w-2/3 md:pr-10">
+                    <!-- titre -->
                     <div class="relative mb-4 md:mb-6">
                         <p
                             class="mb-2 text-lg font-medium uppercase tracking-wider text-gray-500"
@@ -376,6 +403,7 @@ const filteredActivitesWithCriteres = computed(() => {
                             </h2>
                         </div>
                     </div>
+                    <!-- Resume -->
                     <div>
                         <p
                             v-if="structure.presentation_longue"
@@ -390,6 +418,7 @@ const filteredActivitesWithCriteres = computed(() => {
                             {{ structure.presentation_courte }}
                         </p>
                     </div>
+                    <!-- Disciplines -->
                     <div>
                         <h3 class="my-4 text-lg font-semibold text-gray-700">
                             Les disciplines proposées:
@@ -411,6 +440,7 @@ const filteredActivitesWithCriteres = computed(() => {
                             </button>
                         </div>
                     </div>
+                    <!-- Categories -->
                     <div>
                         <h3
                             v-if="selectedDiscipline"
@@ -440,6 +470,7 @@ const filteredActivitesWithCriteres = computed(() => {
                             </button>
                         </div>
                     </div>
+                    <!-- Filters -->
                     <div>
                         <h3
                             v-if="selectedCategory"
@@ -544,24 +575,85 @@ const filteredActivitesWithCriteres = computed(() => {
                         </div>
                     </div>
 
-                    <div
-                        v-if="selectedCategory"
-                        class="my-6 grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3"
-                    >
-                        <ActiviteCard
-                            v-for="activite in filteredActivitesWithCriteres"
-                            :key="activite.id"
-                            :activite="activite"
-                            :link="
-                                route('structures.activites.show', {
-                                    structure: structure.slug,
-                                    activite: activite.id,
-                                })
-                            "
-                        />
-                    </div>
+                    <TabGroup v-if="selectedCategory">
+                        <TabList
+                            class="flex space-x-1 rounded-xl bg-indigo-500 p-1"
+                        >
+                            <Tab as="template" v-slot="{ selected }">
+                                <button
+                                    :class="[
+                                        'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-100',
+                                        'ring-white ring-opacity-60 ring-offset-1 ring-offset-blue-400 focus:outline-none focus:ring-2',
+                                        selected
+                                            ? 'bg-white text-blue-700 shadow'
+                                            : 'text-blue-100 hover:bg-white/[0.12] hover:text-white',
+                                    ]"
+                                >
+                                    Activités
+                                </button>
+                            </Tab>
+                            <Tab as="template" v-slot="{ selected }">
+                                <button
+                                    :class="[
+                                        'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-100',
+                                        'ring-white ring-opacity-60 ring-offset-1 ring-offset-blue-400 focus:outline-none focus:ring-2',
+                                        selected
+                                            ? 'bg-white text-blue-700 shadow'
+                                            : 'text-blue-100 hover:bg-white/[0.12] hover:text-white',
+                                    ]"
+                                >
+                                    Planning
+                                </button>
+                            </Tab>
+                        </TabList>
+                        <TabPanels class="mt-2">
+                            <!-- Activites Cards -->
+                            <TabPanel>
+                                <div
+                                    v-if="selectedCategory"
+                                    class="my-6 grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3"
+                                >
+                                    <ActiviteCard
+                                        v-for="activite in filteredActivitesWithCriteres"
+                                        :key="activite.id"
+                                        :activite="activite"
+                                        :link="
+                                            route('structures.activites.show', {
+                                                structure: structure.slug,
+                                                activite: activite.id,
+                                            })
+                                        "
+                                    /></div
+                            ></TabPanel>
+                            <!-- Planning -->
+                            <TabPanel>
+                                <div
+                                    v-if="selectedCategory"
+                                    class="mt-6 min-h-full w-full overflow-x-auto rounded-sm shadow-lg"
+                                >
+                                    <vue-cal
+                                        small
+                                        :time-from="6 * 60"
+                                        :time-to="24 * 60"
+                                        :time-step="30"
+                                        locale="fr"
+                                        :snap-to-time="15"
+                                        :disable-views="['years', 'year']"
+                                        :cell-click-hold="false"
+                                        :events="getEvents()"
+                                    />
+                                </div>
+                            </TabPanel>
+                        </TabPanels>
+                    </TabGroup>
                 </div>
             </div>
         </section>
     </AppLayout>
 </template>
+
+<style>
+.course {
+    @apply bg-blue-400 text-white;
+}
+</style>
