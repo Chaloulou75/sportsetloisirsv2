@@ -19,6 +19,7 @@ import {
     UserGroupIcon,
     ClockIcon,
 } from "@heroicons/vue/24/outline";
+import { StarIcon } from "@heroicons/vue/24/solid";
 import {
     Listbox,
     ListboxLabel,
@@ -229,7 +230,7 @@ const events = getEvents();
 
         <section class="mx-auto my-4 max-w-full px-0 py-6 sm:px-4 lg:px-8">
             <div
-                class="flex flex-col-reverse justify-between rounded-lg bg-white px-4 py-6 shadow-lg shadow-sky-700 md:flex-row md:items-start md:space-x-6"
+                class="flex flex-col-reverse justify-between rounded-lg bg-white px-4 py-6 shadow md:flex-row md:items-start md:space-x-6"
             >
                 <div class="w-full space-y-12 md:w-1/3">
                     <Link
@@ -708,6 +709,122 @@ const events = getEvents();
                             </TabPanels>
                         </TabGroup>
                     </div>
+                </div>
+            </div>
+        </section>
+        <section class="bg-white">
+            <div class="mx-auto max-w-full px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+                <h2
+                    class="text-center text-2xl font-semibold tracking-tight text-gray-700 sm:text-3xl"
+                >
+                    Les derniers avis sur cette activité
+                </h2>
+
+                <div
+                    class="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-8"
+                >
+                    <blockquote class="rounded-lg bg-gray-100 p-8">
+                        <div class="flex items-center gap-4">
+                            <img
+                                alt="Man"
+                                src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
+                                class="h-16 w-16 rounded-full object-cover"
+                            />
+
+                            <div>
+                                <div
+                                    class="flex justify-center gap-0.5 text-yellow-500"
+                                >
+                                    <StarIcon class="h-4 w-4" />
+                                    <StarIcon class="h-4 w-4" />
+                                    <StarIcon class="h-4 w-4" />
+                                    <StarIcon class="h-4 w-4" />
+                                    <StarIcon class="h-4 w-4" />
+                                </div>
+
+                                <p
+                                    class="mt-1 text-lg font-medium text-gray-700"
+                                >
+                                    Paul Jacquemin
+                                </p>
+                            </div>
+                        </div>
+
+                        <p
+                            class="mt-4 line-clamp-2 text-gray-500 sm:line-clamp-none"
+                        >
+                            Très mauvaise expérience! A fuir!
+                        </p>
+                    </blockquote>
+
+                    <blockquote class="rounded-lg bg-gray-100 p-8">
+                        <div class="flex items-center gap-4">
+                            <img
+                                alt="Man"
+                                src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
+                                class="h-16 w-16 rounded-full object-cover"
+                            />
+
+                            <div>
+                                <div
+                                    class="flex justify-center gap-0.5 text-yellow-500"
+                                >
+                                    <StarIcon class="h-4 w-4" />
+                                    <StarIcon class="h-4 w-4" />
+                                    <StarIcon class="h-4 w-4" />
+                                    <StarIcon class="h-4 w-4" />
+                                    <StarIcon class="h-4 w-4" />
+                                </div>
+
+                                <p
+                                    class="mt-1 text-lg font-medium text-gray-700"
+                                >
+                                    Jacques Miteux
+                                </p>
+                            </div>
+                        </div>
+
+                        <p
+                            class="mt-4 line-clamp-2 text-gray-500 sm:line-clamp-none"
+                        >
+                            C'était à chier, mais je mets 5 étoiles pour le
+                            sourire de Roberta.
+                        </p>
+                    </blockquote>
+
+                    <blockquote class="rounded-lg bg-gray-100 p-8">
+                        <div class="flex items-center gap-4">
+                            <img
+                                alt="Man"
+                                src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
+                                class="h-16 w-16 rounded-full object-cover"
+                            />
+
+                            <div>
+                                <div
+                                    class="flex justify-center gap-0.5 text-yellow-500"
+                                >
+                                    <StarIcon class="h-4 w-4" />
+                                    <StarIcon class="h-4 w-4" />
+                                    <StarIcon class="h-4 w-4" />
+                                    <StarIcon class="h-4 w-4" />
+                                    <StarIcon class="h-4 w-4" />
+                                </div>
+
+                                <p
+                                    class="mt-1 text-lg font-medium text-gray-700"
+                                >
+                                    Antoine Boss
+                                </p>
+                            </div>
+                        </div>
+
+                        <p
+                            class="mt-4 line-clamp-2 text-gray-500 sm:line-clamp-none"
+                        >
+                            C'était vraiment sensationnel.
+                        </p>
+                    </blockquote>
                 </div>
             </div>
         </section>
