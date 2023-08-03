@@ -239,6 +239,7 @@ class ActiviteController extends Controller
             'produits.tarifs',
             'produits.tarifs.tarifType',
             'produits.tarifs.structureTarifTypeInfos',
+            'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut',
             'produits.plannings',
         ])->where('id', $activite)->first();
 

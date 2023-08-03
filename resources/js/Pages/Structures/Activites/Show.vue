@@ -7,12 +7,17 @@ import LeafletMap from "@/Components/LeafletMap.vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 import {
+    MapPinIcon,
     UserIcon,
     AtSymbolIcon,
     GlobeAltIcon,
     PhoneIcon,
     CheckCircleIcon,
     ChevronUpDownIcon,
+    ArrowUturnLeftIcon,
+    UsersIcon,
+    UserGroupIcon,
+    ClockIcon,
 } from "@heroicons/vue/24/outline";
 import {
     Listbox,
@@ -87,6 +92,24 @@ const filteredProductsWithCriteres = computed(() => {
         return isMatch;
     });
 });
+
+const formatCurrency = (value) => {
+    // Remove the non-numeric characters from the currency value
+    const numericValue = Number(value.replace(/[^0-9.-]+/g, ""));
+    // Check if the numeric value is a valid number
+    if (!isNaN(numericValue)) {
+        // Check if the numeric value has decimal places
+        if (numericValue % 1 === 0) {
+            // No decimal places, return as integer
+            return numericValue.toLocaleString() + " €";
+        } else {
+            // Decimal places present, format with two decimal places
+            return numericValue.toFixed(2) + " €";
+        }
+    }
+    // Return the original value if conversion failed
+    return value;
+};
 
 const getEvents = () => {
     const events = [];
@@ -180,6 +203,25 @@ const events = getEvents();
                                 {{ structure.name }}
                             </Link>
                         </li>
+                        <li class="relative flex items-center">
+                            <span
+                                class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
+                            >
+                            </span>
+
+                            <Link
+                                preserve-scroll
+                                :href="
+                                    route('structures.activites.show', {
+                                        structure: structure.slug,
+                                        activite: activite.id,
+                                    })
+                                "
+                                class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                            >
+                                Activité
+                            </Link>
+                        </li>
                     </ol>
                 </nav>
             </div>
@@ -187,9 +229,17 @@ const events = getEvents();
 
         <section class="mx-auto my-4 max-w-full px-0 py-6 sm:px-4 lg:px-8">
             <div
-                class="flex flex-col-reverse justify-between rounded-lg bg-white px-4 py-6 shadow-lg shadow-sky-700 md:flex-row md:space-x-6"
+                class="flex flex-col-reverse justify-between rounded-lg bg-white px-4 py-6 shadow-lg shadow-sky-700 md:flex-row md:items-start md:space-x-6"
             >
-                <div class="w-full md:w-1/3">
+                <div class="w-full space-y-12 md:w-1/3">
+                    <Link
+                        class="my-6 flex items-center justify-center rounded bg-sky-800 px-4 py-3 text-sm text-gray-50 hover:bg-sky-900 hover:text-white hover:shadow"
+                        preserve-scroll
+                        :href="route('structures.show', structure.slug)"
+                    >
+                        <ArrowUturnLeftIcon class="mr-2 h-5 w-5 text-white" />
+                        Retour vers la structure {{ structure.name }}
+                    </Link>
                     <div class="my-4 flex items-center justify-center md:mb-8">
                         <h3 class="text-base font-semibold uppercase">
                             Coordonnées de la structure
@@ -281,8 +331,8 @@ const events = getEvents();
                         </p>
                     </div>
                 </div>
-                <div class="w-full space-y-8 md:w-2/3 md:pr-10">
-                    <div class="relative mb-4 md:mb-6">
+                <div class="w-full md:w-2/3 md:pr-10">
+                    <div class="relative space-y-12">
                         <div
                             class="my-4 flex items-center justify-start space-x-4"
                         >
@@ -293,11 +343,32 @@ const events = getEvents();
                                     class="h-14 w-14 shrink-0 rounded-full object-cover object-center md:h-20 md:w-20"
                                 />
                             </div>
-                            <h1
+                            <h2
                                 class="inline-block w-full text-center text-xl font-semibold text-black sm:text-2xl sm:leading-7 md:text-3xl"
                             >
                                 {{ activite.titre }}
-                            </h1>
+                            </h2>
+                        </div>
+                        <!-- Resume -->
+                        <div>
+                            <p
+                                v-if="activite.description"
+                                class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
+                            >
+                                {{ activite.description }}
+                            </p>
+                            <p
+                                v-else-if="structure.presentation_longue"
+                                class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
+                            >
+                                {{ structure.presentation_longue }}
+                            </p>
+                            <p
+                                v-else
+                                class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
+                            >
+                                {{ structure.presentation_courte }}
+                            </p>
                         </div>
                         <!-- Filters -->
                         <div>
@@ -393,7 +464,7 @@ const events = getEvents();
 
                         <TabGroup>
                             <TabList
-                                class="flex space-x-1 rounded-xl bg-indigo-500 p-1"
+                                class="flex space-x-1 rounded-xl bg-sky-800 p-1"
                             >
                                 <Tab as="template" v-slot="{ selected }">
                                     <button
@@ -401,7 +472,7 @@ const events = getEvents();
                                             'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-100',
                                             'ring-white ring-opacity-60 ring-offset-1 ring-offset-blue-400 focus:outline-none focus:ring-2',
                                             selected
-                                                ? 'bg-white text-blue-700 shadow'
+                                                ? 'bg-white text-sky-700 shadow'
                                                 : 'text-blue-100 hover:bg-white/[0.12] hover:text-white',
                                         ]"
                                     >
@@ -414,7 +485,7 @@ const events = getEvents();
                                             'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-100',
                                             'ring-white ring-opacity-60 ring-offset-1 ring-offset-blue-400 focus:outline-none focus:ring-2',
                                             selected
-                                                ? 'bg-white text-blue-700 shadow'
+                                                ? 'bg-white text-sky-700 shadow'
                                                 : 'text-blue-100 hover:bg-white/[0.12] hover:text-white',
                                         ]"
                                     >
@@ -427,9 +498,8 @@ const events = getEvents();
                                     <div
                                         class="w-full divide-y divide-slate-200"
                                     >
-                                        <dt class="sr-only">Produits</dt>
                                         <div
-                                            class="px-2 py-3 odd:bg-white even:bg-slate-50"
+                                            class="space-y-3 border-gray-200 px-2 py-3 odd:bg-white even:bg-slate-50"
                                             v-for="produit in filteredProductsWithCriteres"
                                             :key="produit.id"
                                         >
@@ -451,30 +521,166 @@ const events = getEvents();
                                                     }})
                                                 </p>
                                             </div>
-                                            <p
-                                                class="text-sm"
-                                                v-for="critere in produit.criteres"
-                                                :key="critere.id"
+                                            <div
+                                                class="flex items-center justify-between"
                                             >
-                                                {{ critere.critere.nom }}:
-                                                <span class="font-semibold">{{
-                                                    critere.valeur
-                                                }}</span>
-                                            </p>
-                                            <p class="mt-2 text-sm">Tarifs:</p>
-                                            <p
-                                                class="text-sm"
-                                                v-for="tarif in produit.tarifs"
-                                                :key="tarif.id"
-                                            >
-                                                <span class="font-semibold">
-                                                    {{ tarif.titre }}:
-                                                    {{ tarif.amount }} € /
-                                                    {{
-                                                        tarif.tarif_type.type
-                                                    }}</span
+                                                <p
+                                                    class="text-sm"
+                                                    v-for="critere in produit.criteres"
+                                                    :key="critere.id"
                                                 >
-                                            </p>
+                                                    {{ critere.critere.nom }}:
+                                                    <span
+                                                        class="font-semibold"
+                                                        >{{
+                                                            critere.valeur
+                                                        }}</span
+                                                    >
+                                                </p>
+                                            </div>
+                                            <table
+                                                class="w-full table-fixed border-collapse text-sm font-semibold text-gray-700 md:table-auto"
+                                            >
+                                                <caption
+                                                    class="caption-top bg-slate-50 py-6 text-sm font-semibold text-slate-600"
+                                                >
+                                                    Liste des tarifs liés à
+                                                    cette activité:
+                                                </caption>
+                                                <thead class="bg-slate-50">
+                                                    <tr
+                                                        class="border-b text-center font-medium text-slate-400"
+                                                    >
+                                                        <th class="p-5">
+                                                            Infos
+                                                        </th>
+                                                        <th class="p-5">
+                                                            Titre
+                                                        </th>
+                                                        <th class="p-5">
+                                                            Type
+                                                        </th>
+                                                        <th class="p-5">
+                                                            Description
+                                                        </th>
+                                                        <th class="p-5">
+                                                            Montant
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr
+                                                        class="border-b border-slate-100 text-center text-slate-500"
+                                                        v-for="tarif in produit.tarifs"
+                                                        :key="tarif.id"
+                                                    >
+                                                        <td
+                                                            class="flex flex-col items-center justify-center p-5"
+                                                        >
+                                                            <div
+                                                                v-for="info in tarif.structure_tarif_type_infos"
+                                                                :key="info.id"
+                                                                class="inline-flex items-center justify-center space-y-2"
+                                                            >
+                                                                <ClockIcon
+                                                                    v-if="
+                                                                        [
+                                                                            1,
+                                                                            2,
+                                                                            5,
+                                                                            7,
+                                                                        ].includes(
+                                                                            info.attribut_id
+                                                                        )
+                                                                    "
+                                                                    class="mr-1 h-5 w-5"
+                                                                />
+                                                                <UserGroupIcon
+                                                                    v-else-if="
+                                                                        [
+                                                                            3,
+                                                                            6,
+                                                                        ].includes(
+                                                                            info.attribut_id
+                                                                        )
+                                                                    "
+                                                                    class="mr-1 h-5 w-5 text-slate-500"
+                                                                />
+                                                                <UsersIcon
+                                                                    v-else-if="
+                                                                        [
+                                                                            4,
+                                                                        ].includes(
+                                                                            info.attribut_id
+                                                                        )
+                                                                    "
+                                                                    class="mr-1 h-5 w-5"
+                                                                />
+
+                                                                <UsersIcon
+                                                                    v-else
+                                                                    class="mr-1 h-5 w-5"
+                                                                />
+
+                                                                <span
+                                                                    v-if="
+                                                                        info.valeur
+                                                                    "
+                                                                    class="text-sm font-thin"
+                                                                >
+                                                                    {{
+                                                                        info
+                                                                            .tarif_type_attribut
+                                                                            .attribut
+                                                                    }}:
+                                                                    {{
+                                                                        info.valeur
+                                                                    }}
+                                                                    <span
+                                                                        v-if="
+                                                                            info.unite
+                                                                        "
+                                                                        >{{
+                                                                            info.unite
+                                                                        }}</span
+                                                                    >
+                                                                </span>
+                                                                <span
+                                                                    v-else
+                                                                    class="text-sm font-thin"
+                                                                    >Pas de
+                                                                    valeur</span
+                                                                >
+                                                            </div>
+                                                        </td>
+                                                        <td class="p-5">
+                                                            {{ tarif.titre }}
+                                                        </td>
+                                                        <td class="p-5">
+                                                            {{
+                                                                tarif.tarif_type
+                                                                    .type
+                                                            }}
+                                                        </td>
+                                                        <td class="p-5">
+                                                            <p
+                                                                class="truncate font-medium"
+                                                            >
+                                                                {{
+                                                                    tarif.description
+                                                                }}
+                                                            </p>
+                                                        </td>
+                                                        <td class="p-5">
+                                                            {{
+                                                                formatCurrency(
+                                                                    tarif.amount
+                                                                )
+                                                            }}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </TabPanel>

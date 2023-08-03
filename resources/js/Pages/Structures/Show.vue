@@ -286,7 +286,7 @@ const events = getEvents();
             <div
                 class="flex flex-col-reverse justify-between rounded-lg bg-white px-4 py-6 shadow md:flex-row md:space-x-6"
             >
-                <div class="w-full md:w-1/3">
+                <div class="w-full space-y-12 md:w-1/3">
                     <div class="my-4 flex items-center justify-center md:mb-8">
                         <h3 class="text-base font-semibold uppercase">
                             Coordonnées de la structure
@@ -378,7 +378,7 @@ const events = getEvents();
                         </p>
                     </div>
                 </div>
-                <div class="w-full space-y-8 md:w-2/3 md:pr-10">
+                <div class="w-full space-y-12 md:w-2/3 md:pr-10">
                     <!-- titre -->
                     <div class="relative mb-4 md:mb-6">
                         <p
@@ -577,7 +577,7 @@ const events = getEvents();
 
                     <TabGroup v-if="selectedCategory">
                         <TabList
-                            class="flex space-x-1 rounded-xl bg-indigo-500 p-1"
+                            class="flex space-x-1 rounded-xl bg-sky-700 p-1"
                         >
                             <Tab as="template" v-slot="{ selected }">
                                 <button
@@ -585,7 +585,7 @@ const events = getEvents();
                                         'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-100',
                                         'ring-white ring-opacity-60 ring-offset-1 ring-offset-blue-400 focus:outline-none focus:ring-2',
                                         selected
-                                            ? 'bg-white text-blue-700 shadow'
+                                            ? 'bg-white text-sky-700 shadow'
                                             : 'text-blue-100 hover:bg-white/[0.12] hover:text-white',
                                     ]"
                                 >
@@ -598,7 +598,7 @@ const events = getEvents();
                                         'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-100',
                                         'ring-white ring-opacity-60 ring-offset-1 ring-offset-blue-400 focus:outline-none focus:ring-2',
                                         selected
-                                            ? 'bg-white text-blue-700 shadow'
+                                            ? 'bg-white text-sky-700 shadow'
                                             : 'text-blue-100 hover:bg-white/[0.12] hover:text-white',
                                     ]"
                                 >
