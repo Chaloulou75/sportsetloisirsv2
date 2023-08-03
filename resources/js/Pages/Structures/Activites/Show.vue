@@ -496,7 +496,7 @@ const events = getEvents();
                             <TabPanels class="mt-2">
                                 <TabPanel>
                                     <div
-                                        class="w-full divide-y divide-slate-200"
+                                        class="w-full divide-y divide-slate-200 text-slate-500"
                                     >
                                         <div
                                             class="space-y-3 border-gray-200 px-2 py-3 odd:bg-white even:bg-slate-50"
@@ -539,14 +539,14 @@ const events = getEvents();
                                                 </p>
                                             </div>
                                             <table
-                                                class="w-full table-fixed border-collapse text-sm font-semibold text-gray-700 md:table-auto"
+                                                class="w-full table-fixed border-collapse text-sm font-semibold text-gray-700 shadow md:table-auto"
                                             >
-                                                <caption
+                                                <!-- <caption
                                                     class="caption-top bg-slate-50 py-6 text-sm font-semibold text-slate-600"
                                                 >
                                                     Liste des tarifs liés à
                                                     cette activité:
-                                                </caption>
+                                                </caption> -->
                                                 <thead class="bg-slate-50">
                                                     <tr
                                                         class="border-b text-center font-medium text-slate-400"
@@ -580,53 +580,55 @@ const events = getEvents();
                                                             <div
                                                                 v-for="info in tarif.structure_tarif_type_infos"
                                                                 :key="info.id"
-                                                                class="inline-flex items-center justify-center space-y-2"
+                                                                class="flex items-center justify-center"
                                                             >
-                                                                <ClockIcon
-                                                                    v-if="
-                                                                        [
-                                                                            1,
-                                                                            2,
-                                                                            5,
-                                                                            7,
-                                                                        ].includes(
-                                                                            info.attribut_id
-                                                                        )
-                                                                    "
-                                                                    class="mr-1 h-5 w-5"
-                                                                />
-                                                                <UserGroupIcon
-                                                                    v-else-if="
-                                                                        [
-                                                                            3,
-                                                                            6,
-                                                                        ].includes(
-                                                                            info.attribut_id
-                                                                        )
-                                                                    "
-                                                                    class="mr-1 h-5 w-5 text-slate-500"
-                                                                />
-                                                                <UsersIcon
-                                                                    v-else-if="
-                                                                        [
-                                                                            4,
-                                                                        ].includes(
-                                                                            info.attribut_id
-                                                                        )
-                                                                    "
-                                                                    class="mr-1 h-5 w-5"
-                                                                />
+                                                                <div>
+                                                                    <ClockIcon
+                                                                        v-if="
+                                                                            [
+                                                                                1,
+                                                                                2,
+                                                                                5,
+                                                                                7,
+                                                                            ].includes(
+                                                                                info.attribut_id
+                                                                            )
+                                                                        "
+                                                                        class="mr-1 h-5 w-5"
+                                                                    />
+                                                                    <UserGroupIcon
+                                                                        v-else-if="
+                                                                            [
+                                                                                3,
+                                                                                6,
+                                                                            ].includes(
+                                                                                info.attribut_id
+                                                                            )
+                                                                        "
+                                                                        class="mr-1 h-5 w-5 text-slate-500"
+                                                                    />
+                                                                    <UsersIcon
+                                                                        v-else-if="
+                                                                            [
+                                                                                4,
+                                                                            ].includes(
+                                                                                info.attribut_id
+                                                                            )
+                                                                        "
+                                                                        class="mr-1 h-5 w-5"
+                                                                    />
 
-                                                                <UsersIcon
-                                                                    v-else
-                                                                    class="mr-1 h-5 w-5"
-                                                                />
+                                                                    <UsersIcon
+                                                                        v-else
+                                                                        class="mr-1 h-5 w-5"
+                                                                    />
+                                                                </div>
 
-                                                                <span
+                                                                <div
                                                                     v-if="
                                                                         info.valeur
                                                                     "
-                                                                    class="text-sm font-thin"
+                                                                    class=""
                                                                 >
                                                                     {{
                                                                         info
@@ -644,13 +646,14 @@ const events = getEvents();
                                                                             info.unite
                                                                         }}</span
                                                                     >
-                                                                </span>
-                                                                <span
+                                                                </div>
+                                                                <div
                                                                     v-else
                                                                     class="text-sm font-thin"
-                                                                    >Pas de
-                                                                    valeur</span
                                                                 >
+                                                                    Pas de
+                                                                    valeur
+                                                                </div>
                                                             </div>
                                                         </td>
                                                         <td class="p-5">
