@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\StructurePlanning;
+use App\Models\StructureProduit;
+use App\Models\StructureTarif;
 use Illuminate\Http\Request;
 
 class ProductReservationController extends Controller
@@ -11,7 +14,12 @@ class ProductReservationController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        $produit = StructureProduit::where('id', $request->produit)->first();
+        $planning = StructurePlanning::where('id', $request->planning)->first();
+        $tarif = StructureTarif::where('id', $request->formule)->first();
+
+        dd($produit, $planning, $tarif);
+
     }
 
     /**

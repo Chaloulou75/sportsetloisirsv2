@@ -120,10 +120,7 @@ const formatCurrency = (value) => {
 };
 
 function formatDate(dateString) {
-    // Parse the date string using dayjs
     const date = dayjs(dateString);
-
-    // Format the date in the desired format
     return date.format("dddd D MMMM YYYY à H[h]mm");
 }
 
@@ -368,6 +365,7 @@ const submitReservation = () => {
                 </div>
                 <div class="w-full md:w-2/3 md:pr-10">
                     <div class="relative space-y-12">
+                        <!-- titre -->
                         <div
                             class="my-4 flex items-center justify-start space-x-4"
                         >
@@ -497,7 +495,9 @@ const submitReservation = () => {
                             </div>
                         </div>
 
-                        <TabGroup>
+                        <TabGroup
+                            v-if="filteredProductsWithCriteres.length > 0"
+                        >
                             <TabList
                                 class="flex space-x-1 rounded-xl bg-indigo-600 p-1"
                             >
@@ -534,8 +534,11 @@ const submitReservation = () => {
                                         <div
                                             class="flex w-full flex-col space-y-3 divide-y divide-slate-200 text-slate-500"
                                         >
+                                            <p class="font-semibold">
+                                                Choisir un produit:
+                                            </p>
                                             <div
-                                                class="space-y-1.5 rounded border border-gray-200 px-2 py-3 odd:bg-white even:bg-slate-50"
+                                                class="space-y-5 rounded border border-gray-200 px-2 py-3 odd:bg-white even:bg-slate-50"
                                                 v-for="produit in filteredProductsWithCriteres"
                                                 :key="produit.id"
                                             >
@@ -572,7 +575,7 @@ const submitReservation = () => {
                                                     </div>
 
                                                     <div
-                                                        class="flex items-center py-1.5 text-xs"
+                                                        class="flex items-center py-1.5 text-sm"
                                                     >
                                                         <dt class="sr-only">
                                                             Ville
@@ -595,7 +598,7 @@ const submitReservation = () => {
                                                     </div>
                                                 </div>
                                                 <div
-                                                    class="my-4 flex items-center justify-between"
+                                                    class="flex items-center justify-between px-2"
                                                 >
                                                     <p
                                                         class="text-sm"
@@ -613,18 +616,18 @@ const submitReservation = () => {
                                                         >
                                                     </p>
                                                 </div>
-                                                <fieldset class="mt-4">
+                                                <fieldset>
                                                     <legend
-                                                        class="text-sm font-semibold leading-6"
+                                                        class="px-6 text-sm font-semibold leading-6"
                                                     >
                                                         Choisir une formule:
                                                     </legend>
 
-                                                    <div class="mt-1 space-y-6">
+                                                    <div class="gap-y-6">
                                                         <div
                                                             v-for="tarif in produit.tarifs"
                                                             :key="tarif.id"
-                                                            class="flex items-center gap-x-3 border-b border-gray-200 px-3 py-4 last:border-none hover:bg-slate-100"
+                                                            class="flex items-center gap-x-3 border-b border-gray-200 px-6 py-4 last:border-none hover:bg-slate-100"
                                                         >
                                                             <input
                                                                 :id="
@@ -642,7 +645,7 @@ const submitReservation = () => {
                                                             />
                                                             <label
                                                                 for="formule-produit"
-                                                                class="flex w-full items-center justify-between gap-x-3 text-sm font-medium leading-6"
+                                                                class="flex w-full items-center justify-between gap-x-3 text-sm font-semibold leading-6"
                                                             >
                                                                 <div
                                                                     v-for="info in tarif.structure_tarif_type_infos"
@@ -772,15 +775,16 @@ const submitReservation = () => {
 
                                                 <template
                                                     v-if="displayPlanning"
+                                                    class="my-6 gap-y-6 bg-white"
                                                 >
                                                     <vue-cal
-                                                        class="my-6"
+                                                        class="vuecal--rounded-theme vuecal--blue-theme"
                                                         hide-view-selector
                                                         :time="false"
                                                         active-view="month"
                                                         locale="fr"
                                                         :events="getEvents()"
-                                                        small
+                                                        xsmall
                                                     >
                                                         <template #arrow-prev>
                                                             <ChevronLeftIcon
