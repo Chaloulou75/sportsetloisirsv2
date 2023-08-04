@@ -318,8 +318,8 @@ class StructureController extends Controller
         }
 
         $structurestypes = Structuretype::with(['structuretypeattributs', 'structuretypeattributs.structuretypevaleurs'])->select(['id', 'name', 'slug'])->get();
-        $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
-        $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
+        // $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
+        // $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
         $disciplines = ListDiscipline::select(['id', 'name', 'slug'])->get();
 
         $structure = Structure::with([
@@ -337,8 +337,8 @@ class StructureController extends Controller
         return Inertia::render('Structures/Edit', [
             'structurestypes' => $structurestypes,
             'disciplines' => $disciplines,
-            'niveaux' => $niveaux,
-            'publictypes' => $publictypes,
+            // 'niveaux' => $niveaux,
+            // 'publictypes' => $publictypes,
             'structure' => $structure,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
