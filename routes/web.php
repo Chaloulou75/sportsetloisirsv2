@@ -23,6 +23,7 @@ use App\Http\Controllers\CityDisciplineStructuretypeController;
 use App\Http\Controllers\DepartementDisciplineCategorieController;
 use App\Http\Controllers\CityDisciplineCategorieStructureController;
 use App\Http\Controllers\DepartementDisciplineStructuretypeController;
+use App\Http\Controllers\ProductReservationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -117,6 +118,11 @@ Route::resource('villes', CityController::class, [
     ]
 ])->only([
     'index', 'show'
+]);
+
+
+Route::resource('product_reservations', ProductReservationController::class)->only([
+    'store'
 ]);
 
 Route::middleware(['auth', 'verified'])->group(function () {

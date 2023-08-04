@@ -1,11 +1,14 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { Head, Link } from "@inertiajs/vue3";
+import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, reactive, computed } from "vue";
 import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
+import ActiviteCard from "@/Components/Structures/ActiviteCard.vue";
 import LeafletMap from "@/Components/LeafletMap.vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
+import dayjs from "dayjs";
+import "dayjs/locale/fr";
 import {
     MapPinIcon,
     UserIcon,
@@ -18,6 +21,8 @@ import {
     UsersIcon,
     UserGroupIcon,
     ClockIcon,
+    ChevronLeftIcon,
+    ChevronRightIcon,
 } from "@heroicons/vue/24/outline";
 import { StarIcon } from "@heroicons/vue/24/solid";
 import {
@@ -32,6 +37,7 @@ import {
     TabPanels,
     TabPanel,
 } from "@headlessui/vue";
+dayjs.locale("fr");
 
 const props = defineProps({
     structure: Object,
@@ -39,6 +45,7 @@ const props = defineProps({
     familles: Object,
     activite: Object,
     criteres: Object,
+    activiteSimilaires: Object,
 });
 
 const filteredCriteres = computed(() => {
@@ -112,6 +119,16 @@ const formatCurrency = (value) => {
     return value;
 };
 
+function formatDate(dateString) {
+    // Parse the date string using dayjs
+    const date = dayjs(dateString);
+
+    // Format the date in the desired format
+    return date.format("dddd D MMMM YYYY à H[h]mm");
+}
+
+const displayPlanning = ref(false);
+
 const getEvents = () => {
     const events = [];
 
@@ -138,6 +155,20 @@ const getEvents = () => {
 };
 
 const events = getEvents();
+
+const reservationForm = useForm({
+    produit: null,
+    formule: null,
+    planning: null,
+    remember: false,
+});
+
+const submitReservation = () => {
+    reservationForm.post("/product_reservations", {
+        preserveScroll: true,
+        onSuccess: () => reservationForm.reset(),
+    });
+};
 </script>
 
 <template>
@@ -234,24 +265,27 @@ const events = getEvents();
             >
                 <div class="w-full space-y-12 md:w-1/3">
                     <Link
-                        class="my-6 flex items-center justify-center rounded bg-sky-800 px-4 py-3 text-sm text-gray-50 hover:bg-sky-900 hover:text-white hover:shadow"
+                        class="my-6 flex items-center justify-center rounded border border-indigo-600 bg-indigo-600 px-6 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 hover:shadow focus:outline-none focus:ring active:text-indigo-500"
                         preserve-scroll
                         :href="route('structures.show', structure.slug)"
                     >
-                        <ArrowUturnLeftIcon class="mr-2 h-5 w-5 text-white" />
-                        Retour vers la structure {{ structure.name }}
+                        <ArrowUturnLeftIcon class="mr-2 h-5 w-5" />
+                        Retour vers l'accueil de la structure
+                        {{ structure.name }}
                     </Link>
-                    <div class="my-4 flex items-center justify-center md:mb-8">
+                    <div class="my-4 flex items-center justify-center md:mb-4">
                         <h3 class="text-base font-semibold uppercase">
                             Coordonnées de la structure
                         </h3>
                     </div>
-                    <div class="flex flex-col space-y-2">
-                        <h3 class="text-base">Localisation</h3>
-                        <p class="py-4 font-semibold">
-                            {{ structure.adresses[0].city }},
-                            {{ structure.adresses[0].zip_code }}
-                        </p>
+                    <div class="flex flex-col space-y-3">
+                        <h3 class="text-base">
+                            Localisation:
+                            <span class="font-semibold">
+                                {{ structure.adresses[0].city }},
+                                {{ structure.adresses[0].zip_code }}
+                            </span>
+                        </h3>
                         <LeafletMap :item="structure" />
                     </div>
                     <div class="my-4 space-y-3">
@@ -465,7 +499,7 @@ const events = getEvents();
 
                         <TabGroup>
                             <TabList
-                                class="flex space-x-1 rounded-xl bg-sky-800 p-1"
+                                class="flex space-x-1 rounded-xl bg-indigo-600 p-1"
                             >
                                 <Tab as="template" v-slot="{ selected }">
                                     <button
@@ -473,7 +507,7 @@ const events = getEvents();
                                             'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-100',
                                             'ring-white ring-opacity-60 ring-offset-1 ring-offset-blue-400 focus:outline-none focus:ring-2',
                                             selected
-                                                ? 'bg-white text-sky-700 shadow'
+                                                ? 'bg-white text-indigo-700 shadow'
                                                 : 'text-blue-100 hover:bg-white/[0.12] hover:text-white',
                                         ]"
                                     >
@@ -486,7 +520,7 @@ const events = getEvents();
                                             'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-100',
                                             'ring-white ring-opacity-60 ring-offset-1 ring-offset-blue-400 focus:outline-none focus:ring-2',
                                             selected
-                                                ? 'bg-white text-sky-700 shadow'
+                                                ? 'bg-white text-indigo-700 shadow'
                                                 : 'text-blue-100 hover:bg-white/[0.12] hover:text-white',
                                         ]"
                                     >
@@ -496,197 +530,354 @@ const events = getEvents();
                             </TabList>
                             <TabPanels class="mt-2">
                                 <TabPanel>
-                                    <div
-                                        class="w-full divide-y divide-slate-200 text-slate-500"
-                                    >
+                                    <form @submit.prevent="submitReservation()">
                                         <div
-                                            class="space-y-3 border-gray-200 px-2 py-3 odd:bg-white even:bg-slate-50"
-                                            v-for="produit in filteredProductsWithCriteres"
-                                            :key="produit.id"
+                                            class="flex w-full flex-col space-y-3 divide-y divide-slate-200 text-slate-500"
                                         >
-                                            <p class="text-xs">
-                                                Produit n° {{ produit.id }}:
-                                            </p>
                                             <div
-                                                class="flex items-center py-1.5 text-xs"
+                                                class="space-y-1.5 rounded border border-gray-200 px-2 py-3 odd:bg-white even:bg-slate-50"
+                                                v-for="produit in filteredProductsWithCriteres"
+                                                :key="produit.id"
                                             >
-                                                <dt class="sr-only">Ville</dt>
-                                                <MapPinIcon
-                                                    class="mr-1 h-4 w-4 text-indigo-700"
-                                                />
-                                                <p class="font-semibold">
-                                                    {{ produit.adresse.city }}
-                                                    ({{
-                                                        produit.adresse
-                                                            .zip_code
-                                                    }})
-                                                </p>
-                                            </div>
-                                            <div
-                                                class="flex items-center justify-between"
-                                            >
-                                                <p
-                                                    class="text-sm"
-                                                    v-for="critere in produit.criteres"
-                                                    :key="critere.id"
+                                                <div
+                                                    class="flex items-center justify-between px-2 py-1"
                                                 >
-                                                    {{ critere.critere.nom }}:
-                                                    <span
-                                                        class="font-semibold"
-                                                        >{{
-                                                            critere.valeur
-                                                        }}</span
+                                                    <div
+                                                        class="flex items-center gap-x-3"
                                                     >
-                                                </p>
-                                            </div>
-                                            <table
-                                                class="w-full table-fixed border-collapse text-sm font-semibold text-gray-700 shadow md:table-auto"
-                                            >
-                                                <!-- <caption
-                                                    class="caption-top bg-slate-50 py-6 text-sm font-semibold text-slate-600"
+                                                        <input
+                                                            :id="
+                                                                'produit_' +
+                                                                produit.id
+                                                            "
+                                                            :value="produit.id"
+                                                            v-model="
+                                                                reservationForm.produit
+                                                            "
+                                                            name="produit"
+                                                            type="radio"
+                                                            class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                                        />
+                                                        <label
+                                                            :for="
+                                                                'produit_' +
+                                                                produit.id
+                                                            "
+                                                            class="flex w-full items-center justify-between gap-x-3 text-sm font-medium leading-6"
+                                                            >Produit n°
+                                                            {{
+                                                                produit.id
+                                                            }}</label
+                                                        >
+                                                    </div>
+
+                                                    <div
+                                                        class="flex items-center py-1.5 text-xs"
+                                                    >
+                                                        <dt class="sr-only">
+                                                            Ville
+                                                        </dt>
+                                                        <MapPinIcon
+                                                            class="mr-1 h-4 w-4 text-indigo-700"
+                                                        />
+                                                        <p
+                                                            class="font-semibold"
+                                                        >
+                                                            {{
+                                                                produit.adresse
+                                                                    .city
+                                                            }}
+                                                            ({{
+                                                                produit.adresse
+                                                                    .zip_code
+                                                            }})
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="my-4 flex items-center justify-between"
                                                 >
-                                                    Liste des tarifs liés à
-                                                    cette activité:
-                                                </caption> -->
-                                                <thead class="bg-slate-50">
-                                                    <tr
-                                                        class="border-b text-center font-medium text-slate-400"
+                                                    <p
+                                                        class="text-sm"
+                                                        v-for="critere in produit.criteres"
+                                                        :key="critere.id"
                                                     >
-                                                        <th class="p-5">
-                                                            Infos
-                                                        </th>
-                                                        <th class="p-5">
-                                                            Titre
-                                                        </th>
-                                                        <th class="p-5">
-                                                            Type
-                                                        </th>
-                                                        <th class="p-5">
-                                                            Description
-                                                        </th>
-                                                        <th class="p-5">
-                                                            Montant
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr
-                                                        class="border-b border-slate-100 text-center text-slate-500"
-                                                        v-for="tarif in produit.tarifs"
-                                                        :key="tarif.id"
+                                                        {{
+                                                            critere.critere.nom
+                                                        }}:
+                                                        <span
+                                                            class="font-semibold"
+                                                            >{{
+                                                                critere.valeur
+                                                            }}</span
+                                                        >
+                                                    </p>
+                                                </div>
+                                                <fieldset class="mt-4">
+                                                    <legend
+                                                        class="text-sm font-semibold leading-6"
                                                     >
-                                                        <td
-                                                            class="flex flex-col items-center justify-center p-5"
+                                                        Choisir une formule:
+                                                    </legend>
+
+                                                    <div class="mt-1 space-y-6">
+                                                        <div
+                                                            v-for="tarif in produit.tarifs"
+                                                            :key="tarif.id"
+                                                            class="flex items-center gap-x-3 border-b border-gray-200 px-3 py-4 last:border-none hover:bg-slate-100"
+                                                        >
+                                                            <input
+                                                                :id="
+                                                                    'formule-produit_' +
+                                                                    tarif.id
+                                                                "
+                                                                :value="
+                                                                    tarif.id
+                                                                "
+                                                                v-model="
+                                                                    reservationForm.formule
+                                                                "
+                                                                type="radio"
+                                                                class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                                            />
+                                                            <label
+                                                                for="formule-produit"
+                                                                class="flex w-full items-center justify-between gap-x-3 text-sm font-medium leading-6"
+                                                            >
+                                                                <div
+                                                                    v-for="info in tarif.structure_tarif_type_infos"
+                                                                    :key="
+                                                                        info.id
+                                                                    "
+                                                                    class="flex items-start justify-center"
+                                                                >
+                                                                    <div>
+                                                                        <ClockIcon
+                                                                            v-if="
+                                                                                [
+                                                                                    1,
+                                                                                    2,
+                                                                                    5,
+                                                                                    7,
+                                                                                ].includes(
+                                                                                    info.attribut_id
+                                                                                )
+                                                                            "
+                                                                            class="mr-1 h-5 w-5"
+                                                                        />
+                                                                        <UserGroupIcon
+                                                                            v-else-if="
+                                                                                [
+                                                                                    3,
+                                                                                    6,
+                                                                                ].includes(
+                                                                                    info.attribut_id
+                                                                                )
+                                                                            "
+                                                                            class="mr-1 h-5 w-5 text-slate-500"
+                                                                        />
+                                                                        <UsersIcon
+                                                                            v-else-if="
+                                                                                [
+                                                                                    4,
+                                                                                ].includes(
+                                                                                    info.attribut_id
+                                                                                )
+                                                                            "
+                                                                            class="mr-1 h-5 w-5"
+                                                                        />
+
+                                                                        <UsersIcon
+                                                                            v-else
+                                                                            class="mr-1 h-5 w-5"
+                                                                        />
+                                                                    </div>
+
+                                                                    <div
+                                                                        v-if="
+                                                                            info.valeur
+                                                                        "
+                                                                        class=""
+                                                                    >
+                                                                        {{
+                                                                            info
+                                                                                .tarif_type_attribut
+                                                                                .attribut
+                                                                        }}:
+                                                                        {{
+                                                                            info.valeur
+                                                                        }}
+                                                                        <span
+                                                                            v-if="
+                                                                                info.unite
+                                                                            "
+                                                                            >{{
+                                                                                info.unite
+                                                                            }}</span
+                                                                        >
+                                                                    </div>
+                                                                    <div
+                                                                        v-else
+                                                                        class="text-sm font-thin"
+                                                                    >
+                                                                        Pas de
+                                                                        valeur
+                                                                    </div>
+                                                                </div>
+                                                                <div>
+                                                                    {{
+                                                                        tarif.titre
+                                                                    }}
+                                                                </div>
+                                                                <div>
+                                                                    {{
+                                                                        tarif
+                                                                            .tarif_type
+                                                                            .type
+                                                                    }}
+                                                                </div>
+                                                                <div>
+                                                                    <p
+                                                                        class="truncate font-medium"
+                                                                    >
+                                                                        {{
+                                                                            tarif.description
+                                                                        }}
+                                                                    </p>
+                                                                </div>
+                                                                <div>
+                                                                    {{
+                                                                        formatCurrency(
+                                                                            tarif.amount
+                                                                        )
+                                                                    }}
+                                                                </div>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+
+                                                <div class="self-end">
+                                                    <button
+                                                        class="my-4 inline-block rounded border border-indigo-600 bg-indigo-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500"
+                                                        type="button"
+                                                        @click="
+                                                            displayPlanning =
+                                                                !displayPlanning
+                                                        "
+                                                    >
+                                                        Choisir une date
+                                                    </button>
+                                                </div>
+
+                                                <template
+                                                    v-if="displayPlanning"
+                                                >
+                                                    <vue-cal
+                                                        class="my-6"
+                                                        hide-view-selector
+                                                        :time="false"
+                                                        active-view="month"
+                                                        locale="fr"
+                                                        :events="getEvents()"
+                                                        small
+                                                    >
+                                                        <template #arrow-prev>
+                                                            <ChevronLeftIcon
+                                                                class="h-4 w-4"
+                                                            />
+                                                        </template>
+                                                        <template #arrow-next>
+                                                            <ChevronRightIcon
+                                                                class="h-4 w-4"
+                                                            />
+                                                        </template>
+                                                    </vue-cal>
+                                                    <vue-cal
+                                                        xsmall
+                                                        :time-from="6 * 60"
+                                                        :time-to="24 * 60"
+                                                        :time-step="60"
+                                                        locale="fr"
+                                                        :snap-to-time="15"
+                                                        :disable-views="[
+                                                            'years',
+                                                            'year',
+                                                        ]"
+                                                        :cell-click-hold="false"
+                                                        :events="getEvents()"
+                                                    />
+                                                    <fieldset>
+                                                        <legend
+                                                            class="text-sm font-semibold leading-6"
+                                                        >
+                                                            Choisir un creneau:
+                                                        </legend>
+
+                                                        <div
+                                                            class="mt-1 space-y-6"
                                                         >
                                                             <div
-                                                                v-for="info in tarif.structure_tarif_type_infos"
-                                                                :key="info.id"
-                                                                class="flex items-center justify-center"
+                                                                v-for="planning in produit.plannings"
+                                                                :key="
+                                                                    planning.id
+                                                                "
+                                                                class="flex items-center gap-x-3 border-b border-gray-200 px-3 py-4 last:border-none hover:bg-slate-100"
                                                             >
-                                                                <div>
-                                                                    <ClockIcon
-                                                                        v-if="
-                                                                            [
-                                                                                1,
-                                                                                2,
-                                                                                5,
-                                                                                7,
-                                                                            ].includes(
-                                                                                info.attribut_id
-                                                                            )
-                                                                        "
-                                                                        class="mr-1 h-5 w-5"
-                                                                    />
-                                                                    <UserGroupIcon
-                                                                        v-else-if="
-                                                                            [
-                                                                                3,
-                                                                                6,
-                                                                            ].includes(
-                                                                                info.attribut_id
-                                                                            )
-                                                                        "
-                                                                        class="mr-1 h-5 w-5 text-slate-500"
-                                                                    />
-                                                                    <UsersIcon
-                                                                        v-else-if="
-                                                                            [
-                                                                                4,
-                                                                            ].includes(
-                                                                                info.attribut_id
-                                                                            )
-                                                                        "
-                                                                        class="mr-1 h-5 w-5"
-                                                                    />
-
-                                                                    <UsersIcon
-                                                                        v-else
-                                                                        class="mr-1 h-5 w-5"
-                                                                    />
-                                                                </div>
-
-                                                                <div
-                                                                    v-if="
-                                                                        info.valeur
+                                                                <input
+                                                                    :id="
+                                                                        'creneaux_' +
+                                                                        planning.id
                                                                     "
-                                                                    class=""
+                                                                    :value="
+                                                                        planning.id
+                                                                    "
+                                                                    v-model="
+                                                                        reservationForm.planning
+                                                                    "
+                                                                    type="radio"
+                                                                    class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                                                />
+                                                                <label
+                                                                    for="creneaux"
+                                                                    class="flex w-full items-center justify-between gap-x-3 text-sm font-semibold leading-6"
                                                                 >
                                                                     {{
-                                                                        info
-                                                                            .tarif_type_attribut
-                                                                            .attribut
-                                                                    }}:
-                                                                    {{
-                                                                        info.valeur
-                                                                    }}
-                                                                    <span
-                                                                        v-if="
-                                                                            info.unite
-                                                                        "
-                                                                        >{{
-                                                                            info.unite
-                                                                        }}</span
+                                                                        planning.title
+                                                                    }}<span
+                                                                        class="font-normal"
                                                                     >
-                                                                </div>
-                                                                <div
-                                                                    v-else
-                                                                    class="text-sm font-thin"
-                                                                >
-                                                                    Pas de
-                                                                    valeur
-                                                                </div>
+                                                                        du </span
+                                                                    >{{
+                                                                        formatDate(
+                                                                            planning.start
+                                                                        )
+                                                                    }}<span
+                                                                        class="font-normal"
+                                                                    >
+                                                                        au </span
+                                                                    >{{
+                                                                        formatDate(
+                                                                            planning.end
+                                                                        )
+                                                                    }}
+                                                                </label>
                                                             </div>
-                                                        </td>
-                                                        <td class="p-5">
-                                                            {{ tarif.titre }}
-                                                        </td>
-                                                        <td class="p-5">
-                                                            {{
-                                                                tarif.tarif_type
-                                                                    .type
-                                                            }}
-                                                        </td>
-                                                        <td class="p-5">
-                                                            <p
-                                                                class="truncate font-medium"
-                                                            >
-                                                                {{
-                                                                    tarif.description
-                                                                }}
-                                                            </p>
-                                                        </td>
-                                                        <td class="p-5">
-                                                            {{
-                                                                formatCurrency(
-                                                                    tarif.amount
-                                                                )
-                                                            }}
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                                        </div>
+                                                    </fieldset>
+                                                </template>
+                                                <button
+                                                    class="my-4 inline-block self-end rounded border border-indigo-600 bg-indigo-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500"
+                                                    type="submit"
+                                                    :disabled="
+                                                        reservationForm.processing
+                                                    "
+                                                >
+                                                    Réserver
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </form>
                                 </TabPanel>
                                 <!-- Planning -->
                                 <TabPanel>
@@ -736,16 +927,16 @@ const events = getEvents();
                                     class="flex justify-center gap-0.5 text-yellow-500"
                                 >
                                     <StarIcon class="h-4 w-4" />
-                                    <StarIcon class="h-4 w-4" />
-                                    <StarIcon class="h-4 w-4" />
-                                    <StarIcon class="h-4 w-4" />
-                                    <StarIcon class="h-4 w-4" />
+                                    <StarIcon class="h-4 w-4 text-white" />
+                                    <StarIcon class="h-4 w-4 text-white" />
+                                    <StarIcon class="h-4 w-4 text-white" />
+                                    <StarIcon class="h-4 w-4 text-white" />
                                 </div>
 
                                 <p
                                     class="mt-1 text-lg font-medium text-gray-700"
                                 >
-                                    Paul Jacquemin
+                                    Paul Jacquemimou
                                 </p>
                             </div>
                         </div>
@@ -808,7 +999,7 @@ const events = getEvents();
                                     <StarIcon class="h-4 w-4" />
                                     <StarIcon class="h-4 w-4" />
                                     <StarIcon class="h-4 w-4" />
-                                    <StarIcon class="h-4 w-4" />
+                                    <StarIcon class="h-4 w-4 text-white" />
                                 </div>
 
                                 <p
@@ -825,6 +1016,30 @@ const events = getEvents();
                             C'était vraiment sensationnel.
                         </p>
                     </blockquote>
+                </div>
+            </div>
+        </section>
+        <section class="bg-white">
+            <div class="mx-auto max-w-full px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+                <h2
+                    class="text-center text-2xl font-semibold tracking-tight text-gray-700 sm:text-3xl"
+                >
+                    Les activités similaires
+                </h2>
+                <div
+                    class="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-8"
+                >
+                    <ActiviteCard
+                        v-for="activite in activiteSimilaires"
+                        :key="activite.id"
+                        :activite="activite"
+                        :link="
+                            route('structures.activites.show', {
+                                structure: structure.slug,
+                                activite: activite.id,
+                            })
+                        "
+                    />
                 </div>
             </div>
         </section>

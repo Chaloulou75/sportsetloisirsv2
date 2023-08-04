@@ -250,6 +250,21 @@ class ActiviteController extends Controller
                 ->whereIn('discipline_id', $structure->disciplines->pluck('discipline_id'))->whereIn('categorie_id', $structure->categories->pluck('categorie_id'))
                 ->get();
 
+        $activiteSimilaires = StructureActivite::with([
+            'discipline:id,name',
+            'categorie:id,categorie_id,discipline_id,nom_categorie_client',
+            'produits',
+            'produits.adresse',
+            'produits.criteres',
+            'produits.criteres.critere',
+            'produits.tarifs',
+            'produits.tarifs.tarifType',
+            'produits.tarifs.structureTarifTypeInfos',
+            'produits.plannings'
+            ])->where('discipline_id', $activite->discipline_id)
+            ->inRandomOrder()
+            ->take(3)
+            ->get();
 
         return Inertia::render('Structures/Activites/Show', [
                     'structure' => $structure,
@@ -257,6 +272,7 @@ class ActiviteController extends Controller
                     'logoUrl' => $logoUrl,
                     'activite' => $activite,
                     'criteres' => $criteres,
+                    'activiteSimilaires' => $activiteSimilaires
         ]);
     }
 
