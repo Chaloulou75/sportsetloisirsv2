@@ -258,7 +258,7 @@ const submitReservation = () => {
 
         <section class="mx-auto my-4 max-w-full px-0 py-6 sm:px-4 lg:px-8">
             <div
-                class="flex flex-col-reverse justify-between rounded-lg bg-white px-4 py-6 shadow md:flex-row md:items-start md:space-x-6"
+                class="flex flex-col-reverse justify-between rounded-lg bg-white px-4 py-6 text-slate-600 shadow md:flex-row md:items-start md:space-x-6"
             >
                 <div class="w-full space-y-12 md:w-1/3">
                     <Link
@@ -377,7 +377,7 @@ const submitReservation = () => {
                                 />
                             </div>
                             <h2
-                                class="inline-block w-full text-center text-xl font-semibold text-black sm:text-2xl sm:leading-7 md:text-3xl"
+                                class="inline-block w-full text-center text-xl font-semibold sm:text-2xl sm:leading-7 md:text-3xl"
                             >
                                 {{ activite.titre }}
                             </h2>
@@ -406,7 +406,7 @@ const submitReservation = () => {
                         <!-- Filters -->
                         <div>
                             <div
-                                class="my-6 grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3"
+                                class="my-6 grid w-full grid-cols-1 gap-4 md:grid-cols-3"
                             >
                                 <Listbox
                                     v-for="critere in filteredCriteres"
@@ -417,7 +417,7 @@ const submitReservation = () => {
                                     <div class="relative mt-1">
                                         <label
                                             :for="critere.nom"
-                                            class="block text-sm font-medium text-gray-700"
+                                            class="block text-sm font-medium"
                                         >
                                             {{ critere.nom }}:
                                         </label>
@@ -538,7 +538,7 @@ const submitReservation = () => {
                                                 Choisir un produit:
                                             </p>
                                             <div
-                                                class="space-y-5 rounded border border-gray-200 px-2 py-3 odd:bg-white even:bg-slate-50"
+                                                class="flex flex-col space-y-5 rounded border border-gray-200 px-2 py-3 odd:bg-white even:bg-slate-50"
                                                 v-for="produit in filteredProductsWithCriteres"
                                                 :key="produit.id"
                                             >
@@ -616,7 +616,11 @@ const submitReservation = () => {
                                                         >
                                                     </p>
                                                 </div>
-                                                <fieldset>
+                                                <fieldset
+                                                    v-if="
+                                                        reservationForm.produit
+                                                    "
+                                                >
                                                     <legend
                                                         class="px-6 text-sm font-semibold leading-6"
                                                     >
@@ -647,6 +651,28 @@ const submitReservation = () => {
                                                                 for="formule-produit"
                                                                 class="flex w-full items-center justify-between gap-x-3 text-sm font-semibold leading-6"
                                                             >
+                                                                <div
+                                                                    v-if="
+                                                                        tarif
+                                                                            .tarif_type
+                                                                            .type
+                                                                    "
+                                                                >
+                                                                    {{
+                                                                        tarif
+                                                                            .tarif_type
+                                                                            .type
+                                                                    }}
+                                                                </div>
+                                                                <div
+                                                                    v-if="
+                                                                        tarif.titre
+                                                                    "
+                                                                >
+                                                                    {{
+                                                                        tarif.titre
+                                                                    }}
+                                                                </div>
                                                                 <div
                                                                     v-for="info in tarif.structure_tarif_type_infos"
                                                                     :key="
@@ -727,19 +753,12 @@ const submitReservation = () => {
                                                                         valeur
                                                                     </div>
                                                                 </div>
-                                                                <div>
-                                                                    {{
-                                                                        tarif.titre
-                                                                    }}
-                                                                </div>
-                                                                <div>
-                                                                    {{
-                                                                        tarif
-                                                                            .tarif_type
-                                                                            .type
-                                                                    }}
-                                                                </div>
-                                                                <div>
+
+                                                                <div
+                                                                    v-if="
+                                                                        tarif.description
+                                                                    "
+                                                                >
                                                                     <p
                                                                         class="truncate font-medium"
                                                                     >
@@ -748,7 +767,11 @@ const submitReservation = () => {
                                                                         }}
                                                                     </p>
                                                                 </div>
-                                                                <div>
+                                                                <div
+                                                                    v-if="
+                                                                        tarif.amount
+                                                                    "
+                                                                >
                                                                     {{
                                                                         formatCurrency(
                                                                             tarif.amount
@@ -760,7 +783,12 @@ const submitReservation = () => {
                                                     </div>
                                                 </fieldset>
 
-                                                <div class="self-end">
+                                                <div
+                                                    v-if="
+                                                        reservationForm.formule
+                                                    "
+                                                    class="self-end"
+                                                >
                                                     <button
                                                         class="my-4 inline-block rounded border border-indigo-600 bg-indigo-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500"
                                                         type="button"
@@ -778,7 +806,7 @@ const submitReservation = () => {
                                                     class="my-6 gap-y-6 bg-white"
                                                 >
                                                     <vue-cal
-                                                        class="vuecal--rounded-theme vuecal--blue-theme"
+                                                        class="vuecal--rounded-theme"
                                                         hide-view-selector
                                                         :time="false"
                                                         active-view="month"
@@ -815,7 +843,8 @@ const submitReservation = () => {
                                                         <legend
                                                             class="text-sm font-semibold leading-6"
                                                         >
-                                                            Choisir un creneau:
+                                                            Choisir une date et
+                                                            un creneau horaire:
                                                         </legend>
 
                                                         <div
@@ -871,13 +900,16 @@ const submitReservation = () => {
                                                     </fieldset>
                                                 </template>
                                                 <button
+                                                    v-if="
+                                                        reservationForm.planning
+                                                    "
                                                     class="my-4 inline-block self-end rounded border border-indigo-600 bg-indigo-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500"
                                                     type="submit"
                                                     :disabled="
                                                         reservationForm.processing
                                                     "
                                                 >
-                                                    Réserver
+                                                    Envoyer une demande
                                                 </button>
                                             </div>
                                         </div>
@@ -903,6 +935,13 @@ const submitReservation = () => {
                                 </TabPanel>
                             </TabPanels>
                         </TabGroup>
+
+                        <div v-else>
+                            <p class="font-medium text-slate-500">
+                                Il n'y a pas encore d'activité pour cette
+                                requète.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

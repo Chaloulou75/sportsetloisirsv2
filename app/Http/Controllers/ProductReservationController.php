@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\StructurePlanning;
-use App\Models\StructureProduit;
-use App\Models\StructureTarif;
 use Illuminate\Http\Request;
+use App\Models\StructureTarif;
+use App\Models\StructureProduit;
+use App\Models\StructurePlanning;
+use Illuminate\Support\Facades\Redirect;
 
 class ProductReservationController extends Controller
 {
@@ -18,7 +19,9 @@ class ProductReservationController extends Controller
         $planning = StructurePlanning::where('id', $request->planning)->first();
         $tarif = StructureTarif::where('id', $request->formule)->first();
 
-        dd($produit, $planning, $tarif);
+        // dd($produit, $planning, $tarif);
+
+        return Redirect::back()->with('success', "La demande a été envoyée");
 
     }
 

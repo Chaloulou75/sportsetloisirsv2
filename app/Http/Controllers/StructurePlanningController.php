@@ -19,22 +19,6 @@ use App\Models\LienDisciplineCategorieCritereValeur;
 class StructurePlanningController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index(Structure $structure)
-    {
-
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Structure $structure, Request $request)
@@ -71,22 +55,6 @@ class StructurePlanningController extends Controller
 
         return Redirect::back()->with('success', "L'évènement a bien été ajouté au planning");
 
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
