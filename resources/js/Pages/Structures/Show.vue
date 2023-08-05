@@ -136,6 +136,17 @@ const filteredActivitesWithCriteres = computed(() => {
     });
 });
 
+function formatPhoneNumber(phoneNumber) {
+    const cleanPhoneNumber = phoneNumber.replace(/\D/g, "");
+    if (cleanPhoneNumber.startsWith("33")) {
+        return `+33 ${cleanPhoneNumber.substr(3, 2)} ${cleanPhoneNumber.substr(
+            5,
+            2
+        )} ${cleanPhoneNumber.substr(7, 2)} ${cleanPhoneNumber.substr(9, 2)}`;
+    }
+    return phoneNumber;
+}
+
 const getEvents = () => {
     const events = [];
 
@@ -292,15 +303,23 @@ const events = getEvents();
                             Coordonnées de la structure
                         </h3>
                     </div>
-                    <div class="flex flex-col space-y-2">
-                        <h3 class="text-base">Localisation</h3>
-                        <p class="py-4 font-semibold">
-                            {{ structure.adresses[0].city }},
-                            {{ structure.adresses[0].zip_code }}
-                        </p>
+                    <div class="flex flex-col space-y-3">
+                        <h3 class="text-base">
+                            Localisation:
+                            <span class="font-semibold">
+                                {{ structure.adresses[0].city }},
+                                {{ structure.adresses[0].zip_code }}
+                            </span>
+                        </h3>
                         <LeafletMap :item="structure" />
                     </div>
-                    <div class="my-4 space-y-3">
+                    <div
+                        class="flex w-full flex-col space-y-3 rounded-md bg-indigo-100 px-2 py-4 text-slate-800"
+                    >
+                        <h3 class="text-center text-base font-semibold">
+                            Contact
+                        </h3>
+
                         <p class="text-base font-semibold text-gray-700">
                             <UserIcon class="inline-block h-4 w-4" />
                             {{ structure.creator.name }}
@@ -367,7 +386,13 @@ const events = getEvents();
                             class="text-base font-medium text-gray-700"
                         >
                             <PhoneIcon class="inline-block h-4 w-4" />
-                            {{ structure.phone1 }}
+                            <a
+                                :href="`tel:${structure.phone1}`"
+                                target="_blank"
+                                class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
+                            >
+                                {{ formatPhoneNumber(structure.phone1) }}
+                            </a>
                         </p>
                         <p
                             v-if="structure.email"

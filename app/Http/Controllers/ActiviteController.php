@@ -266,6 +266,8 @@ class ActiviteController extends Controller
             ->take(3)
             ->get();
 
+        // dd($activiteSimilaires);
+
         return Inertia::render('Structures/Activites/Show', [
                     'structure' => $structure,
                     'familles' => $familles,

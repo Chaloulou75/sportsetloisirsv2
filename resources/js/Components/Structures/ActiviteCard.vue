@@ -1,15 +1,75 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { ref, onMounted, watch } from "vue";
+import { useCookies } from "@vueuse/integrations/useCookies";
 import { MapPinIcon } from "@heroicons/vue/24/outline";
 import { HeartIcon } from "@heroicons/vue/24/solid";
 
-let props = defineProps({
+const props = defineProps({
     activite: Object,
     link: {
         type: String,
         default: null,
     },
+});
+
+const cookies = useCookies(["favoriteActivities"]);
+
+const favoriteActivities = ref([]);
+
+const toggleFavorite = (activityId) => {
+    if (!props.activite) {
+        console.error("activite is undefined:", props.activite);
+        return;
+    }
+    const index = favoriteActivities.value.indexOf(activityId);
+    if (index === -1) {
+        favoriteActivities.value.push(activityId);
+    } else {
+        favoriteActivities.value.splice(index, 1);
+    }
+    cookies.set(
+        "favoriteActivities",
+        JSON.stringify(favoriteActivities.value),
+        {
+            remove: "2d",
+        }
+    );
+};
+
+const isFavorite = () => {
+    if (!props.activite.value) {
+        return false;
+    }
+    return favoriteActivities.value.includes(props.activite.value.id);
+};
+
+watch(
+    () => props.activite.value,
+    (newActivite) => {
+        if (newActivite) {
+            updateIsFavorite(newActivite);
+        }
+    }
+);
+
+// Function to update isFavorite status
+const updateIsFavorite = (newActivite) => {
+    if (!newActivite) {
+        return;
+    }
+    const activityId = newActivite.id;
+
+    const cookieValue = cookies.get("favoriteActivities");
+    if (cookieValue) {
+        favoriteActivities.value = JSON.parse(cookieValue);
+    }
+
+    isFavorite.value = favoriteActivities.value.includes(activityId);
+};
+
+onMounted(() => {
+    updateIsFavorite(props.activite.value);
 });
 
 const formatCurrency = (value) => {
@@ -37,18 +97,31 @@ const formatCityName = (ville) => {
 
 <template>
     <template v-if="link">
-        <Link
-            :href="link"
+        <div
             class="relative block rounded-lg shadow-sm shadow-indigo-200 hover:shadow-xl md:px-0"
         >
-            <HeartIcon class="absolute right-2 top-2 h-6 w-6 text-white" />
+            <button
+                class=""
+                type="button"
+                @click="() => toggleFavorite(activite.id)"
+            >
+                <HeartIcon
+                    class="absolute right-2 top-2 z-20 h-6 w-6"
+                    :class="
+                        isFavorite
+                            ? 'text-red-500 hover:text-white'
+                            : 'text-white hover:text-red-500'
+                    "
+                />
+            </button>
+
             <img
                 alt="Home"
                 src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
                 class="h-56 w-full rounded-md bg-opacity-75 object-cover"
             />
 
-            <div class="mt-2">
+            <Link :href="link" class="mt-2">
                 <dl class="flex flex-col">
                     <p
                         class="px-2 py-1.5 text-center text-sm font-semibold tracking-wide text-gray-600"
@@ -105,7 +178,7 @@ const formatCityName = (ville) => {
                         </div>
                     </div>
                 </dl>
-            </div>
-        </Link>
+            </Link>
+        </div>
     </template>
 </template>

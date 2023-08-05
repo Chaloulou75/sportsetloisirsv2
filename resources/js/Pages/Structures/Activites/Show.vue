@@ -124,6 +124,17 @@ function formatDate(dateString) {
     return date.format("dddd D MMMM YYYY à H[h]mm");
 }
 
+function formatPhoneNumber(phoneNumber) {
+    const cleanPhoneNumber = phoneNumber.replace(/\D/g, "");
+    if (cleanPhoneNumber.startsWith("33")) {
+        return `+33 ${cleanPhoneNumber.substr(3, 2)} ${cleanPhoneNumber.substr(
+            5,
+            2
+        )} ${cleanPhoneNumber.substr(7, 2)} ${cleanPhoneNumber.substr(9, 2)}`;
+    }
+    return phoneNumber;
+}
+
 const displayPlanning = ref(false);
 
 const getEvents = () => {
@@ -163,7 +174,10 @@ const reservationForm = useForm({
 const submitReservation = () => {
     reservationForm.post("/product_reservations", {
         preserveScroll: true,
-        onSuccess: () => reservationForm.reset(),
+        onSuccess: () => {
+            reservationForm.reset();
+            displayPlanning.value = false;
+        },
     });
 };
 </script>
@@ -285,7 +299,19 @@ const submitReservation = () => {
                         </h3>
                         <LeafletMap :item="structure" />
                     </div>
-                    <div class="my-4 space-y-3">
+                    <div
+                        class="flex w-full flex-col space-y-3 rounded-md bg-indigo-100 px-2 py-4 text-slate-800"
+                    >
+                        <h3 class="text-center text-base font-semibold">
+                            Activité proposée par: {{ structure.name }}
+                        </h3>
+                        <Link
+                            class="my-6 flex items-center justify-center rounded border border-indigo-600 bg-indigo-600 px-6 py-3 text-sm font-medium text-white hover:bg-white hover:text-indigo-600 hover:shadow focus:outline-none focus:ring active:text-indigo-500"
+                            preserve-scroll
+                            :href="route('structures.show', structure.slug)"
+                        >
+                            Voir la fiche
+                        </Link>
                         <p class="text-base font-semibold text-gray-700">
                             <UserIcon class="inline-block h-4 w-4" />
                             {{ structure.creator.name }}
@@ -352,7 +378,13 @@ const submitReservation = () => {
                             class="text-base font-medium text-gray-700"
                         >
                             <PhoneIcon class="inline-block h-4 w-4" />
-                            {{ structure.phone1 }}
+                            <a
+                                :href="`tel:${structure.phone1}`"
+                                target="_blank"
+                                class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
+                            >
+                                {{ formatPhoneNumber(structure.phone1) }}
+                            </a>
                         </p>
                         <p
                             v-if="structure.email"
@@ -631,7 +663,7 @@ const submitReservation = () => {
                                                         <div
                                                             v-for="tarif in produit.tarifs"
                                                             :key="tarif.id"
-                                                            class="flex items-center gap-x-3 border-b border-gray-200 px-6 py-4 last:border-none hover:bg-slate-100"
+                                                            class="flex items-center gap-x-3 border-b border-gray-200 px-6 py-4 last:border-none hover:bg-gray-200"
                                                         >
                                                             <input
                                                                 :id="
@@ -900,7 +932,7 @@ const submitReservation = () => {
                                                 </template>
                                                 <button
                                                     v-if="
-                                                        reservationForm.planning
+                                                        reservationForm.formule
                                                     "
                                                     class="my-4 inline-block self-end rounded border border-indigo-600 bg-indigo-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500"
                                                     type="submit"
