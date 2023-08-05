@@ -1,6 +1,6 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import { useCookies } from "@vueuse/integrations/useCookies";
 import { MapPinIcon } from "@heroicons/vue/24/outline";
 import { HeartIcon } from "@heroicons/vue/24/solid";
@@ -18,31 +18,71 @@ const cookies = useCookies(["favoriteActivities"]);
 const favoriteActivities = ref([]);
 
 const toggleFavorite = (activityId) => {
+    console.log("Toggle Favorite - activityId:", activityId);
+
     if (!props.activite) {
         console.error("activite is undefined:", props.activite);
         return;
     }
-    const index = favoriteActivities.value.indexOf(activityId);
-    if (index === -1) {
-        favoriteActivities.value.push(activityId);
-    } else {
-        favoriteActivities.value.splice(index, 1);
+
+    const cookieValue = cookies.get("favoriteActivities");
+    console.log("Cookie Value:", cookieValue);
+
+    // Convert the cookie value to an array
+    const favoriteActivitiesArray = cookieValue
+        ? String(cookieValue).split(",")
+        : [];
+
+    // Ensure that activityId is always an array
+    if (!Array.isArray(activityId)) {
+        activityId = [activityId];
     }
-    cookies.set(
-        "favoriteActivities",
-        JSON.stringify(favoriteActivities.value),
-        {
-            remove: "2d",
+
+    // Toggle each activityId
+    activityId.forEach((id) => {
+        const index = favoriteActivitiesArray.indexOf(String(id));
+        if (index !== -1) {
+            favoriteActivitiesArray.splice(index, 1); // Remove the activity ID from favorites
+        } else {
+            favoriteActivitiesArray.push(String(id)); // Add the activity ID to favorites
         }
-    );
+    });
+
+    // Convert the array back to a comma-separated string and store it in the cookie
+    const updatedCookieValue = favoriteActivitiesArray.join(",");
+    cookies.set("favoriteActivities", updatedCookieValue, {
+        remove: "2d",
+    });
+
+    console.log("Updated Cookie Value:", updatedCookieValue);
 };
 
-const isFavorite = () => {
+const updateIsFavorite = (newActivite) => {
+    if (!newActivite) {
+        return;
+    }
+    const activityId = newActivite.id;
+
+    // Get the cookie value and parse it back to a Set using JSON.parse
+    const cookieValue = cookies.get("favoriteActivities");
+    const favoriteSet = new Set(cookieValue ? JSON.parse(cookieValue) : []);
+
+    isFavorite.value = favoriteSet.has(activityId);
+};
+
+watch(
+    () => favoriteActivities.value,
+    () => {
+        updateIsFavorite(props.activite.value.id);
+    }
+);
+const isFavorite = computed(() => {
     if (!props.activite.value) {
         return false;
     }
-    return favoriteActivities.value.includes(props.activite.value.id);
-};
+    const activityId = props.activite.value.id;
+    return favoriteActivities.value.includes(activityId);
+});
 
 watch(
     () => props.activite.value,
@@ -52,21 +92,6 @@ watch(
         }
     }
 );
-
-// Function to update isFavorite status
-const updateIsFavorite = (newActivite) => {
-    if (!newActivite) {
-        return;
-    }
-    const activityId = newActivite.id;
-
-    const cookieValue = cookies.get("favoriteActivities");
-    if (cookieValue) {
-        favoriteActivities.value = JSON.parse(cookieValue);
-    }
-
-    isFavorite.value = favoriteActivities.value.includes(activityId);
-};
 
 onMounted(() => {
     updateIsFavorite(props.activite.value);
@@ -103,7 +128,7 @@ const formatCityName = (ville) => {
             <button
                 class=""
                 type="button"
-                @click="() => toggleFavorite(activite.id)"
+                @click="() => toggleFavorite([activite.id])"
             >
                 <HeartIcon
                     class="absolute right-2 top-2 z-20 h-6 w-6"
