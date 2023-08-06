@@ -1,6 +1,6 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
-import { ref, onMounted, watch, computed } from "vue";
+import { ref, nextTick, watch, computed, onMounted } from "vue";
 import { useCookies } from "@vueuse/integrations/useCookies";
 import { MapPinIcon } from "@heroicons/vue/24/outline";
 import { HeartIcon } from "@heroicons/vue/24/solid";
@@ -14,30 +14,22 @@ const props = defineProps({
 });
 
 const cookies = useCookies(["favoriteActivities"]);
-
-const favoriteActivities = ref([]);
+const favoriteActivities = ref(cookies.get("favoriteActivities") || []);
+const isFavorite = ref(false);
 
 const toggleFavorite = (activityId) => {
-    console.log("Toggle Favorite - activityId:", activityId);
-
     if (!props.activite) {
-        console.error("activite is undefined:", props.activite);
         return;
     }
-
     const cookieValue = cookies.get("favoriteActivities");
-    console.log("Cookie Value:", cookieValue);
-
     // Convert the cookie value to an array
     const favoriteActivitiesArray = cookieValue
         ? String(cookieValue).split(",")
         : [];
-
     // Ensure that activityId is always an array
     if (!Array.isArray(activityId)) {
         activityId = [activityId];
     }
-
     // Toggle each activityId
     activityId.forEach((id) => {
         const index = favoriteActivitiesArray.indexOf(String(id));
@@ -52,45 +44,33 @@ const toggleFavorite = (activityId) => {
     cookies.set("favoriteActivities", updatedCookieValue, {
         remove: "2d",
     });
-
-    console.log("Updated Cookie Value:", updatedCookieValue);
-};
-
-const updateIsFavorite = (newActivite) => {
-    if (!newActivite) {
-        return;
-    }
-    const activityId = newActivite.id;
-
-    // Get the cookie value and parse it back to a Set using JSON.parse
-    const cookieValue = cookies.get("favoriteActivities");
-    const favoriteSet = new Set(cookieValue ? JSON.parse(cookieValue) : []);
-
-    isFavorite.value = favoriteSet.has(activityId);
+    favoriteActivities.value = favoriteActivitiesArray;
+    updateIsFavorite();
 };
 
 watch(
-    () => favoriteActivities.value,
-    () => {
-        updateIsFavorite(props.activite.value.id);
-    }
-);
-const isFavorite = computed(() => {
-    if (!props.activite.value) {
-        return false;
-    }
-    const activityId = props.activite.value.id;
-    return favoriteActivities.value.includes(activityId);
-});
-
-watch(
-    () => props.activite.value,
-    (newActivite) => {
+    () => props.activite,
+    async (newActivite) => {
         if (newActivite) {
-            updateIsFavorite(newActivite);
+            await nextTick();
+            updateIsFavorite();
         }
     }
 );
+
+const updateIsFavorite = async () => {
+    await nextTick();
+    if (!props.activite) {
+        return;
+    }
+    const activityId = String(props.activite.id);
+    const favoriteActivityIds = Object.values(favoriteActivities.value);
+    isFavorite.value = favoriteActivityIds.includes(activityId);
+};
+
+onMounted(() => {
+    updateIsFavorite();
+});
 
 const formatCurrency = (value) => {
     // Remove the non-numeric characters from the currency value
@@ -118,29 +98,32 @@ const formatCityName = (ville) => {
 <template>
     <template v-if="link">
         <div
-            class="relative block rounded-lg shadow-sm shadow-indigo-200 hover:shadow-xl md:px-0"
+            class="block rounded-lg shadow-sm shadow-indigo-200 hover:shadow-xl md:px-0"
         >
-            <p>Is Favorite: {{ isFavorite }}</p>
-            <button
-                class=""
-                type="button"
-                @click="() => toggleFavorite([activite.id])"
-            >
-                <HeartIcon
-                    class="absolute right-2 top-2 z-20 h-6 w-6"
-                    :class="
-                        isFavorite
-                            ? 'text-red-500 hover:text-white'
-                            : 'text-white hover:text-red-500'
-                    "
-                />
-            </button>
+            <div class="relative">
+                <!-- Button (positioned on top right) -->
+                <button
+                    class="absolute right-2 top-2 bg-transparent"
+                    type="button"
+                    @click="() => toggleFavorite(activite.id)"
+                >
+                    <HeartIcon
+                        class="h-6 w-6"
+                        :class="
+                            isFavorite
+                                ? 'text-red-500 hover:text-white'
+                                : 'text-white hover:text-red-500'
+                        "
+                    />
+                </button>
 
-            <img
-                alt="Home"
-                src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                class="h-56 w-full rounded-md bg-opacity-75 object-cover"
-            />
+                <!-- Image -->
+                <img
+                    alt="Home"
+                    src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                    class="h-56 w-full rounded-md bg-opacity-75 object-cover"
+                />
+            </div>
 
             <Link :href="link" class="mt-2">
                 <dl class="flex flex-col">
