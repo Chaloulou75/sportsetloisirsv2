@@ -16,8 +16,9 @@ class FavoritesController extends Controller
     public function index(Request $request)
     {
         $favoriteActivitiesCookies = $request->cookie('favoriteActivities');
-        $favoriteActivitiesCookies = json_decode($favoriteActivitiesCookies);
-        $activites = StructureActivite::with([
+        $favoriteActivitiesIds = json_decode($favoriteActivitiesCookies);
+        if($favoriteActivitiesIds !== null) {
+            $activites = StructureActivite::with([
             'structure',
             'discipline:id,name',
             'categorie:id,categorie_id,discipline_id,nom_categorie_client',
@@ -30,12 +31,15 @@ class FavoritesController extends Controller
             'produits.tarifs.structureTarifTypeInfos',
             'produits.plannings',
             ])
-            ->whereIn('id', $favoriteActivitiesCookies)
+            ->whereIn('id', $favoriteActivitiesIds)
             ->get();
+        }
+
 
         $favoriteStructuresCookies = $request->cookie('favoriteStructures');
-        $favoriteStructuresCookies = json_decode($favoriteStructuresCookies);
-        $structures = Structure::with([
+        $favoriteStructuresIds = json_decode($favoriteStructuresCookies);
+        if($favoriteStructuresIds !== null) {
+            $structures = Structure::with([
                     'creator:id,name',
                     'users:id,name',
                     'adresses'  => function ($query) {
@@ -56,8 +60,10 @@ class FavoritesController extends Controller
                     'tarifs.tarifType',
                     'tarifs.structureTarifTypeInfos',
                     'plannings',
-                    ])->whereIn('id', $favoriteStructuresCookies)
+                    ])->whereIn('id', $favoriteStructuresIds)
                     ->get();
+        }
+
 
         $familles = Famille::with([
                     'disciplines' => function ($query) {
@@ -71,8 +77,8 @@ class FavoritesController extends Controller
 
         return Inertia::render('Favorites/Index', [
                     'familles' => $familles,
-                    'structures'=> $structures,
-                    'activites' => $activites,
+                    'structures'=> $structures ?? [],
+                    'activites' => $activites ?? [],
         ]);
 
     }

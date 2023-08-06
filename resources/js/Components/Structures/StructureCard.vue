@@ -42,9 +42,12 @@ const toggleFavorite = (structureId) => {
         }
     });
 
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + 2);
+
     const updatedCookieValue = JSON.stringify(favoriteStructuresArray);
     cookies.set("favoriteStructures", updatedCookieValue, {
-        remove: "2d",
+        expires: expirationDate,
     });
     favoriteStructures.value = favoriteStructuresArray;
     updateIsFavorite();
@@ -289,7 +292,7 @@ const formatCityName = (ville) => {
                         class="h-6 w-6"
                         :class="
                             isFavorite
-                                ? 'text-red-500 hover:text-white'
+                                ? 'text-red-500'
                                 : 'text-white hover:text-red-500'
                         "
                     />
