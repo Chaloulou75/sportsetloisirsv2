@@ -9,7 +9,7 @@ import StructureCard from "@/Components/Structures/StructureCard.vue";
 import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
 import { MapPinIcon } from "@heroicons/vue/24/outline";
 
-let props = defineProps({
+const props = defineProps({
     structures: Object,
     familles: Object,
     filters: Object,

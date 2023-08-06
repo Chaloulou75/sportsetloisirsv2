@@ -1,6 +1,7 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { ref, nextTick, watch, computed, onMounted } from "vue";
+import { useCookies } from "@vueuse/integrations/useCookies";
 import { BookmarkIcon, MapPinIcon } from "@heroicons/vue/24/outline";
 import { HeartIcon } from "@heroicons/vue/24/solid";
 
@@ -12,6 +13,65 @@ const props = defineProps({
         type: String,
         default: null,
     },
+});
+
+const cookies = useCookies(["favoriteStructures"]);
+const favoriteStructures = ref(cookies.get("favoriteStructures") || []);
+const isFavorite = ref(false);
+
+const toggleFavorite = (structureId) => {
+    if (!props.structure) {
+        return;
+    }
+    const cookieValue = cookies.get("favoriteStructures");
+    // Convert the cookie value to an array
+    const favoriteStructuresArray = cookieValue
+        ? String(cookieValue).split(",")
+        : [];
+    // Ensure that structureId is always an array
+    if (!Array.isArray(structureId)) {
+        structureId = [structureId];
+    }
+    // Toggle each structureId
+    structureId.forEach((id) => {
+        const index = favoriteStructuresArray.indexOf(String(id));
+        if (index !== -1) {
+            favoriteStructuresArray.splice(index, 1); // Remove the activity ID from favorites
+        } else {
+            favoriteStructuresArray.push(String(id)); // Add the activity ID to favorites
+        }
+    });
+
+    const updatedCookieValue = JSON.stringify(favoriteStructuresArray);
+    cookies.set("favoriteStructures", updatedCookieValue, {
+        remove: "2d",
+    });
+    favoriteStructures.value = favoriteStructuresArray;
+    updateIsFavorite();
+};
+
+watch(
+    () => props.structure,
+    async (newStructure) => {
+        if (newStructure) {
+            await nextTick();
+            updateIsFavorite();
+        }
+    }
+);
+
+const updateIsFavorite = async () => {
+    await nextTick();
+    if (!props.structure) {
+        return;
+    }
+    const structureId = String(props.structure.id);
+    const favoriteStructureIds = Object.values(favoriteStructures.value);
+    isFavorite.value = favoriteStructureIds.includes(structureId);
+};
+
+onMounted(() => {
+    updateIsFavorite();
 });
 
 const getUniqueActivitesDiscipline = (activites) => {
@@ -215,19 +275,38 @@ const formatCityName = (ville) => {
         </Link>
     </template>
     <template v-else>
-        <Link
-            :href="route('structures.show', structure.slug)"
-            :active="route().current('structures.show', structure.slug)"
+        <div
             class="relative block rounded-lg shadow-sm shadow-indigo-200 hover:shadow-xl md:px-0"
         >
-            <HeartIcon class="absolute right-2 top-2 h-6 w-6 text-white" />
-            <img
-                alt="Home"
-                src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                class="h-56 w-full rounded-md bg-opacity-75 object-cover"
-            />
+            <div class="relative">
+                <!-- Button (positioned on top right) -->
+                <button
+                    class="absolute right-2 top-2 bg-transparent"
+                    type="button"
+                    @click="() => toggleFavorite(structure.id)"
+                >
+                    <HeartIcon
+                        class="h-6 w-6"
+                        :class="
+                            isFavorite
+                                ? 'text-red-500 hover:text-white'
+                                : 'text-white hover:text-red-500'
+                        "
+                    />
+                </button>
 
-            <div class="mt-2 p-3">
+                <!-- Image -->
+                <img
+                    alt="Home"
+                    src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                    class="h-56 w-full rounded-md bg-opacity-75 object-cover"
+                />
+            </div>
+
+            <Link
+                :href="route('structures.show', structure.slug)"
+                class="mt-2 p-3"
+            >
                 <dl class="flex flex-col">
                     <p
                         class="text-sm font-medium uppercase tracking-widest text-pink-500"
@@ -363,7 +442,7 @@ const formatCityName = (ville) => {
                         </div>
                     </div>
                 </dl>
-            </div>
-        </Link>
+            </Link>
+        </div>
     </template>
 </template>

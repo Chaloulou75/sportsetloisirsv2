@@ -8,12 +8,14 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\FamilleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActiviteController;
+use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\DepartementController;
 use App\Http\Controllers\CityDisciplineController;
 use App\Http\Controllers\StructureTarifController;
 use App\Http\Controllers\StructurePlanningController;
+use App\Http\Controllers\ProductReservationController;
 use App\Http\Controllers\StructureCategorieController;
 use App\Http\Controllers\StructureDisciplineController;
 use App\Http\Controllers\DepartementDisciplineController;
@@ -23,7 +25,6 @@ use App\Http\Controllers\CityDisciplineStructuretypeController;
 use App\Http\Controllers\DepartementDisciplineCategorieController;
 use App\Http\Controllers\CityDisciplineCategorieStructureController;
 use App\Http\Controllers\DepartementDisciplineStructuretypeController;
-use App\Http\Controllers\ProductReservationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,10 @@ Route::get('/mentions', function () {
 Route::get('/faq', function () {
     return Inertia::render('Faq/Index');
 })->name('faq.index');
+
+Route::resource('favoris', FavoritesController::class)->only([
+    'index'
+]);
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -119,7 +124,6 @@ Route::resource('villes', CityController::class, [
 ])->only([
     'index', 'show'
 ]);
-
 
 Route::resource('product_reservations', ProductReservationController::class)->only([
     'store'
