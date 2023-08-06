@@ -48,8 +48,7 @@ const toggleFavorite = (activityId) => {
         }
     });
 
-    // Convert the array back to a comma-separated string and store it in the cookie
-    const updatedCookieValue = favoriteActivitiesArray.join(",");
+    const updatedCookieValue = JSON.stringify(favoriteActivitiesArray);
     cookies.set("favoriteActivities", updatedCookieValue, {
         remove: "2d",
     });
@@ -93,10 +92,6 @@ watch(
     }
 );
 
-onMounted(() => {
-    updateIsFavorite(props.activite.value);
-});
-
 const formatCurrency = (value) => {
     // Remove the non-numeric characters from the currency value
     const numericValue = Number(value.replace(/[^0-9.-]+/g, ""));
@@ -125,6 +120,7 @@ const formatCityName = (ville) => {
         <div
             class="relative block rounded-lg shadow-sm shadow-indigo-200 hover:shadow-xl md:px-0"
         >
+            <p>Is Favorite: {{ isFavorite }}</p>
             <button
                 class=""
                 type="button"
