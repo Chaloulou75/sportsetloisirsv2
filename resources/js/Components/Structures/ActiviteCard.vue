@@ -101,7 +101,7 @@ const formatCityName = (ville) => {
 <template>
     <template v-if="link">
         <div
-            class="block rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl md:px-0"
+            class="block rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:shadow-2xl md:px-0 md:hover:scale-105"
         >
             <div class="relative">
                 <!-- Button (positioned on top right) -->

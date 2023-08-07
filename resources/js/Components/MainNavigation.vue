@@ -93,6 +93,20 @@ const showingNavigationDropdown = ref(false);
 
                             <template #content>
                                 <BreezeDropdownLink
+                                    :href="route('favoris.index')"
+                                    class="flex items-center"
+                                >
+                                    Mes favoris
+                                    <HeartIcon
+                                        class="ml-2 h-4 w-4 text-red-500"
+                                    />
+                                </BreezeDropdownLink>
+                                <BreezeDropdownLink
+                                    :href="route('profile.edit')"
+                                >
+                                    Mon profil
+                                </BreezeDropdownLink>
+                                <BreezeDropdownLink
                                     v-if="
                                         $page.props.auth.user &&
                                         $page.props.auth.user.structures
@@ -119,11 +133,7 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Inscrire une structure
                                 </BreezeDropdownLink>
-                                <BreezeDropdownLink
-                                    :href="route('profile.edit')"
-                                >
-                                    Mon profil
-                                </BreezeDropdownLink>
+
                                 <BreezeDropdownLink
                                     :href="route('logout')"
                                     method="post"
@@ -256,6 +266,12 @@ const showingNavigationDropdown = ref(false);
                     :active="route().current('structures.index')"
                 >
                     Structures
+                </BreezeResponsiveNavLink>
+                <BreezeResponsiveNavLink
+                    :href="route('favoris.index')"
+                    :active="route().current('favoris.index')"
+                >
+                    Mes Favoris
                 </BreezeResponsiveNavLink>
                 <BreezeResponsiveNavLink
                     v-if="

@@ -35,24 +35,40 @@ const selectDiscipline = (discipline) => {
 };
 </script>
 <template>
-    <div class="flex items-center justify-start">
-        <div class="relative">
+    <div class="flex w-full items-center justify-start md:w-auto">
+        <div class="relative w-full md:w-auto">
             <label for="search" class="text-lg font-medium text-gray-700">
-                Rechercher une discipline: <span v-if="selectedDiscipline" class="text-base font-semibold text-blue-700">{{
-                    selectedDiscipline.name
-                    }}</span>
+                Rechercher une discipline:
+                <span
+                    v-if="selectedDiscipline"
+                    class="text-base font-semibold text-blue-700"
+                    >{{ selectedDiscipline.name }}</span
+                >
             </label>
-            <input type="text" id="search" v-model="searchTerm" placeholder="rugby, randonnées..."
-                class="mb-0.5 w-full rounded border border-gray-300 p-3 placeholder-gray-400 placeholder-opacity-50 sm:text-sm" />
+            <input
+                type="text"
+                id="search"
+                v-model="searchTerm"
+                placeholder="rugby, randonnées..."
+                class="mb-0.5 w-full rounded border border-gray-300 p-3 placeholder-gray-400 placeholder-opacity-50 sm:text-sm"
+            />
 
-            <ul v-if="searchDisciplines.length"
-                class="absolute z-10 w-full space-y-1 rounded border border-gray-300 bg-white px-4 py-2">
-                <li class="border-b border-gray-200 px-1 pb-2 pt-1 text-sm font-medium text-gray-700">
+            <ul
+                v-if="searchDisciplines.length"
+                class="absolute z-10 w-full space-y-1 rounded border border-gray-300 bg-white px-4 py-2"
+            >
+                <li
+                    class="border-b border-gray-200 px-1 pb-2 pt-1 text-sm font-medium text-gray-700"
+                >
                     liste de {{ searchDisciplines.length }} de
                     {{ disciplines.length }} resultats
                 </li>
-                <li v-for="discipline in searchDisciplines" :key="discipline.id" @click="selectDiscipline(discipline)"
-                    class="cursor-pointer p-1 hover:bg-blue-200">
+                <li
+                    v-for="discipline in searchDisciplines"
+                    :key="discipline.id"
+                    @click="selectDiscipline(discipline)"
+                    class="cursor-pointer p-1 hover:bg-blue-200"
+                >
                     {{ discipline.name }}
                 </li>
             </ul>

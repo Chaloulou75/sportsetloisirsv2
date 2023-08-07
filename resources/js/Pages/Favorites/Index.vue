@@ -78,10 +78,10 @@ const props = defineProps({
                 </nav>
             </div>
             <p class="py-2 text-base font-medium leading-relaxed text-gray-600">
-                Vous pouvez désormais retrouver la liste de vos activités et
-                structures favorites et grâce aux données enregistrées
-                anonymement dans votre navigateur. Il vous suffit pour conserver
-                ces informations de
+                Vous pouvez retrouver la liste de vos activités et structures
+                favorites grâce aux données enregistrées anonymement dans votre
+                navigateur. Vos favoris seront conservés 48 heures. Pour les
+                conserver sans limite de temps, Il vous suffit de
                 <Link :href="route('register')" class="font-semibold"
                     >créer un compte</Link
                 >
@@ -135,10 +135,31 @@ const props = defineProps({
                     </div>
                 </div>
             </template>
-            <template v-else-if="structures.length > 0 && activites.length > 0">
+            <template
+                v-else-if="!structures.length > 0 && !activites.length > 0"
+            >
                 <div class="mx-auto max-w-full px-2 sm:px-6 lg:px-8">
                     <p class="font-medium text-gray-700">
                         Il n'y a pas encore d' activites dans vos favoris.
+                    </p>
+                </div>
+            </template>
+            <template v-if="!$page.props.auth.user">
+                <div
+                    class="mx-auto my-6 w-full rounded-md border border-gray-200 bg-blue-200 px-2 py-4 md:w-4/5 md:px-6 lg:px-8"
+                >
+                    <p
+                        class="py-2 text-base font-medium leading-relaxed text-gray-800"
+                    >
+                        Vous pouvez retrouver la liste de vos activités et
+                        structures favorites grâce aux données enregistrées
+                        anonymement dans votre navigateur. Vos favoris seront
+                        conservés 48 heures. Pour les conserver sans limite de
+                        temps, Il vous suffit de
+                        <Link :href="route('register')" class="font-semibold"
+                            >créer un compte</Link
+                        >
+                        sur sports-et-loisirs.fr.
                     </p>
                 </div>
             </template>

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Models\LienDisciplineCategorie;
+use App\Models\LienDisciplineCategorieCritere;
 
 class CityDisciplineCategorieStructureController extends Controller
 {
@@ -53,6 +54,17 @@ class CityDisciplineCategorieStructureController extends Controller
                     ->limit(10)
                     ->get();
 
+        // pour disciplines => function ($query) use ($category) {
+        //         $query->where('categorie_id', $category->id);
+        //     }
+        // pour categories => function ($query) use ($discipline) {
+        //     $query->where('discipline_id', $discipline->id);
+        // }
+        // pour activites => function ($query) use ($discipline, $category) {
+        //         $query->where('discipline_id', $discipline->id)
+        //             ->where('categorie_id', $category->id);
+        //     }
+
         $structure = Structure::with([
             'creator:id,name',
             'users:id,name',
@@ -62,25 +74,20 @@ class CityDisciplineCategorieStructureController extends Controller
             'city:id,ville,ville_formatee,code_postal',
             'departement:id,departement,numero',
             'structuretype:id,name,slug',
-            'disciplines' => function ($query) use ($discipline) {
-                $query->where('discipline_id', $discipline->id);
-            },
+            'disciplines',
             'disciplines.discipline:id,name,slug',
-            'categories'=> function ($query) use ($category) {
-                $query->where('categorie_id', $category->id);
-            },
-            'activites' => function ($query) use ($discipline, $category) {
-                $query->where('discipline_id', $discipline->id)
-                    ->where('categorie_id', $category->id);
-            },
-            'activites.discipline',
-            'activites.categorie',
-            'produits',
-            'produits.criteres',
-            'tarifs',
-            'tarifs.tarifType',
-            'tarifs.structureTarifTypeInfos',
-            'plannings',
+            'categories',
+            'activites' ,
+            'activites.discipline:id,name',
+            'activites.categorie:id,categorie_id,discipline_id,nom_categorie_client',
+            'activites.produits',
+            'activites.produits.adresse',
+            'activites.produits.criteres',
+            'activites.produits.criteres.critere',
+            'activites.produits.tarifs',
+            'activites.produits.tarifs.tarifType',
+            'activites.produits.tarifs.structureTarifTypeInfos',
+            'activites.produits.plannings',
         ])->where('slug', $structure)
         ->withCount('disciplines', 'activites', 'produits')
         ->whereHas('activites', function ($query) use ($discipline, $category) {
@@ -89,6 +96,17 @@ class CityDisciplineCategorieStructureController extends Controller
         })
         ->first();
 
+
+        $logoUrl = asset($structure->logo);
+
+        $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
+            $query->orderBy('defaut', 'desc');
+        }])
+        ->whereIn('discipline_id', $structure->disciplines->pluck('discipline_id'))->whereIn('categorie_id', $structure->categories->pluck('categorie_id'))
+        ->get();
+
+        // dd($criteres);
+
         $structure->timestamp = false;
         $structure->increment('view_count');
 
@@ -96,11 +114,13 @@ class CityDisciplineCategorieStructureController extends Controller
             'familles' => $familles,
             'category' => $category,
             'categories' => $categories,
+            'criteres' => $criteres,
             'allStructureTypes' => $allStructureTypes,
             'city'=> $city,
             'citiesAround' => $citiesAround,
             'disciplinesSimilaires' => $disciplinesSimilaires,
             'structure' => $structure,
+            'logoUrl' => $logoUrl,
             'discipline' => $discipline,
         ]);
 

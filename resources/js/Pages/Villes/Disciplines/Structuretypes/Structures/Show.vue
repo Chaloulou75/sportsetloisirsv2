@@ -54,9 +54,8 @@ const uniqueDisciplines = computed(() => {
     return Array.from(disciplinesMap.values());
 });
 
-const selectedDiscipline = ref(props.discipline);
-console.log("Props discipline:", props.discipline);
-const selectedCategory = ref(props.category);
+const selectedDiscipline = ref(props.discipline.value);
+const selectedCategory = ref(props.category.value);
 // const selectedCriteres = ref({});
 
 const handleDisciplineClick = (discipline) => {
@@ -188,8 +187,8 @@ const events = getEvents();
 
 <template>
     <Head
-        :title="`${category.nom_categorie_client} de ${discipline.name} à ${city.ville}. ${structure.name}`"
-        :description="`${category.nom_categorie_client} de ${discipline.name} à ${city.ville}. ${structure.name} vous propose de pratiquer une activité sportive ou de loisirs à ${city.ville}`"
+        :title="`${structuretypeElected.name} de ${discipline.name} à ${city.ville}.`"
+        :description="`${structuretypeElected.name} de ${discipline.name} à ${city.ville}. Choisissez parmi plus de ${city.structures_count} structures pour pratiquer une activité sportive ou de loisirs à ${city.ville}`"
     />
 
     <AppLayout>
@@ -201,7 +200,7 @@ const events = getEvents();
                 <h1
                     class="text-center text-xl font-semibold uppercase leading-tight tracking-widest text-gray-800"
                 >
-                    {{ category.nom_categorie_client }}
+                    {{ structuretypeElected.name }}
                     <span class="lowercase">de</span> {{ discipline.name }}
                     <span class="lowercase">à</span>
                     {{ formatCityName(city.ville) }}
@@ -283,17 +282,18 @@ const events = getEvents();
                                 preserve-scroll
                                 :href="
                                     route(
-                                        'villes.disciplines.categories.show',
+                                        'villes.disciplines.structuretypes.show',
                                         {
                                             city: city.id,
                                             discipline: discipline.slug,
-                                            category: category.id,
+                                            structuretype:
+                                                structuretypeElected.id,
                                         }
                                     )
                                 "
                                 class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                             >
-                                {{ category.nom_categorie_client }}
+                                {{ structuretypeElected.name }}
                             </Link>
                         </li>
                     </ol>
@@ -302,7 +302,7 @@ const events = getEvents();
 
             <p class="py-2 text-base font-medium leading-tight text-gray-700">
                 <span class="font-semibold text-gray-800"
-                    >{{ category.nom_categorie_client }}
+                    >{{ structuretypeElected.name }}
                 </span>
                 de
                 <span class="font-semibold text-gray-800"
@@ -567,8 +567,7 @@ const events = getEvents();
                                     :class="{
                                         'rounded border border-gray-100 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500': true,
                                         'border-gray-100 bg-indigo-500 text-white':
-                                            selectedDiscipline.id ===
-                                            discipline.id,
+                                            selectedDiscipline === discipline,
                                     }"
                                 >
                                     {{ discipline.name }}
@@ -598,8 +597,7 @@ const events = getEvents();
                                     :class="{
                                         'rounded border border-gray-100 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500': true,
                                         'border-gray-100 bg-indigo-500 text-white':
-                                            selectedCategory.id ===
-                                            categorie.id,
+                                            selectedCategory === categorie,
                                     }"
                                 >
                                     {{ categorie.nom_categorie_client }}
@@ -805,8 +803,3 @@ const events = getEvents();
         </template>
     </AppLayout>
 </template>
-<style>
-.course {
-    @apply bg-blue-400 text-white;
-}
-</style>

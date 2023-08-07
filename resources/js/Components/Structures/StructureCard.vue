@@ -125,7 +125,7 @@ const formatCityName = (ville) => {
 <template>
     <template v-if="link">
         <div
-            class="block rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl md:px-0"
+            class="block rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:shadow-2xl md:px-0 md:hover:scale-105"
         >
             <div class="relative">
                 <!-- Button (positioned on top right) -->
@@ -189,20 +189,17 @@ const formatCityName = (ville) => {
                     <div class="py-1.5">
                         <dt class="sr-only">tarif</dt>
 
-                        <span
+                        <div
                             v-for="(tarif, index) in structure.tarifs"
                             :key="tarif.id"
                         >
-                            <dd class="text-sm text-gray-500">
+                            <p class="text-sm text-gray-500">
                                 {{ tarif.tarif_type.type }}:
                                 <span class="font-semibold">{{
                                     formatCurrency(tarif.amount)
                                 }}</span>
-                            </dd>
-                            <span v-if="index < structure.tarifs.length - 1">
-                                |
-                            </span>
-                        </span>
+                            </p>
+                        </div>
                     </div>
 
                     <div class="flex items-center py-1.5">
