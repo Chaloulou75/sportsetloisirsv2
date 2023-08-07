@@ -15,7 +15,7 @@ const props = defineProps({
 </script>
 <template>
     <Head
-        title="Favoris"
+        title="Mes Favoris"
         :description="'Vos structures et activités favorites.'"
     />
     <AppLayout>
@@ -27,7 +27,7 @@ const props = defineProps({
                 <h1
                     class="text-xl font-semibold leading-tight tracking-widest text-gray-800"
                 >
-                    Vos favoris
+                    Vos Favoris
                 </h1>
                 <nav aria-label="Breadcrumb" class="flex">
                     <ol
@@ -78,49 +78,25 @@ const props = defineProps({
                 </nav>
             </div>
             <p class="py-2 text-base font-medium leading-relaxed text-gray-600">
-                Retrouvez vos activités favorites ici!
+                Vous pouvez désormais retrouver la liste de vos activités et
+                structures favorites et grâce aux données enregistrées
+                anonymement dans votre navigateur. Il vous suffit pour conserver
+                ces informations de
+                <Link :href="route('register')" class="font-semibold"
+                    >créer un compte</Link
+                >
+                sur sports-et-loisirs.fr.
             </p>
         </template>
 
-        <div class="py-12">
-            <template v-if="structures.length > 0">
-                <h2
-                    class="my-8 w-full text-center text-xl font-semibold text-slate-800"
-                >
-                    Vos structures favorites:
-                </h2>
-                <div
-                    class="mx-auto flex max-w-full flex-col px-2 sm:px-6 md:flex-row md:space-x-4 lg:px-8"
-                >
-                    <div
-                        class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-3"
-                    >
-                        <StructureCard
-                            v-for="(structure, index) in structures"
-                            :key="structure.id"
-                            :index="index"
-                            :structure="structure"
-                        />
-                    </div>
-                </div>
-            </template>
-            <template v-else>
-                <div class="mx-auto max-w-full px-2 sm:px-6 lg:px-8">
-                    <p class="font-medium text-gray-700">
-                        Il n'y a pas encore de structures ou activités dans vos
-                        favoris.
-                    </p>
-                </div>
-            </template>
+        <div class="py-6">
             <template v-if="activites.length > 0">
                 <h2
-                    class="my-8 w-full text-center text-xl font-semibold text-slate-800"
+                    class="my-8 w-full text-center text-2xl font-semibold text-slate-800"
                 >
                     Vos activités favorites:
                 </h2>
-                <div
-                    class="mx-auto flex w-full flex-col justify-center px-2 sm:px-6 md:flex-row md:space-x-4 lg:px-8"
-                >
+                <div class="mx-auto w-full px-2 sm:px-6 lg:px-8">
                     <div
                         class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-3"
                     >
@@ -139,7 +115,27 @@ const props = defineProps({
                     </div>
                 </div>
             </template>
-            <template v-else>
+
+            <template v-if="structures.length > 0">
+                <h2
+                    class="my-8 w-full text-center text-2xl font-semibold text-slate-800"
+                >
+                    Vos structures favorites:
+                </h2>
+                <div class="mx-auto w-full px-2 sm:px-6 lg:px-8">
+                    <div
+                        class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-3"
+                    >
+                        <StructureCard
+                            v-for="(structure, index) in structures"
+                            :key="structure.id"
+                            :index="index"
+                            :structure="structure"
+                        />
+                    </div>
+                </div>
+            </template>
+            <template v-else-if="structures.length > 0 && activites.length > 0">
                 <div class="mx-auto max-w-full px-2 sm:px-6 lg:px-8">
                     <p class="font-medium text-gray-700">
                         Il n'y a pas encore d' activites dans vos favoris.

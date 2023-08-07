@@ -139,11 +139,28 @@ const showingNavigationDropdown = ref(false);
                             class="hidden h-full space-x-4 lg:-my-px lg:ml-10 lg:flex"
                         >
                             <BreezeNavLink
+                                class="has-tooltip"
                                 :href="route('favoris.index')"
                                 :active="route().current('favoris.index')"
                             >
+                                <span
+                                    class="tooltip top-16 rounded bg-gray-200 p-2 text-gray-800 shadow-lg md:mr-5"
+                                    >Vous pouvez retrouver la liste de vos
+                                    activités et structures favorites grâce aux
+                                    données enregistrées anonymement dans votre
+                                    navigateur. Il vous suffit, pour conserver
+                                    ces informations, de
+                                    <Link
+                                        :href="route('register')"
+                                        class="font-semibold"
+                                        >créer un compte</Link
+                                    >
+                                    sur sports-et-loisirs.fr.</span
+                                >
+
                                 <HeartIcon class="h-8 w-8 text-red-500" />
                             </BreezeNavLink>
+
                             <BreezeNavLink
                                 :href="route('login')"
                                 :active="route().current('login')"

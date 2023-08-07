@@ -124,19 +124,36 @@ const formatCityName = (ville) => {
 
 <template>
     <template v-if="link">
-        <Link
-            :href="link"
-            class="relative block rounded-lg shadow-sm shadow-indigo-200 hover:shadow-xl md:px-0"
+        <div
+            class="block rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl md:px-0"
         >
-            <HeartIcon class="absolute right-2 top-2 h-6 w-6 text-white" />
-            <img
-                alt="Home"
-                src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                class="h-56 w-full rounded-md bg-opacity-75 object-cover"
-            />
+            <div class="relative">
+                <!-- Button (positioned on top right) -->
+                <button
+                    class="absolute right-2 top-2 bg-transparent"
+                    type="button"
+                    @click="() => toggleFavorite(structure.id)"
+                >
+                    <HeartIcon
+                        class="h-6 w-6"
+                        :class="
+                            isFavorite
+                                ? 'text-red-500'
+                                : 'text-white hover:text-red-500'
+                        "
+                    />
+                </button>
 
-            <div class="mt-2 p-3">
-                <dl class="flex flex-col">
+                <!-- Image -->
+                <img
+                    alt="Home"
+                    src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                    class="h-56 w-full rounded-md object-cover"
+                />
+            </div>
+
+            <Link :href="link" class="">
+                <dl class="mt-2 flex flex-col px-3">
                     <p
                         class="text-sm font-medium uppercase tracking-widest text-pink-500"
                     >
@@ -211,7 +228,10 @@ const formatCityName = (ville) => {
                     <div
                         class="mt-auto flex items-center justify-around gap-1 py-1.5 text-xs"
                     >
-                        <div class="inline-flex shrink-0 items-center">
+                        <div
+                            v-if="structure.disciplines_count"
+                            class="inline-flex shrink-0 items-center"
+                        >
                             <svg
                                 class="mr-1 h-4 w-4 text-indigo-700"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -235,7 +255,10 @@ const formatCityName = (ville) => {
                             </p>
                         </div>
 
-                        <div class="inline-flex shrink-0 items-center">
+                        <div
+                            v-if="structure.activites_count"
+                            class="inline-flex shrink-0 items-center"
+                        >
                             <svg
                                 class="mr-1 h-4 w-4 text-indigo-700"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -260,7 +283,10 @@ const formatCityName = (ville) => {
                             </p>
                         </div>
 
-                        <div class="inline-flex shrink-0 items-center">
+                        <div
+                            v-if="structure.produits_count"
+                            class="inline-flex shrink-0 items-center"
+                        >
                             <BookmarkIcon
                                 class="mr-1 h-4 w-4 text-indigo-700"
                             />
@@ -274,12 +300,12 @@ const formatCityName = (ville) => {
                         </div>
                     </div>
                 </dl>
-            </div>
-        </Link>
+            </Link>
+        </div>
     </template>
     <template v-else>
         <div
-            class="relative block rounded-lg shadow-sm shadow-indigo-200 hover:shadow-xl md:px-0"
+            class="block rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl md:px-0"
         >
             <div class="relative">
                 <!-- Button (positioned on top right) -->
@@ -302,15 +328,12 @@ const formatCityName = (ville) => {
                 <img
                     alt="Home"
                     src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                    class="h-56 w-full rounded-md bg-opacity-75 object-cover"
+                    class="h-56 w-full rounded-md object-cover"
                 />
             </div>
 
-            <Link
-                :href="route('structures.show', structure.slug)"
-                class="mt-2 p-3"
-            >
-                <dl class="flex flex-col">
+            <Link :href="route('structures.show', structure.slug)">
+                <dl class="mt-2 flex flex-col px-3">
                     <p
                         class="text-sm font-medium uppercase tracking-widest text-pink-500"
                     >
@@ -382,7 +405,10 @@ const formatCityName = (ville) => {
                     <div
                         class="mt-auto flex items-center justify-around gap-1 py-1.5 text-xs"
                     >
-                        <div class="inline-flex shrink-0 items-center">
+                        <div
+                            v-if="structure.disciplines_count"
+                            class="inline-flex shrink-0 items-center"
+                        >
                             <svg
                                 class="mr-1 h-4 w-4 text-indigo-700"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -406,7 +432,10 @@ const formatCityName = (ville) => {
                             </p>
                         </div>
 
-                        <div class="inline-flex shrink-0 items-center">
+                        <div
+                            v-if="structure.activites_count"
+                            class="inline-flex shrink-0 items-center"
+                        >
                             <svg
                                 class="mr-1 h-4 w-4 text-indigo-700"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -431,7 +460,10 @@ const formatCityName = (ville) => {
                             </p>
                         </div>
 
-                        <div class="inline-flex shrink-0 items-center">
+                        <div
+                            v-if="structure.produits_count"
+                            class="inline-flex shrink-0 items-center"
+                        >
                             <BookmarkIcon
                                 class="mr-1 h-4 w-4 text-indigo-700"
                             />
