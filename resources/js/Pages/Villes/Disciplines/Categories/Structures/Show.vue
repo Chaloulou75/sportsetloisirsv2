@@ -55,7 +55,6 @@ const uniqueDisciplines = computed(() => {
 });
 
 const selectedDiscipline = ref(props.discipline);
-console.log("Props discipline:", props.discipline);
 const selectedCategory = ref(props.category);
 // const selectedCriteres = ref({});
 

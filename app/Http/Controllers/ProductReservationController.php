@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ReservationAsked;
 use Illuminate\Http\Request;
 use App\Models\StructureTarif;
 use Illuminate\Validation\Rule;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Models\StructurePlanning;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 
 class ProductReservationController extends Controller
@@ -31,12 +33,17 @@ class ProductReservationController extends Controller
         $tarif = StructureTarif::where('id', $request->formule)->first();
         $planning = StructurePlanning::where('id', $request->planning)->first();
 
+        $structure = $produit->structure;
         $email = $produit->structure->email;
+
         $activiteId = $produit->activite->id;
         $activite = StructureActivite::where('id', $activiteId)->first();
-        dd($produit, $planning, $tarif, $email, $activite, $user);
 
-        return Redirect::back()->with('success', "La demande a été envoyée");
+        Mail::to($email)->send(new ReservationAsked($structure, $activite, $produit, $planning, $tarif, $user));
+
+        // dd($produit, $planning, $tarif, $email, $activite, $user);
+
+        return Redirect::back()->with('success', "La demande d'information a été envoyée à la structure");
 
     }
 
