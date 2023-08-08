@@ -792,7 +792,7 @@ const submitReservation = () => {
                                                                     "
                                                                 >
                                                                     <p
-                                                                        class="truncate font-medium"
+                                                                        class="line-clamp-1 w-36 overflow-hidden text-ellipsis"
                                                                     >
                                                                         {{
                                                                             tarif.description

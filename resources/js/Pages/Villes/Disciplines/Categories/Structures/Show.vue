@@ -386,7 +386,9 @@ const events = getEvents();
         </div>
 
         <template v-if="structure">
-            <section class="mx-auto my-4 max-w-full px-0 py-6 sm:px-4 lg:px-8">
+            <section
+                class="mx-auto max-w-full px-0 py-2 sm:px-4 md:my-4 md:py-6 lg:px-8"
+            >
                 <div
                     class="flex flex-col-reverse justify-between rounded-lg bg-white px-4 py-6 shadow md:flex-row md:space-x-6"
                 >
@@ -509,31 +511,16 @@ const events = getEvents();
                     <div class="w-full space-y-12 md:w-2/3 md:pr-10">
                         <div class="relative mb-4 md:mb-6">
                             <p
-                                class="mb-2 text-lg font-medium uppercase tracking-wider text-gray-500"
+                                class="mb-2 text-right text-sm font-medium uppercase tracking-wider text-gray-500 md:text-base"
                             >
                                 {{ structure.structuretype.name }}
                             </p>
-                            <div
-                                class="my-4 flex items-center justify-start space-x-4"
+
+                            <h2
+                                class="text-center text-xl font-semibold text-black sm:text-2xl sm:leading-7 md:text-3xl"
                             >
-                                <img
-                                    v-if="structure.logo"
-                                    alt="img"
-                                    :src="structure.logo"
-                                    class="h-14 w-14 shrink-0 rounded-full object-cover object-center md:h-20 md:w-20"
-                                />
-                                <img
-                                    v-else
-                                    alt="img"
-                                    src="https://via.placeholder.com/360x360.png/151f32?text=LOGO"
-                                    class="h-20 w-20 shrink-0 rounded-full object-cover object-center"
-                                />
-                                <h2
-                                    class="inline-block text-xl font-semibold text-black sm:text-2xl sm:leading-7 md:text-3xl"
-                                >
-                                    {{ structure.name }} - {{ discipline.name }}
-                                </h2>
-                            </div>
+                                {{ structure.name }}
+                            </h2>
                         </div>
                         <!-- Resume -->
                         <div>

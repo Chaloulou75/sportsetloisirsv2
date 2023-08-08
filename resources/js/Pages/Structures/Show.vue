@@ -293,9 +293,11 @@ const events = getEvents();
             </div>
         </template>
 
-        <section class="mx-auto my-4 max-w-full px-0 py-6 sm:px-4 lg:px-8">
+        <section
+            class="mx-auto max-w-full px-0 py-2 sm:px-4 md:my-4 md:py-6 lg:px-8"
+        >
             <div
-                class="flex flex-col-reverse justify-between rounded-lg bg-white px-4 py-6 shadow md:flex-row md:space-x-6"
+                class="flex flex-col-reverse justify-between rounded-lg bg-white px-4 shadow md:flex-row md:space-x-6 md:py-6"
             >
                 <div class="w-full space-y-12 md:w-1/3">
                     <div class="my-4 flex items-center justify-center md:mb-8">
@@ -407,26 +409,23 @@ const events = getEvents();
                     <!-- titre -->
                     <div class="relative mb-4 md:mb-6">
                         <p
-                            class="mb-2 text-lg font-medium uppercase tracking-wider text-gray-500"
+                            class="mb-2 text-right text-sm font-medium uppercase tracking-wider text-gray-500 md:text-base"
                         >
                             {{ structure.structuretype.name }}
                         </p>
-                        <div
-                            class="my-4 flex items-center justify-start space-x-4"
+                        <h2
+                            class="text-center text-xl font-semibold text-black sm:text-2xl sm:leading-7 md:text-3xl"
                         >
-                            <div v-if="structure.logo">
+                            {{ structure.name }}
+                        </h2>
+
+                        <!-- <div v-if="structure.logo">
                                 <img
                                     alt="img"
                                     :src="structure.logo"
                                     class="h-14 w-14 shrink-0 rounded-full object-cover object-center md:h-20 md:w-20"
                                 />
-                            </div>
-                            <h2
-                                class="inline-block text-xl font-semibold text-black sm:text-2xl sm:leading-7 md:text-3xl"
-                            >
-                                {{ structure.name }}
-                            </h2>
-                        </div>
+                            </div> -->
                     </div>
                     <!-- Resume -->
                     <div>
