@@ -2,6 +2,7 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import { ref, onMounted, computed, defineAsyncComponent } from "vue";
+import InscriptionNavigation from "@/Components/Navigation/InscriptionNavigation.vue";
 
 const AddressForm = defineAsyncComponent(() =>
     import("@/Components/Google/AddressForm.vue")
@@ -112,46 +113,20 @@ function submit() {
 
     <AppLayout>
         <template #header>
-            <div
-                class="flex flex-col items-start justify-between md:flex-row md:items-center"
+            <h1
+                class="w-full py-6 text-center text-xl font-semibold leading-tight text-gray-800"
             >
-                <div>
-                    <h2
-                        class="text-xl font-semibold leading-tight text-gray-800"
-                    >
-                        Editer votre structure
-                        <span class="text-blue-700">{{ structure.name }}</span>
-                    </h2>
-                </div>
-                <div class="mt-4 w-full md:mt-0 md:w-1/4">
-                    <div
-                        class="flex flex-col justify-between space-y-4 md:ml-4 md:space-y-6"
-                    >
-                        <Link
-                            :href="
-                                route('structures.activites.index', structure)
-                            "
-                            v-if="can.update"
-                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
-                        >
-                            Ajouter des activités</Link
-                        >
-                        <Link
-                            :href="route('structures.show', structure.slug)"
-                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
-                        >
-                            Voir la structure</Link
-                        >
-                    </div>
-                </div>
-            </div>
+                Editer votre structure
+                <span class="text-blue-700">{{ structure.name }}</span>
+            </h1>
         </template>
 
-        <div class="py-12">
-            <div class="mx-auto max-w-full sm:px-6 lg:px-8 xl:max-w-full">
-                <div>
+        <div class="flex space-x-6 py-8">
+            <InscriptionNavigation :can="can" :structure="structure" />
+            <div class="flex-1">
+                <div class="mx-auto max-w-full lg:px-4">
                     <div class="md:grid md:grid-cols-3 md:gap-6">
-                        <div class="md:col-span-1">
+                        <div class="md:col-span-3">
                             <!--  -->
                             <div class="px-4 sm:px-0">
                                 <h3
@@ -166,14 +141,14 @@ function submit() {
                                 </p>
                             </div>
                         </div>
-                        <div class="mt-5 md:col-span-2 md:mt-0">
+                        <div class="mt-5 md:col-span-3 md:mt-0">
                             <form
                                 @submit.prevent="submit"
                                 enctype="multipart/form-data"
                                 autocomplete="off"
                             >
                                 <div
-                                    class="shadow-lg shadow-sky-700 sm:overflow-hidden sm:rounded-md"
+                                    class="shadow sm:overflow-hidden sm:rounded-md"
                                 >
                                     <div
                                         class="space-y-6 bg-white px-4 py-5 sm:p-6"

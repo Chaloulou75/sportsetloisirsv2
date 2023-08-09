@@ -25,7 +25,7 @@ watch(
         >
             <div
                 v-if="$page.props.flash.success && show"
-                class="mb-2 flex max-w-lg items-center justify-between rounded-lg bg-blue-700 text-white"
+                class="mb-2 flex max-w-lg items-center justify-between rounded-lg bg-green-600 text-white"
             >
                 <div class="flex items-center">
                     <svg

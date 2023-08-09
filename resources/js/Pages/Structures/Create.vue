@@ -2,6 +2,7 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import { ref, onMounted, watch, defineAsyncComponent } from "vue";
+import InscriptionNavigation from "@/Components/Navigation/InscriptionNavigation.vue";
 
 const AddressForm = defineAsyncComponent(() =>
     import("@/Components/Google/AddressForm.vue")
@@ -91,16 +92,19 @@ function submit() {
 
     <AppLayout>
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
+            <h1
+                class="w-full py-6 text-center text-xl font-semibold leading-tight text-gray-800"
+            >
                 Inscription de votre structure
-            </h2>
+            </h1>
         </template>
 
-        <div class="py-12">
-            <div class="mx-auto max-w-full sm:px-6 lg:px-8 xl:max-w-full">
-                <div>
+        <div class="flex space-x-6 py-8">
+            <InscriptionNavigation />
+            <div class="flex-1">
+                <div class="mx-auto max-w-full lg:px-4">
                     <div class="md:grid md:grid-cols-3 md:gap-6">
-                        <div class="md:col-span-1">
+                        <div class="md:col-span-3">
                             <!--  -->
                             <div class="px-4 sm:px-0">
                                 <h3
@@ -116,14 +120,14 @@ function submit() {
                                 </p>
                             </div>
                         </div>
-                        <div class="mt-5 md:col-span-2 md:mt-0">
+                        <div class="mt-5 md:col-span-3 md:mt-0">
                             <form
                                 @submit.prevent="submit"
                                 enctype="multipart/form-data"
                                 autocomplete="off"
                             >
                                 <div
-                                    class="shadow-lg shadow-sky-700 sm:overflow-hidden sm:rounded-md"
+                                    class="shadow sm:overflow-hidden sm:rounded-md"
                                 >
                                     <div
                                         class="space-y-6 bg-white px-4 py-5 sm:p-6"
@@ -268,15 +272,15 @@ function submit() {
                                                                 </div>
 
                                                                 <!-- <div
-                                                                v-if="
-                                                                    errors.attributs
-                                                                "
-                                                                class="mt-2 text-xs text-red-500"
-                                                            >
-                                                                {{
-                                                                    errors.attributs
-                                                                }}
-                                                            </div> -->
+                                                                    v-if="
+                                                                        errors.attributs
+                                                                    "
+                                                                    class="mt-2 text-xs text-red-500"
+                                                                >
+                                                                    {{
+                                                                        errors.attributs
+                                                                    }}
+                                                                </div> -->
                                                             </div>
                                                             <!-- select -->
                                                             <div
@@ -334,15 +338,15 @@ function submit() {
                                                                 </div>
 
                                                                 <!-- <div
-                                                                v-if="
-                                                                    errors.attributs
-                                                                "
-                                                                class="mt-2 text-xs text-red-500"
-                                                            >
-                                                                {{
-                                                                    errors.attributs
-                                                                }}
-                                                            </div> -->
+                                                                    v-if="
+                                                                        errors.attributs
+                                                                    "
+                                                                    class="mt-2 text-xs text-red-500"
+                                                                >
+                                                                    {{
+                                                                        errors.attributs
+                                                                    }}
+                                                                </div> -->
                                                             </div>
                                                             <!-- checkbox -->
                                                             <div
@@ -379,15 +383,15 @@ function submit() {
                                                                     >
                                                                 </div>
                                                                 <!-- <div
-                                                                v-if="
-                                                                    errors.attributs
-                                                                "
-                                                                class="mt-2 text-xs text-red-500"
-                                                            >
-                                                                {{
-                                                                    errors.attributs
-                                                                }}
-                                                            </div> -->
+                                                                    v-if="
+                                                                        errors.attributs
+                                                                    "
+                                                                    class="mt-2 text-xs text-red-500"
+                                                                >
+                                                                    {{
+                                                                        errors.attributs
+                                                                    }}
+                                                                </div> -->
                                                             </div>
                                                             <!-- radio -->
                                                             <div
@@ -449,15 +453,15 @@ function submit() {
                                                                     </div>
                                                                 </div>
                                                                 <!-- <div
-                                                                v-if="
-                                                                    errors.attributs
-                                                                "
-                                                                class="mt-2 text-xs text-red-500"
-                                                            >
-                                                                {{
-                                                                    errors.attributs
-                                                                }}
-                                                            </div> -->
+                                                                    v-if="
+                                                                        errors.attributs
+                                                                    "
+                                                                    class="mt-2 text-xs text-red-500"
+                                                                >
+                                                                    {{
+                                                                        errors.attributs
+                                                                    }}
+                                                                </div> -->
                                                             </div>
                                                         </div>
                                                     </div>
@@ -653,11 +657,11 @@ function submit() {
                             </form>
                         </div>
                     </div>
-                </div>
 
-                <div class="hidden sm:block" aria-hidden="true">
-                    <div class="py-5">
-                        <div class="border-t border-gray-200" />
+                    <div class="hidden sm:block" aria-hidden="true">
+                        <div class="py-5">
+                            <div class="border-t border-gray-200" />
+                        </div>
                     </div>
                 </div>
             </div>
