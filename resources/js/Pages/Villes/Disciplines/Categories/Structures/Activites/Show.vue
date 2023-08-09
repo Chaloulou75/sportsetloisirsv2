@@ -222,7 +222,7 @@ const submitReservation = () => {
                         >({{ city.code_postal }})
                     </span>
                 </h1>
-                <nav aria-label="Breadcrumb" class="flex">
+                <nav aria-label="Breadcrumb" class="hidden md:flex">
                     <ol
                         class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600"
                     >

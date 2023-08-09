@@ -7,8 +7,10 @@ use Inertia\Inertia;
 use App\Models\Famille;
 use App\Models\Structure;
 use Illuminate\Http\Request;
+use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Models\StructureActivite;
+use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
 
 class CityDisciplineStructuretypeStructureActiviteController extends Controller
@@ -29,13 +31,26 @@ class CityDisciplineStructuretypeStructureActiviteController extends Controller
                 ->select(['id', 'name', 'slug'])
                 ->get();
 
+        $city = City::with(['structures'])->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
+                                    ->where('id', $city->id)
+                                    ->withCount('structures')
+                                    ->first();
+
         $discipline = ListDiscipline::where('slug', $discipline)
                                     ->select(['id', 'name', 'slug', 'view_count'])
                                     ->first();
 
         $disciplinesSimilaires = $discipline->disciplinesSimilaires()->select(['famille', 'name', 'slug'])->whereHas('structures')->get();
 
-        $structure = Structure::with([
+        $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
+
+        $categories = LienDisciplineCategorie::where('discipline_id', $discipline->id)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
+
+        $allStructureTypes = Structuretype::whereHas('structures')->select(['id', 'name', 'slug'])->get();
+
+        $structure = Structure::whereHas('disciplines', function ($query) use ($discipline) {
+            $query->where('discipline_id', $discipline->id);
+        })->where('structuretype_id', $structuretypeElected->id)->with([
             'famille:id,name',
             'creator:id,name',
             'users:id,name',
@@ -61,7 +76,7 @@ class CityDisciplineStructuretypeStructureActiviteController extends Controller
             'activites.produits.plannings',
             ])
             ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
-            ->where('slug', $structure->slug)
+            ->where('slug', $structure)
             ->first();
 
         $logoUrl = asset($structure->logo);
@@ -69,7 +84,11 @@ class CityDisciplineStructuretypeStructureActiviteController extends Controller
         $activite = StructureActivite::with([
             'discipline:id,name',
             'categorie:id,categorie_id,discipline_id,nom_categorie_client',
-            'produits',
+            'produits' => function ($query) use ($city) {
+                $query->whereHas('adresse', function ($query) use ($city) {
+                    $query->where('city_id', $city->id);
+                });
+            },
             'produits.adresse',
             'produits.criteres',
             'produits.criteres.critere',
@@ -103,13 +122,32 @@ class CityDisciplineStructuretypeStructureActiviteController extends Controller
             ->take(3)
             ->get();
 
+
+        $citiesAround = City::with('structures')
+                            ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
+                            ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
+                            ->whereHas('structures')
+                            ->where('id', '!=', $city->id)
+                            ->havingRaw('distance <= ?', [$city->tolerance_rayon])
+                            ->orderBy('distance', 'ASC')
+                            ->limit(10)
+                            ->get();
+
+
         return Inertia::render('Villes/Disciplines/Structuretypes/Structures/Activites/Show', [
-                    'structure' => $structure,
                     'familles' => $familles,
+                    'city'=> $city,
+                    'discipline' => $discipline,
+                    'structuretypeElected' => $structuretypeElected,
+                    'allStructureTypes' => $allStructureTypes,
+                    'structure' => $structure,
                     'logoUrl' => $logoUrl,
                     'activite' => $activite,
                     'criteres' => $criteres,
-                    'activiteSimilaires' => $activiteSimilaires
+                    'activiteSimilaires' => $activiteSimilaires,
+                    'categories' => $categories,
+                    'citiesAround' => $citiesAround,
+                    'disciplinesSimilaires' => $disciplinesSimilaires,
         ]);
     }
 }

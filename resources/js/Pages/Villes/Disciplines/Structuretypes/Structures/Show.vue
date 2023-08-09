@@ -54,7 +54,7 @@ const uniqueDisciplines = computed(() => {
     return Array.from(disciplinesMap.values());
 });
 
-const selectedDiscipline = ref(props.discipline.value);
+const selectedDiscipline = ref(props.discipline);
 const selectedCategory = ref();
 // const selectedCriteres = ref({});
 
@@ -208,7 +208,7 @@ const events = getEvents();
                         >({{ city.code_postal }})
                     </span>
                 </h1>
-                <nav aria-label="Breadcrumb" class="flex">
+                <nav aria-label="Breadcrumb" class="hidden md:flex">
                     <ol
                         class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600"
                     >
@@ -294,6 +294,31 @@ const events = getEvents();
                                 class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                             >
                                 {{ structuretypeElected.name }}
+                            </Link>
+                        </li>
+                        <li class="relative flex items-center">
+                            <span
+                                class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
+                            >
+                            </span>
+
+                            <Link
+                                preserve-scroll
+                                :href="
+                                    route(
+                                        'villes.disciplines.structuretypes.structures.show',
+                                        {
+                                            city: city.id,
+                                            discipline: discipline.slug,
+                                            structuretype:
+                                                structuretypeElected.id,
+                                            structure: structure.slug,
+                                        }
+                                    )
+                                "
+                                class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                            >
+                                {{ structure.name }}
                             </Link>
                         </li>
                     </ol>
@@ -562,7 +587,8 @@ const events = getEvents();
                                     :class="{
                                         'rounded border border-gray-100 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500': true,
                                         'border-gray-100 bg-indigo-500 text-white':
-                                            selectedDiscipline === discipline,
+                                            selectedDiscipline.id ===
+                                            discipline.id,
                                     }"
                                 >
                                     {{ discipline.name }}
@@ -751,8 +777,13 @@ const events = getEvents();
                                             :activite="activite"
                                             :link="
                                                 route(
-                                                    'structures.activites.show',
+                                                    'villes.disciplines.structuretypes.structures.activites.show',
                                                     {
+                                                        city: city.id,
+                                                        discipline:
+                                                            discipline.slug,
+                                                        structuretype:
+                                                            structuretypeElected.id,
                                                         structure:
                                                             structure.slug,
                                                         activite: activite.id,

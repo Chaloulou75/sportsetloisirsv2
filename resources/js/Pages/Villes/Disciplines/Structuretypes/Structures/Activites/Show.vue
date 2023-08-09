@@ -4,6 +4,8 @@ import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, reactive, computed } from "vue";
 import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
 import ActiviteCard from "@/Components/Structures/ActiviteCard.vue";
+import CitiesAround from "@/Components/Cities/CitiesAround.vue";
+import DisciplinesSimilaires from "@/Components/Disciplines/DisciplinesSimilaires.vue";
 import LeafletMap from "@/Components/LeafletMap.vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
@@ -46,6 +48,14 @@ const props = defineProps({
     activite: Object,
     criteres: Object,
     activiteSimilaires: Object,
+    familles: Object,
+    structuretypeElected: Object,
+    categories: Object,
+    allStructureTypes: Object,
+    city: Object,
+    citiesAround: Object,
+    discipline: Object,
+    disciplinesSimilaires: Object,
 });
 
 const filteredCriteres = computed(() => {
@@ -119,12 +129,16 @@ const formatCurrency = (value) => {
     return value;
 };
 
-function formatDate(dateString) {
+const formatDate = (dateString) => {
     const date = dayjs(dateString);
     return date.format("dddd D MMMM YYYY à H[h]mm");
-}
+};
 
-function formatPhoneNumber(phoneNumber) {
+const formatCityName = (ville) => {
+    return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
+};
+
+const formatPhoneNumber = (phoneNumber) => {
     const cleanPhoneNumber = phoneNumber.replace(/\D/g, "");
     if (cleanPhoneNumber.startsWith("33")) {
         return `+33 ${cleanPhoneNumber.substr(3, 2)} ${cleanPhoneNumber.substr(
@@ -133,7 +147,7 @@ function formatPhoneNumber(phoneNumber) {
         )} ${cleanPhoneNumber.substr(7, 2)} ${cleanPhoneNumber.substr(9, 2)}`;
     }
     return phoneNumber;
-}
+};
 
 const displayPlanning = ref(false);
 
@@ -199,9 +213,16 @@ const submitReservation = () => {
                 <h1
                     class="text-center text-xl font-semibold uppercase leading-tight tracking-widest text-gray-800"
                 >
-                    {{ activite.titre }}
+                    <!-- {{ activite.titre }} -->
+                    {{ structuretypeElected.name }}
+                    <span class="lowercase">de</span> {{ discipline.name }}
+                    <span class="lowercase">à</span>
+                    {{ formatCityName(city.ville) }}
+                    <span class="text-sm text-gray-600"
+                        >({{ city.code_postal }})
+                    </span>
                 </h1>
-                <nav aria-label="Breadcrumb" class="flex">
+                <nav aria-label="Breadcrumb" class="hidden md:flex">
                     <ol
                         class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600"
                     >
@@ -240,7 +261,76 @@ const submitReservation = () => {
 
                             <Link
                                 preserve-scroll
-                                :href="route('structures.show', structure.slug)"
+                                :href="route('villes.show', city.id)"
+                                class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                            >
+                                {{ formatCityName(city.ville) }}
+                            </Link>
+                        </li>
+                        <li class="relative flex items-center">
+                            <span
+                                class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
+                            >
+                            </span>
+
+                            <Link
+                                preserve-scroll
+                                :href="
+                                    route('villes.disciplines.show', {
+                                        city: city.id,
+                                        discipline: discipline.slug,
+                                    })
+                                "
+                                class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                            >
+                                {{ discipline.name }}
+                            </Link>
+                        </li>
+                        <li class="relative flex items-center">
+                            <span
+                                class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
+                            >
+                            </span>
+
+                            <Link
+                                preserve-scroll
+                                :href="
+                                    route(
+                                        'villes.disciplines.structuretypes.show',
+                                        {
+                                            city: city.id,
+                                            discipline: discipline.slug,
+                                            structuretype:
+                                                structuretypeElected.id,
+                                        }
+                                    )
+                                "
+                                class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                            >
+                                {{ structuretypeElected.name }}
+                            </Link>
+                        </li>
+
+                        <li class="relative flex items-center">
+                            <span
+                                class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
+                            >
+                            </span>
+
+                            <Link
+                                preserve-scroll
+                                :href="
+                                    route(
+                                        'villes.disciplines.structuretypes.structures.show',
+                                        {
+                                            city: city.id,
+                                            discipline: discipline.slug,
+                                            structuretype:
+                                                structuretypeElected.id,
+                                            structure: structure.slug,
+                                        }
+                                    )
+                                "
                                 class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                             >
                                 {{ structure.name }}
@@ -255,10 +345,17 @@ const submitReservation = () => {
                             <Link
                                 preserve-scroll
                                 :href="
-                                    route('structures.activites.show', {
-                                        structure: structure.slug,
-                                        activite: activite.id,
-                                    })
+                                    route(
+                                        'villes.disciplines.structuretypes.structures.activites.show',
+                                        {
+                                            city: city.id,
+                                            discipline: discipline.slug,
+                                            structuretype:
+                                                structuretypeElected.id,
+                                            structure: structure.slug,
+                                            activite: activite.id,
+                                        }
+                                    )
                                 "
                                 class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                             >
@@ -270,6 +367,68 @@ const submitReservation = () => {
             </div>
         </template>
 
+        <div class="mx-auto max-w-full px-2 py-4 sm:px-3 lg:px-6">
+            <div class="flex items-center justify-around space-x-4">
+                <div class="my-4 w-full">
+                    <div class="mt-1">
+                        <nav
+                            class="flex w-full flex-col items-stretch justify-between divide-y divide-green-600 rounded-sm border border-gray-300 bg-white/20 px-3 py-2 shadow-md focus:border-indigo-500 focus:outline-none sm:text-base md:flex-row md:items-center md:divide-y-0"
+                        >
+                            <Link
+                                v-for="categorie in categories"
+                                :key="categorie.id"
+                                :href="
+                                    route(
+                                        'villes.disciplines.categories.show',
+                                        {
+                                            city: city.id,
+                                            discipline: discipline.slug,
+                                            category: categorie.id,
+                                        }
+                                    )
+                                "
+                                :class="[
+                                    'w-full px-2 py-3 text-center text-sm font-medium leading-5 text-gray-700 ring-white ring-opacity-10 ring-offset-2 ring-offset-green-200 focus:outline-none focus:ring-2',
+                                    route().current(
+                                        'villes.disciplines.categories.structures.activites.show'
+                                    ) && category.id === categorie.id
+                                        ? 'bg-green-600 text-white'
+                                        : 'text-gray-700 hover:bg-white/50 hover:text-gray-800',
+                                ]"
+                            >
+                                {{ categorie.nom_categorie_client }}
+                            </Link>
+                            <Link
+                                v-for="structureType in allStructureTypes"
+                                :key="structureType.id"
+                                :href="
+                                    route(
+                                        'villes.disciplines.structuretypes.show',
+                                        {
+                                            city: city.id,
+                                            discipline: discipline.slug,
+                                            structuretype: structureType.id,
+                                        }
+                                    )
+                                "
+                                :class="[
+                                    'w-full px-2 py-3 text-center text-sm font-medium leading-5 text-gray-700 ring-white ring-opacity-10 ring-offset-2 ring-offset-green-200 focus:outline-none focus:ring-2',
+                                    route().current(
+                                        'villes.disciplines.structuretypes.structures.activites.show'
+                                    ) &&
+                                    structuretypeElected.id === structureType.id
+                                        ? 'bg-green-600 text-white'
+                                        : 'text-gray-700 hover:bg-white/50 hover:text-gray-800',
+                                ]"
+                            >
+                                {{ structureType.name }}
+                            </Link>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <section class="mx-auto my-4 max-w-full px-0 py-6 sm:px-4 lg:px-8">
             <div
                 class="flex flex-col-reverse justify-between rounded-lg bg-white px-4 py-6 text-slate-600 shadow md:flex-row md:items-start md:space-x-6"
@@ -278,7 +437,17 @@ const submitReservation = () => {
                     <Link
                         class="my-6 flex items-center justify-center rounded border border-indigo-600 bg-indigo-600 px-6 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 hover:shadow focus:outline-none focus:ring active:text-indigo-500"
                         preserve-scroll
-                        :href="route('structures.show', structure.slug)"
+                        :href="
+                            route(
+                                'villes.disciplines.structuretypes.structures.show',
+                                {
+                                    city: city.id,
+                                    discipline: discipline.slug,
+                                    structuretype: structuretypeElected.id,
+                                    structure: structure.slug,
+                                }
+                            )
+                        "
                     >
                         <ArrowUturnLeftIcon class="mr-2 h-5 w-5" />
                         Retour vers l'accueil de la structure
@@ -308,7 +477,17 @@ const submitReservation = () => {
                         <Link
                             class="my-6 flex items-center justify-center rounded border border-indigo-600 bg-indigo-600 px-6 py-3 text-sm font-medium text-white hover:bg-white hover:text-indigo-600 hover:shadow focus:outline-none focus:ring active:text-indigo-500"
                             preserve-scroll
-                            :href="route('structures.show', structure.slug)"
+                            :href="
+                                route(
+                                    'villes.disciplines.structuretypes.structures.show',
+                                    {
+                                        city: city.id,
+                                        discipline: discipline.slug,
+                                        structuretype: structuretypeElected.id,
+                                        structure: structure.slug,
+                                    }
+                                )
+                            "
                         >
                             Voir la fiche
                         </Link>
@@ -1116,6 +1295,18 @@ const submitReservation = () => {
                     />
                 </div>
             </div>
+        </section>
+        <section
+            class="flex max-w-full flex-col items-start space-y-4 px-0 py-6 sm:px-4 md:flex-row md:space-y-0 lg:px-8"
+        >
+            <CitiesAround
+                v-if="citiesAround.length > 0"
+                :citiesAround="citiesAround"
+            />
+            <DisciplinesSimilaires
+                v-if="disciplinesSimilaires.length > 0"
+                :disciplinesSimilaires="disciplinesSimilaires"
+            />
         </section>
     </AppLayout>
 </template>
