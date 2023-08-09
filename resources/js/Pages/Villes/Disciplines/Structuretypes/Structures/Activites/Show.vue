@@ -42,19 +42,18 @@ import {
 dayjs.locale("fr");
 
 const props = defineProps({
+    familles: Object,
+    city: Object,
+    discipline: Object,
+    structuretypeElected: Object,
+    allStructureTypes: Object,
     structure: Object,
     logoUrl: String,
-    familles: Object,
     activite: Object,
     criteres: Object,
-    activiteSimilaires: Object,
-    familles: Object,
-    structuretypeElected: Object,
     categories: Object,
-    allStructureTypes: Object,
-    city: Object,
+    activiteSimilaires: Object,
     citiesAround: Object,
-    discipline: Object,
     disciplinesSimilaires: Object,
 });
 

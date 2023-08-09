@@ -144,8 +144,8 @@ class CityDisciplineStructuretypeStructureActiviteController extends Controller
                     'logoUrl' => $logoUrl,
                     'activite' => $activite,
                     'criteres' => $criteres,
-                    'activiteSimilaires' => $activiteSimilaires,
                     'categories' => $categories,
+                    'activiteSimilaires' => $activiteSimilaires,
                     'citiesAround' => $citiesAround,
                     'disciplinesSimilaires' => $disciplinesSimilaires,
         ]);
