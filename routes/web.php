@@ -26,6 +26,8 @@ use App\Http\Controllers\DepartementDisciplineCategorieController;
 use App\Http\Controllers\CityDisciplineCategorieStructureController;
 use App\Http\Controllers\DepartementDisciplineStructuretypeController;
 use App\Http\Controllers\CityDisciplineStructuretypeStructureController;
+use App\Http\Controllers\CityDisciplineCategorieStructureActiviteController;
+use App\Http\Controllers\CityDisciplineStructuretypeStructureActiviteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,6 +83,11 @@ Route::get('/villes/{city}/disciplines/{discipline:slug}/structuretypes/{structu
 Route::get('/villes/{city}/disciplines/{discipline:slug}/categories/{category:id}/structures/{structure}', [CityDisciplineCategorieStructureController::class, 'show'])->name('villes.disciplines.categories.structures.show');
 
 Route::get('/villes/{city}/disciplines/{discipline:slug}/structuretypes/{structuretype:id}/structures/{structure}', [CityDisciplineStructuretypeStructureController::class, 'show'])->name('villes.disciplines.structuretypes.structures.show');
+
+
+Route::get('/villes/{city}/disciplines/{discipline:slug}/categories/{category:id}/structures/{structure}/activites/{activite:id}', [CityDisciplineCategorieStructureActiviteController::class, 'show'])->name('villes.disciplines.categories.structures.activites.show');
+
+Route::get('/villes/{city}/disciplines/{discipline:slug}/structuretypes/{structuretype:id}/structures/{structure}/activites/{activite:id}', [CityDisciplineStructuretypeStructureActiviteController::class, 'show'])->name('villes.disciplines.structuretypes.structures.activites.show');
 
 
 Route::get('/discipline/index.{extension?}', function ($extension = null) {

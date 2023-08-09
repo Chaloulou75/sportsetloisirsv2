@@ -28,6 +28,12 @@ class CityDisciplineCategorieStructureController extends Controller
             $query->whereHas('structures');
         })->select(['id', 'name', 'slug'])->get();
 
+        $city = City::with(['structures'])->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
+                                    ->where('id', $city->id)
+                                    ->withCount('structures')
+                                    ->first();
+
+
         $discipline = ListDiscipline::where('slug', $discipline)
                             ->select(['id', 'name', 'slug', 'view_count'])
                             ->first();
