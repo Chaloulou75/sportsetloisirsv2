@@ -115,7 +115,8 @@ class CityDisciplineCategorieStructureActiviteController extends Controller
             'produits.tarifs.tarifType',
             'produits.tarifs.structureTarifTypeInfos',
             'produits.plannings'
-            ])->where('discipline_id', $activite->discipline_id)
+            ])->whereNot('id', $activite->id)
+            ->where('discipline_id', $activite->discipline_id)
             ->inRandomOrder()
             ->take(3)
             ->get();

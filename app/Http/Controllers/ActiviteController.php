@@ -261,7 +261,8 @@ class ActiviteController extends Controller
             'produits.tarifs.tarifType',
             'produits.tarifs.structureTarifTypeInfos',
             'produits.plannings'
-            ])->where('discipline_id', $activite->discipline_id)
+            ])->whereNot('id', $activite->id)
+            ->where('discipline_id', $activite->discipline_id)
             ->inRandomOrder()
             ->take(3)
             ->get();
@@ -286,6 +287,8 @@ class ActiviteController extends Controller
         if (! Gate::allows('update-structure', $structure)) {
             return Redirect::route('structures.activites.index', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
+
+        //
 
         $structure = Structure::with([
             'adresses' => function ($query) {

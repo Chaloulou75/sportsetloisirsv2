@@ -51,31 +51,12 @@ class CityDisciplineStructuretypeStructureActiviteController extends Controller
         $structure = Structure::whereHas('disciplines', function ($query) use ($discipline) {
             $query->where('discipline_id', $discipline->id);
         })->where('structuretype_id', $structuretypeElected->id)->with([
-            'famille:id,name',
-            'creator:id,name',
-            'users:id,name',
-            'adresses'  => function ($query) {
-                $query->latest();
-            },
-            'city:id,ville,ville_formatee,code_postal',
-            'departement:id,departement,numero',
-            'structuretype:id,name,slug',
-            'disciplines',
-            'disciplines.discipline:id,name,slug',
-            'categories',
-            'activites',
-            'activites.discipline:id,name',
-            'activites.categorie:id,categorie_id,discipline_id,nom_categorie_client',
-            'activites.produits',
-            'activites.produits.adresse',
-            'activites.produits.criteres',
-            'activites.produits.criteres.critere',
-            'activites.produits.tarifs',
-            'activites.produits.tarifs.tarifType',
-            'activites.produits.tarifs.structureTarifTypeInfos',
-            'activites.produits.plannings',
-            ])
-            ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
+                'creator:id,name',
+                'users:id,name',
+                'adresses'  => function ($query) {
+                    $query->latest();
+                }
+            ])->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
             ->where('slug', $structure)
             ->first();
 
@@ -117,7 +98,8 @@ class CityDisciplineStructuretypeStructureActiviteController extends Controller
             'produits.tarifs.tarifType',
             'produits.tarifs.structureTarifTypeInfos',
             'produits.plannings'
-            ])->where('discipline_id', $activite->discipline_id)
+            ])->whereNot('id', $activite->id)
+            ->where('discipline_id', $activite->discipline_id)
             ->inRandomOrder()
             ->take(3)
             ->get();
