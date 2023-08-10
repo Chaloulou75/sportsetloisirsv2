@@ -121,7 +121,7 @@ const showingNavigationDropdown = ref(false);
                                     "
                                     :active="route().current('structures.edit')"
                                 >
-                                    Editer ma structure
+                                    Gestion de ma structure
                                 </BreezeDropdownLink>
                                 <BreezeDropdownLink
                                     v-if="
@@ -243,12 +243,12 @@ const showingNavigationDropdown = ref(false);
                 >
                     Rubriques
                 </BreezeResponsiveNavLink> -->
-                <BreezeResponsiveNavLink
+                <!-- <BreezeResponsiveNavLink
                     :href="route('disciplines.index')"
                     :active="route().current('disciplines.index')"
                 >
                     Disciplines
-                </BreezeResponsiveNavLink>
+                </BreezeResponsiveNavLink> -->
                 <BreezeResponsiveNavLink
                     :href="route('villes.index')"
                     :active="route().current('villes.index')"
@@ -296,7 +296,7 @@ const showingNavigationDropdown = ref(false);
                     "
                     :active="route().current('structures.edit')"
                 >
-                    Editer votre structure
+                    Gestion de ma structure
                 </BreezeResponsiveNavLink>
             </div>
 

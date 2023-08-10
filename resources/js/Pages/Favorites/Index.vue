@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { router, Head, Link } from "@inertiajs/vue3";
+import { Head, Link } from "@inertiajs/vue3";
 import { ref, watch, computed, defineAsyncComponent } from "vue";
 import StructureCard from "@/Components/Structures/StructureCard.vue";
 import ActiviteCard from "@/Components/Structures/ActiviteCard.vue";
@@ -140,7 +140,7 @@ const props = defineProps({
             >
                 <div class="mx-auto max-w-full px-2 sm:px-6 lg:px-8">
                     <p class="font-medium text-gray-700">
-                        Il n'y a pas encore d' activites dans vos favoris.
+                        Il n'y a pas encore d'activités dans vos favoris.
                     </p>
                 </div>
             </template>

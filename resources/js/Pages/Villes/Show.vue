@@ -184,7 +184,7 @@ const formatCityName = (ville) => {
                     >
                 </h2>
                 <div
-                    class="flex w-full flex-col items-center justify-center space-y-2 text-gray-600 md:flex-row md:space-x-4 md:space-y-0"
+                    class="flex w-full flex-col flex-wrap items-center justify-center gap-3 text-gray-700 md:flex-row"
                 >
                     <Link
                         v-for="discipline in flattenedDisciplines"

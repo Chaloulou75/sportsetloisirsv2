@@ -3,6 +3,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import { ref, onMounted, computed, defineAsyncComponent } from "vue";
 import InscriptionNavigation from "@/Components/Navigation/InscriptionNavigation.vue";
+import PathsInscriptionNavigation from "@/Components/Navigation/PathsInscriptionNavigation.vue";
 
 const AddressForm = defineAsyncComponent(() =>
     import("@/Components/Google/AddressForm.vue")
@@ -21,6 +22,8 @@ const props = defineProps({
     errors: Object,
     can: Object,
 });
+
+const showSidebar = ref(false);
 
 const form = useForm({
     name: ref(props.structure.name),
@@ -120,10 +123,55 @@ function submit() {
                 <span class="text-blue-700">{{ structure.name }}</span>
             </h1>
         </template>
-
-        <div class="flex space-x-6 py-8">
-            <InscriptionNavigation :can="can" :structure="structure" />
+        <div
+            class="relative flex flex-col space-y-6 py-2 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
+        >
+            <InscriptionNavigation
+                :can="can"
+                :structure="structure"
+                class="hidden md:flex"
+            />
             <div class="flex-1">
+                <PathsInscriptionNavigation />
+                <button
+                    @click="showSidebar = !showSidebar"
+                    class="my-2 inline-flex w-full items-center justify-end self-end rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:text-gray-500 focus:text-gray-500 focus:outline-none md:hidden"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            :class="{
+                                hidden: showSidebar,
+                                'inline-flex': !showSidebar,
+                            }"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"
+                        />
+                        <path
+                            :class="{
+                                hidden: !showSidebar,
+                                'inline-flex': showSidebar,
+                            }"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12"
+                        />
+                    </svg>
+                </button>
+                <InscriptionNavigation
+                    v-if="showSidebar"
+                    :can="can"
+                    :structure="structure"
+                    class="my-4 flex md:hidden"
+                />
                 <div class="mx-auto max-w-full lg:px-4">
                     <div class="md:grid md:grid-cols-3 md:gap-6">
                         <div class="md:col-span-3">

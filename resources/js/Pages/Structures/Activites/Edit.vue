@@ -6,6 +6,7 @@ import ButtonsActiviteEdit from "@/Components/Inscription/Activity/ButtonsActivi
 import { PlusIcon } from "@heroicons/vue/24/outline";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 import InscriptionNavigation from "@/Components/Navigation/InscriptionNavigation.vue";
+import PathsInscriptionNavigation from "@/Components/Navigation/PathsInscriptionNavigation.vue";
 
 const props = defineProps({
     errors: Object,
@@ -38,6 +39,8 @@ const TarifDisplay = defineAsyncComponent(() =>
 const PlanningDisplay = defineAsyncComponent(() =>
     import("@/Components/Inscription/Activity/PlanningDisplay.vue")
 );
+
+const showSidebar = ref(false);
 
 const selectedCategoryId = ref(props.activite.categorie_id);
 
@@ -112,44 +115,67 @@ onMounted(() => {
 
     <AppLayout>
         <template #header>
-            <div
-                class="flex flex-col items-start justify-between md:flex-row md:items-center"
+            <h2
+                class="w-full py-6 text-center text-xl font-semibold leading-tight text-gray-800"
             >
-                <div>
-                    <h2
-                        class="text-xl font-semibold leading-tight text-gray-800"
-                    >
-                        Ajouter ou modifier votre activité
-                        <span class="text-blue-700"></span>
-                    </h2>
-                </div>
-                <div class="mt-4 w-full md:mt-0 md:w-1/4">
-                    <div
-                        class="flex flex-col justify-between space-y-4 md:ml-4 md:space-y-6"
-                    >
-                        <Link
-                            :href="
-                                route('structures.activites.index', structure)
-                            "
-                            v-if="can.update"
-                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
-                        >
-                            Mes disciplines</Link
-                        >
-                        <Link
-                            :href="route('structures.show', structure.slug)"
-                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
-                        >
-                            Voir la structure</Link
-                        >
-                    </div>
-                </div>
-            </div>
+                Ajouter ou modifier votre activité
+                <span class="text-blue-700"></span>
+            </h2>
         </template>
 
-        <div class="flex space-x-6 py-8">
-            <InscriptionNavigation :can="can" :structure="structure" />
+        <div
+            class="relative flex flex-col space-y-6 py-2 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
+        >
+            <InscriptionNavigation
+                :can="can"
+                :displayActivity="displayActivity"
+                :displayTarif="displayTarif"
+                :displayPlanning="displayPlanning"
+                :structure="structure"
+                @eventFromChild="handleButtonEvent"
+                class="hidden md:flex"
+            />
             <div class="mx-auto max-w-full flex-1 lg:px-4">
+                <PathsInscriptionNavigation />
+                <button
+                    @click="showSidebar = !showSidebar"
+                    class="my-2 inline-flex w-full items-center justify-end self-end rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:text-gray-500 focus:text-gray-500 focus:outline-none md:hidden"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            :class="{
+                                hidden: showSidebar,
+                                'inline-flex': !showSidebar,
+                            }"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"
+                        />
+                        <path
+                            :class="{
+                                hidden: !showSidebar,
+                                'inline-flex': showSidebar,
+                            }"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12"
+                        />
+                    </svg>
+                </button>
+                <InscriptionNavigation
+                    v-if="showSidebar"
+                    :can="can"
+                    :structure="structure"
+                    class="my-4 flex md:hidden"
+                />
                 <TabGroup :defaultIndex="defaultTabIndex">
                     <section class="space-y-4 text-gray-700">
                         <div>
@@ -203,13 +229,13 @@ onMounted(() => {
                             :key="categorie.id"
                             class="flex flex-col space-y-4"
                         >
-                            <ButtonsActiviteEdit
+                            <!-- <ButtonsActiviteEdit
                                 :displayActivity="displayActivity"
                                 :displayTarif="displayTarif"
                                 :displayPlanning="displayPlanning"
                                 :structure="structure"
                                 @eventFromChild="handleButtonEvent"
-                            />
+                            /> -->
                             <div
                                 class="flex w-full flex-col items-center justify-between space-y-2 px-2 py-3 md:h-20 md:flex-row md:space-y-0 md:px-0 md:py-6"
                             >

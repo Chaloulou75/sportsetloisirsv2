@@ -250,7 +250,7 @@ const events = getEvents();
                     </ol>
                 </nav>
             </div>
-            <div class="flex flex-col items-start justify-between md:flex-row">
+            <!-- <div class="flex flex-col items-start justify-between md:flex-row">
                 <div></div>
                 <div
                     v-if="$page.props.auth.user"
@@ -290,7 +290,7 @@ const events = getEvents();
                         />
                     </div>
                 </div>
-            </div>
+            </div> -->
         </template>
 
         <section

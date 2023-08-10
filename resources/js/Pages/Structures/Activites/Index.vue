@@ -4,6 +4,7 @@ import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, watch, defineAsyncComponent } from "vue";
 import { TrashIcon } from "@heroicons/vue/24/outline";
 import InscriptionNavigation from "@/Components/Navigation/InscriptionNavigation.vue";
+import PathsInscriptionNavigation from "@/Components/Navigation/PathsInscriptionNavigation.vue";
 
 const AutocompleteActiviteFormSmall = defineAsyncComponent(() =>
     import("@/Components/Inscription/AutocompleteActiviteFormSmall.vue")
@@ -26,6 +27,8 @@ const props = defineProps({
     listDisciplines: Object,
     can: Object,
 });
+
+const showSidebar = ref(false);
 
 const form = useForm({
     structure_id: ref(props.structure.id),
@@ -111,10 +114,56 @@ const submit = () => {
                 <span class="text-blue-700">{{ structure.name }}</span>
             </h1>
         </template>
+        <div
+            class="relative flex flex-col space-y-6 py-2 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
+        >
+            <InscriptionNavigation
+                :can="can"
+                :structure="structure"
+                class="hidden md:flex"
+            />
 
-        <div class="flex space-x-6 py-8">
-            <InscriptionNavigation :can="can" :structure="structure" />
             <div class="mx-auto max-w-full flex-1 lg:px-4">
+                <PathsInscriptionNavigation />
+                <button
+                    @click="showSidebar = !showSidebar"
+                    class="my-2 inline-flex w-full items-center justify-end self-end rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:text-gray-500 focus:text-gray-500 focus:outline-none md:hidden"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            :class="{
+                                hidden: showSidebar,
+                                'inline-flex': !showSidebar,
+                            }"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"
+                        />
+                        <path
+                            :class="{
+                                hidden: !showSidebar,
+                                'inline-flex': showSidebar,
+                            }"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12"
+                        />
+                    </svg>
+                </button>
+                <InscriptionNavigation
+                    v-if="showSidebar"
+                    :can="can"
+                    :structure="structure"
+                    class="my-4 flex md:hidden"
+                />
                 <form @submit.prevent="submit" autocomplete="off">
                     <div
                         class="min-h-screen shadow sm:overflow-hidden sm:rounded-md"
@@ -135,51 +184,6 @@ const submit = () => {
                                         (form.discipline_id = discipline)
                                 "
                             />
-                            <!-- disciplines similaires -->
-                            <section
-                                v-if="activiteSimilairesList.length > 0"
-                                class="mx-auto md:w-1/2"
-                            >
-                                <h2
-                                    class="mb-4 text-lg font-medium text-gray-700"
-                                >
-                                    Les disciplines similaires
-                                </h2>
-                                <div
-                                    class="grid grid-cols-3 gap-2 text-gray-700"
-                                >
-                                    <div
-                                        v-for="discipline in activiteSimilairesList"
-                                        :key="discipline.id"
-                                        :index="discipline.id"
-                                        :class="{
-                                            'pointer-events-none text-gray-400':
-                                                dejaUsedDisciplinesRef.includes(
-                                                    discipline.id
-                                                ),
-                                        }"
-                                        class="flex flex-col items-center justify-center overflow-hidden rounded px-2 py-4 text-center text-lg shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
-                                    >
-                                        <button
-                                            type="button"
-                                            @click="
-                                                updateDiscipline(discipline)
-                                            "
-                                        >
-                                            {{ discipline.name }}
-                                            <span
-                                                v-if="
-                                                    dejaUsedDisciplinesRef.includes(
-                                                        discipline.id
-                                                    )
-                                                "
-                                                class="text-xs italic text-gray-400"
-                                                >(déjà sélectionné)</span
-                                            >
-                                        </button>
-                                    </div>
-                                </div>
-                            </section>
                         </div>
 
                         <!-- categories -->
@@ -257,7 +261,9 @@ const submit = () => {
                             v-if="activites.length > 0"
                             class="mx-auto my-4 max-w-full space-y-4 px-2 py-6 sm:px-4 lg:px-8"
                         >
-                            <h2 class="text-xl font-bold">Les activités</h2>
+                            <h2 class="text-xl font-bold text-gray-700">
+                                Vos activités
+                            </h2>
                             <div
                                 v-for="(
                                     activite, index
@@ -305,7 +311,7 @@ const submit = () => {
                                         class="grid grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-4"
                                     >
                                         <div
-                                            class="flex flex-col items-center justify-between rounded bg-white px-4 py-3 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
+                                            class="flex flex-col items-center justify-between rounded bg-white px-4 py-2 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-indigo-700 hover:text-white hover:ring-2 hover:ring-green-400 sm:rounded-md"
                                             v-for="(
                                                 categorie, index
                                             ) in activite.categories"
@@ -346,7 +352,7 @@ const submit = () => {
                                                     >supprimer categorie</span
                                                 >
                                                 <TrashIcon
-                                                    class="mr-1 h-6 w-6"
+                                                    class="mr-1 h-5 w-5"
                                                 />
                                             </button>
                                         </div>
@@ -356,6 +362,47 @@ const submit = () => {
                         </section>
                     </div>
                 </form>
+                <!-- disciplines similaires -->
+                <section
+                    v-if="activiteSimilairesList.length > 0"
+                    class="mx-auto w-full py-6"
+                >
+                    <h2 class="mb-4 text-lg font-medium text-gray-700">
+                        Les disciplines similaires
+                    </h2>
+                    <div
+                        class="flex w-full flex-col flex-wrap items-center gap-3 text-gray-700 md:flex-row"
+                    >
+                        <div
+                            v-for="discipline in activiteSimilairesList"
+                            :key="discipline.id"
+                            :index="discipline.id"
+                            :class="{
+                                'pointer-events-none text-gray-400':
+                                    dejaUsedDisciplinesRef.includes(
+                                        discipline.id
+                                    ),
+                            }"
+                            class="inline-block w-48 rounded border border-gray-600 px-4 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                        >
+                            <button
+                                type="button"
+                                @click="updateDiscipline(discipline)"
+                            >
+                                {{ discipline.name }}
+                                <span
+                                    v-if="
+                                        dejaUsedDisciplinesRef.includes(
+                                            discipline.id
+                                        )
+                                    "
+                                    class="text-xs italic text-gray-400"
+                                    >(déjà sélectionné)</span
+                                >
+                            </button>
+                        </div>
+                    </div>
+                </section>
 
                 <div class="hidden sm:block" aria-hidden="true">
                     <div class="py-5">
