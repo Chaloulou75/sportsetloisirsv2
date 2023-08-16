@@ -71,7 +71,7 @@ class HomeController extends Controller
             'familleCount' => $familleCount,
             'disciplinesCount' => $disciplinesCount,
             'structuresCount' => $structuresCount,
-            'citiesCount'=> $citiesCount,
+            'citiesCount' => $citiesCount,
             'lastStructures' => $lastStructures,
             'allCities' => $allCities,
             'topVilles' => $topVilles,

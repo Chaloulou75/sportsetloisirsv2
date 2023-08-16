@@ -133,6 +133,15 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Inscrire une structure
                                 </BreezeDropdownLink>
+                                <BreezeDropdownLink
+                                    v-if="
+                                        $page.props.auth.user &&
+                                        $page.props.can.view_admin
+                                    "
+                                    :href="route('admin.index')"
+                                >
+                                    Gestion du site
+                                </BreezeDropdownLink>
 
                                 <BreezeDropdownLink
                                     :href="route('logout')"

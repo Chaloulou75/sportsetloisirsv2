@@ -7,7 +7,9 @@ namespace App\Providers;
 use App\Models\User;
 use App\Models\Activite;
 use App\Models\Structure;
+use App\Models\StructureActivite;
 use App\Policies\StructurePolicy;
+use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -22,6 +24,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Structure::class => StructurePolicy::class,
+        User::class => UserPolicy::class,
     ];
 
     /**
@@ -45,10 +48,10 @@ class AuthServiceProvider extends ServiceProvider
             return ($user->id === $structure->user_id) || ($user->email === 'c.jeandey@gmail.com') || ($user->email === 'tonio20@hotmail.fr');
         });
 
-        Gate::define('update-activite', function (User $user, Activite $activite) {
+        Gate::define('update-activite', function (User $user, StructureActivite $activite) {
             return ($user->id === $activite->user_id) || ($user->email === 'c.jeandey@gmail.com') || ($user->email === 'tonio20@hotmail.fr');
         });
-        Gate::define('destroy-activite', function (User $user, Activite $activite) {
+        Gate::define('destroy-activite', function (User $user, StructureActivite $activite) {
             return ($user->id === $activite->user_id) || ($user->email === 'c.jeandey@gmail.com') || ($user->email === 'tonio20@hotmail.fr');
         });
 

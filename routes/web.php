@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FamilleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActiviteController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\StructureTarifController;
 use App\Http\Controllers\StructurePlanningController;
 use App\Http\Controllers\ProductReservationController;
 use App\Http\Controllers\StructureCategorieController;
+use App\Http\Controllers\DisciplineSimilaireController;
 use App\Http\Controllers\StructureDisciplineController;
 use App\Http\Controllers\DepartementDisciplineController;
 use App\Http\Controllers\CityDisciplineCategorieController;
@@ -165,6 +167,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('/admin/{discipline:slug}', [AdminController::class, 'edit'])->name('admin.edit');
+
+    Route::post('/discipline-similaire/{discipline}', [DisciplineSimilaireController::class, 'store'])->name('discipline-similaire.store');
+    Route::put('/discipline-similaire/{discipline}', [DisciplineSimilaireController::class, 'detach'])->name('discipline-similaire.detach');
+
+    //, 'can:viewAdmin'
 });
 
 Route::get('structures', [StructureController::class, 'index'])
