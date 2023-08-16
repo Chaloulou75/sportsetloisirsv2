@@ -72,7 +72,7 @@ class AdminController extends Controller
             ->select('discipline_similaire_id')
             ->pluck('discipline_similaire_id');
 
-        $listDisciplines = ListDiscipline::select(['id', 'slug', 'name'])->whereNotIn('id', $disciplinesSimilairesIds)->whereNot('id', $discipline->id)->get();
+        $listDisciplines = ListDiscipline::select(['id', 'slug', 'name'])->whereNotIn('id', $disciplinesSimilairesIds)->whereNot('id', $discipline->id)->paginate(15);
 
         return Inertia::render('Admin/Edit', [
             'can' => [

@@ -1,8 +1,12 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { ref, defineAsyncComponent } from "vue";
 import { XCircleIcon, PlusCircleIcon } from "@heroicons/vue/24/outline";
+
+const Pagination = defineAsyncComponent(() =>
+    import("@/Components/Pagination.vue")
+);
 
 const props = defineProps({
     discipline: Object,
@@ -135,15 +139,15 @@ const detach = (disciplineIn) => {
                 Gestion des disciplines similaires
             </h2>
             <div class="flex items-start justify-around px-2 md:px-6">
-                <div>
+                <div class="w-full md:w-1/3">
                     <h3 class="text-center text-lg text-slate-700">
                         Les disciplines similaires
                     </h3>
-                    <ul class="list-inside list-disc">
+                    <ul class="flex list-inside list-disc flex-wrap gap-2">
                         <li
                             v-for="disciplineIn in disciplinesSimilaires"
                             :key="disciplineIn.id"
-                            class="flex items-start space-y-1 text-sm"
+                            class="inline-flex w-40 items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                         >
                             {{ disciplineIn.name }}
                             <button type="button" @click="detach(disciplineIn)">
@@ -154,15 +158,15 @@ const detach = (disciplineIn) => {
                         </li>
                     </ul>
                 </div>
-                <div>
+                <div class="w-full md:w-2/3">
                     <h3 class="text-center text-lg text-slate-700">
                         Ajouter une discipline
                     </h3>
-                    <ul class="list-inside list-disc">
+                    <ul class="flex list-inside list-disc flex-wrap gap-2">
                         <li
-                            v-for="disciplineNotIn in listDisciplines"
-                            :key="disciplineNotIn.id"
-                            class="flex items-start space-y-1 text-sm"
+                            v-for="disciplineNotIn in listDisciplines.data"
+                            :key="disciplineNotIn.discipline_similaire_id"
+                            class="inline-flex w-40 items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                         >
                             {{ disciplineNotIn.name }}
                             <button
@@ -174,6 +178,7 @@ const detach = (disciplineIn) => {
                                 />
                             </button>
                         </li>
+                        <Pagination :links="listDisciplines.links" />
                     </ul>
                 </div>
             </div>
