@@ -15,7 +15,7 @@ import {
     UsersIcon,
     UserGroupIcon,
     ClockIcon,
-InformationCircleIcon,
+    InformationCircleIcon,
 } from "@heroicons/vue/24/outline";
 import {
     Switch,
@@ -231,7 +231,9 @@ const destroyTarif = (tarif, produit) => {
 </script>
 <template>
     <div v-if="structureActivites.length === 0">
-        <p class="font-semibold text-gray-600 italic">Pas d'activité dans cette catégorie</p>
+        <p class="font-semibold italic text-gray-600">
+            Pas d'activité dans cette catégorie
+        </p>
     </div>
     <div
         v-for="structureActivite in structureActivites"
@@ -471,17 +473,32 @@ const destroyTarif = (tarif, produit) => {
                     <Switch
                         v-model="structureActivite.actif"
                         @click="toggleActif(structureActivite)"
-                        :class="structureActivite.actif ? 'bg-green-600' : 'bg-gray-200'"
+                        :class="
+                            structureActivite.actif
+                                ? 'bg-green-600'
+                                : 'bg-gray-200'
+                        "
                         class="relative inline-flex h-6 w-11 items-center rounded-full"
                     >
                         <span class="sr-only">Actif</span>
                         <span
-                            :class="structureActivite.actif ? 'translate-x-6' : 'translate-x-1'"
+                            :class="
+                                structureActivite.actif
+                                    ? 'translate-x-6'
+                                    : 'translate-x-1'
+                            "
                             class="inline-block h-4 w-4 transform rounded-full bg-white transition"
                         />
                     </Switch>
-                    <p class="text-lg font-semibold" :class="structureActivite.actif ? 'text-green-600' : 'text-gray-600'">
-                        {{ structureActivite.actif ? 'Actif' : 'Inactif' }}
+                    <p
+                        class="text-lg font-semibold"
+                        :class="
+                            structureActivite.actif
+                                ? 'text-green-600'
+                                : 'text-gray-600'
+                        "
+                    >
+                        {{ structureActivite.actif ? "Actif" : "Inactif" }}
                     </p>
                 </div>
                 <div class="text-lg">
@@ -555,17 +572,17 @@ const destroyTarif = (tarif, produit) => {
                                 />
                                 <div class="flex flex-col items-center">
                                     <span
-                                    v-if="critere.critere.nom"
-                                    class="text-sm text-gray-600"
+                                        v-if="critere.critere.nom"
+                                        class="text-sm text-gray-600"
                                     >
-                                    {{ critere.critere.nom }}:
-                                </span>
-                                <span
-                                    v-if="critere.valeur"
-                                    class="text-sm text-gray-600 font-semibold"
-                                    >{{ critere.valeur }}</span>
+                                        {{ critere.critere.nom }}:
+                                    </span>
+                                    <span
+                                        v-if="critere.valeur"
+                                        class="text-sm font-semibold text-gray-600"
+                                        >{{ critere.valeur }}</span
+                                    >
                                 </div>
-
                             </div>
                         </div>
                         <div
@@ -676,13 +693,17 @@ const destroyTarif = (tarif, produit) => {
                             v-show="isOpenTarif(produit)"
                             class="col-span-3 h-full w-full py-2 md:col-span-6"
                         >
-                            <div class="flex items-center justify-between w-full px-2 md:px-4 py-2">
-                                <h3 v-if="produit.tarifs.length > 0"
+                            <div
+                                class="flex w-full items-center justify-between px-2 py-2 md:px-4"
+                            >
+                                <h3
+                                    v-if="produit.tarifs.length > 0"
                                     class="w-full px-2 py-2 text-sm font-semibold text-gray-700 md:px-4"
                                 >
                                     Liste des tarifs pour ce produit:
                                 </h3>
-                                <h3 v-else
+                                <h3
+                                    v-else
                                     class="w-full px-2 py-2 text-sm font-semibold text-gray-700 md:px-4"
                                 >
                                     Pas encore de tarif pour ce produit.
@@ -690,7 +711,7 @@ const destroyTarif = (tarif, produit) => {
                                 <button
                                     type="button"
                                     @click="openAddTarifModal(structure)"
-                                    class="rounded bg-green-600 px-2 py-1.5 text-xs text-white shadow-lg transition duration-100 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 w-auto"
+                                    class="w-auto rounded bg-green-600 px-2 py-1.5 text-xs text-white shadow-lg transition duration-100 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
                                 >
                                     Ajouter un tarif
                                 </button>
@@ -714,45 +735,51 @@ const destroyTarif = (tarif, produit) => {
                                             class="col-span-1 flex items-center"
                                         >
                                             <div v-if="info">
-                                            <ClockIcon
-                                                v-if="
-                                                    [1, 2, 5, 7].includes(
-                                                        info.attribut_id
-                                                    )
-                                                "
-                                                class="mr-1 h-5 w-5 text-slate-500"
-                                            />
-                                            <UserGroupIcon
-                                                v-else-if="
-                                                    [3, 6].includes(
-                                                        info.attribut_id
-                                                    )
-                                                "
-                                                class="mr-1 h-5 w-5 text-slate-500"
-                                            />
-                                            <UsersIcon
-                                                v-else
-                                                class="mr-1 h-5 w-5 text-slate-500"
-                                            />
+                                                <ClockIcon
+                                                    v-if="
+                                                        [1, 2, 5, 7].includes(
+                                                            info.attribut_id
+                                                        )
+                                                    "
+                                                    class="mr-1 h-5 w-5 text-slate-500"
+                                                />
+                                                <UserGroupIcon
+                                                    v-else-if="
+                                                        [3, 6].includes(
+                                                            info.attribut_id
+                                                        )
+                                                    "
+                                                    class="mr-1 h-5 w-5 text-slate-500"
+                                                />
+                                                <UsersIcon
+                                                    v-else
+                                                    class="mr-1 h-5 w-5 text-slate-500"
+                                                />
+                                            </div>
+                                            <div v-else>
+                                                <UsersIcon
+                                                    class="mr-1 h-5 w-5 text-slate-500"
+                                                />
+                                            </div>
 
-                                        </div>
-                                        <div v-else>
-                                            <UsersIcon
-                                                class="mr-1 h-5 w-5 text-slate-500"
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <span
-                                            v-if="info.valeur"
-                                            class="text-sm font-semibold text-gray-600"
-                                            >{{ info.tarif_type_attribut.attribut }}: {{ info.valeur }}
-                                            <span v-if="info.unite">{{
-                                                info.unite
-                                            }}</span>
-                                        </span>
-                                        <span v-else class="text-sm font-semibold text-gray-600">Pas de valeur</span>
-                                        </div>
+                                            <div>
+                                                <span
+                                                    v-if="info.valeur"
+                                                    class="text-sm font-semibold text-gray-600"
+                                                    >{{
+                                                        info.tarif_type_attribut
+                                                            .attribut
+                                                    }}: {{ info.valeur }}
+                                                    <span v-if="info.unite">{{
+                                                        info.unite
+                                                    }}</span>
+                                                </span>
+                                                <span
+                                                    v-else
+                                                    class="text-sm font-semibold text-gray-600"
+                                                    >Pas de valeur</span
+                                                >
+                                            </div>
                                         </div>
                                     </div>
                                     <div
@@ -792,7 +819,11 @@ const destroyTarif = (tarif, produit) => {
                                         <button
                                             type="button"
                                             @click="
-                                                () => duplicateTarif(tarif, produit)
+                                                () =>
+                                                    duplicateTarif(
+                                                        tarif,
+                                                        produit
+                                                    )
                                             "
                                         >
                                             <DocumentDuplicateIcon
@@ -803,7 +834,8 @@ const destroyTarif = (tarif, produit) => {
                                         <button
                                             type="button"
                                             @click="
-                                                () => destroyTarif(tarif, produit)
+                                                () =>
+                                                    destroyTarif(tarif, produit)
                                             "
                                         >
                                             <TrashIcon

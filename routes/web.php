@@ -15,7 +15,9 @@ use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\DepartementController;
 use App\Http\Controllers\CityDisciplineController;
 use App\Http\Controllers\StructureTarifController;
+use App\Http\Controllers\FamilleDisciplineController;
 use App\Http\Controllers\StructurePlanningController;
+use App\Http\Controllers\CategoryDisciplineController;
 use App\Http\Controllers\ProductReservationController;
 use App\Http\Controllers\StructureCategorieController;
 use App\Http\Controllers\DisciplineSimilaireController;
@@ -173,6 +175,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/discipline-similaire/{discipline}', [DisciplineSimilaireController::class, 'store'])->name('discipline-similaire.store');
     Route::put('/discipline-similaire/{discipline}', [DisciplineSimilaireController::class, 'detach'])->name('discipline-similaire.detach');
+    Route::put('/disciplines/{discipline:slug}', [DisciplineController::class, 'update'])->name('disciplines.update');
+
+    Route::post('/familles-disciplines/{discipline}', [FamilleDisciplineController::class, 'store'])->name('familles-disciplines.store');
+    Route::put('/familles-disciplines/{discipline}', [FamilleDisciplineController::class, 'detach'])->name('familles-disciplines.detach');
+
+
+    Route::post('/categories-disciplines/{discipline}', [CategoryDisciplineController::class, 'store'])->name('categories-disciplines.store');
+    Route::put('/categories-disciplines/{discipline}', [CategoryDisciplineController::class, 'detach'])->name('categories-disciplines.detach');
+    Route::patch('/categories-disciplines/{discipline}', [CategoryDisciplineController::class, 'update'])->name('categories-disciplines.update');
+
+
 
     //, 'can:viewAdmin'
 });

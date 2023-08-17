@@ -29,7 +29,9 @@ class CityDisciplineCategorieController extends Controller
         $discipline = ListDiscipline::where('slug', $discipline)
                             ->select(['id', 'name', 'slug', 'view_count'])
                             ->first();
-        $disciplinesSimilaires = $discipline->disciplinesSimilaires()->select(['famille', 'name', 'slug'])->get();
+        $disciplinesSimilaires = $discipline->disciplinesSimilaires()
+            ->select('discipline_similaire_id', 'name', 'slug', 'famille')
+            ->get();
 
         $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('id', $category)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
 
@@ -65,7 +67,7 @@ class CityDisciplineCategorieController extends Controller
                 $query->where('discipline_id', $discipline->id);
             },
             'disciplines.discipline:id,name,slug',
-            'categories'=> function ($query) use ($category) {
+            'categories' => function ($query) use ($category) {
                 $query->where('categorie_id', $category->id);
             },
             'activites' => function ($query) use ($discipline, $category) {
@@ -95,7 +97,7 @@ class CityDisciplineCategorieController extends Controller
             'category' => $category,
             'categories' => $categories,
             'allStructureTypes' => $allStructureTypes,
-            'city'=> $city,
+            'city' => $city,
             'citiesAround' => $citiesAround,
             'disciplinesSimilaires' => $disciplinesSimilaires,
             'structures' => $structures,

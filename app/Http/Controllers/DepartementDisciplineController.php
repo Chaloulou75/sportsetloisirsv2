@@ -29,7 +29,9 @@ class DepartementDisciplineController extends Controller
         $discipline = ListDiscipline::where('slug', $discipline)
                             ->select(['id', 'name', 'slug', 'view_count'])
                             ->first();
-        $disciplinesSimilaires = $discipline->disciplinesSimilaires()->select(['famille', 'name', 'slug'])->get();
+        $disciplinesSimilaires = $discipline->disciplinesSimilaires()
+            ->select('discipline_similaire_id', 'name', 'slug', 'famille')
+            ->get();
 
         $categories = LienDisciplineCategorie::where('discipline_id', $discipline->id)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
 
@@ -77,7 +79,7 @@ class DepartementDisciplineController extends Controller
             'familles' => $familles,
             'categories' => $categories,
             'allStructureTypes' => $allStructureTypes,
-            'departement'=> $departement,
+            'departement' => $departement,
             'citiesAround' => $citiesAround,
             'disciplinesSimilaires' => $disciplinesSimilaires,
             'structures' => $structures,

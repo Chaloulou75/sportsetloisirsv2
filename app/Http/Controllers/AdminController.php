@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use App\Models\Famille;
 use App\Models\Categorie;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
@@ -62,11 +63,19 @@ class AdminController extends Controller
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 
-        $categories = LienDisciplineCategorie::where('discipline_id', $discipline->id)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
+        $discipline = ListDiscipline::with('familles')->where('id', $discipline->id)->firstOrFail();
+        $disciplineFamillesIds = $discipline->familles()->select('famille_id')
+            ->pluck('famille_id');
+
+        $categories = LienDisciplineCategorie::with(['discipline', 'categorie'])->where('discipline_id', $discipline->id)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
+
+        $categoriesIds = $categories->pluck('categorie_id');
+
+        $otherCategories = Categorie::select('id', 'nom')->whereNotIn('id', $categoriesIds)->get();
+
         $disciplinesSimilaires = $discipline->disciplinesSimilaires()
             ->select('discipline_similaire_id', 'name', 'slug', 'famille')
             ->get();
-
 
         $disciplinesSimilairesIds = $discipline->disciplinesSimilaires()
             ->select('discipline_similaire_id')
@@ -74,14 +83,18 @@ class AdminController extends Controller
 
         $listDisciplines = ListDiscipline::select(['id', 'slug', 'name'])->whereNotIn('id', $disciplinesSimilairesIds)->whereNot('id', $discipline->id)->paginate(15);
 
+        $familles = Famille::select('id', 'name', 'slug', 'nom_long')->whereNotIn('id', $disciplineFamillesIds)->get();
+
         return Inertia::render('Admin/Edit', [
             'can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
             'categories' => $categories,
+            'otherCategories' => $otherCategories,
             'discipline' => $discipline,
             'disciplinesSimilaires' => $disciplinesSimilaires,
             'listDisciplines' => $listDisciplines,
+            'familles' => $familles,
         ]);
 
     }

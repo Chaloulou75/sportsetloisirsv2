@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Models\Famille;
 use App\Models\Categorie;
 use App\Models\Structure;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use App\Models\LienDisciplineCategorie;
@@ -68,7 +69,9 @@ class DisciplineController extends Controller
             ->select(['id', 'name', 'slug', 'view_count'])
             ->first();
 
-        $disciplinesSimilaires = $discipline->disciplinesSimilaires()->select(['famille', 'name', 'slug'])->get();
+        $disciplinesSimilaires = $discipline->disciplinesSimilaires()
+            ->select('discipline_similaire_id', 'name', 'slug', 'famille')
+            ->get();
 
         $categories = LienDisciplineCategorie::where('discipline_id', $discipline->id)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
 
@@ -97,11 +100,37 @@ class DisciplineController extends Controller
 
         return Inertia::render('Disciplines/Show', [
             'familles' => $familles,
-            'discipline'=> $discipline,
+            'discipline' => $discipline,
             'disciplinesSimilaires' => $disciplinesSimilaires,
-            'structures'=> $structures,
+            'structures' => $structures,
             'categories' => $categories,
         ]);
+    }
+
+    /**
+    * Update the specified resource in storage.
+    */
+    public function update(Request $request, ListDiscipline $discipline)
+    {
+        $user = auth()->user();
+        $this->authorize('viewAdmin', $user);
+
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'min:8'],
+        ]);
+
+        $updatedDiscipline = ListDiscipline::where('id', $discipline->id)->update([
+            'name' => $request->name,
+            'description' => $request->description,
+        ]);
+
+        $discipline = ListDiscipline::find($discipline->id);
+
+        $slug = Str::slug($discipline->name, '-');
+        $discipline->update(['slug' => $slug]);
+
+        return redirect()->back()->with('success', 'Discipline mise à jour.');
     }
 
     public function loadDisciplines()

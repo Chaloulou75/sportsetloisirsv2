@@ -30,7 +30,9 @@ class CityDisciplineStructuretypeController extends Controller
         $discipline = ListDiscipline::where('slug', $discipline)
                             ->select(['id', 'name', 'slug', 'view_count'])
                             ->first();
-        $disciplinesSimilaires = $discipline->disciplinesSimilaires()->select(['famille', 'name', 'slug'])->get();
+        $disciplinesSimilaires = $discipline->disciplinesSimilaires()
+            ->select('discipline_similaire_id', 'name', 'slug', 'famille')
+            ->get();
 
         $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
 
@@ -90,7 +92,7 @@ class CityDisciplineStructuretypeController extends Controller
             'structuretypeElected' => $structuretypeElected,
             'allStructureTypes' => $allStructureTypes,
             'categories' => $categories,
-            'city'=> $city,
+            'city' => $city,
             'citiesAround' => $citiesAround,
             'disciplinesSimilaires' => $disciplinesSimilaires,
             'structures' => $structures,

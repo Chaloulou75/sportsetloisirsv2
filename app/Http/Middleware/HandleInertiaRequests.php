@@ -35,7 +35,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => fn () => $request->user() ? $request->user()->load('structures')->only('id', 'name', 'email', 'structures') : null,
             ],
             'can' => [
-                'view_admin' => auth()->user()->can('viewAdmin', User::class),
+                'view_admin' => $request->user() ? auth()->user()->can('viewAdmin', User::class) : false,
             ],
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy())->toArray(), [
