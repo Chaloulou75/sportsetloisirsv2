@@ -25,6 +25,7 @@ const props = defineProps({
     disciplinesSimilaires: Object,
     listDisciplines: Object,
     familles: Object,
+    disciplineCategorieCriteres: Object,
     can: Object,
 });
 
@@ -224,6 +225,7 @@ const updateCategorie = (index) => {
                     {{ discipline.name }}
                 </h1>
             </div>
+            <!-- édition infos de base -->
             <div class="px-2 md:px-6">
                 <form @submit.prevent="submitUpdateInfoBase" class="space-y-2">
                     <UpdateInfoBase
@@ -390,6 +392,7 @@ const updateCategorie = (index) => {
                     </ul>
                 </div>
             </div>
+
             <!-- les disciplines similaires -->
             <h2
                 class="text-center text-2xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4"
@@ -459,6 +462,7 @@ const updateCategorie = (index) => {
                     </ul>
                 </div>
             </div>
+
             <!-- les familles -->
             <h2
                 class="text-center text-2xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4"
@@ -493,6 +497,81 @@ const updateCategorie = (index) => {
                                     class="ml-2 h-5 w-5 text-red-500 group-hover:text-white"
                                 />
                             </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-1/3">
+                    <h3 class="mb-4 text-center text-lg text-slate-700">
+                        Ajouter des familles de disciplines
+                    </h3>
+                    <ul class="flex flex-wrap justify-center gap-2">
+                        <li
+                            v-for="familleNotIn in familles"
+                            :key="familleNotIn.id"
+                            class="group inline-flex self-stretch"
+                        >
+                            <button
+                                type="button"
+                                @click="attachFamille(familleNotIn)"
+                                class="inline-flex w-40 items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm focus:outline-none focus:ring active:bg-indigo-500 group-hover:border-gray-100 group-hover:bg-indigo-500 group-hover:text-white group-hover:shadow-lg"
+                            >
+                                {{ familleNotIn.name }}
+                                <PlusCircleIcon
+                                    class="ml-2 h-5 w-5 text-blue-500 group-hover:text-white"
+                                />
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- les criteres -->
+            <h2
+                class="text-center text-2xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4"
+            >
+                Les critères associés à
+                <span class="text-indigo-600">{{ discipline.name }}</span>
+            </h2>
+            <div class="flex items-start justify-around px-2 md:px-6">
+                <div class="w-full md:w-1/3">
+                    <h3 class="mb-4 text-center text-lg text-slate-700">
+                        Les critères associés à
+                        <span class="text-indigo-700">{{
+                            discipline.name
+                        }}</span>
+                        <span class="text-sm italic">
+                            (retirer en cliquant sur le critère)</span
+                        >
+                    </h3>
+                    <ul class="flex flex-wrap justify-center gap-2">
+                        <li
+                            v-for="critere in disciplineCategorieCriteres"
+                            :key="critere.id"
+                            class="group inline-flex self-stretch"
+                        >
+                            <p class="text-sm text-slate-600">
+                                Categorie:
+                                {{ critere.categorie.nom_categorie_client }}
+                            </p>
+
+                            <button
+                                type="button"
+                                class="inline-flex w-40 items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm focus:outline-none focus:ring active:bg-indigo-500 group-hover:border-gray-100 group-hover:bg-indigo-500 group-hover:text-white group-hover:shadow-lg"
+                            >
+                                {{ critere.nom }}
+                                <XCircleIcon
+                                    class="ml-2 h-5 w-5 text-red-500 group-hover:text-white"
+                                />
+                            </button>
+                            <ul>
+                                <li
+                                    v-for="valeur in critere.valeurs"
+                                    :key="valeur.id"
+                                    class="liste-disc list-inside text-sm text-slate-600"
+                                >
+                                    {{ valeur.valeur }}
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </div>

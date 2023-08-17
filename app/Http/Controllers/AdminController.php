@@ -8,6 +8,7 @@ use App\Models\Categorie;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use App\Models\LienDisciplineCategorie;
+use App\Models\LienDisciplineCategorieCritere;
 
 class AdminController extends Controller
 {
@@ -85,6 +86,8 @@ class AdminController extends Controller
 
         $familles = Famille::select('id', 'name', 'slug', 'nom_long')->whereNotIn('id', $disciplineFamillesIds)->get();
 
+        $disciplineCategorieCriteres = LienDisciplineCategorieCritere::with(['discipline', 'categorie','critere', 'valeurs'])->where('discipline_id', $discipline->id)->orderBy('categorie_id')->get();
+        // dd($disciplineCategorieCriteres);
         return Inertia::render('Admin/Edit', [
             'can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
@@ -95,6 +98,7 @@ class AdminController extends Controller
             'disciplinesSimilaires' => $disciplinesSimilaires,
             'listDisciplines' => $listDisciplines,
             'familles' => $familles,
+            'disciplineCategorieCriteres' => $disciplineCategorieCriteres,
         ]);
 
     }
