@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LienDisciplineCategorie extends Model
 {
@@ -27,5 +28,11 @@ class LienDisciplineCategorie extends Model
     public function categorie(): BelongsTo
     {
         return $this->belongsTo(Categorie::class, 'categorie_id');
+    }
+
+    public function criteres(): HasMany
+    {
+        return $this->hasMany(LienDisciplineCategorieCritere::class, 'categorie_id', 'categorie_id')
+                ->where('discipline_id', $this->discipline_id);
     }
 }

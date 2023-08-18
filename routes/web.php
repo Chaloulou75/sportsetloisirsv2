@@ -25,6 +25,7 @@ use App\Http\Controllers\StructureDisciplineController;
 use App\Http\Controllers\DepartementDisciplineController;
 use App\Http\Controllers\CityDisciplineCategorieController;
 use App\Http\Controllers\StructureActiviteProduitController;
+use App\Http\Controllers\CategoryDisciplineCritereController;
 use App\Http\Controllers\CityDisciplineStructuretypeController;
 use App\Http\Controllers\DepartementDisciplineCategorieController;
 use App\Http\Controllers\CityDisciplineCategorieStructureController;
@@ -170,6 +171,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // Admin routes
+
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/admin/{discipline:slug}', [AdminController::class, 'edit'])->name('admin.edit');
 
@@ -185,7 +188,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/categories-disciplines/{discipline}', [CategoryDisciplineController::class, 'detach'])->name('categories-disciplines.detach');
     Route::patch('/categories-disciplines/{discipline}', [CategoryDisciplineController::class, 'update'])->name('categories-disciplines.update');
 
-
+    Route::delete('/categories-disciplines-criteres/{lienDisciplineCategorieCritere}', [CategoryDisciplineCritereController::class, 'destroy'])->name('categories-disciplines-criteres.destroy');
 
     //, 'can:viewAdmin'
 });

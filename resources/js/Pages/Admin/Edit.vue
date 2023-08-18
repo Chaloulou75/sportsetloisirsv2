@@ -26,6 +26,7 @@ const props = defineProps({
     listDisciplines: Object,
     familles: Object,
     disciplineCategorieCriteres: Object,
+    groupedData: Object,
     can: Object,
 });
 
@@ -145,6 +146,18 @@ const updateCategorie = (index) => {
         }
     );
 };
+
+const deleteCritere = (disciplineCategorieCritere) => {
+    router.delete(
+        route("categories-disciplines-criteres.destroy", {
+            lienDisciplineCategorieCritere: disciplineCategorieCritere,
+        }),
+        {
+            preserveScroll: true,
+            lienDisciplineCategorieCritere: disciplineCategorieCritere,
+        }
+    );
+};
 </script>
 <template>
     <Head
@@ -225,6 +238,7 @@ const updateCategorie = (index) => {
                     {{ discipline.name }}
                 </h1>
             </div>
+
             <!-- édition infos de base -->
             <div class="px-2 md:px-6">
                 <form @submit.prevent="submitUpdateInfoBase" class="space-y-2">
@@ -241,6 +255,138 @@ const updateCategorie = (index) => {
                         Editer la discipline
                     </button>
                 </form>
+            </div>
+
+            <!-- les familles -->
+            <h2
+                class="text-center text-2xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4"
+            >
+                Les familles associées à
+                <span class="text-indigo-600">{{ discipline.name }}</span>
+            </h2>
+            <div class="flex items-start justify-around px-2 md:px-6">
+                <div class="w-full md:w-1/3">
+                    <h3 class="mb-4 text-center text-lg text-slate-700">
+                        Les familles associées à
+                        <span class="text-indigo-700">{{
+                            discipline.name
+                        }}</span>
+                        <span class="text-sm italic">
+                            (retirer en cliquant sur la discipline)</span
+                        >
+                    </h3>
+                    <ul class="flex flex-wrap justify-center gap-2">
+                        <li
+                            v-for="familleIn in discipline.familles"
+                            :key="familleIn.id"
+                            class="group inline-flex self-stretch"
+                        >
+                            <button
+                                type="button"
+                                @click="detachFamille(familleIn)"
+                                class="inline-flex w-40 items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm focus:outline-none focus:ring active:bg-indigo-500 group-hover:border-gray-100 group-hover:bg-indigo-500 group-hover:text-white group-hover:shadow-lg"
+                            >
+                                {{ familleIn.name }}
+                                <XCircleIcon
+                                    class="ml-2 h-5 w-5 text-red-500 group-hover:text-white"
+                                />
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-1/3">
+                    <h3 class="mb-4 text-center text-lg text-slate-700">
+                        Ajouter des familles de disciplines
+                    </h3>
+                    <ul class="flex flex-wrap justify-center gap-2">
+                        <li
+                            v-for="familleNotIn in familles"
+                            :key="familleNotIn.id"
+                            class="group inline-flex self-stretch"
+                        >
+                            <button
+                                type="button"
+                                @click="attachFamille(familleNotIn)"
+                                class="inline-flex w-40 items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm focus:outline-none focus:ring active:bg-indigo-500 group-hover:border-gray-100 group-hover:bg-indigo-500 group-hover:text-white group-hover:shadow-lg"
+                            >
+                                {{ familleNotIn.name }}
+                                <PlusCircleIcon
+                                    class="ml-2 h-5 w-5 text-blue-500 group-hover:text-white"
+                                />
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- les disciplines similaires -->
+            <h2
+                class="text-center text-2xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4"
+            >
+                Gestion des disciplines similaires à
+                <span class="text-indigo-600">{{ discipline.name }}</span>
+            </h2>
+            <div
+                class="mx-auto flex flex-col items-center justify-center space-y-4 px-2 md:flex-row md:items-start md:justify-around md:space-y-0 md:px-6"
+            >
+                <div class="w-full md:w-1/3">
+                    <h3 class="mb-4 text-center text-lg text-slate-700">
+                        Les disciplines similaires à
+                        <span class="text-indigo-700">{{
+                            discipline.name
+                        }}</span>
+                        <span class="text-sm italic">
+                            (retirer en cliquant sur la discipline)</span
+                        >
+                    </h3>
+                    <ul class="flex flex-wrap justify-center gap-2">
+                        <li
+                            v-for="disciplineIn in disciplinesSimilaires"
+                            :key="disciplineIn.id"
+                            class="group inline-flex self-stretch"
+                        >
+                            <button
+                                type="button"
+                                @click="detachDiscipline(disciplineIn)"
+                                class="inline-flex w-40 items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm focus:outline-none focus:ring active:bg-indigo-500 group-hover:border-gray-100 group-hover:bg-indigo-500 group-hover:text-white group-hover:shadow-lg"
+                            >
+                                {{ disciplineIn.name }}
+                                <XCircleIcon
+                                    class="ml-2 h-5 w-5 text-red-500 group-hover:text-white"
+                                />
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-2/3">
+                    <h3 class="mb-4 text-center text-lg text-slate-700">
+                        Ajouter une discipline similaire à
+                        <span class="text-indigo-700">{{
+                            discipline.name
+                        }}</span>
+                    </h3>
+                    <ul
+                        class="flex flex-wrap items-stretch justify-center gap-2"
+                    >
+                        <li
+                            v-for="disciplineNotIn in listDisciplines.data"
+                            :key="disciplineNotIn.discipline_similaire_id"
+                            class="group inline-flex self-stretch"
+                        >
+                            <button
+                                type="button"
+                                @click="attachDiscipline(disciplineNotIn)"
+                                class="inline-flex w-40 items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm focus:outline-none focus:ring active:bg-indigo-500 group-hover:border-gray-100 group-hover:bg-indigo-500 group-hover:text-white group-hover:shadow-lg"
+                            >
+                                {{ disciplineNotIn.name }}
+                                <PlusCircleIcon
+                                    class="ml-2 h-5 w-5 text-blue-500 group-hover:text-white"
+                                />
+                            </button>
+                        </li>
+                        <Pagination :links="listDisciplines.links" />
+                    </ul>
+                </div>
             </div>
 
             <!-- les catégories associées -->
@@ -359,6 +505,9 @@ const updateCategorie = (index) => {
                                         <ArrowPathIcon
                                             class="mr-1 h-6 w-6 text-gray-600 transition-all duration-200 hover:-rotate-90 hover:text-gray-800"
                                         />
+                                        <span class="sr-only"
+                                            >Mettre à jour la catégorie</span
+                                        >
                                     </button>
                                 </div>
                             </form>
@@ -393,138 +542,6 @@ const updateCategorie = (index) => {
                 </div>
             </div>
 
-            <!-- les disciplines similaires -->
-            <h2
-                class="text-center text-2xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4"
-            >
-                Gestion des disciplines similaires à
-                <span class="text-indigo-600">{{ discipline.name }}</span>
-            </h2>
-            <div
-                class="mx-auto flex flex-col items-center justify-center space-y-4 px-2 md:flex-row md:items-start md:justify-around md:space-y-0 md:px-6"
-            >
-                <div class="w-full md:w-1/3">
-                    <h3 class="mb-4 text-center text-lg text-slate-700">
-                        Les disciplines similaires à
-                        <span class="text-indigo-700">{{
-                            discipline.name
-                        }}</span>
-                        <span class="text-sm italic">
-                            (retirer en cliquant sur la discipline)</span
-                        >
-                    </h3>
-                    <ul class="flex flex-wrap justify-center gap-2">
-                        <li
-                            v-for="disciplineIn in disciplinesSimilaires"
-                            :key="disciplineIn.id"
-                            class="group inline-flex self-stretch"
-                        >
-                            <button
-                                type="button"
-                                @click="detachDiscipline(disciplineIn)"
-                                class="inline-flex w-40 items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm focus:outline-none focus:ring active:bg-indigo-500 group-hover:border-gray-100 group-hover:bg-indigo-500 group-hover:text-white group-hover:shadow-lg"
-                            >
-                                {{ disciplineIn.name }}
-                                <XCircleIcon
-                                    class="ml-2 h-5 w-5 text-red-500 group-hover:text-white"
-                                />
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-                <div class="w-full md:w-2/3">
-                    <h3 class="mb-4 text-center text-lg text-slate-700">
-                        Ajouter une discipline similaire à
-                        <span class="text-indigo-700">{{
-                            discipline.name
-                        }}</span>
-                    </h3>
-                    <ul
-                        class="flex flex-wrap items-stretch justify-center gap-2"
-                    >
-                        <li
-                            v-for="disciplineNotIn in listDisciplines.data"
-                            :key="disciplineNotIn.discipline_similaire_id"
-                            class="group inline-flex self-stretch"
-                        >
-                            <button
-                                type="button"
-                                @click="attachDiscipline(disciplineNotIn)"
-                                class="inline-flex w-40 items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm focus:outline-none focus:ring active:bg-indigo-500 group-hover:border-gray-100 group-hover:bg-indigo-500 group-hover:text-white group-hover:shadow-lg"
-                            >
-                                {{ disciplineNotIn.name }}
-                                <PlusCircleIcon
-                                    class="ml-2 h-5 w-5 text-blue-500 group-hover:text-white"
-                                />
-                            </button>
-                        </li>
-                        <Pagination :links="listDisciplines.links" />
-                    </ul>
-                </div>
-            </div>
-
-            <!-- les familles -->
-            <h2
-                class="text-center text-2xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4"
-            >
-                Les familles associées à
-                <span class="text-indigo-600">{{ discipline.name }}</span>
-            </h2>
-            <div class="flex items-start justify-around px-2 md:px-6">
-                <div class="w-full md:w-1/3">
-                    <h3 class="mb-4 text-center text-lg text-slate-700">
-                        Les familles associées à
-                        <span class="text-indigo-700">{{
-                            discipline.name
-                        }}</span>
-                        <span class="text-sm italic">
-                            (retirer en cliquant sur la discipline)</span
-                        >
-                    </h3>
-                    <ul class="flex flex-wrap justify-center gap-2">
-                        <li
-                            v-for="familleIn in discipline.familles"
-                            :key="familleIn.id"
-                            class="group inline-flex self-stretch"
-                        >
-                            <button
-                                type="button"
-                                @click="detachFamille(familleIn)"
-                                class="inline-flex w-40 items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm focus:outline-none focus:ring active:bg-indigo-500 group-hover:border-gray-100 group-hover:bg-indigo-500 group-hover:text-white group-hover:shadow-lg"
-                            >
-                                {{ familleIn.name }}
-                                <XCircleIcon
-                                    class="ml-2 h-5 w-5 text-red-500 group-hover:text-white"
-                                />
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-                <div class="w-full md:w-1/3">
-                    <h3 class="mb-4 text-center text-lg text-slate-700">
-                        Ajouter des familles de disciplines
-                    </h3>
-                    <ul class="flex flex-wrap justify-center gap-2">
-                        <li
-                            v-for="familleNotIn in familles"
-                            :key="familleNotIn.id"
-                            class="group inline-flex self-stretch"
-                        >
-                            <button
-                                type="button"
-                                @click="attachFamille(familleNotIn)"
-                                class="inline-flex w-40 items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm focus:outline-none focus:ring active:bg-indigo-500 group-hover:border-gray-100 group-hover:bg-indigo-500 group-hover:text-white group-hover:shadow-lg"
-                            >
-                                {{ familleNotIn.name }}
-                                <PlusCircleIcon
-                                    class="ml-2 h-5 w-5 text-blue-500 group-hover:text-white"
-                                />
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
             <!-- les criteres -->
             <h2
                 class="text-center text-2xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4"
@@ -532,72 +549,52 @@ const updateCategorie = (index) => {
                 Les critères associés à
                 <span class="text-indigo-600">{{ discipline.name }}</span>
             </h2>
-            <div class="flex items-start justify-around px-2 md:px-6">
-                <div class="w-full md:w-1/3">
-                    <h3 class="mb-4 text-center text-lg text-slate-700">
-                        Les critères associés à
-                        <span class="text-indigo-700">{{
-                            discipline.name
-                        }}</span>
-                        <span class="text-sm italic">
-                            (retirer en cliquant sur le critère)</span
-                        >
-                    </h3>
-                    <ul class="flex flex-wrap justify-center gap-2">
-                        <li
-                            v-for="critere in disciplineCategorieCriteres"
-                            :key="critere.id"
-                            class="group inline-flex self-stretch"
-                        >
-                            <p class="text-sm text-slate-600">
-                                Categorie:
-                                {{ critere.categorie.nom_categorie_client }}
-                            </p>
+            <div class="w-full px-2 md:px-6">
+                <ul class="flex flex-wrap justify-start gap-10">
+                    <li
+                        v-for="categorie in groupedData"
+                        :key="categorie.id"
+                        class="space-x-4"
+                    >
+                        <p class="text-base text-slate-600 underline">
+                            Catégorie:
+                            {{ categorie.categorie.nom_categorie_client }}
+                        </p>
 
-                            <button
-                                type="button"
-                                class="inline-flex w-40 items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm focus:outline-none focus:ring active:bg-indigo-500 group-hover:border-gray-100 group-hover:bg-indigo-500 group-hover:text-white group-hover:shadow-lg"
+                        <ul class="text-sm text-slate-600">
+                            <li
+                                v-for="critere in categorie.criteres"
+                                :key="critere.id"
+                                class="list-inside list-disc text-sm text-slate-600"
                             >
-                                {{ critere.nom }}
-                                <XCircleIcon
-                                    class="ml-2 h-5 w-5 text-red-500 group-hover:text-white"
-                                />
-                            </button>
-                            <ul>
-                                <li
-                                    v-for="valeur in critere.valeurs"
-                                    :key="valeur.id"
-                                    class="liste-disc list-inside text-sm text-slate-600"
+                                Critère: {{ critere.critere.nom }} -
+                                {{ critere.disciplineCategorieCritere }}
+
+                                <button
+                                    type="button"
+                                    class="inline-flex items-center"
+                                    @click="
+                                        deleteCritere(
+                                            critere.disciplineCategorieCritere
+                                        )
+                                    "
                                 >
-                                    {{ valeur.valeur }}
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-                <div class="w-full md:w-1/3">
-                    <h3 class="mb-4 text-center text-lg text-slate-700">
-                        Ajouter des familles de disciplines
-                    </h3>
-                    <ul class="flex flex-wrap justify-center gap-2">
-                        <li
-                            v-for="familleNotIn in familles"
-                            :key="familleNotIn.id"
-                            class="group inline-flex self-stretch"
-                        >
-                            <button
-                                type="button"
-                                @click="attachFamille(familleNotIn)"
-                                class="inline-flex w-40 items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm focus:outline-none focus:ring active:bg-indigo-500 group-hover:border-gray-100 group-hover:bg-indigo-500 group-hover:text-white group-hover:shadow-lg"
-                            >
-                                {{ familleNotIn.name }}
-                                <PlusCircleIcon
-                                    class="ml-2 h-5 w-5 text-blue-500 group-hover:text-white"
-                                />
-                            </button>
-                        </li>
-                    </ul>
-                </div>
+                                    <TrashIcon class="h-5 w-5 text-red-500" />
+                                </button>
+
+                                <ul class="ml-4">
+                                    <li
+                                        v-for="valeur in critere.valeurs"
+                                        :key="valeur.id"
+                                        class="list-inside list-disc text-sm text-slate-600"
+                                    >
+                                        {{ valeur.valeur }}
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
     </AppLayout>

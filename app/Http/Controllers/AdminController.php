@@ -86,8 +86,44 @@ class AdminController extends Controller
 
         $familles = Famille::select('id', 'name', 'slug', 'nom_long')->whereNotIn('id', $disciplineFamillesIds)->get();
 
-        $disciplineCategorieCriteres = LienDisciplineCategorieCritere::with(['discipline', 'categorie','critere', 'valeurs'])->where('discipline_id', $discipline->id)->orderBy('categorie_id')->get();
-        // dd($disciplineCategorieCriteres);
+
+        $disciplineCategorieCriteres = LienDisciplineCategorieCritere::with([
+            'discipline', 'categorie', 'critere', 'valeurs',
+        ])->where('discipline_id', $discipline->id)
+        ->orderBy('categorie_id')
+        ->get();
+
+        $groupedData = [];
+
+        foreach ($disciplineCategorieCriteres as $item) {
+            $disciplineCategorieCritere = $item->id;
+            $categorieId = $item->categorie->id;
+            $critereId = $item->critere->id;
+            $valeurData = $item->valeurs;
+
+            // Group by categorie
+            if (!isset($groupedData[$categorieId])) {
+                $groupedData[$categorieId] = [
+                    'categorie' => $item->categorie,
+                    'criteres' => [],
+                ];
+            }
+
+            // Group by critere within each categorie
+            if (!isset($groupedData[$categorieId]['criteres'][$critereId])) {
+                $groupedData[$categorieId]['criteres'][$critereId] = [
+                    'disciplineCategorieCritere' => $item->id,
+                    'critere' => $item->critere,
+                    'valeurs' => [],
+                ];
+            }
+
+            // Add valeurs to each critere within each categorie
+            foreach ($valeurData as $valeur) {
+                $groupedData[$categorieId]['criteres'][$critereId]['valeurs'][] = $valeur;
+            }
+        }
+
         return Inertia::render('Admin/Edit', [
             'can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
@@ -99,6 +135,7 @@ class AdminController extends Controller
             'listDisciplines' => $listDisciplines,
             'familles' => $familles,
             'disciplineCategorieCriteres' => $disciplineCategorieCriteres,
+            'groupedData' => $groupedData,
         ]);
 
     }
