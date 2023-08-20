@@ -194,6 +194,23 @@ const updateValeur = (valeur) => {
         }
     );
 };
+
+const critereFormsVisibility = ref({}); // Object to store visibility state
+
+const toggleAddValeurForm = (critere) => {
+    critereFormsVisibility.value[critere.id] =
+        !critereFormsVisibility.value[critere.id];
+};
+
+const showAddValeurForm = (critere) => {
+    return critereFormsVisibility.value[critere.id] || false;
+};
+const addValeurForm = useForm({
+    valeur: ref(null),
+    remember: true,
+});
+
+const addValeur = (critere) => {};
 </script>
 <template>
     <Head
@@ -539,7 +556,7 @@ const updateValeur = (valeur) => {
                                 <div class="flex items-center">
                                     <button type="submit">
                                         <ArrowPathIcon
-                                            class="mr-1 h-6 w-6 text-gray-600 transition-all duration-200 hover:-rotate-90 hover:text-gray-800"
+                                            class="mr-1 h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
                                         />
                                         <span class="sr-only"
                                             >Mettre à jour la catégorie</span
@@ -594,35 +611,50 @@ const updateValeur = (valeur) => {
                     >
                         <p class="text-base text-slate-600 underline">
                             Catégorie:
-                            {{ categorie.categorie.nom_categorie_client }}
+                            <span class="font-semibold">{{
+                                categorie.categorie.nom_categorie_client
+                            }}</span>
                         </p>
 
-                        <ul class="text-sm text-slate-600">
+                        <ul
+                            class="list-inside list-disc space-y-4 py-4 text-sm text-slate-600 marker:text-indigo-600"
+                        >
                             <li
                                 v-for="critere in categorie.criteres"
                                 :key="critere.id"
-                                class="list-inside list-disc text-base text-slate-600"
+                                class="flex flex-col text-base text-slate-600"
                             >
-                                Critère: {{ critere.critere.nom }} -
-                                {{ critere.disciplineCategorieCritere }}
-
-                                <button
-                                    type="button"
-                                    class="inline-flex items-center"
-                                    @click="
-                                        deleteCritere(
-                                            critere.disciplineCategorieCritere
-                                        )
-                                    "
+                                <div
+                                    class="inline-flex w-full items-center justify-between"
                                 >
-                                    <TrashIcon class="h-5 w-5 text-red-500" />
-                                </button>
+                                    <span class="flex-grow"
+                                        >Critère:
+                                        <span class="font-semibold">{{
+                                            critere.critere.nom
+                                        }}</span></span
+                                    >
 
-                                <ul class="ml-4">
+                                    <button
+                                        type="button"
+                                        class="inline-flex items-center"
+                                        @click="
+                                            deleteCritere(
+                                                critere.disciplineCategorieCritere
+                                            )
+                                        "
+                                    >
+                                        <TrashIcon
+                                            class="h-5 w-5 text-red-500"
+                                        />
+                                    </button>
+                                </div>
+                                <ul
+                                    class="ml-4 list-inside list-disc marker:text-indigo-600"
+                                >
                                     <li
                                         v-for="valeur in critere.valeurs"
                                         :key="valeur.id"
-                                        class="list-inside list-disc text-sm text-slate-600"
+                                        class="text-sm text-slate-600"
                                     >
                                         <form
                                             v-if="valeur"
@@ -638,8 +670,7 @@ const updateValeur = (valeur) => {
                                                 >
                                                     <span
                                                         class="text-xs italic"
-                                                        >{{ valeur.id }}</span
-                                                    >
+                                                    ></span>
                                                 </label>
                                                 <div
                                                     class="mt-1 flex rounded-md"
@@ -660,7 +691,80 @@ const updateValeur = (valeur) => {
                                                         autocomplete="none"
                                                     />
                                                 </div>
-                                                <!-- <div
+                                                <div
+                                                    v-if="
+                                                        valeurForm[valeur.id]
+                                                            .errors.valeur
+                                                    "
+                                                    class="text-xs text-red-500"
+                                                >
+                                                    {{
+                                                        valeurForm[valeur.id]
+                                                            .errors.valeur[0]
+                                                    }}
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <button type="submit">
+                                                    <ArrowPathIcon
+                                                        class="mr-1 h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
+                                                    />
+                                                    <span class="sr-only"
+                                                        >Mettre à jour la
+                                                        valeur</span
+                                                    >
+                                                </button>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                class="inline-flex items-center"
+                                                @click="deleteValeur(valeur)"
+                                            >
+                                                <TrashIcon
+                                                    class="h-5 w-5 text-red-500"
+                                                />
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                                <div v-if="showAddValeurForm(critere)">
+                                    <div>
+                                        <form
+                                            class="flex items-center justify-between"
+                                            @submit.prevent="addValeur(critere)"
+                                        >
+                                            <div>
+                                                <label
+                                                    for="newValeur"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                >
+                                                    <span
+                                                        class="text-xs italic"
+                                                    ></span>
+                                                </label>
+                                                <div
+                                                    class="mt-1 flex rounded-md"
+                                                >
+                                                    <input
+                                                        v-model="
+                                                            addValeurForm.valeur
+                                                        "
+                                                        type="text"
+                                                        name="newValeur"
+                                                        id="newValeur"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                        placeholder=""
+                                                        autocomplete="none"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <button type="submit">
+                                                <PlusCircleIcon
+                                                    class="h-5 w-5 text-indigo-500 hover:text-indigo-700"
+                                                />
+                                            </button>
+                                        </form>
+                                        <!-- <div
                                                     v-if="
                                                         valeurForm[valeur.id]
                                                             .errors.valeur
@@ -672,21 +776,17 @@ const updateValeur = (valeur) => {
                                                             .errors.valeur[0]
                                                     }}
                                                 </div> -->
-                                            </div>
-                                            <div class="flex items-center">
-                                                <button type="submit">
-                                                    <ArrowPathIcon
-                                                        class="mr-1 h-6 w-6 text-gray-600 transition-all duration-200 hover:-rotate-90 hover:text-gray-800"
-                                                    />
-                                                    <span class="sr-only"
-                                                        >Mettre à jour la
-                                                        valeur</span
-                                                    >
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </li>
-                                </ul>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button
+                                        v-if="!showAddValeurForm(critere)"
+                                        type="button"
+                                        @click="toggleAddValeurForm(critere)"
+                                    >
+                                        Ajouter une valeur
+                                    </button>
+                                </div>
                             </li>
                         </ul>
                     </li>
