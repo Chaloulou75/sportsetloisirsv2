@@ -93,36 +93,31 @@ class AdminController extends Controller
         ->orderBy('categorie_id')
         ->get();
 
-        $groupedData = [];
 
-        foreach ($disciplineCategorieCriteres as $item) {
-            $disciplineCategorieCritere = $item->id;
-            $categorieId = $item->categorie->id;
-            $critereId = $item->critere->id;
-            $valeurData = $item->valeurs;
+        $groupedData = $disciplineCategorieCriteres->groupBy(function ($item) {
+            return $item->categorie->id;
+        })
+        ->map(function ($categoryItems) {
+            $firstItem = $categoryItems->first();
 
-            // Group by categorie
-            if (!isset($groupedData[$categorieId])) {
-                $groupedData[$categorieId] = [
-                    'categorie' => $item->categorie,
-                    'criteres' => [],
+            $criteres = $categoryItems->groupBy(function ($item) {
+                return $item->critere->id;
+            })
+            ->map(function ($criterionItems) {
+                $firstCriterionItem = $criterionItems->first();
+
+                return [
+                    'disciplineCategorieCritere' => $firstCriterionItem->id,
+                    'critere' => $firstCriterionItem->critere,
+                    'valeurs' => $criterionItems->flatMap->valeurs,
                 ];
-            }
+            });
 
-            // Group by critere within each categorie
-            if (!isset($groupedData[$categorieId]['criteres'][$critereId])) {
-                $groupedData[$categorieId]['criteres'][$critereId] = [
-                    'disciplineCategorieCritere' => $item->id,
-                    'critere' => $item->critere,
-                    'valeurs' => [],
-                ];
-            }
-
-            // Add valeurs to each critere within each categorie
-            foreach ($valeurData as $valeur) {
-                $groupedData[$categorieId]['criteres'][$critereId]['valeurs'][] = $valeur;
-            }
-        }
+            return [
+                'categorie' => $firstItem->categorie,
+                'criteres' => $criteres,
+            ];
+        });
 
         return Inertia::render('Admin/Edit', [
             'can' => [

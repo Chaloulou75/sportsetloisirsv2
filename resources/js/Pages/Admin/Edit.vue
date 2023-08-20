@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
-import { ref, defineAsyncComponent } from "vue";
+import { ref, watch, computed, onMounted, defineAsyncComponent } from "vue";
 import {
     XCircleIcon,
     PlusCircleIcon,
@@ -155,6 +155,42 @@ const deleteCritere = (disciplineCategorieCritere) => {
         {
             preserveScroll: true,
             lienDisciplineCategorieCritere: disciplineCategorieCritere,
+        }
+    );
+};
+
+const valeurForm = ref({});
+const initializeValeurForm = () => {
+    for (const categoryId in props.groupedData) {
+        const category = props.groupedData[categoryId];
+
+        for (const critereId in category.criteres) {
+            const critere = category.criteres[critereId];
+
+            for (const valeurId in critere.valeurs) {
+                const valeur = critere.valeurs[valeurId];
+
+                valeurForm.value[valeur.id] = useForm({
+                    id: ref(valeur.id),
+                    valeur: ref(valeur.valeur),
+                    remember: true,
+                });
+            }
+        }
+    }
+};
+
+initializeValeurForm();
+
+const updateValeur = (valeur) => {
+    router.patch(
+        route("categories-disciplines-criteres-valeurs.update", {
+            lienDisCatCritValeur: valeur.id,
+        }),
+        {
+            preserveScroll: true,
+            valeur: valeurForm.value[valeur.id].valeur,
+            id: valeurForm.value[valeur.id].id,
         }
     );
 };
@@ -445,8 +481,8 @@ const deleteCritere = (disciplineCategorieCritere) => {
                                                     .nom_categorie_client
                                             "
                                             type="text"
-                                            name="name"
-                                            id="name"
+                                            name="nom_categorie_client"
+                                            id="nom_categorie_client"
                                             class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                             placeholder=""
                                             autocomplete="none"
@@ -480,8 +516,8 @@ const deleteCritere = (disciplineCategorieCritere) => {
                                                     .nom_categorie_pro
                                             "
                                             type="text"
-                                            name="name"
-                                            id="name"
+                                            name="nom_categorie_pro"
+                                            id="nom_categorie_pro"
                                             class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                             placeholder=""
                                             autocomplete="none"
@@ -565,7 +601,7 @@ const deleteCritere = (disciplineCategorieCritere) => {
                             <li
                                 v-for="critere in categorie.criteres"
                                 :key="critere.id"
-                                class="list-inside list-disc text-sm text-slate-600"
+                                class="list-inside list-disc text-base text-slate-600"
                             >
                                 Critère: {{ critere.critere.nom }} -
                                 {{ critere.disciplineCategorieCritere }}
@@ -588,7 +624,67 @@ const deleteCritere = (disciplineCategorieCritere) => {
                                         :key="valeur.id"
                                         class="list-inside list-disc text-sm text-slate-600"
                                     >
-                                        {{ valeur.valeur }}
+                                        <form
+                                            v-if="valeur"
+                                            class="inline-flex space-x-4"
+                                            @submit.prevent="
+                                                updateValeur(valeur)
+                                            "
+                                        >
+                                            <div>
+                                                <label
+                                                    :for="valeur[valeur.id]"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                >
+                                                    <span
+                                                        class="text-xs italic"
+                                                        >{{ valeur.id }}</span
+                                                    >
+                                                </label>
+                                                <div
+                                                    class="mt-1 flex rounded-md"
+                                                >
+                                                    <input
+                                                        v-model="
+                                                            valeurForm[
+                                                                valeur.id
+                                                            ].valeur
+                                                        "
+                                                        type="text"
+                                                        :name="
+                                                            valeur[valeur.id]
+                                                        "
+                                                        :id="valeur[valeur.id]"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                        placeholder=""
+                                                        autocomplete="none"
+                                                    />
+                                                </div>
+                                                <!-- <div
+                                                    v-if="
+                                                        valeurForm[valeur.id]
+                                                            .errors.valeur
+                                                    "
+                                                    class="text-xs text-red-500"
+                                                >
+                                                    {{
+                                                        valeurForm[valeur.id]
+                                                            .errors.valeur[0]
+                                                    }}
+                                                </div> -->
+                                            </div>
+                                            <div class="flex items-center">
+                                                <button type="submit">
+                                                    <ArrowPathIcon
+                                                        class="mr-1 h-6 w-6 text-gray-600 transition-all duration-200 hover:-rotate-90 hover:text-gray-800"
+                                                    />
+                                                    <span class="sr-only"
+                                                        >Mettre à jour la
+                                                        valeur</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </form>
                                     </li>
                                 </ul>
                             </li>

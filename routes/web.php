@@ -28,6 +28,7 @@ use App\Http\Controllers\StructureActiviteProduitController;
 use App\Http\Controllers\CategoryDisciplineCritereController;
 use App\Http\Controllers\CityDisciplineStructuretypeController;
 use App\Http\Controllers\DepartementDisciplineCategorieController;
+use App\Http\Controllers\CategoryDisciplineCritereValeurController;
 use App\Http\Controllers\CityDisciplineCategorieStructureController;
 use App\Http\Controllers\DepartementDisciplineStructuretypeController;
 use App\Http\Controllers\CityDisciplineStructuretypeStructureController;
@@ -189,6 +190,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/categories-disciplines/{discipline}', [CategoryDisciplineController::class, 'update'])->name('categories-disciplines.update');
 
     Route::delete('/categories-disciplines-criteres/{lienDisciplineCategorieCritere}', [CategoryDisciplineCritereController::class, 'destroy'])->name('categories-disciplines-criteres.destroy');
+
+    Route::patch('/categories-disciplines-criteres-valeurs/{lienDisCatCritValeur}', [CategoryDisciplineCritereValeurController::class, 'update'])->name('categories-disciplines-criteres-valeurs.update');
 
     //, 'can:viewAdmin'
 });

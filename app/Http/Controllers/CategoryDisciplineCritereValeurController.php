@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Models\LienDisciplineCategorieCritereValeur;
 
 class CategoryDisciplineCritereValeurController extends Controller
 {
@@ -49,9 +51,18 @@ class CategoryDisciplineCritereValeurController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, LienDisciplineCategorieCritereValeur $lienDisCatCritValeur)
     {
-        //
+        $request->validate([
+            'valeur' => ['required', 'string', 'max:255'],
+            'id' => ['required', Rule::exists('liens_disciplines_categories_criteres_valeurs', 'id')],
+        ]);
+
+        $lienDisCatCritValeur = LienDisciplineCategorieCritereValeur::where('id', $lienDisCatCritValeur->id)->firstOrFail();
+
+        $lienDisCatCritValeur->update(['valeur' => $request->valeur]);
+        return redirect()->back()->with('success', 'Valeur du critère modifiée');
+
     }
 
     /**
