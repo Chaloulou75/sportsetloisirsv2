@@ -1,13 +1,21 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
-import { ref, watch, computed, onMounted, defineAsyncComponent } from "vue";
+import { ref, nextTick, defineAsyncComponent } from "vue";
 import {
     XCircleIcon,
     PlusCircleIcon,
     ArrowPathIcon,
     TrashIcon,
+    ChevronUpDownIcon,
+    CheckCircleIcon,
 } from "@heroicons/vue/24/outline";
+import {
+    Listbox,
+    ListboxButton,
+    ListboxOptions,
+    ListboxOption,
+} from "@headlessui/vue";
 
 const Pagination = defineAsyncComponent(() =>
     import("@/Components/Pagination.vue")
@@ -28,6 +36,7 @@ const props = defineProps({
     disciplineCategorieCriteres: Object,
     groupedData: Object,
     can: Object,
+    listeCriteres: Object,
 });
 
 const attachDiscipline = (disciplineNotIn) => {
@@ -140,8 +149,8 @@ const submitUpdateInfoBase = () => {
 
 const categorieForms = props.categories.map((categorie) => {
     return useForm({
-        nom_categorie_client: ref(categorie.nom_categorie_client),
-        nom_categorie_pro: ref(categorie.nom_categorie_pro),
+        nom_categorie_client: ref(categorie.nom_categorie_client ?? ""),
+        nom_categorie_pro: ref(categorie.nom_categorie_pro ?? ""),
         remember: true,
     });
 });
@@ -214,17 +223,16 @@ const updateValeur = (valeur) => {
     );
 };
 
-const critereFormsVisibility = ref({});
+const valeurFormsVisibility = ref({});
 
 const toggleAddValeurForm = (critere) => {
-    critereFormsVisibility.value[critere.disciplineCategorieCritere] =
-        !critereFormsVisibility.value[critere.disciplineCategorieCritere];
+    valeurFormsVisibility.value[critere.disciplineCategorieCritere] =
+        !valeurFormsVisibility.value[critere.disciplineCategorieCritere];
 };
 
 const showAddValeurForm = (critere) => {
     return (
-        critereFormsVisibility.value[critere.disciplineCategorieCritere] ||
-        false
+        valeurFormsVisibility.value[critere.disciplineCategorieCritere] || false
     );
 };
 
@@ -262,6 +270,43 @@ const removeValeur = (valeur) => {
             preserveScroll: true,
             onSuccess: () => {
                 initializeValeurForm();
+            },
+        }
+    );
+};
+
+const critereFormsVisibility = ref({});
+
+const toggleAddCritereForm = (categorie) => {
+    critereFormsVisibility.value[categorie.categorie.id] =
+        !critereFormsVisibility.value[categorie.categorie.id];
+};
+
+const showAddCritereForm = (categorie) => {
+    return critereFormsVisibility.value[categorie.categorie.id] || false;
+};
+
+const type_champs = [{ type: "select" }, { type: "checkbox" }];
+
+const addCritereForm = useForm({
+    critere: ref(props.listeCriteres[0]),
+    type_champ: ref(type_champs[0]),
+    remember: true,
+});
+
+const addCritere = (categorie) => {
+    router.post(
+        route("categories-disciplines-criteres.store"),
+        {
+            critere: addCritereForm.critere,
+            categorie: categorie.categorie,
+            type_champ: addCritereForm.type_champ,
+        },
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                addCritereForm.reset();
+                toggleAddCritereForm(categorie);
             },
         }
     );
@@ -667,7 +712,7 @@ const removeValeur = (valeur) => {
                     <li
                         v-for="categorie in groupedData"
                         :key="categorie.id"
-                        class="space-x-4"
+                        class="gap-4"
                     >
                         <p class="text-base text-slate-600 underline">
                             Catégorie:
@@ -716,75 +761,87 @@ const removeValeur = (valeur) => {
                                         :key="valeur.id"
                                         class="text-sm text-slate-600"
                                     >
-                                        <form
-                                            v-if="valeur"
-                                            class="inline-flex space-x-4"
-                                            @submit.prevent="
-                                                updateValeur(valeur)
-                                            "
-                                        >
-                                            <div>
-                                                <label
-                                                    :for="valeur[valeur.id]"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    <span
-                                                        class="text-xs italic"
-                                                    ></span>
-                                                </label>
-                                                <div
-                                                    class="mt-1 flex rounded-md"
-                                                >
-                                                    <input
-                                                        v-model="
+                                        <template v-if="valeurForm[valeur.id]">
+                                            <form
+                                                v-if="valeur"
+                                                class="inline-flex space-x-4"
+                                                @submit.prevent="
+                                                    updateValeur(valeur)
+                                                "
+                                            >
+                                                <div>
+                                                    <label
+                                                        :for="valeur[valeur.id]"
+                                                        class="block text-sm font-medium text-gray-700"
+                                                    >
+                                                        <span
+                                                            class="text-xs italic"
+                                                        ></span>
+                                                    </label>
+                                                    <div
+                                                        class="mt-1 flex rounded-md"
+                                                    >
+                                                        <input
+                                                            v-model="
+                                                                valeurForm[
+                                                                    valeur.id
+                                                                ].valeur
+                                                            "
+                                                            type="text"
+                                                            :name="
+                                                                valeur[
+                                                                    valeur.id
+                                                                ]
+                                                            "
+                                                            :id="
+                                                                valeur[
+                                                                    valeur.id
+                                                                ]
+                                                            "
+                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                            placeholder=""
+                                                            autocomplete="none"
+                                                        />
+                                                    </div>
+                                                    <div
+                                                        v-if="
                                                             valeurForm[
                                                                 valeur.id
-                                                            ].valeur
+                                                            ].errors.valeur
                                                         "
-                                                        type="text"
-                                                        :name="
-                                                            valeur[valeur.id]
-                                                        "
-                                                        :id="valeur[valeur.id]"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                        placeholder=""
-                                                        autocomplete="none"
-                                                    />
-                                                </div>
-                                                <div
-                                                    v-if="
-                                                        valeurForm[valeur.id]
-                                                            .errors.valeur
-                                                    "
-                                                    class="text-xs text-red-500"
-                                                >
-                                                    {{
-                                                        valeurForm[valeur.id]
-                                                            .errors.valeur[0]
-                                                    }}
-                                                </div>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <button type="submit">
-                                                    <ArrowPathIcon
-                                                        class="mr-1 h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
-                                                    />
-                                                    <span class="sr-only"
-                                                        >Mettre à jour la
-                                                        valeur</span
+                                                        class="text-xs text-red-500"
                                                     >
+                                                        {{
+                                                            valeurForm[
+                                                                valeur.id
+                                                            ].errors.valeur[0]
+                                                        }}
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <button type="submit">
+                                                        <ArrowPathIcon
+                                                            class="mr-1 h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
+                                                        />
+                                                        <span class="sr-only"
+                                                            >Mettre à jour la
+                                                            valeur</span
+                                                        >
+                                                    </button>
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    class="inline-flex items-center"
+                                                    @click="
+                                                        removeValeur(valeur)
+                                                    "
+                                                >
+                                                    <TrashIcon
+                                                        class="h-5 w-5 text-red-500 hover:text-red-700"
+                                                    />
                                                 </button>
-                                            </div>
-                                            <button
-                                                type="button"
-                                                class="inline-flex items-center"
-                                                @click="removeValeur(valeur)"
-                                            >
-                                                <TrashIcon
-                                                    class="h-5 w-5 text-red-500 hover:text-red-700"
-                                                />
-                                            </button>
-                                        </form>
+                                            </form>
+                                        </template>
                                     </li>
                                 </ul>
                                 <ul
@@ -834,18 +891,17 @@ const removeValeur = (valeur) => {
                                                 />
                                             </button>
 
-                                            <!-- <div
-                                                    v-if="
-                                                        valeurForm[valeur.id]
-                                                            .errors.valeur
-                                                    "
-                                                    class="text-xs text-red-500"
-                                                >
-                                                    {{
-                                                        valeurForm[valeur.id]
-                                                            .errors.valeur[0]
-                                                    }}
-                                                </div> -->
+                                            <div
+                                                v-if="
+                                                    addValeurForm.errors.valeur
+                                                "
+                                                class="text-xs text-red-500"
+                                            >
+                                                {{
+                                                    addValeurForm.errors
+                                                        .valeur[0]
+                                                }}
+                                            </div>
                                         </form>
                                     </li>
                                 </ul>
@@ -863,6 +919,194 @@ const removeValeur = (valeur) => {
                                 </div>
                             </li>
                         </ul>
+                        <div class="flex w-full items-center justify-start">
+                            <button
+                                class="inline-flex items-center justify-center rounded-lg border border-gray-300 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                v-if="!showAddCritereForm(categorie)"
+                                type="button"
+                                @click="toggleAddCritereForm(categorie)"
+                            >
+                                Ajouter un critère
+                            </button>
+                            <form
+                                v-if="showAddCritereForm(categorie)"
+                                class="inline-flex flex-grow items-center justify-between"
+                                @submit.prevent="addCritere(categorie)"
+                            >
+                                <div
+                                    class="flex w-full flex-grow flex-col space-y-3"
+                                >
+                                    <Listbox
+                                        class="w-full flex-grow"
+                                        v-model="addCritereForm.critere"
+                                    >
+                                        <div class="relative mt-1">
+                                            <ListboxButton
+                                                class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                                            >
+                                                <span class="block truncate">{{
+                                                    addCritereForm.critere.nom
+                                                }}</span>
+                                                <span
+                                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+                                                >
+                                                    <ChevronUpDownIcon
+                                                        class="h-5 w-5 text-gray-400"
+                                                        aria-hidden="true"
+                                                    />
+                                                </span>
+                                            </ListboxButton>
+
+                                            <transition
+                                                leave-active-class="transition duration-100 ease-in"
+                                                leave-from-class="opacity-100"
+                                                leave-to-class="opacity-0"
+                                            >
+                                                <ListboxOptions
+                                                    class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                                                >
+                                                    <ListboxOption
+                                                        v-slot="{
+                                                            active,
+                                                            selected,
+                                                        }"
+                                                        v-for="critere in props.listeCriteres"
+                                                        :key="critere.id"
+                                                        :value="critere"
+                                                        as="template"
+                                                    >
+                                                        <li
+                                                            :class="[
+                                                                active
+                                                                    ? 'bg-amber-100 text-amber-900'
+                                                                    : 'text-gray-700',
+                                                                'relative cursor-default select-none py-2 pl-10 pr-4',
+                                                            ]"
+                                                        >
+                                                            <span
+                                                                :class="[
+                                                                    selected
+                                                                        ? 'font-medium'
+                                                                        : 'font-normal',
+                                                                    'block truncate',
+                                                                ]"
+                                                                >{{
+                                                                    critere.nom
+                                                                }}</span
+                                                            >
+                                                            <span
+                                                                v-if="selected"
+                                                                class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
+                                                            >
+                                                                <CheckCircleIcon
+                                                                    class="h-5 w-5"
+                                                                    aria-hidden="true"
+                                                                />
+                                                            </span>
+                                                        </li>
+                                                    </ListboxOption>
+                                                </ListboxOptions>
+                                            </transition>
+                                        </div>
+                                    </Listbox>
+
+                                    <Listbox
+                                        v-if="addCritereForm.critere"
+                                        class="w-full flex-grow"
+                                        v-model="addCritereForm.type_champ"
+                                    >
+                                        <div class="relative mt-1">
+                                            <ListboxButton
+                                                class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                                            >
+                                                <span class="block truncate">{{
+                                                    addCritereForm.type_champ
+                                                        .type
+                                                }}</span>
+                                                <span
+                                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+                                                >
+                                                    <ChevronUpDownIcon
+                                                        class="h-5 w-5 text-gray-400"
+                                                        aria-hidden="true"
+                                                    />
+                                                </span>
+                                            </ListboxButton>
+
+                                            <transition
+                                                leave-active-class="transition duration-100 ease-in"
+                                                leave-from-class="opacity-100"
+                                                leave-to-class="opacity-0"
+                                            >
+                                                <ListboxOptions
+                                                    class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                                                >
+                                                    <ListboxOption
+                                                        v-slot="{
+                                                            active,
+                                                            selected,
+                                                        }"
+                                                        v-for="(
+                                                            type_champ, index
+                                                        ) in type_champs"
+                                                        :key="index"
+                                                        :value="type_champ"
+                                                        as="template"
+                                                    >
+                                                        <li
+                                                            :class="[
+                                                                active
+                                                                    ? 'bg-amber-100 text-amber-900'
+                                                                    : 'text-gray-700',
+                                                                'relative cursor-default select-none py-2 pl-10 pr-4',
+                                                            ]"
+                                                        >
+                                                            <span
+                                                                :class="[
+                                                                    selected
+                                                                        ? 'font-medium'
+                                                                        : 'font-normal',
+                                                                    'block truncate',
+                                                                ]"
+                                                                >{{
+                                                                    type_champ.type
+                                                                }}</span
+                                                            >
+                                                            <span
+                                                                v-if="selected"
+                                                                class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
+                                                            >
+                                                                <CheckCircleIcon
+                                                                    class="h-5 w-5"
+                                                                    aria-hidden="true"
+                                                                />
+                                                            </span>
+                                                        </li>
+                                                    </ListboxOption>
+                                                </ListboxOptions>
+                                            </transition>
+                                        </div>
+                                    </Listbox>
+                                </div>
+                                <button
+                                    type="submit"
+                                    class="ml-4 inline-flex items-center"
+                                >
+                                    <PlusCircleIcon
+                                        class="h-6 w-6 text-indigo-500 hover:text-indigo-700"
+                                    />
+                                </button>
+                                <button
+                                    @click="toggleAddCritereForm(categorie)"
+                                    type="button"
+                                    class="ml-4 inline-flex items-center"
+                                >
+                                    <XCircleIcon
+                                        class="h-6 w-6 text-red-500 hover:text-red-700"
+                                    />
+                                </button>
+                            </form>
+                        </div>
                     </li>
                 </ul>
             </div>

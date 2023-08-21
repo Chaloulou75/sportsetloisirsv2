@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use App\Models\Critere;
 use App\Models\Famille;
 use App\Models\Categorie;
 use Illuminate\Http\Request;
@@ -86,7 +87,6 @@ class AdminController extends Controller
 
         $familles = Famille::select('id', 'name', 'slug', 'nom_long')->whereNotIn('id', $disciplineFamillesIds)->get();
 
-
         $disciplineCategorieCriteres = LienDisciplineCategorieCritere::with([
             'discipline', 'categorie', 'critere', 'valeurs',
         ])->where('discipline_id', $discipline->id)
@@ -118,6 +118,7 @@ class AdminController extends Controller
                 'criteres' => $criteres,
             ];
         });
+        $listeCriteres = Critere::select(['id', 'nom'])->get();
 
         return Inertia::render('Admin/Edit', [
             'can' => [
@@ -131,6 +132,7 @@ class AdminController extends Controller
             'familles' => $familles,
             'disciplineCategorieCriteres' => $disciplineCategorieCriteres,
             'groupedData' => $groupedData,
+            'listeCriteres' => $listeCriteres,
         ]);
 
     }

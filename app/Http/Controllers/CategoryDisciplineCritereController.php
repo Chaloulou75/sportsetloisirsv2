@@ -2,12 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
 use App\Models\LienDisciplineCategorieCritereValeur;
-use Illuminate\Http\Request;
 
 class CategoryDisciplineCritereController extends Controller
 {
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'critere.id' => ['required', Rule::exists('liste_criteres', 'id')],
+            'categorie.id' => ['required', Rule::exists('liens_disciplines_categories', 'id')],
+            'type_champ.type' => ['required', 'string', 'max:255'],
+        ]);
+
+        $discCat = LienDisciplineCategorie::where('id', $request->categorie['id'])->firstOrFail();
+
+        LienDisciplineCategorieCritere::create([
+            "discipline_id" => $discCat->discipline_id,
+            "categorie_id" => $request->categorie['id'],
+            "critere_id" => $request->critere['id'],
+            "nom" => $request->critere['nom'],
+            "type_champ_form" => $request->type_champ['type'],
+        ]);
+
+        return redirect()->back()->with('success', 'Critère ajouté avec succès');
+
+    }
     /**
      * Remove the specified resource from storage.
      */
