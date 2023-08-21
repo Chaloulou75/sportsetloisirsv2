@@ -13,8 +13,8 @@ import {
     ListboxButton,
     ListboxOptions,
     ListboxOption,
-  } from '@headlessui/vue'
-  import { ChevronUpDownIcon, CheckCircleIcon } from '@heroicons/vue/20/solid'
+} from "@headlessui/vue";
+import { ChevronUpDownIcon, CheckCircleIcon } from "@heroicons/vue/20/solid";
 
 const emit = defineEmits(["close"]);
 
@@ -31,25 +31,28 @@ const selectedEvent = ref({});
 const isOpen = ref(false);
 
 const filteredProducts = computed(() => {
-  if (selectedActivite.value) {
-    const selectedActiviteId = selectedActivite.value.id;
-    const activite = props.structureActivites.find(
-      (activite) => activite.id === selectedActiviteId
-    );
-    if (activite) {
-      return activite.produits ?? [];
+    if (selectedActivite.value) {
+        const selectedActiviteId = selectedActivite.value.id;
+        const activite = props.structureActivites.find(
+            (activite) => activite.id === selectedActiviteId
+        );
+        if (activite) {
+            return activite.produits ?? [];
+        }
     }
-  }
-  return [];
+    return [];
 });
 
-watch(() => selectedActivite.value, (newActivite) => {
-  if (newActivite) {
-    selectedProduct.value = newActivite.produits[0] || null;
-  } else {
-    selectedProduct.value = null;
-  }
-});
+watch(
+    () => selectedActivite.value,
+    (newActivite) => {
+        if (newActivite) {
+            selectedProduct.value = newActivite.produits[0] || null;
+        } else {
+            selectedProduct.value = null;
+        }
+    }
+);
 
 function closeModal() {
     isOpen.value = false;
@@ -68,7 +71,7 @@ const getEvents = () => {
             if (planning) {
                 const event = {
                     start: planning.start,
-                    end:  planning.end,
+                    end: planning.end,
                     title: planning.title ?? structureActivite.titre,
                     content: structureActivite.description,
                     activiteId: structureActivite.id,
@@ -92,8 +95,16 @@ const events = getEvents();
 
 const formPlanning = useForm({
     structure_id: ref(props.structure.id),
-    discipline_id: ref(props.structureActivites && props.structureActivites.length > 0 ? props.structureActivites[0].discipline_id : null),
-    categorie_id: ref(props.structureActivites && props.structureActivites.length > 0 ? props.structureActivites[0].categorie_id : null),
+    discipline_id: ref(
+        props.structureActivites && props.structureActivites.length > 0
+            ? props.structureActivites[0].discipline_id
+            : null
+    ),
+    categorie_id: ref(
+        props.structureActivites && props.structureActivites.length > 0
+            ? props.structureActivites[0].categorie_id
+            : null
+    ),
     activite: ref(selectedActivite.value),
     produit: ref(selectedProduct.value),
     events: ref(events),
@@ -146,35 +157,39 @@ const handleEventChanged = (event) => {
     selectedEvent.value = event.event;
 
     const url = `/structures/${props.structure.slug}/plannings/${event.event.planningId}`;
-    router.put(url,
-    {
-        _method: "put",
-        event: selectedEvent.value,
-    },
-    {
-        preserveScroll: true,
-        structure: props.structure.slug,
-        planning: event.event.planningId,
-    });
+    router.put(
+        url,
+        {
+            _method: "put",
+            event: selectedEvent.value,
+        },
+        {
+            preserveScroll: true,
+            structure: props.structure.slug,
+            planning: event.event.planningId,
+        }
+    );
 };
-
-
 </script>
 <template>
     <div v-if="structureActivites.length === 0">
-        <p class="font-semibold text-gray-600 italic">Pas d'activité lié à cette catégorie.</p>
+        <p class="font-semibold italic text-gray-600">
+            Pas d'activité lié à cette catégorie.
+        </p>
     </div>
     <div v-else class="mb-4 flex w-full items-center justify-between">
         <h2 class="text-lg font-medium leading-6 text-gray-800">
             Planning de vos activités
             <span class="text-xs text-blue-700">
-                Supprimer un événement (en
-                cliquant et en maintenant un
+                Supprimer un événement (en cliquant et en maintenant un
                 événement)
             </span>
         </h2>
     </div>
-    <div v-show="structureActivites.length > 0" class="min-h-full w-full rounded-sm shadow-lg mt-6 overflow-x-auto">
+    <div
+        v-show="structureActivites.length > 0"
+        class="mt-6 min-h-full w-full overflow-x-auto rounded-sm shadow-lg"
+    >
         <vue-cal
             small
             :time-from="6 * 60"
@@ -245,17 +260,35 @@ const handleEventChanged = (event) => {
                                         id="title"
                                         class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                         v-model="selectedEvent.title"
-                                        :placeholder="structureActivites && structureActivites[0] ? `${structureActivites[0].categorie.nom_categorie_pro} de ${structureActivites[0].discipline.name}` : 'Titre'"
+                                        :placeholder="
+                                            structureActivites &&
+                                            structureActivites[0]
+                                                ? `${structureActivites[0].categorie.nom_categorie_pro} de ${structureActivites[0].discipline.name}`
+                                                : 'Titre'
+                                        "
                                     />
                                 </DialogTitle>
                                 <div class="mt-2">
                                     <p class="text-sm text-gray-500">
-                                        Exemple: <span class="font-semibold"> {{ structureActivites && structureActivites[0] ? structureActivites[0].categorie.nom_categorie_pro + ' de ' + structureActivites[0].discipline.name : '' }}</span>.
+                                        Exemple:
+                                        <span class="font-semibold">
+                                            {{
+                                                structureActivites &&
+                                                structureActivites[0]
+                                                    ? structureActivites[0]
+                                                          .categorie
+                                                          .nom_categorie_pro +
+                                                      " de " +
+                                                      structureActivites[0]
+                                                          .discipline.name
+                                                    : ""
+                                            }}</span
+                                        >.
                                     </p>
                                 </div>
 
                                 <Listbox
-                                    class="w-full mt-4"
+                                    class="mt-4 w-full"
                                     v-model="selectedActivite"
                                 >
                                     <div class="relative mt-1">
@@ -268,12 +301,9 @@ const handleEventChanged = (event) => {
                                         <ListboxButton
                                             class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
                                         >
-                                            <span
-                                                class="block truncate"
-                                                >{{
-                                                    selectedActivite.titre
-                                                }}</span
-                                            >
+                                            <span class="block truncate">{{
+                                                selectedActivite.titre
+                                            }}</span>
                                             <span
                                                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
                                             >
@@ -290,7 +320,7 @@ const handleEventChanged = (event) => {
                                             leave-to-class="opacity-0"
                                         >
                                             <ListboxOptions
-                                                class="absolute mt-1 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-20"
+                                                class="absolute z-20 mt-1 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
                                             >
                                                 <ListboxOption
                                                     v-slot="{
@@ -298,12 +328,8 @@ const handleEventChanged = (event) => {
                                                         selected,
                                                     }"
                                                     v-for="activite in props.structureActivites"
-                                                    :key="
-                                                        activite.id
-                                                    "
-                                                    :value="
-                                                        activite
-                                                    "
+                                                    :key="activite.id"
+                                                    :value="activite"
                                                     as="template"
                                                 >
                                                     <li
@@ -326,9 +352,7 @@ const handleEventChanged = (event) => {
                                                             }}</span
                                                         >
                                                         <span
-                                                            v-if="
-                                                                selected
-                                                            "
+                                                            v-if="selected"
                                                             class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
                                                         >
                                                             <CheckCircleIcon
@@ -345,7 +369,7 @@ const handleEventChanged = (event) => {
 
                                 <Listbox
                                     v-if="selectedActivite"
-                                    class="w-full mt-4"
+                                    class="mt-4 w-full"
                                     v-model="selectedProduct"
                                 >
                                     <div class="relative mt-1">
@@ -358,12 +382,9 @@ const handleEventChanged = (event) => {
                                         <ListboxButton
                                             class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
                                         >
-                                            <span
-                                                class="block truncate"
-                                                >{{
-                                                    selectedProduct.id
-                                                }}</span
-                                            >
+                                            <span class="block truncate">{{
+                                                selectedProduct.id
+                                            }}</span>
                                             <span
                                                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
                                             >
@@ -388,12 +409,8 @@ const handleEventChanged = (event) => {
                                                         selected,
                                                     }"
                                                     v-for="produit in filteredProducts"
-                                                    :key="
-                                                        produit.id
-                                                    "
-                                                    :value="
-                                                        produit
-                                                    "
+                                                    :key="produit.id"
+                                                    :value="produit"
                                                     as="template"
                                                 >
                                                     <li
@@ -416,9 +433,7 @@ const handleEventChanged = (event) => {
                                                             }}</span
                                                         >
                                                         <span
-                                                            v-if="
-                                                                selected
-                                                            "
+                                                            v-if="selected"
                                                             class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
                                                         >
                                                             <CheckCircleIcon

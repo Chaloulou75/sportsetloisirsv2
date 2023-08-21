@@ -36,8 +36,10 @@ const attachDiscipline = (disciplineNotIn) => {
             discipline: props.discipline,
         }),
         {
-            preserveScroll: true,
             disciplineNotIn: disciplineNotIn.id,
+        },
+        {
+            preserveScroll: true,
         }
     );
 };
@@ -49,8 +51,10 @@ const detachDiscipline = (disciplineIn) => {
         }),
         {
             _method: "PUT",
-            preserveScroll: "true",
             disciplineIn: disciplineIn.discipline_similaire_id,
+        },
+        {
+            preserveScroll: true,
         }
     );
 };
@@ -61,8 +65,10 @@ const attachFamille = (familleNotIn) => {
             discipline: props.discipline,
         }),
         {
-            preserveScroll: true,
             familleNotIn: familleNotIn.id,
+        },
+        {
+            preserveScroll: true,
         }
     );
 };
@@ -74,8 +80,10 @@ const detachFamille = (familleIn) => {
         }),
         {
             _method: "PUT",
-            preserveScroll: "true",
             familleIn: familleIn.id,
+        },
+        {
+            preserveScroll: true,
         }
     );
 };
@@ -86,8 +94,10 @@ const attachCategorie = (categorieNotIn) => {
             discipline: props.discipline,
         }),
         {
-            preserveScroll: true,
             categorieNotIn: categorieNotIn.id,
+        },
+        {
+            preserveScroll: true,
         }
     );
 };
@@ -99,8 +109,10 @@ const detachCategorie = (categorieIn) => {
         }),
         {
             _method: "PUT",
-            preserveScroll: "true",
             categorieIn: categorieIn.categorie_id,
+        },
+        {
+            preserveScroll: true,
         }
     );
 };
@@ -117,9 +129,11 @@ const submitUpdateInfoBase = () => {
             discipline: props.discipline,
         }),
         {
-            preserveScroll: true,
             name: updateInfoBaseForm.name,
             description: updateInfoBaseForm.description,
+        },
+        {
+            preserveScroll: true,
         }
     );
 };
@@ -138,11 +152,12 @@ const updateCategorie = (index) => {
             discipline: props.discipline,
         }),
         {
-            preserveScroll: true,
-            // id: categorieForms[index].id,
             nom_categorie_client: categorieForms[index].nom_categorie_client,
             nom_categorie_pro: categorieForms[index].nom_categorie_pro,
             id: props.categories[index].id,
+        },
+        {
+            preserveScroll: true,
         }
     );
 };
@@ -153,8 +168,10 @@ const deleteCritere = (disciplineCategorieCritere) => {
             lienDisciplineCategorieCritere: disciplineCategorieCritere,
         }),
         {
-            preserveScroll: true,
             lienDisciplineCategorieCritere: disciplineCategorieCritere,
+        },
+        {
+            preserveScroll: true,
         }
     );
 };
@@ -188,29 +205,67 @@ const updateValeur = (valeur) => {
             lienDisCatCritValeur: valeur.id,
         }),
         {
-            preserveScroll: true,
             valeur: valeurForm.value[valeur.id].valeur,
             id: valeurForm.value[valeur.id].id,
+        },
+        {
+            preserveScroll: true,
         }
     );
 };
 
-const critereFormsVisibility = ref({}); // Object to store visibility state
+const critereFormsVisibility = ref({});
 
 const toggleAddValeurForm = (critere) => {
-    critereFormsVisibility.value[critere.id] =
-        !critereFormsVisibility.value[critere.id];
+    critereFormsVisibility.value[critere.disciplineCategorieCritere] =
+        !critereFormsVisibility.value[critere.disciplineCategorieCritere];
 };
 
 const showAddValeurForm = (critere) => {
-    return critereFormsVisibility.value[critere.id] || false;
+    return (
+        critereFormsVisibility.value[critere.disciplineCategorieCritere] ||
+        false
+    );
 };
+
 const addValeurForm = useForm({
     valeur: ref(null),
     remember: true,
 });
 
-const addValeur = (critere) => {};
+const addValeur = (critere) => {
+    router.post(
+        route("categories-disciplines-criteres-valeurs.store", {
+            critere: critere.disciplineCategorieCritere,
+        }),
+        {
+            valeur: addValeurForm.valeur,
+            disciplineCategorieCritereId: critere.disciplineCategorieCritere,
+        },
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                initializeValeurForm();
+                addValeurForm.reset();
+                toggleAddValeurForm(critere);
+            },
+        }
+    );
+};
+
+const removeValeur = (valeur) => {
+    router.delete(
+        route("categories-disciplines-criteres-valeurs.destroy", {
+            lienDisCatCritValeur: valeur,
+        }),
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                initializeValeurForm();
+            },
+        }
+    );
+};
 </script>
 <template>
     <Head
@@ -283,7 +338,7 @@ const addValeur = (critere) => {};
             </p>
         </template>
 
-        <div class="space-y-8 py-6">
+        <div class="space-y-16 py-6">
             <div class="px-2 md:px-6">
                 <h1
                     class="text-center text-2xl font-bold uppercase tracking-wide text-indigo-600 md:text-4xl"
@@ -294,6 +349,11 @@ const addValeur = (critere) => {};
 
             <!-- édition infos de base -->
             <div class="px-2 md:px-6">
+                <h2
+                    class="text-center text-2xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4"
+                >
+                    Informations de base
+                </h2>
                 <form @submit.prevent="submitUpdateInfoBase" class="space-y-2">
                     <UpdateInfoBase
                         :errors="errors"
@@ -621,7 +681,7 @@ const addValeur = (critere) => {};
                         >
                             <li
                                 v-for="critere in categorie.criteres"
-                                :key="critere.id"
+                                :key="critere.disciplineCategorieCritere"
                                 class="flex flex-col text-base text-slate-600"
                             >
                                 <div
@@ -718,30 +778,26 @@ const addValeur = (critere) => {};
                                             <button
                                                 type="button"
                                                 class="inline-flex items-center"
-                                                @click="deleteValeur(valeur)"
+                                                @click="removeValeur(valeur)"
                                             >
                                                 <TrashIcon
-                                                    class="h-5 w-5 text-red-500"
+                                                    class="h-5 w-5 text-red-500 hover:text-red-700"
                                                 />
                                             </button>
                                         </form>
                                     </li>
                                 </ul>
-                                <div v-if="showAddValeurForm(critere)">
-                                    <div>
+                                <ul
+                                    v-if="showAddValeurForm(critere)"
+                                    class="ml-4 list-inside list-disc marker:text-indigo-600"
+                                >
+                                    <li class="text-sm text-slate-600">
                                         <form
-                                            class="flex items-center justify-between"
+                                            class="inline-flex flex-grow items-center justify-between"
                                             @submit.prevent="addValeur(critere)"
                                         >
                                             <div>
-                                                <label
-                                                    for="newValeur"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    <span
-                                                        class="text-xs italic"
-                                                    ></span>
-                                                </label>
+                                                <label for="newValeur"></label>
                                                 <div
                                                     class="mt-1 flex rounded-md"
                                                 >
@@ -758,13 +814,27 @@ const addValeur = (critere) => {};
                                                     />
                                                 </div>
                                             </div>
-                                            <button type="submit">
+                                            <button
+                                                type="submit"
+                                                class="ml-4 inline-flex items-center"
+                                            >
                                                 <PlusCircleIcon
-                                                    class="h-5 w-5 text-indigo-500 hover:text-indigo-700"
+                                                    class="h-6 w-6 text-indigo-500 hover:text-indigo-700"
                                                 />
                                             </button>
-                                        </form>
-                                        <!-- <div
+                                            <button
+                                                @click="
+                                                    toggleAddValeurForm(critere)
+                                                "
+                                                type="button"
+                                                class="ml-4 inline-flex items-center"
+                                            >
+                                                <XCircleIcon
+                                                    class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                />
+                                            </button>
+
+                                            <!-- <div
                                                     v-if="
                                                         valeurForm[valeur.id]
                                                             .errors.valeur
@@ -776,10 +846,14 @@ const addValeur = (critere) => {};
                                                             .errors.valeur[0]
                                                     }}
                                                 </div> -->
-                                    </div>
-                                </div>
-                                <div>
+                                        </form>
+                                    </li>
+                                </ul>
+                                <div
+                                    class="flex w-full items-center justify-center py-2"
+                                >
                                     <button
+                                        class="inline-flex items-center justify-center space-y-1 rounded-lg border border-gray-300 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                                         v-if="!showAddValeurForm(critere)"
                                         type="button"
                                         @click="toggleAddValeurForm(critere)"

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LienDisciplineCategorieCritere;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\LienDisciplineCategorieCritereValeur;
@@ -9,43 +10,24 @@ use App\Models\LienDisciplineCategorieCritereValeur;
 class CategoryDisciplineCritereValeurController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, LienDisciplineCategorieCritere $critere)
     {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        $request->validate([
+            'valeur' => ['required', 'string', 'max:255'],
+            'disciplineCategorieCritereId' => ['required', Rule::exists('liens_disciplines_categories_criteres', 'id')],
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        $lienDisCatCritVal = LienDisciplineCategorieCritereValeur::create([
+            'discipline_categorie_critere_id' => $request->disciplineCategorieCritereId,
+            'valeur' => $request->valeur,
+            'defaut' => 0,
+        ]);
+
+        return redirect()->back()->with('success', 'Valeur du critère ajoutée');
+
     }
 
     /**
@@ -68,8 +50,11 @@ class CategoryDisciplineCritereValeurController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(LienDisciplineCategorieCritereValeur $lienDisCatCritValeur)
     {
-        //
+        $valeur = LienDisciplineCategorieCritereValeur::where('id', $lienDisCatCritValeur->id)->firstOrFail();
+        $valeur->delete();
+        return redirect()->back()->with('success', 'Valeur supprimée');
+
     }
 }

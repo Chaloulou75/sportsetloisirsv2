@@ -14,7 +14,7 @@ const props = defineProps({
 const discipline = ref(null);
 </script>
 <template>
-    <Head title="Admin page" :description="'Administration du site.'" />
+    <Head title="Gestion du site" :description="'Administration du site.'" />
     <AppLayout>
         <template #header>
             <div
@@ -81,7 +81,9 @@ const discipline = ref(null);
 
         <div class="py-6">
             <div class="px-2 md:px-6">
-                <h2 class="text-center text-2xl text-slate-700">
+                <h2
+                    class="text-center text-2xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4"
+                >
                     Gestion par discipline
                 </h2>
 

@@ -20,10 +20,15 @@ const props = defineProps({
 });
 
 function destroy(id) {
-    router.delete(`/structures/${id}`, {
-        method: "DELETE",
-        preserveScroll: true,
-    });
+    router.delete(
+        `/structures/${id}`,
+        {
+            method: "DELETE",
+        },
+        {
+            preserveScroll: true,
+        }
+    );
 }
 </script>
 

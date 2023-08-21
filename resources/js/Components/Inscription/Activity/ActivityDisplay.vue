@@ -149,13 +149,15 @@ const submitForm = (id) => {
             image: formEdit.image,
         },
         {
+            structure: props.structure.slug,
+            activite: id,
+        },
+        {
             preserveScroll: true,
             onSuccess: () => {
                 formEdit.reset();
                 closeEditModal();
             },
-            structure: props.structure.slug,
-            activite: id,
         }
     );
 };
@@ -169,9 +171,11 @@ async function toggleActif(structureActivite) {
             actif: structureActivite.actif,
         },
         {
-            preserveScroll: true,
             structure: props.structure.slug,
             activite: structureActivite.id,
+        },
+        {
+            preserveScroll: true,
         }
     );
 }
@@ -180,22 +184,29 @@ const duplicate = (structureActivite, produit) => {
     router.post(
         `/structures/${props.structure.slug}/activites/${structureActivite.id}/produits/${produit.id}/duplicate`,
         {
-            preserveScroll: true,
             structure: props.structure.slug,
             activite: structureActivite.id,
             produit: produit.id,
+        },
+        {
+            preserveScroll: true,
         }
     );
 };
 
 const destroy = (structureActivite, produit) => {
     const url = `/structures/${props.structure.slug}/activites/${structureActivite.id}/produits/${produit.id}`;
-    router.delete(url, {
-        preserveScroll: true,
-        structure: props.structure.slug,
-        activite: structureActivite.id,
-        produit: produit.id,
-    });
+    router.delete(
+        url,
+        {
+            structure: props.structure.slug,
+            activite: structureActivite.id,
+            produit: produit.id,
+        },
+        {
+            preserveScroll: true,
+        }
+    );
 };
 
 const openTarifToggle = (produit) => {
@@ -211,22 +222,29 @@ const duplicateTarif = (tarif, produit) => {
     router.post(
         `/structures/${props.structure.slug}/tarifs/${tarif.id}/produits/${produit.id}/duplicate`,
         {
-            preserveScroll: true,
             structure: props.structure.slug,
             tarif: tarif.id,
             produit: produit.id,
+        },
+        {
+            preserveScroll: true,
         }
     );
 };
 
 const destroyTarif = (tarif, produit) => {
     const url = `/structures/${props.structure.slug}/tarifs/${tarif.id}/produits/${produit.id}`;
-    router.delete(url, {
-        preserveScroll: true,
-        structure: props.structure.slug,
-        tarif: tarif.id,
-        produit: produit.id,
-    });
+    router.delete(
+        url,
+        {
+            structure: props.structure.slug,
+            tarif: tarif.id,
+            produit: produit.id,
+        },
+        {
+            preserveScroll: true,
+        }
+    );
 };
 </script>
 <template>

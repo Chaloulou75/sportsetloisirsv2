@@ -63,11 +63,16 @@ const openEditTarifModal = (tarif) => {
 
 const destroyTarif = (tarif) => {
     const url = `/structures/${props.structure.slug}/tarifs/${tarif.id}`;
-    router.delete(url, {
-        preserveScroll: true,
-        structure: props.structure.slug,
-        tarif: tarif.id,
-    });
+    router.delete(
+        url,
+        {
+            structure: props.structure.slug,
+            tarif: tarif.id,
+        },
+        {
+            preserveScroll: true,
+        }
+    );
 };
 </script>
 <template>
