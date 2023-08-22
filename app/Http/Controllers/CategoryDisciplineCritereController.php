@@ -21,7 +21,7 @@ class CategoryDisciplineCritereController extends Controller
             'type_champ.type' => ['required', 'string', 'max:255'],
         ]);
 
-        $discCat = LienDisciplineCategorie::where('id', $request->categorie['id'])->firstOrFail();
+        $discCat = LienDisciplineCategorie::with('discipline')->where('id', $request->categorie['id'])->firstOrFail();
 
         LienDisciplineCategorieCritere::create([
             "discipline_id" => $discCat->discipline_id,
@@ -31,7 +31,7 @@ class CategoryDisciplineCritereController extends Controller
             "type_champ_form" => $request->type_champ['type'],
         ]);
 
-        return redirect()->back()->with('success', 'Critère ajouté avec succès');
+        return to_route('admin.edit', $discCat->discipline)->with('success', 'Critère ajouté avec succès');
 
     }
     /**
@@ -42,7 +42,7 @@ class CategoryDisciplineCritereController extends Controller
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 
-        $discCatCritere = LienDisciplineCategorieCritere::with('valeurs')->where('id', $lienDisciplineCategorieCritere->id)->firstOrFail();
+        $discCatCritere = LienDisciplineCategorieCritere::with(['discipline', 'valeurs'])->where('id', $lienDisciplineCategorieCritere->id)->firstOrFail();
 
         if($discCatCritere->valeurs->isNotEmpty()) {
             foreach ($discCatCritere->valeurs as $valeur) {
@@ -51,7 +51,7 @@ class CategoryDisciplineCritereController extends Controller
         }
 
         $discCatCritere->delete();
-        return redirect()->back()->with('success', 'Critère et valeurs associés supprimés');
+        return to_route('admin.edit', $discCatCritere->discipline)->with('success', 'Critère et valeurs associés supprimés');
 
     }
 }

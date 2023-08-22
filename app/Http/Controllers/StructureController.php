@@ -50,7 +50,7 @@ class StructureController extends Controller
         })->select(['id', 'name', 'slug'])->get();
 
         return Inertia::render('Structures/Index', [
-            'structures'=> Structure::with([
+            'structures' => Structure::with([
                     'famille:id,name',
                     'creator:id,name',
                     'users:id,name',
@@ -103,8 +103,8 @@ class StructureController extends Controller
                             'departement_id' => $structure->departement_id,
                             'user' => $structure->creator,
                             'logo' => $structure->logo ? asset($structure->logo) : 'https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
-                            'categories' =>$structure->categories,
-                            'disciplines' =>$structure->disciplines,
+                            'categories' => $structure->categories,
+                            'disciplines' => $structure->disciplines,
                             'activites' => $structure->activites,
                             'produits' => $structure->produits,
                             'tarifs' => $structure->tarifs,
@@ -141,7 +141,7 @@ class StructureController extends Controller
      */
     public function store(Request $request)
     {
-        $validated= request()->validate([
+        $validated = request()->validate([
             'name' => ['required', 'string', 'max:255'],
             'structuretype_id' => ['required', Rule::exists('structuretypes', 'id')],
             'email' => ['required', 'max:50', 'email:filter', 'unique:structures,email'],
@@ -172,7 +172,7 @@ class StructureController extends Controller
 
         $validated['user_id'] = auth()->id();
 
-        $city= City::where('code_postal', $validated['zip_code'])->firstOrFail();
+        $city = City::where('code_postal', $validated['zip_code'])->firstOrFail();
         $cityId = $city->id;
         $validated['city_id'] = $cityId;
 
@@ -185,7 +185,7 @@ class StructureController extends Controller
         }
 
         $departmentNumber = substr($validated['zip_code'], 0, 2);
-        $departement= Departement::where('numero', $departmentNumber)->firstOrFail();
+        $departement = Departement::where('numero', $departmentNumber)->firstOrFail();
         $validated['departement_id'] = $departement->id;
 
         $structure = Structure::create($validated);
@@ -297,7 +297,7 @@ class StructureController extends Controller
         $structure->increment('view_count');
 
         return Inertia::render('Structures/Show', [
-            'structure'=> $structure,
+            'structure' => $structure,
             'familles' => $familles,
             'criteres' => $criteres,
             'logoUrl' => $logoUrl,
@@ -337,8 +337,6 @@ class StructureController extends Controller
         return Inertia::render('Structures/Edit', [
             'structurestypes' => $structurestypes,
             'disciplines' => $disciplines,
-            // 'niveaux' => $niveaux,
-            // 'publictypes' => $publictypes,
             'structure' => $structure,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
@@ -355,7 +353,7 @@ class StructureController extends Controller
     {
         $structure = Structure::where('id', $structure->id)->firstOrFail();
 
-        $validated= request()->validate([
+        $validated = request()->validate([
             'name' => ['required', 'string', 'max:255'],
             'structuretype_id' => ['required', Rule::exists('structuretypes', 'id')],
             'email' => ['required', 'max:50', 'email:filter'],
@@ -384,7 +382,7 @@ class StructureController extends Controller
         $validated['user_id'] = auth()->id();
         $validated['slug'] = $slug . '-' . $structure->id;
 
-        $city= City::where('code_postal', $validated['zip_code'])->firstOrFail();
+        $city = City::where('code_postal', $validated['zip_code'])->firstOrFail();
         $cityId = $city->id;
         $validated['city_id'] = $cityId;
 
@@ -398,7 +396,7 @@ class StructureController extends Controller
         }
 
         $departmentNumber = substr($validated['zip_code'], 0, 2);
-        $departement= Departement::where('numero', $departmentNumber)->firstOrFail();
+        $departement = Departement::where('numero', $departmentNumber)->firstOrFail();
         $validated['departement_id'] = $departement->id;
 
         if($request->hasFile('logo')) {

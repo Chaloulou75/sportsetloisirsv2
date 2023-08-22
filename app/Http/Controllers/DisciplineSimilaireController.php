@@ -18,7 +18,7 @@ class DisciplineSimilaireController extends Controller
         $disciplineNotInId = $request->input('disciplineNotIn');
         $disciplineNotIn = ListDiscipline::findOrFail($disciplineNotInId);
         $discipline->disciplinesSimilaires()->attach($disciplineNotIn);
-        return redirect()->back()->with('success', 'Discipline similaire ajoutée');
+        return to_route('admin.edit', $discipline)->with('success', 'Discipline similaire ajoutée');
     }
 
     /**
@@ -31,7 +31,7 @@ class DisciplineSimilaireController extends Controller
         $disciplineInId = $request->input('disciplineIn');
         $disciplineIn = ListDiscipline::findOrFail($disciplineInId);
         $discipline->disciplinesSimilaires()->detach($disciplineIn);
-        return redirect()->back()->with('success', 'Discipline similaire supprimée');
+        return to_route('admin.edit', $discipline)->with('success', 'Discipline similaire supprimée');
     }
 
 

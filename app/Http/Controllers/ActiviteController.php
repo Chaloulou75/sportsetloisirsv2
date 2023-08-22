@@ -72,7 +72,7 @@ class ActiviteController extends Controller
 
         $categories = Categorie::with('disciplines')->select(['id', 'nom', 'ico'])->get();
 
-        $dejaUsedDisciplines= $structure->disciplines->unique()->pluck('discipline_id');
+        $dejaUsedDisciplines = $structure->disciplines->unique()->pluck('discipline_id');
 
         $listDisciplines = ListDiscipline::with(['categories'])->select(['id', 'name', 'slug'])->get();
 
@@ -117,7 +117,7 @@ class ActiviteController extends Controller
                                     ->where('discipline_id', $validated['discipline_id'])
                                     ->exists();
         if($exists) {
-            return Redirect::back()->with('error', 'Cette discipline est déjà associée à cette structure.');
+            return to_route('structures.activites.index', $structure)->with('error', 'Cette discipline est déjà associée à cette structure.');
         }
 
         $structureDiscipline = StructureDiscipline::create([
@@ -182,7 +182,7 @@ class ActiviteController extends Controller
             }
         }
 
-        return Redirect::route('structures.activites.index', $structure)->with('success', 'Activité créée, vous pouvez ajouter d\'autres activités à votre structure.');
+        return to_route('structures.activites.index', $structure)->with('success', 'Activité créée, vous pouvez ajouter d\'autres activités à votre structure.');
     }
 
     public function show(Structure $structure, $activite)
@@ -285,7 +285,7 @@ class ActiviteController extends Controller
     public function edit(Structure $structure, $activite)
     {
         if (! Gate::allows('update-structure', $structure)) {
-            return Redirect::route('structures.activites.index', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
+            return to_route('structures.activites.index', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
 
         //
@@ -354,7 +354,7 @@ class ActiviteController extends Controller
                                                         'id' => $infoItem->id,
                                                         'attribut_id' => $infoItem->attribut_id,
                                                         'valeur' => $infoItem->valeur,
-                                                        'unite'=> $infoItem->unite,
+                                                        'unite' => $infoItem->unite,
                                                         'tarifTypeAttribut' => $infoItem->tarifTypeAttribut
                                                     ];
                                                 }),
@@ -380,7 +380,7 @@ class ActiviteController extends Controller
             'structureActivites' => $structureActivites,
             'criteres' => $criteres,
             'categoriesListByDiscipline' => $categoriesListByDiscipline,
-            'tarifTypes'=> $tarifTypes,
+            'tarifTypes' => $tarifTypes,
             'activiteForTarifs' => $activiteForTarifs,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
@@ -395,7 +395,7 @@ class ActiviteController extends Controller
     public function update(Request $request, Structure $structure, $activite)
     {
         if (! Gate::allows('update-structure', $structure)) {
-            return Redirect::route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de modifier cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
+            return to_route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de modifier cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
 
         $request->validate([
@@ -613,7 +613,7 @@ class ActiviteController extends Controller
         // newAdresse
         if($request->address) {
 
-            $city= City::where('code_postal', $request->zip_code)->firstOrFail();
+            $city = City::where('code_postal', $request->zip_code)->firstOrFail();
             $cityId = $city->id;
 
             $validatedAddress = [

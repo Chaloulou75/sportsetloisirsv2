@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
-import { ref, nextTick, defineAsyncComponent } from "vue";
+import { ref, watch, defineAsyncComponent, nextTick } from "vue";
 import {
     XCircleIcon,
     PlusCircleIcon,
@@ -9,6 +9,7 @@ import {
     TrashIcon,
     ChevronUpDownIcon,
     CheckCircleIcon,
+    ArrowUturnLeftIcon,
 } from "@heroicons/vue/24/outline";
 import {
     Listbox,
@@ -35,32 +36,24 @@ const props = defineProps({
     familles: Object,
     disciplineCategorieCriteres: Object,
     groupedData: Object,
-    can: Object,
+    user_can: Object,
     listeCriteres: Object,
 });
 
-const attachDiscipline = (disciplineNotIn) => {
-    router.post(
-        route("discipline-similaire.store", {
-            discipline: props.discipline,
-        }),
-        {
-            disciplineNotIn: disciplineNotIn.id,
-        },
-        {
-            preserveScroll: true,
-        }
-    );
-};
+const updateInfoBaseForm = useForm({
+    name: ref(props.discipline.name),
+    description: ref(props.discipline.description),
+    remember: true,
+});
 
-const detachDiscipline = (disciplineIn) => {
+const submitUpdateInfoBase = () => {
     router.put(
-        route("discipline-similaire.detach", {
+        route("disciplines.update", {
             discipline: props.discipline,
         }),
         {
-            _method: "PUT",
-            disciplineIn: disciplineIn.discipline_similaire_id,
+            name: updateInfoBaseForm.name,
+            description: updateInfoBaseForm.description,
         },
         {
             preserveScroll: true,
@@ -97,13 +90,13 @@ const detachFamille = (familleIn) => {
     );
 };
 
-const attachCategorie = (categorieNotIn) => {
+const attachDiscipline = (disciplineNotIn) => {
     router.post(
-        route("categories-disciplines.store", {
+        route("discipline-similaire.store", {
             discipline: props.discipline,
         }),
         {
-            categorieNotIn: categorieNotIn.id,
+            disciplineNotIn: disciplineNotIn.id,
         },
         {
             preserveScroll: true,
@@ -126,20 +119,13 @@ const detachCategorie = (categorieIn) => {
     );
 };
 
-const updateInfoBaseForm = useForm({
-    name: ref(props.discipline.name),
-    description: ref(props.discipline.description),
-    remember: true,
-});
-
-const submitUpdateInfoBase = () => {
-    router.put(
-        route("disciplines.update", {
+const attachCategorie = (categorieNotIn) => {
+    router.post(
+        route("categories-disciplines.store", {
             discipline: props.discipline,
         }),
         {
-            name: updateInfoBaseForm.name,
-            description: updateInfoBaseForm.description,
+            categorieNotIn: categorieNotIn.id,
         },
         {
             preserveScroll: true,
@@ -164,6 +150,21 @@ const updateCategorie = (index) => {
             nom_categorie_client: categorieForms[index].nom_categorie_client,
             nom_categorie_pro: categorieForms[index].nom_categorie_pro,
             id: props.categories[index].id,
+        },
+        {
+            preserveScroll: true,
+        }
+    );
+};
+
+const detachDiscipline = (disciplineIn) => {
+    router.put(
+        route("discipline-similaire.detach", {
+            discipline: props.discipline,
+        }),
+        {
+            _method: "PUT",
+            disciplineIn: disciplineIn.discipline_similaire_id,
         },
         {
             preserveScroll: true,
@@ -323,7 +324,7 @@ const addCritere = (categorie) => {
                 class="my-4 flex w-full flex-col items-center justify-center space-y-2"
             >
                 <h2
-                    class="text-xl font-semibold leading-tight tracking-widest text-gray-800"
+                    class="text-center text-xl font-semibold leading-tight tracking-widest text-gray-800"
                 >
                     Administration de la discipline
                     <span class="text-indigo-600">{{ discipline.name }}</span>
@@ -382,24 +383,32 @@ const addCritere = (categorie) => {
                 similaires et catégories associées.
             </p>
         </template>
+        <div class="px-2 py-6 md:px-6">
+            <Link
+                :href="route('admin.index')"
+                class="hidden w-1/5 items-center justify-center rounded border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-600 shadow-sm hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring-2 md:flex"
+            >
+                <ArrowUturnLeftIcon class="mr-3 h-5 w-5 self-end" />
+                Retour administration
+            </Link>
+        </div>
+        <div class="px-2 md:px-6">
+            <h1
+                class="text-center text-2xl font-bold uppercase tracking-wide text-indigo-600 md:text-4xl"
+            >
+                {{ discipline.name }}
+            </h1>
+        </div>
 
-        <div class="space-y-16 py-6">
-            <div class="px-2 md:px-6">
-                <h1
-                    class="text-center text-2xl font-bold uppercase tracking-wide text-indigo-600 md:text-4xl"
-                >
-                    {{ discipline.name }}
-                </h1>
-            </div>
-
+        <div class="space-y-16 px-2 py-6 md:px-6">
             <!-- édition infos de base -->
-            <div class="px-2 md:px-6">
-                <h2
-                    class="text-center text-2xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4"
-                >
-                    Informations de base
-                </h2>
-                <form @submit.prevent="submitUpdateInfoBase" class="space-y-2">
+            <h2
+                class="text-center text-xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4 md:text-2xl"
+            >
+                Informations de base
+            </h2>
+            <div>
+                <form @submit.prevent="submitUpdateInfoBase" class="space-y-4">
                     <UpdateInfoBase
                         :errors="errors"
                         v-model:name="updateInfoBaseForm.name"
@@ -408,7 +417,7 @@ const addCritere = (categorie) => {
                     <button
                         :disabled="updateInfoBaseForm.processing"
                         type="submit"
-                        class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        class="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:w-auto"
                     >
                         Editer la discipline
                     </button>
@@ -417,12 +426,14 @@ const addCritere = (categorie) => {
 
             <!-- les familles -->
             <h2
-                class="text-center text-2xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4"
+                class="text-center text-xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4 md:text-2xl"
             >
                 Les familles associées à
                 <span class="text-indigo-600">{{ discipline.name }}</span>
             </h2>
-            <div class="flex items-start justify-around px-2 md:px-6">
+            <div
+                class="mx-auto flex flex-col items-center justify-center space-y-4 md:flex-row md:items-start md:justify-around md:space-y-0"
+            >
                 <div class="w-full md:w-1/3">
                     <h3 class="mb-4 text-center text-lg text-slate-700">
                         Les familles associées à
@@ -430,7 +441,7 @@ const addCritere = (categorie) => {
                             discipline.name
                         }}</span>
                         <span class="text-sm italic">
-                            (retirer en cliquant sur la discipline)</span
+                            (retirer en cliquant sur la famille)</span
                         >
                     </h3>
                     <ul class="flex flex-wrap justify-center gap-2">
@@ -479,13 +490,13 @@ const addCritere = (categorie) => {
 
             <!-- les disciplines similaires -->
             <h2
-                class="text-center text-2xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4"
+                class="text-center text-xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4 md:text-2xl"
             >
                 Gestion des disciplines similaires à
                 <span class="text-indigo-600">{{ discipline.name }}</span>
             </h2>
             <div
-                class="mx-auto flex flex-col items-center justify-center space-y-4 px-2 md:flex-row md:items-start md:justify-around md:space-y-0 md:px-6"
+                class="mx-auto flex flex-col items-center justify-center space-y-4 md:flex-row md:items-start md:justify-around md:space-y-0"
             >
                 <div class="w-full md:w-1/3">
                     <h3 class="mb-4 text-center text-lg text-slate-700">
@@ -549,13 +560,13 @@ const addCritere = (categorie) => {
 
             <!-- les catégories associées -->
             <h2
-                class="text-center text-2xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4"
+                class="text-center text-xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4 md:text-2xl"
             >
                 Gestion des catégories associées à
                 <span class="text-indigo-600">{{ discipline.name }}</span>
             </h2>
             <div
-                class="mx-auto flex flex-col items-center justify-center space-y-4 px-2 md:flex-row md:items-start md:justify-around md:space-y-0 md:px-6"
+                class="mx-auto flex flex-col items-center justify-center space-y-4 md:flex-row md:items-start md:justify-around md:space-y-0"
             >
                 <div class="w-full md:w-2/3">
                     <h3 class="mb-4 text-center text-lg text-slate-700">
@@ -567,6 +578,7 @@ const addCritere = (categorie) => {
                             (retirer en cliquant sur la catégorie)</span
                         >
                     </h3>
+
                     <ul class="flex flex-wrap justify-center gap-2">
                         <li
                             v-for="(categorieIn, index) in categories"
@@ -585,7 +597,7 @@ const addCritere = (categorie) => {
                             </button>
 
                             <form
-                                class="inline-flex space-x-4"
+                                class="inline-flex flex-col space-y-2 md:flex-row md:space-x-4 md:space-y-0"
                                 @submit.prevent="updateCategorie(index)"
                             >
                                 <div>
@@ -658,8 +670,16 @@ const addCritere = (categorie) => {
                                         }}
                                     </div>
                                 </div>
-                                <div class="flex items-center">
-                                    <button type="submit">
+                                <div
+                                    class="mx-auto flex w-full items-center justify-center md:w-auto"
+                                >
+                                    <button
+                                        type="submit"
+                                        class="flex items-center justify-center rounded-md border border-gray-200 px-4 py-2 md:border-none"
+                                    >
+                                        <span class="mr-2 text-xs md:hidden"
+                                            >Mettre à jour</span
+                                        >
                                         <ArrowPathIcon
                                             class="mr-1 h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
                                         />
@@ -702,19 +722,23 @@ const addCritere = (categorie) => {
 
             <!-- les criteres -->
             <h2
-                class="text-center text-2xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4"
+                class="text-center text-xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4 md:text-2xl"
             >
                 Les critères associés à
                 <span class="text-indigo-600">{{ discipline.name }}</span>
             </h2>
-            <div class="w-full px-2 md:px-6">
-                <ul class="flex flex-wrap justify-start gap-10">
+            <div class="w-full">
+                <ul
+                    class="flex flex-wrap justify-center gap-10 md:justify-start"
+                >
                     <li
                         v-for="categorie in groupedData"
                         :key="categorie.id"
                         class="gap-4"
                     >
-                        <p class="text-base text-slate-600 underline">
+                        <p
+                            class="text-base text-slate-600 underline decoration-sky-600 decoration-2 underline-offset-2"
+                        >
                             Catégorie:
                             <span class="font-semibold">{{
                                 categorie.categorie.nom_categorie_client

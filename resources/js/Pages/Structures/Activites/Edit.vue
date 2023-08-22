@@ -180,7 +180,7 @@ onMounted(() => {
                     <section class="space-y-4 text-gray-700">
                         <div>
                             <h2
-                                class="text-center text-3xl font-bold uppercase md:text-left"
+                                class="py-4 text-center text-3xl font-bold uppercase"
                             >
                                 {{ activite.discipline.name }}
                             </h2>

@@ -18,7 +18,8 @@ class CategoryDisciplineController extends Controller
         $categorieNotInId = $request->input('categorieNotIn');
         $categorieNotIn = Categorie::findOrFail($categorieNotInId);
         $discipline->categories()->attach($categorieNotIn);
-        return redirect()->back()->with('success', 'Catégorie ajoutée');
+
+        return to_route('admin.edit', $discipline)->with('success', 'Catégorie ajoutée');
     }
 
     /**
@@ -28,10 +29,11 @@ class CategoryDisciplineController extends Controller
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
+
         $categorieInId = $request->input('categorieIn');
         $categorieIn = Categorie::findOrFail($categorieInId);
         $discipline->categories()->detach($categorieIn);
-        return redirect()->back()->with('success', 'Catégorie supprimée');
+        return to_route('admin.edit', $discipline)->with('success', 'Catégorie supprimée');
     }
     /**
      * Update the specified resource in storage.
@@ -50,6 +52,6 @@ class CategoryDisciplineController extends Controller
             'nom_categorie_client' => $request->nom_categorie_client,
             'nom_categorie_pro' => $request->nom_categorie_pro,
         ]);
-        return redirect()->back()->with('success', 'Catégorie mise à jour');
+        return to_route('admin.edit', $discipline)->with('success', 'Catégorie mise à jour');
     }
 }

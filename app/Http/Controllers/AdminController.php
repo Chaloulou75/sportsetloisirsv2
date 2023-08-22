@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Models\Critere;
 use App\Models\Famille;
 use App\Models\Categorie;
+use App\Models\Structure;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use App\Models\LienDisciplineCategorie;
@@ -24,12 +25,15 @@ class AdminController extends Controller
         $listDisciplines = ListDiscipline::select(['id', 'slug', 'name'])->get();
         $categories = Categorie::select('id', 'nom')->get();
 
+        $structures = Structure::select(['id', 'name', 'slug'])->get();
+
         return Inertia::render('Admin/Index', [
-            'can' => [
+            'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
             'categories' => $categories,
             'listDisciplines' => $listDisciplines,
+            'structures' => $structures,
         ]);
     }
 
@@ -121,7 +125,7 @@ class AdminController extends Controller
         $listeCriteres = Critere::select(['id', 'nom'])->get();
 
         return Inertia::render('Admin/Edit', [
-            'can' => [
+            'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
             'categories' => $categories,

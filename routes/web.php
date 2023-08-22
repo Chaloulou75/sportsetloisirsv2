@@ -179,6 +179,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/discipline-similaire/{discipline}', [DisciplineSimilaireController::class, 'store'])->name('discipline-similaire.store');
     Route::put('/discipline-similaire/{discipline}', [DisciplineSimilaireController::class, 'detach'])->name('discipline-similaire.detach');
+    Route::post('/disciplines', [DisciplineController::class, 'create'])->name('disciplines.create');
+
     Route::put('/disciplines/{discipline:slug}', [DisciplineController::class, 'update'])->name('disciplines.update');
 
     Route::post('/familles-disciplines/{discipline}', [FamilleDisciplineController::class, 'store'])->name('familles-disciplines.store');

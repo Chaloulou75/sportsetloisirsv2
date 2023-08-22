@@ -106,7 +106,30 @@ class DisciplineController extends Controller
             'categories' => $categories,
         ]);
     }
+    /**
+    * Update the specified resource in storage.
+    */
+    public function create(Request $request)
+    {
+        $user = auth()->user();
+        $this->authorize('viewAdmin', $user);
 
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'min:8'],
+        ]);
+
+        $slug = Str::slug($request->name, '-');
+
+
+        $discipline = ListDiscipline::create([
+            "name" => $request->name,
+            "slug" => $slug,
+            "description" => $request->description,
+        ]);
+
+        return to_route('admin.index')->with('success', 'Discipline '. $discipline->name .' créée.');
+    }
     /**
     * Update the specified resource in storage.
     */
@@ -130,7 +153,7 @@ class DisciplineController extends Controller
         $slug = Str::slug($discipline->name, '-');
         $discipline->update(['slug' => $slug]);
 
-        return redirect()->back()->with('success', 'Discipline mise à jour.');
+        return to_route('admin.edit', $discipline)->with('success', 'Discipline mise à jour.');
     }
 
     public function loadDisciplines()

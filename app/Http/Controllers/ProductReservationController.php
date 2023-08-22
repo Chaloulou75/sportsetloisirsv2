@@ -25,7 +25,7 @@ class ProductReservationController extends Controller
             'planning' => ['nullable', Rule::exists('structure_produits_planning', 'id')],
         ]);
         if(!auth()->user()) {
-            return redirect()->route('login')->with('error', 'Vous devez vous authentifier pour effectuer la demande');
+            return to_route('login')->with('error', 'Vous devez vous authentifier pour effectuer la demande');
         }
 
         $user = auth()->user();
