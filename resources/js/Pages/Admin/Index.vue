@@ -120,7 +120,7 @@ const submitCreateInfoBase = () => {
             </h2>
             <div>
                 <div
-                    class="flex flex-col items-start justify-around space-y-6 md:flex-row md:justify-center md:space-x-6 md:space-y-0"
+                    class="flex flex-col items-end justify-around space-y-6 md:flex-row md:justify-center md:space-x-6 md:space-y-0"
                 >
                     <div
                         class="flex w-full flex-col items-end justify-center gap-x-4 md:w-2/3 md:flex-row"
@@ -150,7 +150,7 @@ const submitCreateInfoBase = () => {
                             v-if="!displayCreateDisciplineForm"
                             @click="showCreateDisciplineForm"
                             type="button"
-                            class="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            class="mb-0.5 inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         >
                             Créer une nouvelle discipline
                         </button>

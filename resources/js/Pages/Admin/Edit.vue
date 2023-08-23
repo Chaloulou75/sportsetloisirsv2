@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
-import { ref, watch, defineAsyncComponent, nextTick } from "vue";
+import { ref, watch, onMounted, defineAsyncComponent, nextTick } from "vue";
 import {
     XCircleIcon,
     PlusCircleIcon,
@@ -104,6 +104,21 @@ const attachDiscipline = (disciplineNotIn) => {
     );
 };
 
+const detachDiscipline = (disciplineIn) => {
+    router.put(
+        route("discipline-similaire.detach", {
+            discipline: props.discipline,
+        }),
+        {
+            _method: "PUT",
+            disciplineIn: disciplineIn.discipline_similaire_id,
+        },
+        {
+            preserveScroll: true,
+        }
+    );
+};
+
 const detachCategorie = (categorieIn) => {
     router.put(
         route("categories-disciplines.detach", {
@@ -133,13 +148,28 @@ const attachCategorie = (categorieNotIn) => {
     );
 };
 
-const categorieForms = props.categories.map((categorie) => {
-    return useForm({
-        nom_categorie_client: ref(categorie.nom_categorie_client ?? ""),
-        nom_categorie_pro: ref(categorie.nom_categorie_pro ?? ""),
-        remember: true,
-    });
+const categorieForms = ref([]);
+
+onMounted(() => {
+    updateCategorieForms();
 });
+
+watch(
+    () => props.categories,
+    () => {
+        updateCategorieForms();
+    }
+);
+
+const updateCategorieForms = () => {
+    categorieForms.value = props.categories.map((categorie) => {
+        return useForm({
+            nom_categorie_client: ref(categorie.nom_categorie_client ?? ""),
+            nom_categorie_pro: ref(categorie.nom_categorie_pro ?? ""),
+            remember: true,
+        });
+    });
+};
 
 const updateCategorie = (index) => {
     router.patch(
@@ -153,21 +183,9 @@ const updateCategorie = (index) => {
         },
         {
             preserveScroll: true,
-        }
-    );
-};
-
-const detachDiscipline = (disciplineIn) => {
-    router.put(
-        route("discipline-similaire.detach", {
-            discipline: props.discipline,
-        }),
-        {
-            _method: "PUT",
-            disciplineIn: disciplineIn.discipline_similaire_id,
-        },
-        {
-            preserveScroll: true,
+            onSuccess: () => {
+                categorieForms.reset();
+            },
         }
     );
 };
@@ -595,100 +613,102 @@ const addCritere = (categorie) => {
                                     class="ml-2 h-5 w-5 text-red-500 group-hover:text-white"
                                 />
                             </button>
-
-                            <form
-                                class="inline-flex flex-col space-y-2 md:flex-row md:space-x-4 md:space-y-0"
-                                @submit.prevent="updateCategorie(index)"
-                            >
-                                <div>
-                                    <label
-                                        for="nom_categorie_client"
-                                        class="block text-sm font-medium text-gray-700"
-                                    >
-                                        Nom client
-                                        <span class="text-xs italic"></span>
-                                    </label>
-                                    <div class="mt-1 flex rounded-md">
-                                        <input
-                                            v-model="
-                                                categorieForms[index]
+                            <template v-if="categorieForms[index]">
+                                <form
+                                    class="inline-flex flex-col space-y-2 md:flex-row md:space-x-4 md:space-y-0"
+                                    @submit.prevent="updateCategorie(index)"
+                                >
+                                    <div>
+                                        <label
+                                            for="nom_categorie_client"
+                                            class="block text-sm font-medium text-gray-700"
+                                        >
+                                            Nom client
+                                            <span class="text-xs italic"></span>
+                                        </label>
+                                        <div class="mt-1 flex rounded-md">
+                                            <input
+                                                v-model="
+                                                    categorieForms[index]
+                                                        .nom_categorie_client
+                                                "
+                                                type="text"
+                                                name="nom_categorie_client"
+                                                id="nom_categorie_client"
+                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                placeholder=""
+                                                autocomplete="none"
+                                            />
+                                        </div>
+                                        <div
+                                            v-if="
+                                                categorieForms[index].errors
                                                     .nom_categorie_client
                                             "
-                                            type="text"
-                                            name="nom_categorie_client"
-                                            id="nom_categorie_client"
-                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                            placeholder=""
-                                            autocomplete="none"
-                                        />
+                                            class="text-xs text-red-500"
+                                        >
+                                            {{
+                                                categorieForms[index].errors
+                                                    .nom_categorie_client[0]
+                                            }}
+                                        </div>
                                     </div>
-                                    <div
-                                        v-if="
-                                            categorieForms[index].errors
-                                                .nom_categorie_client
-                                        "
-                                        class="text-xs text-red-500"
-                                    >
-                                        {{
-                                            categorieForms[index].errors
-                                                .nom_categorie_client[0]
-                                        }}
-                                    </div>
-                                </div>
-                                <div>
-                                    <label
-                                        for="nom_categorie_pro"
-                                        class="block text-sm font-medium text-gray-700"
-                                    >
-                                        Nom Professionnel
-                                        <span class="text-xs italic"></span>
-                                    </label>
-                                    <div class="mt-1 flex rounded-md">
-                                        <input
-                                            v-model="
-                                                categorieForms[index]
+                                    <div>
+                                        <label
+                                            for="nom_categorie_pro"
+                                            class="block text-sm font-medium text-gray-700"
+                                        >
+                                            Nom Professionnel
+                                            <span class="text-xs italic"></span>
+                                        </label>
+                                        <div class="mt-1 flex rounded-md">
+                                            <input
+                                                v-model="
+                                                    categorieForms[index]
+                                                        .nom_categorie_pro
+                                                "
+                                                type="text"
+                                                name="nom_categorie_pro"
+                                                id="nom_categorie_pro"
+                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                placeholder=""
+                                                autocomplete="none"
+                                            />
+                                        </div>
+                                        <div
+                                            v-if="
+                                                categorieForms[index].errors
                                                     .nom_categorie_pro
                                             "
-                                            type="text"
-                                            name="nom_categorie_pro"
-                                            id="nom_categorie_pro"
-                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                            placeholder=""
-                                            autocomplete="none"
-                                        />
+                                            class="text-xs text-red-500"
+                                        >
+                                            {{
+                                                categorieForms[index].errors
+                                                    .nom_categorie_pro[0]
+                                            }}
+                                        </div>
                                     </div>
                                     <div
-                                        v-if="
-                                            categorieForms[index].errors
-                                                .nom_categorie_pro
-                                        "
-                                        class="text-xs text-red-500"
+                                        class="mx-auto flex w-full items-center justify-center md:w-auto"
                                     >
-                                        {{
-                                            categorieForms[index].errors
-                                                .nom_categorie_pro[0]
-                                        }}
+                                        <button
+                                            type="submit"
+                                            class="flex items-center justify-center rounded-md border border-gray-200 px-4 py-2 md:border-none"
+                                        >
+                                            <span class="mr-2 text-xs md:hidden"
+                                                >Mettre à jour</span
+                                            >
+                                            <ArrowPathIcon
+                                                class="mr-1 h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
+                                            />
+                                            <span class="sr-only"
+                                                >Mettre à jour la
+                                                catégorie</span
+                                            >
+                                        </button>
                                     </div>
-                                </div>
-                                <div
-                                    class="mx-auto flex w-full items-center justify-center md:w-auto"
-                                >
-                                    <button
-                                        type="submit"
-                                        class="flex items-center justify-center rounded-md border border-gray-200 px-4 py-2 md:border-none"
-                                    >
-                                        <span class="mr-2 text-xs md:hidden"
-                                            >Mettre à jour</span
-                                        >
-                                        <ArrowPathIcon
-                                            class="mr-1 h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
-                                        />
-                                        <span class="sr-only"
-                                            >Mettre à jour la catégorie</span
-                                        >
-                                    </button>
-                                </div>
-                            </form>
+                                </form>
+                            </template>
                         </li>
                     </ul>
                 </div>
@@ -727,7 +747,7 @@ const addCritere = (categorie) => {
                 Les critères associés à
                 <span class="text-indigo-600">{{ discipline.name }}</span>
             </h2>
-            <div class="w-full">
+            <template v-if="groupedData" class="w-full">
                 <ul
                     class="flex flex-wrap justify-center gap-10 md:justify-start"
                 >
@@ -1133,7 +1153,221 @@ const addCritere = (categorie) => {
                         </div>
                     </li>
                 </ul>
-            </div>
+            </template>
+            <template v-else>
+                <ul
+                    class="flex flex-wrap justify-center gap-10 md:justify-start"
+                >
+                    <li
+                        v-for="categorie in categories"
+                        :key="categorie.id"
+                        class="gap-4"
+                    >
+                        <p
+                            class="text-base text-slate-600 underline decoration-sky-600 decoration-2 underline-offset-2"
+                        >
+                            Catégorie:
+                            <span
+                                v-if="categorie.nom_categorie_client"
+                                class="font-semibold"
+                                >{{ categorie.nom_categorie_client }}</span
+                            ><span v-else class="font-semibold">{{
+                                categorie.categorie.nom
+                            }}</span>
+                        </p>
+                        <div
+                            class="my-4 flex w-full items-center justify-start"
+                        >
+                            <button
+                                class="inline-flex items-center justify-center rounded-lg border border-gray-300 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                v-if="!showAddCritereForm(categorie)"
+                                type="button"
+                                @click="toggleAddCritereForm(categorie)"
+                            >
+                                Ajouter un critère
+                            </button>
+                            <form
+                                v-if="showAddCritereForm(categorie)"
+                                class="inline-flex flex-grow items-center justify-between"
+                                @submit.prevent="addCritere(categorie)"
+                            >
+                                <div
+                                    class="flex w-full flex-grow flex-col space-y-3"
+                                >
+                                    <Listbox
+                                        class="w-full flex-grow"
+                                        v-model="addCritereForm.critere"
+                                    >
+                                        <div class="relative mt-1">
+                                            <ListboxButton
+                                                class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                                            >
+                                                <span class="block truncate">{{
+                                                    addCritereForm.critere.nom
+                                                }}</span>
+                                                <span
+                                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+                                                >
+                                                    <ChevronUpDownIcon
+                                                        class="h-5 w-5 text-gray-400"
+                                                        aria-hidden="true"
+                                                    />
+                                                </span>
+                                            </ListboxButton>
+
+                                            <transition
+                                                leave-active-class="transition duration-100 ease-in"
+                                                leave-from-class="opacity-100"
+                                                leave-to-class="opacity-0"
+                                            >
+                                                <ListboxOptions
+                                                    class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                                                >
+                                                    <ListboxOption
+                                                        v-slot="{
+                                                            active,
+                                                            selected,
+                                                        }"
+                                                        v-for="critere in props.listeCriteres"
+                                                        :key="critere.id"
+                                                        :value="critere"
+                                                        as="template"
+                                                    >
+                                                        <li
+                                                            :class="[
+                                                                active
+                                                                    ? 'bg-amber-100 text-amber-900'
+                                                                    : 'text-gray-700',
+                                                                'relative cursor-default select-none py-2 pl-10 pr-4',
+                                                            ]"
+                                                        >
+                                                            <span
+                                                                :class="[
+                                                                    selected
+                                                                        ? 'font-medium'
+                                                                        : 'font-normal',
+                                                                    'block truncate',
+                                                                ]"
+                                                                >{{
+                                                                    critere.nom
+                                                                }}</span
+                                                            >
+                                                            <span
+                                                                v-if="selected"
+                                                                class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
+                                                            >
+                                                                <CheckCircleIcon
+                                                                    class="h-5 w-5"
+                                                                    aria-hidden="true"
+                                                                />
+                                                            </span>
+                                                        </li>
+                                                    </ListboxOption>
+                                                </ListboxOptions>
+                                            </transition>
+                                        </div>
+                                    </Listbox>
+
+                                    <Listbox
+                                        v-if="addCritereForm.critere"
+                                        class="w-full flex-grow"
+                                        v-model="addCritereForm.type_champ"
+                                    >
+                                        <div class="relative mt-1">
+                                            <ListboxButton
+                                                class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                                            >
+                                                <span class="block truncate">{{
+                                                    addCritereForm.type_champ
+                                                        .type
+                                                }}</span>
+                                                <span
+                                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+                                                >
+                                                    <ChevronUpDownIcon
+                                                        class="h-5 w-5 text-gray-400"
+                                                        aria-hidden="true"
+                                                    />
+                                                </span>
+                                            </ListboxButton>
+
+                                            <transition
+                                                leave-active-class="transition duration-100 ease-in"
+                                                leave-from-class="opacity-100"
+                                                leave-to-class="opacity-0"
+                                            >
+                                                <ListboxOptions
+                                                    class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                                                >
+                                                    <ListboxOption
+                                                        v-slot="{
+                                                            active,
+                                                            selected,
+                                                        }"
+                                                        v-for="(
+                                                            type_champ, index
+                                                        ) in type_champs"
+                                                        :key="index"
+                                                        :value="type_champ"
+                                                        as="template"
+                                                    >
+                                                        <li
+                                                            :class="[
+                                                                active
+                                                                    ? 'bg-amber-100 text-amber-900'
+                                                                    : 'text-gray-700',
+                                                                'relative cursor-default select-none py-2 pl-10 pr-4',
+                                                            ]"
+                                                        >
+                                                            <span
+                                                                :class="[
+                                                                    selected
+                                                                        ? 'font-medium'
+                                                                        : 'font-normal',
+                                                                    'block truncate',
+                                                                ]"
+                                                                >{{
+                                                                    type_champ.type
+                                                                }}</span
+                                                            >
+                                                            <span
+                                                                v-if="selected"
+                                                                class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
+                                                            >
+                                                                <CheckCircleIcon
+                                                                    class="h-5 w-5"
+                                                                    aria-hidden="true"
+                                                                />
+                                                            </span>
+                                                        </li>
+                                                    </ListboxOption>
+                                                </ListboxOptions>
+                                            </transition>
+                                        </div>
+                                    </Listbox>
+                                </div>
+                                <button
+                                    type="submit"
+                                    class="ml-4 inline-flex items-center"
+                                >
+                                    <PlusCircleIcon
+                                        class="h-6 w-6 text-indigo-500 hover:text-indigo-700"
+                                    />
+                                </button>
+                                <button
+                                    @click="toggleAddCritereForm(categorie)"
+                                    type="button"
+                                    class="ml-4 inline-flex items-center"
+                                >
+                                    <XCircleIcon
+                                        class="h-6 w-6 text-red-500 hover:text-red-700"
+                                    />
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+            </template>
         </div>
     </AppLayout>
 </template>

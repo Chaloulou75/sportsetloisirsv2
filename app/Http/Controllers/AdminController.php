@@ -122,6 +122,7 @@ class AdminController extends Controller
                 'criteres' => $criteres,
             ];
         });
+
         $listeCriteres = Critere::select(['id', 'nom'])->get();
 
         return Inertia::render('Admin/Edit', [
