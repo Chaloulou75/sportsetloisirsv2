@@ -762,8 +762,8 @@ const addFromScratchCritere = (categorie) => {
             <h2
                 class="text-center text-xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4 md:text-2xl"
             >
-                Les critères associés à
-                <span class="text-indigo-600">{{ discipline.name }}</span>
+                Les <span class="text-indigo-600">critères</span> associés aux
+                catégories.
             </h2>
             <template v-if="Object.keys(groupedData).length > 0" class="w-full">
                 <ul

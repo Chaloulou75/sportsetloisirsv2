@@ -55,7 +55,7 @@ class CategoryDisciplineController extends Controller
 
         $discipline->categories()->detach($categorieIn);
 
-        return to_route('admin.edit', $discipline)->with('success', 'Catégorie supprimée, ainsi que les critèeres et valeurs associées à cette catégorie.');
+        return to_route('admin.edit', $discipline)->with('success', 'Catégorie supprimée, ainsi que les critères et valeurs associées à cette catégorie.');
     }
     /**
      * Update the specified resource in storage.

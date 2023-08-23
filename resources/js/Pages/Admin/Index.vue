@@ -132,7 +132,7 @@ const submitCreateInfoBase = () => {
                         <template v-if="discipline" class="w-full md:w-auto">
                             <Link
                                 :href="route('admin.edit', discipline)"
-                                class="group mb-0.5 flex w-full items-center justify-center rounded border border-gray-300 bg-white px-4 py-2.5 text-base font-medium text-gray-600 shadow-sm hover:bg-blue-500 hover:text-white focus:outline-none focus:ring-2 md:w-auto"
+                                class="group mb-0.5 flex w-full items-center justify-center rounded border border-gray-300 bg-white px-4 py-2.5 text-base font-medium text-gray-600 shadow-sm hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring-2 md:w-auto"
                             >
                                 <span
                                     class="mr-4 inline-block group-hover:text-white"
@@ -150,7 +150,7 @@ const submitCreateInfoBase = () => {
                             v-if="!displayCreateDisciplineForm"
                             @click="showCreateDisciplineForm"
                             type="button"
-                            class="mb-0.5 inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            class="mb-0.5 inline-flex w-full justify-center rounded border border-transparent bg-indigo-600 px-4 py-2.5 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         >
                             Créer une nouvelle discipline
                         </button>
