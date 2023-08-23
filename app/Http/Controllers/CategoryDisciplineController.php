@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categorie;
 use App\Models\LienDisciplineCategorie;
+use App\Models\LienDisciplineCategorieCritere;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use Illuminate\Validation\Rule;
@@ -32,8 +33,29 @@ class CategoryDisciplineController extends Controller
 
         $categorieInId = $request->input('categorieIn');
         $categorieIn = Categorie::findOrFail($categorieInId);
+
+        $disciplineCategorie = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('categorie_id', $categorieIn->id)->first();
+        $discCatCrit = LienDisciplineCategorieCritere::with('valeurs')->where('categorie_id', $disciplineCategorie->id)->get();
+
+
+        foreach ($discCatCrit as $item) {
+            if ($item->valeurs->isNotEmpty()) {
+                foreach ($item->valeurs as $valeur) {
+                    $valeur->delete();
+                }
+            }
+        }
+
+
+        if($discCatCrit->isNotEmpty()) {
+            foreach($discCatCrit as $critere) {
+                $critere->delete();
+            }
+        }
+
         $discipline->categories()->detach($categorieIn);
-        return to_route('admin.edit', $discipline)->with('success', 'Catégorie supprimée');
+
+        return to_route('admin.edit', $discipline)->with('success', 'Catégorie supprimée, ainsi que les critèeres et valeurs associées à cette catégorie.');
     }
     /**
      * Update the specified resource in storage.

@@ -97,31 +97,38 @@ class AdminController extends Controller
         ->orderBy('categorie_id')
         ->get();
 
-
-        $groupedData = $disciplineCategorieCriteres->groupBy(function ($item) {
-            return $item->categorie->id;
-        })
-        ->map(function ($categoryItems) {
-            $firstItem = $categoryItems->first();
-
-            $criteres = $categoryItems->groupBy(function ($item) {
-                return $item->critere->id;
+        if($disciplineCategorieCriteres->isEmpty()) {
+            $groupedData = collect();
+        } else {
+            $groupedData = $disciplineCategorieCriteres->groupBy(function ($item) {
+                return $item->categorie->id;
             })
-            ->map(function ($criterionItems) {
-                $firstCriterionItem = $criterionItems->first();
+            ->map(function ($categoryItems) {
+                $firstItem = $categoryItems->first();
+
+                $criteres = $categoryItems->groupBy(function ($item) {
+                    return $item->critere->id;
+                })
+                ->map(function ($criterionItems) {
+                    $firstCriterionItem = $criterionItems->first();
+
+                    return [
+                        'disciplineCategorieCritere' => $firstCriterionItem->id,
+                        'critere' => $firstCriterionItem->critere,
+                        'valeurs' => $criterionItems->flatMap->valeurs,
+                    ];
+                });
 
                 return [
-                    'disciplineCategorieCritere' => $firstCriterionItem->id,
-                    'critere' => $firstCriterionItem->critere,
-                    'valeurs' => $criterionItems->flatMap->valeurs,
+                    'categorie' => $firstItem->categorie,
+                    'categoriebase' => [
+                        'id' => $firstItem->categorie->categorie->id,
+                        'nom' => $firstItem->categorie->categorie->nom,
+                    ],
+                    'criteres' => $criteres,
                 ];
             });
-
-            return [
-                'categorie' => $firstItem->categorie,
-                'criteres' => $criteres,
-            ];
-        });
+        }
 
         $listeCriteres = Critere::select(['id', 'nom'])->get();
 

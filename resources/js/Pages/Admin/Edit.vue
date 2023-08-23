@@ -330,6 +330,24 @@ const addCritere = (categorie) => {
         }
     );
 };
+
+const addFromScratchCritere = (categorie) => {
+    router.post(
+        route("categories-disciplines-criteres.store"),
+        {
+            critere: addCritereForm.critere,
+            categorie: categorie,
+            type_champ: addCritereForm.type_champ,
+        },
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                addCritereForm.reset();
+                toggleAddCritereForm(categorie);
+            },
+        }
+    );
+};
 </script>
 <template>
     <Head
@@ -747,7 +765,7 @@ const addCritere = (categorie) => {
                 Les critères associés à
                 <span class="text-indigo-600">{{ discipline.name }}</span>
             </h2>
-            <template v-if="groupedData" class="w-full">
+            <template v-if="Object.keys(groupedData).length > 0" class="w-full">
                 <ul
                     class="flex flex-wrap justify-center gap-10 md:justify-start"
                 >
@@ -760,8 +778,14 @@ const addCritere = (categorie) => {
                             class="text-base text-slate-600 underline decoration-sky-600 decoration-2 underline-offset-2"
                         >
                             Catégorie:
-                            <span class="font-semibold">{{
-                                categorie.categorie.nom_categorie_client
+                            <span
+                                v-if="categorie.categorie.nom_categorie_client"
+                                class="font-semibold"
+                                >{{
+                                    categorie.categorie.nom_categorie_client
+                                }}</span
+                            ><span v-else class="font-semibold">{{
+                                categorie.categoriebase.nom
                             }}</span>
                         </p>
 
@@ -1189,7 +1213,9 @@ const addCritere = (categorie) => {
                             <form
                                 v-if="showAddCritereForm(categorie)"
                                 class="inline-flex flex-grow items-center justify-between"
-                                @submit.prevent="addCritere(categorie)"
+                                @submit.prevent="
+                                    addFromScratchCritere(categorie)
+                                "
                             >
                                 <div
                                     class="flex w-full flex-grow flex-col space-y-3"
