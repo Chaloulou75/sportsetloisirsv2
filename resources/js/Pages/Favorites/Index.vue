@@ -107,7 +107,6 @@ const props = defineProps({
                             :activite="activite"
                             :link="
                                 route('structures.activites.show', {
-                                    structure: activite.structure.slug,
                                     activite: activite.id,
                                 })
                             "

@@ -256,7 +256,6 @@ const submitReservation = () => {
                                 preserve-scroll
                                 :href="
                                     route('structures.activites.show', {
-                                        structure: structure.slug,
                                         activite: activite.id,
                                     })
                                 "
@@ -1109,7 +1108,6 @@ const submitReservation = () => {
                         :activite="activite"
                         :link="
                             route('structures.activites.show', {
-                                structure: structure.slug,
                                 activite: activite.id,
                             })
                         "

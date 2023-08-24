@@ -204,9 +204,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::get('structures', [StructureController::class, 'index'])
     ->name('structures.index');
-Route::get('structures/{structure:slug}', [StructureController::class, 'show'])
+Route::get('{structure:slug}', [StructureController::class, 'show'])
     ->name('structures.show');
-Route::get('/structures/{structure:slug}/activites/{activite:id}', [ActiviteController::class, 'show'])->name('structures.activites.show');
-
+Route::get('activites/{activite:id}', [ActiviteController::class, 'show'])->name('structures.activites.show');
 
 require __DIR__.'/auth.php';

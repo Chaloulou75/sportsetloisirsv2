@@ -61,8 +61,8 @@ class ReservationAsked extends Mailable
             markdown: 'emails.reservations.asked',
             with: [
                 'structureName' => $this->structure->name,
-                'url' => route('structures.activites.show', ['structure' => $this->structure->slug, 'activite' => $this->activite->id]),
-                'activiteName' =>$this->activite->titre,
+                'url' => route('structures.activites.show', ['activite' => $this->activite->id]),
+                'activiteName' => $this->activite->titre,
                 'tarifAmount' => $this->tarif->amount,
                 'planningStart' => $formattedStart,
                 'planningEnd' =>  $formattedEnd,

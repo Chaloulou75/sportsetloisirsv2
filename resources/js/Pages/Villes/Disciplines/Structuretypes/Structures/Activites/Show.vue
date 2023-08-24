@@ -1287,7 +1287,6 @@ const submitReservation = () => {
                         :activite="activite"
                         :link="
                             route('structures.activites.show', {
-                                structure: structure.slug,
                                 activite: activite.id,
                             })
                         "

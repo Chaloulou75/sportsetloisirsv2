@@ -185,8 +185,9 @@ class ActiviteController extends Controller
         return to_route('structures.activites.index', $structure)->with('success', 'Activité créée, vous pouvez ajouter d\'autres activités à votre structure.');
     }
 
-    public function show(Structure $structure, $activite)
+    public function show($activite)
     {
+        //Structure $structure,
         $familles = Famille::with([
                     'disciplines' => function ($query) {
                         $query->whereHas('structures');
@@ -198,38 +199,8 @@ class ActiviteController extends Controller
                 ->select(['id', 'name', 'slug'])
                 ->get();
 
-        $structure = Structure::with([
-            'famille:id,name',
-            'creator:id,name',
-            'users:id,name',
-            'adresses'  => function ($query) {
-                $query->latest();
-            },
-            'city:id,ville,ville_formatee,code_postal',
-            'departement:id,departement,numero',
-            'structuretype:id,name,slug',
-            'disciplines',
-            'disciplines.discipline:id,name,slug',
-            'categories',
-            'activites',
-            'activites.discipline:id,name',
-            'activites.categorie:id,categorie_id,discipline_id,nom_categorie_client',
-            'activites.produits',
-            'activites.produits.adresse',
-            'activites.produits.criteres',
-            'activites.produits.criteres.critere',
-            'activites.produits.tarifs',
-            'activites.produits.tarifs.tarifType',
-            'activites.produits.tarifs.structureTarifTypeInfos',
-            'activites.produits.plannings',
-            ])
-            ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
-            ->where('slug', $structure->slug)
-            ->first();
-
-        $logoUrl = asset($structure->logo);
-
         $activite = StructureActivite::with([
+            'structure',
             'discipline:id,name',
             'categorie:id,categorie_id,discipline_id,nom_categorie_client',
             'produits',
@@ -242,6 +213,22 @@ class ActiviteController extends Controller
             'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut',
             'produits.plannings',
         ])->where('id', $activite)->first();
+
+
+        $structure = $activite->structure()->with([
+                    'creator:id,name',
+                    'users:id,name',
+                    'adresses'  => function ($query) {
+                        $query->latest();
+                    },
+                    'city:id,ville,ville_formatee,code_postal',
+                    'departement:id,departement,numero',
+                    'structuretype:id,name,slug',
+                    ])
+                    ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
+                    ->first();
+
+        $logoUrl = asset($structure->logo);
 
 
         $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
@@ -267,7 +254,7 @@ class ActiviteController extends Controller
             ->take(3)
             ->get();
 
-        // dd($activiteSimilaires);
+        //
 
         return Inertia::render('Structures/Activites/Show', [
                     'structure' => $structure,

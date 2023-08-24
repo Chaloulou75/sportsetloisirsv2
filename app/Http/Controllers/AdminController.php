@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Critere;
 use App\Models\Famille;
@@ -23,9 +24,11 @@ class AdminController extends Controller
         $this->authorize('viewAdmin', $user);
 
         $listDisciplines = ListDiscipline::select(['id', 'slug', 'name'])->get();
-        $categories = Categorie::select('id', 'nom')->get();
+        $categories = Categorie::select(['id', 'nom'])->get();
 
         $structures = Structure::select(['id', 'name', 'slug'])->get();
+
+        $users = User::select(['id', 'name', 'email'])->paginate(12);
 
         return Inertia::render('Admin/Index', [
             'user_can' => [
@@ -34,6 +37,7 @@ class AdminController extends Controller
             'categories' => $categories,
             'listDisciplines' => $listDisciplines,
             'structures' => $structures,
+            'users' => $users,
         ]);
     }
 
@@ -87,7 +91,7 @@ class AdminController extends Controller
             ->select('discipline_similaire_id')
             ->pluck('discipline_similaire_id');
 
-        $listDisciplines = ListDiscipline::select(['id', 'slug', 'name'])->whereNotIn('id', $disciplinesSimilairesIds)->whereNot('id', $discipline->id)->paginate(15);
+        $listDisciplines = ListDiscipline::select(['id', 'slug', 'name'])->whereNotIn('id', $disciplinesSimilairesIds)->whereNot('id', $discipline->id)->paginate(12);
 
         $familles = Famille::select('id', 'name', 'slug', 'nom_long')->whereNotIn('id', $disciplineFamillesIds)->get();
 
