@@ -34,11 +34,17 @@ const submitForm = async () => {
         const disciplineSlug = search.value;
 
         if (city && disciplineSlug) {
-            router.get(`/villes/${city}/disciplines/${disciplineSlug}`);
+            router.get(
+                route("villes.disciplines.show", {
+                    city: city,
+                    discipline: disciplineSlug,
+                })
+            );
+            // router.get(`/villes/${city}/disciplines/${disciplineSlug}`);
         } else if (city) {
-            router.get(`/villes/${city}`);
+            router.get(route("villes.show", { city }));
         } else if (disciplineSlug) {
-            router.get(`/disciplines/${disciplineSlug}`);
+            router.get(route("disciplines.show", { disciplineSlug }));
         }
 
         // Reset the form

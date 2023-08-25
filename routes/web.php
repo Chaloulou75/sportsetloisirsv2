@@ -45,9 +45,11 @@ use App\Http\Controllers\CityDisciplineStructuretypeStructureActiviteController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+require __DIR__.'/auth.php';
 
 Route::get('/', [HomeController::class, 'index'])
     ->name('welcome');
+
 
 Route::get('/mentions', function () {
     return Inertia::render('Mentions/Index');
@@ -76,33 +78,48 @@ Route::resource('familles', FamilleController::class)->only([
     'index', 'show'
 ]);
 
-Route::get('/villes/{city}/disciplines/{discipline:slug}', [CityDisciplineController::class, 'show'], [
+Route::resource('villes', CityController::class, [
+    'parameters' => [
+        'villes' => 'city'
+    ]
+])->only([
+    'index', 'show'
+]);
+
+Route::get('/localite-{city}-1/{discipline:slug}', [CityDisciplineController::class, 'show'], [
     'parameters' => [
         'villes' => 'city'
     ]
 ])->name('villes.disciplines.show');
+// disciplines/
 
-Route::get('/villes/{city}/disciplines/{discipline:slug}/categories/{category:id}', [CityDisciplineCategorieController::class, 'show'])->name('villes.disciplines.categories.show');
+Route::get('/localite-{city}-1/{discipline:slug}/cat-{category:id}', [CityDisciplineCategorieController::class, 'show'])->name('villes.disciplines.categories.show');
+// /villes/disciplines/categories/
 
-Route::get('/villes/{city}/disciplines/{discipline:slug}/structuretypes/{structuretype:id}', [CityDisciplineStructuretypeController::class, 'show'])->name('villes.disciplines.structuretypes.show');
+Route::get('/localite-{city}-1/{discipline:slug}/typ-{structuretype:id}', [CityDisciplineStructuretypeController::class, 'show'])->name('villes.disciplines.structuretypes.show');
+// /villes/disciplines/structuretypes/
 
-Route::get('/villes/{city}/disciplines/{discipline:slug}/categories/{category:id}/structures/{structure}', [CityDisciplineCategorieStructureController::class, 'show'])->name('villes.disciplines.categories.structures.show');
+Route::get('/localite-{city}-1/{discipline:slug}/cat-{category:id}/{structure}', [CityDisciplineCategorieStructureController::class, 'show'])->name('villes.disciplines.categories.structures.show');
+// /villes/disciplines/categories/structures/
 
-Route::get('/villes/{city}/disciplines/{discipline:slug}/structuretypes/{structuretype:id}/structures/{structure}', [CityDisciplineStructuretypeStructureController::class, 'show'])->name('villes.disciplines.structuretypes.structures.show');
+Route::get('/localite-{city}-1/{discipline:slug}/typ-{structuretype:id}/{structure}', [CityDisciplineStructuretypeStructureController::class, 'show'])->name('villes.disciplines.structuretypes.structures.show');
+// /villes/disciplines/structuretypes/structures/
 
+Route::get('/localite-{city}-1/{discipline:slug}/cat-{category:id}/{structure}/{activite:id}', [CityDisciplineCategorieStructureActiviteController::class, 'show'])->name('villes.disciplines.categories.structures.activites.show');
+// /villes/disciplines/categories/structures/activites/
 
-Route::get('/villes/{city}/disciplines/{discipline:slug}/categories/{category:id}/structures/{structure}/activites/{activite:id}', [CityDisciplineCategorieStructureActiviteController::class, 'show'])->name('villes.disciplines.categories.structures.activites.show');
-
-Route::get('/villes/{city}/disciplines/{discipline:slug}/structuretypes/{structuretype:id}/structures/{structure}/activites/{activite:id}', [CityDisciplineStructuretypeStructureActiviteController::class, 'show'])->name('villes.disciplines.structuretypes.structures.activites.show');
-
+Route::get('/localite-{city}-1/{discipline:slug}/typ-{structuretype:id}/{structure}/{activite:id}', [CityDisciplineStructuretypeStructureActiviteController::class, 'show'])->name('villes.disciplines.structuretypes.structures.activites.show');
+// /villes/disciplines/structuretypes/structures/activites/
 
 Route::get('/discipline/index.{extension?}', function ($extension = null) {
     return redirect('/disciplines/', 301);
 });
+
 Route::get('/dis-{disciplineWithPlus}-{id}.{extension?}', function ($disciplineWithPlus, $id, $extension = null) {
     $discipline = str_replace('+', '-', strtolower($disciplineWithPlus));
     return redirect('/disciplines/' . $discipline, 301);
 });
+
 Route::resource('disciplines', DisciplineController::class)->only([
     'index', 'show'
 ]);
@@ -115,16 +132,18 @@ Route::get('/{departementWithPlus}-{id}-2.{extension?}', function ($departementW
     $departement = str_replace('+', '-', strtolower($departementWithPlus));
     return redirect('/departements/' . $id, 301);
 });
+
 Route::resource('departements', DepartementController::class)->only([
     'index', 'show'
 ]);
 
-Route::get('/departements/{departement}/disciplines/{discipline:slug}', [DepartementDisciplineController::class, 'show'])->name('departements.disciplines.show');
+Route::get('/localite-{departement}-2/{discipline:slug}', [DepartementDisciplineController::class, 'show'])->name('departements.disciplines.show');
 
-Route::get('/departements/{departement}/disciplines/{discipline:slug}/categories/{category:id}', [DepartementDisciplineCategorieController::class, 'show'])->name('departements.disciplines.categories.show');
+Route::get('/localite-{departement}-2/{discipline:slug}/cat-{category:id}', [DepartementDisciplineCategorieController::class, 'show'])->name('departements.disciplines.categories.show');
+// /departements/disciplines/categories/
 
-Route::get('/departements/{departement}/disciplines/{discipline:slug}/structuretypes/{structuretype:id}', [DepartementDisciplineStructuretypeController::class, 'show'])->name('departements.disciplines.structuretypes.show');
-
+Route::get('localite-{departement}-2/{discipline:slug}/type-{structuretype:id}', [DepartementDisciplineStructuretypeController::class, 'show'])->name('departements.disciplines.structuretypes.show');
+// /departements/disciplines/structuretypes/
 
 Route::get('/localite-1/index.{extension?}', function ($extension = null) {
     return redirect('/villes/', 301);
@@ -133,13 +152,6 @@ Route::get('/{villeWithPlus}-{id}-1.{extension?}', function ($villeWithPlus, $id
     $ville = str_replace('+', '-', strtolower($villeWithPlus));
     return redirect('/villes/' . $id, 301);
 });
-Route::resource('villes', CityController::class, [
-    'parameters' => [
-        'villes' => 'city'
-    ]
-])->only([
-    'index', 'show'
-]);
 
 Route::resource('product_reservations', ProductReservationController::class)->only([
     'store'
@@ -197,15 +209,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/categories-disciplines-criteres-valeurs/{critere}', [CategoryDisciplineCritereValeurController::class, 'store'])->name('categories-disciplines-criteres-valeurs.store');
     Route::patch('/categories-disciplines-criteres-valeurs/{lienDisCatCritValeur}', [CategoryDisciplineCritereValeurController::class, 'update'])->name('categories-disciplines-criteres-valeurs.update');
     Route::delete('/categories-disciplines-criteres-valeurs/{lienDisCatCritValeur}', [CategoryDisciplineCritereValeurController::class, 'destroy'])->name('categories-disciplines-criteres-valeurs.destroy');
-
-
     //, 'can:viewAdmin'
 });
 
-Route::get('structures', [StructureController::class, 'index'])
+Route::get('/structures', [StructureController::class, 'index'])
     ->name('structures.index');
-Route::get('{structure:slug}', [StructureController::class, 'show'])
+Route::get('/{structure:slug}', [StructureController::class, 'show'])
     ->name('structures.show');
-Route::get('activites/{activite:id}', [ActiviteController::class, 'show'])->name('structures.activites.show');
-
-require __DIR__.'/auth.php';
+Route::get('/activites/{activite:id}', [ActiviteController::class, 'show'])->name('structures.activites.show');

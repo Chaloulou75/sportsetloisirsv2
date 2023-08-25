@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      *
@@ -14,9 +13,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('structures_tarifs', function (Blueprint $table) {
-            $table->integer('id', true);
-            $table->integer('structure_id');
-            $table->integer('type_id');
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('structure_id');
+            $table->unsignedBigInteger('type_id');
             $table->string('titre');
             $table->text('description');
             $table->decimal('amount', 7);

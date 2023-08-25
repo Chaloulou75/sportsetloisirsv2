@@ -187,7 +187,6 @@ class ActiviteController extends Controller
 
     public function show($activite)
     {
-        //Structure $structure,
         $familles = Famille::with([
                     'disciplines' => function ($query) {
                         $query->whereHas('structures');
@@ -214,7 +213,6 @@ class ActiviteController extends Controller
             'produits.plannings',
         ])->where('id', $activite)->first();
 
-
         $structure = $activite->structure()->with([
                     'creator:id,name',
                     'users:id,name',
@@ -229,7 +227,6 @@ class ActiviteController extends Controller
                     ->first();
 
         $logoUrl = asset($structure->logo);
-
 
         $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
             $query->orderBy('defaut', 'desc');
@@ -254,8 +251,6 @@ class ActiviteController extends Controller
             ->take(3)
             ->get();
 
-        //
-
         return Inertia::render('Structures/Activites/Show', [
                     'structure' => $structure,
                     'familles' => $familles,
@@ -274,8 +269,6 @@ class ActiviteController extends Controller
         if (! Gate::allows('update-structure', $structure)) {
             return to_route('structures.activites.index', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
-
-        //
 
         $structure = Structure::with([
             'adresses' => function ($query) {

@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      *
@@ -14,10 +13,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('structures_categories', function (Blueprint $table) {
-            $table->integer('id', true);
-            $table->integer('structure_id');
-            $table->integer('discipline_id');
-            $table->integer('categorie_id');
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('structure_id');
+            $table->unsignedBigInteger('discipline_id');
+            $table->unsignedBigInteger('categorie_id');
             $table->timestamp('created_at');
             $table->timestamp('updated_at');
         });

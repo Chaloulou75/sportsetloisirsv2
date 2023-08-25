@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      *
@@ -14,8 +13,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('liste_structures_types_attributs', function (Blueprint $table) {
-            $table->integer('id', true);
-            $table->integer('structuretype_id');
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('structuretype_id');
             $table->string('nom');
             $table->string('type_champ_form');
             $table->timestamp('created_at')->useCurrent();

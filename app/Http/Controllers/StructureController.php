@@ -318,8 +318,6 @@ class StructureController extends Controller
         }
 
         $structurestypes = Structuretype::with(['structuretypeattributs', 'structuretypeattributs.structuretypevaleurs'])->select(['id', 'name', 'slug'])->get();
-        // $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
-        // $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
         $disciplines = ListDiscipline::select(['id', 'name', 'slug'])->get();
 
         $structure = Structure::with([
