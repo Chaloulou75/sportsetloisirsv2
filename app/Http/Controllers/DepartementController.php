@@ -74,9 +74,11 @@ class DepartementController extends Controller
                                     ->first();
 
         $structures = $departement->structures()->with([
-            'famille:id,name',
             'creator:id,name',
             'users:id,name',
+            'adresses'  => function ($query) {
+                $query->latest();
+            },
             'city:id,ville,ville_formatee,code_postal',
             'departement:id,departement,numero',
             'structuretype:id,name,slug',
@@ -99,7 +101,7 @@ class DepartementController extends Controller
 
         return Inertia::render('Departements/Show', [
             'familles' => $familles,
-            'departement'=> $departement,
+            'departement' => $departement,
             'structures' => $structures,
         ]);
     }

@@ -78,9 +78,11 @@ class CityController extends Controller
                     ->get();
 
         $structures = $city->structures()->with([
-            'famille:id,name',
             'creator:id,name',
             'users:id,name',
+            'adresses'  => function ($query) {
+                $query->latest();
+            },
             'city:id,ville,ville_formatee,code_postal',
             'departement:id,departement,numero',
             'structuretype:id,name,slug',
@@ -103,7 +105,7 @@ class CityController extends Controller
 
         return Inertia::render('Villes/Show', [
             'familles' => $familles,
-            'city'=> $city,
+            'city' => $city,
             'citiesAround' => $citiesAround,
             'structures' => $structures,
             'filters' => request()->all(['discipline']),

@@ -50,13 +50,14 @@ class DepartementDisciplineStructuretypeController extends Controller
                             ->limit(10)
                             ->get();
 
-
         $structures = $departement->structures()->whereHas('disciplines', function ($query) use ($discipline) {
             $query->where('discipline_id', $discipline->id);
         })->where('structuretype_id', $structuretypeElected->id)->with([
-            'famille:id,name',
             'creator:id,name',
             'users:id,name',
+            'adresses'  => function ($query) {
+                $query->latest();
+            },
             'city:id,ville,ville_formatee,code_postal',
             'departement:id,departement,numero',
             'structuretype:id,name,slug',

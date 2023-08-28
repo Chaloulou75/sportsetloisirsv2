@@ -1,8 +1,8 @@
 <script setup>
-import AppLayout from "@/Layouts/AppLayout.vue";
+import ProLayout from "@/Layouts/ProLayout.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import { ref, onMounted, computed, defineAsyncComponent } from "vue";
-import InscriptionNavigation from "@/Components/Navigation/InscriptionNavigation.vue";
+// import InscriptionNavigation from "@/Components/Navigation/InscriptionNavigation.vue";
 import PathsInscriptionNavigation from "@/Components/Navigation/PathsInscriptionNavigation.vue";
 
 const AddressForm = defineAsyncComponent(() =>
@@ -114,7 +114,7 @@ function submit() {
 <template>
     <Head title="Editer votre structure" />
 
-    <AppLayout>
+    <ProLayout :structure="structure" :can="can">
         <template #header>
             <h1
                 class="w-full py-6 text-center text-xl font-semibold leading-tight text-gray-800"
@@ -126,14 +126,14 @@ function submit() {
         <div
             class="relative flex flex-col space-y-6 py-2 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
         >
-            <InscriptionNavigation
+            <!-- <InscriptionNavigation
                 :can="can"
                 :structure="structure"
                 class="hidden md:flex"
-            />
+            /> -->
             <div class="flex-1">
                 <PathsInscriptionNavigation />
-                <button
+                <!-- <button
                     @click="showSidebar = !showSidebar"
                     class="my-2 inline-flex w-full items-center justify-end self-end rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:text-gray-500 focus:text-gray-500 focus:outline-none md:hidden"
                 >
@@ -171,7 +171,7 @@ function submit() {
                     :can="can"
                     :structure="structure"
                     class="my-4 flex md:hidden"
-                />
+                /> -->
                 <div class="mx-auto max-w-full lg:px-4">
                     <div class="md:grid md:grid-cols-3 md:gap-6">
                         <div class="md:col-span-3">
@@ -749,7 +749,7 @@ function submit() {
                 </div>
             </div>
         </div>
-    </AppLayout>
+    </ProLayout>
 </template>
 
 <style>

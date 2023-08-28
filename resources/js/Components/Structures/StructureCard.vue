@@ -206,12 +206,12 @@ const formatCityName = (ville) => {
                         <dt class="sr-only">Ville</dt>
                         <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
                         <dd
-                            v-if="structure.city.ville"
+                            v-if="structure.adresses.length > 0"
                             class="text-sm font-medium"
                         >
-                            {{ formatCityName(structure.city.ville) }}
+                            {{ formatCityName(structure.adresses[0].city) }}
                             <span class="text-xs"
-                                >({{ structure.zip_code }})</span
+                                >({{ structure.adresses[0].zip_code }})</span
                             >
                         </dd>
                         <dd v-else class="text-sm font-medium">
@@ -383,12 +383,12 @@ const formatCityName = (ville) => {
                         <dt class="sr-only">Ville</dt>
                         <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
                         <dd
-                            v-if="structure.city.ville"
+                            v-if="structure.adresses.length > 0"
                             class="text-sm font-medium"
                         >
-                            {{ formatCityName(structure.city.ville) }}
+                            {{ formatCityName(structure.adresses[0].city) }}
                             <span class="text-xs"
-                                >({{ structure.zip_code }})</span
+                                >({{ structure.adresses[0].zip_code }})</span
                             >
                         </dd>
                         <dd v-else class="text-sm font-medium">

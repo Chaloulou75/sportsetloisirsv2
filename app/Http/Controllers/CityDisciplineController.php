@@ -53,7 +53,6 @@ class CityDisciplineController extends Controller
                     ->get();
 
         $structures = $city->structures()->with([
-            'famille:id,name',
             'creator:id,name',
             'users:id,name',
             'adresses'  => function ($query) {

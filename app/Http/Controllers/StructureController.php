@@ -319,7 +319,9 @@ class StructureController extends Controller
         $disciplines = ListDiscipline::select(['id', 'name', 'slug'])->get();
 
         $structure = Structure::with([
-            'famille:id,name',
+            'adresses'  => function ($query) {
+                $query->latest();
+            },
             'creator:id,name,email',
             'users:id,name',
             'cities:id,ville,ville_formatee',

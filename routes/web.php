@@ -34,6 +34,7 @@ use App\Http\Controllers\DepartementDisciplineStructuretypeController;
 use App\Http\Controllers\CityDisciplineStructuretypeStructureController;
 use App\Http\Controllers\CityDisciplineCategorieStructureActiviteController;
 use App\Http\Controllers\CityDisciplineStructuretypeStructureActiviteController;
+use App\Http\Controllers\StructureGestionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -158,6 +159,7 @@ Route::resource('product_reservations', ProductReservationController::class)->on
 ]);
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/structures/gestion/{structure:slug}', [StructureGestionController::class, 'index'])->name('structures.gestion.index');
     Route::post('/structures/{structure:slug}/activites/{activite:id}/newactivitystore', [ActiviteController::class, 'newactivitystore']);
     Route::put('/structures/{structure:slug}/activites/{activite:id}/toggleactif', [ActiviteController::class, 'toggleactif']);
     Route::resource('structures.activites', ActiviteController::class)->scoped(['structure' => 'slug','activite' => 'id'])->except('show');
