@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,9 +22,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (config('app.env') === 'production') {
-            $this->app['request']->server->set('HTTPS', true);
-        }
+        // if ($this->app->environment('production')) {
+        //     URL::forceScheme('https');
+        // }
+
 
         /**
          * Paginate a standard Laravel Collection.

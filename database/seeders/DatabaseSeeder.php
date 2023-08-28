@@ -397,7 +397,7 @@ class DatabaseSeeder extends Seeder
         // Publictype::factory()->create(['name' => '14 à 18 ans', 'slug' => '14-18ans']);
         // Publictype::factory()->create(['name' => 'Adultes', 'slug' => 'adultes']);
 
-        Structure::factory(1)->create();
+        // Structure::factory(1)->create();
 
     }
 }
