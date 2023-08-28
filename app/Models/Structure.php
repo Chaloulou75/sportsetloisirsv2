@@ -107,12 +107,12 @@ class Structure extends Model
 
     public function cities(): BelongsToMany
     {
-        return $this->belongsToMany(City::class, 'structure_villes_france', 'structure_id', 'villes_france_id');
+        return $this->belongsToMany(City::class, 'structure_adresse', 'structure_id', 'city_id');
     }
 
     public function city(): BelongsTo
     {
-        return $this->belongsTo(City::class);
+        return $this->belongsTo(City::class, 'structure_id', 'city_id');
     }
 
     public function departement(): BelongsTo

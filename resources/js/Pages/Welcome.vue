@@ -70,7 +70,11 @@ const formatCityName = (ville) => {
 
     <AppLayout>
         <header>
-            <FamilleNavigation :familles="familles" class="my-3" />
+            <FamilleNavigation
+                v-if="familles.length > 0"
+                :familles="familles"
+                class="my-3"
+            />
         </header>
         <div>
             <section

@@ -13,8 +13,8 @@ const BaseInfoForm = defineAsyncComponent(() =>
 );
 const props = defineProps({
     structurestypes: Object,
-    niveaux: Object,
-    publictypes: Object,
+    // niveaux: Object,
+    // publictypes: Object,
     disciplines: Object,
     errors: Object,
 });

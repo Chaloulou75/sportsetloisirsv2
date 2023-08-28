@@ -124,15 +124,13 @@ class StructureController extends Controller
     public function create()
     {
         $structurestypes = Structuretype::with(['structuretypeattributs', 'structuretypeattributs.structuretypevaleurs'])->select(['id', 'name', 'slug'])->get();
-        $niveaux = Nivel::select(['id', 'name', 'slug'])->get();
-        $publictypes = Publictype::select(['id', 'name', 'slug'])->get();
         $disciplines = ListDiscipline::select(['id', 'name', 'slug'])->get();
 
         return Inertia::render('Structures/Create', [
             'structurestypes' => $structurestypes,
             'disciplines' => $disciplines,
-            'niveaux' => $niveaux,
-            'publictypes' => $publictypes,
+            // 'niveaux' => $niveaux,
+            // 'publictypes' => $publictypes,
         ]);
     }
 

@@ -44,7 +44,7 @@ class HomeController extends Controller
                                 ->get();
 
 
-        $topVilles = City::with(['departement', 'structures'])->whereHas('structures')
+        $topVilles = City::whereHas('structures')
                         ->select(['id', 'code_postal', 'ville', 'ville_formatee', 'departement', 'nom_departement'])
                         ->withCount('structures')
                         ->orderByDesc('structures_count')
