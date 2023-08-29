@@ -6,7 +6,21 @@ import Footer from "@/Components/Footer.vue";
 import { ref } from "vue";
 import { TransitionRoot } from "@headlessui/vue";
 
+const emit = defineEmits(["eventFromChild"]);
+
+const handleButtonEvent = (message) => {
+    if (message === "Mes adresses") {
+        displayAdresses.value = true;
+    }
+};
+
+const handleCloseEvent = () => {
+    displayAdresses.value = false;
+};
+
+const displayAdresses = ref(false);
 const isShowing = ref(true);
+
 const props = defineProps({
     structure: Object,
     can: Object,
@@ -17,7 +31,11 @@ const props = defineProps({
     <div class="min-h-screen w-full bg-white">
         <div class="flex">
             <!-- Page Heading -->
-            <InscriptionNavigation :structure="structure" :can="can" />
+            <InscriptionNavigation
+                :structure="structure"
+                :can="can"
+                @eventFromChild="handleButtonEvent"
+            />
 
             <div class="flex-1">
                 <ProNavigation :structure="structure" />
@@ -43,7 +61,10 @@ const props = defineProps({
                 >
                     <main>
                         <FlashMessages />
-                        <slot />
+                        <slot
+                            name="default"
+                            v-bind="{ displayAdresses, handleCloseEvent }"
+                        />
                     </main>
                 </TransitionRoot>
             </div>

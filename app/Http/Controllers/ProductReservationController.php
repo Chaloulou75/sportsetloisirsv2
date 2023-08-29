@@ -39,6 +39,8 @@ class ProductReservationController extends Controller
         $activiteId = $produit->activite->id;
         $activite = StructureActivite::where('id', $activiteId)->first();
 
+        // $reservationenAttente =
+
         Mail::to($email)->send(new ReservationAsked($structure, $activite, $produit, $planning, $tarif, $user));
 
         // dd($produit, $planning, $tarif, $email, $activite, $user);

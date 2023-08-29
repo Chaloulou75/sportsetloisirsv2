@@ -11,12 +11,10 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::table('structures_horaires', function (Blueprint $table) {
-
             $table->foreign('structure_id')
                 ->references('id')
                 ->on('structures')
                 ->onDelete('cascade');
-
         });
     }
 

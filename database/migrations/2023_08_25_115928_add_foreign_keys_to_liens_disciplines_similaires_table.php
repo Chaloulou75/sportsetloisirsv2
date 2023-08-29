@@ -20,7 +20,6 @@ return new class () extends Migration {
                   ->references('id')
                   ->on('liste_disciplines')
                   ->onDelete('cascade');
-
         });
     }
 

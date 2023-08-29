@@ -158,22 +158,6 @@ const user = computed(() => page.props.auth.user);
                             </span>
                         </summary>
                         <ul class="space-y-1">
-                            <li>
-                                <Link
-                                    v-if="user && !user.structures.length > 0"
-                                    :href="route('structures.create')"
-                                    class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
-                                    :class="{
-                                        'bg-blue-600 text-white':
-                                            route().current(
-                                                'structures.create',
-                                                structure
-                                            ),
-                                    }"
-                                >
-                                    Inscription
-                                </Link>
-                            </li>
                             <li v-if="structure">
                                 <a
                                     href=""
@@ -354,6 +338,17 @@ const user = computed(() => page.props.auth.user);
                                             >
                                                 Editer ma structure
                                             </Link>
+                                        </li>
+                                        <li v-if="structure">
+                                            <button
+                                                type="button"
+                                                @click="
+                                                    emitEvent('Mes adresses')
+                                                "
+                                                class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                                            >
+                                                Mes adresses
+                                            </button>
                                         </li>
                                         <li>
                                             <Link

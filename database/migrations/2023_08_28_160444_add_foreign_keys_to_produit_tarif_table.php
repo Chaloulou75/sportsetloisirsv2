@@ -11,10 +11,8 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::table('produit_tarif', function (Blueprint $table) {
-
             $table->foreign('produit_id')->references('id')->on('structures_produits')->onDelete('cascade');
             $table->foreign('tarif_id')->references('id')->on('structures_tarifs')->onDelete('cascade');
-
         });
     }
 

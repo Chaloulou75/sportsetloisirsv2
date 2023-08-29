@@ -51,7 +51,9 @@ class StructureController extends Controller
 
         return Inertia::render('Structures/Index', [
             'structures' => Structure::with([
-                    'famille:id,name',
+                    'adresses'  => function ($query) {
+                        $query->latest();
+                    },
                     'creator:id,name',
                     'users:id,name',
                     'city:id,ville,ville_formatee,code_postal',
@@ -103,6 +105,7 @@ class StructureController extends Controller
                             'departement_id' => $structure->departement_id,
                             'user' => $structure->creator,
                             'logo' => $structure->logo ? asset($structure->logo) : 'https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
+                            'adresses' => $structure->adresses,
                             'categories' => $structure->categories,
                             'disciplines' => $structure->disciplines,
                             'activites' => $structure->activites,
@@ -255,7 +258,6 @@ class StructureController extends Controller
 
 
         $structure = Structure::with([
-            'famille:id,name',
             'creator:id,name',
             'users:id,name',
             'adresses'  => function ($query) {
