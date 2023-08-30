@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class City extends Model
 {
@@ -68,6 +69,23 @@ class City extends Model
     public function structures(): HasMany
     {
         return $this->hasMany(Structure::class);
+    }
+
+    public function adresses(): HasMany
+    {
+        return $this->hasMany(StructureAddress::class, 'city_id');
+    }
+
+    public function produits(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            StructureProduit::class,
+            StructureAddress::class,
+            'city_id',
+            'lieu_id',
+            'id',
+            'id'
+        );
     }
 
     // public function structures(): BelongsToMany

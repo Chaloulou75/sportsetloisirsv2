@@ -21,12 +21,7 @@ class HomeController extends Controller
         $structuresCount = Structure::count();
         $citiesCount = City::count();
 
-        $familles = Famille::with([
-            'disciplines' => function ($query) {
-                $query->whereHas('structures');
-            }
-        ])
-        ->whereHas('disciplines', function ($query) {
+        $familles = Famille::whereHas('disciplines', function ($query) {
             $query->whereHas('structures');
         })->select(['id', 'name', 'slug'])->get();
 

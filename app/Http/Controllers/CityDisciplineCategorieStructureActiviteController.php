@@ -119,7 +119,7 @@ class CityDisciplineCategorieStructureActiviteController extends Controller
                     'category' => $category,
                     'categories' => $categories,
                     'allStructureTypes' => $allStructureTypes,
-                    'city'=> $city,
+                    'city' => $city,
                     'discipline' => $discipline,
                     'structure' => $structure,
                     'logoUrl' => $logoUrl,

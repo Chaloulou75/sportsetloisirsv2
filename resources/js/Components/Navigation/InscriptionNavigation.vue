@@ -64,7 +64,7 @@ const user = computed(() => page.props.auth.user);
                         <ul class="space-y-1">
                             <li>
                                 <Link
-                                    v-if="user && !user.structures.length > 0"
+                                    v-if="user"
                                     :href="route('structures.create')"
                                     class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
                                     :class="{
@@ -80,48 +80,27 @@ const user = computed(() => page.props.auth.user);
                             </li>
                             <li>
                                 <Link
-                                    v-if="user && !user.structures.length > 0"
+                                    v-if="user"
                                     :href="route('structures.create')"
                                     class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
-                                    :class="{
-                                        'bg-blue-600 text-white':
-                                            route().current(
-                                                'structures.create',
-                                                structure
-                                            ),
-                                    }"
                                 >
                                     A valider (4)
                                 </Link>
                             </li>
                             <li>
                                 <Link
-                                    v-if="user && !user.structures.length > 0"
+                                    v-if="user"
                                     :href="route('structures.create')"
                                     class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
-                                    :class="{
-                                        'bg-blue-600 text-white':
-                                            route().current(
-                                                'structures.create',
-                                                structure
-                                            ),
-                                    }"
                                 >
                                     En cours (3)
                                 </Link>
                             </li>
                             <li>
                                 <Link
-                                    v-if="user && !user.structures.length > 0"
+                                    v-if="user"
                                     :href="route('structures.create')"
                                     class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
-                                    :class="{
-                                        'bg-blue-600 text-white':
-                                            route().current(
-                                                'structures.create',
-                                                structure
-                                            ),
-                                    }"
                                 >
                                     Messages (3)
                                 </Link>
@@ -350,6 +329,19 @@ const user = computed(() => page.props.auth.user);
                                                 Mes adresses
                                             </button>
                                         </li>
+                                        <li v-if="structure">
+                                            <Link
+                                                :href="
+                                                    route('structures.show', {
+                                                        structure:
+                                                            structure.slug,
+                                                    })
+                                                "
+                                                class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                                            >
+                                                Voir ma structure
+                                            </Link>
+                                        </li>
                                         <li>
                                             <Link
                                                 v-if="
@@ -387,19 +379,6 @@ const user = computed(() => page.props.auth.user);
                                         </li>
                                     </ul>
                                 </details>
-                            </li>
-
-                            <li v-if="structure">
-                                <Link
-                                    :href="
-                                        route('structures.show', {
-                                            structure: structure.slug,
-                                        })
-                                    "
-                                    class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                                >
-                                    Voir ma structure
-                                </Link>
                             </li>
                         </ul>
                     </details>

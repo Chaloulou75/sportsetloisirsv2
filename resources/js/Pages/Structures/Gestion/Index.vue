@@ -142,12 +142,14 @@ const deleteAdresse = (adresse) => {
         </template>
 
         <template #default="{ displayAdresses, handleCloseEvent }">
-            <div class="px-2 py-6 text-gray-700 md:px-4">
+            <div class="space-y-10 px-2 py-6 text-gray-700 md:px-4">
                 <h3 class="text-2xl">
                     Bienvenue
                     <span class="text-indigo-700">{{ user.name }}</span>
                 </h3>
-                <p class="text-lg">Vos demandes de réservations:</p>
+                <p class="text-xl font-semibold">
+                    Vos demandes de réservations en attente:
+                </p>
                 <ul>
                     <!-- <li v-for="reservation in "></li> -->
                 </ul>

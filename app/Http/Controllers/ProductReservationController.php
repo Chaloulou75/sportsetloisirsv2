@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ReservationAsked;
 use Illuminate\Http\Request;
+use App\Mail\ReservationAsked;
 use App\Models\StructureTarif;
 use Illuminate\Validation\Rule;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Models\StructurePlanning;
+use App\Models\ProductReservation;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 
@@ -39,7 +40,18 @@ class ProductReservationController extends Controller
         $activiteId = $produit->activite->id;
         $activite = StructureActivite::where('id', $activiteId)->first();
 
-        // $reservationenAttente =
+        $newReservation = ProductReservation::create([
+            'user_id' => $user->id,
+            'produit_id' => $produit->id,
+            'tarif_id' => $tarif->id,
+            'planning_id' => $planning->id,
+            'pending' => true,
+            'confirmed' => false,
+            'finished' => false,
+            'cancelled' => false,
+        ]);
+
+        dd($newReservation);
 
         Mail::to($email)->send(new ReservationAsked($structure, $activite, $produit, $planning, $tarif, $user));
 
