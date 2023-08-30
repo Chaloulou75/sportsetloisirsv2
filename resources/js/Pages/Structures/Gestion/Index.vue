@@ -1,7 +1,7 @@
 <script setup>
 import ProLayout from "@/Layouts/ProLayout.vue";
 import { Head, useForm, usePage, router } from "@inertiajs/vue3";
-import { ref, computed, defineAsyncComponent } from "vue";
+import { ref, computed, watch, defineAsyncComponent } from "vue";
 import PathsInscriptionNavigation from "@/Components/Navigation/PathsInscriptionNavigation.vue";
 import {
     ArrowPathIcon,
@@ -24,6 +24,7 @@ const props = defineProps({
 
 const addAddress = ref(false);
 const displayAdresseForm = () => {
+    showUpdateAddressForm.value = false;
     addAddress.value = !addAddress.value;
 };
 const addressForm = useForm({
@@ -37,7 +38,7 @@ const addressForm = useForm({
 
 const onSubmitAdress = () => {
     router.post(
-        `/url a definir`,
+        route("structures.adresses.store", props.structure.slug),
         {
             address: addressForm.address,
             city: addressForm.city,
@@ -50,9 +51,78 @@ const onSubmitAdress = () => {
             preserveScroll: true,
             onSuccess: () => {
                 addressForm.reset();
-                emit("close");
+                displayAdresseForm();
             },
+        }
+    );
+};
+
+const showUpdateAddressForm = ref(false);
+const selectedAdresse = ref(null);
+
+const updateAddressForm = useForm({
+    address: ref(null),
+    city: ref(null),
+    zip_code: ref(null),
+    country: ref(null),
+    address_lat: ref(null),
+    address_lng: ref(null),
+});
+
+watch(
+    () => selectedAdresse.value,
+    (newAdresse) => {
+        if (newAdresse) {
+            console.log(newAdresse);
+            updateAddressForm.address = newAdresse.address;
+            updateAddressForm.city = newAdresse.city;
+            updateAddressForm.zip_code = newAdresse.zip_code;
+            updateAddressForm.country = newAdresse.country;
+            updateAddressForm.address_lat = newAdresse.address_lat;
+            updateAddressForm.address_lng = newAdresse.address_lng;
+        }
+    }
+);
+
+const displayUpdateAdresseForm = (adresse) => {
+    selectedAdresse.value = adresse;
+    addAddress.value = false;
+    showUpdateAddressForm.value = !showUpdateAddressForm.value;
+};
+
+const onUpdateAdress = () => {
+    const adresse = selectedAdresse.value;
+    router.put(
+        route("structures.adresses.update", {
             structure: props.structure.slug,
+            adress: adresse.id,
+        }),
+        {
+            address: updateAddressForm.address,
+            city: updateAddressForm.city,
+            zip_code: updateAddressForm.zip_code,
+            country: updateAddressForm.country,
+            address_lat: updateAddressForm.address_lat,
+            address_lng: updateAddressForm.address_lng,
+        },
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                updateAddressForm.reset();
+                displayUpdateAdresseForm();
+            },
+        }
+    );
+};
+
+const deleteAdresse = (adresse) => {
+    router.delete(
+        route("structures.adresses.destroy", {
+            structure: props.structure.slug,
+            adress: adresse.id,
+        }),
+        {
+            preserveScroll: true,
         }
     );
 };
@@ -107,10 +177,12 @@ const onSubmitAdress = () => {
                                 <div class="flex items-center gap-x-6">
                                     <button
                                         type="button"
-                                        @click="updateAdresse(adresse)"
+                                        @click="
+                                            displayUpdateAdresseForm(adresse)
+                                        "
                                     >
                                         <ArrowPathIcon
-                                            class="h-5 w-5 text-blue-500"
+                                            class="h-6 w-6 text-blue-500 transition-all duration-200 hover:-rotate-90 hover:text-indigo-500"
                                         />
                                     </button>
                                     <button
@@ -118,7 +190,7 @@ const onSubmitAdress = () => {
                                         @click="deleteAdresse(adresse)"
                                     >
                                         <TrashIcon
-                                            class="h-5 w-5 text-red-500"
+                                            class="h-6 w-6 text-red-500 hover:text-red-700"
                                         />
                                     </button>
                                 </div>
@@ -126,7 +198,7 @@ const onSubmitAdress = () => {
                         </ul>
                         <div class="flex items-center justify-end">
                             <button
-                                class="group flex items-center justify-center rounded-md border border-gray-200 px-4 py-2.5 text-sm hover:bg-blue-500"
+                                class="group flex items-center justify-center rounded-md border border-gray-200 bg-white px-4 py-2.5 text-sm hover:bg-blue-500"
                                 type="button"
                                 @click="displayAdresseForm"
                             >
@@ -138,6 +210,33 @@ const onSubmitAdress = () => {
                                 />
                             </button>
                         </div>
+                        <form
+                            class="flex flex-col justify-end"
+                            v-if="showUpdateAddressForm"
+                            @submit.prevent="onUpdateAdress"
+                            autocomplete="off"
+                        >
+                            <AddressForm
+                                :errors="errors"
+                                v-model:address="updateAddressForm.address"
+                                v-model:city="updateAddressForm.city"
+                                v-model:zip_code="updateAddressForm.zip_code"
+                                v-model:country="updateAddressForm.country"
+                                v-model:address_lat="
+                                    updateAddressForm.address_lat
+                                "
+                                v-model:address_lng="
+                                    updateAddressForm.address_lng
+                                "
+                            />
+                            <button
+                                type="submit"
+                                :disabled="updateAddressForm.processing"
+                                class="my-4 flex items-center self-end rounded-md border border-gray-200 bg-white px-4 py-2.5 text-sm hover:bg-blue-500 hover:text-white"
+                            >
+                                Mettre à jour
+                            </button>
+                        </form>
                         <form
                             class="flex flex-col justify-end"
                             v-if="addAddress"
@@ -154,6 +253,7 @@ const onSubmitAdress = () => {
                                 v-model:address_lng="addressForm.address_lng"
                             />
                             <button
+                                :disabled="addressForm.processing"
                                 type="submit"
                                 class="my-4 flex items-center self-end rounded-md border border-gray-200 bg-white px-4 py-2.5 text-sm hover:bg-blue-500 hover:text-white"
                             >

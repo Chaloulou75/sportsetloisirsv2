@@ -15,7 +15,9 @@ use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\DepartementController;
 use App\Http\Controllers\CityDisciplineController;
 use App\Http\Controllers\StructureTarifController;
+use App\Http\Controllers\StructureGestionController;
 use App\Http\Controllers\FamilleDisciplineController;
+use App\Http\Controllers\StructureAddresseController;
 use App\Http\Controllers\StructurePlanningController;
 use App\Http\Controllers\CategoryDisciplineController;
 use App\Http\Controllers\ProductReservationController;
@@ -34,7 +36,6 @@ use App\Http\Controllers\DepartementDisciplineStructuretypeController;
 use App\Http\Controllers\CityDisciplineStructuretypeStructureController;
 use App\Http\Controllers\CityDisciplineCategorieStructureActiviteController;
 use App\Http\Controllers\CityDisciplineStructuretypeStructureActiviteController;
-use App\Http\Controllers\StructureGestionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -159,7 +160,7 @@ Route::resource('product_reservations', ProductReservationController::class)->on
 ]);
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/structures/gestion/{structure:slug}', [StructureGestionController::class, 'index'])->name('structures.gestion.index');
+    Route::get('/gestion/{structure:slug}', [StructureGestionController::class, 'index'])->name('structures.gestion.index');
     Route::post('/structures/{structure:slug}/activites/{activite:id}/newactivitystore', [ActiviteController::class, 'newactivitystore']);
     Route::put('/structures/{structure:slug}/activites/{activite:id}/toggleactif', [ActiviteController::class, 'toggleactif']);
     Route::resource('structures.activites', ActiviteController::class)->scoped(['structure' => 'slug','activite' => 'id'])->except('show');
@@ -175,6 +176,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('structures.plannings', StructurePlanningController::class)->scoped(['structure' => 'slug','planning' => 'id'])->only(['store', 'update', 'destroy']);
     Route::resource('structures.disciplines', StructureDisciplineController::class)->scoped(['structure' => 'slug','discipline' => 'id'])->only(['destroy']);
     Route::resource('structures.categories', StructureCategorieController::class)->scoped(['structure' => 'slug','categorie' => 'id'])->only(['destroy']);
+
+    Route::post('structures/{structure:slug}/adresses', [StructureAddresseController::class, 'store'])->name('structures.adresses.store');
+    Route::put('structures/{structure:slug}/adresses/{adress}', [StructureAddresseController::class, 'update'])->name('structures.adresses.update');
+    Route::delete('structures/{structure:slug}/adresses/{adress}', [StructureAddresseController::class, 'destroy'])->name('structures.adresses.destroy');
 
     Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
     Route::post('/structures', [StructureController::class, 'store'])->name('structures.store');
