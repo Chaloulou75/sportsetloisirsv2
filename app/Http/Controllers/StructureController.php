@@ -14,16 +14,16 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\StructureUser;
 use App\Mail\StructureCreated;
-use App\Models\LienDisciplineCategorieCritere;
 use App\Models\ListDiscipline;
 use Illuminate\Validation\Rule;
 use App\Models\StructureAddress;
 use App\Models\StructureHoraire;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
-use App\Models\StructureCategorie;
 use App\Models\StructurePlanning;
 use App\Models\StructureTypeInfo;
+use App\Models\ProductReservation;
+use App\Models\StructureCategorie;
 use App\Models\StructureDiscipline;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -32,6 +32,7 @@ use Illuminate\Http\RedirectResponse;
 use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
+use App\Models\LienDisciplineCategorieCritere;
 
 class StructureController extends Controller
 {
@@ -317,6 +318,11 @@ class StructureController extends Controller
             return Redirect::route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette fiche, vous devez être le créateur de la structure ou un administrateur.');
         }
 
+        $allReservationsCount = ProductReservation::count();
+        $pendingReservationsCount = ProductReservation::where('pending', true)->count();
+        $confirmedReservationsCount = ProductReservation::where('confirmed', true)
+            ->count();
+
         $structurestypes = Structuretype::with(['structuretypeattributs', 'structuretypeattributs.structuretypevaleurs'])->select(['id', 'name', 'slug'])->get();
         $disciplines = ListDiscipline::select(['id', 'name', 'slug'])->get();
 
@@ -338,6 +344,9 @@ class StructureController extends Controller
             'structurestypes' => $structurestypes,
             'disciplines' => $disciplines,
             'structure' => $structure,
+            'allReservationsCount' => $allReservationsCount,
+            'confirmedReservationsCount' => $confirmedReservationsCount,
+            'pendingReservationsCount' => $pendingReservationsCount,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),

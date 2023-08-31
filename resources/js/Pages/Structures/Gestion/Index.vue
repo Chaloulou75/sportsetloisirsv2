@@ -2,15 +2,22 @@
 import ProLayout from "@/Layouts/ProLayout.vue";
 import { Head, useForm, usePage, router } from "@inertiajs/vue3";
 import { ref, computed, watch, defineAsyncComponent } from "vue";
-import PathsInscriptionNavigation from "@/Components/Navigation/PathsInscriptionNavigation.vue";
 import {
     ArrowPathIcon,
     PlusIcon,
     TrashIcon,
     XCircleIcon,
 } from "@heroicons/vue/24/outline";
+import dayjs from "dayjs";
+import "dayjs/locale/fr";
+dayjs.locale("fr");
+
 const AddressForm = defineAsyncComponent(() =>
     import("@/Components/Google/AddressForm.vue")
+);
+
+const ActiviteCard = defineAsyncComponent(() =>
+    import("@/Components/Structures/ActiviteCard.vue")
 );
 
 const page = usePage();
@@ -19,8 +26,32 @@ const user = computed(() => page.props.auth.user);
 const props = defineProps({
     errors: Object,
     structure: Object,
+    confirmedReservations: Object,
+    allReservations: Object,
+    pendingReservations: Object,
+    confirmedReservationsCount: Number,
+    allReservationsCount: Number,
+    pendingReservationsCount: Number,
     can: Object,
 });
+
+const currentMonth = ref(dayjs().format("MMMM YYYY"));
+const formatDate = (dateString) => {
+    const date = dayjs(dateString);
+    return date.format("dddd D MMMM YYYY à H[h]mm");
+};
+
+const formatCurrency = (value) => {
+    const numericValue = Number(value.replace(/[^0-9.-]+/g, ""));
+    if (!isNaN(numericValue)) {
+        if (numericValue % 1 === 0) {
+            return numericValue.toLocaleString() + " €";
+        } else {
+            return numericValue.toFixed(2) + " €";
+        }
+    }
+    return value;
+};
 
 const addAddress = ref(false);
 const displayAdresseForm = () => {
@@ -132,7 +163,13 @@ const deleteAdresse = (adresse) => {
         title="Gestion de votre structure"
         :description="'Gestion de votre structure, disciplines et activités.'"
     />
-    <ProLayout :structure="structure" :can="can">
+    <ProLayout
+        :structure="structure"
+        :can="can"
+        :allReservationsCount="allReservationsCount"
+        :pendingReservationsCount="pendingReservationsCount"
+        :confirmedReservationsCount="confirmedReservationsCount"
+    >
         <template #header>
             <h1
                 class="text-xl font-semibold leading-tight tracking-widest text-gray-700"
@@ -147,12 +184,135 @@ const deleteAdresse = (adresse) => {
                     Bienvenue
                     <span class="text-indigo-700">{{ user.name }}</span>
                 </h3>
-                <p class="text-xl font-semibold">
-                    Vos demandes de réservations en attente:
-                </p>
-                <ul>
-                    <!-- <li v-for="reservation in "></li> -->
-                </ul>
+                <div
+                    class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
+                >
+                    <p class="text-xl font-semibold">
+                        Vous avez
+                        <span class="text-indigo-700">{{
+                            pendingReservationsCount
+                        }}</span>
+                        demandes de réservations en attente:
+                    </p>
+                    <ul class="list-inside list-disc">
+                        <li
+                            v-for="reservation in pendingReservations"
+                            :key="reservation.id"
+                        >
+                            <span class="font-semibold text-indigo-500">{{
+                                reservation.planning.title
+                            }}</span
+                            >: du
+                            <span class="font-semibold">{{
+                                formatDate(reservation.planning.start)
+                            }}</span>
+                            au
+                            <span class="font-semibold">{{
+                                formatDate(reservation.planning.end)
+                            }}</span>
+                            <span class="font-semibold text-indigo-500">{{
+                                formatCurrency(reservation.tarif.amount)
+                            }}</span>
+                        </li>
+                    </ul>
+                </div>
+                <div
+                    class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
+                >
+                    <p class="text-xl font-semibold">
+                        <span class="text-indigo-700">{{
+                            confirmedReservationsCount
+                        }}</span>
+                        réservations en cours:
+                    </p>
+                    <ul class="list-inside list-disc">
+                        <li
+                            v-for="reservation in confirmedReservations"
+                            :key="reservation.id"
+                        >
+                            <span class="font-semibold text-indigo-500">{{
+                                reservation.planning.title
+                            }}</span
+                            >:<span class="font-normal"> du </span
+                            ><span class="font-semibold">{{
+                                formatDate(reservation.planning.start)
+                            }}</span
+                            ><span class="font-normal"> au </span
+                            ><span class="font-semibold">{{
+                                formatDate(reservation.planning.end)
+                            }}</span>
+                            <span class="font-semibold text-indigo-500">{{
+                                formatCurrency(reservation.tarif.amount)
+                            }}</span>
+                        </li>
+                    </ul>
+                </div>
+                <div
+                    class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
+                >
+                    <h2 class="text-2xl font-semibold">
+                        Vos statistiques de {{ currentMonth }}:
+                    </h2>
+                    <div
+                        class="grid w-full grid-cols-1 justify-items-center gap-4 md:grid-cols-4"
+                    >
+                        <div
+                            class="flex flex-col items-center justify-center space-y-4"
+                        >
+                            <div class="text-5xl font-bold text-indigo-500">
+                                33
+                            </div>
+                            <div class="font-semibold">réservations</div>
+                        </div>
+                        <div
+                            class="flex flex-col items-center justify-center space-y-4"
+                        >
+                            <div class="text-5xl font-bold text-indigo-500">
+                                {{ formatCurrency("4589") }}
+                            </div>
+                            <div class="font-semibold">chiffre d'affaire</div>
+                        </div>
+                        <div
+                            class="flex flex-col items-center justify-center space-y-4"
+                        >
+                            <div class="text-5xl font-bold text-indigo-500">
+                                {{ structure.view_count }}
+                            </div>
+                            <div class="font-semibold">pages vues</div>
+                        </div>
+                        <div
+                            class="flex flex-col items-center justify-center space-y-4"
+                        >
+                            <div class="text-5xl font-bold text-indigo-500">
+                                4
+                            </div>
+                            <div class="font-semibold">messages</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
+                >
+                    <h2 class="text-2xl font-semibold">
+                        Vos activités les plus populaires:
+                    </h2>
+                    <div
+                        class="grid w-full grid-cols-1 justify-items-center gap-4 md:grid-cols-3"
+                    >
+                        <ActiviteCard
+                            v-for="(activite, index) in structure.activites"
+                            :key="activite.id"
+                            :index="index"
+                            :activite="activite"
+                            :link="
+                                route('structures.activites.show', {
+                                    activite: activite.id,
+                                })
+                            "
+                        />
+                    </div>
+                </div>
 
                 <template v-if="displayAdresses">
                     <div

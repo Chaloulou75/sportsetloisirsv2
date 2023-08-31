@@ -11,6 +11,7 @@ use Database\Seeders\AListePaysTableSeeder;
 use Database\Seeders\CategoriesTableSeeder;
 use Database\Seeders\DepartementsTableSeeder;
 use Database\Seeders\VillesFranceTableSeeder;
+use Database\Seeders\ListeCriteresTableSeeder;
 use Database\Seeders\ListeFamillesTableSeeder;
 use Database\Seeders\StructuretypesTableSeeder;
 use Database\Seeders\ListeDisciplinesTableSeeder;
@@ -39,14 +40,15 @@ class DatabaseSeeder extends Seeder
         $this->call(ListeFamillesTableSeeder::class);
         $this->call(ListeDisciplinesTableSeeder::class);
         $this->call(StructuretypesTableSeeder::class);
+        $this->call(ListeCriteresTableSeeder::class);
         $this->call(CategoriesTableSeeder::class);
         $this->call(ListeTarifsTypesTableSeeder::class);
         $this->call(ListeTarifsTypesAttributsTableSeeder::class);
         $this->call(LiensDisciplinesCategoriesTableSeeder::class);
         $this->call(LiensFamillesDisciplinesTableSeeder::class);
-        $this->call(LiensDisciplinesSimilairesTableSeeder::class);
         $this->call(LiensDisciplinesCategoriesCriteresTableSeeder::class);
         $this->call(LiensDisciplinesCategoriesCriteresValeursTableSeeder::class);
+        $this->call(LiensDisciplinesSimilairesTableSeeder::class);
 
 
 

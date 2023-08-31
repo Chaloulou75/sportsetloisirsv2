@@ -17,6 +17,9 @@ const props = defineProps({
     displayActivity: Boolean,
     displayTarif: Boolean,
     displayPlanning: Boolean,
+    confirmedReservationsCount: Number,
+    allReservationsCount: Number,
+    pendingReservationsCount: Number,
     can: Object,
 });
 
@@ -65,15 +68,13 @@ const user = computed(() => page.props.auth.user);
                             <li>
                                 <Link
                                     v-if="user"
-                                    :href="route('structures.create')"
+                                    :href="
+                                        route(
+                                            'structures.gestion.index',
+                                            structure.slug
+                                        )
+                                    "
                                     class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
-                                    :class="{
-                                        'bg-blue-600 text-white':
-                                            route().current(
-                                                'structures.create',
-                                                structure
-                                            ),
-                                    }"
                                 >
                                     Solde
                                 </Link>
@@ -81,28 +82,50 @@ const user = computed(() => page.props.auth.user);
                             <li>
                                 <Link
                                     v-if="user"
-                                    :href="route('structures.create')"
-                                    class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
+                                    :href="
+                                        route(
+                                            'structures.gestion.index',
+                                            structure.slug
+                                        )
+                                    "
+                                    class="flex items-center justify-between rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
                                 >
-                                    A valider (4)
+                                    <div>A valider</div>
+                                    <div class="p-1">
+                                        {{ pendingReservationsCount }}
+                                    </div>
                                 </Link>
                             </li>
                             <li>
                                 <Link
                                     v-if="user"
-                                    :href="route('structures.create')"
-                                    class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
+                                    :href="
+                                        route(
+                                            'structures.gestion.index',
+                                            structure.slug
+                                        )
+                                    "
+                                    class="flex items-center justify-between rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
                                 >
-                                    En cours (3)
+                                    <div>En cours</div>
+                                    <div class="p-1">
+                                        {{ confirmedReservationsCount }}
+                                    </div>
                                 </Link>
                             </li>
                             <li>
                                 <Link
                                     v-if="user"
-                                    :href="route('structures.create')"
-                                    class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
+                                    :href="
+                                        route(
+                                            'structures.gestion.index',
+                                            structure.slug
+                                        )
+                                    "
+                                    class="flex items-center justify-between rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
                                 >
-                                    Messages (3)
+                                    <div>Messages</div>
+                                    <div class="p-1">4</div>
                                 </Link>
                             </li>
                         </ul>

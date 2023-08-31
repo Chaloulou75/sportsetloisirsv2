@@ -18,6 +18,7 @@ use App\Models\StructureHoraire;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Models\StructurePlanning;
+use App\Models\ProductReservation;
 use App\Models\StructureCategorie;
 use App\Models\StructureDiscipline;
 use Illuminate\Support\Facades\Auth;
@@ -48,6 +49,20 @@ class ActiviteController extends Controller
             ->where('structure_id', $structure->id)
             ->latest()
             ->get();
+
+
+
+        $allReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {
+            $query->where('structure_id', $structure->id);
+        })->count();
+        $pendingReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {
+            $query->where('structure_id', $structure->id);
+        })->where('pending', true)->count();
+        $confirmedReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {
+            $query->where('structure_id', $structure->id);
+        })->where('confirmed', true)
+            ->count();
+
 
         $actByDiscAndCategorie = $activites->groupBy('discipline.name')->map(function ($disciplineCategories) {
             $categories = $disciplineCategories->groupBy('categorie.nom_categorie_pro')->map(function ($categorieItems) {
@@ -83,6 +98,9 @@ class ActiviteController extends Controller
             'listDisciplines' => $listDisciplines,
             'activites' => $activites,
             'actByDiscAndCategorie' => $actByDiscAndCategorie,
+            'allReservationsCount' => $allReservationsCount,
+            'confirmedReservationsCount' => $confirmedReservationsCount,
+            'pendingReservationsCount' => $pendingReservationsCount,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),
@@ -270,6 +288,19 @@ class ActiviteController extends Controller
             return to_route('structures.activites.index', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
 
+
+        $allReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {
+            $query->where('structure_id', $structure->id);
+        })->count();
+        $pendingReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {
+            $query->where('structure_id', $structure->id);
+        })->where('pending', true)->count();
+        $confirmedReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {
+            $query->where('structure_id', $structure->id);
+        })->where('confirmed', true)
+            ->count();
+
+
         $structure = Structure::with([
             'adresses' => function ($query) {
                 $query->latest();
@@ -362,6 +393,9 @@ class ActiviteController extends Controller
             'categoriesListByDiscipline' => $categoriesListByDiscipline,
             'tarifTypes' => $tarifTypes,
             'activiteForTarifs' => $activiteForTarifs,
+            'allReservationsCount' => $allReservationsCount,
+            'confirmedReservationsCount' => $confirmedReservationsCount,
+            'pendingReservationsCount' => $pendingReservationsCount,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),

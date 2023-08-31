@@ -51,8 +51,6 @@ class ProductReservationController extends Controller
             'cancelled' => false,
         ]);
 
-        dd($newReservation);
-
         Mail::to($email)->send(new ReservationAsked($structure, $activite, $produit, $planning, $tarif, $user));
 
         // dd($produit, $planning, $tarif, $email, $activite, $user);

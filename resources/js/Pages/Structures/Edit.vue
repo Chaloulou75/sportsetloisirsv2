@@ -19,6 +19,9 @@ const props = defineProps({
     publictypes: Object,
     disciplines: Object,
     structure: Object,
+    confirmedReservationsCount: Number,
+    allReservationsCount: Number,
+    pendingReservationsCount: Number,
     errors: Object,
     can: Object,
 });
@@ -114,7 +117,13 @@ function submit() {
 <template>
     <Head title="Editer votre structure" />
 
-    <ProLayout :structure="structure" :can="can">
+    <ProLayout
+        :structure="structure"
+        :can="can"
+        :allReservationsCount="allReservationsCount"
+        :pendingReservationsCount="pendingReservationsCount"
+        :confirmedReservationsCount="confirmedReservationsCount"
+    >
         <template #header>
             <h1
                 class="w-full py-6 text-center text-xl font-semibold leading-tight text-gray-800"

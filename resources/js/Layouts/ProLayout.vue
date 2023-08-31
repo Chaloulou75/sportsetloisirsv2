@@ -9,7 +9,19 @@ import { TransitionRoot } from "@headlessui/vue";
 const emit = defineEmits(["eventFromChild"]);
 
 const handleButtonEvent = (message) => {
-    if (message === "Mes adresses") {
+    if (message === "Mon planning") {
+        displayActivity.value = false;
+        displayTarif.value = false;
+        displayPlanning.value = true;
+    } else if (message === "Mes tarifs") {
+        displayActivity.value = false;
+        displayPlanning.value = false;
+        displayTarif.value = true;
+    } else if (message === "Mes activites") {
+        displayActivity.value = true;
+        displayPlanning.value = false;
+        displayTarif.value = false;
+    } else if (message === "Mes adresses") {
         displayAdresses.value = true;
     }
 };
@@ -20,9 +32,15 @@ const handleCloseEvent = () => {
 
 const displayAdresses = ref(false);
 const isShowing = ref(true);
+const displayActivity = ref(true);
+const displayTarif = ref(false);
+const displayPlanning = ref(false);
 
 const props = defineProps({
     structure: Object,
+    confirmedReservationsCount: Number,
+    allReservationsCount: Number,
+    pendingReservationsCount: Number,
     can: Object,
 });
 </script>
@@ -33,6 +51,9 @@ const props = defineProps({
             <!-- Page Heading -->
             <InscriptionNavigation
                 :structure="structure"
+                :allReservationsCount="allReservationsCount"
+                :pendingReservationsCount="pendingReservationsCount"
+                :confirmedReservationsCount="confirmedReservationsCount"
                 :can="can"
                 @eventFromChild="handleButtonEvent"
             />
@@ -63,7 +84,13 @@ const props = defineProps({
                         <FlashMessages />
                         <slot
                             name="default"
-                            v-bind="{ displayAdresses, handleCloseEvent }"
+                            v-bind="{
+                                displayAdresses,
+                                displayActivity,
+                                displayPlanning,
+                                displayTarif,
+                                handleCloseEvent,
+                            }"
                         />
                     </main>
                 </TransitionRoot>
