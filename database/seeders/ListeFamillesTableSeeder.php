@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class AListeRubriquesTableSeeder extends Seeder
+class ListeFamillesTableSeeder extends Seeder
 {
     /**
      * Auto generated seed file
@@ -16,13 +16,14 @@ class AListeRubriquesTableSeeder extends Seeder
     {
 
 
-        DB::table('a_liste_rubriques')->delete();
+        DB::table('liste_familles')->delete();
 
-        DB::table('a_liste_rubriques')->insert(array(
+        DB::table('liste_familles')->insert(array(
             0 =>
             array(
-                'id_rubrique' => 1,
-                'nom' => 'Balle',
+                'id' => 1,
+                'name' => 'Balle',
+                'slug' => 'balle',
                 'nom_long' => 'Sports de balle',
                 'title' => 'Sports de balle et collectif.loc.',
                 'title_clubs' => 'Sports de balle et collectif.loc.',
@@ -41,11 +42,15 @@ class AListeRubriquesTableSeeder extends Seeder
                 'description_profs' => 'Consultez la liste des clubs disponibles, comparez services, tarifs et horaires en 2 clics ! Pratiquer un sport de balle n\'a jamais été aussi simple !',
                 'type' => 'Sport',
                 'ordre' => 0,
+                'view_count' => null,
+                'created_at' => '2023-04-26 17:36:59',
+                'updated_at' => '0000-00-00 00:00:00',
             ),
             1 =>
             array(
-                'id_rubrique' => 2,
-                'nom' => 'Combat',
+                'id' => 2,
+                'name' => 'Combat',
+                'slug' => 'combat',
                 'nom_long' => 'Sports de combat',
                 'title' => 'Sports de combat et art martiaux.loc.',
                 'title_clubs' => 'Sports de combat et art martiaux.loc.',
@@ -64,11 +69,15 @@ class AListeRubriquesTableSeeder extends Seeder
                 'description_profs' => 'Consultez la liste des clubs disponibles, comparez services, tarifs et horaires en 2 clics ! Pratiquer un sport de combat n\'a jamais été aussi simple !',
                 'type' => 'Sport',
                 'ordre' => 0,
+                'view_count' => null,
+                'created_at' => '2023-04-26 17:36:59',
+                'updated_at' => '0000-00-00 00:00:00',
             ),
             2 =>
             array(
-                'id_rubrique' => 3,
-                'nom' => 'Montagne',
+                'id' => 3,
+                'name' => 'Montagne',
+                'slug' => 'montagne',
                 'nom_long' => 'Sports de montagne',
                 'title' => 'Sports de montagne et nature.loc.',
                 'title_clubs' => 'Sports de montagne et nature.loc.',
@@ -87,11 +96,15 @@ class AListeRubriquesTableSeeder extends Seeder
                 'description_profs' => 'Consultez la liste des clubs disponibles, comparez services, tarifs et horaires en 2 clics ! Pratiquer un sport de montagne/ nature n\'a jamais été aussi simple !',
                 'type' => 'Sport',
                 'ordre' => 0,
+                'view_count' => null,
+                'created_at' => '2023-04-26 17:36:59',
+                'updated_at' => '0000-00-00 00:00:00',
             ),
             3 =>
             array(
-                'id_rubrique' => 4,
-                'nom' => 'Eau',
+                'id' => 4,
+                'name' => 'Eau',
+                'slug' => 'eau',
                 'nom_long' => 'Sports d\'eau',
                 'title' => 'Sports aquatiques.loc.',
                 'title_clubs' => 'Sports aquatiques.loc.',
@@ -110,11 +123,15 @@ class AListeRubriquesTableSeeder extends Seeder
                 'description_profs' => 'Consultez la liste des clubs disponibles, comparez services, tarifs et horaires en 2 clics ! Pratiquer une activité aquatique n\'a jamais été aussi simple !',
                 'type' => 'Sport',
                 'ordre' => 0,
+                'view_count' => null,
+                'created_at' => '2023-04-26 17:36:59',
+                'updated_at' => '0000-00-00 00:00:00',
             ),
             4 =>
             array(
-                'id_rubrique' => 5,
-                'nom' => 'Fitness',
+                'id' => 5,
+                'name' => 'Fitness',
+                'slug' => 'fitness',
                 'nom_long' => 'Fitness et musculation',
                 'title' => 'Fitness et musculation.loc.',
                 'title_clubs' => 'Fitness et musculation.loc.',
@@ -133,11 +150,15 @@ class AListeRubriquesTableSeeder extends Seeder
                 'description_profs' => 'Consultez la liste des clubs disponibles, comparez services, tarifs et horaires en 2 clics ! Entretenir son corps n\'a jamais été aussi simple !',
                 'type' => 'Sport',
                 'ordre' => 0,
+                'view_count' => null,
+                'created_at' => '2023-04-26 17:36:59',
+                'updated_at' => '0000-00-00 00:00:00',
             ),
             5 =>
             array(
-                'id_rubrique' => 6,
-                'nom' => 'Mécanique',
+                'id' => 6,
+                'name' => 'Mécanique',
+                'slug' => 'mecanique',
                 'nom_long' => 'Sports mécaniques',
                 'title' => 'Sports mécaniques.loc.',
                 'title_clubs' => 'Sports mécaniques.loc.',
@@ -156,11 +177,15 @@ class AListeRubriquesTableSeeder extends Seeder
                 'description_profs' => 'Consultez la liste des clubs disponibles, comparez services, tarifs et horaires en 2 clics ! Pratiquer une activité mécanique n\'a jamais été aussi simple !',
                 'type' => 'Sport',
                 'ordre' => 0,
+                'view_count' => null,
+                'created_at' => '2023-04-26 17:36:59',
+                'updated_at' => '0000-00-00 00:00:00',
             ),
             6 =>
             array(
-                'id_rubrique' => 7,
-                'nom' => 'Musique',
+                'id' => 7,
+                'name' => 'Musique',
+                'slug' => 'musique',
                 'nom_long' => 'Musique',
                 'title' => 'Cours de musique.loc.',
                 'title_clubs' => 'Cours de musique.loc.',
@@ -179,11 +204,15 @@ class AListeRubriquesTableSeeder extends Seeder
                 'description_profs' => 'Consultez la liste des cours disponibles, comparez services, tarifs et horaires en 2 clics ! Apprendre un instrument de musique n\'a jamais été aussi simple !',
                 'type' => 'Loisirs',
                 'ordre' => 0,
+                'view_count' => null,
+                'created_at' => '2023-04-26 17:36:59',
+                'updated_at' => '0000-00-00 00:00:00',
             ),
             7 =>
             array(
-                'id_rubrique' => 8,
-                'nom' => 'Danse',
+                'id' => 8,
+                'name' => 'Danse',
+                'slug' => 'danse',
                 'nom_long' => 'Danse',
                 'title' => 'Cours de danse.loc.',
                 'title_clubs' => 'Cours de danse.loc.',
@@ -202,11 +231,15 @@ class AListeRubriquesTableSeeder extends Seeder
                 'description_profs' => 'Consultez la liste des cours disponibles, comparez services, tarifs et horaires en 2 clics ! Apprendre à danser n\'a jamais été aussi simple !',
                 'type' => 'Loisirs',
                 'ordre' => 0,
+                'view_count' => null,
+                'created_at' => '2023-04-26 17:36:59',
+                'updated_at' => '0000-00-00 00:00:00',
             ),
             8 =>
             array(
-                'id_rubrique' => 9,
-                'nom' => 'Loisirs créatifs',
+                'id' => 9,
+                'name' => 'Loisirs créatifs',
+                'slug' => 'creations',
                 'nom_long' => 'Loisirs créatifs',
                 'title' => 'Loisirs créatifs.loc.',
                 'title_clubs' => 'Loisirs créatifs.loc.',
@@ -225,11 +258,15 @@ class AListeRubriquesTableSeeder extends Seeder
                 'description_profs' => 'Consultez la liste des activités disponibles, comparez services, tarifs et horaires en 2 clics ! Pratiquer un loisir créatif n\'a jamais été aussi simple !',
                 'type' => 'Loisirs',
                 'ordre' => 0,
+                'view_count' => null,
+                'created_at' => '2023-04-26 17:36:59',
+                'updated_at' => '0000-00-00 00:00:00',
             ),
             9 =>
             array(
-                'id_rubrique' => 10,
-                'nom' => 'Jeux - divers',
+                'id' => 10,
+                'name' => 'Jeux - divers',
+                'slug' => 'jeux-divers',
                 'nom_long' => 'Jeux et divertissements',
                 'title' => 'Jeux et divertissement.loc.',
                 'title_clubs' => 'Jeux et divertissement.loc.',
@@ -248,6 +285,9 @@ class AListeRubriquesTableSeeder extends Seeder
                 'description_profs' => 'Consultez la liste des jeux et divertissements disponibles, comparez services, tarifs et horaires en 2 clics ! S\'amuser n\'a jamais été aussi simple !',
                 'type' => 'Loisirs',
                 'ordre' => 0,
+                'view_count' => null,
+                'created_at' => '2023-04-26 17:36:59',
+                'updated_at' => '0000-00-00 00:00:00',
             ),
         ));
 

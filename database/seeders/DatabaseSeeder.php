@@ -3,21 +3,24 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\City;
+
 use App\Models\User;
-use App\Models\Nivel;
-use App\Models\Famille;
-use App\Models\Structure;
-use App\Models\Discipline;
-use App\Models\Publictype;
-use App\Models\Departement;
-use App\Models\Activitetype;
-use App\Models\Structuretype;
 use Illuminate\Database\Seeder;
+use App\Models\LienDisciplineSimilaire;
 use Database\Seeders\AListePaysTableSeeder;
 use Database\Seeders\CategoriesTableSeeder;
 use Database\Seeders\DepartementsTableSeeder;
 use Database\Seeders\VillesFranceTableSeeder;
+use Database\Seeders\ListeFamillesTableSeeder;
+use Database\Seeders\StructuretypesTableSeeder;
+use Database\Seeders\ListeDisciplinesTableSeeder;
+use Database\Seeders\ListeTarifsTypesTableSeeder;
+use Database\Seeders\LiensFamillesDisciplinesTableSeeder;
+use Database\Seeders\ListeTarifsTypesAttributsTableSeeder;
+use Database\Seeders\LiensDisciplinesCategoriesTableSeeder;
+use Database\Seeders\LiensDisciplinesSimilairesTableSeeder;
+use Database\Seeders\LiensDisciplinesCategoriesCriteresTableSeeder;
+use Database\Seeders\LiensDisciplinesCategoriesCriteresValeursTableSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -33,10 +36,19 @@ class DatabaseSeeder extends Seeder
         $this->call(AListePaysTableSeeder::class);
         $this->call(DepartementsTableSeeder::class);
         $this->call(VillesFranceTableSeeder::class);
-        // $this->call(CategoriesTableSeeder::class);
+        $this->call(ListeFamillesTableSeeder::class);
+        $this->call(ListeDisciplinesTableSeeder::class);
+        $this->call(StructuretypesTableSeeder::class);
+        $this->call(CategoriesTableSeeder::class);
+        $this->call(ListeTarifsTypesTableSeeder::class);
+        $this->call(ListeTarifsTypesAttributsTableSeeder::class);
+        $this->call(LiensDisciplinesCategoriesTableSeeder::class);
+        $this->call(LiensFamillesDisciplinesTableSeeder::class);
+        $this->call(LiensDisciplinesSimilairesTableSeeder::class);
+        $this->call(LiensDisciplinesCategoriesCriteresTableSeeder::class);
+        $this->call(LiensDisciplinesCategoriesCriteresValeursTableSeeder::class);
 
-        // $departements = Departement::all();
-        // $cities = City::all();
+
 
         User::factory()->create([
                     'name' => 'Charles J',
@@ -46,6 +58,9 @@ class DatabaseSeeder extends Seeder
             'name' => 'Tonio V',
             'email' => 'tonio20@hotmail.fr',
         ]);
+
+
+
 
     }
 }
