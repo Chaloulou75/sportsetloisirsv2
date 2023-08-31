@@ -29,9 +29,9 @@ const user = computed(() => page.props.auth.user);
 </script>
 <template>
     <div
-        class="flex min-h-screen w-full flex-col justify-between border-e bg-white md:w-1/5"
+        class="flex min-h-full w-full flex-col justify-between border-e bg-white md:w-1/5"
     >
-        <div class="sticky inset-x-0 top-0 space-y-8 px-4 py-2">
+        <div class="inset-x-0 top-0 space-y-8 px-4 py-2">
             <Link :href="route('welcome')">
                 <BreezeApplicationLogo class="block h-9 w-auto" />
             </Link>
@@ -41,7 +41,7 @@ const user = computed(() => page.props.auth.user);
                         class="group [&_summary::-webkit-details-marker]:hidden"
                     >
                         <summary
-                            class="flex cursor-pointer items-center justify-between rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-gray-100 hover:text-gray-700"
+                            class="flex cursor-pointer items-center justify-between rounded-lg bg-gray-100 px-4 py-2 text-gray-700 hover:bg-blue-500 hover:text-white"
                         >
                             <span class="text-sm font-medium">
                                 Réservations
@@ -136,7 +136,7 @@ const user = computed(() => page.props.auth.user);
                         class="group [&_summary::-webkit-details-marker]:hidden"
                     >
                         <summary
-                            class="flex cursor-pointer items-center justify-between rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-gray-100 hover:text-gray-700"
+                            class="flex cursor-pointer items-center justify-between rounded-lg bg-gray-100 px-4 py-2 text-gray-700 hover:bg-blue-500 hover:text-white"
                         >
                             <span class="text-sm font-medium">
                                 Publications
@@ -423,7 +423,7 @@ const user = computed(() => page.props.auth.user);
             </ul>
         </div>
 
-        <div class="sticky inset-x-0 bottom-0 border-t border-gray-100">
+        <div class="inset-x-0 bottom-0 border-t border-gray-100">
             <Link
                 :href="route('profile.edit')"
                 class="hidden items-center gap-2 bg-white p-4 hover:bg-gray-50 md:flex"

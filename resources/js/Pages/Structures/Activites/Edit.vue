@@ -129,9 +129,9 @@ onMounted(() => {
     >
         <template #header>
             <h1
-                class="text-xl font-semibold leading-tight tracking-widest text-gray-700"
+                class="text-2xl font-semibold uppercase leading-tight tracking-widest text-gray-700"
             >
-                Gérer vos activités
+                Activités
             </h1>
         </template>
         <template #default="{ displayActivity, displayPlanning, displayTarif }">

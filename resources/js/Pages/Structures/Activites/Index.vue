@@ -115,9 +115,9 @@ const submit = () => {
     >
         <template #header>
             <h1
-                class="text-xl font-semibold leading-tight tracking-widest text-gray-700"
+                class="text-2xl font-semibold leading-tight tracking-widest text-gray-700"
             >
-                Gestion de vos activités
+                Activités
             </h1>
         </template>
         <div
@@ -232,7 +232,7 @@ const submit = () => {
                                 ) in actByDiscAndCategorie"
                                 :key="activite.id"
                                 :index="index"
-                                class="flex w-full flex-col justify-between space-y-4 rounded-lg border border-gray-200 px-2 py-4 text-gray-700 shadow-md md:flex-row md:space-y-0"
+                                class="flex w-full flex-col justify-between space-y-4 rounded-lg border border-gray-200 bg-gray-50 px-2 py-4 text-gray-700 shadow-md md:flex-row md:space-y-0"
                             >
                                 <div
                                     class="flex w-full flex-col justify-start space-y-2"
