@@ -64,6 +64,14 @@ class StructureGestionController extends Controller
 
         $confirmedReservationsCount = $confirmedReservations->count();
 
+        $totalAmountConfirmed = $confirmedReservations->sum(function ($reservation) {
+            return $reservation->tarif->amount;
+        });
+
+        $totalAmountPending = $pendingReservations->sum(function ($reservation) {
+            return $reservation->tarif->amount;
+        });
+
         $structure = Structure::with([
                     'adresses'  => function ($query) {
                         $query->latest();
@@ -76,7 +84,9 @@ class StructureGestionController extends Controller
                     'disciplines',
                     'disciplines.discipline:id,name,slug',
                     'categories',
-                    'activites',
+                    'activites' => function ($query) {
+                        $query->latest()->limit(3);
+                    },
                     'activites.discipline',
                     'activites.categorie',
                     'activites.produits',
@@ -101,7 +111,8 @@ class StructureGestionController extends Controller
             'confirmedReservationsCount' => $confirmedReservationsCount,
             'pendingReservations' => $pendingReservations,
             'pendingReservationsCount' => $pendingReservationsCount,
-
+            'totalAmountPending' => $totalAmountPending,
+            'totalAmountConfirmed' => $totalAmountConfirmed,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),

@@ -291,7 +291,7 @@ const submit = () => {
                                                         }
                                                     )
                                                 "
-                                                class="flex flex-col items-center justify-center"
+                                                class="flex flex-col items-center justify-center text-center"
                                             >
                                                 {{ categorie.name }}
 

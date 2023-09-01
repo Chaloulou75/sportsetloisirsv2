@@ -1,6 +1,6 @@
 <script setup>
 import ProLayout from "@/Layouts/ProLayout.vue";
-import { Head, useForm, usePage, router } from "@inertiajs/vue3";
+import { Head, useForm, usePage, router, Link } from "@inertiajs/vue3";
 import { ref, computed, watch, defineAsyncComponent } from "vue";
 import {
     ArrowPathIcon,
@@ -32,6 +32,8 @@ const props = defineProps({
     confirmedReservationsCount: Number,
     allReservationsCount: Number,
     pendingReservationsCount: Number,
+    totalAmountConfirmed: Number,
+    totalAmountPending: Number,
     can: Object,
 });
 
@@ -104,7 +106,6 @@ watch(
     () => selectedAdresse.value,
     (newAdresse) => {
         if (newAdresse) {
-            console.log(newAdresse);
             updateAddressForm.address = newAdresse.address;
             updateAddressForm.city = newAdresse.city;
             updateAddressForm.zip_code = newAdresse.zip_code;
@@ -184,16 +185,27 @@ const deleteAdresse = (adresse) => {
                     Bienvenue
                     <span class="text-indigo-700">{{ user.name }}</span>
                 </h3>
+
+                <!-- réservations en attente -->
                 <div
                     class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
                 >
-                    <p class="text-xl font-semibold">
-                        Vous avez
-                        <span class="text-indigo-700">{{
-                            pendingReservationsCount
-                        }}</span>
-                        demandes de réservations en attente:
-                    </p>
+                    <div class="flex items-center justify-between">
+                        <p class="text-xl font-semibold">
+                            Vous avez
+                            <span class="text-indigo-700">{{
+                                pendingReservationsCount
+                            }}</span>
+                            <span v-if="pendingReservationsCount > 1">
+                                demandes</span
+                            >
+                            <span v-else> demande</span>
+                            de réservation en attente:
+                        </p>
+                        <div class="text-2xl font-bold text-indigo-500">
+                            {{ totalAmountPending }} €
+                        </div>
+                    </div>
                     <ul class="list-inside list-disc">
                         <li
                             v-for="reservation in pendingReservations"
@@ -210,21 +222,46 @@ const deleteAdresse = (adresse) => {
                             <span class="font-semibold">{{
                                 formatDate(reservation.planning.end)
                             }}</span>
-                            <span class="font-semibold text-indigo-500">{{
-                                formatCurrency(reservation.tarif.amount)
-                            }}</span>
+                            <span class="ml-5 font-semibold text-indigo-500">
+                                {{ formatCurrency(reservation.tarif.amount) }}
+                            </span>
                         </li>
                     </ul>
+                    <div class="flex w-full items-center justify-end">
+                        <Link
+                            preserve-scroll
+                            :href="
+                                route(
+                                    'structures.gestion.reservations.index',
+                                    structure
+                                )
+                            "
+                            class="rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-indigo-500 shadow hover:bg-gray-100 hover:text-indigo-800"
+                        >
+                            Voir mes réservations
+                        </Link>
+                    </div>
                 </div>
+
+                <!-- réservations en cours -->
                 <div
                     class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
                 >
-                    <p class="text-xl font-semibold">
-                        <span class="text-indigo-700">{{
-                            confirmedReservationsCount
-                        }}</span>
-                        réservations en cours:
-                    </p>
+                    <div class="flex items-center justify-between">
+                        <p class="text-xl font-semibold">
+                            <span class="text-indigo-700">{{
+                                confirmedReservationsCount
+                            }}</span>
+                            <span v-if="confirmedReservationsCount > 1">
+                                réservations</span
+                            >
+                            <span v-else> réservation</span>
+                            en cours:
+                        </p>
+                        <div class="text-2xl font-bold text-indigo-500">
+                            {{ totalAmountConfirmed }} €
+                        </div>
+                    </div>
                     <ul class="list-inside list-disc">
                         <li
                             v-for="reservation in confirmedReservations"
@@ -241,12 +278,28 @@ const deleteAdresse = (adresse) => {
                             ><span class="font-semibold">{{
                                 formatDate(reservation.planning.end)
                             }}</span>
-                            <span class="font-semibold text-indigo-500">{{
+                            <span class="ml-5 font-semibold text-indigo-500">{{
                                 formatCurrency(reservation.tarif.amount)
                             }}</span>
                         </li>
                     </ul>
+                    <div class="flex w-full items-center justify-end">
+                        <Link
+                            preserve-scroll
+                            :href="
+                                route(
+                                    'structures.gestion.reservations.index',
+                                    structure
+                                )
+                            "
+                            class="rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-indigo-500 shadow hover:bg-gray-100 hover:text-indigo-800"
+                        >
+                            Voir mes réservations
+                        </Link>
+                    </div>
                 </div>
+
+                <!-- Statistiques -->
                 <div
                     class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
                 >
@@ -260,7 +313,7 @@ const deleteAdresse = (adresse) => {
                             class="flex flex-col items-center justify-center space-y-4"
                         >
                             <div class="text-5xl font-bold text-indigo-500">
-                                33
+                                {{ allReservationsCount }}
                             </div>
                             <div class="font-semibold">réservations</div>
                         </div>
@@ -268,7 +321,7 @@ const deleteAdresse = (adresse) => {
                             class="flex flex-col items-center justify-center space-y-4"
                         >
                             <div class="text-5xl font-bold text-indigo-500">
-                                {{ formatCurrency("4589") }}
+                                {{ totalAmountConfirmed }} €
                             </div>
                             <div class="font-semibold">chiffre d'affaire</div>
                         </div>
@@ -291,6 +344,7 @@ const deleteAdresse = (adresse) => {
                     </div>
                 </div>
 
+                <!-- activités populaires -->
                 <div
                     class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
                 >
@@ -314,12 +368,13 @@ const deleteAdresse = (adresse) => {
                     </div>
                 </div>
 
+                <!--  adresses -->
                 <template v-if="displayAdresses">
                     <div
                         class="my-4 flex w-full flex-col space-y-6 rounded-md border border-gray-200 bg-gray-50 px-4 py-2 text-gray-800 shadow-md"
                     >
                         <div class="flex items-center justify-between">
-                            <h3 class="font-semibold">Vos adresses:</h3>
+                            <h3 class="text-xl font-semibold">Vos adresses:</h3>
                             <button type="button" @click="handleCloseEvent">
                                 <XCircleIcon class="h-7 w-7 text-red-500" />
                             </button>

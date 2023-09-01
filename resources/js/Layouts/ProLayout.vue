@@ -30,7 +30,7 @@ const handleCloseEvent = () => {
     displayAdresses.value = false;
 };
 
-const displayAdresses = ref(false);
+const displayAdresses = ref(true);
 const isShowing = ref(true);
 const displayActivity = ref(true);
 const displayTarif = ref(false);

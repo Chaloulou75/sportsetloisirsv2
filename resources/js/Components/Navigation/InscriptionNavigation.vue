@@ -29,9 +29,9 @@ const user = computed(() => page.props.auth.user);
 </script>
 <template>
     <div
-        class="flex min-h-full w-full flex-col justify-between border-e bg-white md:w-1/5"
+        class="hidden min-h-full w-full flex-col justify-between bg-white md:flex md:w-1/5"
     >
-        <div class="inset-x-0 top-0 space-y-8 px-4 py-2">
+        <div class="sticky inset-x-0 top-0 space-y-8 px-4 py-2">
             <Link :href="route('welcome')">
                 <BreezeApplicationLogo class="block h-9 w-auto" />
             </Link>
@@ -410,6 +410,13 @@ const user = computed(() => page.props.auth.user);
                     <a
                         href="/"
                         class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
+                        >Statistiques
+                    </a>
+                </li>
+                <li>
+                    <a
+                        href="/"
+                        class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
                         >Avis Clients
                     </a>
                 </li>
@@ -423,7 +430,7 @@ const user = computed(() => page.props.auth.user);
             </ul>
         </div>
 
-        <div class="inset-x-0 bottom-0 border-t border-gray-100">
+        <!-- <div class="inset-x-0 bottom-0 border-t border-gray-100">
             <Link
                 :href="route('profile.edit')"
                 class="hidden items-center gap-2 bg-white p-4 hover:bg-gray-50 md:flex"
@@ -440,6 +447,6 @@ const user = computed(() => page.props.auth.user);
                     </p>
                 </div>
             </Link>
-        </div>
+        </div> -->
     </div>
 </template>

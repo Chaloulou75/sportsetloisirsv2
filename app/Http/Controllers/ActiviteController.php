@@ -50,8 +50,6 @@ class ActiviteController extends Controller
             ->latest()
             ->get();
 
-
-
         $allReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {
             $query->where('structure_id', $structure->id);
         })->count();

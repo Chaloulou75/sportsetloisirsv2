@@ -125,23 +125,6 @@ const showingNavigationDropdown = ref(false);
                                         )
                                     "
                                 >
-                                    Gestion de ma structure New
-                                </BreezeDropdownLink>
-                                <BreezeDropdownLink
-                                    v-if="
-                                        $page.props.auth.user &&
-                                        $page.props.auth.user.structures
-                                            .length > 0
-                                    "
-                                    :href="
-                                        route(
-                                            'structures.edit',
-                                            $page.props.auth.user.structures[0]
-                                                .slug
-                                        )
-                                    "
-                                    :active="route().current('structures.edit')"
-                                >
                                     Gestion de ma structure
                                 </BreezeDropdownLink>
                                 <BreezeDropdownLink

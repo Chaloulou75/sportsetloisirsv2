@@ -22,7 +22,7 @@ const props = defineProps({
                 <div
                     class="flex w-full flex-1 items-center justify-center text-xl text-gray-500"
                 >
-                    <h1 class="text-center">{{ structure.name }}</h1>
+                    <h1 class="text-center font-bold">{{ structure.name }}</h1>
                 </div>
 
                 <div class="hidden h-full lg:ml-6 lg:flex lg:items-center">
