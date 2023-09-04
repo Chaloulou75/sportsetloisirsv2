@@ -100,6 +100,11 @@ class Structure extends Model
         return $this->belongsToMany(User::class);
     }
 
+    public function partenaires(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'structure_user', 'structure_id', 'user_id')->withPivot('niveau', 'contact', 'email', 'phone');
+    }
+
     public function famille(): BelongsTo
     {
         return $this->belongsTo(Famille::class);

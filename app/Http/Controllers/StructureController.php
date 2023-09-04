@@ -332,6 +332,7 @@ class StructureController extends Controller
             },
             'creator:id,name,email',
             'users:id,name',
+            'partenaires',
             'cities:id,ville,ville_formatee',
             'departement:id,departement,numero',
             'structuretype:id,name,slug',

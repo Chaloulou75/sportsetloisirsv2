@@ -234,6 +234,7 @@ class ProductReservationController extends Controller
      */
     public function update(Request $request, Structure $structure, ProductReservation $reservation)
     {
+
         if($request->status === "confirmed") {
             $randomCode = strval(rand(0000, 9999));
 
@@ -259,12 +260,21 @@ class ProductReservationController extends Controller
 
             // email refusée
         } elseif($request->status === "finished") {
+            $code = $reservation->code;
 
             $request->validate([
-                "code" => ['required', 'string', 'size:4', 'regex:/^[0-9]{4}$/'],
+                "code" => ['required',
+                            'string',
+                            'size:4',
+                            'regex:/^[0-9]{4}$/',
+                            function ($attribute, $value, $fail) use ($code) {
+                                if ($value !== $code) {
+                                    $fail('Le code de la réservation est érroné.');
+                                }
+                            },
+                ],
             ]);
 
-            $code = $reservation->code;
             if($request->code === $code) {
                 $reservation->update([
                             'confirmed' => false,

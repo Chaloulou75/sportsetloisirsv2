@@ -1,9 +1,9 @@
 <script setup>
+import { ref } from "vue";
 import InscriptionNavigation from "@/Components/Navigation/InscriptionNavigation.vue";
 import ProNavigation from "@/Components/Navigation/ProNavigation.vue";
 import FlashMessages from "@/Components/FlashMessages.vue";
 import Footer from "@/Components/Footer.vue";
-import { ref } from "vue";
 import { TransitionRoot } from "@headlessui/vue";
 
 const emit = defineEmits(["eventFromChild"]);
@@ -21,11 +21,11 @@ const handleButtonEvent = (message) => {
         displayActivity.value = true;
         displayPlanning.value = false;
         displayTarif.value = false;
-    } else if (message === "Mes adresses") {
-        displayAdresses.value = true;
     }
 };
-
+// else if (message === "Mes adresses") {
+//         displayAdresses.value = true;
+//     }
 const handleCloseEvent = () => {
     displayAdresses.value = false;
 };

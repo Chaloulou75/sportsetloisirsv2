@@ -1,13 +1,17 @@
 <script setup>
 import ProLayout from "@/Layouts/ProLayout.vue";
 import { Head, useForm, usePage, router } from "@inertiajs/vue3";
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, defineAsyncComponent } from "vue";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 dayjs.locale("fr");
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
+
+const CodeForm = defineAsyncComponent(() =>
+    import("@/Components/Inscription/CodeForm.vue")
+);
 
 const props = defineProps({
     errors: Object,
@@ -53,41 +57,17 @@ const confirmReservation = (reservation) => {
     updateReservation(selectedReservation.value);
 };
 
-const codeForm = useForm({
-    code: ref({}),
-});
-
-const onCodeSubmit = (reservation) => {
-    router.put(
-        route("structures.gestion.reservations.update", {
-            structure: props.structure.slug,
-            reservation: reservation,
-        }),
-        {
-            reservation_id: reservation.id,
-            status: "finished",
-            code: codeForm.code[reservation.id],
-        },
-        {
-            preserveScroll: true,
-            onSuccess: () => {
-                codeForm.reset();
-            },
-        }
-    );
-};
-
 const refusReservation = (reservation) => {
     selectedReservation.value = reservation;
     statusReservation.value = "refused";
     updateReservation(selectedReservation.value);
 };
 
-const finishReservation = (reservation) => {
-    selectedReservation.value = reservation;
-    statusReservation.value = "finished";
-    updateReservation(selectedReservation.value);
-};
+// const finishReservation = (reservation) => {
+//     selectedReservation.value = reservation;
+//     statusReservation.value = "finished";
+//     updateReservation(selectedReservation.value);
+// };
 
 const cancelReservation = (reservation) => {
     selectedReservation.value = reservation;
@@ -124,11 +104,7 @@ const updateReservation = (reservation) => {
         :confirmedReservationsCount="confirmedReservationsCount"
     >
         <template #header>
-            <h1
-                class="text-xl font-semibold leading-tight tracking-widest text-gray-700"
-            >
-                Réservations
-            </h1>
+            <h1 class="text-2xl font-bold text-indigo-700">Réservations</h1>
         </template>
 
         <template #default="{}">
@@ -158,15 +134,15 @@ const updateReservation = (reservation) => {
                             {{ totalAmountPending }} €
                         </div>
                     </div>
-                    <div class="space-y-6">
+                    <div class="space-y-8">
                         <div
-                            class="space-y-2"
+                            class="space-y-4"
                             v-for="reservation in pendingReservations"
                             :key="reservation.id"
                         >
                             <p>
-                                Vous avez reçu une demande de réservation de la
-                                part de
+                                &bullet; Vous avez reçu une demande de
+                                réservation de la part de
                                 <span class="font-semibold text-indigo-500">{{
                                     reservation.user.name
                                 }}</span>
@@ -231,7 +207,7 @@ const updateReservation = (reservation) => {
                             {{ totalAmountConfirmed }} €
                         </div>
                     </div>
-                    <div class="space-y-6">
+                    <div class="space-y-8">
                         <div
                             class="space-y-4"
                             v-for="(
@@ -269,82 +245,20 @@ const updateReservation = (reservation) => {
                             </p>
 
                             <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
-                                <form
-                                    @submit.prevent="
-                                        () => onCodeSubmit(reservation)
-                                    "
-                                    autocomplete="off"
-                                    class="space-y-4"
-                                >
-                                    <div>
-                                        <label
-                                            :for="
-                                                reservation.code[reservation.id]
-                                            "
-                                            class="block text-sm font-medium text-gray-700"
-                                        >
-                                            Code de la réservation
-                                            <span class="italic"
-                                                >(4 chiffres)</span
-                                            >
-                                            *
-                                        </label>
-                                        <div class="mt-1 flex rounded-md">
-                                            <input
-                                                v-model="
-                                                    codeForm.code[
-                                                        reservation.id
-                                                    ]
-                                                "
-                                                type="text"
-                                                :name="
-                                                    reservation.code[
-                                                        reservation.id
-                                                    ]
-                                                "
-                                                :id="
-                                                    reservation.code[
-                                                        reservation.id
-                                                    ]
-                                                "
-                                                :class="{
-                                                    'border-red-400':
-                                                        errors.code,
-                                                }"
-                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                placeholder="1234"
-                                                autocomplete="none"
-                                            />
-                                        </div>
-                                        <div
-                                            v-if="errors.code"
-                                            class="mt-2 text-sm text-red-500"
-                                        >
-                                            {{ errors.code }}
-                                        </div>
-                                    </div>
+                                <CodeForm
+                                    :structure="structure"
+                                    :reservation="reservation"
+                                    :errors="errors[index]"
+                                />
+                                <div class="w-full place-self-end">
                                     <button
-                                        type="submit"
-                                        :disabled="codeForm.processing"
-                                        class="w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-indigo-500 shadow hover:bg-gray-100 hover:text-indigo-800"
+                                        type="button"
+                                        @click="cancelReservation(reservation)"
+                                        class="w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-red-500 shadow hover:bg-red-50 hover:text-red-800"
                                     >
-                                        Verifier le code
+                                        Annuler
                                     </button>
-                                </form>
-                                <!-- <button
-                                    type="button"
-                                    @click="finishReservation(reservation)"
-                                    class="w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-indigo-500 shadow hover:bg-gray-100 hover:text-indigo-800"
-                                >
-                                    Terminer
-                                </button> -->
-                                <button
-                                    type="button"
-                                    @click="cancelReservation(reservation)"
-                                    class="rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-red-500 shadow hover:bg-red-50 hover:text-red-800"
-                                >
-                                    Annuler
-                                </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -370,14 +284,14 @@ const updateReservation = (reservation) => {
                             {{ totalAmountPending }} €
                         </div> -->
                     </div>
-                    <div class="space-y-6">
+                    <div class="space-y-8">
                         <div
-                            class="space-y-2"
+                            class="space-y-4"
                             v-for="reservation in finishedReservations"
                             :key="reservation.id"
                         >
                             <p>
-                                Réservation de la part de
+                                &bullet; Réservation de la part de
                                 <span class="font-semibold text-indigo-500">{{
                                     reservation.user.name
                                 }}</span>
@@ -426,14 +340,14 @@ const updateReservation = (reservation) => {
                             {{ totalAmountPending }} €
                         </div> -->
                     </div>
-                    <div class="space-y-6">
+                    <div class="space-y-8">
                         <div
-                            class="space-y-2"
+                            class="space-y-4"
                             v-for="reservation in cancelledReservations"
                             :key="reservation.id"
                         >
                             <p>
-                                Réservation de la part de
+                                &bullet; Réservation de la part de
                                 <span class="font-semibold text-indigo-500">{{
                                     reservation.user.name
                                 }}</span>
