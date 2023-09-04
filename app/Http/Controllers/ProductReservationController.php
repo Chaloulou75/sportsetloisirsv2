@@ -249,22 +249,23 @@ class ProductReservationController extends Controller
 
         } elseif($request->status === "refused") {
             $reservation->update([
-                            'confirmed' => false,
-                            'pending' => false,
-                            'finished' => false,
-                            'cancelled' => true,
-                            'code' => null,
-                        ]);
+                'confirmed' => false,
+                'pending' => false,
+                'finished' => false,
+                'cancelled' => true,
+                'code' => null,
+            ]);
             return to_route('structures.gestion.reservations.index', $structure)->with('success', 'Réservation refusée.');
 
             // email refusée
         } elseif($request->status === "finished") {
+
             $request->validate([
-                'code' => ['required', 'string', 'size:4', 'regex:/^[0-9]{4}$/'],
+                "code" => ['required', 'string', 'size:4', 'regex:/^[0-9]{4}$/'],
             ]);
 
             $code = $reservation->code;
-            if($code === $request->code) {
+            if($request->code === $code) {
                 $reservation->update([
                             'confirmed' => false,
                             'pending' => false,
@@ -272,7 +273,7 @@ class ProductReservationController extends Controller
                             'cancelled' => false,
                         ]);
                 //email terminée
-                return to_route('structures.gestion.reservations.index', $structure)->with('success', 'Réservation terminée.');
+                return to_route('structures.gestion.reservations.index', $structure)->with('success', 'Code vérifié, la réservation est validée.');
 
             } else {
                 return to_route('structures.gestion.reservations.index', $structure)->with('error', 'Le code de la réservation est érroné.');

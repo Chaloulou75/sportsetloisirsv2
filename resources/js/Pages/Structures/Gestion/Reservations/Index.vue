@@ -53,17 +53,29 @@ const confirmReservation = (reservation) => {
     updateReservation(selectedReservation.value);
 };
 
-const reservationForm = useForm({
-    code: ref(null),
+const codeForm = useForm({
+    code: ref({}),
 });
-watch(
-    () => selectedReservation.value,
-    (newReservation) => {
-        if (newReservation) {
-            reservationForm.code = newReservation.code;
+
+const onCodeSubmit = (reservation) => {
+    router.put(
+        route("structures.gestion.reservations.update", {
+            structure: props.structure.slug,
+            reservation: reservation,
+        }),
+        {
+            reservation_id: reservation.id,
+            status: "finished",
+            code: codeForm.code[reservation.id],
+        },
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                codeForm.reset();
+            },
         }
-    }
-);
+    );
+};
 
 const refusReservation = (reservation) => {
     selectedReservation.value = reservation;
@@ -92,13 +104,9 @@ const updateReservation = (reservation) => {
         {
             reservation_id: reservation.id,
             status: statusReservation.value,
-            // code: reservationForm[reservation.id].code ?? null,
         },
         {
             preserveScroll: true,
-            onSuccess: () => {
-                reservationForm.reset();
-            },
         }
     );
 };
@@ -225,9 +233,12 @@ const updateReservation = (reservation) => {
                     </div>
                     <div class="space-y-6">
                         <div
-                            class="space-y-2"
-                            v-for="reservation in confirmedReservations"
+                            class="space-y-4"
+                            v-for="(
+                                reservation, index
+                            ) in confirmedReservations"
                             :key="reservation.id"
+                            :index="index"
                         >
                             <p>
                                 &bullet; Vous avez reçu une demande de
@@ -260,49 +271,73 @@ const updateReservation = (reservation) => {
                             <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
                                 <form
                                     @submit.prevent="
-                                        finishReservation(reservation)
+                                        () => onCodeSubmit(reservation)
                                     "
                                     autocomplete="off"
                                     class="space-y-4"
                                 >
-                                    <!-- <div>
+                                    <div>
                                         <label
-                                            for="name"
+                                            :for="
+                                                reservation.code[reservation.id]
+                                            "
                                             class="block text-sm font-medium text-gray-700"
                                         >
-                                            Code de la réservation (4 chiffres)
+                                            Code de la réservation
+                                            <span class="italic"
+                                                >(4 chiffres)</span
+                                            >
                                             *
                                         </label>
                                         <div class="mt-1 flex rounded-md">
                                             <input
-                                                ref="code"
                                                 v-model="
-                                                    reservationForm[
+                                                    codeForm.code[
                                                         reservation.id
-                                                    ].code
+                                                    ]
                                                 "
                                                 type="text"
-                                                name="code"
-                                                id="code"
+                                                :name="
+                                                    reservation.code[
+                                                        reservation.id
+                                                    ]
+                                                "
+                                                :id="
+                                                    reservation.code[
+                                                        reservation.id
+                                                    ]
+                                                "
+                                                :class="{
+                                                    'border-red-400':
+                                                        errors.code,
+                                                }"
                                                 class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                 placeholder="1234"
                                                 autocomplete="none"
                                             />
                                         </div>
                                         <div
-                                            v-if="errors.reservationForm.code"
-                                            class="mt-2 text-xs text-red-500"
+                                            v-if="errors.code"
+                                            class="mt-2 text-sm text-red-500"
                                         >
-                                            {{ errors.reservationForm.code }}
+                                            {{ errors.code }}
                                         </div>
-                                    </div> -->
+                                    </div>
                                     <button
                                         type="submit"
+                                        :disabled="codeForm.processing"
                                         class="w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-indigo-500 shadow hover:bg-gray-100 hover:text-indigo-800"
                                     >
-                                        Terminer
+                                        Verifier le code
                                     </button>
                                 </form>
+                                <!-- <button
+                                    type="button"
+                                    @click="finishReservation(reservation)"
+                                    class="w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-indigo-500 shadow hover:bg-gray-100 hover:text-indigo-800"
+                                >
+                                    Terminer
+                                </button> -->
                                 <button
                                     type="button"
                                     @click="cancelReservation(reservation)"

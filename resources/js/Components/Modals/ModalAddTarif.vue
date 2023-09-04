@@ -1,6 +1,6 @@
 <script setup>
-import { ref, reactive, computed, watch, onMounted } from "vue";
-import { useForm, router } from "@inertiajs/vue3";
+import { ref, reactive, watch } from "vue";
+import { router } from "@inertiajs/vue3";
 import {
     XCircleIcon,
     ChevronUpDownIcon,
