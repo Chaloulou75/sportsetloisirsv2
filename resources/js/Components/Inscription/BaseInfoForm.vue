@@ -163,21 +163,25 @@ watch(tiktok, (value) => {
                     class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     placeholder="02 10 ..." autocomplete="none" /> -->
                 <MazPhoneNumberInput
+                    class="w-full"
                     v-model="phone1"
-                    show-code-on-list
-                    color="info"
-                    :only-countries="['FR', 'BE', 'LU']"
+                    color="primary"
+                    size="sm"
+                    :only-countries="['FR']"
                     @update="results = $event"
                     :success="results?.isValid"
                     :noSearch="true"
+                    :noFlags="true"
+                    :noCountrySelector="true"
+                    :noExample="true"
                     :translations="{
                         countrySelector: {
-                            placeholder: 'code pays',
+                            placeholder: '',
                             error: 'Choisir un pays',
                         },
                         phoneInput: {
-                            placeholder: 'Télephone',
-                            example: 'Exemple:',
+                            placeholder: '',
+                            example: '',
                         },
                     }"
                 />
@@ -200,21 +204,25 @@ watch(tiktok, (value) => {
                     class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     placeholder="02 10 ..." autocomplete="none" /> -->
                 <MazPhoneNumberInput
+                    class="w-full"
                     v-model="phone2"
-                    show-code-on-list
-                    color="info"
-                    :only-countries="['FR', 'BE', 'LU']"
+                    color="primary"
+                    size="sm"
+                    :only-countries="['FR']"
                     @update="results = $event"
                     :success="results?.isValid"
                     :noSearch="true"
+                    :noFlags="true"
+                    :noCountrySelector="true"
+                    :noExample="true"
                     :translations="{
                         countrySelector: {
-                            placeholder: 'code pays',
+                            placeholder: '',
                             error: 'Choisir un pays',
                         },
                         phoneInput: {
-                            placeholder: 'Télephone',
-                            example: 'Exemple:',
+                            placeholder: '',
+                            example: '',
                         },
                     }"
                 />

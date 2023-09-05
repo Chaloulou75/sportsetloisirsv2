@@ -60,6 +60,7 @@ const props = defineProps({
 
             <div class="flex-1">
                 <ProNavigation :structure="structure" />
+
                 <header
                     class="h-auto w-full bg-gradient-to-br from-green-100 to-blue-100 shadow-sm"
                     v-if="$slots.header"
@@ -81,7 +82,6 @@ const props = defineProps({
                     leave-to="opacity-0"
                 >
                     <main>
-                        <FlashMessages />
                         <slot
                             name="default"
                             v-bind="{
@@ -92,6 +92,7 @@ const props = defineProps({
                                 handleCloseEvent,
                             }"
                         />
+                        <FlashMessages />
                     </main>
                 </TransitionRoot>
             </div>

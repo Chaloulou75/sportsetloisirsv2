@@ -286,7 +286,6 @@ class ActiviteController extends Controller
             return to_route('structures.activites.index', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
 
-
         $allReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {
             $query->where('structure_id', $structure->id);
         })->count();
@@ -302,7 +301,12 @@ class ActiviteController extends Controller
         $structure = Structure::with([
             'adresses' => function ($query) {
                 $query->latest();
-            }, 'produits', 'tarifs', 'tarifs.tarifType', 'tarifs.structureTarifTypeInfos', 'tarifs.structureTarifTypeInfos.tarifTypeAttribut'
+            },
+            'produits',
+            'tarifs',
+            'tarifs.tarifType',
+            'tarifs.structureTarifTypeInfos',
+            'tarifs.structureTarifTypeInfos.tarifTypeAttribut'
         ])
         ->select(['id', 'name', 'slug'])
         ->where('slug', $structure->slug)
@@ -316,11 +320,25 @@ class ActiviteController extends Controller
 
         $categoriesListByDiscipline = LienDisciplineCategorie::where('discipline_id', $activite->discipline->id)->get();
 
-        $structureActivites = StructureActivite::with(['structure:id,name,slug,presentation_courte', 'categorie:id,nom_categorie_pro', 'discipline:id,name', 'plannings', 'produits', 'produits.adresse', 'produits.criteres', 'produits.criteres.critere', 'produits.horaire', 'produits.tarifs', 'produits.tarifs.structureTarifTypeInfos', 'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut', 'produits.tarifs.tarifType'])
-                            ->where('structure_id', $structure->id)
-                            ->where('discipline_id', $activite->discipline->id)
-                            ->latest()
-                            ->get();
+        $structureActivites = StructureActivite::with([
+            'structure:id,name,slug,presentation_courte',
+            'categorie:id,nom_categorie_pro',
+            'discipline:id,name',
+            'plannings',
+            'produits',
+            'produits.adresse',
+            'produits.criteres',
+            'produits.criteres.critere',
+            'produits.horaire',
+            'produits.tarifs',
+            'produits.tarifs.structureTarifTypeInfos',
+            'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut',
+            'produits.tarifs.tarifType'
+            ])
+            ->where('structure_id', $structure->id)
+            ->where('discipline_id', $activite->discipline->id)
+            ->latest()
+            ->get();
 
         $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
             $query->orderBy('defaut', 'desc');
@@ -406,6 +424,7 @@ class ActiviteController extends Controller
      */
     public function update(Request $request, Structure $structure, $activite)
     {
+
         if (! Gate::allows('update-structure', $structure)) {
             return to_route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de modifier cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
@@ -436,7 +455,8 @@ class ActiviteController extends Controller
             // 'actif' => 1,
         ]);
 
-        return Redirect::back()->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
+        return to_route('structures.activites.edit', ['structure' => $structure->slug, 'activite' => $activite])->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
+
     }
 
     /**

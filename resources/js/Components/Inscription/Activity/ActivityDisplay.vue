@@ -140,18 +140,11 @@ const formEdit = useForm({
 });
 
 const submitForm = (id) => {
-    router.post(
-        `/structures/${props.structure.slug}/activites/${id}`,
-        {
-            _method: "put",
-            titre: formEdit.titre,
-            description: formEdit.description,
-            image: formEdit.image,
-        },
-        {
+    formEdit.put(
+        route("structures.activites.update", {
             structure: props.structure.slug,
             activite: id,
-        },
+        }),
         {
             preserveScroll: true,
             onSuccess: () => {

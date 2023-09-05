@@ -139,7 +139,7 @@ onMounted(() => {
                 class="relative flex flex-col space-y-6 py-2 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
             >
                 <div class="mx-auto max-w-full flex-1 lg:px-4">
-                    <PathsInscriptionNavigation />
+                    <!-- <PathsInscriptionNavigation /> -->
                     <TabGroup :defaultIndex="defaultTabIndex">
                         <section class="space-y-4 text-gray-700">
                             <div>

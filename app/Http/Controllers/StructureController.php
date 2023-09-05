@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use Inertia\Inertia;
-use App\Models\Nivel;
 use App\Models\Famille;
 use App\Models\Structure;
-use App\Models\Publictype;
 use App\Models\Departement;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -133,8 +131,6 @@ class StructureController extends Controller
         return Inertia::render('Structures/Create', [
             'structurestypes' => $structurestypes,
             'disciplines' => $disciplines,
-            // 'niveaux' => $niveaux,
-            // 'publictypes' => $publictypes,
         ]);
     }
 
@@ -240,7 +236,9 @@ class StructureController extends Controller
 
         Mail::to($structure->email)->send(new StructureCreated($structure));
 
-        return Redirect::route('structures.activites.index', $structure->slug)->with('success', 'Votre structure est bien créée, vous allez recevoir une confirmation par email. Vous pouvez, maintenant, ajouter des activités à votre structure.');
+        return Redirect::route();
+
+        return to_route('structures.activites.index', $structure->slug)->with('success', 'Votre structure est bien créée, vous allez recevoir une confirmation par email. Vous pouvez, maintenant, ajouter des activités à votre structure.');
     }
 
     /**
@@ -336,6 +334,21 @@ class StructureController extends Controller
             'cities:id,ville,ville_formatee',
             'departement:id,departement,numero',
             'structuretype:id,name,slug',
+            'disciplines',
+            'categories',
+            'activites' => function ($query) {
+                $query->orderBy('discipline_id');
+            },
+            'activites.discipline:id,name',
+            'activites.categorie:id,categorie_id,discipline_id,nom_categorie_client',
+            'activites.produits',
+            'activites.produits.adresse',
+            'activites.produits.criteres',
+            'activites.produits.criteres.critere',
+            'activites.produits.tarifs',
+            'activites.produits.tarifs.tarifType',
+            'activites.produits.tarifs.structureTarifTypeInfos',
+            'activites.produits.plannings',
             ])
             ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'abo_news', 'abo_promo', 'logo'])
             ->where('slug', $structure->slug)
@@ -402,7 +415,7 @@ class StructureController extends Controller
                             ->where('city_id', $validated['city_id'])
                             ->exists();
         if($exists) {
-            return Redirect::back()->with('error', 'Ce nom de structure existe déjà dans cette ville.');
+            return to_route('structures.edit', $structure->slug)->with('error', 'Ce nom de structure existe déjà dans cette ville.');
         }
 
         $departmentNumber = substr($validated['zip_code'], 0, 2);
@@ -452,8 +465,7 @@ class StructureController extends Controller
             }
         }
 
-        return Redirect::route('structures.show', $structure->slug)->with('success', 'Votre structure a été mise à jour');
-
+        return to_route('structures.edit', $structure->slug)->with('success', 'Votre structure a été mise à jour');
     }
 
     /**

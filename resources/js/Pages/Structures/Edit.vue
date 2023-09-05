@@ -11,6 +11,12 @@ const MicroNavBackPro = defineAsyncComponent(() =>
     import("@/Components/Structures/MicroNavBackPro.vue")
 );
 
+const PermissionStructureUserForm = defineAsyncComponent(() =>
+    import(
+        "@/Components/Structures/Gestion/Permissions/PermissionStructureUserForm.vue"
+    )
+);
+
 const AddressForm = defineAsyncComponent(() =>
     import("@/Components/Google/AddressForm.vue")
 );
@@ -50,6 +56,13 @@ const handleButtonEvent = (message) => {
         displayAdresses.value = false;
         displayPartenaire.value = true;
     }
+};
+
+const addPermission = ref(false);
+const showUpdatePermissionForm = ref(false);
+const displayPartenaireForm = () => {
+    showUpdatePermissionForm.value = false;
+    addPermission.value = !addPermission.value;
 };
 
 const addAddress = ref(false);
@@ -150,6 +163,18 @@ const deleteAdresse = (adresse) => {
         route("structures.adresses.destroy", {
             structure: props.structure.slug,
             adress: adresse.id,
+        }),
+        {
+            preserveScroll: true,
+        }
+    );
+};
+
+const deletePartenaire = (partenaire) => {
+    router.delete(
+        route("structures.partenaires.destroy", {
+            structure: props.structure.slug,
+            partenaire: partenaire.id,
         }),
         {
             preserveScroll: true,
@@ -261,124 +286,6 @@ const submit = () => {
                 class="relative flex flex-col space-y-6 py-2 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
             >
                 <div class="flex-1">
-                    <template v-if="displayAdresses">
-                        <div
-                            class="my-4 flex w-full flex-col space-y-6 rounded-md border border-gray-200 bg-gray-50 px-4 py-2 text-gray-800 shadow-md"
-                        >
-                            <div class="flex items-center justify-start">
-                                <h3 class="text-xl font-semibold">
-                                    Vos adresses:
-                                </h3>
-                            </div>
-
-                            <ul class="list-inside list-disc space-y-2">
-                                <li
-                                    class="flex items-center justify-between"
-                                    v-for="adresse in structure.adresses"
-                                    :key="adresse.id"
-                                >
-                                    <span
-                                        >{{ adresse.address }},
-                                        {{ adresse.zip_code }}
-                                        {{ adresse.city }}</span
-                                    >
-                                    <div class="flex items-center gap-x-6">
-                                        <button
-                                            type="button"
-                                            @click="
-                                                displayUpdateAdresseForm(
-                                                    adresse
-                                                )
-                                            "
-                                        >
-                                            <ArrowPathIcon
-                                                class="h-6 w-6 text-blue-500 transition-all duration-200 hover:-rotate-90 hover:text-indigo-500"
-                                            />
-                                        </button>
-                                        <button
-                                            type="button"
-                                            @click="deleteAdresse(adresse)"
-                                        >
-                                            <TrashIcon
-                                                class="h-6 w-6 text-red-500 hover:text-red-700"
-                                            />
-                                        </button>
-                                    </div>
-                                </li>
-                            </ul>
-                            <div class="flex items-center justify-end">
-                                <button
-                                    class="group flex items-center justify-center rounded-md border border-gray-200 bg-white px-4 py-2.5 text-sm hover:bg-blue-500"
-                                    type="button"
-                                    @click="displayAdresseForm"
-                                >
-                                    <span class="group-hover:text-white"
-                                        >Ajouter une adresse</span
-                                    >
-                                    <PlusIcon
-                                        class="ml-4 h-5 w-5 text-blue-500 group-hover:text-white"
-                                    />
-                                </button>
-                            </div>
-                            <form
-                                class="flex flex-col justify-end"
-                                v-if="showUpdateAddressForm"
-                                @submit.prevent="onUpdateAdress"
-                                autocomplete="off"
-                            >
-                                <AddressForm
-                                    :errors="errors"
-                                    v-model:address="updateAddressForm.address"
-                                    v-model:city="updateAddressForm.city"
-                                    v-model:zip_code="
-                                        updateAddressForm.zip_code
-                                    "
-                                    v-model:country="updateAddressForm.country"
-                                    v-model:address_lat="
-                                        updateAddressForm.address_lat
-                                    "
-                                    v-model:address_lng="
-                                        updateAddressForm.address_lng
-                                    "
-                                />
-                                <button
-                                    type="submit"
-                                    :disabled="updateAddressForm.processing"
-                                    class="my-4 flex items-center self-end rounded-md border border-gray-200 bg-white px-4 py-2.5 text-sm hover:bg-blue-500 hover:text-white"
-                                >
-                                    Mettre à jour
-                                </button>
-                            </form>
-                            <form
-                                class="flex flex-col justify-end"
-                                v-if="addAddress"
-                                @submit.prevent="onSubmitAdress"
-                                autocomplete="off"
-                            >
-                                <AddressForm
-                                    :errors="errors"
-                                    v-model:address="addressForm.address"
-                                    v-model:city="addressForm.city"
-                                    v-model:zip_code="addressForm.zip_code"
-                                    v-model:country="addressForm.country"
-                                    v-model:address_lat="
-                                        addressForm.address_lat
-                                    "
-                                    v-model:address_lng="
-                                        addressForm.address_lng
-                                    "
-                                />
-                                <button
-                                    :disabled="addressForm.processing"
-                                    type="submit"
-                                    class="my-4 flex items-center self-end rounded-md border border-gray-200 bg-white px-4 py-2.5 text-sm hover:bg-blue-500 hover:text-white"
-                                >
-                                    Enregistrer
-                                </button>
-                            </form>
-                        </div>
-                    </template>
-                    <!-- <PathsInscriptionNavigation /> -->
                     <template v-if="displayEditStructure">
                         <div class="mx-auto max-w-full lg:px-4">
                             <div class="md:grid md:grid-cols-3 md:gap-6">
@@ -1003,6 +910,125 @@ const submit = () => {
                         </div>
                     </template>
 
+                    <template v-if="displayAdresses">
+                        <div
+                            class="my-4 flex w-full flex-col space-y-6 rounded-md border border-gray-200 bg-gray-50 px-4 py-2 text-gray-800 shadow-md"
+                        >
+                            <div class="flex items-center justify-start">
+                                <h3 class="text-xl font-semibold">
+                                    Vos adresses:
+                                </h3>
+                            </div>
+
+                            <ul class="list-inside list-disc space-y-2">
+                                <li
+                                    class="flex items-center justify-between"
+                                    v-for="adresse in structure.adresses"
+                                    :key="adresse.id"
+                                >
+                                    <span
+                                        >{{ adresse.address }},
+                                        {{ adresse.zip_code }}
+                                        {{ adresse.city }}</span
+                                    >
+                                    <div class="flex items-center gap-x-6">
+                                        <button
+                                            type="button"
+                                            @click="
+                                                displayUpdateAdresseForm(
+                                                    adresse
+                                                )
+                                            "
+                                        >
+                                            <ArrowPathIcon
+                                                class="h-6 w-6 text-blue-500 transition-all duration-200 hover:-rotate-90 hover:text-indigo-500"
+                                            />
+                                        </button>
+                                        <button
+                                            type="button"
+                                            @click="deleteAdresse(adresse)"
+                                        >
+                                            <TrashIcon
+                                                class="h-6 w-6 text-red-500 hover:text-red-700"
+                                            />
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="flex items-center justify-end">
+                                <button
+                                    class="group flex items-center justify-center rounded-md border border-gray-200 bg-white px-4 py-2.5 text-sm hover:bg-blue-500"
+                                    type="button"
+                                    @click="displayAdresseForm"
+                                >
+                                    <span class="group-hover:text-white"
+                                        >Ajouter une adresse</span
+                                    >
+                                    <PlusIcon
+                                        class="ml-4 h-5 w-5 text-blue-500 group-hover:text-white"
+                                    />
+                                </button>
+                            </div>
+                            <form
+                                class="flex flex-col justify-end"
+                                v-if="showUpdateAddressForm"
+                                @submit.prevent="onUpdateAdress"
+                                autocomplete="off"
+                            >
+                                <AddressForm
+                                    :errors="errors"
+                                    v-model:address="updateAddressForm.address"
+                                    v-model:city="updateAddressForm.city"
+                                    v-model:zip_code="
+                                        updateAddressForm.zip_code
+                                    "
+                                    v-model:country="updateAddressForm.country"
+                                    v-model:address_lat="
+                                        updateAddressForm.address_lat
+                                    "
+                                    v-model:address_lng="
+                                        updateAddressForm.address_lng
+                                    "
+                                />
+                                <button
+                                    type="submit"
+                                    :disabled="updateAddressForm.processing"
+                                    class="my-4 flex items-center self-end rounded-md border border-gray-200 bg-white px-4 py-2.5 text-sm hover:bg-blue-500 hover:text-white"
+                                >
+                                    Mettre à jour
+                                </button>
+                            </form>
+                            <form
+                                class="flex flex-col justify-end"
+                                v-if="addAddress"
+                                @submit.prevent="onSubmitAdress"
+                                autocomplete="off"
+                            >
+                                <AddressForm
+                                    :errors="errors"
+                                    v-model:address="addressForm.address"
+                                    v-model:city="addressForm.city"
+                                    v-model:zip_code="addressForm.zip_code"
+                                    v-model:country="addressForm.country"
+                                    v-model:address_lat="
+                                        addressForm.address_lat
+                                    "
+                                    v-model:address_lng="
+                                        addressForm.address_lng
+                                    "
+                                />
+                                <button
+                                    :disabled="addressForm.processing"
+                                    type="submit"
+                                    class="my-4 flex items-center self-end rounded-md border border-gray-200 bg-white px-4 py-2.5 text-sm hover:bg-blue-500 hover:text-white"
+                                >
+                                    Enregistrer
+                                </button>
+                            </form>
+                        </div>
+                    </template>
+                    <!-- <PathsInscriptionNavigation /> -->
+
                     <template v-if="displayPartenaire">
                         <div
                             class="my-4 flex w-full flex-col space-y-6 rounded-md border border-gray-200 bg-gray-50 px-4 py-2 text-gray-800 shadow-md"
@@ -1020,16 +1046,55 @@ const submit = () => {
                                 >
                                     <span
                                         >{{ partenaire.name }},
-                                        {{ partenaire.email }}, niveau
+                                        {{ partenaire.email }}, niveau:
                                         {{ partenaire.pivot.niveau }},
                                         {{ partenaire.pivot.phone }}</span
                                     >
 
-                                    <div
-                                        class="flex items-center gap-x-6"
-                                    ></div>
+                                    <div class="flex items-center gap-x-6">
+                                        <button
+                                            type="button"
+                                            @click="
+                                                displayUpdatePartenaireForm(
+                                                    partenaire
+                                                )
+                                            "
+                                        >
+                                            <ArrowPathIcon
+                                                class="h-6 w-6 text-blue-500 transition-all duration-200 hover:-rotate-90 hover:text-indigo-500"
+                                            />
+                                        </button>
+                                        <button
+                                            type="button"
+                                            @click="
+                                                deletePartenaire(partenaire)
+                                            "
+                                        >
+                                            <TrashIcon
+                                                class="h-6 w-6 text-red-500 hover:text-red-700"
+                                            />
+                                        </button>
+                                    </div>
                                 </li>
                             </ul>
+                            <div class="flex items-center justify-end">
+                                <button
+                                    class="group flex items-center justify-center rounded-md border border-gray-200 bg-white px-4 py-2.5 text-sm hover:bg-blue-500"
+                                    type="button"
+                                    @click="displayPartenaireForm"
+                                >
+                                    <span class="group-hover:text-white"
+                                        >Ajouter une permission</span
+                                    >
+                                    <PlusIcon
+                                        class="ml-4 h-5 w-5 text-blue-500 group-hover:text-white"
+                                    />
+                                </button>
+                            </div>
+                            <PermissionStructureUserForm
+                                v-if="addPermission"
+                                :structure="structure"
+                            />
                         </div>
                     </template>
 

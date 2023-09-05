@@ -13,6 +13,7 @@ use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\DepartementController;
+use App\Http\Controllers\StructureUserController;
 use App\Http\Controllers\CityDisciplineController;
 use App\Http\Controllers\StructureTarifController;
 use App\Http\Controllers\StructureGestionController;
@@ -184,6 +185,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('structures/{structure:slug}/adresses', [StructureAddresseController::class, 'store'])->name('structures.adresses.store');
     Route::put('structures/{structure:slug}/adresses/{adress}', [StructureAddresseController::class, 'update'])->name('structures.adresses.update');
     Route::delete('structures/{structure:slug}/adresses/{adress}', [StructureAddresseController::class, 'destroy'])->name('structures.adresses.destroy');
+
+
+    Route::post('structures/{structure:slug}/partenaires', [StructureUserController::class, 'store'])->name('structures.partenaires.store');
+    Route::put('structures/{structure:slug}/partenaires/{partenaire}', [StructureUserController::class, 'update'])->name('structures.partenaires.update');
+    Route::delete('structures/{structure:slug}/partenaires/{partenaire}', [StructureUserController::class, 'destroy'])->name('structures.partenaires.destroy');
+
 
     Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
     Route::post('/structures', [StructureController::class, 'store'])->name('structures.store');

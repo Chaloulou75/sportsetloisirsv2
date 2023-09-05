@@ -134,7 +134,7 @@ class StructureActiviteProduitController extends Controller
         // newAdresse
         if($request->address) {
 
-            $city= City::where('code_postal', $request->zip_code)->firstOrFail();
+            $city = City::where('code_postal', $request->zip_code)->firstOrFail();
             $cityId = $city->id;
 
             $validatedAddress = [
@@ -274,7 +274,7 @@ class StructureActiviteProduitController extends Controller
         // newAdresse
         if($request->address) {
 
-            $city= City::where('code_postal', $request->zip_code)->firstOrFail();
+            $city = City::where('code_postal', $request->zip_code)->firstOrFail();
             $cityId = $city->id;
 
             $validatedAddress = [
@@ -336,7 +336,7 @@ class StructureActiviteProduitController extends Controller
         $originalProduit = StructureProduit::with('criteres')->where('id', $produit->id)->firstOrFail();
 
         $originalProduitCriteres = StructureProduitCritere::where('produit_id', $originalProduit->id)->get();
-
+        // dd($originalProduit->tarifs);
         $newProduit = new StructureProduit();
         $newProduit->structure_id = $originalProduit->structure_id;
         $newProduit->discipline_id = $originalProduit->discipline_id;
@@ -350,9 +350,13 @@ class StructureActiviteProduitController extends Controller
         $newProduit->id = null;
         $newProduit->save();
 
-        foreach($originalProduit->tarifs() as $tarif) {
-            $newProduit->attach($tarif->id);
+        if($originalProduit->tarifs->isNotEmpty()) {
+            foreach($originalProduit->tarifs as $tarif) {
+                $newProduit->tarifs()->attach($tarif->id);
+            }
         }
+
+
 
         foreach($originalProduitCriteres as $produitCritere) {
             $newProduitCritere = new StructureProduitCritere();

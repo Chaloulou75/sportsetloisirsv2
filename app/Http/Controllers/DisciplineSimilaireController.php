@@ -18,6 +18,7 @@ class DisciplineSimilaireController extends Controller
         $disciplineNotInId = $request->input('disciplineNotIn');
         $disciplineNotIn = ListDiscipline::findOrFail($disciplineNotInId);
         $discipline->disciplinesSimilaires()->attach($disciplineNotIn);
+
         return to_route('admin.edit', $discipline)->with('success', 'Discipline similaire ajoutée');
     }
 

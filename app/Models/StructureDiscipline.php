@@ -34,4 +34,10 @@ class StructureDiscipline extends Model
     {
         return $this->hasMany(StructurePlanning::class, 'discipline_id');
     }
+
+    public function activites(): HasMany
+    {
+        return $this->hasMany(StructureActivite::class, 'structure_id', 'structure_id')->where('discipline_id', $this->discipline_id);
+    }
+
 }
