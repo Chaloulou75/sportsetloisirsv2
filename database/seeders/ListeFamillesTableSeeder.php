@@ -44,7 +44,7 @@ class ListeFamillesTableSeeder extends Seeder
                 'ordre' => 0,
                 'view_count' => null,
                 'created_at' => '2023-04-26 17:36:59',
-                'updated_at' => '0000-00-00 00:00:00',
+                'updated_at' => '2023-09-05 16:00:00',
             ),
             1 =>
             array(
@@ -71,7 +71,7 @@ class ListeFamillesTableSeeder extends Seeder
                 'ordre' => 0,
                 'view_count' => null,
                 'created_at' => '2023-04-26 17:36:59',
-                'updated_at' => '0000-00-00 00:00:00',
+                'updated_at' => '2023-09-05 16:00:00',
             ),
             2 =>
             array(
@@ -98,7 +98,7 @@ class ListeFamillesTableSeeder extends Seeder
                 'ordre' => 0,
                 'view_count' => null,
                 'created_at' => '2023-04-26 17:36:59',
-                'updated_at' => '0000-00-00 00:00:00',
+                'updated_at' => '2023-09-05 16:00:00',
             ),
             3 =>
             array(
@@ -125,7 +125,7 @@ class ListeFamillesTableSeeder extends Seeder
                 'ordre' => 0,
                 'view_count' => null,
                 'created_at' => '2023-04-26 17:36:59',
-                'updated_at' => '0000-00-00 00:00:00',
+                'updated_at' => '2023-09-05 16:00:00',
             ),
             4 =>
             array(
@@ -152,7 +152,7 @@ class ListeFamillesTableSeeder extends Seeder
                 'ordre' => 0,
                 'view_count' => null,
                 'created_at' => '2023-04-26 17:36:59',
-                'updated_at' => '0000-00-00 00:00:00',
+                'updated_at' => '2023-09-05 16:00:00',
             ),
             5 =>
             array(
@@ -179,7 +179,7 @@ class ListeFamillesTableSeeder extends Seeder
                 'ordre' => 0,
                 'view_count' => null,
                 'created_at' => '2023-04-26 17:36:59',
-                'updated_at' => '0000-00-00 00:00:00',
+                'updated_at' => '2023-09-05 16:00:00',
             ),
             6 =>
             array(
@@ -206,7 +206,7 @@ class ListeFamillesTableSeeder extends Seeder
                 'ordre' => 0,
                 'view_count' => null,
                 'created_at' => '2023-04-26 17:36:59',
-                'updated_at' => '0000-00-00 00:00:00',
+                'updated_at' => '2023-09-05 16:00:00',
             ),
             7 =>
             array(
@@ -233,7 +233,7 @@ class ListeFamillesTableSeeder extends Seeder
                 'ordre' => 0,
                 'view_count' => null,
                 'created_at' => '2023-04-26 17:36:59',
-                'updated_at' => '0000-00-00 00:00:00',
+                'updated_at' => '2023-09-05 16:00:00',
             ),
             8 =>
             array(
@@ -260,7 +260,7 @@ class ListeFamillesTableSeeder extends Seeder
                 'ordre' => 0,
                 'view_count' => null,
                 'created_at' => '2023-04-26 17:36:59',
-                'updated_at' => '0000-00-00 00:00:00',
+                'updated_at' => '2023-09-05 16:00:00',
             ),
             9 =>
             array(
@@ -287,7 +287,7 @@ class ListeFamillesTableSeeder extends Seeder
                 'ordre' => 0,
                 'view_count' => null,
                 'created_at' => '2023-04-26 17:36:59',
-                'updated_at' => '0000-00-00 00:00:00',
+                'updated_at' => '2023-09-05 16:00:00',
             ),
         ));
 
