@@ -47,8 +47,8 @@ class DatabaseSeeder extends Seeder
         $this->call(LiensDisciplinesCategoriesTableSeeder::class);
         $this->call(LiensDisciplinesCategoriesCriteresTableSeeder::class);
         $this->call(LiensDisciplinesCategoriesCriteresValeursTableSeeder::class);
-        $this->call(LiensDisciplinesSimilairesTableSeeder::class);
-        $this->call(LiensFamillesDisciplinesTableSeeder::class);
+        // $this->call(LiensDisciplinesSimilairesTableSeeder::class);
+        // $this->call(LiensFamillesDisciplinesTableSeeder::class);
 
         User::factory()->create([
                     'name' => 'Charles J',
