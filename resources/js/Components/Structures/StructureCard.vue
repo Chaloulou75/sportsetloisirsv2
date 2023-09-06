@@ -100,20 +100,14 @@ const getUniqueActivitesTitre = (activites) => {
 };
 
 const formatCurrency = (value) => {
-    // Remove the non-numeric characters from the currency value
     const numericValue = Number(value.replace(/[^0-9.-]+/g, ""));
-    // Check if the numeric value is a valid number
     if (!isNaN(numericValue)) {
-        // Check if the numeric value has decimal places
         if (numericValue % 1 === 0) {
-            // No decimal places, return as integer
             return numericValue.toLocaleString() + " €";
         } else {
-            // Decimal places present, format with two decimal places
             return numericValue.toFixed(2) + " €";
         }
     }
-    // Return the original value if conversion failed
     return value;
 };
 

@@ -81,6 +81,11 @@ Route::resource('familles', FamilleController::class)->only([
     'index', 'show'
 ]);
 
+Route::get('/structures', [StructureController::class, 'index'])
+        ->name('structures.index');
+Route::get('/{structure:slug}', [StructureController::class, 'show'])
+    ->name('structures.show');
+
 Route::resource('villes', CityController::class, [
     'parameters' => [
         'villes' => 'city'
@@ -235,8 +240,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //, 'can:viewAdmin'
 });
 
-Route::get('/structures', [StructureController::class, 'index'])
-    ->name('structures.index');
-Route::get('/{structure:slug}', [StructureController::class, 'show'])
-    ->name('structures.show');
+
 Route::get('/activites/{activite:id}', [ActiviteController::class, 'show'])->name('structures.activites.show');
