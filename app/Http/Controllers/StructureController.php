@@ -236,8 +236,6 @@ class StructureController extends Controller
 
         Mail::to($structure->email)->send(new StructureCreated($structure));
 
-        return Redirect::route();
-
         return to_route('structures.activites.index', $structure->slug)->with('success', 'Votre structure est bien créée, vous allez recevoir une confirmation par email. Vous pouvez, maintenant, ajouter des activités à votre structure.');
     }
 

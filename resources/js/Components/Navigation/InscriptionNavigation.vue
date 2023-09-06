@@ -101,7 +101,7 @@ const user = computed(() => page.props.auth.user);
                     </Link>
                 </li>
                 <!-- Réservations -->
-                <li class="w-full">
+                <li v-if="structure" class="w-full">
                     <details
                         class="group [&_summary::-webkit-details-marker]:hidden"
                     >
@@ -132,7 +132,7 @@ const user = computed(() => page.props.auth.user);
                         <ul class="space-y-1">
                             <li>
                                 <Link
-                                    v-if="user"
+                                    v-if="user && structure"
                                     :href="
                                         route(
                                             'structures.gestion.index',
@@ -146,7 +146,7 @@ const user = computed(() => page.props.auth.user);
                             </li>
                             <li>
                                 <Link
-                                    v-if="user"
+                                    v-if="user && structure"
                                     :href="
                                         route(
                                             'structures.gestion.index',
@@ -163,7 +163,7 @@ const user = computed(() => page.props.auth.user);
                             </li>
                             <li>
                                 <Link
-                                    v-if="user"
+                                    v-if="user && structure"
                                     :href="
                                         route(
                                             'structures.gestion.index',
@@ -258,7 +258,7 @@ const user = computed(() => page.props.auth.user);
                                 </Link>
                             </li>
                             <!-- activite -->
-                            <li>
+                            <li v-if="structure">
                                 <Link
                                     :href="
                                         route(
@@ -337,6 +337,7 @@ const user = computed(() => page.props.auth.user);
         >
             <div class="space-y-1 pb-3 pt-2">
                 <BreezeResponsiveNavLink
+                    v-if="structure"
                     :href="route('structures.gestion.index', structure.slug)"
                     :active="
                         route().current(
@@ -348,6 +349,7 @@ const user = computed(() => page.props.auth.user);
                     Accueil Gestion
                 </BreezeResponsiveNavLink>
                 <BreezeResponsiveNavLink
+                    v-if="structure"
                     :href="route('structures.gestion.index', structure.slug)"
                     :active="route('structures.gestion.index', structure.slug)"
                 >
@@ -361,8 +363,8 @@ const user = computed(() => page.props.auth.user);
                     Ma structure
                 </BreezeResponsiveNavLink>
                 <BreezeResponsiveNavLink
+                    v-if="structure && can.update"
                     :href="route('structures.activites.index', structure)"
-                    v-if="can.update"
                     :active="
                         route().current('structures.activites.index', structure)
                     "
