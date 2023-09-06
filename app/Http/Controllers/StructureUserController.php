@@ -49,6 +49,8 @@ class StructureUserController extends Controller
             'phone' => $request->phone,
         ]);
 
+        //foreach($request->activites etc....)
+
         //envoie email?
 
         return to_route('structures.edit', $structure->slug)->with('success', 'Partenaire ajouté à votre structure.');
@@ -84,9 +86,18 @@ class StructureUserController extends Controller
      */
     public function destroy(Structure $structure, string $partenaire)
     {
+        //verifier que le partenaire n'est pas le dernier à être Super Admin
+        $partenaireASupprimer = $structure->partenaires()->wherePivot('user_id', $partenaire)->first();
+
+        $superAdminForStructureCount = $structure->partenaires()->wherePivot('niveau', 1)->count();
+
+        if(($partenaireASupprimer->pivot->niveau === 1) && ($superAdminForStructureCount < 2)) {
+            return to_route('structures.edit', $structure->slug)->with('error', 'Il doit y avoir au minimum un Super Administrateur pour votre structure.');
+        }
+
         $structure->partenaires()->detach($partenaire);
 
-        return to_route('structures.edit', $structure->slug)->with('success', 'Partenaire supprmé à votre structure.');
+        return to_route('structures.edit', $structure->slug)->with('success', 'Partenaire supprimé à votre structure.');
 
     }
 }

@@ -21,7 +21,7 @@ watch(
                     show) ||
                 ($page.props.flash.success && show)
             "
-            class="sticky bottom-0 right-0 px-4 py-6"
+            class="sticky bottom-0 right-0 z-20 px-4 py-6"
         >
             <div
                 v-if="$page.props.flash.success && show"

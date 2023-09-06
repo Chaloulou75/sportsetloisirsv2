@@ -277,17 +277,25 @@ const submit = () => {
         :confirmedReservationsCount="confirmedReservationsCount"
     >
         <template #header>
-            <h1 class="text-2xl font-bold text-indigo-700">Ma structure</h1>
+            <h1
+                class="text-center text-lg font-semibold text-indigo-700 md:text-left md:text-2xl md:font-bold"
+            >
+                Ma structure
+            </h1>
         </template>
 
         <template #default>
-            <MicroNavBackPro @eventFromChild="handleButtonEvent" />
+            <MicroNavBackPro
+                :can="can"
+                :structure="structure"
+                @eventFromChild="handleButtonEvent"
+            />
             <div
                 class="relative flex flex-col space-y-6 py-2 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
             >
                 <div class="flex-1">
                     <template v-if="displayEditStructure">
-                        <div class="mx-auto max-w-full lg:px-4">
+                        <div class="mx-auto my-4 max-w-full md:px-4">
                             <div class="md:grid md:grid-cols-3 md:gap-6">
                                 <div class="md:col-span-3">
                                     <!--  -->
@@ -1044,12 +1052,34 @@ const submit = () => {
                                     v-for="partenaire in structure.partenaires"
                                     :key="partenaire.id"
                                 >
-                                    <span
-                                        >{{ partenaire.name }},
-                                        {{ partenaire.email }}, niveau:
-                                        {{ partenaire.pivot.niveau }},
-                                        {{ partenaire.pivot.phone }}</span
-                                    >
+                                    <p>
+                                        <span
+                                            class="font-semibold text-indigo-500"
+                                            >{{ partenaire.name }}</span
+                                        >, {{ partenaire.email }}. Niveau:<span
+                                            class="font-semibold"
+                                            v-if="partenaire.pivot.niveau === 1"
+                                        >
+                                            Super administrateur</span
+                                        >
+                                        <span
+                                            class="font-semibold"
+                                            v-else-if="
+                                                partenaire.pivot.niveau === 2
+                                            "
+                                        >
+                                            Administrateur</span
+                                        >
+                                        <span
+                                            class="font-semibold"
+                                            v-else-if="
+                                                partenaire.pivot.niveau === 3
+                                            "
+                                        >
+                                            Sans permission</span
+                                        >, telephone:
+                                        {{ partenaire.pivot.phone }}
+                                    </p>
 
                                     <div class="flex items-center gap-x-6">
                                         <button

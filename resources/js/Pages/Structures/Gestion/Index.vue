@@ -58,7 +58,11 @@ const formatCurrency = (value) => {
         :confirmedReservationsCount="confirmedReservationsCount"
     >
         <template #header>
-            <h1 class="text-2xl font-bold text-indigo-700">Accueil</h1>
+            <h1
+                class="text-center text-lg font-semibold text-indigo-700 md:text-left md:text-2xl md:font-bold"
+            >
+                Accueil
+            </h1>
         </template>
 
         <template #default>

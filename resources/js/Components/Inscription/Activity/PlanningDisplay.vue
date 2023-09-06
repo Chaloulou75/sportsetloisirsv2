@@ -118,9 +118,10 @@ const onEventCreate = (event, deleteEventFunction) => {
 };
 
 const onSubmitEventForm = () => {
-    const url = `/structures/${props.structure.slug}/plannings`;
     router.post(
-        url,
+        route("structures.plannings.store", {
+            structure: props.structure.slug,
+        }),
         {
             structure_id: formPlanning.structure_id,
             discipline_id: formPlanning.discipline_id,
@@ -131,7 +132,7 @@ const onSubmitEventForm = () => {
         },
         {
             preserveScroll: true,
-            remember: false,
+            remember: true,
             onSuccess: () => {
                 formPlanning.reset();
                 closeModal();
@@ -142,15 +143,18 @@ const onSubmitEventForm = () => {
 };
 
 const handleEventDeleted = (event) => {
-    const url = `/structures/${props.structure.slug}/plannings/${event.planningId}`;
-    router.delete(url, {
-        preserveScroll: true,
-        onSuccess: () => {
-            closeModal();
-        },
-        structure: props.structure.slug,
-        planning: event.planningId,
-    });
+    router.delete(
+        route("structures.plannings.destroy", {
+            structure: props.structure.slug,
+            planning: event.planningId,
+        }),
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                closeModal();
+            },
+        }
+    );
 };
 
 const handleEventChanged = (event) => {
@@ -228,7 +232,7 @@ const handleEventChanged = (event) => {
                 leave-from="opacity-100"
                 leave-to="opacity-0"
             >
-                <div class="fixed inset-0 bg-black bg-opacity-25" />
+                <div class="fixed inset-0 bg-black bg-opacity-50" />
             </TransitionChild>
             <div class="fixed inset-0 overflow-y-auto">
                 <div
@@ -368,7 +372,10 @@ const handleEventChanged = (event) => {
                                 </Listbox>
 
                                 <Listbox
-                                    v-if="selectedActivite"
+                                    v-if="
+                                        selectedActivite &&
+                                        filteredProducts.length > 0
+                                    "
                                     class="mt-4 w-full"
                                     v-model="selectedProduct"
                                 >
@@ -448,6 +455,17 @@ const handleEventChanged = (event) => {
                                     </div>
                                 </Listbox>
 
+                                <p
+                                    class="py-2 text-sm text-red-600"
+                                    v-if="
+                                        selectedActivite &&
+                                        !filteredProducts.length > 0
+                                    "
+                                >
+                                    Il faut au préalable ajouter au moins un
+                                    produit à l'activité.
+                                </p>
+
                                 <div class="mt-4 flex justify-between">
                                     <button
                                         type="button"
@@ -457,6 +475,10 @@ const handleEventChanged = (event) => {
                                         Annuler
                                     </button>
                                     <button
+                                        v-if="
+                                            selectedActivite &&
+                                            filteredProducts.length > 0
+                                        "
                                         type="submit"
                                         class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                                     >

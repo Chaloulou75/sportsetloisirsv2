@@ -36,20 +36,14 @@ const tarifsList = computed(() => {
 });
 
 const formatCurrency = (value) => {
-    // Remove the non-numeric characters from the currency value
     const numericValue = Number(value.replace(/[^0-9.-]+/g, ""));
-    // Check if the numeric value is a valid number
     if (!isNaN(numericValue)) {
-        // Check if the numeric value has decimal places
         if (numericValue % 1 === 0) {
-            // No decimal places, return as integer
             return numericValue.toLocaleString() + " €";
         } else {
-            // Decimal places present, format with two decimal places
             return numericValue.toFixed(2) + " €";
         }
     }
-    // Return the original value if conversion failed
     return value;
 };
 
@@ -83,7 +77,7 @@ const destroyTarif = (tarif) => {
     </div>
     <div
         v-if="structure.tarifs.length > 0"
-        class="mt-6 min-h-full w-full overflow-x-auto rounded-xl shadow-lg"
+        class="mt-6 w-full overflow-x-auto rounded-xl shadow-lg"
     >
         <table
             class="w-full table-fixed border-collapse text-sm font-semibold text-gray-700 md:table-auto"
@@ -175,7 +169,7 @@ const destroyTarif = (tarif) => {
     </div>
     <div
         v-if="tarifsList.length > 0"
-        class="mt-12 min-h-full w-full overflow-x-auto rounded-xl shadow-lg"
+        class="mt-12 w-full overflow-x-auto rounded-xl shadow-lg"
     >
         <table
             class="w-full table-fixed border-collapse text-sm font-semibold text-gray-700 md:table-auto"

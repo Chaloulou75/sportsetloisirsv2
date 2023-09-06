@@ -47,7 +47,7 @@ const props = defineProps({
 
 <template>
     <div class="min-h-screen w-full bg-white">
-        <div class="flex">
+        <div class="flex flex-col md:flex-row">
             <!-- Page Heading -->
             <InscriptionNavigation
                 :structure="structure"
@@ -58,14 +58,16 @@ const props = defineProps({
                 @eventFromChild="handleButtonEvent"
             />
 
-            <div class="flex-1">
+            <div class="md:flex-1">
                 <ProNavigation :structure="structure" />
 
                 <header
                     class="h-auto w-full bg-gradient-to-br from-green-100 to-blue-100 shadow-sm"
                     v-if="$slots.header"
                 >
-                    <div class="mx-auto max-w-full px-2 py-4 sm:px-3 lg:px-6">
+                    <div
+                        class="mx-auto max-w-full px-2 py-2.5 sm:px-3 md:py-4 lg:px-6"
+                    >
                         <slot name="header" />
                     </div>
                 </header>

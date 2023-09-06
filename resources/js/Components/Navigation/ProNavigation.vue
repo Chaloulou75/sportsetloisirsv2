@@ -15,7 +15,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <nav class="border-b border-gray-100 bg-white">
+    <nav class="hidden border-b border-gray-100 bg-white lg:block">
         <!-- Primary Navigation Menu -->
         <div class="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
             <div class="flex h-16 justify-between">

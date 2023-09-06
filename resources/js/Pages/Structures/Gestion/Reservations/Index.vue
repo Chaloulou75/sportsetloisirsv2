@@ -104,7 +104,11 @@ const updateReservation = (reservation) => {
         :confirmedReservationsCount="confirmedReservationsCount"
     >
         <template #header>
-            <h1 class="text-2xl font-bold text-indigo-700">Réservations</h1>
+            <h1
+                class="text-center text-lg font-semibold text-indigo-700 md:text-left md:text-2xl md:font-bold"
+            >
+                Réservations
+            </h1>
         </template>
 
         <template #default="{}">

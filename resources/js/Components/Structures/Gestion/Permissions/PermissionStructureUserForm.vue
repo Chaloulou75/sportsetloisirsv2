@@ -2,7 +2,6 @@
 import { ref } from "vue";
 import { useForm, Link } from "@inertiajs/vue3";
 import MazPhoneNumberInput from "maz-ui/components/MazPhoneNumberInput";
-import { GlobeAltIcon } from "@heroicons/vue/24/solid";
 
 const props = defineProps({
     errors: Object,

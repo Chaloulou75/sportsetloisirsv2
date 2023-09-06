@@ -41,14 +41,39 @@ class ActiviteController extends Controller
         $structure = Structure::with([
                         'disciplines',
                         'activites',
+                        'adresses' => function ($query) {
+                            $query->latest();
+                        },
+                        'produits',
+                        'tarifs',
+                        'tarifs.tarifType',
+                        'tarifs.structureTarifTypeInfos',
+                        'tarifs.structureTarifTypeInfos.tarifTypeAttribut'
                     ])->select(['id', 'name', 'slug'])
                     ->where('id', $structure->id)
                     ->first();
 
-        $activites = StructureActivite::with(['structure','categorie', 'discipline'])
+        $activites = StructureActivite::with([
+            'structure:id,name,slug,presentation_courte',
+            'categorie:id,nom_categorie_pro',
+            'discipline:id,name',
+            'plannings',
+            'produits',
+            'produits.adresse',
+            'produits.criteres',
+            'produits.criteres.critere',
+            'produits.horaire',
+            'produits.tarifs',
+            'produits.tarifs.structureTarifTypeInfos',
+            'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut',
+            'produits.tarifs.tarifType'
+        ])
             ->where('structure_id', $structure->id)
             ->latest()
             ->get();
+
+        $tarifTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();
+
 
         $allReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {
             $query->where('structure_id', $structure->id);
@@ -81,7 +106,68 @@ class ActiviteController extends Controller
             ];
         });
 
-        // dd($actByDiscAndCategorie);
+
+        $activiteForTarifs = StructureActivite::with([
+                    'structure:id,name,slug',
+                    'categorie:id,nom_categorie_pro',
+                    'discipline:id,name',
+                    'produits',
+                    'produits.tarifs',
+                    'produits.tarifs.structureTarifTypeInfos',
+                    'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut'])
+                    ->where('structure_id', $structure->id)
+                    ->latest()
+                    ->get()
+                    ->groupBy('discipline.id')
+                    ->map(function ($disciplineActivites, $disciplineId) {
+                        return [
+                            'id' => $disciplineId,
+                            'disciplineName' => $disciplineActivites->first()->discipline->name,
+                            'categories' => $disciplineActivites->groupBy('categorie.id')->map(function ($categorieItems, $categoryId) {
+                                $activites = $categorieItems->map(function ($activiteItem) {
+                                    return [
+                                        'id' => $activiteItem->id,
+                                        'titre' => $activiteItem->titre,
+                                        'disciplineId' => $activiteItem->discipline_id,
+                                        'categorieId' => $activiteItem->categorie_id,
+                                        'produits' => $activiteItem->produits->map(function ($produitItem) {
+                                            return [
+                                                'id' => $produitItem->id,
+                                                'disciplineId' => $produitItem->discipline_id,
+                                                'categorieId' => $produitItem->categorie_id,
+                                                'activiteId' => $produitItem->activite_id,
+                                                'tarifs' => $produitItem->tarifs->map(function ($tarifItem) {
+                                                    return [
+                                                        'id' => $tarifItem->id,
+                                                        'typeId' => $tarifItem->type_id,
+                                                        'titre' => $tarifItem->titre,
+                                                        'description' => $tarifItem->description,
+                                                        'amount' => $tarifItem->amount,
+                                                        'produits' => $tarifItem->produits,
+                                                        'infos' => $tarifItem->structureTarifTypeInfos->map(function ($infoItem) {
+                                                            return [
+                                                                'id' => $infoItem->id,
+                                                                'attribut_id' => $infoItem->attribut_id,
+                                                                'valeur' => $infoItem->valeur,
+                                                                'unite' => $infoItem->unite,
+                                                                'tarifTypeAttribut' => $infoItem->tarifTypeAttribut
+                                                            ];
+                                                        }),
+                                                    ];
+                                                }),
+                                            ];
+                                        }),
+                                    ];
+                                });
+                                return [
+                                    'id' => $categoryId,
+                                    'disciplineId' => $categorieItems->first()->discipline->id,
+                                    'name' => $categorieItems->first()->categorie->nom_categorie_pro ?? 'Sans Catégorie',
+                                    'activites' => $activites,
+                                ];
+                            }),
+                        ];
+                    });
 
         $categories = Categorie::with('disciplines')->select(['id', 'nom', 'ico'])->get();
 
@@ -95,7 +181,9 @@ class ActiviteController extends Controller
             'dejaUsedDisciplines' => $dejaUsedDisciplines,
             'listDisciplines' => $listDisciplines,
             'activites' => $activites,
+            'tarifTypes' => $tarifTypes,
             'actByDiscAndCategorie' => $actByDiscAndCategorie,
+            'activiteForTarifs' => $activiteForTarifs,
             'allReservationsCount' => $allReservationsCount,
             'confirmedReservationsCount' => $confirmedReservationsCount,
             'pendingReservationsCount' => $pendingReservationsCount,
@@ -346,7 +434,14 @@ class ActiviteController extends Controller
 
         $tarifTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();
 
-        $activiteForTarifs = StructureActivite::with(['structure:id,name,slug', 'categorie:id,nom_categorie_pro', 'discipline:id,name', 'produits', 'produits.tarifs', 'produits.tarifs.structureTarifTypeInfos', 'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut'])
+        $activiteForTarifs = StructureActivite::with([
+            'structure:id,name,slug',
+            'categorie:id,nom_categorie_pro',
+            'discipline:id,name',
+            'produits',
+            'produits.tarifs',
+            'produits.tarifs.structureTarifTypeInfos',
+            'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut'])
             ->where('structure_id', $structure->id)
             ->latest()
             ->get()
@@ -536,10 +631,7 @@ class ActiviteController extends Controller
             'address_lng' => ['nullable'],
             'date' => ['nullable'],
             'time' => ['nullable'],
-            // 'selectedCheckboxes' => ['nullable'],
         ]);
-
-        // dd($request->criteres);
 
         $structure = Structure::with('adresses')->where('id', $request->structure_id)->firstOrfail();
 
