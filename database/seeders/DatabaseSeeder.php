@@ -45,12 +45,10 @@ class DatabaseSeeder extends Seeder
         $this->call(ListeTarifsTypesTableSeeder::class);
         $this->call(ListeTarifsTypesAttributsTableSeeder::class);
         $this->call(LiensDisciplinesCategoriesTableSeeder::class);
-        $this->call(LiensFamillesDisciplinesTableSeeder::class);
         $this->call(LiensDisciplinesCategoriesCriteresTableSeeder::class);
         $this->call(LiensDisciplinesCategoriesCriteresValeursTableSeeder::class);
         $this->call(LiensDisciplinesSimilairesTableSeeder::class);
-
-
+        $this->call(LiensFamillesDisciplinesTableSeeder::class);
 
         User::factory()->create([
                     'name' => 'Charles J',
@@ -60,9 +58,6 @@ class DatabaseSeeder extends Seeder
             'name' => 'Tonio V',
             'email' => 'tonio20@hotmail.fr',
         ]);
-
-
-
 
     }
 }
