@@ -2,8 +2,8 @@
 import { ref, computed, nextTick, defineAsyncComponent } from "vue";
 import { useForm, router } from "@inertiajs/vue3";
 import dayjs from "dayjs";
-import "dayjs/locale/fr"; // Import the French locale
-import localeData from "dayjs/plugin/localeData"; // Import the localeData plugin
+import "dayjs/locale/fr";
+import localeData from "dayjs/plugin/localeData";
 import {
     AcademicCapIcon,
     ArrowPathIcon,
@@ -28,7 +28,7 @@ import {
     DialogPanel,
     DialogTitle,
 } from "@headlessui/vue";
-dayjs.locale("fr"); // Set the locale to French
+dayjs.locale("fr");
 dayjs.extend(localeData);
 
 const ModalAddTarif = defineAsyncComponent(() =>
@@ -86,20 +86,14 @@ const formatTime = (time) => {
 };
 
 const formatCurrency = (value) => {
-    // Remove the non-numeric characters from the currency value
     const numericValue = Number(value.replace(/[^0-9.-]+/g, ""));
-    // Check if the numeric value is a valid number
     if (!isNaN(numericValue)) {
-        // Check if the numeric value has decimal places
         if (numericValue % 1 === 0) {
-            // No decimal places, return as integer
             return numericValue.toLocaleString() + " €";
         } else {
-            // Decimal places present, format with two decimal places
             return numericValue.toFixed(2) + " €";
         }
     }
-    // Return the original value if conversion failed
     return value;
 };
 

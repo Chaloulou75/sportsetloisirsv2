@@ -169,10 +169,10 @@ const openAddTarifModal = (structure) => {
             >
                 <div class="mx-auto max-w-full flex-1 lg:px-4">
                     <div
+                        v-if="displayTarifs"
                         class="flex w-full flex-col items-center justify-end space-y-2 px-2 py-3 md:h-20 md:flex-row md:space-y-0 md:px-0 md:py-6"
                     >
                         <button
-                            v-if="displayTarifs"
                             type="button"
                             @click="openAddTarifModal(structure)"
                             class="w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:flex md:w-auto"

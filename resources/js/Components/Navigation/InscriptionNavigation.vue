@@ -336,38 +336,30 @@ const user = computed(() => page.props.auth.user);
             class="md:hidden"
         >
             <div class="space-y-1 pb-3 pt-2">
+                <BreezeResponsiveNavLink :href="route('welcome')">
+                    Accueil Site
+                </BreezeResponsiveNavLink>
                 <BreezeResponsiveNavLink
                     v-if="structure"
                     :href="route('structures.gestion.index', structure.slug)"
-                    :active="
-                        route().current(
-                            'structures.gestion.index',
-                            structure.slug
-                        )
-                    "
                 >
                     Accueil Gestion
                 </BreezeResponsiveNavLink>
                 <BreezeResponsiveNavLink
                     v-if="structure"
                     :href="route('structures.gestion.index', structure.slug)"
-                    :active="route('structures.gestion.index', structure.slug)"
                 >
                     Mes Reservations
                 </BreezeResponsiveNavLink>
                 <BreezeResponsiveNavLink
                     v-if="user && user.structures.length > 0 && can.update"
                     :href="route('structures.edit', structure)"
-                    :active="route().current('structures.edit', structure)"
                 >
                     Ma structure
                 </BreezeResponsiveNavLink>
                 <BreezeResponsiveNavLink
                     v-if="structure && can.update"
                     :href="route('structures.activites.index', structure)"
-                    :active="
-                        route().current('structures.activites.index', structure)
-                    "
                 >
                     Mes activités
                 </BreezeResponsiveNavLink>

@@ -240,5 +240,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //, 'can:viewAdmin'
 });
 
-
 Route::get('/activites/{activite:id}', [ActiviteController::class, 'show'])->name('structures.activites.show');
