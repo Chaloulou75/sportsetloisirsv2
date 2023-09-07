@@ -90,7 +90,7 @@ class ActiviteController extends Controller
         $actByDiscAndCategorie = $activites->groupBy('discipline.name')->map(function ($disciplineCategories) {
             $categories = $disciplineCategories->groupBy('categorie.nom_categorie_pro')->map(function ($categorieItems) {
                 return [
-                            'id' => $categorieItems->first()->id,
+                            'activite_id' => $categorieItems->first()->id,
                             'categorie_id' => $categorieItems->first()->categorie->id,
                             'name' => $categorieItems->first()->categorie->nom_categorie_pro ?? 'Sans Catégorie',
                             'count' => $categorieItems->count(),
@@ -105,7 +105,6 @@ class ActiviteController extends Controller
                 'categories' => $categories,
             ];
         });
-
 
         $activiteForTarifs = StructureActivite::with([
                     'structure:id,name,slug',
@@ -402,7 +401,7 @@ class ActiviteController extends Controller
 
         $activite = StructureActivite::with(['structure','categorie', 'discipline'])
                         ->where('structure_id', $structure->id)
-                        ->where('categorie_id', $activite)
+                        ->where('id', $activite)
                         ->withCount('categorie')
                         ->first();
 

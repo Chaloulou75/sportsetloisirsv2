@@ -1,7 +1,7 @@
 <script setup>
 import ProLayout from "@/Layouts/ProLayout.vue";
 import { Head } from "@inertiajs/vue3";
-import { ref, computed, onMounted, defineAsyncComponent } from "vue";
+import { ref, computed, nextTick, onMounted, defineAsyncComponent } from "vue";
 import { PlusIcon } from "@heroicons/vue/24/outline";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 
@@ -85,9 +85,6 @@ const defaultTabIndex = computed(() => {
 });
 
 const filteredActivites = computed(() => {
-    if (!selectedCategoryId.value) {
-        return [];
-    }
     return props.structureActivites.filter(
         (activity) => activity.categorie_id === selectedCategoryId.value
     );
@@ -104,11 +101,11 @@ const latestAdresseId = computed(() => {
         const latestAdresse = props.structure.adresses[0];
         return latestAdresse.id;
     }
-    return null; // Return a default value if there are no adresses
+    return null;
 });
 
 onMounted(() => {
-    selectedCategoryId.value = props.activite.categorie_id;
+    selectedCategoryId.value = ref(props.activite.categorie_id);
 });
 </script>
 
@@ -148,10 +145,10 @@ onMounted(() => {
                                             <Tab
                                                 v-for="categorie in categoriesListByDiscipline"
                                                 :key="categorie.id"
+                                                :index="categorie.id"
                                                 as="template"
                                                 v-slot="{ selected }"
                                                 class="py-2"
-                                                v-model="selectedCategoryId"
                                             >
                                                 <button
                                                     @click="

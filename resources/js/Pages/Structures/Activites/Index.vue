@@ -12,6 +12,10 @@ const MicroNavActiviteBackPro = defineAsyncComponent(() =>
     import("@/Components/Structures/MicroNavActiviteBackPro.vue")
 );
 
+const DisciplineCard = defineAsyncComponent(() =>
+    import("@/Components/Structures/DisciplineCard.vue")
+);
+
 const TarifDisplay = defineAsyncComponent(() =>
     import("@/Components/Inscription/Activity/TarifDisplay.vue")
 );
@@ -81,14 +85,14 @@ const dejaUsedDisciplinesRef = ref(props.dejaUsedDisciplines);
 
 const currentActivite = ref(null);
 const showDeleteDisciplineModal = ref(false);
-const openDeleteModal = (activite) => {
+const handleOpenDeleteModal = (activite) => {
     showDeleteDisciplineModal.value = true;
     currentActivite.value = activite;
 };
 
 const currentCategorie = ref(null);
 const showDeleteCategorieModal = ref(false);
-const openDeleteCategorieModal = (categorie) => {
+const handleOpenDeleteCategorieModal = (categorie) => {
     showDeleteCategorieModal.value = true;
     currentCategorie.value = categorie;
 };
@@ -182,10 +186,10 @@ const openAddTarifModal = (structure) => {
                         </button>
                     </div>
                     <template v-if="displayActivites">
-                        <form @submit.prevent="submit" autocomplete="off">
-                            <div
-                                class="min-h-screen shadow sm:overflow-hidden sm:rounded-md"
-                            >
+                        <div
+                            class="min-h-screen shadow sm:overflow-hidden sm:rounded-md"
+                        >
+                            <form @submit.prevent="submit" autocomplete="off">
                                 <div
                                     class="flex w-full flex-col items-start justify-start bg-white px-4 py-5 md:flex-row md:px-6 md:py-10"
                                 >
@@ -283,124 +287,37 @@ const openAddTarifModal = (structure) => {
                                         Enregistrer
                                     </button>
                                 </div>
+                            </form>
 
-                                <section
-                                    v-if="activites.length > 0"
-                                    class="mx-auto my-4 max-w-full space-y-4 px-2 py-6 sm:px-4 lg:px-8"
+                            <section
+                                v-if="activites.length > 0"
+                                class="mx-auto my-4 max-w-full space-y-4 px-2 py-6 sm:px-4 lg:px-8"
+                            >
+                                <h2 class="text-xl font-bold text-gray-700">
+                                    Vos activités
+                                </h2>
+
+                                <div
+                                    class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
                                 >
-                                    <h2 class="text-xl font-bold text-gray-700">
-                                        Vos activités
-                                    </h2>
-                                    <div
+                                    <DisciplineCard
                                         v-for="(
                                             activite, index
                                         ) in actByDiscAndCategorie"
                                         :key="activite.id"
-                                        :index="index"
-                                        class="flex w-full flex-col justify-between space-y-4 rounded-lg border border-gray-200 bg-gray-50 px-2 py-4 text-gray-700 shadow-md md:flex-row md:space-y-0"
-                                    >
-                                        <div
-                                            class="flex w-full flex-col justify-start space-y-2"
-                                        >
-                                            <div
-                                                v-if="activite"
-                                                class="flex w-full items-center justify-between px-2 text-lg font-semibold text-gray-700"
-                                            >
-                                                <p>
-                                                    {{
-                                                        activite.disciplineName
-                                                    }}
-                                                    <span
-                                                        v-if="
-                                                            activite.count > 1
-                                                        "
-                                                        class="text-sm text-gray-600"
-                                                        >({{ activite.count }}
-                                                        activités liées)
-                                                    </span>
-                                                    <span
-                                                        v-else
-                                                        class="text-sm text-gray-600"
-                                                        >({{
-                                                            activite.count
-                                                        }}
-                                                        activité liée)</span
-                                                    >
-                                                </p>
-                                                <button
-                                                    type="button"
-                                                    @click="
-                                                        openDeleteModal(
-                                                            activite
-                                                        )
-                                                    "
-                                                >
-                                                    <span class="sr-only"
-                                                        >supprimer
-                                                        discipline</span
-                                                    >
-                                                    <TrashIcon
-                                                        class="mr-1 h-6 w-6 text-gray-600 hover:text-red-600"
-                                                    />
-                                                </button>
-                                            </div>
-                                            <div
-                                                v-if="activite.categories"
-                                                class="grid grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-4"
-                                            >
-                                                <div
-                                                    class="flex flex-col items-center justify-between rounded bg-white px-4 py-2 text-lg text-gray-600 shadow-lg transition duration-150 hover:bg-indigo-700 hover:text-white hover:ring-2 hover:ring-green-400 sm:rounded-md"
-                                                    v-for="(
-                                                        categorie, index
-                                                    ) in activite.categories"
-                                                    :key="categorie.id"
-                                                >
-                                                    <Link
-                                                        :href="
-                                                            route(
-                                                                'structures.activites.edit',
-                                                                {
-                                                                    structure:
-                                                                        structure.slug,
-                                                                    activite:
-                                                                        categorie.categorie_id,
-                                                                }
-                                                            )
-                                                        "
-                                                        class="flex flex-col items-center justify-center text-center"
-                                                    >
-                                                        {{ categorie.name }}
+                                        :activite="activite"
+                                        :structure="structure"
+                                        @open-delete-modal="
+                                            handleOpenDeleteModal
+                                        "
+                                        @open-delete-categorie-modal="
+                                            handleOpenDeleteCategorieModal
+                                        "
+                                    />
+                                </div>
+                            </section>
+                        </div>
 
-                                                        <span class="text-sm">
-                                                            ({{
-                                                                categorie.count
-                                                            }})</span
-                                                        >
-                                                    </Link>
-                                                    <button
-                                                        type="button"
-                                                        @click="
-                                                            openDeleteCategorieModal(
-                                                                categorie
-                                                            )
-                                                        "
-                                                        class="self-end text-gray-600 hover:text-white"
-                                                    >
-                                                        <span class="sr-only"
-                                                            >supprimer
-                                                            categorie</span
-                                                        >
-                                                        <TrashIcon
-                                                            class="mr-1 h-5 w-5"
-                                                        />
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </section>
-                            </div>
-                        </form>
                         <!-- disciplines similaires -->
                         <section
                             v-if="activiteSimilairesList.length > 0"
