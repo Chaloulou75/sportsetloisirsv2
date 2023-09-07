@@ -81,11 +81,6 @@ Route::resource('familles', FamilleController::class)->only([
     'index', 'show'
 ]);
 
-Route::get('/structures', [StructureController::class, 'index'])
-        ->name('structures.index');
-Route::get('/{structure:slug}', [StructureController::class, 'show'])
-    ->name('structures.show');
-
 Route::resource('villes', CityController::class, [
     'parameters' => [
         'villes' => 'city'
@@ -93,6 +88,21 @@ Route::resource('villes', CityController::class, [
 ])->only([
     'index', 'show'
 ]);
+
+Route::resource('disciplines', DisciplineController::class)->only([
+    'index', 'show'
+]);
+
+Route::resource('departements', DepartementController::class)->only([
+    'index', 'show'
+]);
+
+
+Route::get('/structures', [StructureController::class, 'index'])
+        ->name('structures.index');
+
+Route::get('/{structure:slug}', [StructureController::class, 'show'])
+    ->name('structures.show');
 
 Route::get('/localite-{city}-1/{discipline:slug}', [CityDisciplineController::class, 'show'], [
     'parameters' => [
@@ -128,9 +138,7 @@ Route::get('/dis-{disciplineWithPlus}-{id}.{extension?}', function ($disciplineW
     return redirect('/disciplines/' . $discipline, 301);
 });
 
-Route::resource('disciplines', DisciplineController::class)->only([
-    'index', 'show'
-]);
+
 
 Route::get('/localite-2/index.{extension?}', function ($extension = null) {
     return redirect('/departements/', 301);
@@ -140,10 +148,6 @@ Route::get('/{departementWithPlus}-{id}-2.{extension?}', function ($departementW
     $departement = str_replace('+', '-', strtolower($departementWithPlus));
     return redirect('/departements/' . $id, 301);
 });
-
-Route::resource('departements', DepartementController::class)->only([
-    'index', 'show'
-]);
 
 Route::get('/localite-{departement}-2/{discipline:slug}', [DepartementDisciplineController::class, 'show'])->name('departements.disciplines.show');
 
