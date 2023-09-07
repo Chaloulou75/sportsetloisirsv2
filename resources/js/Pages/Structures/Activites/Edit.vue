@@ -195,7 +195,7 @@ onMounted(() => {
                                         {{ categorie.nom_categorie_pro }}
                                     </div>
                                     <button
-                                        v-if="displayActivity"
+                                        v-if="displayActivites"
                                         type="button"
                                         @click="openAddActiviteModal(categorie)"
                                         class="flex w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:flex md:w-auto"
@@ -204,7 +204,7 @@ onMounted(() => {
                                         <PlusIcon class="ml-2 h-5 w-5" />
                                     </button>
                                     <button
-                                        v-if="displayTarif"
+                                        v-if="displayTarifs"
                                         type="button"
                                         @click="openAddTarifModal(structure)"
                                         class="w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:flex md:w-auto"

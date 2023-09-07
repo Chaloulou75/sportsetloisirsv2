@@ -53,7 +53,7 @@ class StructurePlanningController extends Controller
             'end' => $endDate ?? "",
         ]);
 
-        return Redirect::back()->with('success', "L'évènement a bien été ajouté au planning");
+        return to_route('structures.activites.index', $structure)->with('success', "L'évènement a bien été ajouté au planning");
 
     }
 
@@ -88,7 +88,7 @@ class StructurePlanningController extends Controller
             'end' => $endDate,
         ]);
 
-        return Redirect::back()->with('success', "Planning mis à jour");
+        return to_route('structures.activites.index', $structure)->with('success', "Planning mis à jour");
 
     }
 
@@ -101,6 +101,6 @@ class StructurePlanningController extends Controller
 
         $planning->delete();
 
-        return Redirect::back()->with('success', "L'évenement a bien été supprimé");
+        return to_route('structures.activites.index', $structure)->with('success', "L'évenement a bien été supprimé");
     }
 }

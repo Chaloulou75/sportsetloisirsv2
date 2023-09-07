@@ -157,7 +157,10 @@ class StructureActiviteProduitController extends Controller
             $structureProduit->update(['lieu_id' => $structureAddress->id]);
 
         }
-        return Redirect::back();
+
+        return to_route('structures.activites.edit', ['structure' => $structure->slug, 'activite' => $activite])->with('success', 'Produit ajouté.');
+
+
     }
 
     /**
@@ -297,7 +300,8 @@ class StructureActiviteProduitController extends Controller
             $structureProduit->update(['lieu_id' => $structureAddress->id]);
 
         }
-        return Redirect::back();
+
+        return to_route('structures.activites.edit', ['structure' => $structure->slug, 'activite' => $activite])->with('success', 'Produit mise à jour.');
 
     }
 
@@ -328,7 +332,7 @@ class StructureActiviteProduitController extends Controller
 
         $produit->delete();
 
-        return Redirect::back()->with('success', "Le produit a bien été supprimé");
+        return to_route('structures.activites.edit', ['structure' => $structure->slug, 'activite' => $activite])->with('success', "Le produit a bien été supprimé");
     }
 
     public function duplicate(Structure $structure, StructureActivite $activite, StructureProduit $produit)
@@ -356,8 +360,6 @@ class StructureActiviteProduitController extends Controller
             }
         }
 
-
-
         foreach($originalProduitCriteres as $produitCritere) {
             $newProduitCritere = new StructureProduitCritere();
             $newProduitCritere->structure_id = $produitCritere->structure_id;
@@ -372,6 +374,6 @@ class StructureActiviteProduitController extends Controller
             $newProduitCritere->save();
         }
 
-        return Redirect::back()->with('success', "Le produit a bien été dupliqué");
+        return to_route('structures.activites.edit', ['structure' => $structure->slug, 'activite' => $activite])->with('success', "Le produit a bien été dupliqué");
     }
 }

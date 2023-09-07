@@ -2,7 +2,7 @@
 import ProLayout from "@/Layouts/ProLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, watch, defineAsyncComponent } from "vue";
-import { TrashIcon } from "@heroicons/vue/24/outline";
+import { TrashIcon, PlusIcon } from "@heroicons/vue/24/outline";
 
 const AutocompleteActiviteFormSmall = defineAsyncComponent(() =>
     import("@/Components/Inscription/AutocompleteActiviteFormSmall.vue")
@@ -26,6 +26,10 @@ const ModalDeleteDiscipline = defineAsyncComponent(() =>
 
 const ModalDeleteCategorie = defineAsyncComponent(() =>
     import("@/Components/Modals/ModalDeleteCategorie.vue")
+);
+
+const ModalAddTarif = defineAsyncComponent(() =>
+    import("@/Components/Modals/ModalAddTarif.vue")
 );
 
 const props = defineProps({
@@ -134,6 +138,11 @@ const submit = () => {
         props.structure
     );
 };
+
+const showAddTarifModal = ref(false);
+const openAddTarifModal = (structure) => {
+    showAddTarifModal.value = true;
+};
 </script>
 
 <template>
@@ -159,6 +168,19 @@ const submit = () => {
                 class="relative my-4 flex flex-col space-y-6 py-2 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
             >
                 <div class="mx-auto max-w-full flex-1 lg:px-4">
+                    <div
+                        class="flex w-full flex-col items-center justify-end space-y-2 px-2 py-3 md:h-20 md:flex-row md:space-y-0 md:px-0 md:py-6"
+                    >
+                        <button
+                            v-if="displayTarifs"
+                            type="button"
+                            @click="openAddTarifModal(structure)"
+                            class="w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:flex md:w-auto"
+                        >
+                            Ajouter un tarif
+                            <PlusIcon class="ml-2 h-5 w-5" />
+                        </button>
+                    </div>
                     <template v-if="displayActivites">
                         <form @submit.prevent="submit" autocomplete="off">
                             <div
@@ -460,6 +482,15 @@ const submit = () => {
                 :show="showDeleteDisciplineModal"
                 @close="showDeleteDisciplineModal = false"
                 @deleteDiscipline="removeDiscipline"
+            />
+            <ModalAddTarif
+                :errors="errors"
+                :structure="structure"
+                :tarif-types="tarifTypes"
+                :activiteForTarifs="activiteForTarifs"
+                :structureActivites="activites"
+                :show="showAddTarifModal"
+                @close="showAddTarifModal = false"
             />
         </template>
     </ProLayout>

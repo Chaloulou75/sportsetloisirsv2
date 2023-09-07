@@ -593,7 +593,8 @@ class ActiviteController extends Controller
             $activite->delete();
         }
 
-        return Redirect::back()->with('success', 'l\'activité a été supprimée.');
+        return to_route('structures.activites.index', ['structure' => $structure->slug ])->with('success', 'l\'activité a été supprimée.');
+
     }
 
     public function toggleactif(Request $request, Structure $structure, $activite): RedirectResponse
@@ -602,13 +603,17 @@ class ActiviteController extends Controller
             'actif' => 'required|boolean',
         ]);
 
-        $structureActivite = StructureActivite::with(['structure','categorie', 'discipline'])
-                                            ->where('structure_id', $structure->id)
-                                            ->where('id', $activite)
-                                            ->first();
+        $structureActivite = StructureActivite::with([
+            'structure',
+            'categorie',
+            'discipline'
+        ])->where('structure_id', $structure->id)
+            ->where('id', $activite)
+            ->first();
 
         $structureActivite->update(['actif' => $request->actif]);
-        return Redirect::back();
+
+        return to_route('structures.activites.edit', ['structure' => $structure->slug, 'activite' => $activite]);
     }
 
     public function newactivitystore(Request $request, Structure $structure, $activite): RedirectResponse
@@ -641,7 +646,7 @@ class ActiviteController extends Controller
         if($structure->id === $request->structure_id) {
             foreach($structure->adresses as $address) {
                 if (($address->address_lat === $request->address_lat) && ($address->address_lng === $request->address_lng)) {
-                    return Redirect::back()->with('error', 'Cette adresse existe déjà dans votre liste d\'adresses');
+                    return to_route('structures.activites.edit', ['structure' => $structure->slug, 'activite' => $activite])->with('error', 'Cette adresse existe déjà dans votre liste d\'adresses');
                 }
             }
         }
@@ -761,6 +766,7 @@ class ActiviteController extends Controller
 
         }
 
-        return Redirect::back()->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
+        return to_route('structures.activites.edit', ['structure' => $structure->slug, 'activite' => $activite])->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
+
     }
 }

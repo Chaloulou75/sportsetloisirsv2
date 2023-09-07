@@ -32,6 +32,7 @@ class DisciplineSimilaireController extends Controller
         $disciplineInId = $request->input('disciplineIn');
         $disciplineIn = ListDiscipline::findOrFail($disciplineInId);
         $discipline->disciplinesSimilaires()->detach($disciplineIn);
+
         return to_route('admin.edit', $discipline)->with('success', 'Discipline similaire supprimée');
     }
 

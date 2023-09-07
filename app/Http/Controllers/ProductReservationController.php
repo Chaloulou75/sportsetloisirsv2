@@ -207,10 +207,7 @@ class ProductReservationController extends Controller
 
         Mail::to($email)->send(new ReservationAsked($structure, $activite, $produit, $planning, $tarif, $user));
 
-        // dd($produit, $planning, $tarif, $email, $activite, $user);
-
-        return Redirect::back()->with('success', "La demande d'information a été envoyée à la structure");
-
+        return to_route('structures.activites.show', ['activite' => $activite])->with('success', "La demande d'information a été envoyée à la structure");
     }
 
     /**

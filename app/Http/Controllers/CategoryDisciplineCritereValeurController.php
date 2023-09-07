@@ -45,6 +45,7 @@ class CategoryDisciplineCritereValeurController extends Controller
         $lienDisCatCritValeur = LienDisciplineCategorieCritereValeur::where('id', $lienDisCatCritValeur->id)->firstOrFail();
 
         $lienDisCatCritValeur->update(['valeur' => $request->valeur]);
+
         return to_route('admin.edit', $discipline)->with('success', 'Valeur du critère modifiée');
 
     }
@@ -57,6 +58,7 @@ class CategoryDisciplineCritereValeurController extends Controller
         $discipline = $lienDisCatCritValeur->discipline;
         $valeur = LienDisciplineCategorieCritereValeur::where('id', $lienDisCatCritValeur->id)->firstOrFail();
         $valeur->delete();
+
         return to_route('admin.edit', $discipline)->with('success', 'Valeur supprimée');
 
     }

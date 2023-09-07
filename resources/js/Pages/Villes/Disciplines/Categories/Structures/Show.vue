@@ -584,7 +584,8 @@ const events = getEvents();
                                     :class="{
                                         'rounded border border-gray-100 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500': true,
                                         'border-gray-100 bg-indigo-500 text-white':
-                                            selectedCategory === categorie,
+                                            selectedCategory.id ===
+                                            categorie.id,
                                     }"
                                 >
                                     {{ categorie.nom_categorie_client }}

@@ -104,6 +104,7 @@ class StructureAddresseController extends Controller
     public function destroy(Structure $structure, StructureAddress $adress)
     {
         $adress->delete();
+
         return to_route('structures.gestion.index', $structure)->with('success', 'Adresse supprimée.');
 
     }

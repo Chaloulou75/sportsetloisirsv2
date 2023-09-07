@@ -572,7 +572,6 @@ class StructureController extends Controller
             $structure->delete();
         }
 
-
-        return redirect()->route('structures.index')->with('success', 'Structure supprimée.');
+        return to_route('welcome')->with('success', 'Structure supprimée.');
     }
 }

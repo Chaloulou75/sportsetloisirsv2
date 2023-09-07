@@ -119,7 +119,7 @@ class StructureDisciplineController extends Controller
             $structureDiscipline->delete();
         }
 
-        return Redirect::route('structures.activites.index', $structure)->with('success', 'Discipline supprimée de votre liste.');
+        return to_route('structures.activites.index', $structure)->with('success', 'Discipline supprimée de votre liste.');
 
     }
 }

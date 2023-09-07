@@ -33,8 +33,8 @@ const isShowing = ref(true);
             leave-to="opacity-0"
         >
             <main>
-                <FlashMessages />
                 <slot />
+                <FlashMessages />
             </main>
         </TransitionRoot>
         <!-- Page Footer -->
