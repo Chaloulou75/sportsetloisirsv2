@@ -238,14 +238,23 @@ onMounted(() => {
                                 </div>
                                 <template v-if="displayActivites">
                                     <ActivityDisplay
+                                        v-for="structureActivite in filteredActivites"
+                                        :key="structureActivite.id"
                                         :errors="errors"
                                         :structure="structure"
-                                        :structureActivites="filteredActivites"
+                                        :structureActivite="structureActivite"
                                         :filteredCriteres="filteredCriteres"
                                         :latestAdresseId="latestAdresseId"
                                         :tarif-types="tarifTypes"
                                         :activiteForTarifs="activiteForTarifs"
                                     />
+                                    <div v-if="filteredActivites.length === 0">
+                                        <p
+                                            class="font-semibold italic text-gray-600"
+                                        >
+                                            Pas d'activité dans cette catégorie
+                                        </p>
+                                    </div>
                                 </template>
                                 <template v-if="displayPlanning">
                                     <PlanningDisplay

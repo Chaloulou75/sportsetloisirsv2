@@ -54,7 +54,7 @@ const ModalEditTarif = defineAsyncComponent(() =>
 );
 
 const props = defineProps({
-    structureActivites: Object,
+    structureActivite: Object,
     structure: Object,
     errors: Object,
     filteredCriteres: Object,
@@ -130,8 +130,8 @@ const closeEditModal = () => {
 };
 
 const formEdit = useForm({
-    titre: ref(null),
-    description: ref(null),
+    titre: ref(props.structureActivite.titre),
+    description: ref(props.structureActivite.description),
     image: ref(null),
 });
 
@@ -237,16 +237,7 @@ const destroyTarif = (tarif, produit) => {
 };
 </script>
 <template>
-    <div v-if="structureActivites.length === 0">
-        <p class="font-semibold italic text-gray-600">
-            Pas d'activité dans cette catégorie
-        </p>
-    </div>
-    <div
-        v-for="structureActivite in structureActivites"
-        :key="structureActivite.id"
-        class="flex h-full w-full flex-col rounded border border-gray-200"
-    >
+    <div class="flex h-full w-full flex-col rounded border border-gray-200">
         <div class="flex w-full items-center justify-between bg-gray-700">
             <h2 class="px-2 py-4 font-semibold text-white">
                 {{ structureActivite.titre }}
@@ -522,15 +513,6 @@ const destroyTarif = (tarif, produit) => {
                     </p>
                 </div>
             </div>
-            <div class="self-end px-2 py-1">
-                <button
-                    type="button"
-                    @click="openAddProduitModal(structureActivite)"
-                    class="rounded border border-green-500 bg-gray-700 px-2 py-1 text-base text-white transition duration-100 hover:bg-gray-800 hover:text-gray-200 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
-                >
-                    Ajouter un produit
-                </button>
-            </div>
         </div>
         <Disclosure v-slot="{ open }" defaultOpen>
             <DisclosureButton
@@ -544,12 +526,19 @@ const destroyTarif = (tarif, produit) => {
                         >
                         <span v-else>déclinaison</span>
                     </span>
+                    <ChevronUpIcon
+                        :class="open ? 'rotate-180 transform' : ''"
+                        class="h-5 w-5 text-gray-800"
+                    />
                 </div>
 
-                <ChevronUpIcon
-                    :class="open ? 'rotate-180 transform' : ''"
-                    class="h-5 w-5 text-gray-800"
-                />
+                <button
+                    type="button"
+                    @click="openAddProduitModal(structureActivite)"
+                    class="flex h-full w-auto items-center justify-center bg-green-500 hover:bg-green-600"
+                >
+                    <PlusIcon class="h-6 w-6 text-white" />
+                </button>
             </DisclosureButton>
 
             <transition
@@ -874,14 +863,14 @@ const destroyTarif = (tarif, produit) => {
 
     <ModalDeleteActivite
         :structure="structure"
-        :structureActivite="currentStructureActivite"
+        :structureActivite="structureActivite"
         :show="showDeleteActiviteModal"
         @close="showDeleteActiviteModal = false"
     />
     <ModalAddProduit
         :errors="errors"
         :structure="structure"
-        :structureActivite="currentStructureActivite"
+        :structureActivite="structureActivite"
         :show="showAddProduitModal"
         @close="showAddProduitModal = false"
         :filteredCriteres="filteredCriteres"
@@ -890,7 +879,7 @@ const destroyTarif = (tarif, produit) => {
     <ModalEditProduit
         :errors="errors"
         :structure="structure"
-        :structureActivite="currentStructureActivite"
+        :structureActivite="structureActivite"
         :produit="currentProduit"
         :show="showEditProduitModal"
         @close="showEditProduitModal = false"
