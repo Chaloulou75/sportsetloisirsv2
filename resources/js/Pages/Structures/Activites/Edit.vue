@@ -136,6 +136,23 @@ onMounted(() => {
                 >
                     {{ activite.discipline.name }}
                 </h1>
+                <!-- <button
+                    v-for="categorie in categoriesListByDiscipline"
+                    :key="categorie.id"
+                    :index="categorie.id"
+                    @click="selectedCategoryId = categorie.id"
+                    :class="[
+                        'flex w-full flex-col items-center border border-gray-200',
+                        {
+                            'bg-green-600 text-white':
+                                selectedCategoryId === categorie.id,
+                            'text-gray-700 hover:bg-white/50 hover:text-gray-800':
+                                selectedCategoryId !== categorie.id,
+                        },
+                    ]"
+                >
+                    {{ categorie.nom_categorie_pro }}
+                </button> -->
             </div>
         </template>
         <template #default>
@@ -147,43 +164,39 @@ onMounted(() => {
                 class="relative flex flex-col space-y-6 py-2 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
             >
                 <div class="mx-auto max-w-full flex-1 lg:px-4">
-                    <!-- <PathsInscriptionNavigation /> -->
                     <TabGroup :defaultIndex="defaultTabIndex">
                         <section class="space-y-4 text-gray-700">
-                            <div>
-                                <!-- categories -->
-                                <div class="my-4 w-full">
-                                    <div class="mt-1">
-                                        <TabList
-                                            class="flex w-full flex-col items-stretch justify-between divide-y divide-green-600 rounded-sm border border-gray-300 bg-white/20 px-3 py-2 shadow-md focus:border-indigo-500 focus:outline-none sm:text-base md:flex-row md:items-center md:divide-y-0"
+                            <div class="my-4 w-full">
+                                <div class="mt-1">
+                                    <TabList
+                                        class="flex w-full flex-col items-stretch justify-between divide-y divide-green-600 rounded-sm border border-gray-300 bg-white/20 px-3 py-2 shadow-md focus:border-indigo-500 focus:outline-none sm:text-base md:flex-row md:items-center md:divide-y-0"
+                                    >
+                                        <Tab
+                                            v-for="categorie in categoriesListByDiscipline"
+                                            :key="categorie.id"
+                                            :index="categorie.id"
+                                            as="template"
+                                            v-slot="{ selected }"
+                                            class="py-2"
                                         >
-                                            <Tab
-                                                v-for="categorie in categoriesListByDiscipline"
-                                                :key="categorie.id"
-                                                :index="categorie.id"
-                                                as="template"
-                                                v-slot="{ selected }"
-                                                class="py-2"
+                                            <button
+                                                @click="
+                                                    selectedCategoryId =
+                                                        categorie.id
+                                                "
+                                                :class="[
+                                                    'w-full px-2 py-3 text-sm font-medium leading-5 text-gray-700 ring-white ring-opacity-10 ring-offset-2 ring-offset-green-200 focus:outline-none focus:ring-2',
+                                                    selected
+                                                        ? 'bg-green-600 text-white'
+                                                        : 'text-gray-700 hover:bg-white/50 hover:text-gray-800',
+                                                ]"
                                             >
-                                                <button
-                                                    @click="
-                                                        selectedCategoryId =
-                                                            categorie.id
-                                                    "
-                                                    :class="[
-                                                        'w-full px-2 py-3 text-sm font-medium leading-5 text-gray-700 ring-white ring-opacity-10 ring-offset-2 ring-offset-green-200 focus:outline-none focus:ring-2',
-                                                        selected
-                                                            ? 'bg-green-600 text-white'
-                                                            : 'text-gray-700 hover:bg-white/50 hover:text-gray-800',
-                                                    ]"
-                                                >
-                                                    {{
-                                                        categorie.nom_categorie_pro
-                                                    }}
-                                                </button>
-                                            </Tab>
-                                        </TabList>
-                                    </div>
+                                                {{
+                                                    categorie.nom_categorie_pro
+                                                }}
+                                            </button>
+                                        </Tab>
+                                    </TabList>
                                 </div>
                             </div>
                         </section>
@@ -232,7 +245,8 @@ onMounted(() => {
                                         :latestAdresseId="latestAdresseId"
                                         :tarif-types="tarifTypes"
                                         :activiteForTarifs="activiteForTarifs"
-                                /></template>
+                                    />
+                                </template>
                                 <template v-if="displayPlanning">
                                     <PlanningDisplay
                                         :errors="errors"
