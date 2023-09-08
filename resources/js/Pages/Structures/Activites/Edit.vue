@@ -1,8 +1,12 @@
 <script setup>
 import ProLayout from "@/Layouts/ProLayout.vue";
-import { Head } from "@inertiajs/vue3";
-import { ref, computed, nextTick, onMounted, defineAsyncComponent } from "vue";
-import { PlusIcon } from "@heroicons/vue/24/outline";
+import { Head, Link } from "@inertiajs/vue3";
+import { ref, computed, onMounted, defineAsyncComponent } from "vue";
+import {
+    ArrowLeftOnRectangleIcon,
+    ChevronLeftIcon,
+    PlusIcon,
+} from "@heroicons/vue/24/outline";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 
 const props = defineProps({
@@ -120,14 +124,25 @@ onMounted(() => {
         :confirmedReservationsCount="confirmedReservationsCount"
     >
         <template #header>
-            <h1
-                class="text-center text-lg font-semibold text-indigo-700 md:text-left md:text-2xl md:font-bold"
-            >
-                {{ activite.discipline.name }}
-            </h1>
+            <div class="flex h-full items-center justify-start">
+                <Link
+                    class="h-full bg-blue-600 py-2.5 md:px-4 md:py-4"
+                    :href="route('structures.activites.index', structure)"
+                >
+                    <ChevronLeftIcon class="h-10 w-10 text-white" />
+                </Link>
+                <h1
+                    class="px-2 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-6 md:py-4 md:text-left md:text-2xl md:font-bold"
+                >
+                    {{ activite.discipline.name }}
+                </h1>
+            </div>
         </template>
         <template #default>
-            <MicroNavActiviteBackPro @eventFromChild="handleButtonEvent" />
+            <MicroNavActiviteBackPro
+                :activite="activite"
+                @eventFromChild="handleButtonEvent"
+            />
             <div
                 class="relative flex flex-col space-y-6 py-2 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
             >
@@ -184,10 +199,10 @@ onMounted(() => {
                                 class="flex flex-col space-y-4"
                             >
                                 <div
-                                    class="flex w-full flex-col items-center justify-between space-y-2 px-2 py-3 md:h-20 md:flex-row md:space-y-0 md:px-0 md:py-6"
+                                    class="flex w-full flex-col items-center justify-start space-y-2 px-2 py-3 md:h-20 md:flex-row md:space-x-4 md:space-y-0 md:px-0 md:py-6"
                                 >
                                     <div
-                                        class="text-center text-lg font-semibold text-gray-700 md:text-left"
+                                        class="text-center text-xl font-semibold text-indigo-600 md:text-left md:text-3xl"
                                     >
                                         {{ categorie.nom_categorie_pro }}
                                     </div>
@@ -195,19 +210,17 @@ onMounted(() => {
                                         v-if="displayActivites"
                                         type="button"
                                         @click="openAddActiviteModal(categorie)"
-                                        class="flex w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:flex md:w-auto"
+                                        class="flex w-full items-center justify-between bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
                                     >
-                                        Ajouter une activité
-                                        <PlusIcon class="ml-2 h-5 w-5" />
+                                        <PlusIcon class="h-6 w-6" />
                                     </button>
                                     <button
                                         v-if="displayTarifs"
                                         type="button"
                                         @click="openAddTarifModal(structure)"
-                                        class="w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:flex md:w-auto"
+                                        class="w-full items-center justify-between bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
                                     >
-                                        Ajouter un tarif
-                                        <PlusIcon class="ml-2 h-5 w-5" />
+                                        <PlusIcon class="h-5 w-5" />
                                     </button>
                                 </div>
                                 <template v-if="displayActivites">

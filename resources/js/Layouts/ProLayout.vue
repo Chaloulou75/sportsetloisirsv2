@@ -47,43 +47,41 @@ const props = defineProps({
 
 <template>
     <div class="min-h-screen w-full bg-white">
-        <div class="flex flex-col md:flex-row">
-            <!-- Page Heading -->
-            <InscriptionNavigation
-                :structure="structure"
-                :allReservationsCount="allReservationsCount"
-                :pendingReservationsCount="pendingReservationsCount"
-                :confirmedReservationsCount="confirmedReservationsCount"
-                :can="can"
-                @eventFromChild="handleButtonEvent"
-            />
+        <main>
+            <div class="flex flex-col md:flex-row">
+                <!-- Page Heading -->
+                <InscriptionNavigation
+                    :structure="structure"
+                    :allReservationsCount="allReservationsCount"
+                    :pendingReservationsCount="pendingReservationsCount"
+                    :confirmedReservationsCount="confirmedReservationsCount"
+                    :can="can"
+                    @eventFromChild="handleButtonEvent"
+                />
 
-            <div class="md:flex-1">
-                <ProNavigation :structure="structure" />
+                <div class="md:flex-1">
+                    <ProNavigation :structure="structure" />
 
-                <header
-                    class="h-auto w-full bg-gradient-to-br from-green-100 to-blue-100 shadow-sm"
-                    v-if="$slots.header"
-                >
-                    <div
-                        class="mx-auto max-w-full px-2 py-2.5 sm:px-3 md:py-4 lg:px-6"
+                    <header
+                        class="h-auto w-full bg-gradient-to-br from-green-100 to-blue-100 shadow-sm"
+                        v-if="$slots.header"
                     >
-                        <slot name="header" />
-                    </div>
-                </header>
+                        <div class="mx-auto max-w-full">
+                            <slot name="header" />
+                        </div>
+                    </header>
 
-                <!-- Page Content -->
-                <TransitionRoot
-                    appear
-                    :show="isShowing"
-                    enter="transition-opacity duration-200"
-                    enter-from="opacity-0"
-                    enter-to="opacity-100"
-                    leave="transition-opacity duration-150"
-                    leave-from="opacity-100"
-                    leave-to="opacity-0"
-                >
-                    <main>
+                    <!-- Page Content -->
+                    <TransitionRoot
+                        appear
+                        :show="isShowing"
+                        enter="transition-opacity duration-200"
+                        enter-from="opacity-0"
+                        enter-to="opacity-100"
+                        leave="transition-opacity duration-150"
+                        leave-from="opacity-100"
+                        leave-to="opacity-0"
+                    >
                         <slot
                             name="default"
                             v-bind="{
@@ -95,11 +93,11 @@ const props = defineProps({
                             }"
                         />
                         <FlashMessages />
-                    </main>
-                </TransitionRoot>
+                    </TransitionRoot>
+                </div>
             </div>
-        </div>
-        <!-- Page Footer -->
-        <Footer />
+            <!-- Page Footer -->
+            <Footer />
+        </main>
     </div>
 </template>

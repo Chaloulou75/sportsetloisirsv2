@@ -278,7 +278,7 @@ const submit = () => {
     >
         <template #header>
             <h1
-                class="text-center text-lg font-semibold text-indigo-700 md:text-left md:text-2xl md:font-bold"
+                class="px-2 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-6 md:py-4 md:text-left md:text-2xl md:font-bold"
             >
                 Ma structure
             </h1>

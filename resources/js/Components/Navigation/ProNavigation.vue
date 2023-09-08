@@ -15,12 +15,12 @@ const props = defineProps({
 </script>
 
 <template>
-    <nav class="hidden border-b border-gray-100 bg-white lg:block">
+    <nav class="hidden border-b border-gray-100 bg-blue-600 lg:block">
         <!-- Primary Navigation Menu -->
         <div class="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
             <div class="flex h-16 justify-between">
                 <div
-                    class="flex w-full flex-1 items-center justify-center text-xl text-gray-500"
+                    class="flex w-full flex-1 items-center justify-start text-2xl text-gray-100"
                 >
                     <h1 class="text-center font-bold">{{ structure.name }}</h1>
                 </div>
@@ -33,7 +33,7 @@ const props = defineProps({
                                 <span class="inline-flex rounded-md">
                                     <button
                                         type="button"
-                                        class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
+                                        class="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium leading-4 text-gray-100 transition duration-150 ease-in-out hover:text-white focus:outline-none"
                                     >
                                         {{ $page.props.auth.user.name }}
 
