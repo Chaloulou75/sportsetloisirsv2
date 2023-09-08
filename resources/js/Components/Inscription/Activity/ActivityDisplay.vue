@@ -16,6 +16,8 @@ import {
     UserGroupIcon,
     ClockIcon,
     InformationCircleIcon,
+    PencilSquareIcon,
+    CurrencyEuroIcon,
 } from "@heroicons/vue/24/outline";
 import {
     Switch,
@@ -243,28 +245,29 @@ const destroyTarif = (tarif, produit) => {
     <div
         v-for="structureActivite in structureActivites"
         :key="structureActivite.id"
-        class="flex h-full w-full flex-col space-y-3 rounded border border-gray-200"
+        class="flex h-full w-full flex-col rounded border border-gray-200"
     >
-        <div
-            class="flex w-full items-center justify-between bg-gray-700 px-2 py-4"
-        >
-            <h2 class="font-semibold text-white">
+        <div class="flex w-full items-center justify-between bg-gray-700">
+            <h2 class="px-2 py-4 font-semibold text-white">
                 {{ structureActivite.titre }}
             </h2>
-            <div class="flex items-center space-x-4">
+            <div class="flex h-full items-center">
                 <button
                     type="button"
                     @click="openEditModal(structureActivite)"
-                    class="rounded-sm bg-white px-2 py-1 text-base text-gray-700 transition duration-100 hover:text-gray-800 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
+                    class="h-full w-auto bg-blue-500 p-4 hover:bg-blue-600"
                 >
-                    Editer l'activité
+                    <PencilSquareIcon
+                        class="h-6 w-6 text-gray-100 hover:text-white"
+                    />
                 </button>
                 <button
                     type="button"
                     @click="openDeleteModal(structureActivite)"
+                    class="h-full w-auto bg-red-500 p-4 hover:bg-red-600"
                 >
                     <TrashIcon
-                        class="mr-1 h-6 w-6 text-gray-100 hover:text-red-500"
+                        class="mr-1 h-6 w-6 text-gray-100 hover:text-white"
                     />
                 </button>
             </div>
@@ -537,9 +540,9 @@ const destroyTarif = (tarif, produit) => {
                     <span>
                         {{ structureActivite.produits.length }}
                         <span v-if="structureActivite.produits.length > 1"
-                            >produits</span
+                            >déclinaisons</span
                         >
-                        <span v-else>produit</span>
+                        <span v-else>déclinaison</span>
                     </span>
                 </div>
 
@@ -561,8 +564,9 @@ const destroyTarif = (tarif, produit) => {
                     <div
                         v-for="produit in structureActivite.produits"
                         :key="produit.id"
-                        class="grid grid-flow-row grid-cols-2 place-items-center gap-2 py-4 odd:bg-white even:bg-slate-50 md:grid-cols-6"
+                        class="grid grid-flow-row grid-cols-2 place-items-center divide-y divide-gray-100 odd:bg-white even:bg-slate-50 md:grid-cols-6"
                     >
+                        <!-- criteres -->
                         <div
                             v-if="produit.criteres.length > 0"
                             class="col-span-2 grid h-full w-full grid-cols-2 place-items-center gap-2"
@@ -590,6 +594,7 @@ const destroyTarif = (tarif, produit) => {
                                 </div>
                             </div>
                         </div>
+                        <!-- pas de criteres -->
                         <div
                             v-else
                             class="col-span-2 grid h-full w-full grid-cols-2 place-items-center gap-2"
@@ -609,7 +614,8 @@ const destroyTarif = (tarif, produit) => {
                                 >
                             </div>
                         </div>
-                        <div class="col-span-1 flex items-center p-0.5">
+                        <!-- adresse -->
+                        <div class="col-span-1 flex h-full items-center">
                             <MapPinIcon class="mr-1 h-6 w-6 text-gray-600" />
                             <div
                                 class="flex flex-col items-center text-sm text-gray-600"
@@ -619,6 +625,7 @@ const destroyTarif = (tarif, produit) => {
                                 {{ produit.adresse.city }}
                             </div>
                         </div>
+                        <!-- horaire -->
                         <div class="col-span-1 flex items-center">
                             <ClockIcon class="mr-1 h-6 w-6 text-gray-600" />
                             <div
@@ -646,18 +653,19 @@ const destroyTarif = (tarif, produit) => {
                                 >Planning</span
                             >
                         </div>
-                        <div class="col-span-1 flex items-center">
+                        <!-- tarif block -->
+                        <div
+                            class="col-span-1 flex h-full w-full items-center justify-center"
+                        >
                             <button
                                 @click="() => openTarifToggle(produit)"
                                 type="button"
-                                class="flex w-full items-center justify-between rounded bg-green-600 px-3 py-2 text-sm text-white shadow-lg transition duration-100 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm"
+                                class="flex h-full w-1/2 items-center justify-center bg-green-600 hover:bg-green-500"
                             >
-                                Tarifs
+                                <CurrencyEuroIcon
+                                    class="mr-1 h-6 w-6 text-gray-50 hover:text-white"
+                                />
                             </button>
-                        </div>
-                        <div
-                            class="col-span-1 flex items-center justify-between space-x-2"
-                        >
                             <button
                                 type="button"
                                 @click="
@@ -666,34 +674,40 @@ const destroyTarif = (tarif, produit) => {
                                         produit
                                     )
                                 "
+                                class="flex h-full w-1/2 items-center justify-center bg-blue-500 p-4 hover:bg-blue-600"
                             >
                                 <ArrowPathIcon
-                                    class="mr-1 h-6 w-6 text-gray-600 transition-all duration-200 hover:-rotate-90 hover:text-gray-800"
+                                    class="mr-1 h-6 w-6 text-gray-50 transition-all duration-200 hover:-rotate-90 hover:text-white"
                                 />
                             </button>
+                        </div>
+                        <!-- gestion -->
+                        <div
+                            class="col-span-1 flex h-full w-full items-center justify-between"
+                        >
                             <button
                                 type="button"
                                 @click="
                                     () => duplicate(structureActivite, produit)
                                 "
+                                class="flex h-full w-1/2 items-center justify-center bg-blue-500 p-4 hover:bg-blue-600"
                             >
                                 <DocumentDuplicateIcon
-                                    class="mr-1 h-6 w-6 text-gray-600 hover:text-gray-800"
+                                    class="mr-1 h-6 w-6 text-gray-50 hover:text-white"
                                 />
                             </button>
-
                             <button
                                 type="button"
                                 @click="
                                     () => destroy(structureActivite, produit)
                                 "
+                                class="flex h-full w-1/2 items-center justify-center bg-red-500 p-4 hover:bg-red-600"
                             >
                                 <TrashIcon
-                                    class="mr-1 h-6 w-6 text-gray-600 hover:text-gray-800"
+                                    class="mr-1 h-6 w-6 text-gray-100 hover:text-white"
                                 />
                             </button>
                         </div>
-
                         <div
                             v-show="isOpenTarif(produit)"
                             class="col-span-3 h-full w-full py-2 md:col-span-6"
@@ -842,9 +856,10 @@ const destroyTarif = (tarif, produit) => {
                                                 () =>
                                                     destroyTarif(tarif, produit)
                                             "
+                                            class="h-full w-auto bg-red-500 p-4 hover:bg-red-600"
                                         >
                                             <TrashIcon
-                                                class="mr-1 h-6 w-6 text-gray-600 hover:text-gray-800"
+                                                class="mr-1 h-6 w-6 text-gray-100 hover:text-white"
                                             />
                                         </button>
                                     </div>
