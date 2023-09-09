@@ -44,11 +44,17 @@ const props = defineProps({
 
         <div class="mt-2">
             <dl class="flex flex-col">
-                <p
-                    class="px-2 py-1.5 text-center text-base font-semibold uppercase tracking-wide text-gray-600"
+                <Link
+                    :href="
+                        route('structures.activites.edit', {
+                            structure: structure.slug,
+                            activite: activite.id,
+                        })
+                    "
+                    class="px-2 py-1.5 text-center text-base font-semibold uppercase tracking-wide text-gray-600 hover:text-indigo-600"
                 >
                     {{ activite.disciplineName }}
-                </p>
+                </Link>
 
                 <div class="w-full divide-y divide-slate-200">
                     <div
@@ -60,7 +66,7 @@ const props = defineProps({
                             :href="
                                 route('structures.activites.edit', {
                                     structure: structure.slug,
-                                    activite: categorie.activite_id,
+                                    activite: activite.id,
                                 })
                             "
                             class="text-sm hover:text-indigo-500"
@@ -73,7 +79,7 @@ const props = defineProps({
                         <button
                             type="button"
                             @click="emit('openDeleteCategorieModal', categorie)"
-                            class="self-end text-gray-600 hover:text-white"
+                            class="self-end text-red-500 hover:text-red-600"
                         >
                             <span class="sr-only">supprimer categorie</span>
                             <TrashIcon class="mr-1 h-5 w-5" />

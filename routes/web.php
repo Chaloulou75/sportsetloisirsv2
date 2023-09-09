@@ -194,6 +194,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     Route::resource('structures.disciplines', StructureDisciplineController::class)->scoped(['structure' => 'slug','discipline' => 'id'])->only(['destroy']);
+
+    Route::get('structures/{structure:slug}/disciplines', [StructureDisciplineController::class, 'index'])->name('structures.disciplines.index');
+    Route::get('structures/{structure:slug}/{discipline:slug}/cat-{categorie:id}', [StructureDisciplineController::class, 'show'])->name('structures.disciplines.show');
+
     Route::resource('structures.categories', StructureCategorieController::class)->scoped(['structure' => 'slug','categorie' => 'id'])->only(['destroy']);
 
     Route::post('structures/{structure:slug}/adresses', [StructureAddresseController::class, 'store'])->name('structures.adresses.store');

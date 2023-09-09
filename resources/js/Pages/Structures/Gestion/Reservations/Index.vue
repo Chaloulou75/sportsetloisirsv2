@@ -1,7 +1,8 @@
 <script setup>
 import ProLayout from "@/Layouts/ProLayout.vue";
-import { Head, useForm, usePage, router } from "@inertiajs/vue3";
-import { ref, computed, watch, defineAsyncComponent } from "vue";
+import { Head, usePage, Link, router } from "@inertiajs/vue3";
+import { ref, computed, defineAsyncComponent } from "vue";
+import { ChevronLeftIcon } from "@heroicons/vue/24/outline";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 dayjs.locale("fr");
@@ -104,11 +105,19 @@ const updateReservation = (reservation) => {
         :confirmedReservationsCount="confirmedReservationsCount"
     >
         <template #header>
-            <h1
-                class="px-2 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-6 md:py-4 md:text-left md:text-2xl md:font-bold"
-            >
-                Réservations
-            </h1>
+            <div class="flex h-full items-center justify-start">
+                <Link
+                    class="h-full bg-blue-600 py-2.5 md:px-4 md:py-4"
+                    :href="route('structures.gestion.index', structure)"
+                >
+                    <ChevronLeftIcon class="h-10 w-10 text-white" />
+                </Link>
+                <h1
+                    class="px-2 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-6 md:py-4 md:text-left md:text-2xl md:font-bold"
+                >
+                    Réservations
+                </h1>
+            </div>
         </template>
 
         <template #default="{}">

@@ -12,6 +12,7 @@ import {
     DocumentDuplicateIcon,
     XCircleIcon,
     TrashIcon,
+    PlusIcon,
     UsersIcon,
     UserGroupIcon,
     ClockIcon,
@@ -237,7 +238,7 @@ const destroyTarif = (tarif, produit) => {
 };
 </script>
 <template>
-    <div class="flex h-full w-full flex-col rounded border border-gray-200">
+    <div class="flex w-full flex-col rounded border border-gray-200">
         <div class="flex w-full items-center justify-between bg-gray-700">
             <h2 class="px-2 py-4 font-semibold text-white">
                 {{ structureActivite.titre }}
@@ -516,9 +517,9 @@ const destroyTarif = (tarif, produit) => {
         </div>
         <Disclosure v-slot="{ open }" defaultOpen>
             <DisclosureButton
-                class="flex w-full justify-between bg-gray-200 px-4 py-4 font-semibold text-gray-800"
+                class="flex w-full justify-between bg-gray-200 pl-4 font-semibold text-gray-800"
             >
-                <div class="flex items-center space-x-6">
+                <div class="flex items-center py-3">
                     <span>
                         {{ structureActivite.produits.length }}
                         <span v-if="structureActivite.produits.length > 1"
@@ -528,16 +529,16 @@ const destroyTarif = (tarif, produit) => {
                     </span>
                     <ChevronUpIcon
                         :class="open ? 'rotate-180 transform' : ''"
-                        class="h-5 w-5 text-gray-800"
+                        class="ml-6 h-5 w-5 text-gray-800"
                     />
                 </div>
 
                 <button
                     type="button"
                     @click="openAddProduitModal(structureActivite)"
-                    class="flex h-full w-auto items-center justify-center bg-green-500 hover:bg-green-600"
+                    class="flex h-full w-auto items-center justify-center bg-green-500 px-3 py-3 hover:bg-green-600"
                 >
-                    <PlusIcon class="h-6 w-6 text-white" />
+                    <PlusIcon class="h-5 w-5 text-white" />
                 </button>
             </DisclosureButton>
 

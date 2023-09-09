@@ -102,6 +102,7 @@ const user = computed(() => page.props.auth.user);
                 <li v-if="structure" class="w-full">
                     <details
                         class="group [&_summary::-webkit-details-marker]:hidden"
+                        open
                     >
                         <summary
                             class="flex cursor-pointer items-center justify-between rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
@@ -199,6 +200,7 @@ const user = computed(() => page.props.auth.user);
                 <li class="w-full">
                     <details
                         class="group [&_summary::-webkit-details-marker]:hidden"
+                        open
                     >
                         <summary
                             class="flex cursor-pointer items-center justify-between rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
@@ -246,7 +248,7 @@ const user = computed(() => page.props.auth.user);
                                     "
                                     :href="route('structures.edit', structure)"
                                     :active="route().current('structures.edit')"
-                                    class="flex items-center justify-between rounded bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
+                                    class="group relative flex items-center justify-between rounded bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
                                     :class="{
                                         'bg-green-500 text-white':
                                             route().current(
@@ -256,6 +258,15 @@ const user = computed(() => page.props.auth.user);
                                     }"
                                 >
                                     Ma structure
+                                    <div
+                                        v-if="
+                                            route().current(
+                                                'structures.edit',
+                                                structure
+                                            )
+                                        "
+                                        class="absolute inset-y-2 -right-2.5 h-5 w-5 rotate-45 bg-green-500"
+                                    ></div>
                                 </Link>
                             </li>
                             <!-- activite -->
@@ -263,27 +274,42 @@ const user = computed(() => page.props.auth.user);
                                 <Link
                                     :href="
                                         route(
-                                            'structures.activites.index',
+                                            'structures.disciplines.index',
                                             structure
                                         )
                                     "
                                     :active="
                                         route().current(
-                                            'structures.activites.index',
+                                            'structures.disciplines.index',
                                             structure
                                         )
                                     "
                                     v-if="can.update"
-                                    class="flex items-center justify-between rounded bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
+                                    class="relative flex items-center justify-between rounded bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
                                     :class="{
                                         'bg-green-500 text-white':
                                             route().current(
-                                                'structures.activites.index',
+                                                'structures.disciplines.index',
                                                 structure
+                                            ) ||
+                                            route().current(
+                                                'structures.activites.edit'
                                             ),
                                     }"
                                 >
                                     Mes activités
+                                    <div
+                                        v-if="
+                                            route().current(
+                                                'structures.disciplines.index',
+                                                structure
+                                            ) ||
+                                            route().current(
+                                                'structures.activites.edit'
+                                            )
+                                        "
+                                        class="absolute inset-y-2 -right-2.5 h-5 w-5 rotate-45 bg-green-500"
+                                    ></div>
                                 </Link>
                             </li>
                         </ul>
@@ -366,7 +392,7 @@ const user = computed(() => page.props.auth.user);
                 </BreezeResponsiveNavLink>
                 <BreezeResponsiveNavLink
                     v-if="structure && can.update"
-                    :href="route('structures.activites.index', structure)"
+                    :href="route('structures.disciplines.index', structure)"
                 >
                     Mes activités
                 </BreezeResponsiveNavLink>

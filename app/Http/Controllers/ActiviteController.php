@@ -424,6 +424,7 @@ class ActiviteController extends Controller
             ])
             ->where('structure_id', $structure->id)
             ->where('discipline_id', $activite->discipline->id)
+            ->orderBy('categorie_id')
             ->latest()
             ->get();
 

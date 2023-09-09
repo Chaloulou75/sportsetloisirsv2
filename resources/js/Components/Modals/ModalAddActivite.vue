@@ -21,7 +21,7 @@ const AddressForm = defineAsyncComponent(() =>
 const props = defineProps({
     errors: Object,
     structure: Object,
-    activite: Object,
+    discipline: Object,
     criteres: Object,
     categorie: Object,
     show: Boolean,
@@ -44,7 +44,7 @@ const filteredCriteres = computed(() => {
 
 const form = useForm({
     structure_id: ref(props.structure.id),
-    discipline_id: ref(props.activite.discipline_id),
+    discipline_id: ref(props.discipline.id),
     categorie_id: ref(props.categorie.id),
     titre: ref(null),
     description: ref(null),
