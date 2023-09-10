@@ -1,8 +1,8 @@
 <script setup>
 import ProLayout from "@/Layouts/ProLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import { ref, computed, onMounted, defineAsyncComponent } from "vue";
-import { ChevronLeftIcon } from "@heroicons/vue/24/outline";
+import { ref, computed, defineAsyncComponent } from "vue";
+import { ChevronLeftIcon, AcademicCapIcon } from "@heroicons/vue/24/outline";
 
 const props = defineProps({
     errors: Object,
@@ -111,7 +111,7 @@ const latestAdresseId = computed(() => {
                     <ChevronLeftIcon class="h-10 w-10 text-white" />
                 </Link>
                 <h1
-                    class="px-2 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-6 md:py-4 md:text-left md:text-2xl md:font-bold"
+                    class="px-2 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-6 md:py-4 md:text-left md:text-3xl md:font-bold"
                 >
                     {{ activite.discipline.name }}
                 </h1>
@@ -126,9 +126,12 @@ const latestAdresseId = computed(() => {
                     v-for="categorie in categoriesListByDiscipline"
                     :key="categorie.id"
                     :index="categorie.id"
-                    class="flex h-full w-full flex-col items-center border border-gray-200 bg-white px-2 py-6 text-xs hover:bg-gray-50"
+                    class="flex h-full w-full flex-col items-center justify-between border-r border-blue-600 bg-white px-2 py-4 text-xs text-gray-800 hover:bg-gray-50"
                 >
-                    {{ categorie.nom_categorie_pro }}
+                    <AcademicCapIcon class="h-8 w-8" />
+                    <div class="">
+                        {{ categorie.nom_categorie_pro }}
+                    </div>
                 </Link>
             </div>
         </template>

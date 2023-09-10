@@ -2,7 +2,7 @@
 import ProLayout from "@/Layouts/ProLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { ref, computed, defineAsyncComponent } from "vue";
-import { ChevronLeftIcon } from "@heroicons/vue/24/outline";
+import { AcademicCapIcon, ChevronLeftIcon } from "@heroicons/vue/24/outline";
 
 const props = defineProps({
     errors: Object,
@@ -124,7 +124,10 @@ const latestAdresseId = computed(() => {
                     :index="categorie.id"
                     class="flex h-full w-full flex-col items-center border border-gray-200 bg-white text-xs"
                 >
-                    {{ categorie.nom_categorie_pro }}
+                    <AcademicCapIcon class="h-8 w-8" />
+                    <div class="">
+                        {{ categorie.nom_categorie_pro }}
+                    </div>
                 </Link>
             </div>
         </template>
