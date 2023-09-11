@@ -137,12 +137,17 @@ const formEdit = useForm({
 });
 
 const submitForm = (id) => {
-    formEdit.put(
+    router.post(
         route("structures.activites.update", {
             structure: props.structure.slug,
             activite: id,
         }),
         {
+            _method: "put",
+            titre: formEdit.titre,
+            description: formEdit.description,
+            image: formEdit.image,
+            forceFormData: true,
             preserveScroll: true,
             onSuccess: () => {
                 formEdit.reset();
@@ -339,14 +344,10 @@ const destroyTarif = (tarif, produit) => {
                                                         "
                                                     />
                                                     <span
-                                                        v-if="
-                                                            formEdit.errors
-                                                                .image
-                                                        "
+                                                        v-if="errors.image"
                                                         class="mt-2 text-xs text-red-500"
                                                         >{{
-                                                            formEdit.errors
-                                                                .image[0]
+                                                            errors.image[0]
                                                         }}</span
                                                     >
                                                 </div>
@@ -409,15 +410,11 @@ const destroyTarif = (tarif, produit) => {
                                                     </div>
                                                     <div
                                                         v-if="
-                                                            formEdit.errors
-                                                                .description
+                                                            errors.description
                                                         "
                                                         class="mt-2 text-xs text-red-500"
                                                     >
-                                                        {{
-                                                            formEdit.errors
-                                                                .description
-                                                        }}
+                                                        {{ errors.description }}
                                                     </div>
                                                 </div>
                                             </div>

@@ -139,7 +139,10 @@ const latestAdresseId = computed(() => {
             </div>
         </template>
         <template #default>
-            <MicroNavActiviteBackPro @eventFromChild="handleButtonEvent" />
+            <MicroNavActiviteBackPro
+                :discipline="discipline"
+                @eventFromChild="handleButtonEvent"
+            />
             <div
                 class="relative flex flex-col space-y-6 py-2 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
             >

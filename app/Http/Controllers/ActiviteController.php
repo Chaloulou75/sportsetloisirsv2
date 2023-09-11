@@ -519,7 +519,7 @@ class ActiviteController extends Controller
      */
     public function update(Request $request, Structure $structure, $activite)
     {
-
+        // dd($request->all());
         if (! Gate::allows('update-structure', $structure)) {
             return to_route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de modifier cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
@@ -531,10 +531,9 @@ class ActiviteController extends Controller
                 // 'actif' => 'nullable|boolean',
             ]);
 
-        $structureActivite = StructureActivite::with(['structure','categorie', 'discipline'])
-                                    ->where('structure_id', $structure->id)
-                                    ->where('id', $activite)
-                                    ->first();
+        $structureActivite = StructureActivite::with(['structure','categorie', 'discipline'])->where('structure_id', $structure->id)
+                    ->where('id', $activite)
+                    ->first();
 
 
         if ($request->hasFile('image')) {

@@ -156,7 +156,7 @@ const latestAdresseId = computed(() => {
                     <div
                         class="flex w-full flex-col items-center justify-start space-y-2 px-2 py-3 md:h-20 md:flex-row md:space-x-4 md:space-y-0 md:px-0 md:py-6"
                     >
-                        <p class="text-lg font-medium leading-6 text-gray-800">
+                        <p class="text-lg font-medium leading-6 text-slate-500">
                             Ajouter
                             <span v-if="displayActivites">une activité</span
                             ><span v-if="displayTarifs">un tarif</span

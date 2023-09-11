@@ -299,10 +299,10 @@ onMounted(() => {
                                                     />
                                                 </div>
                                                 <div
-                                                    v-if="form.errors.titre"
+                                                    v-if="errors.titre"
                                                     class="mt-2 text-xs text-red-500"
                                                 >
-                                                    {{ form.errors.titre }}
+                                                    {{ errors.titre }}
                                                 </div>
                                             </div>
                                             <!-- description -->
