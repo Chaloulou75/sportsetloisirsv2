@@ -592,7 +592,7 @@ class ActiviteController extends Controller
             $activite->delete();
         }
 
-        return to_route('structures.activites.index', ['structure' => $structure->slug ])->with('success', 'l\'activité a été supprimée.');
+        return to_route('structures.disciplines.index', ['structure' => $structure->slug ])->with('success', 'l\'activité a été supprimée.');
 
     }
 
