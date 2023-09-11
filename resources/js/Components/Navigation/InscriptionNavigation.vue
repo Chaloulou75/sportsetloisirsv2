@@ -29,11 +29,11 @@ const user = computed(() => page.props.auth.user);
 </script>
 <template>
     <nav
-        class="min-h-full w-full flex-col justify-between border-r border-gray-100 bg-gray-50 md:flex md:w-1/5"
+        class="min-h-full w-full flex-col justify-between border-r border-gray-100 bg-gray-50 md:flex md:w-1/6"
     >
-        <div class="w-full space-y-8 md:sticky md:inset-x-0 md:top-0">
+        <div class="w-full space-y-6 md:sticky md:inset-x-0 md:top-0">
             <!-- Hamburger logo-->
-            <div class="flex h-16 justify-between pl-3">
+            <div class="flex h-16 justify-between bg-blue-100 pl-3">
                 <div class="flex shrink-0 items-center">
                     <Link :href="route('welcome')">
                         <BreezeApplicationLogo class="block h-9 w-auto" />
@@ -80,14 +80,14 @@ const user = computed(() => page.props.auth.user);
             </div>
 
             <ul
-                class="hidden h-full w-full space-y-8 pl-3 md:flex md:flex-col md:items-start"
+                class="hidden h-full w-full space-y-6 md:flex md:flex-col md:items-start"
             >
                 <!-- Accueil -->
                 <li v-if="structure" class="w-full">
                     <Link
                         :href="route('structures.gestion.index', structure)"
                         :active="route().current('structures.gestion.index')"
-                        class="block rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
                         :class="{
                             'bg-blue-600 text-white': route().current(
                                 'structures.gestion.index',
@@ -105,7 +105,7 @@ const user = computed(() => page.props.auth.user);
                         open
                     >
                         <summary
-                            class="flex cursor-pointer items-center justify-between rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                            class="flex cursor-pointer items-center justify-between rounded-sm bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                         >
                             <span class="text-sm font-medium">
                                 Réservations
@@ -138,7 +138,7 @@ const user = computed(() => page.props.auth.user);
                                             structure.slug
                                         )
                                     "
-                                    class="flex items-center justify-between rounded bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
+                                    class="flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
                                 >
                                     <div>Solde</div>
                                     <div>245 €</div>
@@ -153,7 +153,7 @@ const user = computed(() => page.props.auth.user);
                                             structure.slug
                                         )
                                     "
-                                    class="flex items-center justify-between rounded bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
+                                    class="flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
                                 >
                                     <div>A valider</div>
                                     <div>
@@ -170,7 +170,7 @@ const user = computed(() => page.props.auth.user);
                                             structure.slug
                                         )
                                     "
-                                    class="flex items-center justify-between rounded bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
+                                    class="flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
                                 >
                                     <div>En cours</div>
                                     <div>
@@ -187,7 +187,7 @@ const user = computed(() => page.props.auth.user);
                                             structure.slug
                                         )
                                     "
-                                    class="flex items-center justify-between rounded bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
+                                    class="flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
                                 >
                                     <div>Messages</div>
                                     <div>4</div>
@@ -203,7 +203,7 @@ const user = computed(() => page.props.auth.user);
                         open
                     >
                         <summary
-                            class="flex cursor-pointer items-center justify-between rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                            class="flex cursor-pointer items-center justify-between rounded-sm bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                         >
                             <span class="text-sm font-medium">
                                 Publications
@@ -231,7 +231,7 @@ const user = computed(() => page.props.auth.user);
                             <li class="mt-2" v-if="structure">
                                 <a
                                     href=""
-                                    class="flex items-center justify-between rounded bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
+                                    class="flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
                                 >
                                     <div>Ranking Score</div>
                                     <div>2265</div>
@@ -248,7 +248,7 @@ const user = computed(() => page.props.auth.user);
                                     "
                                     :href="route('structures.edit', structure)"
                                     :active="route().current('structures.edit')"
-                                    class="group relative flex items-center justify-between rounded bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
+                                    class="group relative flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
                                     :class="{
                                         'bg-green-500 text-white':
                                             route().current(
@@ -285,7 +285,7 @@ const user = computed(() => page.props.auth.user);
                                         )
                                     "
                                     v-if="can.update"
-                                    class="relative flex items-center justify-between rounded bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
+                                    class="relative flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
                                     :class="{
                                         'bg-green-500 text-white':
                                             route().current(
@@ -325,7 +325,7 @@ const user = computed(() => page.props.auth.user);
                 <li class="w-full">
                     <a
                         href="/"
-                        class="flex items-center justify-between rounded border-2 border-dotted border-sky-500 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
+                        class="flex items-center justify-between rounded-sm border-2 border-dotted border-sky-500 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
                         >Statistiques
                     </a>
                 </li>
@@ -333,7 +333,7 @@ const user = computed(() => page.props.auth.user);
                 <li class="w-full">
                     <a
                         href="/"
-                        class="flex items-center justify-between rounded border-2 border-dotted border-sky-500 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
+                        class="flex items-center justify-between rounded-sm border-2 border-dotted border-sky-500 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
                         >Avis Clients
                     </a>
                 </li>
@@ -341,7 +341,7 @@ const user = computed(() => page.props.auth.user);
                 <li class="w-full">
                     <a
                         href="/"
-                        class="block rounded border-2 border-dotted border-sky-500 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
+                        class="block rounded-sm border-2 border-dotted border-sky-500 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
                         >Articles de blog
                     </a>
                 </li>

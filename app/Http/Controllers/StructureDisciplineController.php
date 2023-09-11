@@ -22,6 +22,7 @@ use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\LienDisciplineCategorieCritere;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class StructureDisciplineController extends Controller
 {
@@ -238,7 +239,15 @@ class StructureDisciplineController extends Controller
 
         $discipline = ListDiscipline::where('slug', $discipline)->first();
 
-        $categoriesListByDiscipline = LienDisciplineCategorie::where('discipline_id', $discipline->id)->get();
+
+        $categoriesListByDiscipline = LienDisciplineCategorie::whereHas('structures_activites', function (Builder $query) use ($structure) {
+            $query->where('structure_id', $structure->id);
+        })->where('discipline_id', $discipline->id)->get();
+
+        $categoriesWithoutStructures = LienDisciplineCategorie::whereDoesntHave('structures_activites', function (Builder $query) use ($structure) {
+            $query->where('structure_id', $structure->id);
+        })->where('discipline_id', $discipline->id)->get();
+
 
         $structureActivites = StructureActivite::with([
             'structure:id,name,slug,presentation_courte',
@@ -337,6 +346,7 @@ class StructureDisciplineController extends Controller
             'criteres' => $criteres,
             'discipline' => $discipline,
             'categoriesListByDiscipline' => $categoriesListByDiscipline,
+            'categoriesWithoutStructures' => $categoriesWithoutStructures,
             'tarifTypes' => $tarifTypes,
             'activiteForTarifs' => $activiteForTarifs,
             'allReservationsCount' => $allReservationsCount,

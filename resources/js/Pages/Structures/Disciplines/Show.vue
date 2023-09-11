@@ -2,6 +2,8 @@
 import ProLayout from "@/Layouts/ProLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { ref, computed, defineAsyncComponent } from "vue";
+import BreezeDropdown from "@/Components/Dropdown.vue";
+import BreezeDropdownLink from "@/Components/DropdownLink.vue";
 import {
     ChevronLeftIcon,
     PlusIcon,
@@ -15,6 +17,7 @@ const props = defineProps({
     structureActivites: Object,
     criteres: Object,
     categoriesListByDiscipline: Object,
+    categoriesWithoutStructures: Object,
     tarifTypes: Object,
     activiteForTarifs: Object,
     confirmedReservationsCount: Number,
@@ -136,6 +139,34 @@ const latestAdresseId = computed(() => {
                         {{ category.nom_categorie_pro }}
                     </div>
                 </Link>
+                <BreezeDropdown align="right" width="48">
+                    <template #trigger>
+                        <span class="inline-flex rounded-md">
+                            <button
+                                type="button"
+                                class="inline-flex items-center border border-transparent bg-green-500 px-3 py-2.5 text-gray-50 transition duration-150 ease-in-out hover:bg-green-600 hover:text-white focus:outline-none md:py-4"
+                            >
+                                <PlusIcon class="h-10 w-8" />
+                            </button>
+                        </span>
+                    </template>
+
+                    <template #content>
+                        <BreezeDropdownLink
+                            :href="
+                                route('structures.categories.show', {
+                                    structure: structure.slug,
+                                    discipline: discipline.slug,
+                                    categorie: category.id,
+                                })
+                            "
+                            v-for="category in categoriesWithoutStructures"
+                            :key="category.id"
+                        >
+                            {{ category.nom_categorie_pro }}
+                        </BreezeDropdownLink>
+                    </template>
+                </BreezeDropdown>
             </div>
         </template>
         <template #default>

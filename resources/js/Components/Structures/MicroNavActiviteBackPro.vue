@@ -5,6 +5,7 @@ const emit = defineEmits(["eventFromChild"]);
 const props = defineProps({
     activite: Object,
     discipline: Object,
+    categorie: Object,
 });
 
 const activeButton = ref("Mes activites");
@@ -35,6 +36,10 @@ const getButtonClass = (buttonName) => {
                 :class="getButtonClass('Mes activites')"
             >
                 Mes activités
+                <span v-if="categorie">
+                    {{ categorie.nom_categorie_pro }} de
+                </span>
+                <span v-if="discipline"> {{ discipline.name }} </span>
                 <div
                     v-if="activeButton === 'Mes activites'"
                     class="absolute inset-x-2 -bottom-2 mx-auto h-4 w-4 rotate-45 bg-indigo-500 group-hover:hidden"
@@ -47,7 +52,11 @@ const getButtonClass = (buttonName) => {
                 :class="getButtonClass('Planning')"
             >
                 Planning
-                <span v-if="discipline">{{ discipline.name }}</span>
+                <span v-if="categorie">
+                    {{ categorie.nom_categorie_pro }} de
+                </span>
+
+                <span v-if="discipline"> {{ discipline.name }} </span>
                 <div
                     v-if="activeButton === 'Planning'"
                     class="absolute inset-x-2 -bottom-2 mx-auto h-4 w-4 rotate-45 bg-indigo-500 group-hover:hidden"
@@ -60,8 +69,13 @@ const getButtonClass = (buttonName) => {
                 @click="emitEvent('Mes tarifs')"
                 :class="getButtonClass('Mes tarifs')"
             >
-                Mes tarifs
-                <span v-if="discipline">{{ discipline.name }}</span>
+                <p>
+                    Tarifs
+                    <span v-if="categorie"
+                        >{{ categorie.nom_categorie_pro }} de
+                    </span>
+                    <span v-if="discipline"> {{ discipline.name }} </span>
+                </p>
                 <div
                     v-if="activeButton === 'Mes tarifs'"
                     class="absolute inset-x-2 -bottom-2 mx-auto h-4 w-4 rotate-45 bg-indigo-500 group-hover:hidden"

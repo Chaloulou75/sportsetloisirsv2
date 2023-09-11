@@ -1,11 +1,10 @@
 <script setup>
 import { ref } from "vue";
-import BreezeApplicationLogo from "@/Components/ApplicationLogo.vue";
 import BreezeDropdown from "@/Components/Dropdown.vue";
 import BreezeDropdownLink from "@/Components/DropdownLink.vue";
-import BreezeNavLink from "@/Components/NavLink.vue";
 import BreezeResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import { Link } from "@inertiajs/vue3";
+import { UserIcon } from "@heroicons/vue/24/outline";
 
 const showingNavigationDropdown = ref(false);
 
@@ -35,6 +34,9 @@ const props = defineProps({
                                         type="button"
                                         class="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-2 text-sm font-medium leading-4 text-gray-100 transition duration-150 ease-in-out hover:text-white focus:outline-none"
                                     >
+                                        <UserIcon
+                                            class="mr-2 h-6 w-6 text-white"
+                                        />
                                         {{ $page.props.auth.user.name }}
 
                                         <svg

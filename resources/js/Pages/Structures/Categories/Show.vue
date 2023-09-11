@@ -2,6 +2,8 @@
 import ProLayout from "@/Layouts/ProLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { ref, computed, defineAsyncComponent } from "vue";
+import BreezeDropdown from "@/Components/Dropdown.vue";
+import BreezeDropdownLink from "@/Components/DropdownLink.vue";
 import {
     AcademicCapIcon,
     PlusIcon,
@@ -16,6 +18,7 @@ const props = defineProps({
     structureActivites: Object,
     criteres: Object,
     categoriesListByDiscipline: Object,
+    categoriesWithoutStructures: Object,
     tarifTypes: Object,
     activiteForTarifs: Object,
     confirmedReservationsCount: Number,
@@ -119,7 +122,7 @@ const latestAdresseId = computed(() => {
                 <h1
                     class="shrink-0 px-2 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-6 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
-                    {{ categorie.nom_categorie_pro }} {{ discipline.name }}
+                    {{ discipline.name }}
                 </h1>
                 <Link
                     :href="
@@ -142,11 +145,40 @@ const latestAdresseId = computed(() => {
                         {{ category.nom_categorie_pro }}
                     </div>
                 </Link>
+                <BreezeDropdown align="right" width="48">
+                    <template #trigger>
+                        <span class="inline-flex rounded-md">
+                            <button
+                                type="button"
+                                class="inline-flex items-center border border-transparent bg-green-500 px-3 py-2.5 text-gray-50 transition duration-150 ease-in-out hover:bg-green-600 hover:text-white focus:outline-none md:py-4"
+                            >
+                                <PlusIcon class="h-10 w-8" />
+                            </button>
+                        </span>
+                    </template>
+
+                    <template #content>
+                        <BreezeDropdownLink
+                            :href="
+                                route('structures.categories.show', {
+                                    structure: structure.slug,
+                                    discipline: discipline.slug,
+                                    categorie: category.id,
+                                })
+                            "
+                            v-for="category in categoriesWithoutStructures"
+                            :key="category.id"
+                        >
+                            {{ category.nom_categorie_pro }}
+                        </BreezeDropdownLink>
+                    </template>
+                </BreezeDropdown>
             </div>
         </template>
         <template #default>
             <MicroNavActiviteBackPro
                 :discipline="discipline"
+                :categorie="categorie"
                 @eventFromChild="handleButtonEvent"
             />
             <div
@@ -179,7 +211,7 @@ const latestAdresseId = computed(() => {
                             @click="openAddTarifModal(structure)"
                             class="w-full items-center justify-between bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
                         >
-                            <PlusIcon class="h-5 w-5" />
+                            <PlusIcon class="h-6 w-6" />
                         </button>
                     </div>
                     <template v-if="displayActivites">

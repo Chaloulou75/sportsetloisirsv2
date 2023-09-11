@@ -19,6 +19,7 @@ use Illuminate\Http\RedirectResponse;
 use App\Models\LienDisciplineCategorie;
 use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\LienDisciplineCategorieCritere;
 
 class StructureCategorieController extends Controller
@@ -84,7 +85,13 @@ class StructureCategorieController extends Controller
         $discipline = ListDiscipline::where('slug', $discipline)->first();
         $categorie = LienDisciplineCategorie::where('id', $categorie)->first();
 
-        $categoriesListByDiscipline = LienDisciplineCategorie::where('discipline_id', $discipline->id)->get();
+        $categoriesListByDiscipline = LienDisciplineCategorie::whereHas('structures_activites', function (Builder $query) use ($structure) {
+            $query->where('structure_id', $structure->id);
+        })->where('discipline_id', $discipline->id)->get();
+
+        $categoriesWithoutStructures = LienDisciplineCategorie::whereDoesntHave('structures_activites', function (Builder $query) use ($structure) {
+            $query->where('structure_id', $structure->id);
+        })->where('discipline_id', $discipline->id)->get();
 
         $structureActivites = StructureActivite::with([
             'structure:id,name,slug,presentation_courte',
@@ -185,6 +192,7 @@ class StructureCategorieController extends Controller
             'discipline' => $discipline,
             'categorie' => $categorie,
             'categoriesListByDiscipline' => $categoriesListByDiscipline,
+            'categoriesWithoutStructures' => $categoriesWithoutStructures,
             'tarifTypes' => $tarifTypes,
             'activiteForTarifs' => $activiteForTarifs,
             'allReservationsCount' => $allReservationsCount,
