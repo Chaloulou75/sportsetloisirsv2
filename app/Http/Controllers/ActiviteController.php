@@ -618,7 +618,6 @@ class ActiviteController extends Controller
 
     public function newactivitystore(Request $request, Structure $structure, $discipline): RedirectResponse
     {
-        dd($request->all());
         $request->validate([
             'structure_id' => ['required', Rule::exists('structures', 'id')],
             'discipline_id' => ['required', Rule::exists('liste_disciplines', 'id')],

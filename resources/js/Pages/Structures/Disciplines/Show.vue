@@ -148,7 +148,10 @@ const latestAdresseId = computed(() => {
                         class="flex w-full flex-col items-center justify-start space-y-2 px-2 py-3 md:h-20 md:flex-row md:space-x-4 md:space-y-0 md:px-0 md:py-6"
                     >
                         <p class="text-lg font-medium leading-6 text-gray-800">
-                            Ajouter une activité à
+                            Ajouter
+                            <span v-if="displayActivites">une activité</span
+                            ><span v-if="displayTarifs">un tarif</span
+                            ><span v-if="displayPlanning">un planning</span> à
                             <span class="text-indigo-500">{{
                                 discipline.name
                             }}</span>

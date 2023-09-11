@@ -1,5 +1,5 @@
 <script setup>
-import { useForm, router } from "@inertiajs/vue3";
+import { useForm } from "@inertiajs/vue3";
 import { ref, watch, onMounted, computed, defineAsyncComponent } from "vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
@@ -65,11 +65,9 @@ const form = useForm({
     time: ref(null),
 });
 
-// Watcher for form.categorie_id
 watch(
     () => form.categorie_id,
     (newCategorieId) => {
-        // Update filteredCriteres based on the new form.categorie_id
         filteredCriteres.value = props.criteres.filter(
             (critere) => critere.categorie_id === newCategorieId
         );
@@ -123,25 +121,6 @@ function onSubmit() {
             structure: props.structure.slug,
             discipline: props.discipline.slug,
         }),
-        // {
-        //     structure_id: form.structure_id,
-        //     discipline_id: form.discipline_id,
-        //     categorie_id: form.categorie_id,
-        //     titre: form.titre,
-        //     description: form.description,
-        //     image: form.image,
-        //     actif: form.actif,
-        //     criteres: form.criteres,
-        //     adresse: form.adresse,
-        //     address: form.address,
-        //     city: form.city,
-        //     zip_code: form.zip_code,
-        //     country: form.country,
-        //     address_lat: form.address_lat,
-        //     address_lng: form.address_lng,
-        //     date: form.date,
-        //     time: form.time,
-        // },
         {
             preserveScroll: true,
             onSuccess: () => {
