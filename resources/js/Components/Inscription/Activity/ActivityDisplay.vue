@@ -538,7 +538,7 @@ const destroyTarif = (tarif, produit) => {
                     @click="openAddProduitModal(structureActivite)"
                     class="flex h-full w-auto items-center justify-center bg-green-500 px-3 py-3 hover:bg-green-600"
                 >
-                    <PlusIcon class="h-5 w-5 text-white" />
+                    <PlusIcon class="h-6 w-6 text-white" />
                 </button>
             </DisclosureButton>
 

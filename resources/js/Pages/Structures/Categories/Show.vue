@@ -2,7 +2,11 @@
 import ProLayout from "@/Layouts/ProLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { ref, computed, defineAsyncComponent } from "vue";
-import { AcademicCapIcon, ChevronLeftIcon } from "@heroicons/vue/24/outline";
+import {
+    AcademicCapIcon,
+    PlusIcon,
+    ChevronLeftIcon,
+} from "@heroicons/vue/24/outline";
 
 const props = defineProps({
     errors: Object,
@@ -66,8 +70,7 @@ const handleButtonEvent = (message) => {
 
 const currentCategorie = ref({});
 const showAddActiviteModal = ref(false);
-const openAddActiviteModal = (categorie) => {
-    currentCategorie.value = props.categorie.id;
+const openAddActiviteModal = () => {
     showAddActiviteModal.value = true;
 };
 
@@ -131,10 +134,10 @@ const latestAdresseId = computed(() => {
                     class="flex h-full w-full flex-col items-center border border-gray-200 py-2.5 text-xs md:py-4"
                     :class="{
                         'bg-green-600 text-white': category.id === categorie.id,
-                        'bg-white': category.id !== categorie.id,
+                        'bg-white text-slate-700': category.id !== categorie.id,
                     }"
                 >
-                    <AcademicCapIcon class="h-8 w-8" />
+                    <AcademicCapIcon class="h-6 w-6" />
                     <div class="">
                         {{ category.nom_categorie_pro }}
                     </div>
@@ -142,11 +145,43 @@ const latestAdresseId = computed(() => {
             </div>
         </template>
         <template #default>
-            <MicroNavActiviteBackPro @eventFromChild="handleButtonEvent" />
+            <MicroNavActiviteBackPro
+                :discipline="discipline"
+                @eventFromChild="handleButtonEvent"
+            />
             <div
                 class="relative flex flex-col space-y-6 py-2 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
             >
                 <div class="mx-auto max-w-full flex-1 space-y-8 lg:px-4">
+                    <div
+                        class="flex w-full flex-col items-center justify-start space-y-2 px-2 py-3 md:h-20 md:flex-row md:space-x-4 md:space-y-0 md:px-0 md:py-6"
+                    >
+                        <p class="text-lg font-medium leading-6 text-gray-800">
+                            Ajouter
+                            <span v-if="displayActivites">une activité</span
+                            ><span v-if="displayTarifs">un tarif</span
+                            ><span v-if="displayPlanning">un planning</span> à
+                            <span class="text-indigo-500">{{
+                                discipline.name
+                            }}</span>
+                        </p>
+                        <button
+                            v-if="displayActivites"
+                            type="button"
+                            @click="openAddActiviteModal()"
+                            class="flex w-full items-center justify-between bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
+                        >
+                            <PlusIcon class="h-6 w-6" />
+                        </button>
+                        <button
+                            v-if="displayTarifs"
+                            type="button"
+                            @click="openAddTarifModal(structure)"
+                            class="w-full items-center justify-between bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
+                        >
+                            <PlusIcon class="h-5 w-5" />
+                        </button>
+                    </div>
                     <template v-if="displayActivites">
                         <ActivityDisplay
                             v-for="structureActivite in structureActivites"
@@ -192,7 +227,8 @@ const latestAdresseId = computed(() => {
             <ModalAddActivite
                 :errors="errors"
                 :structure="structure"
-                :categorie="categorie"
+                :category="categorie"
+                :categories="categoriesListByDiscipline"
                 :discipline="discipline"
                 :criteres="criteres"
                 :show="showAddActiviteModal"

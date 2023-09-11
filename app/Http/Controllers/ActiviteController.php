@@ -550,7 +550,7 @@ class ActiviteController extends Controller
             // 'actif' => 1,
         ]);
 
-        return to_route('structures.activites.edit', ['structure' => $structure->slug, 'activite' => $activite])->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
+        return to_route('structures.categories.show', ['structure' => $structure->slug, 'discipline' => $structureActivite->discipline->slug, 'categorie' => $structureActivite->categorie->id, ])->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
 
     }
 
@@ -613,7 +613,7 @@ class ActiviteController extends Controller
 
         $structureActivite->update(['actif' => $request->actif]);
 
-        return to_route('structures.activites.edit', ['structure' => $structure->slug, 'activite' => $activite]);
+        return to_route('structures.categories.show', ['structure' => $structure->slug, 'discipline' => $structureActivite->discipline->slug, 'categorie' => $structureActivite->categorie->id])->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
     }
 
     public function newactivitystore(Request $request, Structure $structure, $discipline): RedirectResponse

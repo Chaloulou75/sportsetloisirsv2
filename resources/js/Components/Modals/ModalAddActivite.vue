@@ -23,10 +23,12 @@ const props = defineProps({
     structure: Object,
     discipline: Object,
     criteres: Object,
-    categorie: Object,
+    category: Object,
     categories: Object,
     show: Boolean,
 });
+
+const categorieId = ref(null);
 
 const filteredCriteres = ref([]);
 
@@ -48,7 +50,7 @@ const latestAdresseId = computed(() => {
 const form = useForm({
     structure_id: ref(props.structure.id),
     discipline_id: ref(props.discipline.id),
-    categorie_id: ref(null),
+    categorie_id: ref(),
     titre: ref(null),
     description: ref(null),
     image: ref(null),
@@ -132,6 +134,7 @@ function onSubmit() {
 }
 
 onMounted(() => {
+    form.categorie_id = ref(props.category?.id ?? null);
     const startDate = new Date();
     const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
     form.date = [startDate, endDate];
@@ -207,7 +210,7 @@ onMounted(() => {
                                         <div class="flex flex-col space-y-3">
                                             <!-- categories -->
                                             <div
-                                                v-if="categories.length > 0"
+                                                v-if="categories"
                                                 class="flex w-full flex-col items-center justify-start space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
                                             >
                                                 <label

@@ -129,9 +129,9 @@ const latestAdresseId = computed(() => {
                     v-for="category in categoriesListByDiscipline"
                     :key="category.id"
                     :index="category.id"
-                    class="flex h-full w-full flex-col items-center border border-gray-200 bg-white py-2.5 text-xs md:py-4"
+                    class="flex h-full w-full flex-col items-center border border-gray-200 bg-white py-2.5 text-xs text-slate-700 md:py-4"
                 >
-                    <AcademicCapIcon class="h-8 w-8" />
+                    <AcademicCapIcon class="h-6 w-6" />
                     <div class="">
                         {{ category.nom_categorie_pro }}
                     </div>

@@ -293,7 +293,10 @@ const user = computed(() => page.props.auth.user);
                                                 structure
                                             ) ||
                                             route().current(
-                                                'structures.activites.edit'
+                                                'structures.disciplines.show'
+                                            ) ||
+                                            route().current(
+                                                'structures.categories.show'
                                             ),
                                     }"
                                 >
@@ -305,7 +308,10 @@ const user = computed(() => page.props.auth.user);
                                                 structure
                                             ) ||
                                             route().current(
-                                                'structures.activites.edit'
+                                                'structures.disciplines.show'
+                                            ) ||
+                                            route().current(
+                                                'structures.categories.show'
                                             )
                                         "
                                         class="absolute inset-y-2 -right-2.5 h-5 w-5 rotate-45 bg-green-500"
