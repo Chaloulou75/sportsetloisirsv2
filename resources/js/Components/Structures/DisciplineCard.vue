@@ -46,9 +46,9 @@ const props = defineProps({
             <dl class="flex flex-col">
                 <Link
                     :href="
-                        route('structures.activites.edit', {
+                        route('structures.disciplines.show', {
                             structure: structure.slug,
-                            activite: activite.id,
+                            discipline: activite.disciplineSlug,
                         })
                     "
                     class="px-2 py-1.5 text-center text-base font-semibold uppercase tracking-wide text-gray-600 hover:text-indigo-600"
@@ -60,13 +60,14 @@ const props = defineProps({
                     <div
                         class="flex justify-between px-2 py-3 odd:bg-white even:bg-slate-50"
                         v-for="categorie in activite.categories"
-                        :key="categorie.id"
+                        :key="categorie.categorie_id"
                     >
                         <Link
                             :href="
-                                route('structures.activites.edit', {
+                                route('structures.categories.show', {
                                     structure: structure.slug,
-                                    activite: activite.id,
+                                    discipline: activite.disciplineSlug,
+                                    categorie: categorie.categorie_id,
                                 })
                             "
                             class="text-sm hover:text-indigo-500"

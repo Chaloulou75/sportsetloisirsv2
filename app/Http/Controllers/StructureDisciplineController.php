@@ -48,7 +48,7 @@ class StructureDisciplineController extends Controller
         $activites = StructureActivite::with([
             'structure:id,name,slug,presentation_courte',
             'categorie:id,nom_categorie_pro',
-            'discipline:id,name',
+            'discipline:id,name,slug',
             'plannings',
             'produits',
             'produits.adresse',
@@ -93,6 +93,7 @@ class StructureDisciplineController extends Controller
                 'id' => $disciplineCategories->first()->id,
                 'discipline_id' => $disciplineCategories->first()->discipline->id,
                 'disciplineName' => $disciplineCategories->first()->discipline->name,
+                'disciplineSlug' => $disciplineCategories->first()->discipline->slug,
                 'count' => $disciplineCategories->count(),
                 'categories' => $categories,
             ];
@@ -204,7 +205,7 @@ class StructureDisciplineController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Structure $structure, $discipline, $categorie)
+    public function show(Structure $structure, $discipline)
     {
         if (! Gate::allows('update-structure', $structure)) {
             return to_route('structures.disciplines.index', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
@@ -236,14 +237,13 @@ class StructureDisciplineController extends Controller
         ->first();
 
         $discipline = ListDiscipline::where('slug', $discipline)->first();
-        $categorie = LienDisciplineCategorie::where('id', $categorie)->first();
 
-        $categoriesListByDiscipline = LienDisciplineCategorie::where('discipline_id', $discipline)->get();
+        $categoriesListByDiscipline = LienDisciplineCategorie::where('discipline_id', $discipline->id)->get();
 
         $structureActivites = StructureActivite::with([
             'structure:id,name,slug,presentation_courte',
             'categorie:id,nom_categorie_pro',
-            'discipline:id,name',
+            'discipline:id,name,slug',
             'plannings',
             'produits',
             'produits.adresse',
@@ -257,7 +257,6 @@ class StructureDisciplineController extends Controller
             ])
             ->where('structure_id', $structure->id)
             ->where('discipline_id', $discipline->id)
-            ->where('categorie_id', $categorie->id)
             ->latest()
             ->get();
 
@@ -337,7 +336,6 @@ class StructureDisciplineController extends Controller
             'structureActivites' => $structureActivites,
             'criteres' => $criteres,
             'discipline' => $discipline,
-            'categorie' => $categorie,
             'categoriesListByDiscipline' => $categoriesListByDiscipline,
             'tarifTypes' => $tarifTypes,
             'activiteForTarifs' => $activiteForTarifs,

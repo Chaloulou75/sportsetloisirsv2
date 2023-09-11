@@ -24,8 +24,11 @@ const props = defineProps({
     discipline: Object,
     criteres: Object,
     categorie: Object,
+    categories: Object,
     show: Boolean,
 });
+
+const filteredCriteres = ref([]);
 
 const addAddress = ref(false);
 const latestAdresseId = computed(() => {
@@ -36,16 +39,16 @@ const latestAdresseId = computed(() => {
     return null; // Return a default value if there are no adresses
 });
 
-const filteredCriteres = computed(() => {
-    return props.criteres.filter(
-        (critere) => critere.categorie_id === props.categorie.id
-    );
-});
+// const filteredCriteres = computed(() => {
+//     return props.criteres.filter(
+//         (critere) => critere.categorie_id === form.categorie_id
+//     );
+// });
 
 const form = useForm({
     structure_id: ref(props.structure.id),
     discipline_id: ref(props.discipline.id),
-    categorie_id: ref(props.categorie.id),
+    categorie_id: ref(null),
     titre: ref(null),
     description: ref(null),
     image: ref(null),
@@ -61,6 +64,32 @@ const form = useForm({
     date: ref(null),
     time: ref(null),
 });
+
+// Watcher for form.categorie_id
+watch(
+    () => form.categorie_id,
+    (newCategorieId) => {
+        // Update filteredCriteres based on the new form.categorie_id
+        filteredCriteres.value = props.criteres.filter(
+            (critere) => critere.categorie_id === newCategorieId
+        );
+    }
+);
+
+watch(
+    filteredCriteres.value,
+    (newFilteredCriteres) => {
+        newFilteredCriteres.forEach((critere) => {
+            if (
+                critere.type_champ_form === "select" &&
+                critere.valeurs.length > 0
+            ) {
+                form.criteres[critere.id] = critere.valeurs[0].valeur;
+            }
+        });
+    },
+    { immediate: true }
+);
 
 const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
     if (checked) {
@@ -88,51 +117,37 @@ const isCheckboxSelected = (critereId, optionValue) => {
     );
 };
 
-watch(
-    filteredCriteres,
-    (newFilteredCriteres) => {
-        newFilteredCriteres.forEach((critere) => {
-            if (
-                critere.type_champ_form === "select" &&
-                critere.valeurs.length > 0
-            ) {
-                form.criteres[critere.id] = critere.valeurs[0].valeur;
-            }
-        });
-    },
-    { immediate: true }
-);
-
 function onSubmit() {
-    router.post(
-        `/structures/${props.structure.slug}/activites/${props.activite.id}/newactivitystore`,
-        {
-            structure_id: form.structure_id,
-            discipline_id: form.discipline_id,
-            categorie_id: props.categorie.id,
-            titre: form.titre,
-            description: form.description,
-            image: form.image,
-            actif: form.actif,
-            criteres: form.criteres,
-            adresse: form.adresse,
-            address: form.address,
-            city: form.city,
-            zip_code: form.zip_code,
-            country: form.country,
-            address_lat: form.address_lat,
-            address_lng: form.address_lng,
-            date: form.date,
-            time: form.time,
-        },
+    form.post(
+        route("structures.activites.newactivitystore", {
+            structure: props.structure.slug,
+            discipline: props.discipline.slug,
+        }),
+        // {
+        //     structure_id: form.structure_id,
+        //     discipline_id: form.discipline_id,
+        //     categorie_id: form.categorie_id,
+        //     titre: form.titre,
+        //     description: form.description,
+        //     image: form.image,
+        //     actif: form.actif,
+        //     criteres: form.criteres,
+        //     adresse: form.adresse,
+        //     address: form.address,
+        //     city: form.city,
+        //     zip_code: form.zip_code,
+        //     country: form.country,
+        //     address_lat: form.address_lat,
+        //     address_lng: form.address_lng,
+        //     date: form.date,
+        //     time: form.time,
+        // },
         {
             preserveScroll: true,
             onSuccess: () => {
                 form.reset();
                 emit("close");
             },
-            structure: props.structure.slug,
-            activite: props.activite.id,
         }
     );
 }
@@ -197,7 +212,10 @@ onMounted(() => {
                                         <h3
                                             class="text-lg font-medium leading-6 text-gray-800"
                                         >
-                                            Ajouter une activité
+                                            Ajouter une activité à
+                                            <span class="text-indigo-500">{{
+                                                discipline.name
+                                            }}</span>
                                         </h3>
                                         <button type="button">
                                             <XCircleIcon
@@ -208,6 +226,52 @@ onMounted(() => {
                                     </DialogTitle>
                                     <div class="mt-2 w-full">
                                         <div class="flex flex-col space-y-3">
+                                            <!-- categories -->
+                                            <div
+                                                v-if="categories.length > 0"
+                                                class="flex w-full flex-col items-center justify-start space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
+                                            >
+                                                <label
+                                                    for="categorie"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                >
+                                                    Categorie
+                                                </label>
+                                                <div
+                                                    class="mt-1 flex rounded-md"
+                                                >
+                                                    <select
+                                                        name="categorie"
+                                                        id="categorie"
+                                                        v-model="
+                                                            form.categorie_id
+                                                        "
+                                                        class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                    >
+                                                        <option
+                                                            v-for="categorie in categories"
+                                                            :key="categorie.id"
+                                                            :value="
+                                                                categorie.id
+                                                            "
+                                                        >
+                                                            {{
+                                                                categorie.nom_categorie_pro
+                                                            }}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <div
+                                                    v-if="
+                                                        form.errors.categorie_id
+                                                    "
+                                                    class="mt-2 text-xs text-red-500"
+                                                >
+                                                    {{
+                                                        form.errors.categorie_id
+                                                    }}
+                                                </div>
+                                            </div>
                                             <!-- image -->
                                             <div>
                                                 <label
@@ -248,15 +312,15 @@ onMounted(() => {
                                                         name="titre"
                                                         id="titre"
                                                         class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                        :placeholder="`${categorie.nom_categorie_pro} de ${activite.discipline.name}`"
+                                                        :placeholder="`Tournois de ${discipline.name}`"
                                                         autocomplete="none"
                                                     />
                                                 </div>
                                                 <div
-                                                    v-if="errors.titre"
+                                                    v-if="form.errors.titre"
                                                     class="mt-2 text-xs text-red-500"
                                                 >
-                                                    {{ errors.titre }}
+                                                    {{ form.errors.titre }}
                                                 </div>
                                             </div>
                                             <!-- description -->

@@ -76,7 +76,10 @@ const destroyTarif = (tarif) => {
         </p>
     </div>
     <div
-        v-if="structure.tarifs.length > 0"
+        v-if="
+            structure.tarifs.length > 0 &&
+            route().current('structures.disciplines.index', structure)
+        "
         class="mt-6 w-full overflow-x-auto rounded-xl shadow-lg"
     >
         <table

@@ -118,8 +118,6 @@ const onSubmitEventForm = () => {
         {
             structure_id: formPlanning.structure_id,
             title: formPlanning.title,
-            // discipline_id: selectedActivite.value.discipline_id,
-            // categorie_id: selectedActivite.value.categorie_id,
             activite_id: formPlanning.activite.id,
             produit_id: formPlanning.produit.id,
             event: selectedEvent.value,
@@ -172,7 +170,7 @@ const handleEventChanged = (event) => {
 <template>
     <div v-if="structureActivites.length === 0">
         <p class="font-semibold italic text-gray-600">
-            Pas d'activité lié à cette catégorie.
+            Pas d'activité liée. Créer d'abord une activité.
         </p>
     </div>
     <div v-else class="mb-4 flex w-full items-center justify-between">

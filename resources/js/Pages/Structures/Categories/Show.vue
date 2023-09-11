@@ -2,15 +2,12 @@
 import ProLayout from "@/Layouts/ProLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { ref, computed, defineAsyncComponent } from "vue";
-import {
-    ChevronLeftIcon,
-    PlusIcon,
-    AcademicCapIcon,
-} from "@heroicons/vue/24/outline";
+import { AcademicCapIcon, ChevronLeftIcon } from "@heroicons/vue/24/outline";
 
 const props = defineProps({
     errors: Object,
     structure: Object,
+    categorie: Object,
     discipline: Object,
     structureActivites: Object,
     criteres: Object,
@@ -67,11 +64,10 @@ const handleButtonEvent = (message) => {
     }
 };
 
-const selectedCategoryId = ref(null);
-
-const currentCategorie = ref(props.categoriesListByDiscipline[0]);
+const currentCategorie = ref({});
 const showAddActiviteModal = ref(false);
-const openAddActiviteModal = () => {
+const openAddActiviteModal = (categorie) => {
+    currentCategorie.value = props.categorie.id;
     showAddActiviteModal.value = true;
 };
 
@@ -82,7 +78,7 @@ const openAddTarifModal = (structure) => {
 
 const filteredCriteres = computed(() => {
     return props.criteres.filter(
-        (critere) => critere.categorie_id === selectedCategoryId.value
+        (critere) => critere.categorie_id === props.categorie.id.value
     );
 });
 
@@ -109,14 +105,18 @@ const latestAdresseId = computed(() => {
             <div class="flex h-full items-center justify-start">
                 <Link
                     class="h-full bg-blue-600 py-2.5 md:px-4 md:py-4"
-                    :href="route('structures.disciplines.index', structure)"
+                    :href="
+                        route('structures.disciplines.index', {
+                            structure: props.structure,
+                        })
+                    "
                 >
                     <ChevronLeftIcon class="h-10 w-10 text-white" />
                 </Link>
                 <h1
-                    class="shrink-0 px-2 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-6 md:py-4 md:text-left md:text-3xl md:font-bold"
+                    class="shrink-0 px-2 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-6 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
-                    {{ discipline.name }}
+                    {{ categorie.nom_categorie_pro }} {{ discipline.name }}
                 </h1>
                 <Link
                     :href="
@@ -128,8 +128,11 @@ const latestAdresseId = computed(() => {
                     "
                     v-for="category in categoriesListByDiscipline"
                     :key="category.id"
-                    :index="category.id"
-                    class="flex h-full w-full flex-col items-center border border-gray-200 bg-white py-2.5 text-xs md:py-4"
+                    class="flex h-full w-full flex-col items-center border border-gray-200 py-2.5 text-xs md:py-4"
+                    :class="{
+                        'bg-green-600 text-white': category.id === categorie.id,
+                        'bg-white': category.id !== categorie.id,
+                    }"
                 >
                     <AcademicCapIcon class="h-8 w-8" />
                     <div class="">
@@ -144,32 +147,6 @@ const latestAdresseId = computed(() => {
                 class="relative flex flex-col space-y-6 py-2 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
             >
                 <div class="mx-auto max-w-full flex-1 space-y-8 lg:px-4">
-                    <div
-                        class="flex w-full flex-col items-center justify-start space-y-2 px-2 py-3 md:h-20 md:flex-row md:space-x-4 md:space-y-0 md:px-0 md:py-6"
-                    >
-                        <p class="text-lg font-medium leading-6 text-gray-800">
-                            Ajouter une activité à
-                            <span class="text-indigo-500">{{
-                                discipline.name
-                            }}</span>
-                        </p>
-                        <button
-                            v-if="displayActivites"
-                            type="button"
-                            @click="openAddActiviteModal()"
-                            class="flex w-full items-center justify-between bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
-                        >
-                            <PlusIcon class="h-6 w-6" />
-                        </button>
-                        <button
-                            v-if="displayTarifs"
-                            type="button"
-                            @click="openAddTarifModal(structure)"
-                            class="w-full items-center justify-between bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
-                        >
-                            <PlusIcon class="h-5 w-5" />
-                        </button>
-                    </div>
                     <template v-if="displayActivites">
                         <ActivityDisplay
                             v-for="structureActivite in structureActivites"
@@ -215,8 +192,8 @@ const latestAdresseId = computed(() => {
             <ModalAddActivite
                 :errors="errors"
                 :structure="structure"
+                :categorie="categorie"
                 :discipline="discipline"
-                :categories="categoriesListByDiscipline"
                 :criteres="criteres"
                 :show="showAddActiviteModal"
                 @close="showAddActiviteModal = false"

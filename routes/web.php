@@ -175,7 +175,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/gestion/{structure:slug}/reservations/{reservation}', [ProductReservationController::class, 'update'])->name('structures.gestion.reservations.update');
 
 
-    Route::post('/structures/{structure:slug}/activites/{activite:id}/newactivitystore', [ActiviteController::class, 'newactivitystore']);
+    Route::post('/structures/{structure:slug}/{discipline:slug}/newactivitystore', [ActiviteController::class, 'newactivitystore'])->name('structures.activites.newactivitystore');
     Route::put('/structures/{structure:slug}/activites/{activite:id}/toggleactif', [ActiviteController::class, 'toggleactif']);
     Route::resource('structures.activites', ActiviteController::class)->scoped(['structure' => 'slug','activite' => 'id'])->except(['index', 'show']);
 
@@ -196,7 +196,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('structures.disciplines', StructureDisciplineController::class)->scoped(['structure' => 'slug','discipline' => 'id'])->only(['destroy']);
 
     Route::get('structures/{structure:slug}/disciplines', [StructureDisciplineController::class, 'index'])->name('structures.disciplines.index');
-    Route::get('structures/{structure:slug}/{discipline:slug}/cat-{categorie:id}', [StructureDisciplineController::class, 'show'])->name('structures.disciplines.show');
+    Route::get('structures/{structure:slug}/{discipline:slug}', [StructureDisciplineController::class, 'show'])->name('structures.disciplines.show');
+
+    Route::get('structures/{structure:slug}/{discipline:slug}/cat-{categorie:id}', [StructureCategorieController::class, 'show'])->name('structures.categories.show');
 
     Route::resource('structures.categories', StructureCategorieController::class)->scoped(['structure' => 'slug','categorie' => 'id'])->only(['destroy']);
 

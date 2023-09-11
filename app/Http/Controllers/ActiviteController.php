@@ -616,8 +616,9 @@ class ActiviteController extends Controller
         return to_route('structures.activites.edit', ['structure' => $structure->slug, 'activite' => $activite]);
     }
 
-    public function newactivitystore(Request $request, Structure $structure, $activite): RedirectResponse
+    public function newactivitystore(Request $request, Structure $structure, $discipline): RedirectResponse
     {
+        dd($request->all());
         $request->validate([
             'structure_id' => ['required', Rule::exists('structures', 'id')],
             'discipline_id' => ['required', Rule::exists('liste_disciplines', 'id')],
@@ -646,7 +647,7 @@ class ActiviteController extends Controller
         if($structure->id === $request->structure_id) {
             foreach($structure->adresses as $address) {
                 if (($address->address_lat === $request->address_lat) && ($address->address_lng === $request->address_lng)) {
-                    return to_route('structures.activites.edit', ['structure' => $structure->slug, 'activite' => $activite])->with('error', 'Cette adresse existe déjà dans votre liste d\'adresses');
+                    return to_route('structures.disciplines.show', ['structure' => $structure->slug, 'discipline' => $discipline])->with('error', 'Cette adresse existe déjà dans votre liste d\'adresses');
                 }
             }
         }
@@ -766,7 +767,7 @@ class ActiviteController extends Controller
 
         }
 
-        return to_route('structures.activites.edit', ['structure' => $structure->slug, 'activite' => $activite])->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
+        return to_route('structures.disciplines.show', ['structure' => $structure->slug, 'discipline' => $discipline])->with('success', 'Activité ajoutée, ajoutez d\'autres activités à votre structure.');
 
     }
 }
