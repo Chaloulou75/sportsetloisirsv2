@@ -25,11 +25,10 @@ class StructurePlanningController extends Controller
     {
         $request->validate([
             'structure_id' => ['required', Rule::exists('structures', 'id')],
-            'discipline_id' => ['required', Rule::exists('liste_disciplines', 'id')],
-            'categorie_id' => ['required', Rule::exists('liens_disciplines_categories', 'id')],
+            'title' => ['nullable', 'string'],
             'activite_id' => ['required', Rule::exists('structures_activites', 'id')],
             'produit_id' => ['required', Rule::exists('structures_produits', 'id')],
-            'event' => 'required',
+            'event' => ['required'],
         ]);
 
         $activite = StructureActivite::findOrFail($request->activite_id);
@@ -44,16 +43,16 @@ class StructurePlanningController extends Controller
 
         StructurePlanning::create([
             'structure_id' => $request->structure_id,
-            'discipline_id' => $request->discipline_id,
-            'categorie_id' => $request->categorie_id,
+            'discipline_id' => $activite->discipline_id,
+            'categorie_id' => $activite->categorie_id,
             'activite_id' => $activite->id,
             'produit_id' => $produit->id,
-            'title' => $request->event['title'] ?? $activite->titre,
+            'title' => $request->title ?? $activite->titre,
             'start' => $startDate ?? "",
             'end' => $endDate ?? "",
         ]);
 
-        return to_route('structures.activites.index', $structure)->with('success', "L'évènement a bien été ajouté au planning");
+        return to_route('structures.disciplines.index', $structure)->with('success', "L'évènement a bien été ajouté au planning");
 
     }
 
@@ -88,7 +87,7 @@ class StructurePlanningController extends Controller
             'end' => $endDate,
         ]);
 
-        return to_route('structures.activites.index', $structure)->with('success', "Planning mis à jour");
+        return to_route('structures.disciplines.index', $structure)->with('success', "Planning mis à jour");
 
     }
 
@@ -101,6 +100,6 @@ class StructurePlanningController extends Controller
 
         $planning->delete();
 
-        return to_route('structures.activites.index', $structure)->with('success', "L'évenement a bien été supprimé");
+        return to_route('structures.disciplines.index', $structure)->with('success', "L'évenement a bien été supprimé");
     }
 }

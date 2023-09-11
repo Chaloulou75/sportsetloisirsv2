@@ -120,6 +120,6 @@ class StructureCategorieController extends Controller
             $structureDiscipline->delete();
         };
 
-        return to_route('structures.activites.index', $structure)->with('success', 'Discipline supprimée de votre liste.');
+        return to_route('structures.disciplines.index', $structure)->with('success', 'Discipline supprimée de votre liste.');
     }
 }

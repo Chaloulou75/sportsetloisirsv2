@@ -27,32 +27,9 @@ const props = defineProps({
 
 const selectedActivite = ref(props.structureActivites[0]);
 const selectedProduct = ref(props.structureActivites[0]?.produits?.[0] ?? "");
+const selectedTitle = ref(props.structureActivites[0].titre);
 const selectedEvent = ref({});
 const isOpen = ref(false);
-
-const filteredProducts = computed(() => {
-    if (selectedActivite.value) {
-        const selectedActiviteId = selectedActivite.value.id;
-        const activite = props.structureActivites.find(
-            (activite) => activite.id === selectedActiviteId
-        );
-        if (activite) {
-            return activite.produits ?? [];
-        }
-    }
-    return [];
-});
-
-watch(
-    () => selectedActivite.value,
-    (newActivite) => {
-        if (newActivite) {
-            selectedProduct.value = newActivite.produits[0] || null;
-        } else {
-            selectedProduct.value = null;
-        }
-    }
-);
 
 function closeModal() {
     isOpen.value = false;
@@ -95,20 +72,36 @@ const events = getEvents();
 
 const formPlanning = useForm({
     structure_id: ref(props.structure.id),
-    discipline_id: ref(
-        props.structureActivites && props.structureActivites.length > 0
-            ? props.structureActivites[0].discipline_id
-            : null
-    ),
-    categorie_id: ref(
-        props.structureActivites && props.structureActivites.length > 0
-            ? props.structureActivites[0].categorie_id
-            : null
-    ),
+    title: ref(selectedTitle.value),
     activite: ref(selectedActivite.value),
     produit: ref(selectedProduct.value),
     events: ref(events),
 });
+
+const filteredProducts = computed(() => {
+    if (formPlanning.activite) {
+        const selectedActiviteId = formPlanning.activite.id;
+        const activite = props.structureActivites.find(
+            (activite) => activite.id === selectedActiviteId
+        );
+        if (activite) {
+            return activite.produits ?? [];
+        }
+    }
+    return [];
+});
+
+watch(
+    () => formPlanning.activite,
+    (newActivite) => {
+        if (newActivite) {
+            formPlanning.produit = newActivite.produits[0] || null;
+            formPlanning.title = newActivite.titre;
+        } else {
+            selectedProduct.value = null;
+        }
+    }
+);
 
 const onEventCreate = (event, deleteEventFunction) => {
     selectedEvent.value = event;
@@ -124,8 +117,9 @@ const onSubmitEventForm = () => {
         }),
         {
             structure_id: formPlanning.structure_id,
-            discipline_id: formPlanning.discipline_id,
-            categorie_id: formPlanning.categorie_id,
+            title: formPlanning.title,
+            // discipline_id: selectedActivite.value.discipline_id,
+            // categorie_id: selectedActivite.value.categorie_id,
             activite_id: formPlanning.activite.id,
             produit_id: formPlanning.produit.id,
             event: selectedEvent.value,
@@ -263,11 +257,10 @@ const handleEventChanged = (event) => {
                                         name="title"
                                         id="title"
                                         class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                        v-model="selectedEvent.title"
+                                        v-model="formPlanning.title"
                                         :placeholder="
-                                            structureActivites &&
-                                            structureActivites[0]
-                                                ? `${structureActivites[0].categorie.nom_categorie_pro} de ${structureActivites[0].discipline.name}`
+                                            formPlanning.title
+                                                ? formPlanning.title
                                                 : 'Titre'
                                         "
                                     />
@@ -276,24 +269,14 @@ const handleEventChanged = (event) => {
                                     <p class="text-sm text-gray-500">
                                         Exemple:
                                         <span class="font-semibold">
-                                            {{
-                                                structureActivites &&
-                                                structureActivites[0]
-                                                    ? structureActivites[0]
-                                                          .categorie
-                                                          .nom_categorie_pro +
-                                                      " de " +
-                                                      structureActivites[0]
-                                                          .discipline.name
-                                                    : ""
-                                            }}</span
+                                            {{ formPlanning.title }}</span
                                         >.
                                     </p>
                                 </div>
 
                                 <Listbox
                                     class="mt-4 w-full"
-                                    v-model="selectedActivite"
+                                    v-model="formPlanning.activite"
                                 >
                                     <div class="relative mt-1">
                                         <label
@@ -306,7 +289,7 @@ const handleEventChanged = (event) => {
                                             class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
                                         >
                                             <span class="block truncate">{{
-                                                selectedActivite.titre
+                                                formPlanning.activite.titre
                                             }}</span>
                                             <span
                                                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
@@ -377,7 +360,7 @@ const handleEventChanged = (event) => {
                                         filteredProducts.length > 0
                                     "
                                     class="mt-4 w-full"
-                                    v-model="selectedProduct"
+                                    v-model="formPlanning.produit"
                                 >
                                     <div class="relative mt-1">
                                         <label
@@ -390,7 +373,7 @@ const handleEventChanged = (event) => {
                                             class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
                                         >
                                             <span class="block truncate">{{
-                                                selectedProduct.id
+                                                formPlanning.produit.id
                                             }}</span>
                                             <span
                                                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"

@@ -38,159 +38,159 @@ class ActiviteController extends Controller
      */
     public function index(Structure $structure)
     {
-        $structure = Structure::with([
-                        'disciplines',
-                        'activites',
-                        'adresses' => function ($query) {
-                            $query->latest();
-                        },
-                        'produits',
-                        'tarifs',
-                        'tarifs.tarifType',
-                        'tarifs.structureTarifTypeInfos',
-                        'tarifs.structureTarifTypeInfos.tarifTypeAttribut'
-                    ])->select(['id', 'name', 'slug'])
-                    ->where('id', $structure->id)
-                    ->first();
+        // $structure = Structure::with([
+        //                 'disciplines',
+        //                 'activites',
+        //                 'adresses' => function ($query) {
+        //                     $query->latest();
+        //                 },
+        //                 'produits',
+        //                 'tarifs',
+        //                 'tarifs.tarifType',
+        //                 'tarifs.structureTarifTypeInfos',
+        //                 'tarifs.structureTarifTypeInfos.tarifTypeAttribut'
+        //             ])->select(['id', 'name', 'slug'])
+        //             ->where('id', $structure->id)
+        //             ->first();
 
-        $activites = StructureActivite::with([
-            'structure:id,name,slug,presentation_courte',
-            'categorie:id,nom_categorie_pro',
-            'discipline:id,name',
-            'plannings',
-            'produits',
-            'produits.adresse',
-            'produits.criteres',
-            'produits.criteres.critere',
-            'produits.horaire',
-            'produits.tarifs',
-            'produits.tarifs.structureTarifTypeInfos',
-            'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut',
-            'produits.tarifs.tarifType'
-        ])
-            ->where('structure_id', $structure->id)
-            ->latest()
-            ->get();
+        // $activites = StructureActivite::with([
+        //     'structure:id,name,slug,presentation_courte',
+        //     'categorie:id,nom_categorie_pro',
+        //     'discipline:id,name',
+        //     'plannings',
+        //     'produits',
+        //     'produits.adresse',
+        //     'produits.criteres',
+        //     'produits.criteres.critere',
+        //     'produits.horaire',
+        //     'produits.tarifs',
+        //     'produits.tarifs.structureTarifTypeInfos',
+        //     'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut',
+        //     'produits.tarifs.tarifType'
+        // ])
+        //     ->where('structure_id', $structure->id)
+        //     ->latest()
+        //     ->get();
 
-        $tarifTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();
-
-
-        $allReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {
-            $query->where('structure_id', $structure->id);
-        })->count();
-        $pendingReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {
-            $query->where('structure_id', $structure->id);
-        })->where('pending', true)->count();
-        $confirmedReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {
-            $query->where('structure_id', $structure->id);
-        })->where('confirmed', true)
-            ->count();
+        // $tarifTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();
 
 
-        $actByDiscAndCategorie = $activites->groupBy('discipline.name')->map(function ($disciplineCategories) {
-            $categories = $disciplineCategories->groupBy('categorie.nom_categorie_pro')->map(function ($categorieItems) {
-                return [
-                            'activite_id' => $categorieItems->first()->id,
-                            'categorie_id' => $categorieItems->first()->categorie->id,
-                            'name' => $categorieItems->first()->categorie->nom_categorie_pro ?? 'Sans Catégorie',
-                            'count' => $categorieItems->count(),
-                        ];
-            })->sortByDesc('count');
+        // $allReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {
+        //     $query->where('structure_id', $structure->id);
+        // })->count();
+        // $pendingReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {
+        //     $query->where('structure_id', $structure->id);
+        // })->where('pending', true)->count();
+        // $confirmedReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {
+        //     $query->where('structure_id', $structure->id);
+        // })->where('confirmed', true)
+        //     ->count();
 
-            return [
-                'id' => $disciplineCategories->first()->id,
-                'discipline_id' => $disciplineCategories->first()->discipline->id,
-                'disciplineName' => $disciplineCategories->first()->discipline->name,
-                'count' => $disciplineCategories->count(),
-                'categories' => $categories,
-            ];
-        });
 
-        $activiteForTarifs = StructureActivite::with([
-                    'structure:id,name,slug',
-                    'categorie:id,nom_categorie_pro',
-                    'discipline:id,name',
-                    'produits',
-                    'produits.tarifs',
-                    'produits.tarifs.structureTarifTypeInfos',
-                    'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut'])
-                    ->where('structure_id', $structure->id)
-                    ->latest()
-                    ->get()
-                    ->groupBy('discipline.id')
-                    ->map(function ($disciplineActivites, $disciplineId) {
-                        return [
-                            'id' => $disciplineId,
-                            'disciplineName' => $disciplineActivites->first()->discipline->name,
-                            'categories' => $disciplineActivites->groupBy('categorie.id')->map(function ($categorieItems, $categoryId) {
-                                $activites = $categorieItems->map(function ($activiteItem) {
-                                    return [
-                                        'id' => $activiteItem->id,
-                                        'titre' => $activiteItem->titre,
-                                        'disciplineId' => $activiteItem->discipline_id,
-                                        'categorieId' => $activiteItem->categorie_id,
-                                        'produits' => $activiteItem->produits->map(function ($produitItem) {
-                                            return [
-                                                'id' => $produitItem->id,
-                                                'disciplineId' => $produitItem->discipline_id,
-                                                'categorieId' => $produitItem->categorie_id,
-                                                'activiteId' => $produitItem->activite_id,
-                                                'tarifs' => $produitItem->tarifs->map(function ($tarifItem) {
-                                                    return [
-                                                        'id' => $tarifItem->id,
-                                                        'typeId' => $tarifItem->type_id,
-                                                        'titre' => $tarifItem->titre,
-                                                        'description' => $tarifItem->description,
-                                                        'amount' => $tarifItem->amount,
-                                                        'produits' => $tarifItem->produits,
-                                                        'infos' => $tarifItem->structureTarifTypeInfos->map(function ($infoItem) {
-                                                            return [
-                                                                'id' => $infoItem->id,
-                                                                'attribut_id' => $infoItem->attribut_id,
-                                                                'valeur' => $infoItem->valeur,
-                                                                'unite' => $infoItem->unite,
-                                                                'tarifTypeAttribut' => $infoItem->tarifTypeAttribut
-                                                            ];
-                                                        }),
-                                                    ];
-                                                }),
-                                            ];
-                                        }),
-                                    ];
-                                });
-                                return [
-                                    'id' => $categoryId,
-                                    'disciplineId' => $categorieItems->first()->discipline->id,
-                                    'name' => $categorieItems->first()->categorie->nom_categorie_pro ?? 'Sans Catégorie',
-                                    'activites' => $activites,
-                                ];
-                            }),
-                        ];
-                    });
+        // $actByDiscAndCategorie = $activites->groupBy('discipline.name')->map(function ($disciplineCategories) {
+        //     $categories = $disciplineCategories->groupBy('categorie.nom_categorie_pro')->map(function ($categorieItems) {
+        //         return [
+        //                     'activite_id' => $categorieItems->first()->id,
+        //                     'categorie_id' => $categorieItems->first()->categorie->id,
+        //                     'name' => $categorieItems->first()->categorie->nom_categorie_pro ?? 'Sans Catégorie',
+        //                     'count' => $categorieItems->count(),
+        //                 ];
+        //     })->sortByDesc('count');
 
-        $categories = Categorie::with('disciplines')->select(['id', 'nom', 'ico'])->get();
+        //     return [
+        //         'id' => $disciplineCategories->first()->id,
+        //         'discipline_id' => $disciplineCategories->first()->discipline->id,
+        //         'disciplineName' => $disciplineCategories->first()->discipline->name,
+        //         'count' => $disciplineCategories->count(),
+        //         'categories' => $categories,
+        //     ];
+        // });
 
-        $dejaUsedDisciplines = $structure->disciplines->unique()->pluck('discipline_id');
+        // $activiteForTarifs = StructureActivite::with([
+        //             'structure:id,name,slug',
+        //             'categorie:id,nom_categorie_pro',
+        //             'discipline:id,name',
+        //             'produits',
+        //             'produits.tarifs',
+        //             'produits.tarifs.structureTarifTypeInfos',
+        //             'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut'])
+        //             ->where('structure_id', $structure->id)
+        //             ->latest()
+        //             ->get()
+        //             ->groupBy('discipline.id')
+        //             ->map(function ($disciplineActivites, $disciplineId) {
+        //                 return [
+        //                     'id' => $disciplineId,
+        //                     'disciplineName' => $disciplineActivites->first()->discipline->name,
+        //                     'categories' => $disciplineActivites->groupBy('categorie.id')->map(function ($categorieItems, $categoryId) {
+        //                         $activites = $categorieItems->map(function ($activiteItem) {
+        //                             return [
+        //                                 'id' => $activiteItem->id,
+        //                                 'titre' => $activiteItem->titre,
+        //                                 'disciplineId' => $activiteItem->discipline_id,
+        //                                 'categorieId' => $activiteItem->categorie_id,
+        //                                 'produits' => $activiteItem->produits->map(function ($produitItem) {
+        //                                     return [
+        //                                         'id' => $produitItem->id,
+        //                                         'disciplineId' => $produitItem->discipline_id,
+        //                                         'categorieId' => $produitItem->categorie_id,
+        //                                         'activiteId' => $produitItem->activite_id,
+        //                                         'tarifs' => $produitItem->tarifs->map(function ($tarifItem) {
+        //                                             return [
+        //                                                 'id' => $tarifItem->id,
+        //                                                 'typeId' => $tarifItem->type_id,
+        //                                                 'titre' => $tarifItem->titre,
+        //                                                 'description' => $tarifItem->description,
+        //                                                 'amount' => $tarifItem->amount,
+        //                                                 'produits' => $tarifItem->produits,
+        //                                                 'infos' => $tarifItem->structureTarifTypeInfos->map(function ($infoItem) {
+        //                                                     return [
+        //                                                         'id' => $infoItem->id,
+        //                                                         'attribut_id' => $infoItem->attribut_id,
+        //                                                         'valeur' => $infoItem->valeur,
+        //                                                         'unite' => $infoItem->unite,
+        //                                                         'tarifTypeAttribut' => $infoItem->tarifTypeAttribut
+        //                                                     ];
+        //                                                 }),
+        //                                             ];
+        //                                         }),
+        //                                     ];
+        //                                 }),
+        //                             ];
+        //                         });
+        //                         return [
+        //                             'id' => $categoryId,
+        //                             'disciplineId' => $categorieItems->first()->discipline->id,
+        //                             'name' => $categorieItems->first()->categorie->nom_categorie_pro ?? 'Sans Catégorie',
+        //                             'activites' => $activites,
+        //                         ];
+        //                     }),
+        //                 ];
+        //             });
 
-        $listDisciplines = ListDiscipline::with(['categories'])->select(['id', 'name', 'slug'])->get();
+        // $categories = Categorie::with('disciplines')->select(['id', 'nom', 'ico'])->get();
 
-        return Inertia::render('Structures/Activites/Index', [
-            'structure' => $structure,
-            'categories' => $categories,
-            'dejaUsedDisciplines' => $dejaUsedDisciplines,
-            'listDisciplines' => $listDisciplines,
-            'activites' => $activites,
-            'tarifTypes' => $tarifTypes,
-            'actByDiscAndCategorie' => $actByDiscAndCategorie,
-            'activiteForTarifs' => $activiteForTarifs,
-            'allReservationsCount' => $allReservationsCount,
-            'confirmedReservationsCount' => $confirmedReservationsCount,
-            'pendingReservationsCount' => $pendingReservationsCount,
-            'can' => [
-                'update' => optional(Auth::user())->can('update', $structure),
-                'delete' => optional(Auth::user())->can('delete', $structure),
-            ]
-        ]);
+        // $dejaUsedDisciplines = $structure->disciplines->unique()->pluck('discipline_id');
+
+        // $listDisciplines = ListDiscipline::with(['categories'])->select(['id', 'name', 'slug'])->get();
+
+        // return Inertia::render('Structures/Activites/Index', [
+        //     'structure' => $structure,
+        //     'categories' => $categories,
+        //     'dejaUsedDisciplines' => $dejaUsedDisciplines,
+        //     'listDisciplines' => $listDisciplines,
+        //     'activites' => $activites,
+        //     'tarifTypes' => $tarifTypes,
+        //     'actByDiscAndCategorie' => $actByDiscAndCategorie,
+        //     'activiteForTarifs' => $activiteForTarifs,
+        //     'allReservationsCount' => $allReservationsCount,
+        //     'confirmedReservationsCount' => $confirmedReservationsCount,
+        //     'pendingReservationsCount' => $pendingReservationsCount,
+        //     'can' => [
+        //         'update' => optional(Auth::user())->can('update', $structure),
+        //         'delete' => optional(Auth::user())->can('delete', $structure),
+        //     ]
+        // ]);
     }
 
     /**
@@ -220,7 +220,7 @@ class ActiviteController extends Controller
                                     ->where('discipline_id', $validated['discipline_id'])
                                     ->exists();
         if($exists) {
-            return to_route('structures.activites.index', $structure)->with('error', 'Cette discipline est déjà associée à cette structure.');
+            return to_route('structures.disciplines.index', $structure)->with('error', 'Cette discipline est déjà associée à cette structure.');
         }
 
         $structureDiscipline = StructureDiscipline::create([
@@ -285,7 +285,7 @@ class ActiviteController extends Controller
             }
         }
 
-        return to_route('structures.activites.index', $structure)->with('success', 'Activité créée, vous pouvez ajouter d\'autres activités à votre structure.');
+        return to_route('structures.disciplines.index', $structure)->with('success', 'Activité créée, vous pouvez ajouter d\'autres activités à votre structure.');
     }
 
     public function show($activite)
@@ -370,7 +370,7 @@ class ActiviteController extends Controller
     public function edit(Structure $structure, $activite)
     {
         if (! Gate::allows('update-structure', $structure)) {
-            return to_route('structures.activites.index', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
+            return to_route('structures.disciplines.index', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
 
         $allReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {

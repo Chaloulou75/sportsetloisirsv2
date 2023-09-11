@@ -86,7 +86,7 @@ class StructureTarifController extends Controller
             }
         }
 
-        return to_route('structures.activites.index', $structure)->with('success', "Le tarif a bien été enregistré pour vos produits");
+        return to_route('structures.disciplines.index', $structure)->with('success', "Le tarif a bien été enregistré pour vos produits");
 
     }
 
@@ -169,7 +169,7 @@ class StructureTarifController extends Controller
             }
         }
 
-        return to_route('structures.activites.index', $structure)->with('success', "Le tarif a bien été mis à jour pour vos produits");
+        return to_route('structures.disciplines.index', $structure)->with('success', "Le tarif a bien été mis à jour pour vos produits");
 
     }
 
@@ -195,7 +195,7 @@ class StructureTarifController extends Controller
         // $tarif->produits()->detach();
         // $tarif->delete();
 
-        return to_route('structures.activites.index', $structure)->with('success', 'Le tarif pour ce produit a bien été supprimé');
+        return to_route('structures.disciplines.index', $structure)->with('success', 'Le tarif pour ce produit a bien été supprimé');
     }
 
     /**
@@ -215,7 +215,7 @@ class StructureTarifController extends Controller
         $tarif->produits()->detach();
         $tarif->delete();
 
-        return to_route('structures.activites.index', $structure)->with('success', 'Le tarif a bien été supprimé');
+        return to_route('structures.disciplines.index', $structure)->with('success', 'Le tarif a bien été supprimé');
     }
 
     public function duplicate(Structure $structure, $tarif, $produit)
@@ -248,6 +248,6 @@ class StructureTarifController extends Controller
             $newTarifInfo->save();
         }
 
-        return to_route('structures.activites.index', $structure)->with('success', "Le tarif a bien été dupliqué");
+        return to_route('structures.disciplines.index', $structure)->with('success', "Le tarif a bien été dupliqué");
     }
 }

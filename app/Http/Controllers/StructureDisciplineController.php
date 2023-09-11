@@ -207,7 +207,7 @@ class StructureDisciplineController extends Controller
     public function show(Structure $structure, $discipline, $categorie)
     {
         if (! Gate::allows('update-structure', $structure)) {
-            return to_route('structures.activites.index', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
+            return to_route('structures.disciplines.index', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
 
         $allReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {
@@ -422,7 +422,7 @@ class StructureDisciplineController extends Controller
             $structureDiscipline->delete();
         }
 
-        return to_route('structures.activites.index', $structure)->with('success', 'Discipline supprimée de votre liste.');
+        return to_route('structures.disciplines.index', $structure)->with('success', 'Discipline supprimée de votre liste.');
 
     }
 }

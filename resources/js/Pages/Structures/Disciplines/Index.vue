@@ -297,6 +297,52 @@ const openAddTarifModal = (structure) => {
                                 </div>
                             </form>
 
+                            <!-- disciplines similaires -->
+                            <section
+                                v-if="activiteSimilairesList.length > 0"
+                                class="mx-auto w-full px-2 py-6 sm:px-4 lg:px-8"
+                            >
+                                <h2
+                                    class="mb-4 text-lg font-medium text-gray-700"
+                                >
+                                    Les disciplines similaires
+                                </h2>
+                                <div
+                                    class="flex w-full flex-col flex-wrap items-center gap-3 text-gray-700 md:flex-row"
+                                >
+                                    <div
+                                        v-for="discipline in activiteSimilairesList"
+                                        :key="discipline.id"
+                                        :index="discipline.id"
+                                        :class="{
+                                            'pointer-events-none text-gray-400':
+                                                dejaUsedDisciplinesRef.includes(
+                                                    discipline.id
+                                                ),
+                                        }"
+                                        class="inline-block w-48 rounded border border-gray-600 px-4 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                    >
+                                        <button
+                                            type="button"
+                                            @click="
+                                                updateDiscipline(discipline)
+                                            "
+                                        >
+                                            {{ discipline.name }}
+                                            <span
+                                                v-if="
+                                                    dejaUsedDisciplinesRef.includes(
+                                                        discipline.id
+                                                    )
+                                                "
+                                                class="text-xs italic text-gray-400"
+                                                >(déjà sélectionné)</span
+                                            >
+                                        </button>
+                                    </div>
+                                </div>
+                            </section>
+
                             <section
                                 v-if="activites.length > 0"
                                 class="mx-auto my-4 max-w-full space-y-4 px-2 py-6 sm:px-4 lg:px-8"
@@ -325,48 +371,6 @@ const openAddTarifModal = (structure) => {
                                 </div>
                             </section>
                         </div>
-
-                        <!-- disciplines similaires -->
-                        <section
-                            v-if="activiteSimilairesList.length > 0"
-                            class="mx-auto w-full py-6"
-                        >
-                            <h2 class="mb-4 text-lg font-medium text-gray-700">
-                                Les disciplines similaires
-                            </h2>
-                            <div
-                                class="flex w-full flex-col flex-wrap items-center gap-3 text-gray-700 md:flex-row"
-                            >
-                                <div
-                                    v-for="discipline in activiteSimilairesList"
-                                    :key="discipline.id"
-                                    :index="discipline.id"
-                                    :class="{
-                                        'pointer-events-none text-gray-400':
-                                            dejaUsedDisciplinesRef.includes(
-                                                discipline.id
-                                            ),
-                                    }"
-                                    class="inline-block w-48 rounded border border-gray-600 px-4 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
-                                >
-                                    <button
-                                        type="button"
-                                        @click="updateDiscipline(discipline)"
-                                    >
-                                        {{ discipline.name }}
-                                        <span
-                                            v-if="
-                                                dejaUsedDisciplinesRef.includes(
-                                                    discipline.id
-                                                )
-                                            "
-                                            class="text-xs italic text-gray-400"
-                                            >(déjà sélectionné)</span
-                                        >
-                                    </button>
-                                </div>
-                            </div>
-                        </section>
                     </template>
 
                     <template v-if="displayTarifs">
