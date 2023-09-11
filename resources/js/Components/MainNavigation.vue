@@ -228,8 +228,13 @@ const showingNavigationDropdown = ref(false);
                 </BreezeResponsiveNavLink>
                 <BreezeResponsiveNavLink
                     v-if="user && user.structures.length > 0"
-                    :href="route('structures.edit', user.structures[0].slug)"
-                    :active="route().current('structures.edit')"
+                    :href="
+                        route(
+                            'structures.gestion.index',
+                            user.structures[0].slug
+                        )
+                    "
+                    :active="route().current('structures.gestion.index')"
                 >
                     Gestion de ma structure
                 </BreezeResponsiveNavLink>
