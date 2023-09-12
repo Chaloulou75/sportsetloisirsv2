@@ -10,6 +10,7 @@ use App\Models\Discipline;
 use App\Models\Departement;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
+use App\Models\StructureProduit;
 use Illuminate\Support\Facades\Route;
 
 class HomeController extends Controller
@@ -19,30 +20,30 @@ class HomeController extends Controller
         $familleCount = Famille::count();
         $disciplinesCount = ListDiscipline::count();
         $structuresCount = Structure::count();
+        $produitsCount = StructureProduit::count();
         $citiesCount = City::count();
 
-        $familles = Famille::whereHas('disciplines', function ($query) {
-            $query->whereHas('structures');
+        $familles = Famille::withWhereHas('disciplines', function ($query) {
+            $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();
 
-        $listDisciplines = ListDiscipline::whereHas('structures')->select(['id', 'name', 'slug'])->get();
+        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
 
-        $disciplines = ListDiscipline::whereHas('structures')->select(['id', 'name', 'slug'])
-                        ->withCount('structures')
-                        ->orderByDesc('structures_count')
+        $disciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])
+                        ->withCount('structureProduits')
+                        ->orderByDesc('structure_produits_count')
                         ->limit(12)
                         ->get();
 
-
-        $allCities = City::whereHas('structures')
+        $allCities = City::whereHas('produits')
                                 ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
                                 ->get();
 
 
-        $topVilles = City::whereHas('structures')
+        $topVilles = City::whereHas('produits')
                         ->select(['id', 'code_postal', 'ville', 'ville_formatee', 'departement', 'nom_departement'])
-                        ->withCount('structures')
-                        ->orderByDesc('structures_count')
+                        ->withCount('produits')
+                        ->orderByDesc('produits_count')
                         ->limit(12)
                         ->get();
 
@@ -66,6 +67,7 @@ class HomeController extends Controller
             'familleCount' => $familleCount,
             'disciplinesCount' => $disciplinesCount,
             'structuresCount' => $structuresCount,
+            'produitsCount' => $produitsCount,
             'citiesCount' => $citiesCount,
             'lastStructures' => $lastStructures,
             'allCities' => $allCities,

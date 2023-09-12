@@ -57,6 +57,11 @@ class ListDiscipline extends Model
         return $this->belongsToMany(StructureActivite::class, 'structures_produits', 'discipline_id', 'activite_id');
     }
 
+    public function structureProduits(): HasMany
+    {
+        return $this->hasMany(StructureProduit::class, 'discipline_id');
+    }
+
     public function disciplinesSimilaires(): BelongsToMany
     {
         return $this->belongsToMany(ListDiscipline::class, 'liens_disciplines_similaires', 'discipline_id', 'discipline_similaire_id');

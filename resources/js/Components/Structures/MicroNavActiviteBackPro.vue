@@ -35,7 +35,13 @@ const getButtonClass = (buttonName) => {
                 @click="emitEvent('Mes activites')"
                 :class="getButtonClass('Mes activites')"
             >
-                Mes activités
+                <span
+                    :class="{
+                        hidden: route().current('structures.categories.show'),
+                    }"
+                    >Mes activités
+                </span>
+
                 <span v-if="categorie">
                     {{ categorie.nom_categorie_pro }} de
                 </span>

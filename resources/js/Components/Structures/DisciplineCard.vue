@@ -44,7 +44,7 @@ const props = defineProps({
 
         <div class="mt-2">
             <dl class="flex flex-col">
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between py-1">
                     <Link
                         :href="
                             route('structures.disciplines.show', {
@@ -52,7 +52,7 @@ const props = defineProps({
                                 discipline: activite.disciplineSlug,
                             })
                         "
-                        class="px-2 py-1.5 text-center text-base font-semibold uppercase tracking-wide text-gray-600 hover:text-indigo-600"
+                        class="px-2 py-2 text-center text-base font-semibold uppercase tracking-wide text-gray-600 hover:text-indigo-600"
                     >
                         {{ activite.disciplineName }}
                     </Link>
@@ -61,7 +61,7 @@ const props = defineProps({
                             <span class="inline-flex rounded-md">
                                 <button
                                     type="button"
-                                    class="inline-flex items-center border border-transparent bg-green-500 px-2 py-2 text-gray-50 transition duration-150 ease-in-out hover:bg-green-600 hover:text-white focus:outline-none"
+                                    class="inline-flex items-center border border-transparent bg-green-500 px-2 py-2 text-white transition duration-150 ease-in-out hover:bg-green-600 focus:outline-none"
                                 >
                                     <PlusIcon class="h-5 w-5" />
                                 </button>
@@ -87,7 +87,7 @@ const props = defineProps({
                 </div>
                 <div class="w-full divide-y divide-slate-200">
                     <div
-                        class="flex justify-between px-2 py-3 odd:bg-white even:bg-slate-50"
+                        class="flex items-center justify-between pl-2 odd:bg-white even:bg-slate-50"
                         v-for="categorie in activite.categories"
                         :key="categorie.categorie_id"
                     >
@@ -99,7 +99,7 @@ const props = defineProps({
                                     categorie: categorie.categorie_id,
                                 })
                             "
-                            class="text-sm hover:text-indigo-500"
+                            class="py-2 text-sm hover:text-indigo-500"
                             >{{ categorie.name }}
 
                             <span class="text-sm">
@@ -109,10 +109,10 @@ const props = defineProps({
                         <button
                             type="button"
                             @click="emit('openDeleteCategorieModal', categorie)"
-                            class="self-end text-red-500 hover:text-red-600"
+                            class="self-end bg-red-500 p-2 text-white hover:bg-red-600"
                         >
                             <span class="sr-only">supprimer categorie</span>
-                            <TrashIcon class="mr-1 h-5 w-5" />
+                            <TrashIcon class="h-5 w-5" />
                         </button>
                     </div>
                 </div>

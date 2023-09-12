@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Models\Famille;
 use App\Models\Structure;
 use Illuminate\Http\Request;
+use App\Models\StructureProduit;
 use Illuminate\Support\Facades\DB;
 
 class CityController extends Controller
@@ -17,21 +18,18 @@ class CityController extends Controller
     public function index()
     {
         $structuresCount = Structure::count();
-        $familles = Famille::with([
-            'disciplines' => function ($query) {
-                $query->whereHas('structures');
-            }
-        ])
-        ->whereHas('disciplines', function ($query) {
-            $query->whereHas('structures');
+        $produitsCount = StructureProduit::count();
+
+        $familles = Famille::withWhereHas('disciplines', function ($query) {
+            $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();
 
-        $cities = City::whereHas('structures')->select(['id', 'ville', 'ville_formatee', 'code_postal'])
-                        ->withCount('structures')
+        $cities = City::whereHas('produits')->select(['id', 'ville', 'ville_formatee', 'code_postal'])
+                        ->withCount('produits')
                         ->filter(
                             request(['search'])
                         )
-                        ->orderByDesc('structures_count')
+                        ->orderByDesc('produits_count')
                         ->paginate(15)
                         ->withQueryString();
 
@@ -39,6 +37,7 @@ class CityController extends Controller
             'cities' => $cities,
             'familles' => $familles,
             'structuresCount' => $structuresCount,
+            'produitsCount' => $produitsCount,
             'filters' => request()->all(['search']),
         ]);
     }
@@ -48,22 +47,17 @@ class CityController extends Controller
      */
     public function show(City $city)
     {
-        $familles = Famille::with([
-            'disciplines' => function ($query) {
-                $query->whereHas('structures');
-            }
-        ])
-        ->whereHas('disciplines', function ($query) {
-            $query->whereHas('structures');
+        $familles = Famille::withWhereHas('disciplines', function ($query) {
+            $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();
 
-        $city = City::with(['structures'])
+        $city = City::with(['produits'])
                     ->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
                     ->where('id', $city->id)
-                    ->withCount('structures')
+                    ->withCount('produits')
                     ->first();
 
-        $citiesAround = City::with('structures')
+        $citiesAround = City::whereHas('produits')
                     ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
                     ->selectRaw("
                         (6366 * acos(
@@ -93,12 +87,40 @@ class CityController extends Controller
             'activites.discipline',
             'activites.categorie',
             'produits',
+            'produits.adresse',
             'produits.criteres',
+            'produits.criteres.critere',
             'tarifs',
             'tarifs.tarifType',
             'tarifs.structureTarifTypeInfos',
             'plannings',
-        ])->withCount('disciplines', 'produits', 'activites')->paginate(6);
+        ])->withCount('disciplines', 'produits', 'activites')
+        ->paginate(6);
+
+        $produits = $city->produits()->with([
+            'structure',
+            'structure.creator:id,name',
+            'structure.users:id,name',
+            'structure.adresses'  => function ($query) {
+                $query->latest();
+            },
+            'structure.city:id,ville,ville_formatee,code_postal',
+            'structure.departement:id,departement,numero',
+            'structure.structuretype:id,name,slug',
+            'discipline:id,name,slug',
+            'categorie:id,categorie_id',
+            'activite',
+            'activite.discipline',
+            'activite.categorie',
+            'adresse',
+            'criteres',
+            'criteres.critere',
+            'tarifs',
+            'tarifs.tarifType',
+            'tarifs.structureTarifTypeInfos',
+            'structure.plannings',
+        ])
+        ->paginate(6);
 
         $city->timestamp = false;
         $city->increment('view_count');
@@ -108,11 +130,12 @@ class CityController extends Controller
             'city' => $city,
             'citiesAround' => $citiesAround,
             'structures' => $structures,
+            'produits' => $produits,
             'filters' => request()->all(['discipline']),
         ]);
     }
 
-    public function radians($degrees)
+    protected function radians($degrees)
     {
         return $degrees * pi() / 180;
     }

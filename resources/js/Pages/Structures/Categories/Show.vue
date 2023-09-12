@@ -120,11 +120,17 @@ const latestAdresseId = computed(() => {
                 >
                     <ChevronLeftIcon class="h-10 w-10 text-white" />
                 </Link>
-                <h1
+                <Link
+                    :href="
+                        route('structures.disciplines.show', {
+                            structure: props.structure,
+                            discipline: props.discipline.slug,
+                        })
+                    "
                     class="shrink-0 px-3 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
                     {{ discipline.name }}
-                </h1>
+                </Link>
                 <Link
                     :href="
                         route('structures.categories.show', {
@@ -249,12 +255,6 @@ const latestAdresseId = computed(() => {
                             :activiteForTarifs="activiteForTarifs"
                         />
                     </template>
-
-                    <div class="hidden sm:block" aria-hidden="true">
-                        <div class="py-5">
-                            <div class="border-t border-gray-200" />
-                        </div>
-                    </div>
                 </div>
             </div>
             <ModalAddActivite

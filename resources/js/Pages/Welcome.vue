@@ -15,6 +15,7 @@ const props = defineProps({
     famillesCount: Number,
     disciplinesCount: Number,
     structuresCount: Number,
+    produitsCount: Number,
     citiesCount: Number,
     lastStructures: Object,
     allCities: Object,
@@ -114,8 +115,11 @@ const formatCityName = (ville) => {
                             Nombreuses disciplines
                         </h3>
                         <p class="text-gray-600">
-                            Trouvez un club de sport ou un cours collectif dans
-                            plus de
+                            Trouvez un club de sport ou un des
+                            <span class="font-semibold">{{
+                                produitsCount
+                            }}</span>
+                            cours collectifs dans plus de
                             <span class="font-semibold">{{
                                 disciplinesCount
                             }}</span>

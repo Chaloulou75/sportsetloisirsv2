@@ -168,7 +168,7 @@ const openAddTarifModal = (structure) => {
                     <ChevronLeftIcon class="h-10 w-10 text-white" />
                 </Link>
                 <h1
-                    class="px-2 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-6 md:py-4 md:text-left md:text-2xl md:font-bold"
+                    class="shrink-0 px-3 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
                     Disciplines
                 </h1>
@@ -194,9 +194,7 @@ const openAddTarifModal = (structure) => {
                         </button>
                     </div>
                     <template v-if="displayActivites">
-                        <div
-                            class="min-h-screen shadow sm:overflow-hidden sm:rounded-md"
-                        >
+                        <div class="min-h-screen">
                             <form @submit.prevent="submit" autocomplete="off">
                                 <div
                                     class="flex w-full flex-col items-start justify-start bg-white px-4 py-5 md:flex-row md:px-6 md:py-10"
@@ -345,7 +343,7 @@ const openAddTarifModal = (structure) => {
 
                             <section
                                 v-if="activites.length > 0"
-                                class="mx-auto my-4 max-w-full space-y-4 px-2 py-6 sm:px-4 lg:px-8"
+                                class="mx-auto my-4 max-w-full space-y-4 px-2 sm:px-4 lg:px-8"
                             >
                                 <h2 class="text-xl font-bold text-gray-700">
                                     Vos activités
@@ -390,12 +388,6 @@ const openAddTarifModal = (structure) => {
                             :structureActivites="activites"
                         />
                     </template>
-
-                    <div class="hidden sm:block" aria-hidden="true">
-                        <div class="py-5">
-                            <div class="border-t border-gray-200" />
-                        </div>
-                    </div>
                 </div>
             </div>
 

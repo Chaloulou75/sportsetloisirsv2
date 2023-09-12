@@ -3,7 +3,6 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import { router, Head, Link } from "@inertiajs/vue3";
 import { ref, watch, computed, defineAsyncComponent } from "vue";
 import { debounce } from "lodash";
-import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
 import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
 import CitiesAround from "@/Components/Cities/CitiesAround.vue";
 
@@ -12,8 +11,29 @@ const props = defineProps({
     city: Object,
     citiesAround: Object,
     structures: Object,
+    produits: Object,
     filters: Object,
 });
+
+const StructureCard = defineAsyncComponent(() =>
+    import("@/Components/Structures/StructureCard.vue")
+);
+
+const LeafletMapMultiple = defineAsyncComponent(() =>
+    import("@/Components/LeafletMapMultiple.vue")
+);
+
+const ProduitCard = defineAsyncComponent(() =>
+    import("@/Components/Structures/ProduitCard.vue")
+);
+
+const LeafletMapProduitMultiple = defineAsyncComponent(() =>
+    import("@/Components/LeafletMapProduitMultiple.vue")
+);
+
+const Pagination = defineAsyncComponent(() =>
+    import("@/Components/Pagination.vue")
+);
 
 let discipline = ref("");
 function resetSearch() {
@@ -31,14 +51,6 @@ watch(
     }, 500)
 );
 
-const StructureCard = defineAsyncComponent(() =>
-    import("@/Components/Structures/StructureCard.vue")
-);
-
-const Pagination = defineAsyncComponent(() =>
-    import("@/Components/Pagination.vue")
-);
-
 const flattenedDisciplines = computed(() => {
     const uniqueDisciplines = new Map();
     props.structures.data.forEach((structure) => {
@@ -53,13 +65,20 @@ const flattenedDisciplines = computed(() => {
 });
 
 const hoveredStructure = ref(null);
+const hoveredProduit = ref(null);
 
-function showTooltip(structure) {
+const showTooltip = (structure) => {
     hoveredStructure.value = structure.id;
-}
-function hideTooltip() {
+};
+const showProduitTooltip = (produit) => {
+    hoveredProduit.value = produit.id;
+};
+const hideTooltip = () => {
     hoveredStructure.value = null;
-}
+};
+const hideProduitTooltip = () => {
+    hoveredProduit.value = null;
+};
 
 const formatCityName = (ville) => {
     return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
@@ -201,47 +220,93 @@ const formatCityName = (ville) => {
                     </Link>
                 </div>
             </div>
-            <h2 class="text-center text-lg font-semibold text-gray-600">
-                Les structures disponibles à
-                <span class="text-indigo-700">{{
-                    formatCityName(city.ville)
-                }}</span>
-                <span class="text-xs text-gray-600">
-                    ({{ city.code_postal }})</span
-                >
-            </h2>
-            <div
-                class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-12 sm:px-6 md:flex-row md:space-x-8 lg:px-8"
-            >
-                <div class="md:w-1/2">
-                    <div
-                        class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-2"
+            <section>
+                <h2 class="text-center text-lg font-semibold text-gray-600">
+                    Les structures disponibles à
+                    <span class="text-indigo-700">{{
+                        formatCityName(city.ville)
+                    }}</span>
+                    <span class="text-xs text-gray-600">
+                        ({{ city.code_postal }})</span
                     >
-                        <StructureCard
-                            v-for="(structure, index) in structures.data"
-                            :key="structure.id"
-                            :index="index"
-                            :structure="structure"
-                            @mouseover="showTooltip(structure)"
-                            @mouseout="hideTooltip()"
-                        />
+                </h2>
+                <div
+                    class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-12 sm:px-6 md:flex-row md:space-x-8 lg:px-8"
+                >
+                    <div class="md:w-1/2">
+                        <div
+                            class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-2"
+                        >
+                            <StructureCard
+                                v-for="(structure, index) in structures.data"
+                                :key="structure.id"
+                                :index="index"
+                                :structure="structure"
+                                @mouseover="showTooltip(structure)"
+                                @mouseout="hideTooltip"
+                            />
+                        </div>
+                        <div class="flex justify-end p-10">
+                            <Pagination :links="structures.links" />
+                        </div>
                     </div>
-                    <div class="flex justify-end p-10">
-                        <Pagination :links="structures.links" />
+                    <div class="space-y-4 md:sticky md:w-1/2">
+                        <LeafletMapMultiple
+                            class="md:top-2"
+                            :structures="structures.data"
+                            :hovered-structure="hoveredStructure"
+                            :zoom="11"
+                        />
+                        <CitiesAround :citiesAround="citiesAround" />
                     </div>
                 </div>
-                <div class="space-y-4 md:sticky md:w-1/2">
-                    <LeafletMapMultiple
-                        class="md:top-2"
-                        :structures="structures.data"
-                        :hovered-structure="hoveredStructure"
-                        :zoom="11"
-                    />
-                    <CitiesAround :citiesAround="citiesAround" />
+            </section>
+        </template>
+        <template v-if="produits.data.length > 0">
+            <div
+                class="mx-auto max-w-full px-2 py-6 sm:px-6 md:space-x-4 md:py-12 lg:px-8"
+            >
+                <h2 class="text-center text-lg font-semibold text-gray-600">
+                    Les activités disponibles à
+                    <span class="text-indigo-700">{{
+                        formatCityName(city.ville)
+                    }}</span>
+                    <span class="text-xs text-gray-600">
+                        ({{ city.code_postal }})</span
+                    >
+                </h2>
+                <div
+                    class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-12 sm:px-6 md:flex-row md:space-x-8 lg:px-8"
+                >
+                    <div class="md:w-1/2">
+                        <div
+                            class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-2"
+                        >
+                            <ProduitCard
+                                v-for="produit in produits.data"
+                                :key="produit.id"
+                                :produit="produit"
+                                @mouseover="showProduitTooltip(produit)"
+                                @mouseout="hideProduitTooltip"
+                            />
+                        </div>
+                        <div class="flex justify-end p-10">
+                            <Pagination :links="produits.links" />
+                        </div>
+                    </div>
+                    <div class="space-y-4 md:sticky md:w-1/2">
+                        <LeafletMapProduitMultiple
+                            class="md:top-2"
+                            :produits="produits.data"
+                            :hovered-produit="hoveredProduit"
+                            :zoom="16"
+                        />
+                        <CitiesAround :citiesAround="citiesAround" />
+                    </div>
                 </div>
             </div>
         </template>
-        <template v-else>
+        <template v-if="structures.data.length === 0">
             <div
                 class="mx-auto min-h-screen max-w-full px-2 py-12 sm:px-6 lg:px-8"
             >

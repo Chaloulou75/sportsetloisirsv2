@@ -1,6 +1,6 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
-import { ref, nextTick, watch, computed, onMounted } from "vue";
+import { ref, nextTick, watch, onMounted } from "vue";
 import { useCookies } from "@vueuse/integrations/useCookies";
 import { BookmarkIcon, MapPinIcon } from "@heroicons/vue/24/outline";
 import { HeartIcon } from "@heroicons/vue/24/solid";
