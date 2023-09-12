@@ -117,7 +117,7 @@ const latestAdresseId = computed(() => {
                     <ChevronLeftIcon class="h-10 w-10 text-white" />
                 </Link>
                 <h1
-                    class="shrink-0 px-2 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-6 md:py-4 md:text-left md:text-3xl md:font-bold"
+                    class="shrink-0 px-3 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-3xl md:font-bold"
                 >
                     {{ discipline.name }}
                 </h1>

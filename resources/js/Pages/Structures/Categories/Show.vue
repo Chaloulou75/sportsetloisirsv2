@@ -120,7 +120,7 @@ const latestAdresseId = computed(() => {
                     <ChevronLeftIcon class="h-10 w-10 text-white" />
                 </Link>
                 <h1
-                    class="shrink-0 px-2 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-6 md:py-4 md:text-left md:text-2xl md:font-bold"
+                    class="shrink-0 px-3 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
                     {{ discipline.name }}
                 </h1>
@@ -136,7 +136,7 @@ const latestAdresseId = computed(() => {
                     :key="category.id"
                     class="flex h-full w-full flex-col items-center border border-gray-200 py-2.5 text-xs md:py-4"
                     :class="{
-                        'bg-green-600 text-white': category.id === categorie.id,
+                        'bg-green-500 text-white': category.id === categorie.id,
                         'bg-white text-slate-700': category.id !== categorie.id,
                     }"
                 >

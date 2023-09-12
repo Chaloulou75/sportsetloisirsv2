@@ -1,7 +1,9 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
 import { ref } from "vue";
-import { TrashIcon } from "@heroicons/vue/24/outline";
+import { TrashIcon, PlusIcon } from "@heroicons/vue/24/outline";
+import BreezeDropdown from "@/Components/Dropdown.vue";
+import BreezeDropdownLink from "@/Components/DropdownLink.vue";
 
 const emit = defineEmits(["openDeleteModal", "openDeleteCategorieModal"]);
 
@@ -44,18 +46,47 @@ const props = defineProps({
 
         <div class="mt-2">
             <dl class="flex flex-col">
-                <Link
-                    :href="
-                        route('structures.disciplines.show', {
-                            structure: structure.slug,
-                            discipline: activite.disciplineSlug,
-                        })
-                    "
-                    class="px-2 py-1.5 text-center text-base font-semibold uppercase tracking-wide text-gray-600 hover:text-indigo-600"
-                >
-                    {{ activite.disciplineName }}
-                </Link>
+                <div class="flex items-center justify-between">
+                    <Link
+                        :href="
+                            route('structures.disciplines.show', {
+                                structure: structure.slug,
+                                discipline: activite.disciplineSlug,
+                            })
+                        "
+                        class="px-2 py-1.5 text-center text-base font-semibold uppercase tracking-wide text-gray-600 hover:text-indigo-600"
+                    >
+                        {{ activite.disciplineName }}
+                    </Link>
+                    <BreezeDropdown align="right" width="48">
+                        <template #trigger>
+                            <span class="inline-flex rounded-md">
+                                <button
+                                    type="button"
+                                    class="inline-flex items-center border border-transparent bg-green-500 px-2 py-2 text-gray-50 transition duration-150 ease-in-out hover:bg-green-600 hover:text-white focus:outline-none"
+                                >
+                                    <PlusIcon class="h-5 w-5" />
+                                </button>
+                            </span>
+                        </template>
 
+                        <template #content>
+                            <BreezeDropdownLink
+                                :href="
+                                    route('structures.categories.show', {
+                                        structure: structure.slug,
+                                        discipline: activite.disciplineSlug,
+                                        categorie: category.id,
+                                    })
+                                "
+                                v-for="category in activite.missingCategories"
+                                :key="category.id"
+                            >
+                                {{ category.nom_categorie_pro }}
+                            </BreezeDropdownLink>
+                        </template>
+                    </BreezeDropdown>
+                </div>
                 <div class="w-full divide-y divide-slate-200">
                     <div
                         class="flex justify-between px-2 py-3 odd:bg-white even:bg-slate-50"
