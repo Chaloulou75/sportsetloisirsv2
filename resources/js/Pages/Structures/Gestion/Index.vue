@@ -228,6 +228,19 @@ const formatCurrency = (value) => {
                             <div class="font-semibold">messages</div>
                         </div>
                     </div>
+                    <div class="flex w-full items-center justify-end">
+                        <Link
+                            :href="
+                                route(
+                                    'structures.gestion.statistiques.index',
+                                    structure
+                                )
+                            "
+                            class="rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-indigo-500 shadow hover:bg-gray-100 hover:text-indigo-800"
+                        >
+                            Voir mes statistiques
+                        </Link>
+                    </div>
                 </div>
 
                 <!-- activités populaires -->
@@ -251,6 +264,16 @@ const formatCurrency = (value) => {
                                 })
                             "
                         />
+                    </div>
+                    <div class="flex w-full items-center justify-end">
+                        <Link
+                            :href="
+                                route('structures.disciplines.index', structure)
+                            "
+                            class="rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-indigo-500 shadow hover:bg-gray-100 hover:text-indigo-800"
+                        >
+                            Voir mes activités
+                        </Link>
                     </div>
                 </div>
             </div>

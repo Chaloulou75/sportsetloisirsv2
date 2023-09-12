@@ -26,14 +26,12 @@ const props = defineProps({
     >
         <div class="relative">
             <button
-                class="absolute right-2 top-2 bg-transparent"
+                class="absolute right-2 top-2 bg-red-500 p-1"
                 type="button"
                 @click="emit('openDeleteModal', activite)"
             >
                 <span class="sr-only">supprimer discipline</span>
-                <TrashIcon
-                    class="mr-1 h-6 w-6 text-red-500 hover:text-red-600"
-                />
+                <TrashIcon class="h-6 w-6 text-red-100 hover:text-white" />
             </button>
 
             <!-- Image -->

@@ -246,7 +246,6 @@ class StructureDisciplineController extends Controller
 
         $discipline = ListDiscipline::where('slug', $discipline)->first();
 
-
         $categoriesListByDiscipline = LienDisciplineCategorie::whereHas('structures_activites', function (Builder $query) use ($structure) {
             $query->where('structure_id', $structure->id);
         })->where('discipline_id', $discipline->id)->get();
@@ -254,7 +253,6 @@ class StructureDisciplineController extends Controller
         $categoriesWithoutStructures = LienDisciplineCategorie::whereDoesntHave('structures_activites', function (Builder $query) use ($structure) {
             $query->where('structure_id', $structure->id);
         })->where('discipline_id', $discipline->id)->get();
-
 
         $structureActivites = StructureActivite::with([
             'structure:id,name,slug,presentation_courte',

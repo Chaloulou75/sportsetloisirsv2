@@ -134,7 +134,7 @@ const user = computed(() => page.props.auth.user);
                                     v-if="user && structure"
                                     :href="
                                         route(
-                                            'structures.gestion.index',
+                                            'structures.gestion.reservations.index',
                                             structure.slug
                                         )
                                     "
@@ -149,7 +149,7 @@ const user = computed(() => page.props.auth.user);
                                     v-if="user && structure"
                                     :href="
                                         route(
-                                            'structures.gestion.index',
+                                            'structures.gestion.reservations.index',
                                             structure.slug
                                         )
                                     "
@@ -166,7 +166,7 @@ const user = computed(() => page.props.auth.user);
                                     v-if="user && structure"
                                     :href="
                                         route(
-                                            'structures.gestion.index',
+                                            'structures.gestion.reservations.index',
                                             structure.slug
                                         )
                                     "
@@ -229,13 +229,18 @@ const user = computed(() => page.props.auth.user);
                         <ul class="space-y-2">
                             <!-- ranking -->
                             <li class="mt-2" v-if="structure">
-                                <a
-                                    href=""
+                                <Link
+                                    :href="
+                                        route(
+                                            'structures.gestion.index',
+                                            structure
+                                        )
+                                    "
                                     class="flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
                                 >
                                     <div>Ranking Score</div>
                                     <div>2265</div>
-                                </a>
+                                </Link>
                             </li>
 
                             <!-- structure -->
@@ -323,27 +328,32 @@ const user = computed(() => page.props.auth.user);
                 </li>
                 <!-- stats -->
                 <li class="w-full">
-                    <a
-                        href="/"
+                    <Link
+                        :href="
+                            route(
+                                'structures.gestion.statistiques.index',
+                                structure
+                            )
+                        "
                         class="flex items-center justify-between rounded-sm border-2 border-dotted border-sky-500 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
                         >Statistiques
-                    </a>
+                    </Link>
                 </li>
                 <!-- avis -->
                 <li class="w-full">
-                    <a
-                        href="/"
+                    <Link
+                        :href="route('structures.gestion.index', structure)"
                         class="flex items-center justify-between rounded-sm border-2 border-dotted border-sky-500 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
                         >Avis Clients
-                    </a>
+                    </Link>
                 </li>
                 <!-- blog -->
                 <li class="w-full">
-                    <a
-                        href="/"
+                    <Link
+                        :href="route('structures.gestion.index', structure)"
                         class="block rounded-sm border-2 border-dotted border-sky-500 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
                         >Articles de blog
-                    </a>
+                    </Link>
                 </li>
             </ul>
         </div>

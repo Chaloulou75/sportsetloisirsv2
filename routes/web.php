@@ -37,6 +37,7 @@ use App\Http\Controllers\DepartementDisciplineStructuretypeController;
 use App\Http\Controllers\CityDisciplineStructuretypeStructureController;
 use App\Http\Controllers\CityDisciplineCategorieStructureActiviteController;
 use App\Http\Controllers\CityDisciplineStructuretypeStructureActiviteController;
+use App\Http\Controllers\StructureStatistiqueController;
 
 /*
 |--------------------------------------------------------------------------
@@ -170,10 +171,16 @@ Route::resource('product_reservations', ProductReservationController::class)->on
 ]);
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
+    Route::post('/structures', [StructureController::class, 'store'])->name('structures.store');
+    Route::get('/structures/{structure:slug}/edit', [StructureController::class, 'edit'])->name('structures.edit');
+    Route::put('/structures/{structure}', [StructureController::class, 'update'])->name('structures.update');
+    Route::delete('/structures/{structure}', [StructureController::class, 'destroy'])->name('structures.destroy');
+
     Route::get('/gestion/{structure:slug}', [StructureGestionController::class, 'index'])->name('structures.gestion.index');
     Route::get('/gestion/{structure:slug}/reservations', [ProductReservationController::class, 'index'])->name('structures.gestion.reservations.index');
     Route::put('/gestion/{structure:slug}/reservations/{reservation}', [ProductReservationController::class, 'update'])->name('structures.gestion.reservations.update');
-
+    Route::get('/gestion/{structure:slug}/statistiques', [StructureStatistiqueController::class, 'index'])->name('structures.gestion.statistiques.index');
 
     Route::post('/structures/{structure:slug}/{discipline:slug}/newactivitystore', [ActiviteController::class, 'newactivitystore'])->name('structures.activites.newactivitystore');
     Route::put('/structures/{structure:slug}/activites/{activite:id}/toggleactif', [ActiviteController::class, 'toggleactif']);
@@ -192,7 +199,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('structures/{structure:slug}/plannings/{planning}', [StructurePlanningController::class, 'update'])->name('structures.plannings.update');
     Route::delete('structures/{structure:slug}/plannings/{planning}', [StructurePlanningController::class, 'destroy'])->name('structures.plannings.destroy');
 
-
     Route::resource('structures.disciplines', StructureDisciplineController::class)->scoped(['structure' => 'slug','discipline' => 'id'])->only(['destroy']);
 
     Route::get('structures/{structure:slug}/disciplines', [StructureDisciplineController::class, 'index'])->name('structures.disciplines.index');
@@ -206,24 +212,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('structures/{structure:slug}/adresses/{adress}', [StructureAddresseController::class, 'update'])->name('structures.adresses.update');
     Route::delete('structures/{structure:slug}/adresses/{adress}', [StructureAddresseController::class, 'destroy'])->name('structures.adresses.destroy');
 
-
     Route::post('structures/{structure:slug}/partenaires', [StructureUserController::class, 'store'])->name('structures.partenaires.store');
     Route::put('structures/{structure:slug}/partenaires/{partenaire}', [StructureUserController::class, 'update'])->name('structures.partenaires.update');
     Route::delete('structures/{structure:slug}/partenaires/{partenaire}', [StructureUserController::class, 'destroy'])->name('structures.partenaires.destroy');
-
-
-    Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
-    Route::post('/structures', [StructureController::class, 'store'])->name('structures.store');
-    Route::get('/structures/{structure:slug}/edit', [StructureController::class, 'edit'])->name('structures.edit');
-    Route::put('/structures/{structure}', [StructureController::class, 'update'])->name('structures.update');
-    Route::delete('/structures/{structure}', [StructureController::class, 'destroy'])->name('structures.destroy');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Admin routes
-
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/admin/{discipline:slug}', [AdminController::class, 'edit'])->name('admin.edit');
 

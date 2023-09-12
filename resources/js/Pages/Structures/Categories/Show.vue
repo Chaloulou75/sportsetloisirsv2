@@ -112,8 +112,9 @@ const latestAdresseId = computed(() => {
                 <Link
                     class="h-full bg-blue-600 py-2.5 md:px-4 md:py-4"
                     :href="
-                        route('structures.disciplines.index', {
+                        route('structures.disciplines.show', {
                             structure: props.structure,
+                            discipline: props.discipline.slug,
                         })
                     "
                 >
