@@ -13,6 +13,8 @@ import {
     MagnifyingGlassIcon,
     ShoppingCartIcon,
     UserIcon,
+    MapPinIcon,
+    QuestionMarkCircleIcon,
 } from "@heroicons/vue/24/solid";
 
 const props = defineProps({
@@ -76,15 +78,22 @@ const submitForm = async () => {
 
                 <div class="hidden space-x-8 lg:-my-px lg:ml-10 lg:flex">
                     <section
-                        class="mx-auto flex w-full items-center justify-center px-2 md:flex-row md:space-x-4 md:space-y-0"
+                        class="mx-auto flex w-full items-center justify-center px-2 md:flex-row md:space-y-0"
                     >
+                        <MapPinIcon class="h-5 w-5 text-white" />
+
                         <AutocompleteCityNav
                             :cities="allCities"
                             v-model="localite"
+                            class="mr-4"
                         />
+
+                        <QuestionMarkCircleIcon class="h-5 w-5 text-white" />
+
                         <AutocompleteDisciplineNav
                             :disciplines="listDisciplines"
                             v-model="search"
+                            class="mr-4"
                         />
                         <div class="w-full md:w-auto">
                             <button
