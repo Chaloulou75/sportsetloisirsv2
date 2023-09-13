@@ -5,16 +5,59 @@ import BreezeDropdown from "@/Components/Dropdown.vue";
 import BreezeDropdownLink from "@/Components/DropdownLink.vue";
 import BreezeNavLink from "@/Components/NavLink.vue";
 import BreezeResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
-import { Link, usePage } from "@inertiajs/vue3";
-import { HeartIcon } from "@heroicons/vue/24/solid";
+import AutocompleteDisciplineNav from "@/Components/Navigation/AutocompleteDisciplineNav.vue";
+import AutocompleteCityNav from "@/Components/Navigation/AutocompleteCityNav.vue";
+import { Link, usePage, router } from "@inertiajs/vue3";
+import {
+    HeartIcon,
+    MagnifyingGlassIcon,
+    ShoppingCartIcon,
+    UserIcon,
+} from "@heroicons/vue/24/solid";
 
-defineProps({
+const props = defineProps({
     canLogin: Boolean,
     canRegister: Boolean,
+    listDisciplines: Object,
+    allCities: Object,
 });
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 const showingNavigationDropdown = ref(false);
+
+const search = ref(null);
+const localite = ref(null);
+const processing = ref(false);
+
+const submitForm = async () => {
+    processing.value = true;
+    try {
+        const city = localite.value;
+        const disciplineSlug = search.value;
+
+        if (city && disciplineSlug) {
+            router.get(
+                route("villes.disciplines.show", {
+                    city: city,
+                    discipline: disciplineSlug,
+                })
+            );
+            // router.get(`/villes/${city}/disciplines/${disciplineSlug}`);
+        } else if (city) {
+            router.get(route("villes.show", { city }));
+        } else if (disciplineSlug) {
+            router.get(route("disciplines.show", { disciplineSlug }));
+        }
+
+        // Reset the form
+        localite.value = "";
+        search.value = "";
+        processing.value = false;
+    } catch (error) {
+        console.error("Error:", error);
+        processing.value = false;
+    }
+};
 </script>
 
 <template>
@@ -29,14 +72,9 @@ const showingNavigationDropdown = ref(false);
                             <BreezeApplicationLogo class="block h-9 w-auto" />
                         </Link>
                     </div>
-
-                    <!-- Navigation Links -->
-                    <div
-                        class="hidden space-x-8 lg:-my-px lg:ml-10 lg:flex"
-                    ></div>
                 </div>
 
-                <!-- <div class="hidden space-x-8 lg:-my-px lg:ml-10 lg:flex">
+                <div class="hidden space-x-8 lg:-my-px lg:ml-10 lg:flex">
                     <section
                         class="mx-auto flex w-full items-center justify-center px-2 md:flex-row md:space-x-4 md:space-y-0"
                     >
@@ -53,39 +91,27 @@ const showingNavigationDropdown = ref(false);
                                 @click="submitForm"
                                 :disabled="processing"
                                 type="submit"
-                                class="mb-0.5 flex w-full items-center justify-center rounded border border-green-300 bg-white px-2 py-2 text-sm font-medium text-gray-600 shadow-sm hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 md:w-auto"
+                                class="mb-0.5 flex w-full items-center justify-center rounded border border-indigo-500 bg-white px-2 py-2 text-sm font-medium text-indigo-500 shadow-sm hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:w-auto"
                             >
                                 <MagnifyingGlassIcon class="h-5 w-5" />
                                 <span class="sr-only">Rechercher</span>
                             </button>
                         </div>
                     </section>
-                </div> -->
+                </div>
 
-                <div class="hidden h-full lg:ml-6 lg:flex lg:items-center">
-                    <!-- Settings Dropdown -->
-                    <div class="relative ml-3" v-if="user">
+                <div
+                    class="hidden h-full lg:ml-6 lg:flex lg:items-center lg:space-x-2"
+                >
+                    <div class="relative ml-3">
                         <BreezeDropdown align="right" width="48">
                             <template #trigger>
                                 <span class="inline-flex rounded-md">
                                     <button
                                         type="button"
-                                        class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
+                                        class="inline-flex items-center px-1 py-2 text-white transition duration-150 ease-in-out hover:text-red-500 focus:text-red-500"
                                     >
-                                        {{ user.name }}
-
-                                        <svg
-                                            class="-mr-0.5 ml-2 h-4 w-4"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20"
-                                            fill="currentColor"
-                                        >
-                                            <path
-                                                fill-rule="evenodd"
-                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                clip-rule="evenodd"
-                                            />
-                                        </svg>
+                                        <HeartIcon class="h-8 w-8" />
                                     </button>
                                 </span>
                             </template>
@@ -93,13 +119,54 @@ const showingNavigationDropdown = ref(false);
                             <template #content>
                                 <BreezeDropdownLink
                                     :href="route('favoris.index')"
-                                    class="flex items-center"
+                                    :active="route().current('favoris.index')"
                                 >
                                     Mes favoris
-                                    <HeartIcon
-                                        class="ml-2 h-4 w-4 text-red-500"
-                                    />
                                 </BreezeDropdownLink>
+                                <p class="px-4 py-2 text-sm text-gray-700">
+                                    Vous pouvez retrouver la liste de vos
+                                    activités et structures favorites grâce aux
+                                    données enregistrées anonymement dans votre
+                                    navigateur. Il vous suffit, pour conserver
+                                    ces informations, de
+                                    <Link
+                                        :href="route('register')"
+                                        class="font-semibold"
+                                        >créer un compte</Link
+                                    >
+                                    sur sports-et-loisirs.fr.
+                                </p>
+                            </template>
+                        </BreezeDropdown>
+                    </div>
+                    <Link
+                        :href="route('welcome')"
+                        :active="route().current('welcome')"
+                    >
+                        <ShoppingCartIcon
+                            class="h-8 w-8 text-white hover:text-indigo-500 focus:text-indigo-500"
+                        />
+                    </Link>
+                    <!-- Settings Dropdown User -->
+                    <div class="relative" v-if="user">
+                        <BreezeDropdown align="right" width="48">
+                            <template #trigger>
+                                <span class="inline-flex rounded-md">
+                                    <button
+                                        type="button"
+                                        class="inline-flex items-center px-1 py-2 text-white hover:text-indigo-500 focus:text-indigo-500"
+                                    >
+                                        <UserIcon class="ml-2 h-8 w-8" />
+                                    </button>
+                                </span>
+                            </template>
+
+                            <template #content>
+                                <div
+                                    class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700"
+                                >
+                                    {{ user.name }}
+                                </div>
                                 <BreezeDropdownLink
                                     :href="route('profile.edit')"
                                 >
@@ -150,29 +217,6 @@ const showingNavigationDropdown = ref(false);
                         <div
                             class="hidden h-full space-x-4 lg:-my-px lg:ml-10 lg:flex"
                         >
-                            <BreezeNavLink
-                                class="has-tooltip"
-                                :href="route('favoris.index')"
-                                :active="route().current('favoris.index')"
-                            >
-                                <span
-                                    class="tooltip top-16 rounded bg-gray-200 p-2 text-gray-800 shadow-lg md:mr-5"
-                                    >Vous pouvez retrouver la liste de vos
-                                    activités et structures favorites grâce aux
-                                    données enregistrées anonymement dans votre
-                                    navigateur. Il vous suffit, pour conserver
-                                    ces informations, de
-                                    <Link
-                                        :href="route('register')"
-                                        class="font-semibold"
-                                        >créer un compte</Link
-                                    >
-                                    sur sports-et-loisirs.fr.</span
-                                >
-
-                                <HeartIcon class="h-8 w-8 text-red-500" />
-                            </BreezeNavLink>
-
                             <BreezeNavLink
                                 :href="route('login')"
                                 :active="route().current('login')"

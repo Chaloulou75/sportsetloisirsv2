@@ -1,25 +1,31 @@
 <script setup>
-import MainNavigation from "@/Components/MainNavigation.vue";
+import ResultNavigation from "@/Components/Navigation/ResultNavigation.vue";
 import FlashMessages from "@/Components/FlashMessages.vue";
 import Footer from "@/Components/Footer.vue";
 import { ref } from "vue";
 import { TransitionRoot } from "@headlessui/vue";
 
+const props = defineProps({
+    listDisciplines: Object,
+    allCities: Object,
+});
 const isShowing = ref(true);
 </script>
 
 <template>
     <div class="min-h-screen bg-white">
         <main>
-            <MainNavigation />
             <!-- Page Heading -->
             <header
-                class="h-full w-full bg-gradient-to-br from-green-100 to-blue-100 shadow-sm"
+                class="relative mx-auto h-full w-full bg-slate-200/80 bg-running-paris bg-cover bg-center bg-no-repeat bg-blend-soft-light"
                 v-if="$slots.header"
             >
-                <div class="mx-auto max-w-full px-2 py-4 sm:px-3 lg:px-6">
-                    <slot name="header" />
-                </div>
+                <ResultNavigation
+                    :listDisciplines="listDisciplines"
+                    :allCities="allCities"
+                />
+
+                <slot name="header" />
             </header>
 
             <!-- Page Content -->

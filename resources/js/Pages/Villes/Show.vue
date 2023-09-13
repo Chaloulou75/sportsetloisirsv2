@@ -1,9 +1,9 @@
 <script setup>
-import AppLayout from "@/Layouts/AppLayout.vue";
+import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { router, Head, Link } from "@inertiajs/vue3";
 import { ref, watch, computed, defineAsyncComponent } from "vue";
 import { debounce } from "lodash";
-import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
+import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import CitiesAround from "@/Components/Cities/CitiesAround.vue";
 
 const props = defineProps({
@@ -12,6 +12,8 @@ const props = defineProps({
     citiesAround: Object,
     structures: Object,
     produits: Object,
+    listDisciplines: Object,
+    allCities: Object,
     filters: Object,
 });
 
@@ -87,104 +89,102 @@ const formatCityName = (ville) => {
 
 <template>
     <Head
-        :title="city.ville"
+        :title="formatCityName(city.ville)"
         :description="
             'Envie de faire du sport à ' +
-            city.ville +
+            formatCityName(city.ville) +
             '? Choisissez parmi plus de ' +
             city.structures_count +
             ' structures pour pratiquer une activité sportive ou de loisirs à ' +
-            city.ville
+            formatCityName(city.ville)
         "
     />
 
-    <AppLayout>
+    <ResultLayout :listDisciplines="listDisciplines" :allCities="allCities">
         <template #header>
-            <FamilleNavigation :familles="familles" />
-            <div
-                class="my-4 flex w-full flex-col items-center justify-center space-y-2"
-            >
-                <p class="text-base font-semibold text-gray-700">
-                    Sports et loisirs à
-                </p>
-                <h1
-                    class="text-xl font-semibold leading-tight tracking-widest text-gray-800"
+            <FamilleResultNavigation :familles="familles" />
+            <div class="mx-auto max-w-full px-2 py-4 shadow-sm md:px-4 lg:px-6">
+                <div
+                    class="mx-auto my-2 flex w-full flex-col items-center justify-center space-y-2 bg-gray-200/60 px-4 py-2 md:w-1/3"
                 >
-                    {{ formatCityName(city.ville) }}
-                    <span class="text-sm text-gray-600"
-                        >({{ city.code_postal }})
-                    </span>
-                    <span class="text-xs italic tracking-tight text-gray-600"
-                        >({{ city.view_count }} vues)
-                    </span>
-                </h1>
-                <nav aria-label="Breadcrumb" class="flex">
-                    <ol
-                        class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600"
+                    <h1
+                        class="border-b-2 border-slate-400 text-xl font-semibold leading-tight tracking-widest text-gray-800 md:text-3xl"
                     >
-                        <li class="flex items-center">
-                            <Link
-                                preserve-scroll
-                                :href="route('welcome')"
-                                class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-4 w-4"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
+                        {{ formatCityName(city.ville) }}
+                        <span class="text-sm text-gray-600"
+                            >({{ city.code_postal }})
+                        </span>
+                    </h1>
+                </div>
+                <div
+                    class="mx-auto flex w-full flex-col items-center justify-center space-y-2 bg-gray-200/60 px-4 py-2 md:w-1/3"
+                >
+                    <nav aria-label="Breadcrumb" class="flex">
+                        <ol
+                            class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600"
+                        >
+                            <li class="flex items-center">
+                                <Link
+                                    preserve-scroll
+                                    :href="route('welcome')"
+                                    class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
                                 >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                                    />
-                                </svg>
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        class="h-4 w-4"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                                        />
+                                    </svg>
 
-                                <span class="ms-1.5 text-xs font-medium">
-                                    Accueil
+                                    <span class="ms-1.5 text-xs font-medium">
+                                        Accueil
+                                    </span>
+                                </Link>
+                            </li>
+
+                            <li class="relative flex items-center">
+                                <span
+                                    class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
+                                >
                                 </span>
-                            </Link>
-                        </li>
 
-                        <li class="relative flex items-center">
-                            <span
-                                class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
-                            >
-                            </span>
-
-                            <Link
-                                preserve-scroll
-                                :href="route('villes.show', city.id)"
-                                class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
-                            >
-                                {{ formatCityName(city.ville) }}
-                            </Link>
-                        </li>
-                    </ol>
-                </nav>
+                                <Link
+                                    preserve-scroll
+                                    :href="route('villes.show', city.id)"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                                >
+                                    {{ formatCityName(city.ville) }}
+                                </Link>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+                <!-- <p class="py-2 text-base font-medium leading-tight text-white">
+                    Trouvez une activité à
+                    <span class="font-semibold"
+                        >{{ formatCityName(city.ville) }}
+                    </span>
+                    en France. <br />
+                    Consultez la liste des
+                    <span v-if="city.structures_count > 1" class="font-semibold"
+                        >{{ city.structures_count }}
+                    </span>
+                    structures disponibles, comparez services, tarifs et
+                    horaires en 2 clics ! Pratiquer un sport à
+                    <span class="font-semibold">{{
+                        formatCityName(city.ville)
+                    }}</span>
+                    n'a jamais été aussi simple!
+                </p> -->
             </div>
-            <p class="py-2 text-base font-medium leading-tight text-gray-700">
-                Trouvez une activité à
-                <span class="font-semibold text-gray-800"
-                    >{{ formatCityName(city.ville) }}
-                </span>
-                en France. <br />
-                Consultez la liste des
-                <span
-                    v-if="city.structures_count > 1"
-                    class="font-semibold text-gray-800"
-                    >{{ city.structures_count }}
-                </span>
-                structures disponibles, comparez services, tarifs et horaires en
-                2 clics ! Pratiquer un sport à
-                <span class="font-semibold text-gray-800">{{
-                    formatCityName(city.ville)
-                }}</span>
-                n'a jamais été aussi simple!
-            </p>
         </template>
 
         <template v-if="structures.data.length > 0">
@@ -318,5 +318,5 @@ const formatCityName = (ville) => {
                 </p>
             </div>
         </template>
-    </AppLayout>
+    </ResultLayout>
 </template>

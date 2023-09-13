@@ -21,6 +21,8 @@ module.exports = {
             },
             backgroundImage: {
                 "badminton-hero": "url('/images/badminton.jpg')",
+                "running-paris": "url('/images/running-paris.jpg')",
+                "la-piste": "url('/images/la-piste.jpg')",
             },
         },
     },

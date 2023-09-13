@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Models\Famille;
 use App\Models\Structure;
 use Illuminate\Http\Request;
+use App\Models\ListDiscipline;
 use App\Models\StructureProduit;
 use Illuminate\Support\Facades\DB;
 
@@ -50,6 +51,12 @@ class CityController extends Controller
         $familles = Famille::withWhereHas('disciplines', function ($query) {
             $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();
+
+        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
+
+        $allCities = City::whereHas('produits')
+                                        ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                                        ->get();
 
         $city = City::with(['produits'])
                     ->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
@@ -127,6 +134,8 @@ class CityController extends Controller
 
         return Inertia::render('Villes/Show', [
             'familles' => $familles,
+            'listDisciplines' => $listDisciplines,
+            'allCities' => $allCities,
             'city' => $city,
             'citiesAround' => $citiesAround,
             'structures' => $structures,
