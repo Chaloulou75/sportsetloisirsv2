@@ -61,7 +61,7 @@ const submitForm = async () => {
 </script>
 
 <template>
-    <nav class="border-b border-gray-100 bg-transparent">
+    <nav class="border-b border-gray-100 bg-slate-900/80">
         <!-- Primary Navigation Menu -->
         <div class="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
             <div class="flex h-16 justify-between">
@@ -218,12 +218,14 @@ const submitForm = async () => {
                             class="hidden h-full space-x-4 lg:-my-px lg:ml-10 lg:flex"
                         >
                             <BreezeNavLink
+                                class="text-white"
                                 :href="route('login')"
                                 :active="route().current('login')"
                             >
                                 Connexion
                             </BreezeNavLink>
                             <BreezeNavLink
+                                class="text-white"
                                 :href="route('register')"
                                 :active="route().current('register')"
                             >

@@ -103,12 +103,14 @@ const formatCityName = (ville) => {
     <ResultLayout :listDisciplines="listDisciplines" :allCities="allCities">
         <template #header>
             <FamilleResultNavigation :familles="familles" />
-            <div class="mx-auto max-w-full px-2 py-4 shadow-sm md:px-4 lg:px-6">
+            <div
+                class="mx-auto my-6 max-w-full px-2 py-4 shadow-sm md:px-4 lg:px-6"
+            >
                 <div
-                    class="mx-auto my-2 flex w-full flex-col items-center justify-center space-y-2 bg-gray-200/60 px-4 py-2 md:w-1/3"
+                    class="mx-auto my-2 flex w-full flex-col items-center justify-center space-y-2 bg-slate-100/70 px-2 py-2 md:w-1/4"
                 >
                     <h1
-                        class="border-b-2 border-slate-400 text-xl font-semibold leading-tight tracking-widest text-gray-800 md:text-3xl"
+                        class="border-b-2 border-slate-400 text-2xl font-bold leading-tight tracking-widest text-gray-800 md:text-4xl"
                     >
                         {{ formatCityName(city.ville) }}
                         <span class="text-sm text-gray-600"
@@ -117,7 +119,7 @@ const formatCityName = (ville) => {
                     </h1>
                 </div>
                 <div
-                    class="mx-auto flex w-full flex-col items-center justify-center space-y-2 bg-gray-200/60 px-4 py-2 md:w-1/3"
+                    class="mx-auto flex w-full flex-col items-center justify-center space-y-2 bg-gray-200/60 px-2 py-2 md:w-1/4"
                 >
                     <nav aria-label="Breadcrumb" class="flex">
                         <ol

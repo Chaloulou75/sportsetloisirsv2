@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watchEffect } from "vue";
 const emit = defineEmits(["update:model-value"]);
 const props = defineProps({
     cities: Object,
@@ -27,10 +27,15 @@ let selectedCity = ref(props.cities.find((city) => city.id === city));
 
 const selectCity = (city) => {
     selectedCity.value = city;
-    searchTerm.value = "";
-    // Add the selected discipline ID to dejaUsedDisciplinesRef
+    searchTerm.value = formatCityName(selectedCity.value.ville);
     emit("update:model-value", city.id);
 };
+
+watchEffect(() => {
+    if (searchTerm.value === "") {
+        selectedCity.value = null; // Reset selectedCity to null
+    }
+});
 
 const formatCityName = (ville) => {
     return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
@@ -57,8 +62,8 @@ const formatCityName = (ville) => {
             />
 
             <ul
-                v-if="searchCities.length"
-                class="absolute z-10 w-full space-y-1 rounded border border-gray-300 bg-white px-4 py-2"
+                v-if="searchCities.length && !selectedCity"
+                class="absolute z-10 w-full space-y-1 rounded border border-gray-300 bg-white px-2 py-2"
             >
                 <li
                     class="border-b border-gray-200 px-1 pb-2 pt-1 text-sm font-medium text-gray-700"
@@ -70,7 +75,7 @@ const formatCityName = (ville) => {
                     v-for="city in searchCities"
                     :key="city.id"
                     @click="selectCity(city)"
-                    class="cursor-pointer p-1 hover:bg-blue-200"
+                    class="cursor-pointer p-1 hover:bg-indigo-100"
                 >
                     {{ formatCityName(city.ville) }}
                 </li>

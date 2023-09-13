@@ -33,7 +33,7 @@ const selectCity = (city) => {
 
 watchEffect(() => {
     if (searchTerm.value === "") {
-        selectedCity.value = null; // Reset selectedCity to null
+        selectedCity.value = null;
     }
 });
 

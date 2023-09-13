@@ -65,7 +65,7 @@ watchEffect(() => {
                     v-for="discipline in searchDisciplines"
                     :key="discipline.id"
                     @click="selectDiscipline(discipline)"
-                    class="cursor-pointer p-1 text-sm hover:bg-indigo-200"
+                    class="cursor-pointer p-1 text-sm hover:bg-indigo-100"
                 >
                     {{ discipline.name }}
                 </li>

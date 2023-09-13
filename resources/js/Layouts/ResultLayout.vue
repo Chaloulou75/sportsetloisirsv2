@@ -17,7 +17,7 @@ const isShowing = ref(true);
         <main>
             <!-- Page Heading -->
             <header
-                class="relative mx-auto h-full w-full bg-slate-200/80 bg-running-paris bg-cover bg-center bg-no-repeat bg-blend-soft-light"
+                class="relative mx-auto h-full w-full bg-slate-200/70 bg-running-paris bg-cover bg-center bg-no-repeat bg-blend-soft-light"
                 v-if="$slots.header"
             >
                 <ResultNavigation

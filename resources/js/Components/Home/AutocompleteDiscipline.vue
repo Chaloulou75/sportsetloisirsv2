@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watchEffect } from "vue";
 const emit = defineEmits(["update:model-value"]);
 const props = defineProps({
     disciplines: Object,
@@ -29,10 +29,15 @@ let selectedDiscipline = ref(null);
 
 const selectDiscipline = (discipline) => {
     selectedDiscipline.value = discipline;
-    searchTerm.value = "";
-    // emit the selected discipline ID
+    searchTerm.value = selectedDiscipline.value.name;
     emit("update:model-value", discipline.slug);
 };
+
+watchEffect(() => {
+    if (searchTerm.value === "") {
+        selectedDiscipline.value = null;
+    }
+});
 </script>
 <template>
     <div class="flex w-full items-center justify-start md:w-auto">
@@ -54,8 +59,8 @@ const selectDiscipline = (discipline) => {
             />
 
             <ul
-                v-if="searchDisciplines.length"
-                class="absolute z-10 w-full space-y-1 rounded border border-gray-300 bg-white px-4 py-2"
+                v-if="searchDisciplines.length && !selectedDiscipline"
+                class="absolute z-10 w-full space-y-1 rounded border border-gray-300 bg-white px-2 py-2"
             >
                 <li
                     class="border-b border-gray-200 px-1 pb-2 pt-1 text-sm font-medium text-gray-700"
@@ -67,7 +72,7 @@ const selectDiscipline = (discipline) => {
                     v-for="discipline in searchDisciplines"
                     :key="discipline.id"
                     @click="selectDiscipline(discipline)"
-                    class="cursor-pointer p-1 hover:bg-blue-200"
+                    class="cursor-pointer p-1 hover:bg-indigo-100"
                 >
                     {{ discipline.name }}
                 </li>
