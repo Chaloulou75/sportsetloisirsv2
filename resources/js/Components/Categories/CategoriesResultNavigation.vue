@@ -10,7 +10,7 @@ const props = defineProps({
 });
 </script>
 <template>
-    <div class="block border-b-8 border-indigo-400 bg-slate-300/50 py-2">
+    <div class="block border-b-8 border-indigo-400 bg-slate-100/60 py-2">
         <div class="mx-auto max-w-full">
             <div
                 class="flex h-full w-full flex-col flex-wrap items-center justify-around space-y-1.5 md:flex-row md:space-y-0 md:divide-x md:divide-gray-700"
