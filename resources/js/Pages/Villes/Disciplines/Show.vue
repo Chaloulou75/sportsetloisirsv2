@@ -11,6 +11,7 @@ import DisciplinesSimilaires from "@/Components/Disciplines/DisciplinesSimilaire
 const props = defineProps({
     familles: Object,
     categories: Object,
+    categoriesWithoutProduit: Object,
     allStructureTypes: Object,
     city: Object,
     citiesAround: Object,
@@ -45,7 +46,7 @@ function hideTooltip() {
 
 <template>
     <Head
-        :title="formatCityName(city.ville)"
+        :title="` ${discipline.name} à ${formatCityName(city.ville)}.`"
         :description="
             'Envie de faire du ' +
             discipline.name +
@@ -156,6 +157,7 @@ function hideTooltip() {
                 :discipline="discipline"
                 :allStructureTypes="allStructureTypes"
                 :categories="categories"
+                :categoriesWithoutProduit="categoriesWithoutProduit"
             />
         </template>
         <template v-if="structures.data.length > 0">

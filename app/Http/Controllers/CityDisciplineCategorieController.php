@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Models\LienDisciplineCategorie;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class CityDisciplineCategorieController extends Controller
 {
@@ -42,10 +43,26 @@ class CityDisciplineCategorieController extends Controller
 
         $allStructureTypes = Structuretype::whereHas('structures')->select(['id', 'name', 'slug'])->get();
 
-        $city = City::with(['structures'])->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
+        $city = City::with(['structures', 'produits', 'produits.adresse'])->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
                             ->where('id', $city->id)
                             ->withCount('structures')
                             ->first();
+
+
+        $categories = LienDisciplineCategorie::withWhereHas('structures_produits.adresse', function (Builder $query) use ($city) {
+            $query->where('city_id', $city->id);
+        })
+                ->where('discipline_id', $discipline->id)
+                ->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+                ->get();
+
+        $categoriesWithoutProduit = LienDisciplineCategorie::whereDoesntHave('structures_produits.adresse', function (Builder $query) use ($city) {
+            $query->where('city_id', $city->id);
+        })
+        ->where('discipline_id', $discipline->id)
+        ->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+        ->get();
+
 
         $citiesAround = City::with('structures')
                     ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
@@ -98,6 +115,7 @@ class CityDisciplineCategorieController extends Controller
             'familles' => $familles,
             'category' => $category,
             'categories' => $categories,
+            'categoriesWithoutProduit' => $categoriesWithoutProduit,
             'allStructureTypes' => $allStructureTypes,
             'city' => $city,
             'citiesAround' => $citiesAround,

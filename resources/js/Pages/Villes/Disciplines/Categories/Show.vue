@@ -12,6 +12,7 @@ const props = defineProps({
     familles: Object,
     category: Object,
     categories: Object,
+    categoriesWithoutProduit: Object,
     allStructureTypes: Object,
     city: Object,
     citiesAround: Object,
@@ -72,7 +73,7 @@ function hideTooltip() {
                     class="mx-auto my-2 flex w-full flex-col items-center justify-center space-y-2 bg-slate-100/60 px-2 py-2 md:w-1/3"
                 >
                     <h1
-                        class="border-b-2 border-slate-400 text-center text-2xl font-bold leading-tight tracking-widest text-gray-800 md:text-4xl"
+                        class="shrink-0 border-b-2 border-slate-400 text-center text-2xl font-bold leading-tight tracking-widest text-gray-800 md:text-4xl"
                     >
                         {{ discipline.name }}
                         <span class="lowercase">à</span>
@@ -130,7 +131,7 @@ function hideTooltip() {
                                 <Link
                                     preserve-scroll
                                     :href="route('villes.show', city.id)"
-                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                                    class="flex h-10 shrink-0 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     {{ formatCityName(city.ville) }}
                                 </Link>
@@ -149,7 +150,7 @@ function hideTooltip() {
                                             discipline: discipline.slug,
                                         })
                                     "
-                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                                    class="flex h-10 shrink-0 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     {{ discipline.name }}
                                 </Link>
@@ -172,7 +173,7 @@ function hideTooltip() {
                                             }
                                         )
                                     "
-                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                                    class="flex h-10 shrink-0 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     {{ category.nom_categorie_client }}
                                 </Link>
@@ -187,6 +188,7 @@ function hideTooltip() {
                 :allStructureTypes="allStructureTypes"
                 :categories="categories"
                 :category="category"
+                :categoriesWithoutProduit="categoriesWithoutProduit"
             />
         </template>
         <template v-if="structures.data.length > 0">

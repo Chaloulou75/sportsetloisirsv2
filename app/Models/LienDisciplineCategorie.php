@@ -35,6 +35,11 @@ class LienDisciplineCategorie extends Model
         return $this->hasMany(StructureActivite::class, 'categorie_id');
     }
 
+    public function structures_produits(): HasMany
+    {
+        return $this->hasMany(StructureProduit::class, 'categorie_id');
+    }
+
     public function criteres(): HasMany
     {
         return $this->hasMany(LienDisciplineCategorieCritere::class, 'categorie_id', 'categorie_id')
