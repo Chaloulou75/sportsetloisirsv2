@@ -5,7 +5,6 @@ import { Head, Link } from "@inertiajs/vue3";
 import ButtonsActiviteEdit from "@/Components/Inscription/Activity/ButtonsActiviteEdit.vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
-import { XCircleIcon } from "@heroicons/vue/24/outline";
 import {
     TransitionRoot,
     TransitionChild,

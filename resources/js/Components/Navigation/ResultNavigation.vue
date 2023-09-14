@@ -26,6 +26,7 @@ const props = defineProps({
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 const showingNavigationDropdown = ref(false);
+const showingSearchForm = ref(false);
 
 const search = ref(null);
 const localite = ref(null);
@@ -82,7 +83,7 @@ const submitForm = async () => {
                     <section
                         class="mx-auto flex w-full items-center justify-center px-2 md:flex-row md:space-y-0"
                     >
-                        <MapPinIcon class="h-5 w-5 text-white" />
+                        <MapPinIcon class="mr-1 h-8 w-8 text-white" />
 
                         <AutocompleteCityNav
                             :cities="allCities"
@@ -90,7 +91,9 @@ const submitForm = async () => {
                             class="mr-4"
                         />
 
-                        <QuestionMarkCircleIcon class="h-5 w-5 text-white" />
+                        <QuestionMarkCircleIcon
+                            class="mr-1 h-8 w-8 text-white"
+                        />
 
                         <AutocompleteDisciplineNav
                             :disciplines="listDisciplines"
@@ -228,26 +231,40 @@ const submitForm = async () => {
                         <div
                             class="hidden h-full space-x-4 lg:-my-px lg:ml-10 lg:flex"
                         >
-                            <BreezeNavLink
-                                class="text-white"
+                            <Link
+                                class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium leading-5 text-white transition duration-150 ease-in-out hover:border-gray-300 hover:text-gray-50 focus:border-gray-300 focus:text-gray-50 focus:outline-none"
                                 :href="route('login')"
                                 :active="route().current('login')"
                             >
                                 Connexion
-                            </BreezeNavLink>
-                            <BreezeNavLink
-                                class="text-white"
+                            </Link>
+                            <Link
+                                class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium leading-5 text-white transition duration-150 ease-in-out hover:border-gray-300 hover:text-gray-50 focus:border-gray-300 focus:text-gray-50 focus:outline-none"
                                 :href="route('register')"
                                 :active="route().current('register')"
                             >
                                 Inscription
-                            </BreezeNavLink>
+                            </Link>
                         </div>
                     </template>
                 </div>
 
                 <!-- Hamburger -->
-                <div class="-mr-2 flex items-center lg:hidden">
+                <div class="-mr-2 flex items-center space-x-2 lg:hidden">
+                    <button
+                        @click="showingSearchForm = !showingSearchForm"
+                        type="button"
+                        class="items-center justify-center rounded bg-transparent px-2 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    >
+                        <MagnifyingGlassIcon class="h-5 w-5" />
+                        <span class="sr-only">Rechercher</span>
+                    </button>
+                    <button
+                        type="button"
+                        class="items-center justify-center rounded bg-transparent px-2 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    >
+                        <ShoppingCartIcon class="h-5 w-5" />
+                    </button>
                     <button
                         @click="
                             showingNavigationDropdown =
@@ -296,20 +313,23 @@ const submitForm = async () => {
             class="lg:hidden"
         >
             <div class="space-y-1 pb-3 pt-2">
-                <BreezeResponsiveNavLink
+                <Link
+                    class="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
                     :href="route('favoris.index')"
                     :active="route().current('favoris.index')"
                 >
                     Mes Favoris
-                </BreezeResponsiveNavLink>
-                <BreezeResponsiveNavLink
+                </Link>
+                <Link
+                    class="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
                     v-if="user && !user.structures.length > 0"
                     :href="route('structures.create')"
                     :active="route().current('structures.create')"
                 >
                     Inscrire votre structure
-                </BreezeResponsiveNavLink>
-                <BreezeResponsiveNavLink
+                </Link>
+                <Link
+                    class="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
                     v-if="user && user.structures.length > 0"
                     :href="
                         route(
@@ -320,13 +340,14 @@ const submitForm = async () => {
                     :active="route().current('structures.gestion.index')"
                 >
                     Gestion de ma structure
-                </BreezeResponsiveNavLink>
-                <BreezeResponsiveNavLink
+                </Link>
+                <Link
+                    class="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
                     v-if="user && $page.props.user_can.view_admin"
                     :href="route('admin.index')"
                 >
                     Gestion du site
-                </BreezeResponsiveNavLink>
+                </Link>
             </div>
 
             <!-- Responsive Settings Options -->
@@ -341,30 +362,66 @@ const submitForm = async () => {
                 </div>
 
                 <div class="mt-3 space-y-1" v-if="user">
-                    <BreezeResponsiveNavLink
+                    <Link
+                        class="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
                         :href="route('logout')"
                         method="post"
                         as="button"
                     >
                         Se déconnecter
-                    </BreezeResponsiveNavLink>
+                    </Link>
                 </div>
 
                 <div v-else>
-                    <BreezeResponsiveNavLink
+                    <Link
+                        class="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
                         :href="route('login')"
                         :active="route().current('login')"
                     >
                         Connexion
-                    </BreezeResponsiveNavLink>
-                    <BreezeResponsiveNavLink
+                    </Link>
+                    <Link
+                        class="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
                         :href="route('register')"
                         :active="route().current('register')"
                     >
                         Inscription
-                    </BreezeResponsiveNavLink>
+                    </Link>
                 </div>
             </div>
+        </div>
+        <div
+            :class="{
+                block: showingSearchForm,
+                hidden: !showingSearchForm,
+            }"
+            class="pb-3 pt-2 lg:hidden"
+        >
+            <section
+                class="mx-auto flex w-full items-center justify-center px-2 md:flex-row md:space-y-0 lg:hidden"
+            >
+                <AutocompleteCityNav
+                    :cities="allCities"
+                    v-model="localite"
+                    class="mr-4"
+                />
+                <AutocompleteDisciplineNav
+                    :disciplines="listDisciplines"
+                    v-model="search"
+                    class="mr-4"
+                />
+                <div class="w-auto">
+                    <button
+                        @click="submitForm"
+                        :disabled="processing"
+                        type="submit"
+                        class="mb-0.5 flex w-full items-center justify-center rounded border border-indigo-500 bg-white px-2 py-2 text-sm font-medium text-indigo-500 shadow-sm hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:w-auto"
+                    >
+                        <MagnifyingGlassIcon class="h-5 w-5" />
+                        <span class="sr-only">Rechercher</span>
+                    </button>
+                </div>
+            </section>
         </div>
     </nav>
 </template>

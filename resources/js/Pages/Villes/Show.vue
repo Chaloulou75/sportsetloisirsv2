@@ -103,11 +103,9 @@ const formatCityName = (ville) => {
     <ResultLayout :listDisciplines="listDisciplines" :allCities="allCities">
         <template #header>
             <FamilleResultNavigation :familles="familles" />
-            <div
-                class="mx-auto my-6 max-w-full px-2 py-4 shadow-sm md:px-4 lg:px-6"
-            >
+            <div class="mx-auto my-6 max-w-full px-2 py-4 md:px-4 lg:px-6">
                 <div
-                    class="mx-auto my-2 flex w-full flex-col items-center justify-center space-y-2 bg-slate-100/70 px-2 py-2 md:w-1/4"
+                    class="mx-auto my-2 flex w-full flex-col items-center justify-center space-y-2 bg-slate-100/60 px-2 py-2 md:w-1/4"
                 >
                     <h1
                         class="border-b-2 border-slate-400 text-2xl font-bold leading-tight tracking-widest text-gray-800 md:text-4xl"
@@ -119,7 +117,7 @@ const formatCityName = (ville) => {
                     </h1>
                 </div>
                 <div
-                    class="mx-auto flex w-full flex-col items-center justify-center space-y-2 bg-gray-200/60 px-2 py-2 md:w-1/4"
+                    class="mx-auto flex w-full flex-col items-center justify-center space-y-2 bg-slate-100/60 px-2 py-2 md:w-1/4"
                 >
                     <nav aria-label="Breadcrumb" class="flex">
                         <ol
@@ -169,23 +167,6 @@ const formatCityName = (ville) => {
                         </ol>
                     </nav>
                 </div>
-                <!-- <p class="py-2 text-base font-medium leading-tight text-white">
-                    Trouvez une activité à
-                    <span class="font-semibold"
-                        >{{ formatCityName(city.ville) }}
-                    </span>
-                    en France. <br />
-                    Consultez la liste des
-                    <span v-if="city.structures_count > 1" class="font-semibold"
-                        >{{ city.structures_count }}
-                    </span>
-                    structures disponibles, comparez services, tarifs et
-                    horaires en 2 clics ! Pratiquer un sport à
-                    <span class="font-semibold">{{
-                        formatCityName(city.ville)
-                    }}</span>
-                    n'a jamais été aussi simple!
-                </p> -->
             </div>
         </template>
 

@@ -17,14 +17,17 @@ class CityDisciplineCategorieController extends Controller
      */
     public function show(City $city, $discipline, $category)
     {
-        $familles = Famille::with([
-            'disciplines' => function ($query) {
-                $query->whereHas('structures');
-            }
-        ])
-        ->whereHas('disciplines', function ($query) {
-            $query->whereHas('structures');
+
+        $familles = Famille::withWhereHas('disciplines', function ($query) {
+            $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();
+
+        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
+
+        $allCities = City::whereHas('produits')
+                        ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                        ->get();
+
 
         $discipline = ListDiscipline::where('slug', $discipline)
                             ->select(['id', 'name', 'slug', 'view_count'])
@@ -101,6 +104,8 @@ class CityDisciplineCategorieController extends Controller
             'disciplinesSimilaires' => $disciplinesSimilaires,
             'structures' => $structures,
             'discipline' => $discipline,
+            'listDisciplines' => $listDisciplines,
+            'allCities' => $allCities,
         ]);
 
     }

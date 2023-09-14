@@ -122,7 +122,7 @@ const headerClass = computed(() => {
         <main>
             <!-- Page Heading -->
             <header
-                class="relative mx-auto h-full w-full bg-slate-200/70 bg-cover bg-center bg-no-repeat bg-blend-soft-light"
+                class="relative mx-auto h-full w-full bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-soft-light"
                 :class="headerClass"
                 v-if="$slots.header"
             >
