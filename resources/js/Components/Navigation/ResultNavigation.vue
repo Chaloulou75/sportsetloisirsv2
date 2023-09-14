@@ -48,7 +48,9 @@ const submitForm = async () => {
         } else if (city) {
             router.get(route("villes.show", { city }));
         } else if (disciplineSlug) {
-            router.get(route("disciplines.show", { disciplineSlug }));
+            router.get(
+                route("disciplines.show", { discipline: disciplineSlug })
+            );
         }
 
         // Reset the form

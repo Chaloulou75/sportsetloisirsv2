@@ -30,7 +30,6 @@ let selectedDiscipline = ref(null);
 const selectDiscipline = (discipline) => {
     selectedDiscipline.value = discipline;
     searchTerm.value = selectedDiscipline.value.name;
-    // emit the selected discipline ID
     emit("update:model-value", discipline.slug);
 };
 

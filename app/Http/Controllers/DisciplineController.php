@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use Inertia\Inertia;
 use App\Models\Famille;
 use App\Models\Categorie;
@@ -55,15 +56,16 @@ class DisciplineController extends Controller
      */
     public function show(ListDiscipline $discipline)
     {
-
-        $familles = Famille::with([
-            'disciplines' => function ($query) {
-                $query->whereHas('structures');
-            }
-        ])
-        ->whereHas('disciplines', function ($query) {
-            $query->whereHas('structures');
+        $familles = Famille::withWhereHas('disciplines', function ($query) {
+            $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();
+
+        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
+
+        $allCities = City::whereHas('produits')
+                                        ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                                        ->get();
+
 
         $discipline = ListDiscipline::where('slug', $discipline->slug)
             ->select(['id', 'name', 'slug', 'view_count'])
@@ -106,6 +108,8 @@ class DisciplineController extends Controller
             'disciplinesSimilaires' => $disciplinesSimilaires,
             'structures' => $structures,
             'categories' => $categories,
+            'listDisciplines' => $listDisciplines,
+            'allCities' => $allCities,
         ]);
     }
     /**
