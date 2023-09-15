@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Models\LienDisciplineCategorie;
+use App\Models\LienDisciplineCategorieCritere;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class CityDisciplineCategorieController extends Controller
@@ -63,6 +64,7 @@ class CityDisciplineCategorieController extends Controller
         ->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
         ->get();
 
+        $criteres = LienDisciplineCategorieCritere::with('valeurs')->where('discipline_id', $discipline->id)->where('categorie_id', $category->id)->get();
 
         $citiesAround = City::with('structures')
                     ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
@@ -122,6 +124,7 @@ class CityDisciplineCategorieController extends Controller
             'disciplinesSimilaires' => $disciplinesSimilaires,
             'structures' => $structures,
             'discipline' => $discipline,
+            'criteres' => $criteres,
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,
         ]);

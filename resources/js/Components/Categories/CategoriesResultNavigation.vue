@@ -3,6 +3,7 @@ import { Link } from "@inertiajs/vue3";
 import BreezeDropdown from "@/Components/Dropdown.vue";
 import BreezeDropdownLink from "@/Components/DropdownLink.vue";
 import { HomeIcon, PlusIcon } from "@heroicons/vue/24/solid";
+import { ChevronDownIcon } from "@heroicons/vue/24/outline";
 const props = defineProps({
     city: Object,
     discipline: Object,
@@ -56,7 +57,8 @@ const props = defineProps({
                                 type="button"
                                 class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-gray-900 focus:text-gray-900 focus:outline-none md:px-4 lg:px-8"
                             >
-                                <PlusIcon class="h-5 w-5" />
+                                Plus
+                                <ChevronDownIcon class="ml-2 h-5 w-5" />
                             </button>
                         </span>
                     </template>
