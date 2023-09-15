@@ -45,9 +45,8 @@ const submitForm = async () => {
                     discipline: disciplineSlug,
                 })
             );
-            // router.get(`/villes/${city}/disciplines/${disciplineSlug}`);
         } else if (city) {
-            router.get(route("villes.show", { city }));
+            router.get(route("villes.show", { city: city }));
         } else if (disciplineSlug) {
             router.get(
                 route("disciplines.show", { discipline: disciplineSlug })
@@ -59,7 +58,6 @@ const submitForm = async () => {
         search.value = "";
         processing.value = false;
     } catch (error) {
-        console.error("Error:", error);
         processing.value = false;
     }
 };

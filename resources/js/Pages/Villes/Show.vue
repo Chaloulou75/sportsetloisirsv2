@@ -37,21 +37,22 @@ const Pagination = defineAsyncComponent(() =>
     import("@/Components/Pagination.vue")
 );
 
-let discipline = ref("");
-function resetSearch() {
-    discipline.value = "";
-}
+// let discipline = ref("");
+// function resetSearch() {
+//     discipline.value = "";
+// }
 
-watch(
-    discipline,
-    debounce(function (value) {
-        router.get(
-            `/villes/${city.ville_formatee}`,
-            { discipline: value },
-            { preserveState: true, replace: true }
-        );
-    }, 500)
-);
+// watch(
+//     discipline,
+//     debounce(function (value) {
+//         router.get(
+//             `/villes/${city.ville_formatee}`,
+//             { discipline: value },
+//             { preserveState: true,
+//             replace: true }
+//         );
+//     }, 500)
+// );
 
 const flattenedDisciplines = computed(() => {
     const uniqueDisciplines = new Map();

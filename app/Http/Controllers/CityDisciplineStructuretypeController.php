@@ -6,10 +6,11 @@ use App\Models\City;
 use Inertia\Inertia;
 use App\Models\Famille;
 use Illuminate\Http\Request;
-use App\Models\ListDiscipline;
-use App\Models\LienDisciplineCategorie;
 use App\Models\Structuretype;
+use App\Models\ListDiscipline;
 use App\Models\StructureTypeInfo;
+use App\Models\LienDisciplineCategorie;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class CityDisciplineStructuretypeController extends Controller
 {
@@ -18,14 +19,17 @@ class CityDisciplineStructuretypeController extends Controller
      */
     public function show(City $city, $discipline, $structuretype)
     {
-        $familles = Famille::with([
-            'disciplines' => function ($query) {
-                $query->whereHas('structures');
-            }
-        ])
-        ->whereHas('disciplines', function ($query) {
-            $query->whereHas('structures');
+
+        $familles = Famille::withWhereHas('disciplines', function ($query) {
+            $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();
+
+        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
+
+        $allCities = City::whereHas('produits')
+                        ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                        ->get();
+
 
         $discipline = ListDiscipline::where('slug', $discipline)
                             ->select(['id', 'name', 'slug', 'view_count'])
@@ -38,12 +42,25 @@ class CityDisciplineStructuretypeController extends Controller
 
         $allStructureTypes = Structuretype::whereHas('structures')->select(['id', 'name', 'slug'])->get();
 
-        $categories = LienDisciplineCategorie::where('discipline_id', $discipline->id)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
-
-        $city = City::with(['structures'])->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
+        $city = City::with(['structures', 'produits', 'produits.adresse'])->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
                             ->where('id', $city->id)
                             ->withCount('structures')
                             ->first();
+
+        $categories = LienDisciplineCategorie::withWhereHas('structures_produits.adresse', function (Builder $query) use ($city) {
+            $query->where('city_id', $city->id);
+        })
+                        ->where('discipline_id', $discipline->id)
+                        ->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+                        ->get();
+
+        $categoriesWithoutProduit = LienDisciplineCategorie::whereDoesntHave('structures_produits.adresse', function (Builder $query) use ($city) {
+            $query->where('city_id', $city->id);
+        })
+        ->where('discipline_id', $discipline->id)
+        ->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+        ->get();
+
 
         $citiesAround = City::with('structures')
                     ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
@@ -92,11 +109,14 @@ class CityDisciplineStructuretypeController extends Controller
             'structuretypeElected' => $structuretypeElected,
             'allStructureTypes' => $allStructureTypes,
             'categories' => $categories,
+            'categoriesWithoutProduit' => $categoriesWithoutProduit,
             'city' => $city,
             'citiesAround' => $citiesAround,
             'disciplinesSimilaires' => $disciplinesSimilaires,
             'structures' => $structures,
             'discipline' => $discipline,
+            'listDisciplines' => $listDisciplines,
+            'allCities' => $allCities,
         ]);
 
     }

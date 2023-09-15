@@ -10,6 +10,7 @@ const props = defineProps({
     categoriesWithoutProduit: Object,
     allStructureTypes: Object,
     category: Object,
+    structuretypeElected: Object,
 });
 </script>
 <template>
@@ -18,15 +19,15 @@ const props = defineProps({
             <div
                 class="flex h-full w-full flex-col items-center justify-around space-y-1.5 md:flex-row md:space-y-0 md:divide-x md:divide-gray-700"
             >
-                <Link
-                    preserve-scroll
-                    :href="route('welcome')"
+                <a
+                    href="#"
+                    onclick="history.back();return false;"
                     class="hidden items-center pt-1 text-center transition duration-150 ease-in-out focus:outline-none md:inline-flex md:px-4 lg:px-8"
                 >
                     <HomeIcon
                         class="h-8 w-8 text-blue-700 hover:text-blue-800"
                     />
-                </Link>
+                </a>
                 <Link
                     preserve-scroll
                     v-for="categorie in categories"
@@ -89,6 +90,13 @@ const props = defineProps({
                         })
                     "
                     class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-gray-900 focus:text-gray-900 focus:outline-none md:px-4 lg:px-8"
+                    :class="[
+                        route().current(
+                            'villes.disciplines.structuretypes.show'
+                        ) && structureType.id === structuretypeElected.id
+                            ? 'underline decoration-indigo-500 decoration-4 underline-offset-2'
+                            : '',
+                    ]"
                 >
                     {{ structureType.name }}
                 </Link>

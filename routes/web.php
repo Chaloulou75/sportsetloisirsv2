@@ -7,6 +7,7 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FamilleController;
+use App\Http\Controllers\MentionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActiviteController;
 use App\Http\Controllers\FavoritesController;
@@ -25,6 +26,7 @@ use App\Http\Controllers\ProductReservationController;
 use App\Http\Controllers\StructureCategorieController;
 use App\Http\Controllers\DisciplineSimilaireController;
 use App\Http\Controllers\StructureDisciplineController;
+use App\Http\Controllers\StructureStatistiqueController;
 use App\Http\Controllers\DepartementDisciplineController;
 use App\Http\Controllers\CityDisciplineCategorieController;
 use App\Http\Controllers\StructureActiviteProduitController;
@@ -37,7 +39,6 @@ use App\Http\Controllers\DepartementDisciplineStructuretypeController;
 use App\Http\Controllers\CityDisciplineStructuretypeStructureController;
 use App\Http\Controllers\CityDisciplineCategorieStructureActiviteController;
 use App\Http\Controllers\CityDisciplineStructuretypeStructureActiviteController;
-use App\Http\Controllers\StructureStatistiqueController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,10 +55,7 @@ require __DIR__.'/auth.php';
 Route::get('/', [HomeController::class, 'index'])
     ->name('welcome');
 
-
-Route::get('/mentions', function () {
-    return Inertia::render('Mentions/Index');
-})->name('mentions.index');
+Route::get('/mentions', [MentionController::class, 'index'])->name('mentions.index');
 
 Route::get('/faq', function () {
     return Inertia::render('Faq/Index');
@@ -82,22 +80,29 @@ Route::resource('familles', FamilleController::class)->only([
     'index', 'show'
 ]);
 
+Route::resource('disciplines', DisciplineController::class)->only([
+    'index', 'show'
+]);
+
 Route::resource('villes', CityController::class, [
     'parameters' => [
         'villes' => 'city'
     ]
 ])->only([
-    'index', 'show'
+    'index'
 ]);
 
-Route::resource('disciplines', DisciplineController::class)->only([
-    'index', 'show'
-]);
+Route::get('/localite-{city:id}-1', [CityController::class, 'show'], [
+    'parameters' => [
+        'villes' => 'city'
+    ]
+])->name('villes.show');
 
 Route::resource('departements', DepartementController::class)->only([
-    'index', 'show'
+    'index'
 ]);
 
+Route::get('/localite-{departement:id}-2', [DepartementController::class, 'show'])->name('departements.show');
 
 Route::get('/structures', [StructureController::class, 'index'])
         ->name('structures.index');
