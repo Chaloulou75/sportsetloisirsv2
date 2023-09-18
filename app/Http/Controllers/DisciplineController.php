@@ -25,14 +25,16 @@ class DisciplineController extends Controller
     {
         $structuresCount = Structure::count();
 
-        $familles = Famille::with([
-            'disciplines' => function ($query) {
-                $query->whereHas('structures');
-            }
-        ])
-        ->whereHas('disciplines', function ($query) {
-            $query->whereHas('structures');
+        $familles = Famille::withWhereHas('disciplines', function ($query) {
+            $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();
+
+        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
+
+        $allCities = City::whereHas('produits')
+                                        ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                                        ->get();
+
 
         $disciplines = ListDiscipline::whereHas('structures')->select(['id', 'name', 'slug'])
                         ->withCount('structures')
@@ -46,6 +48,8 @@ class DisciplineController extends Controller
         return Inertia::render('Disciplines/Index', [
             'disciplines' => $disciplines,
             'familles' => $familles,
+            'listDisciplines' => $listDisciplines,
+            'allCities' => $allCities,
             'structuresCount' => $structuresCount,
             'filters' => request()->all(['search']),
         ]);

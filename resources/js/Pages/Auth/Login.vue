@@ -1,16 +1,21 @@
 <script setup>
 import Checkbox from "@/Components/Checkbox.vue";
-import AppLayout from "@/Layouts/AppLayout.vue";
+import ResultLayout from "@/Layouts/ResultLayout.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
-import { ArrowRightOnRectangleIcon } from "@heroicons/vue/24/outline";
+import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
+import ResultsHeader from "@/Components/ResultsHeader.vue";
+import { ArrowRightOnRectangleIcon, HomeIcon } from "@heroicons/vue/24/outline";
 
 defineProps({
     canResetPassword: Boolean,
     status: String,
+    familles: Object,
+    listDisciplines: Object,
+    allCities: Object,
 });
 
 const form = useForm({
@@ -27,19 +32,74 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Connexion"
-        description="Sports-et-loisirs.fr recense les structures proposant des activités de sport ou de loisirs en France - plus de 300 disciplines et 32000 clubs référencés." />
-    <AppLayout>
+    <Head
+        title="Connexion"
+        description="Sports-et-loisirs.fr recense les structures proposant des activités de sport ou de loisirs en France - plus de 300 disciplines et 32000 clubs référencés."
+    />
+    <ResultLayout :listDisciplines="listDisciplines" :allCities="allCities">
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                <ArrowRightOnRectangleIcon class="inline-block w-6 h-6 mr-2 text-gray-600"></ArrowRightOnRectangleIcon>
-                Connexion à mon compte
-            </h2>
-        </template>
+            <FamilleResultNavigation :familles="familles" />
+            <ResultsHeader>
+                <template v-slot:title>
+                    <h1
+                        class="border-b-2 border-slate-400 text-2xl font-bold leading-tight tracking-widest text-gray-800 md:text-4xl"
+                    >
+                        <ArrowRightOnRectangleIcon
+                            class="mr-2 inline-block h-6 w-6 text-gray-600"
+                        ></ArrowRightOnRectangleIcon>
+                        Connexion à mon compte
+                    </h1>
+                </template>
+                <template v-slot:ariane>
+                    <nav aria-label="Breadcrumb" class="flex">
+                        <ol
+                            class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600"
+                        >
+                            <li class="flex items-center">
+                                <Link
+                                    preserve-scroll
+                                    :href="route('welcome')"
+                                    class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
+                                >
+                                    <HomeIcon class="h-4 w-4" />
 
-        <div class="flex flex-col items-center min-h-full py-16 bg-white sm:justify-center">
-            <div class="w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md sm:max-w-md sm:rounded-lg">
-                <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
+                                    <span
+                                        class="ms-1.5 hidden text-xs font-medium md:block"
+                                    >
+                                        Accueil
+                                    </span>
+                                </Link>
+                            </li>
+
+                            <li class="relative flex items-center">
+                                <span
+                                    class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
+                                >
+                                </span>
+
+                                <Link
+                                    preserve-scroll
+                                    :href="route('login')"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                                >
+                                    Se connecter
+                                </Link>
+                            </li>
+                        </ol>
+                    </nav>
+                </template>
+            </ResultsHeader>
+        </template>
+        <div
+            class="flex min-h-full flex-col items-center bg-white py-4 sm:justify-center"
+        >
+            <div
+                class="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg"
+            >
+                <div
+                    v-if="status"
+                    class="mb-4 text-sm font-medium text-green-600"
+                >
                     {{ status }}
                 </div>
 
@@ -47,8 +107,15 @@ const submit = () => {
                     <div>
                         <InputLabel for="email" value="Email" />
 
-                        <TextInput id="email" type="email" class="block w-full mt-1" v-model="form.email" required autofocus
-                            autocomplete="username" />
+                        <TextInput
+                            id="email"
+                            type="email"
+                            class="mt-1 block w-full"
+                            v-model="form.email"
+                            required
+                            autofocus
+                            autocomplete="username"
+                        />
 
                         <InputError class="mt-2" :message="form.errors.email" />
                     </div>
@@ -56,31 +123,52 @@ const submit = () => {
                     <div class="mt-4">
                         <InputLabel for="password" value="Mot de passe" />
 
-                        <TextInput id="password" type="password" class="block w-full mt-1" v-model="form.password" required
-                            autocomplete="current-password" />
+                        <TextInput
+                            id="password"
+                            type="password"
+                            class="mt-1 block w-full"
+                            v-model="form.password"
+                            required
+                            autocomplete="current-password"
+                        />
 
-                        <InputError class="mt-2" :message="form.errors.password" />
+                        <InputError
+                            class="mt-2"
+                            :message="form.errors.password"
+                        />
                     </div>
 
-                    <div class="block mt-4">
+                    <div class="mt-4 block">
                         <label class="flex items-center">
-                            <Checkbox name="remember" v-model:checked="form.remember" />
-                            <span class="ml-2 text-sm text-gray-600">Se souvenir de moi</span>
+                            <Checkbox
+                                name="remember"
+                                v-model:checked="form.remember"
+                            />
+                            <span class="ml-2 text-sm text-gray-600"
+                                >Se souvenir de moi</span
+                            >
                         </label>
                     </div>
 
-                    <div class="flex items-center justify-end mt-4">
-                        <Link v-if="canResetPassword" :href="route('password.request')"
-                            class="text-sm text-gray-600 underline rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                        Mot de passe oublié?
+                    <div class="mt-4 flex items-center justify-end">
+                        <Link
+                            v-if="canResetPassword"
+                            :href="route('password.request')"
+                            class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        >
+                            Mot de passe oublié?
                         </Link>
 
-                        <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                        <PrimaryButton
+                            class="ml-4"
+                            :class="{ 'opacity-25': form.processing }"
+                            :disabled="form.processing"
+                        >
                             Se connecter
                         </PrimaryButton>
                     </div>
                 </form>
             </div>
         </div>
-    </AppLayout>
+    </ResultLayout>
 </template>

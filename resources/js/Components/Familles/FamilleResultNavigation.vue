@@ -5,7 +5,7 @@ const props = defineProps({
 });
 </script>
 <template>
-    <div class="hidden bg-slate-700/60 py-2 sm:block">
+    <div class="hidden bg-slate-700/60 py-2 md:block">
         <div class="mx-auto max-w-full">
             <div
                 class="flex flex-col flex-wrap items-center justify-center space-y-1.5 md:flex-row md:space-y-0 md:divide-x md:divide-white"

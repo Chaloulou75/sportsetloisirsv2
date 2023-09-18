@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use Inertia\Inertia;
 use App\Models\Famille;
 use App\Models\Departement;
@@ -9,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Models\LienDisciplineCategorie;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class DepartementDisciplineController extends Controller
 {
@@ -17,14 +19,15 @@ class DepartementDisciplineController extends Controller
      */
     public function show(Departement $departement, $discipline)
     {
-        $familles = Famille::with([
-            'disciplines' => function ($query) {
-                $query->whereHas('structures');
-            }
-        ])
-        ->whereHas('disciplines', function ($query) {
-            $query->whereHas('structures');
+        $familles = Famille::withWhereHas('disciplines', function ($query) {
+            $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();
+
+        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
+
+        $allCities = City::whereHas('produits')
+                                        ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                                        ->get();
 
         $discipline = ListDiscipline::where('slug', $discipline)
                             ->select(['id', 'name', 'slug', 'view_count'])
@@ -33,12 +36,30 @@ class DepartementDisciplineController extends Controller
             ->select('discipline_similaire_id', 'name', 'slug', 'famille')
             ->get();
 
-        $categories = LienDisciplineCategorie::where('discipline_id', $discipline->id)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
-
-        $departement = Departement::with(['cities', 'structures'])->select(['id', 'numero', 'departement', 'prefixe', 'view_count', 'latitude', 'longitude'])
+        $departement = Departement::with([
+            'structures',
+            'cities' => function ($query) {
+                $query->has('produits')->with(['produits', 'produits.adresse']);
+            }])
+                            ->select(['id', 'numero', 'departement', 'prefixe', 'view_count', 'latitude', 'longitude'])
                             ->where('id', $departement->id)
                             ->withCount('structures')
                             ->first();
+
+
+        $categories = LienDisciplineCategorie::withWhereHas('structures_produits.adresse', function ($query) use ($departement) {
+            $query->whereIn('city_id', $departement->cities->pluck('id'));
+        })
+                ->where('discipline_id', $discipline->id)
+                ->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+                ->get();
+
+        $categoriesWithoutProduit = LienDisciplineCategorie::whereDoesntHave('structures_produits.adresse', function ($query) use ($departement) {
+            $query->whereIn('city_id', $departement->cities->pluck('id'));
+        })
+        ->where('discipline_id', $discipline->id)
+        ->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+        ->get();
 
         $allStructureTypes = Structuretype::whereHas('structures')->select(['id', 'name', 'slug'])->get();
 
@@ -80,12 +101,15 @@ class DepartementDisciplineController extends Controller
         return Inertia::render('Departements/Disciplines/Show', [
             'familles' => $familles,
             'categories' => $categories,
+            'categoriesWithoutProduit' => $categoriesWithoutProduit,
             'allStructureTypes' => $allStructureTypes,
             'departement' => $departement,
             'citiesAround' => $citiesAround,
             'disciplinesSimilaires' => $disciplinesSimilaires,
             'structures' => $structures,
             'discipline' => $discipline,
+            'listDisciplines' => $listDisciplines,
+            'allCities' => $allCities,
         ]);
 
     }

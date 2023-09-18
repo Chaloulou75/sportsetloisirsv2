@@ -1,11 +1,17 @@
 <script setup>
-import AppLayout from "@/Layouts/AppLayout.vue";
+import ResultLayout from "@/Layouts/ResultLayout.vue";
 import DeleteUserForm from "./Partials/DeleteUserForm.vue";
 import UpdatePasswordForm from "./Partials/UpdatePasswordForm.vue";
 import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm.vue";
+import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
+import ResultsHeader from "@/Components/ResultsHeader.vue";
 import { Link, Head } from "@inertiajs/vue3";
+import { HomeIcon } from "@heroicons/vue/24/outline";
 
 defineProps({
+    familles: Object,
+    listDisciplines: Object,
+    allCities: Object,
     mustVerifyEmail: Boolean,
     status: String,
 });
@@ -14,22 +20,64 @@ defineProps({
 <template>
     <Head title="Profil" />
 
-    <AppLayout>
+    <ResultLayout
+        :listDisciplines="listDisciplines"
+        :allCities="allCities"
+        :discipline="discipline"
+        :categories="categories"
+    >
         <template #header>
-            <div
-                class="flex flex-col items-start justify-between md:flex-row md:items-center"
-            >
-                <div>
-                    <h2
-                        class="text-xl font-semibold leading-tight text-gray-800"
+            <FamilleResultNavigation :familles="familles" />
+            <ResultsHeader>
+                <template v-slot:title>
+                    <h1
+                        class="border-b-2 border-slate-400 text-center text-2xl font-bold leading-tight tracking-widest text-gray-800 md:text-4xl"
                     >
                         Informations du profil
-                    </h2>
-                </div>
-            </div>
+                    </h1>
+                </template>
+                <template v-slot:ariane>
+                    <nav aria-label="Breadcrumb" class="flex">
+                        <ol
+                            class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600"
+                        >
+                            <li class="flex items-center">
+                                <Link
+                                    preserve-scroll
+                                    :href="route('welcome')"
+                                    class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
+                                >
+                                    <HomeIcon class="h-4 w-4" />
+
+                                    <span
+                                        class="ms-1.5 hidden text-xs font-medium md:block"
+                                    >
+                                        Accueil
+                                    </span>
+                                </Link>
+                            </li>
+
+                            <li class="relative flex items-center">
+                                <span
+                                    class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
+                                >
+                                </span>
+
+                                <Link
+                                    preserve-scroll
+                                    :href="route('profile.edit')"
+                                    class="flex h-10 shrink-0 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                                >
+                                    Profile
+                                </Link>
+                            </li>
+                        </ol>
+                    </nav>
+                </template>
+            </ResultsHeader>
         </template>
 
-        <div class="py-12">
+        <div class="py-4">
             <div class="mx-auto max-w-full space-y-6 sm:px-6 lg:px-8">
                 <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
                     <UpdateProfileInformationForm
@@ -48,5 +96,5 @@ defineProps({
                 </div>
             </div>
         </div>
-    </AppLayout>
+    </ResultLayout>
 </template>

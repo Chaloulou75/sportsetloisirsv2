@@ -39,6 +39,7 @@ use App\Http\Controllers\DepartementDisciplineStructuretypeController;
 use App\Http\Controllers\CityDisciplineStructuretypeStructureController;
 use App\Http\Controllers\CityDisciplineCategorieStructureActiviteController;
 use App\Http\Controllers\CityDisciplineStructuretypeStructureActiviteController;
+use App\Http\Controllers\FaqController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,9 +58,7 @@ Route::get('/', [HomeController::class, 'index'])
 
 Route::get('/mentions', [MentionController::class, 'index'])->name('mentions.index');
 
-Route::get('/faq', function () {
-    return Inertia::render('Faq/Index');
-})->name('faq.index');
+Route::get('/faq', [FaqController::class, 'index'])->name('faq.index');
 
 Route::resource('favoris', FavoritesController::class)->only([
     'index'
@@ -106,9 +105,6 @@ Route::get('/localite-{departement:id}-2', [DepartementController::class, 'show'
 
 Route::get('/structures', [StructureController::class, 'index'])
         ->name('structures.index');
-
-Route::get('/{structure:slug}', [StructureController::class, 'show'])
-    ->name('structures.show');
 
 Route::get('/localite-{city}-1/{discipline:slug}', [CityDisciplineController::class, 'show'], [
     'parameters' => [
@@ -251,5 +247,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/categories-disciplines-criteres-valeurs/{lienDisCatCritValeur}', [CategoryDisciplineCritereValeurController::class, 'destroy'])->name('categories-disciplines-criteres-valeurs.destroy');
     //, 'can:viewAdmin'
 });
+
+Route::get('/{structure:slug}', [StructureController::class, 'show'])
+    ->name('structures.show');
 
 Route::get('/activites/{activite:id}', [ActiviteController::class, 'show'])->name('structures.activites.show');

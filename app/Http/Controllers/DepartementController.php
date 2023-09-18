@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use Inertia\Inertia;
 use App\Models\Famille;
 use App\Models\Structure;
 use App\Models\Departement;
 use Illuminate\Http\Request;
+use App\Models\ListDiscipline;
 use Illuminate\Support\Facades\DB;
 
 class DepartementController extends Controller
@@ -17,14 +19,17 @@ class DepartementController extends Controller
     public function index()
     {
         $structuresCount = Structure::count();
-        $familles = Famille::with([
-            'disciplines' => function ($query) {
-                $query->whereHas('structures');
-            }
-        ])
-        ->whereHas('disciplines', function ($query) {
-            $query->whereHas('structures');
+
+        $familles = Famille::withWhereHas('disciplines', function ($query) {
+            $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();
+
+        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
+
+        $allCities = City::whereHas('produits')
+                        ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                        ->get();
+
 
         $departements = Departement::with([
                             'structures:id,name,slug,presentation_courte,address,city,zip_code,address_lat,address_lng,departement_id'
@@ -42,6 +47,8 @@ class DepartementController extends Controller
         return Inertia::render('Departements/Index', [
             'departements' => $departements,
             'familles' => $familles,
+            'listDisciplines' => $listDisciplines,
+            'allCities' => $allCities,
             'structuresCount' => $structuresCount,
             'filters' => request()->all(['search']),
         ]);
@@ -52,14 +59,17 @@ class DepartementController extends Controller
      */
     public function show(Departement $departement)
     {
-        $familles = Famille::with([
-            'disciplines' => function ($query) {
-                $query->whereHas('structures');
-            }
-        ])
-        ->whereHas('disciplines', function ($query) {
-            $query->whereHas('structures');
+
+        $familles = Famille::withWhereHas('disciplines', function ($query) {
+            $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();
+
+        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
+
+        $allCities = City::whereHas('produits')
+                                        ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                                        ->get();
+
 
         $departement = Departement::with(['cities',
                                         'structures' => function ($query) {
@@ -101,6 +111,8 @@ class DepartementController extends Controller
 
         return Inertia::render('Departements/Show', [
             'familles' => $familles,
+            'listDisciplines' => $listDisciplines,
+            'allCities' => $allCities,
             'departement' => $departement,
             'structures' => $structures,
         ]);

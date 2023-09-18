@@ -3,8 +3,6 @@ import { ref, computed } from "vue";
 import BreezeApplicationLogo from "@/Components/ApplicationLogo.vue";
 import BreezeDropdown from "@/Components/Dropdown.vue";
 import BreezeDropdownLink from "@/Components/DropdownLink.vue";
-import BreezeNavLink from "@/Components/NavLink.vue";
-import BreezeResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import AutocompleteDisciplineNav from "@/Components/Navigation/AutocompleteDisciplineNav.vue";
 import AutocompleteCityNav from "@/Components/Navigation/AutocompleteCityNav.vue";
 import { Link, usePage, router } from "@inertiajs/vue3";

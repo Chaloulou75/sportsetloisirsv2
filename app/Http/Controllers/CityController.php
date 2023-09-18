@@ -21,9 +21,17 @@ class CityController extends Controller
         $structuresCount = Structure::count();
         $produitsCount = StructureProduit::count();
 
+
         $familles = Famille::withWhereHas('disciplines', function ($query) {
             $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();
+
+        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
+
+        $allCities = City::whereHas('produits')
+                        ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                        ->get();
+
 
         $cities = City::whereHas('produits')->select(['id', 'ville', 'ville_formatee', 'code_postal'])
                         ->withCount('produits')
@@ -37,6 +45,8 @@ class CityController extends Controller
         return Inertia::render('Villes/Index', [
             'cities' => $cities,
             'familles' => $familles,
+            'listDisciplines' => $listDisciplines,
+            'allCities' => $allCities,
             'structuresCount' => $structuresCount,
             'produitsCount' => $produitsCount,
             'filters' => request()->all(['search']),

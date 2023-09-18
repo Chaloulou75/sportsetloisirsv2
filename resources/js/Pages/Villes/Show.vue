@@ -1,10 +1,12 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { router, Head, Link } from "@inertiajs/vue3";
-import { ref, watch, computed, defineAsyncComponent } from "vue";
-import { debounce } from "lodash";
+import { Head, Link } from "@inertiajs/vue3";
+import { ref, computed, defineAsyncComponent } from "vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
+import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CitiesAround from "@/Components/Cities/CitiesAround.vue";
+import { HomeIcon, ListBulletIcon, MapIcon } from "@heroicons/vue/24/outline";
+import { useElementVisibility } from "@vueuse/core";
 
 const props = defineProps({
     familles: Object,
@@ -37,22 +39,18 @@ const Pagination = defineAsyncComponent(() =>
     import("@/Components/Pagination.vue")
 );
 
-// let discipline = ref("");
-// function resetSearch() {
-//     discipline.value = "";
-// }
+const mapStructure = ref(null);
+const mapIsVisible = useElementVisibility(mapStructure);
+const listeStructure = ref(null);
+const listeIsVisible = useElementVisibility(listeStructure);
 
-// watch(
-//     discipline,
-//     debounce(function (value) {
-//         router.get(
-//             `/villes/${city.ville_formatee}`,
-//             { discipline: value },
-//             { preserveState: true,
-//             replace: true }
-//         );
-//     }, 500)
-// );
+const goToMap = () => {
+    mapStructure.value.scrollIntoView({ behavior: "smooth" });
+};
+
+const goToListe = () => {
+    listeStructure.value.scrollIntoView({ behavior: "smooth" });
+};
 
 const flattenedDisciplines = computed(() => {
     const uniqueDisciplines = new Map();
@@ -104,22 +102,18 @@ const formatCityName = (ville) => {
     <ResultLayout :listDisciplines="listDisciplines" :allCities="allCities">
         <template #header>
             <FamilleResultNavigation :familles="familles" />
-            <div class="mx-auto my-6 max-w-full px-2 py-4 md:px-4 lg:px-6">
-                <div
-                    class="mx-auto my-2 flex w-full flex-col items-center justify-center space-y-2 bg-slate-100/60 px-2 py-2 md:w-1/4"
-                >
+            <ResultsHeader>
+                <template v-slot:title>
                     <h1
                         class="border-b-2 border-slate-400 text-2xl font-bold leading-tight tracking-widest text-gray-800 md:text-4xl"
                     >
                         {{ formatCityName(city.ville) }}
-                        <span class="text-sm text-gray-600"
+                        <!-- <span class="text-sm text-gray-600"
                             >({{ city.code_postal }})
-                        </span>
+                        </span> -->
                     </h1>
-                </div>
-                <div
-                    class="mx-auto flex w-full flex-col items-center justify-center space-y-2 bg-slate-100/60 px-2 py-2 md:w-1/4"
-                >
+                </template>
+                <template v-slot:ariane>
                     <nav aria-label="Breadcrumb" class="flex">
                         <ol
                             class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600"
@@ -130,22 +124,11 @@ const formatCityName = (ville) => {
                                     :href="route('welcome')"
                                     class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
                                 >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        class="h-4 w-4"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                                        />
-                                    </svg>
+                                    <HomeIcon class="h-4 w-4" />
 
-                                    <span class="ms-1.5 text-xs font-medium">
+                                    <span
+                                        class="ms-1.5 hidden text-xs font-medium md:block"
+                                    >
                                         Accueil
                                     </span>
                                 </Link>
@@ -167,8 +150,8 @@ const formatCityName = (ville) => {
                             </li>
                         </ol>
                     </nav>
-                </div>
-            </div>
+                </template>
+            </ResultsHeader>
         </template>
 
         <template v-if="structures.data.length > 0">
@@ -215,9 +198,9 @@ const formatCityName = (ville) => {
                     >
                 </h2>
                 <div
-                    class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-12 sm:px-6 md:flex-row md:space-x-8 lg:px-8"
+                    class="relative mx-auto flex min-h-screen max-w-full flex-col px-2 py-12 sm:px-6 md:flex-row md:space-x-8 lg:px-8"
                 >
-                    <div class="md:w-1/2">
+                    <div class="md:w-1/2" ref="listeStructure">
                         <div
                             class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-2"
                         >
@@ -233,8 +216,20 @@ const formatCityName = (ville) => {
                         <div class="flex justify-end p-10">
                             <Pagination :links="structures.links" />
                         </div>
+                        <button
+                            v-if="!mapIsVisible && listeIsVisible"
+                            type="button"
+                            class="fixed inset-x-2 bottom-2 z-50 mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-2 text-white hover:bg-gray-800 md:hidden"
+                            @click="goToMap"
+                        >
+                            <MapIcon class="mr-2 h-5 w-5" />
+                            Carte
+                        </button>
                     </div>
-                    <div class="space-y-4 md:sticky md:w-1/2">
+                    <div
+                        class="space-y-4 md:sticky md:w-1/2"
+                        ref="mapStructure"
+                    >
                         <LeafletMapMultiple
                             class="md:top-2"
                             :structures="structures.data"
@@ -242,6 +237,15 @@ const formatCityName = (ville) => {
                             :zoom="11"
                         />
                         <CitiesAround :citiesAround="citiesAround" />
+                        <button
+                            v-if="mapIsVisible && !listeIsVisible"
+                            type="button"
+                            class="fixed inset-x-2 bottom-2 z-50 mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-2 text-white hover:bg-gray-800 md:hidden"
+                            @click="goToListe"
+                        >
+                            <ListBulletIcon class="mr-2 h-5 w-5" />
+                            Liste
+                        </button>
                     </div>
                 </div>
             </section>

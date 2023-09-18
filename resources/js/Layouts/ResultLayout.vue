@@ -118,11 +118,11 @@ const headerClass = computed(() => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-white">
+    <div class="relative min-h-screen bg-white">
         <main>
             <!-- Page Heading -->
             <header
-                class="relative mx-auto h-full w-full bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-soft-light"
+                class="mx-auto h-full w-full bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-soft-light"
                 :class="headerClass"
                 v-if="$slots.header"
             >

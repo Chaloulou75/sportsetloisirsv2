@@ -52,14 +52,17 @@ class FamilleController extends Controller
      */
     public function show(Famille $famille)
     {
-        $familles = Famille::with([
-            'disciplines' => function ($query) {
-                $query->whereHas('structures');
-            }
-        ])
-        ->whereHas('disciplines', function ($query) {
-            $query->whereHas('structures');
+
+        $familles = Famille::withWhereHas('disciplines', function ($query) {
+            $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();
+
+        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
+
+        $allCities = City::whereHas('produits')
+                        ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                        ->get();
+
 
         $famille = Famille::with([
             'disciplines' => function ($query) {
@@ -79,6 +82,8 @@ class FamilleController extends Controller
 
         return Inertia::render('Familles/Show', [
             'familles' => $familles,
+            'allCities' => $allCities,
+            'listDisciplines' => $listDisciplines,
             'famille' => $famille,
         ]);
     }

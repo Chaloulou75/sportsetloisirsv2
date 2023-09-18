@@ -1,12 +1,20 @@
 <script setup>
-import AppLayout from "@/Layouts/AppLayout.vue";
+import ResultLayout from "@/Layouts/ResultLayout.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
+import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
+import ResultsHeader from "@/Components/ResultsHeader.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { CheckIcon } from "@heroicons/vue/24/solid";
-import { UserCircleIcon } from "@heroicons/vue/24/outline";
+import { UserCircleIcon, HomeIcon } from "@heroicons/vue/24/outline";
+
+const props = defineProps({
+    familles: Object,
+    listDisciplines: Object,
+    allCities: Object,
+});
 
 const form = useForm({
     name: "",
@@ -28,35 +36,79 @@ const submit = () => {
         title="Inscription"
         description="Sports-et-loisirs.fr recense les structures proposant des activités de sport ou de loisirs en France - plus de 300 disciplines et 32000 clubs référencés."
     />
-    <AppLayout>
+    <ResultLayout :listDisciplines="listDisciplines" :allCities="allCities">
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                <UserCircleIcon
-                    class="mr-2 inline-block h-6 w-6 text-gray-600"
-                ></UserCircleIcon
-                >Inscription
-            </h2>
-            <div
-                class="py-2 text-base font-medium leading-relaxed text-gray-600"
-            >
-                <p class="pb-2 font-semibold">Pourquoi créer un compte?</p>
-                <p>
-                    En créant un compte sur notre site, vous aurez accès
-                    gratuitement à l'ensemble de nos services, à savoir :
-                </p>
-                <p class="flex items-center">
-                    <CheckIcon class="mr-2 h-5 w-5 text-blue-500" />Publier la
-                    fiche détaillée de votre structure
-                </p>
-                <p class="flex items-center">
-                    <CheckIcon class="mr-2 h-5 w-5 text-blue-500" />Diffuser vos
-                    événements
-                </p>
-            </div>
-        </template>
+            <FamilleResultNavigation :familles="familles" />
+            <ResultsHeader>
+                <template v-slot:title>
+                    <h1
+                        class="border-b-2 border-slate-400 text-2xl font-bold leading-tight tracking-widest text-gray-800 md:text-4xl"
+                    >
+                        <UserCircleIcon
+                            class="mr-2 inline-block h-6 w-6 text-gray-600"
+                        ></UserCircleIcon
+                        >Inscription
+                    </h1>
+                </template>
+                <template v-slot:ariane>
+                    <nav aria-label="Breadcrumb" class="flex">
+                        <ol
+                            class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600"
+                        >
+                            <li class="flex items-center">
+                                <Link
+                                    preserve-scroll
+                                    :href="route('welcome')"
+                                    class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
+                                >
+                                    <HomeIcon class="h-4 w-4" />
 
+                                    <span
+                                        class="ms-1.5 hidden text-xs font-medium md:block"
+                                    >
+                                        Accueil
+                                    </span>
+                                </Link>
+                            </li>
+
+                            <li class="relative flex items-center">
+                                <span
+                                    class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
+                                >
+                                </span>
+
+                                <Link
+                                    preserve-scroll
+                                    :href="route('register')"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                                >
+                                    S'inscrire
+                                </Link>
+                            </li>
+                        </ol>
+                    </nav>
+                </template>
+            </ResultsHeader>
+        </template>
         <div
-            class="flex min-h-full flex-col items-center bg-white py-16 sm:justify-center"
+            class="px-2 py-2 text-base font-medium leading-relaxed text-gray-600 md:px-6"
+        >
+            <p class="pb-2 font-semibold">Pourquoi créer un compte?</p>
+            <p>
+                En créant un compte sur notre site, vous aurez accès
+                gratuitement à l'ensemble de nos services, à savoir :
+            </p>
+            <p class="flex items-center">
+                <CheckIcon class="mr-2 h-5 w-5 text-blue-500" />Publier la fiche
+                détaillée de votre structure
+            </p>
+            <p class="flex items-center">
+                <CheckIcon class="mr-2 h-5 w-5 text-blue-500" />Diffuser vos
+                événements
+            </p>
+        </div>
+        <div
+            class="flex min-h-full flex-col items-center bg-white py-4 sm:justify-center"
         >
             <div
                 class="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg"
@@ -151,5 +203,5 @@ const submit = () => {
                 </form>
             </div>
         </div>
-    </AppLayout>
+    </ResultLayout>
 </template>

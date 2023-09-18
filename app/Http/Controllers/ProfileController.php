@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\Famille;
 use Illuminate\Http\Request;
+use App\Models\ListDiscipline;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
@@ -18,9 +21,23 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+
+        $familles = Famille::withWhereHas('disciplines', function ($query) {
+            $query->whereHas('structureProduits');
+        })->select(['id', 'name', 'slug'])->get();
+
+        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
+
+        $allCities = City::whereHas('produits')
+                                ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                                ->get();
+
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
+            'familles' => $familles,
+            'listDisciplines' => $listDisciplines,
+            'allCities' => $allCities,
         ]);
     }
 

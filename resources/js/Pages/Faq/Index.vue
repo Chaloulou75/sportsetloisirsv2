@@ -1,22 +1,74 @@
 <script setup>
-import AppLayout from "@/Layouts/AppLayout.vue";
+import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { ChevronUpIcon } from "@heroicons/vue/24/solid";
-import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
+import { HomeIcon, QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
+import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
+import ResultsHeader from "@/Components/ResultsHeader.vue";
+const props = defineProps({
+    familles: Object,
+    listDisciplines: Object,
+    allCities: Object,
+});
 </script>
 
 <template>
     <Head title="Questions fréquentes" description="Questions fréquentes" />
 
-    <AppLayout>
+    <ResultLayout :listDisciplines="listDisciplines" :allCities="allCities">
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                <QuestionMarkCircleIcon
-                    class="mr-2 inline-block h-6 w-6 text-gray-600"
-                ></QuestionMarkCircleIcon
-                >Questions fréquentes
-            </h2>
+            <FamilleResultNavigation :familles="familles" />
+            <ResultsHeader>
+                <template v-slot:title>
+                    <h1
+                        class="border-b-2 border-slate-400 text-center text-2xl font-bold leading-tight tracking-widest text-gray-800 md:text-4xl"
+                    >
+                        <QuestionMarkCircleIcon
+                            class="mr-2 inline-block h-6 w-6 text-gray-600"
+                        ></QuestionMarkCircleIcon
+                        >Questions fréquentes
+                    </h1>
+                </template>
+                <template v-slot:ariane>
+                    <nav aria-label="Breadcrumb" class="flex">
+                        <ol
+                            class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600"
+                        >
+                            <li class="flex items-center">
+                                <Link
+                                    preserve-scroll
+                                    :href="route('welcome')"
+                                    class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
+                                >
+                                    <HomeIcon class="h-4 w-4" />
+
+                                    <span
+                                        class="ms-1.5 hidden text-xs font-medium md:block"
+                                    >
+                                        Accueil
+                                    </span>
+                                </Link>
+                            </li>
+
+                            <li class="relative flex items-center">
+                                <span
+                                    class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
+                                >
+                                </span>
+
+                                <Link
+                                    preserve-scroll
+                                    :href="route('faq.index')"
+                                    class="flex h-10 shrink-0 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                                >
+                                    faq
+                                </Link>
+                            </li>
+                        </ol>
+                    </nav>
+                </template>
+            </ResultsHeader>
         </template>
 
         <div class="py-4">
@@ -434,5 +486,5 @@ import { QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
                 </div>
             </div>
         </div>
-    </AppLayout>
+    </ResultLayout>
 </template>
