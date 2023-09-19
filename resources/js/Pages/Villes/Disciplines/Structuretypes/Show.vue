@@ -225,33 +225,36 @@ function hideTooltip() {
                     <button
                         v-if="!mapIsVisible && listeIsVisible"
                         type="button"
-                        class="fixed inset-x-2 bottom-2 z-50 mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-2 text-white hover:bg-gray-800 md:hidden"
+                        class="fixed inset-x-2 bottom-4 z-50 mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:hidden"
                         @click="goToMap"
                     >
                         <MapIcon class="mr-2 h-5 w-5" />
                         Carte
                     </button>
                 </div>
-                <div class="space-y-4 md:sticky md:w-1/2" ref="mapStructure">
-                    <LeafletMapMultiple
-                        class="md:top-2"
-                        :structures="structures.data"
-                        :hovered-structure="hoveredStructure"
-                        :zoom="12"
-                    />
+                <div class="space-y-4 md:sticky md:w-1/2">
+                    <div ref="mapStructure">
+                        <LeafletMapMultiple
+                            class="md:top-2"
+                            :structures="structures.data"
+                            :hovered-structure="hoveredStructure"
+                            :zoom="12"
+                        />
+                        <button
+                            v-if="mapIsVisible"
+                            type="button"
+                            class="fixed inset-x-2 bottom-4 z-[9999] mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:hidden"
+                            @click="goToListe"
+                        >
+                            <ListBulletIcon class="mr-2 h-5 w-5" />
+                            Liste
+                        </button>
+                    </div>
+
                     <CitiesAround :citiesAround="citiesAround" />
                     <DisciplinesSimilaires
                         :disciplinesSimilaires="disciplinesSimilaires"
                     />
-                    <button
-                        v-if="mapIsVisible && !listeIsVisible"
-                        type="button"
-                        class="fixed inset-x-2 bottom-2 z-50 mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-2 text-white hover:bg-gray-800 md:hidden"
-                        @click="goToListe"
-                    >
-                        <ListBulletIcon class="mr-2 h-5 w-5" />
-                        Liste
-                    </button>
                 </div>
             </div>
         </template>

@@ -62,7 +62,9 @@ const submitForm = async () => {
 </script>
 
 <template>
-    <nav class="border-b border-gray-100 bg-slate-900/80">
+    <nav
+        class="fixed inset-x-0 top-0 z-50 border-b border-gray-100 bg-slate-900/80"
+    >
         <!-- Primary Navigation Menu -->
         <div class="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
             <div class="flex h-16 justify-between">
