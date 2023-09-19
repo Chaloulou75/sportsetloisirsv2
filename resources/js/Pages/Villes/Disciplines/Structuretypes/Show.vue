@@ -225,7 +225,7 @@ function hideTooltip() {
                     <button
                         v-if="!mapIsVisible && listeIsVisible"
                         type="button"
-                        class="fixed inset-x-2 bottom-4 z-50 mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:hidden"
+                        class="fixed inset-x-2 bottom-4 z-[9999] mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:hidden"
                         @click="goToMap"
                     >
                         <MapIcon class="mr-2 h-5 w-5" />
