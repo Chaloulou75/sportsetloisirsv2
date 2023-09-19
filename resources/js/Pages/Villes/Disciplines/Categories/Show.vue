@@ -375,16 +375,15 @@ const formCriteres = useForm({
                                 @mouseover="showTooltip(structure)"
                                 @mouseout="hideTooltip()"
                                 :link="
-                                    route(
-                                        'villes.disciplines.categories.structures.show',
-                                        {
-                                            city: city.id,
-                                            discipline: discipline.slug,
-                                            category: category.id,
-                                            structure: structure.slug,
-                                        }
-                                    )
+                                    route('structures.show', {
+                                        structure: structure.slug,
+                                    })
                                 "
+                                :data="{
+                                    city: city.id,
+                                    discipline: discipline.slug,
+                                    category: category.id,
+                                }"
                             />
                         </div>
                         <div class="flex justify-end p-10">

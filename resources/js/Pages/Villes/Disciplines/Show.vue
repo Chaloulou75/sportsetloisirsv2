@@ -173,6 +173,15 @@ function hideTooltip() {
                             :structure="structure"
                             @mouseover="showTooltip(structure)"
                             @mouseout="hideTooltip()"
+                            :link="
+                                route('structures.show', {
+                                    structure: structure.slug,
+                                })
+                            "
+                            :data="{
+                                city: city.id,
+                                discipline: discipline.slug,
+                            }"
                         />
                     </div>
                     <div class="flex justify-end p-10">

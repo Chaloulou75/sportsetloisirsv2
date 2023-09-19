@@ -27,9 +27,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\RedirectResponse;
+use App\Models\LienDisciplineCategorie;
 use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\LienDisciplineCategorieCritere;
 
 class StructureController extends Controller
@@ -261,6 +263,12 @@ class StructureController extends Controller
      */
     public function show(Structure $structure)
     {
+        $discipline = request()->discipline;
+        $city = request()->city;
+        $category = request()->category;
+        $structuretype = request()->structuretype;
+        $departement = request()->departement;
+
         $familles = Famille::withWhereHas('disciplines', function ($query) {
             $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();
@@ -272,34 +280,103 @@ class StructureController extends Controller
                                 ->get();
 
         $structure = Structure::with([
-            'creator:id,name',
-            'users:id,name',
-            'adresses'  => function ($query) {
-                $query->latest();
-            },
-            'city:id,ville,ville_formatee,code_postal',
-            'departement:id,departement,numero',
-            'structuretype:id,name,slug',
-            'disciplines',
-            'disciplines.discipline:id,name,slug',
-            'categories',
-            'activites',
-            'activites.discipline:id,name',
-            'activites.categorie:id,categorie_id,discipline_id,nom_categorie_client',
-            'activites.produits',
-            'activites.produits.adresse',
-            'activites.produits.criteres',
-            'activites.produits.criteres.critere',
-            'activites.produits.tarifs',
-            'activites.produits.tarifs.tarifType',
-            'activites.produits.tarifs.structureTarifTypeInfos',
-            'activites.produits.plannings',
-            ])
-            ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
-            ->where('slug', $structure->slug)
-            ->first();
+                    'creator:id,name',
+                    'users:id,name',
+                    'adresses'  => function ($query) {
+                        $query->latest();
+                    },
+                    'city:id,ville,ville_formatee,code_postal',
+                    'departement:id,departement,numero',
+                    'structuretype:id,name,slug',
+                    'disciplines',
+                    'disciplines.discipline:id,name,slug',
+                    'categories',
+                    'activites',
+                    'activites.discipline:id,name',
+                    'activites.categorie:id,categorie_id,discipline_id,nom_categorie_client,nom_categorie_pro',
+                    'activites.produits',
+                    'activites.produits.adresse',
+                    'activites.produits.criteres',
+                    'activites.produits.criteres.critere',
+                    'activites.produits.tarifs',
+                    'activites.produits.tarifs.tarifType',
+                    'activites.produits.tarifs.structureTarifTypeInfos',
+                    'activites.produits.plannings',
+                    ])
+                    ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
+                    ->where('slug', $structure->slug)
+                    ->first();
 
         $logoUrl = asset($structure->logo);
+
+        if($departement !== null) {
+            $departement = Departement::with([
+                        'structures',
+                        'cities' => function ($query) {
+                            $query->has('produits')->with(['produits', 'produits.adresse']);
+                        }])
+                                        ->select(['id', 'numero', 'departement', 'prefixe', 'view_count', 'latitude', 'longitude'])
+                                        ->where('id', $departement->id)
+                                        ->withCount('structures')
+                                        ->first();
+
+        } else {
+            $departement = null;
+        }
+
+        if ($city !== null) {
+            $city = City::with([
+                'structures',
+                'produits',
+                'produits.adresse'
+            ])
+            ->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
+            ->where('id', $city)
+            ->withCount('structures')
+            ->first();
+
+            $citiesAround = City::with('structures', 'produits', 'produits.adresse')
+                                ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
+                                ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
+                                ->where('id', '!=', $city->id)
+                                ->havingRaw('distance <= ?', [$city->tolerance_rayon])
+                                ->orderBy('distance', 'ASC')
+                                ->limit(10)
+                                ->get();
+        } else {
+            $citiesAround = null;
+        }
+
+        if($discipline !== null) {
+
+            $discipline = ListDiscipline::where('slug', $discipline)
+                                        ->select(['id', 'name', 'slug', 'view_count'])
+                                        ->first();
+            $disciplinesSimilaires = $discipline->disciplinesSimilaires()->select(['famille', 'name', 'slug'])->whereHas('structures')->get();
+
+            $categories = $structure->activites->pluck('categorie')->where('discipline_id', $discipline->id);
+
+            $categoriesWithoutProduit = LienDisciplineCategorie::whereNotIn('id', $categories->pluck('id'))->where('discipline_id', $discipline->id)
+            ->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+            ->get();
+
+            if($category !== null) {
+                $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('id', $category)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
+            }
+
+            if($structuretype !== null) {
+                $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
+            }
+
+        } else {
+            $category = null;
+            $categories = null;
+            $categoriesWithoutProduit = null;
+            $disciplinesSimilaires = null;
+            $structuretypeElected = null;
+        }
+
+        $allStructureTypes = Structuretype::whereHas('structures')->select(['id', 'name', 'slug'])->get();
 
         $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
             $query->orderBy('defaut', 'desc');
@@ -320,7 +397,17 @@ class StructureController extends Controller
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),
-            ]
+            ],
+            'category' => $category,
+            'categories' => $categories,
+            'categoriesWithoutProduit' => $categoriesWithoutProduit,
+            'allStructureTypes' => $allStructureTypes,
+            'structuretypeElected' => $structuretypeElected,
+            'city' => $city,
+            'citiesAround' => $citiesAround,
+            'departement' => $departement,
+            'discipline' => $discipline,
+            'disciplinesSimilaires' => $disciplinesSimilaires,
         ]);
     }
 

@@ -4,7 +4,6 @@ import { Head, Link } from "@inertiajs/vue3";
 import { ref, reactive, computed } from "vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
-import ModalDeleteStructure from "@/Components/Modals/ModalDeleteStructure.vue";
 import LeafletMap from "@/Components/LeafletMap.vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
@@ -37,8 +36,18 @@ const props = defineProps({
     logoUrl: String,
     familles: Object,
     listDisciplines: Object,
+    discipline: Object,
+    disciplinesSimilaires: Object,
     allCities: Object,
+    city: Object,
+    citiesAround: Object,
+    category: Object,
+    categories: Object,
+    categoriesWithoutProduit: Object,
+    allStructureTypes: Object,
+    structuretypeElected: Object,
     criteres: Object,
+    departement: Object,
     can: Object,
 });
 

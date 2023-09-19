@@ -117,7 +117,7 @@ class CityDisciplineCategorieStructureController extends Controller
             'categories' => $categories,
             'criteres' => $criteres,
             'allStructureTypes' => $allStructureTypes,
-            'city'=> $city,
+            'city' => $city,
             'citiesAround' => $citiesAround,
             'disciplinesSimilaires' => $disciplinesSimilaires,
             'structure' => $structure,

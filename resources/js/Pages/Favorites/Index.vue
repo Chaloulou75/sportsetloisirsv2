@@ -1,17 +1,12 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import { ref, watch, computed, defineAsyncComponent } from "vue";
+import { ref } from "vue";
 import StructureCard from "@/Components/Structures/StructureCard.vue";
 import ActiviteCard from "@/Components/Structures/ActiviteCard.vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
-import {
-    HomeIcon,
-    ListBulletIcon,
-    MapIcon,
-    MapPinIcon,
-} from "@heroicons/vue/24/outline";
+import { HomeIcon } from "@heroicons/vue/24/outline";
 
 const props = defineProps({
     structures: Object,

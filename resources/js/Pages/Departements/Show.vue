@@ -217,6 +217,14 @@ watch(
                                 :structure="structure"
                                 @mouseover="showTooltip(structure)"
                                 @mouseout="hideTooltip()"
+                                :link="
+                                    route('structures.show', {
+                                        structure: structure.slug,
+                                    })
+                                "
+                                :data="{
+                                    departement: departement.id,
+                                }"
                             />
                         </div>
                         <div class="flex justify-end p-10">

@@ -106,6 +106,10 @@ Route::get('/localite-{departement:id}-2', [DepartementController::class, 'show'
 Route::get('/structures', [StructureController::class, 'index'])
         ->name('structures.index');
 
+
+Route::get('str-{structure:slug}', [StructureController::class, 'show'])
+    ->name('structures.show');
+
 Route::get('/localite-{city}-1/{discipline:slug}', [CityDisciplineController::class, 'show'], [
     'parameters' => [
         'villes' => 'city'
@@ -139,8 +143,6 @@ Route::get('/dis-{disciplineWithPlus}-{id}.{extension?}', function ($disciplineW
     $discipline = str_replace('+', '-', strtolower($disciplineWithPlus));
     return redirect('/disciplines/' . $discipline, 301);
 });
-
-
 
 Route::get('/localite-2/index.{extension?}', function ($extension = null) {
     return redirect('/departements/', 301);
@@ -247,8 +249,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/categories-disciplines-criteres-valeurs/{lienDisCatCritValeur}', [CategoryDisciplineCritereValeurController::class, 'destroy'])->name('categories-disciplines-criteres-valeurs.destroy');
     //, 'can:viewAdmin'
 });
-
-Route::get('/{structure:slug}', [StructureController::class, 'show'])
-    ->name('structures.show');
-
+//][/{discipline?}][/{category?}]
 Route::get('/activites/{activite:id}', [ActiviteController::class, 'show'])->name('structures.activites.show');

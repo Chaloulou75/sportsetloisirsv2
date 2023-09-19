@@ -13,6 +13,10 @@ const props = defineProps({
         type: String,
         default: null,
     },
+    data: {
+        type: Object,
+        default: null,
+    },
 });
 
 const cookies = useCookies(["favoriteStructures"]);
@@ -146,7 +150,7 @@ const formatCityName = (ville) => {
                 />
             </div>
 
-            <Link :href="link" class="">
+            <Link :href="link" :data="data" class="">
                 <dl class="mt-2 flex flex-col px-3">
                     <p
                         class="text-sm font-medium uppercase tracking-widest text-pink-500"
@@ -323,7 +327,13 @@ const formatCityName = (ville) => {
                 />
             </div>
 
-            <Link :href="route('structures.show', structure.slug)">
+            <Link
+                :href="
+                    route('structures.show', {
+                        structure: structure.slug,
+                    })
+                "
+            >
                 <dl class="mt-2 flex flex-col px-3">
                     <p
                         class="text-sm font-medium uppercase tracking-widest text-pink-500"
