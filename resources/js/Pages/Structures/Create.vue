@@ -1,7 +1,10 @@
 <script setup>
-import AppLayout from "@/Layouts/AppLayout.vue";
-import { Head, useForm } from "@inertiajs/vue3";
+import ResultLayout from "@/Layouts/ResultLayout.vue";
+import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, onMounted, watch, defineAsyncComponent } from "vue";
+import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
+import ResultsHeader from "@/Components/ResultsHeader.vue";
+import { HomeIcon } from "@heroicons/vue/24/outline";
 
 const AddressForm = defineAsyncComponent(() =>
     import("@/Components/Google/AddressForm.vue")
@@ -12,6 +15,9 @@ const BaseInfoForm = defineAsyncComponent(() =>
 const props = defineProps({
     structurestypes: Object,
     disciplines: Object,
+    familles: Object,
+    listDisciplines: Object,
+    allCities: Object,
     errors: Object,
 });
 
@@ -52,32 +58,32 @@ function resetFields() {
 }
 
 const name = ref(null);
-const familles = ref([]);
-const disciplinesList = ref([]);
+// const familles = ref([]);
+// const disciplinesList = ref([]);
 
-const getFamilles = async () => {
-    let response = await axios.get("/api/familles");
-    familles.value = response.data.data;
-};
+// const getFamilles = async () => {
+//     let response = await axios.get("/api/familles");
+//     familles.value = response.data.data;
+// };
 
 onMounted(() => {
     name.value.focus();
-    getFamilles();
+    // getFamilles();
 });
 
-watch(
-    () => form.famille_id,
-    async (newFamilleID) => {
-        axios
-            .get("/api/disciplines?famille_id=" + newFamilleID)
-            .then((response) => {
-                disciplinesList.value = response.data.data;
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-    }
-);
+// watch(
+//     () => form.famille_id,
+//     async (newFamilleID) => {
+//         axios
+//             .get("/api/disciplines?famille_id=" + newFamilleID)
+//             .then((response) => {
+//                 disciplinesList.value = response.data.data;
+//             })
+//             .catch((e) => {
+//                 console.log(e);
+//             });
+//     }
+// );
 
 function submit() {
     form.post("/structures");
@@ -87,13 +93,56 @@ function submit() {
 <template>
     <Head title="Inscription de votre structure" />
 
-    <AppLayout>
+    <ResultLayout :listDisciplines="listDisciplines" :allCities="allCities">
         <template #header>
-            <h1
-                class="w-full py-6 text-center text-xl font-semibold leading-tight text-gray-800"
-            >
-                Inscription de votre structure
-            </h1>
+            <FamilleResultNavigation :familles="familles" />
+            <ResultsHeader>
+                <template v-slot:title>
+                    <h1
+                        class="border-b-2 border-slate-400 text-center text-xl font-bold leading-tight tracking-widest text-gray-800 md:text-4xl"
+                    >
+                        Inscription de votre structure
+                    </h1>
+                </template>
+                <template v-slot:ariane>
+                    <nav aria-label="Breadcrumb" class="flex">
+                        <ol
+                            class="flex rounded-lg border border-gray-200 text-gray-600"
+                        >
+                            <li class="flex items-center">
+                                <Link
+                                    preserve-scroll
+                                    :href="route('welcome')"
+                                    class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
+                                >
+                                    <HomeIcon class="h-4 w-4" />
+
+                                    <span
+                                        class="ms-1.5 hidden text-xs font-medium md:block"
+                                    >
+                                        Accueil
+                                    </span>
+                                </Link>
+                            </li>
+
+                            <li class="relative flex items-center">
+                                <span
+                                    class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
+                                >
+                                </span>
+
+                                <Link
+                                    preserve-scroll
+                                    :href="route('structures.create')"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                                >
+                                    Structure
+                                </Link>
+                            </li>
+                        </ol>
+                    </nav>
+                </template>
+            </ResultsHeader>
         </template>
         <template #default>
             <div
@@ -680,7 +729,7 @@ function submit() {
                 </div>
             </div>
         </template>
-    </AppLayout>
+    </ResultLayout>
 </template>
 
 <style>

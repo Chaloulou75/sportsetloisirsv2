@@ -1,17 +1,26 @@
 <script setup>
-import AppLayout from "@/Layouts/AppLayout.vue";
+import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { router, Head, Link } from "@inertiajs/vue3";
-import { ref, watch, computed, defineAsyncComponent } from "vue";
+import { ref, watch, defineAsyncComponent } from "vue";
 import { debounce } from "lodash";
 import TextInput from "@/Components/TextInput.vue";
 import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
 import StructureCard from "@/Components/Structures/StructureCard.vue";
-import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
-import { MapPinIcon } from "@heroicons/vue/24/outline";
+import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
+import ResultsHeader from "@/Components/ResultsHeader.vue";
+import {
+    HomeIcon,
+    ListBulletIcon,
+    MapIcon,
+    MapPinIcon,
+} from "@heroicons/vue/24/outline";
+import { useElementVisibility } from "@vueuse/core";
 
 const props = defineProps({
     structures: Object,
     familles: Object,
+    listDisciplines: Object,
+    allCities: Object,
     filters: Object,
     structuresCount: Number,
 });
@@ -19,6 +28,19 @@ const props = defineProps({
 const Pagination = defineAsyncComponent(() =>
     import("@/Components/Pagination.vue")
 );
+
+const mapStructure = ref(null);
+const mapIsVisible = useElementVisibility(mapStructure);
+const listeStructure = ref(null);
+const listeIsVisible = useElementVisibility(listeStructure);
+
+const goToMap = () => {
+    mapStructure.value.scrollIntoView({ behavior: "smooth" });
+};
+
+const goToListe = () => {
+    listeStructure.value.scrollIntoView({ behavior: "smooth" });
+};
 
 let search = ref(props.filters.search);
 
@@ -59,75 +81,57 @@ watch(
         "
     />
 
-    <AppLayout>
+    <ResultLayout :listDisciplines="listDisciplines" :allCities="allCities">
         <template #header>
-            <FamilleNavigation :familles="familles" />
-            <div
-                class="my-4 flex w-full flex-col items-center justify-center space-y-2"
-            >
-                <h1
-                    class="text-xl font-semibold leading-tight tracking-widest text-gray-800"
-                >
-                    Structures, clubs, coachs
-                </h1>
-                <nav aria-label="Breadcrumb" class="flex">
-                    <ol
-                        class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600"
+            <FamilleResultNavigation :familles="familles" />
+            <ResultsHeader>
+                <template v-slot:title>
+                    <h1
+                        class="border-b-2 border-slate-400 text-center text-2xl font-bold leading-tight tracking-widest text-gray-800 md:text-4xl"
                     >
-                        <li class="flex items-center">
-                            <Link
-                                preserve-scroll
-                                :href="route('welcome')"
-                                class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-4 w-4"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
+                        Structures
+                    </h1>
+                </template>
+                <template v-slot:ariane>
+                    <nav aria-label="Breadcrumb" class="flex">
+                        <ol
+                            class="flex rounded-lg border border-gray-200 text-gray-600"
+                        >
+                            <li class="flex items-center">
+                                <Link
+                                    preserve-scroll
+                                    :href="route('welcome')"
+                                    class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
                                 >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                                    />
-                                </svg>
+                                    <HomeIcon class="h-4 w-4" />
 
-                                <span class="ms-1.5 text-xs font-medium">
-                                    Accueil
+                                    <span
+                                        class="ms-1.5 hidden text-xs font-medium md:block"
+                                    >
+                                        Accueil
+                                    </span>
+                                </Link>
+                            </li>
+
+                            <li class="relative flex items-center">
+                                <span
+                                    class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
+                                >
                                 </span>
-                            </Link>
-                        </li>
 
-                        <li class="relative flex items-center">
-                            <span
-                                class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
-                            >
-                            </span>
-
-                            <Link
-                                preserve-scroll
-                                :href="route('structures.index')"
-                                class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
-                            >
-                                Structures
-                            </Link>
-                        </li>
-                    </ol>
-                </nav>
-            </div>
-            <p class="py-2 text-base font-medium leading-relaxed text-gray-600">
-                Plus de
-                <span class="font-semibold text-gray-800">{{
-                    structures.total
-                }}</span>
-                structures référencées et prêtes à vous accueillir et vous
-                accompagner dans la pratique de votre discipline favorite !
-            </p>
+                                <Link
+                                    preserve-scroll
+                                    :href="route('structures.index')"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                                >
+                                    Structures
+                                </Link>
+                            </li>
+                        </ol>
+                    </nav>
+                </template>
+            </ResultsHeader>
         </template>
-
         <div class="py-12">
             <!-- search box -->
             <div
@@ -166,7 +170,7 @@ watch(
                 <div
                     class="mx-auto flex min-h-screen max-w-full flex-col px-2 sm:px-6 md:flex-row md:space-x-4 lg:px-8"
                 >
-                    <div class="md:w-1/2">
+                    <div ref="listeStructure" class="md:w-1/2">
                         <div
                             class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-2"
                         >
@@ -182,13 +186,33 @@ watch(
                         <div class="flex justify-end p-10">
                             <Pagination :links="structures.links" />
                         </div>
+                        <button
+                            v-if="!mapIsVisible && listeIsVisible"
+                            type="button"
+                            class="fixed inset-x-2 bottom-4 z-[9999] mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:hidden"
+                            @click="goToMap"
+                        >
+                            <MapIcon class="mr-2 h-5 w-5" />
+                            Carte
+                        </button>
                     </div>
-                    <LeafletMapMultiple
-                        class="md:sticky md:top-2 md:w-1/2"
-                        :structures="structures.data"
-                        :hovered-structure="hoveredStructure"
-                        :zoom="7"
-                    />
+                    <div ref="mapStructure" class="md:w-1/2">
+                        <LeafletMapMultiple
+                            class="md:sticky md:top-2"
+                            :structures="structures.data"
+                            :hovered-structure="hoveredStructure"
+                            :zoom="7"
+                        />
+                        <button
+                            v-if="mapIsVisible"
+                            type="button"
+                            class="fixed inset-x-2 bottom-4 z-[9999] mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:hidden"
+                            @click="goToListe"
+                        >
+                            <ListBulletIcon class="mr-2 h-5 w-5" />
+                            Liste
+                        </button>
+                    </div>
                 </div>
             </template>
             <template v-else>
@@ -202,5 +226,5 @@ watch(
                 </div>
             </template>
         </div>
-    </AppLayout>
+    </ResultLayout>
 </template>

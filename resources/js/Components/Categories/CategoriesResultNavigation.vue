@@ -333,7 +333,7 @@ const showStructuresTypes = () => {
             </div>
         </div>
     </div>
-    <!-- mobile -->
+    <!--departement mobile -->
     <div
         v-if="departement"
         class="grid w-full grid-cols-6 border-b border-gray-100 bg-slate-900/90 text-white md:hidden"

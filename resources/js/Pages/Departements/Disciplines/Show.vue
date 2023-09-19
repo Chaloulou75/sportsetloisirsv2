@@ -1,6 +1,6 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { Head, Link } from "@inertiajs/vue3";
+import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, defineAsyncComponent } from "vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
@@ -8,7 +8,13 @@ import CategoriesResultNavigation from "@/Components/Categories/CategoriesResult
 import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
 import CitiesAround from "@/Components/Cities/CitiesAround.vue";
 import DisciplinesSimilaires from "@/Components/Disciplines/DisciplinesSimilaires.vue";
-import { HomeIcon, ListBulletIcon, MapIcon } from "@heroicons/vue/24/outline";
+import {
+    AdjustmentsHorizontalIcon,
+    HomeIcon,
+    ListBulletIcon,
+    MapIcon,
+    XMarkIcon,
+} from "@heroicons/vue/24/outline";
 import { useElementVisibility } from "@vueuse/core";
 
 const props = defineProps({

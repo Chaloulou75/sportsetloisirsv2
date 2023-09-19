@@ -47,7 +47,7 @@ const submit = () => {
                         <ArrowRightOnRectangleIcon
                             class="mr-2 inline-block h-6 w-6 text-gray-600"
                         ></ArrowRightOnRectangleIcon>
-                        Connexion à mon compte
+                        Connexion
                     </h1>
                 </template>
                 <template v-slot:ariane>

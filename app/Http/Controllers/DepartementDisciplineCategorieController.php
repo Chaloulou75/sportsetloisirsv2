@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Models\LienDisciplineCategorie;
+use App\Models\LienDisciplineCategorieCritere;
 
 class DepartementDisciplineCategorieController extends Controller
 {
@@ -37,6 +38,9 @@ class DepartementDisciplineCategorieController extends Controller
             ->get();
 
         $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('id', $category)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
+
+        $criteres = LienDisciplineCategorieCritere::with('valeurs')->where('discipline_id', $discipline->id)->where('categorie_id', $category->id)->get();
+
 
 
         $departement = Departement::with([
@@ -116,6 +120,7 @@ class DepartementDisciplineCategorieController extends Controller
             'categories' => $categories,
             'categoriesWithoutProduit' => $categoriesWithoutProduit,
             'allStructureTypes' => $allStructureTypes,
+            'criteres' => $criteres,
             'departement' => $departement,
             'citiesAround' => $citiesAround,
             'disciplinesSimilaires' => $disciplinesSimilaires,

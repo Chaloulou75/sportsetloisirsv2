@@ -8,7 +8,13 @@ import CategoriesResultNavigation from "@/Components/Categories/CategoriesResult
 import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
 import CitiesAround from "@/Components/Cities/CitiesAround.vue";
 import DisciplinesSimilaires from "@/Components/Disciplines/DisciplinesSimilaires.vue";
-import { HomeIcon, ListBulletIcon, MapIcon } from "@heroicons/vue/24/outline";
+import {
+    AdjustmentsHorizontalIcon,
+    HomeIcon,
+    ListBulletIcon,
+    MapIcon,
+    XMarkIcon,
+} from "@heroicons/vue/24/outline";
 import { useElementVisibility } from "@vueuse/core";
 
 const props = defineProps({
@@ -149,7 +155,7 @@ function hideTooltip() {
                                     {{ discipline.name }}
                                 </Link>
                             </li>
-                            <li class="relative flex items-center">
+                            <li class="relative hidden items-center md:flex">
                                 <span
                                     class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)]"
                                 >

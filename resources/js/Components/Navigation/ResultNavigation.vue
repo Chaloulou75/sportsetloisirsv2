@@ -365,10 +365,10 @@ const submitForm = async () => {
             <!-- Responsive Settings Options -->
             <div class="border-t border-gray-200 py-1">
                 <div class="px-4" v-if="user">
-                    <div class="text-base font-medium text-gray-800">
+                    <div class="text-base font-medium text-gray-200">
                         {{ user.name }}
                     </div>
-                    <div class="text-sm font-medium text-gray-500">
+                    <div class="text-sm font-medium text-gray-300">
                         {{ user.email }}
                     </div>
                 </div>

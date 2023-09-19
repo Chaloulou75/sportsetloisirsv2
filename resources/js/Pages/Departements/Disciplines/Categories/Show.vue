@@ -1,6 +1,6 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { Head, Link } from "@inertiajs/vue3";
+import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, defineAsyncComponent } from "vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
@@ -8,7 +8,13 @@ import CategoriesResultNavigation from "@/Components/Categories/CategoriesResult
 import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
 import CitiesAround from "@/Components/Cities/CitiesAround.vue";
 import DisciplinesSimilaires from "@/Components/Disciplines/DisciplinesSimilaires.vue";
-import { HomeIcon, ListBulletIcon, MapIcon } from "@heroicons/vue/24/outline";
+import {
+    AdjustmentsHorizontalIcon,
+    HomeIcon,
+    ListBulletIcon,
+    MapIcon,
+    XMarkIcon,
+} from "@heroicons/vue/24/outline";
 import { useElementVisibility } from "@vueuse/core";
 
 const props = defineProps({
@@ -17,6 +23,7 @@ const props = defineProps({
     categories: Object,
     categoriesWithoutProduit: Object,
     allStructureTypes: Object,
+    criteres: Object,
     departement: Object,
     citiesAround: Object,
     structures: Object,
@@ -59,6 +66,16 @@ function showTooltip(structure) {
 function hideTooltip() {
     hoveredStructure.value = null;
 }
+
+const showCriteres = ref(false);
+
+const toggleCriteres = () => {
+    showCriteres.value = !showCriteres.value;
+};
+
+const formCriteres = useForm({
+    criteres: ref([]),
+});
 </script>
 
 <template>
@@ -149,7 +166,7 @@ function hideTooltip() {
                                     {{ discipline.name }}
                                 </Link>
                             </li>
-                            <li class="relative flex items-center">
+                            <li class="relative hidden items-center md:flex">
                                 <span
                                     class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
                                 >
@@ -185,6 +202,146 @@ function hideTooltip() {
                 :categoriesWithoutProduit="categoriesWithoutProduit"
             />
         </template>
+        <!-- Criteres -->
+        <div
+            class="mt-6 flex w-full items-center justify-between border-b border-gray-300 px-2 md:hidden"
+        >
+            <h3 class="font-semibold">
+                {{ category.nom_categorie_client }}
+            </h3>
+            <button type="button" @click="toggleCriteres">
+                <XMarkIcon v-if="showCriteres" class="h-6 w-6" />
+                <AdjustmentsHorizontalIcon v-else class="h-6 w-6" />
+            </button>
+        </div>
+
+        <div
+            v-if="criteres"
+            class="mx-auto w-full flex-col items-start justify-center space-x-0 space-y-2 rounded bg-gray-50 px-2 py-6 md:flex md:flex-row md:space-x-6 md:space-y-0 md:px-6"
+            :class="{
+                flex: showCriteres,
+                hidden: !showCriteres,
+            }"
+        >
+            <div v-for="critere in criteres" :key="critere.id" class="max-w-lg">
+                <!-- select -->
+                <div v-if="critere.type_champ_form === 'select'">
+                    <div>
+                        <label
+                            :for="critere.nom"
+                            class="block text-sm font-medium text-gray-700"
+                        >
+                            {{ critere.nom }}
+                        </label>
+                        <div class="mt-1 flex rounded-md">
+                            <select
+                                :name="critere.nom"
+                                :id="critere.nom"
+                                v-model="formCriteres.criteres[critere.id]"
+                                class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                            >
+                                <option disabled value="">
+                                    Selectionner un
+                                    {{ critere.nom }}
+                                </option>
+                                <option
+                                    v-for="(option, index) in critere.valeurs"
+                                    :key="option.id"
+                                    :value="option.valeur"
+                                >
+                                    {{ option.valeur }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- checkbox -->
+                <div v-if="critere.type_champ_form === 'checkbox'">
+                    <div class="block">
+                        <span class="text-sm font-medium text-gray-700">{{
+                            critere.nom
+                        }}</span>
+                        <div class="mt-2">
+                            <div
+                                v-for="(option, index) in critere.valeurs"
+                                :key="option.id"
+                            >
+                                <label
+                                    class="inline-flex items-center"
+                                    :for="option.valeur"
+                                >
+                                    <input
+                                        v-model="
+                                            formCriteres.criteres[critere.id]
+                                        "
+                                        :id="option.valeur"
+                                        :value="option.valeur"
+                                        :name="option.valeur"
+                                        type="checkbox"
+                                        class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
+                                    />
+                                    <span
+                                        class="ml-2 text-sm font-medium text-gray-700"
+                                        >{{ option.valeur }}</span
+                                    >
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- radio -->
+                <div v-if="critere.type_champ_form === 'radio'">
+                    <label
+                        :for="critere.nom"
+                        class="block text-sm font-medium text-gray-700"
+                    >
+                        {{ critere.nom }}
+                    </label>
+
+                    <div class="mt-1 flex rounded-md">
+                        <div>
+                            <label
+                                class="inline-flex items-center"
+                                v-for="(option, index) in critere.valeurs"
+                                :key="option.id"
+                            >
+                                <input
+                                    v-model="formCriteres.criteres[critere.id]"
+                                    type="radio"
+                                    class="form-radio"
+                                    :name="option.valeur"
+                                    :value="option.valeur"
+                                    checked
+                                />
+                                <span class="ml-2">{{ option.valeur }}</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- input text -->
+                <div v-if="critere.type_champ_form === 'text'">
+                    <label
+                        :for="critere.nom"
+                        class="block text-sm font-medium text-gray-700"
+                    >
+                        {{ critere.nom }}
+                    </label>
+                    <div class="mt-1 flex rounded-md">
+                        <input
+                            type="text"
+                            v-model="formCriteres.criteres[critere.id]"
+                            :name="critere.nom"
+                            :id="critere.nom"
+                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                            placeholder=""
+                            autocomplete="none"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Structures -->
         <template v-if="structures.data.length > 0">
             <div
                 class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-12 sm:px-6 md:flex-row md:space-x-4 lg:px-8"

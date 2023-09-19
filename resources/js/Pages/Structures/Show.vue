@@ -1,8 +1,9 @@
 <script setup>
-import AppLayout from "@/Layouts/AppLayout.vue";
+import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { ref, reactive, computed } from "vue";
-import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
+import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
+import ResultsHeader from "@/Components/ResultsHeader.vue";
 import ModalDeleteStructure from "@/Components/Modals/ModalDeleteStructure.vue";
 import LeafletMap from "@/Components/LeafletMap.vue";
 import VueCal from "vue-cal";
@@ -14,10 +15,12 @@ import {
     PhoneIcon,
     CheckCircleIcon,
     ChevronUpDownIcon,
+    HomeIcon,
+    ListBulletIcon,
+    MapIcon,
 } from "@heroicons/vue/24/outline";
 import {
     Listbox,
-    ListboxLabel,
     ListboxButton,
     ListboxOptions,
     ListboxOption,
@@ -33,6 +36,8 @@ const props = defineProps({
     structure: Object,
     logoUrl: String,
     familles: Object,
+    listDisciplines: Object,
+    allCities: Object,
     criteres: Object,
     can: Object,
 });
@@ -191,106 +196,58 @@ const events = getEvents();
         "
     />
 
-    <AppLayout>
+    <ResultLayout :listDisciplines="listDisciplines" :allCities="allCities">
         <template #header>
-            <FamilleNavigation :familles="familles" />
-            <div
-                class="my-4 flex w-full flex-col items-center justify-center space-y-2"
-            >
-                <h1
-                    class="text-center text-xl font-semibold uppercase leading-tight tracking-widest text-gray-800"
-                >
-                    {{ structure.name }}
-                </h1>
-                <nav aria-label="Breadcrumb" class="flex">
-                    <ol
-                        class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600"
+            <FamilleResultNavigation :familles="familles" />
+            <ResultsHeader>
+                <template v-slot:title>
+                    <h1
+                        class="border-b-2 border-slate-400 text-center text-2xl font-bold leading-tight tracking-widest text-gray-800 md:text-4xl"
                     >
-                        <li class="flex items-center">
-                            <Link
-                                preserve-scroll
-                                :href="route('welcome')"
-                                class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-4 w-4"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
+                        {{ structure.name }}
+                    </h1>
+                </template>
+                <template v-slot:ariane>
+                    <nav aria-label="Breadcrumb" class="flex">
+                        <ol
+                            class="flex rounded-lg border border-gray-200 text-gray-600"
+                        >
+                            <li class="flex items-center">
+                                <Link
+                                    preserve-scroll
+                                    :href="route('welcome')"
+                                    class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
                                 >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                                    />
-                                </svg>
+                                    <HomeIcon class="h-4 w-4" />
 
-                                <span class="ms-1.5 text-xs font-medium">
-                                    Accueil
+                                    <span
+                                        class="ms-1.5 hidden text-xs font-medium md:block"
+                                    >
+                                        Accueil
+                                    </span>
+                                </Link>
+                            </li>
+
+                            <li class="relative flex items-center">
+                                <span
+                                    class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
+                                >
                                 </span>
-                            </Link>
-                        </li>
 
-                        <li class="relative flex items-center">
-                            <span
-                                class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
-                            >
-                            </span>
-
-                            <Link
-                                preserve-scroll
-                                :href="route('structures.show', structure.slug)"
-                                class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
-                            >
-                                {{ structure.name }}
-                            </Link>
-                        </li>
-                    </ol>
-                </nav>
-            </div>
-            <!-- <div class="flex flex-col items-start justify-between md:flex-row">
-                <div></div>
-                <div
-                    v-if="$page.props.auth.user"
-                    class="mt-4 w-full md:mt-0 md:w-1/4"
-                >
-                    <div
-                        v-if="can.update"
-                        class="flex flex-col justify-between space-y-4 md:ml-4 md:space-y-6"
-                    >
-                        <Link
-                            :href="
-                                route('structures.disciplines.index', structure)
-                            "
-                            v-if="can.update"
-                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
-                        >
-                            Ajouter des activités</Link
-                        >
-                        <Link
-                            :href="route('structures.edit', structure.slug)"
-                            v-if="can.update"
-                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-darkblue hover:text-white hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-lg"
-                        >
-                            Editer la structure</Link
-                        >
-                        <button
-                            v-if="can.delete"
-                            @click="showModal = true"
-                            class="flex flex-col items-center justify-center overflow-hidden rounded bg-white px-4 py-2 text-center text-xs text-gray-600 shadow-lg transition duration-150 hover:bg-red-400 hover:text-white hover:ring-2 hover:ring-red-400 hover:ring-offset-2 focus:ring-2 focus:ring-red-400 focus:ring-offset-2 sm:rounded-lg"
-                        >
-                            Supprimer cette structure
-                        </button>
-                        <ModalDeleteStructure
-                            :structure="structure"
-                            :show="showModal"
-                            @close="showModal = false"
-                        />
-                    </div>
-                </div>
-            </div> -->
+                                <Link
+                                    preserve-scroll
+                                    :href="
+                                        route('structures.show', structure.slug)
+                                    "
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                                >
+                                    {{ structure.name }}
+                                </Link>
+                            </li>
+                        </ol>
+                    </nav>
+                </template>
+            </ResultsHeader>
         </template>
 
         <section
@@ -672,7 +629,7 @@ const events = getEvents();
                 </div>
             </div>
         </section>
-    </AppLayout>
+    </ResultLayout>
 </template>
 
 <style>

@@ -39,14 +39,16 @@ class StructureController extends Controller
      */
     public function index()
     {
-        $familles = Famille::with([
-            'disciplines' => function ($query) {
-                $query->whereHas('structures');
-            }
-        ])
-        ->whereHas('disciplines', function ($query) {
-            $query->whereHas('structures');
+
+        $familles = Famille::withWhereHas('disciplines', function ($query) {
+            $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();
+
+        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
+
+        $allCities = City::whereHas('produits')
+                                ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                                ->get();
 
         return Inertia::render('Structures/Index', [
             'structures' => Structure::with([
@@ -117,6 +119,8 @@ class StructureController extends Controller
                         })->withQueryString(),
             'filters' => request()->all(['search']),
             'familles' => $familles,
+            'allCities' => $allCities,
+            'listDisciplines' => $listDisciplines,
         ]);
     }
 
@@ -125,12 +129,25 @@ class StructureController extends Controller
      */
     public function create()
     {
+        $familles = Famille::withWhereHas('disciplines', function ($query) {
+            $query->whereHas('structureProduits');
+        })->select(['id', 'name', 'slug'])->get();
+
+        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
+
+        $allCities = City::whereHas('produits')
+                                ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                                ->get();
+
         $structurestypes = Structuretype::with(['structuretypeattributs', 'structuretypeattributs.structuretypevaleurs'])->select(['id', 'name', 'slug'])->get();
         $disciplines = ListDiscipline::select(['id', 'name', 'slug'])->get();
 
         return Inertia::render('Structures/Create', [
             'structurestypes' => $structurestypes,
             'disciplines' => $disciplines,
+            'familles' => $familles,
+            'allCities' => $allCities,
+            'listDisciplines' => $listDisciplines,
         ]);
     }
 
@@ -244,15 +261,15 @@ class StructureController extends Controller
      */
     public function show(Structure $structure)
     {
-        $familles = Famille::with([
-                    'disciplines' => function ($query) {
-                        $query->whereHas('structures');
-                    }
-                ])
-                ->whereHas('disciplines', function ($query) {
-                    $query->whereHas('structures');
-                })->select(['id', 'name', 'slug'])->get();
+        $familles = Famille::withWhereHas('disciplines', function ($query) {
+            $query->whereHas('structureProduits');
+        })->select(['id', 'name', 'slug'])->get();
 
+        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
+
+        $allCities = City::whereHas('produits')
+                                ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                                ->get();
 
         $structure = Structure::with([
             'creator:id,name',
@@ -296,6 +313,8 @@ class StructureController extends Controller
         return Inertia::render('Structures/Show', [
             'structure' => $structure,
             'familles' => $familles,
+            'allCities' => $allCities,
+            'listDisciplines' => $listDisciplines,
             'criteres' => $criteres,
             'logoUrl' => $logoUrl,
             'can' => [
