@@ -1,10 +1,9 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import { ref, computed, defineAsyncComponent, onMounted } from "vue";
+import { ref, defineAsyncComponent } from "vue";
 import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
 import DisciplinesSimilaires from "@/Components/Disciplines/DisciplinesSimilaires.vue";
-import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
@@ -50,6 +49,19 @@ const StructureCard = defineAsyncComponent(() =>
 const Pagination = defineAsyncComponent(() =>
     import("@/Components/Pagination.vue")
 );
+
+const mapStructure = ref(null);
+const mapIsVisible = useElementVisibility(mapStructure);
+const listeStructure = ref(null);
+const listeIsVisible = useElementVisibility(listeStructure);
+
+const goToMap = () => {
+    mapStructure.value.scrollIntoView({ behavior: "smooth" });
+};
+
+const goToListe = () => {
+    listeStructure.value.scrollIntoView({ behavior: "smooth" });
+};
 
 const hoveredStructure = ref(null);
 
@@ -287,7 +299,72 @@ function hideTooltip() {
                         </TabPanels>
                     </TabGroup>
                 </template> -->
-                <template>
+                <template v-if="structures.data.length > 0">
+                    <div
+                        class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-12 sm:px-6 md:flex-row md:space-x-4 lg:px-8"
+                    >
+                        <div ref="listeStructure" class="md:w-1/2">
+                            <div
+                                class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
+                            >
+                                <StructureCard
+                                    v-for="(
+                                        structure, index
+                                    ) in structures.data"
+                                    :key="structure.id"
+                                    :index="index"
+                                    :structure="structure"
+                                    @mouseover="showTooltip(structure)"
+                                    @mouseout="hideTooltip()"
+                                    :link="
+                                        route('structures.show', {
+                                            structure: structure.slug,
+                                        })
+                                    "
+                                    :data="{
+                                        discipline: discipline.slug,
+                                    }"
+                                />
+                            </div>
+                            <div class="flex justify-end p-10">
+                                <Pagination :links="structures.links" />
+                            </div>
+                            <button
+                                v-if="!mapIsVisible && listeIsVisible"
+                                type="button"
+                                class="fixed inset-x-2 bottom-4 z-[9999] mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:hidden"
+                                @click="goToMap"
+                            >
+                                <MapIcon class="mr-2 h-5 w-5" />
+                                Carte
+                            </button>
+                        </div>
+                        <div class="space-y-4 md:sticky md:w-1/2">
+                            <div ref="mapStructure">
+                                <LeafletMapMultiple
+                                    class="md:top-2"
+                                    :structures="structures.data"
+                                    :hovered-structure="hoveredStructure"
+                                    :zoom="12"
+                                />
+                                <button
+                                    v-if="mapIsVisible"
+                                    type="button"
+                                    class="fixed inset-x-2 bottom-4 z-[9999] mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:hidden"
+                                    @click="goToListe"
+                                >
+                                    <ListBulletIcon class="mr-2 h-5 w-5" />
+                                    Liste
+                                </button>
+                            </div>
+                            <!-- <CitiesAround :citiesAround="citiesAround" /> -->
+                            <DisciplinesSimilaires
+                                :disciplinesSimilaires="disciplinesSimilaires"
+                            />
+                        </div>
+                    </div>
+                </template>
+                <template v-else>
                     <div
                         class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-12 sm:px-6 md:flex-row lg:px-8"
                     >

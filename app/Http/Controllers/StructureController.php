@@ -317,7 +317,7 @@ class StructureController extends Controller
                             $query->has('produits')->with(['produits', 'produits.adresse']);
                         }])
                                         ->select(['id', 'numero', 'departement', 'prefixe', 'view_count', 'latitude', 'longitude'])
-                                        ->where('id', $departement->id)
+                                        ->where('id', $departement)
                                         ->withCount('structures')
                                         ->first();
 
@@ -353,6 +353,7 @@ class StructureController extends Controller
             $discipline = ListDiscipline::where('slug', $discipline)
                                         ->select(['id', 'name', 'slug', 'view_count'])
                                         ->first();
+
             $disciplinesSimilaires = $discipline->disciplinesSimilaires()->select(['famille', 'name', 'slug'])->whereHas('structures')->get();
 
             $categories = $structure->activites->pluck('categorie')->where('discipline_id', $discipline->id);
