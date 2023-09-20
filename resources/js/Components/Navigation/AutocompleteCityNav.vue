@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, watchEffect } from "vue";
+import { MapPinIcon } from "@heroicons/vue/24/solid";
 const emit = defineEmits(["update:model-value"]);
 const props = defineProps({
     cities: Object,
@@ -43,13 +44,18 @@ const formatCityName = (ville) => {
 </script>
 <template>
     <div class="flex w-full items-center justify-start md:w-1/2">
-        <div class="relative w-full">
+        <div class="relative flex w-full">
+            <span
+                class="px:1.5 inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-xs text-gray-400 md:px-3"
+                ><MapPinIcon class="h-7 w-7"
+            /></span>
+
             <input
                 type="text"
                 id="localite"
                 v-model="searchTerm"
                 placeholder="Toulouse"
-                class="mb-0.5 w-full rounded border border-gray-300 p-2 placeholder-gray-400 placeholder-opacity-50 sm:text-sm"
+                class="block w-full flex-1 rounded-none rounded-r-md border border-gray-300 p-2 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-lg"
             />
 
             <ul

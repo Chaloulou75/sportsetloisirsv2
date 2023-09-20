@@ -107,7 +107,6 @@ Route::get('/localite-{departement:id}-2', [DepartementController::class, 'show'
 Route::get('/structures', [StructureController::class, 'index'])
         ->name('structures.index');
 
-
 Route::get('str-{structure:slug}', [StructureController::class, 'show'])
     ->name('structures.show');
 
@@ -170,9 +169,9 @@ Route::get('/{villeWithPlus}-{id}-1.{extension?}', function ($villeWithPlus, $id
     return redirect('/villes/' . $id, 301);
 });
 
-Route::get('/disc-{discipline:slug}/cat-{category:id}', [CategoryDisciplineController::class, 'show'])->name('disciplines.categories.show');
+Route::get('/dis-{discipline:slug}/cat-{category:id}', [CategoryDisciplineController::class, 'show'])->name('disciplines.categories.show');
 
-Route::get('/disc-{discipline:slug}/typ-{structuretype:id}', [StructureTypeDisciplineController::class, 'show'])->name('disciplines.structuretypes.show');
+Route::get('/dis-{discipline:slug}/typ-{structuretype:id}', [StructureTypeDisciplineController::class, 'show'])->name('disciplines.structuretypes.show');
 
 Route::resource('product_reservations', ProductReservationController::class)->only([
     'store'

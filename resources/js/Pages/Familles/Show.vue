@@ -31,7 +31,7 @@ defineProps({
             <ResultsHeader>
                 <template v-slot:title>
                     <h1
-                        class="border-b-2 border-slate-400 text-center text-2xl font-bold leading-tight tracking-widest text-gray-800 md:text-4xl"
+                        class="border-b-2 border-slate-400 pb-2 text-2xl font-black leading-tight tracking-widest text-gray-600 md:text-4xl"
                     >
                         {{ famille.name }}
                     </h1>

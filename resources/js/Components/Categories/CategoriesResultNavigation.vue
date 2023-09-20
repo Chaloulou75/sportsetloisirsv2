@@ -45,7 +45,7 @@ const showStructuresTypes = () => {
                             discipline: discipline.slug,
                         })
                     "
-                    class="hidden items-center pt-1 text-center transition duration-150 ease-in-out focus:outline-none md:inline-flex md:px-4 lg:px-8"
+                    class="hidden items-center text-center transition duration-150 ease-in-out focus:outline-none md:inline-flex md:px-4 lg:px-8"
                 >
                     <HomeIcon
                         class="h-8 w-8 text-blue-700 hover:text-indigo-700"
@@ -61,7 +61,7 @@ const showStructuresTypes = () => {
                             category: categorie.id,
                         })
                     "
-                    class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
+                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
                 >
                     {{ categorie.nom_categorie_client }}
                 </Link>
@@ -70,7 +70,7 @@ const showStructuresTypes = () => {
                         <span class="inline-flex">
                             <button
                                 type="button"
-                                class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
+                                class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
                             >
                                 Plus
                                 <ChevronDownIcon class="ml-2 h-5 w-5" />
@@ -104,14 +104,14 @@ const showStructuresTypes = () => {
                             structuretype: structureType.id,
                         })
                     "
-                    class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-sky-700 focus:text-sky-700 focus:outline-none md:px-4 lg:px-8"
+                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-sky-700 focus:text-sky-700 focus:outline-none md:px-4 lg:px-8"
                 >
                     {{ structureType.name }}
                 </Link>
                 <Link
                     preserve-scroll
                     :href="route('welcome')"
-                    class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:text-pink-600 focus:text-pink-600 focus:outline-none md:px-4 lg:px-8"
+                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:text-pink-600 focus:text-pink-600 focus:outline-none md:px-8"
                 >
                     <NewspaperIcon class="mr-2 h-6 w-6 text-pink-600" />
                     Blog
@@ -222,7 +222,7 @@ const showStructuresTypes = () => {
                             discipline: discipline.slug,
                         })
                     "
-                    class="hidden items-center pt-1 text-center transition duration-150 ease-in-out focus:outline-none md:inline-flex md:px-4 lg:px-8"
+                    class="hidden items-center text-center transition duration-150 ease-in-out focus:outline-none md:inline-flex md:px-4 lg:px-8"
                 >
                     <HomeIcon
                         class="h-8 w-8 text-blue-700 hover:text-indigo-700"
@@ -239,7 +239,7 @@ const showStructuresTypes = () => {
                             category: categorie.id,
                         })
                     "
-                    class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
+                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
                     :class="[
                         route().current('villes.disciplines.categories.show') &&
                         category.id === categorie.id
@@ -254,7 +254,7 @@ const showStructuresTypes = () => {
                         <span class="inline-flex">
                             <button
                                 type="button"
-                                class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
+                                class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
                             >
                                 Plus
                                 <ChevronDownIcon class="ml-2 h-5 w-5" />
@@ -290,7 +290,7 @@ const showStructuresTypes = () => {
                             structuretype: structureType.id,
                         })
                     "
-                    class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-sky-700 transition duration-150 ease-in-out hover:text-sky-800 focus:text-sky-800 focus:outline-none md:px-4 lg:px-8"
+                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-sky-700 transition duration-150 ease-in-out hover:text-sky-800 focus:text-sky-800 focus:outline-none md:px-4 lg:px-8"
                     :class="[
                         route().current(
                             'villes.disciplines.structuretypes.show'
@@ -304,7 +304,7 @@ const showStructuresTypes = () => {
                 <Link
                     preserve-scroll
                     :href="route('welcome')"
-                    class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:text-pink-600 focus:text-pink-600 focus:outline-none md:px-4 lg:px-8"
+                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:text-pink-600 focus:text-pink-600 focus:outline-none md:px-4 lg:px-8"
                 >
                     <NewspaperIcon class="mr-2 h-6 w-6 text-pink-600" />
                     Blog
@@ -419,7 +419,7 @@ const showStructuresTypes = () => {
                             discipline: discipline.slug,
                         })
                     "
-                    class="hidden items-center pt-1 text-center transition duration-150 ease-in-out focus:outline-none md:inline-flex md:px-4 lg:px-8"
+                    class="hidden items-center text-center transition duration-150 ease-in-out focus:outline-none md:inline-flex md:px-4 lg:px-8"
                 >
                     <HomeIcon
                         class="h-8 w-8 text-blue-700 hover:text-indigo-700"
@@ -436,7 +436,7 @@ const showStructuresTypes = () => {
                             category: categorie.id,
                         })
                     "
-                    class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
+                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
                     :class="[
                         route().current(
                             'departements.disciplines.categories.show'
@@ -452,7 +452,7 @@ const showStructuresTypes = () => {
                         <span class="inline-flex">
                             <button
                                 type="button"
-                                class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
+                                class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
                             >
                                 Plus
                                 <ChevronDownIcon class="ml-2 h-5 w-5" />
@@ -491,7 +491,7 @@ const showStructuresTypes = () => {
                             structuretype: structureType.id,
                         })
                     "
-                    class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-sky-700 focus:text-sky-700 focus:outline-none md:px-4 lg:px-8"
+                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-sky-700 focus:text-sky-700 focus:outline-none md:px-4 lg:px-8"
                     :class="[
                         route().current(
                             'departements.disciplines.structuretypes.show'
@@ -505,7 +505,7 @@ const showStructuresTypes = () => {
                 <Link
                     preserve-scroll
                     :href="route('welcome')"
-                    class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:text-pink-600 focus:text-pink-600 focus:outline-none md:px-4 lg:px-8"
+                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:text-pink-600 focus:text-pink-600 focus:outline-none md:px-4 lg:px-8"
                 >
                     <NewspaperIcon class="mr-2 h-6 w-6 text-pink-600" />
                     Blog
@@ -619,7 +619,7 @@ const showStructuresTypes = () => {
                             discipline: discipline.slug,
                         })
                     "
-                    class="hidden items-center pt-1 text-center transition duration-150 ease-in-out focus:outline-none md:inline-flex md:px-4 lg:px-8"
+                    class="hidden items-center text-center transition duration-150 ease-in-out focus:outline-none md:inline-flex md:px-4 lg:px-8"
                 >
                     <HomeIcon
                         class="h-8 w-8 text-blue-700 hover:text-indigo-700"
@@ -635,7 +635,7 @@ const showStructuresTypes = () => {
                             category: categorie.id,
                         })
                     "
-                    class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
+                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
                     :class="[
                         route().current('disciplines.categories.show') &&
                         category.id === categorie.id
@@ -650,7 +650,7 @@ const showStructuresTypes = () => {
                         <span class="inline-flex">
                             <button
                                 type="button"
-                                class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
+                                class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
                             >
                                 Plus
                                 <ChevronDownIcon class="ml-2 h-5 w-5" />
@@ -684,7 +684,7 @@ const showStructuresTypes = () => {
                             structuretype: structureType.id,
                         })
                     "
-                    class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-sky-700 focus:text-sky-700 focus:outline-none md:px-4 lg:px-8"
+                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-sky-700 focus:text-sky-700 focus:outline-none md:px-4 lg:px-8"
                     :class="[
                         route().current('disciplines.structuretypes.show') &&
                         structureType.id === structuretypeElected.id
@@ -697,7 +697,7 @@ const showStructuresTypes = () => {
                 <Link
                     preserve-scroll
                     :href="route('welcome')"
-                    class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:text-pink-600 focus:text-pink-600 focus:outline-none md:px-4 lg:px-8"
+                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:text-pink-600 focus:text-pink-600 focus:outline-none md:px-4 lg:px-8"
                 >
                     <NewspaperIcon class="mr-2 h-6 w-6 text-pink-600" />
                     Blog
@@ -808,7 +808,7 @@ const showStructuresTypes = () => {
                             discipline: discipline.slug,
                         })
                     "
-                    class="hidden items-center pt-1 text-center transition duration-150 ease-in-out focus:outline-none md:inline-flex md:px-4 lg:px-8"
+                    class="hidden items-center text-center transition duration-150 ease-in-out focus:outline-none md:inline-flex md:px-4 lg:px-8"
                 >
                     <HomeIcon
                         class="h-8 w-8 text-blue-700 hover:text-indigo-700"
@@ -824,7 +824,7 @@ const showStructuresTypes = () => {
                             category: categorie.id,
                         })
                     "
-                    class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
+                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
                 >
                     {{ categorie.nom_categorie_client }}
                 </Link>
@@ -833,7 +833,7 @@ const showStructuresTypes = () => {
                         <span class="inline-flex">
                             <button
                                 type="button"
-                                class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
+                                class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
                             >
                                 Plus
                                 <ChevronDownIcon class="ml-2 h-5 w-5" />
@@ -867,7 +867,7 @@ const showStructuresTypes = () => {
                             structuretype: structureType.id,
                         })
                     "
-                    class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-sky-700 focus:text-sky-700 focus:outline-none md:px-4 lg:px-8"
+                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-sky-700 focus:text-sky-700 focus:outline-none md:px-4 lg:px-8"
                     :class="[
                         route().current('disciplines.structuretypes.show') &&
                         structureType.id === structuretypeElected.id
@@ -880,7 +880,7 @@ const showStructuresTypes = () => {
                 <Link
                     preserve-scroll
                     :href="route('welcome')"
-                    class="inline-flex items-center pt-1 text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:text-pink-600 focus:text-pink-600 focus:outline-none md:px-4 lg:px-8"
+                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:text-pink-600 focus:text-pink-600 focus:outline-none md:px-4 lg:px-8"
                 >
                     <NewspaperIcon class="mr-2 h-6 w-6 text-pink-600" />
                     Blog

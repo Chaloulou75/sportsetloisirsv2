@@ -11,8 +11,6 @@ import {
     MagnifyingGlassIcon,
     ShoppingCartIcon,
     UserIcon,
-    MapPinIcon,
-    QuestionMarkCircleIcon,
 } from "@heroicons/vue/24/solid";
 
 const props = defineProps({
@@ -83,16 +81,10 @@ const submitForm = async () => {
                     <section
                         class="mx-auto flex w-full items-center justify-center px-2 md:flex-row md:space-y-0"
                     >
-                        <MapPinIcon class="mr-1 h-8 w-8 text-white" />
-
                         <AutocompleteCityNav
                             :cities="allCities"
                             v-model="localite"
                             class="mr-4"
-                        />
-
-                        <QuestionMarkCircleIcon
-                            class="mr-1 h-8 w-8 text-white"
                         />
 
                         <AutocompleteDisciplineNav
@@ -105,9 +97,11 @@ const submitForm = async () => {
                                 @click="submitForm"
                                 :disabled="processing"
                                 type="submit"
-                                class="mb-0.5 flex w-full items-center justify-center rounded border border-indigo-500 bg-white px-2 py-2 text-sm font-medium text-indigo-500 shadow-sm hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:w-auto"
+                                class="flex w-full items-center justify-center rounded border border-indigo-500 bg-white px-2 py-2 text-sm font-medium text-indigo-500 shadow-sm hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:w-auto"
                             >
-                                <MagnifyingGlassIcon class="h-5 w-5" />
+                                <MagnifyingGlassIcon
+                                    class="h-5 w-5 md:h-7 md:w-7"
+                                />
                                 <span class="sr-only">Rechercher</span>
                             </button>
                         </div>
@@ -442,7 +436,7 @@ const submitForm = async () => {
                         type="submit"
                         class="mb-0.5 flex w-full items-center justify-center rounded border border-indigo-500 bg-white px-2 py-2 text-sm font-medium text-indigo-500 shadow-sm hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:w-auto"
                     >
-                        <MagnifyingGlassIcon class="h-5 w-5" />
+                        <MagnifyingGlassIcon class="h-6 w-6" />
                         <span class="sr-only">Rechercher</span>
                     </button>
                 </div>
