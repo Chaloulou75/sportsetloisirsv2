@@ -18,8 +18,6 @@ class StructureTypeDisciplineController extends Controller
      */
     public function show(ListDiscipline $discipline, $structuretype)
     {
-        dd($discipline, $structuretype);
-
         $familles = Famille::withWhereHas('disciplines', function ($query) {
             $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();
@@ -30,12 +28,14 @@ class StructureTypeDisciplineController extends Controller
                         ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
                         ->get();
 
-        $discipline = ListDiscipline::where('slug', $discipline)
+        $discipline = ListDiscipline::where('slug', $discipline->slug)
                             ->select(['id', 'name', 'slug', 'view_count'])
                             ->first();
         $disciplinesSimilaires = $discipline->disciplinesSimilaires()
             ->select('discipline_similaire_id', 'name', 'slug', 'famille')
             ->get();
+
+        $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
 
         $allStructureTypes = Structuretype::whereHas('structures')->select(['id', 'name', 'slug'])->get();
 
@@ -89,6 +89,7 @@ class StructureTypeDisciplineController extends Controller
             'familles' => $familles,
             'categories' => $categories,
             'categoriesWithoutProduit' => $categoriesWithoutProduit,
+            'structuretypeElected' => $structuretypeElected,
             'allStructureTypes' => $allStructureTypes,
             'disciplinesSimilaires' => $disciplinesSimilaires,
             'structures' => $structures,
