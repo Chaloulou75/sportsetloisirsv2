@@ -3,6 +3,7 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use App\Http\Controllers\FaqController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
@@ -29,6 +30,7 @@ use App\Http\Controllers\StructureDisciplineController;
 use App\Http\Controllers\StructureStatistiqueController;
 use App\Http\Controllers\DepartementDisciplineController;
 use App\Http\Controllers\CityDisciplineCategorieController;
+use App\Http\Controllers\StructureTypeDisciplineController;
 use App\Http\Controllers\StructureActiviteProduitController;
 use App\Http\Controllers\CategoryDisciplineCritereController;
 use App\Http\Controllers\CityDisciplineStructuretypeController;
@@ -39,7 +41,6 @@ use App\Http\Controllers\DepartementDisciplineStructuretypeController;
 use App\Http\Controllers\CityDisciplineStructuretypeStructureController;
 use App\Http\Controllers\CityDisciplineCategorieStructureActiviteController;
 use App\Http\Controllers\CityDisciplineStructuretypeStructureActiviteController;
-use App\Http\Controllers\FaqController;
 
 /*
 |--------------------------------------------------------------------------
@@ -168,6 +169,10 @@ Route::get('/{villeWithPlus}-{id}-1.{extension?}', function ($villeWithPlus, $id
     $ville = str_replace('+', '-', strtolower($villeWithPlus));
     return redirect('/villes/' . $id, 301);
 });
+
+Route::get('/disc-{discipline:slug}/cat-{category:id}', [CategoryDisciplineController::class, 'show'])->name('disciplines.categories.show');
+
+Route::get('/disc-{discipline:slug}/typ-{structuretype:id}', [StructureTypeDisciplineController::class, 'show'])->name('disciplines.structuretypes.show');
 
 Route::resource('product_reservations', ProductReservationController::class)->only([
     'store'

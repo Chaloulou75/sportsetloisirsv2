@@ -9,6 +9,7 @@ use App\Models\Categorie;
 use App\Models\Structure;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineSimilaire;
@@ -79,7 +80,18 @@ class DisciplineController extends Controller
             ->select('discipline_similaire_id', 'name', 'slug', 'famille')
             ->get();
 
-        $categories = LienDisciplineCategorie::where('discipline_id', $discipline->id)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
+
+        $categories = LienDisciplineCategorie::withWhereHas('structures_produits')
+                ->where('discipline_id', $discipline->id)
+                ->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+                ->get();
+
+        $categoriesWithoutProduit = LienDisciplineCategorie::whereDoesntHave('structures_produits')
+        ->where('discipline_id', $discipline->id)
+        ->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+        ->get();
+
+        $allStructureTypes = Structuretype::whereHas('structures')->select(['id', 'name', 'slug'])->get();
 
         $structures = $discipline->structures()->with([
             'creator:id,name',
@@ -101,7 +113,7 @@ class DisciplineController extends Controller
             'tarifs.tarifType',
             'tarifs.structureTarifTypeInfos',
             'plannings',
-        ])->withCount('disciplines', 'produits', 'activites')->paginate(6);
+        ])->withCount('produits', 'activites')->paginate(6);
 
         $discipline->timestamps = false;
         $discipline->increment('view_count');
@@ -112,8 +124,11 @@ class DisciplineController extends Controller
             'disciplinesSimilaires' => $disciplinesSimilaires,
             'structures' => $structures,
             'categories' => $categories,
+            'categoriesWithoutProduit' => $categoriesWithoutProduit,
+            'allStructureTypes' => $allStructureTypes,
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,
+
         ]);
     }
     /**
