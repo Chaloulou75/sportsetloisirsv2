@@ -42,8 +42,8 @@ const formatCityName = (ville) => {
 };
 </script>
 <template>
-    <div class="flex w-full items-center justify-start md:w-auto">
-        <div class="relative w-full md:w-auto">
+    <div class="flex w-full items-center justify-start md:w-1/2">
+        <div class="relative w-full">
             <input
                 type="text"
                 id="localite"

@@ -77,7 +77,9 @@ const submitForm = async () => {
                     </div>
                 </div>
 
-                <div class="hidden space-x-8 lg:-my-px lg:ml-10 lg:flex">
+                <div
+                    class="hidden space-x-8 lg:-my-px lg:ml-10 lg:flex lg:w-full"
+                >
                     <section
                         class="mx-auto flex w-full items-center justify-center px-2 md:flex-row md:space-y-0"
                     >
@@ -171,7 +173,7 @@ const submitForm = async () => {
                                         type="button"
                                         class="inline-flex items-center px-1 py-2 text-white hover:text-indigo-500 focus:text-indigo-500"
                                     >
-                                        <UserIcon class="ml-2 h-8 w-8" />
+                                        <UserIcon class="h-8 w-8" />
                                     </button>
                                 </span>
                             </template>
@@ -234,53 +236,61 @@ const submitForm = async () => {
                         </BreezeDropdown>
                     </div>
                     <template v-else>
-                        <div
-                            class="hidden h-full space-x-4 lg:-my-px lg:ml-10 lg:flex"
-                        >
-                            <Link
-                                preserve-scroll
-                                class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium leading-5 text-white transition duration-150 ease-in-out hover:border-gray-300 hover:text-gray-50 focus:border-gray-300 focus:text-gray-50 focus:outline-none"
-                                :href="route('login')"
-                                :active="route().current('login')"
-                            >
-                                Connexion
-                            </Link>
-                            <Link
-                                preserve-scroll
-                                class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium leading-5 text-white transition duration-150 ease-in-out hover:border-gray-300 hover:text-gray-50 focus:border-gray-300 focus:text-gray-50 focus:outline-none"
-                                :href="route('register')"
-                                :active="route().current('register')"
-                            >
-                                Inscription
-                            </Link>
-                        </div>
+                        <BreezeDropdown align="right" width="48">
+                            <template #trigger>
+                                <span class="inline-flex rounded-md">
+                                    <button
+                                        type="button"
+                                        class="inline-flex items-center px-1 py-2 text-white hover:text-indigo-500 focus:text-indigo-500"
+                                    >
+                                        <UserIcon class="h-8 w-8" />
+                                    </button>
+                                </span>
+                            </template>
+
+                            <template #content>
+                                <BreezeDropdownLink
+                                    :href="route('login')"
+                                    preserve-scroll
+                                >
+                                    Connexion
+                                </BreezeDropdownLink>
+                                <BreezeDropdownLink
+                                    preserve-scroll
+                                    :href="route('register')"
+                                >
+                                    Inscription
+                                </BreezeDropdownLink>
+                            </template>
+                        </BreezeDropdown>
                     </template>
                 </div>
 
-                <!-- Hamburger -->
+                <!-- svg -->
                 <div class="-mr-2 flex items-center space-x-2 lg:hidden">
                     <button
                         @click="showingSearchForm = !showingSearchForm"
                         type="button"
                         class="items-center justify-center rounded bg-transparent px-2 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
-                        <MagnifyingGlassIcon class="h-5 w-5" />
+                        <MagnifyingGlassIcon class="h-6 w-6" />
                         <span class="sr-only">Rechercher</span>
                     </button>
                     <button
                         type="button"
                         class="items-center justify-center rounded bg-transparent px-2 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
-                        <ShoppingCartIcon class="h-5 w-5" />
+                        <ShoppingCartIcon class="h-6 w-6" />
                     </button>
                     <button
                         @click="
                             showingNavigationDropdown =
                                 !showingNavigationDropdown
                         "
-                        class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
+                        class="items-center justify-center rounded bg-transparent px-2 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
-                        <svg
+                        <UserIcon class="h-6 w-6" />
+                        <!-- <svg
                             class="h-6 w-6"
                             stroke="currentColor"
                             fill="none"
@@ -306,7 +316,7 @@ const submitForm = async () => {
                                 stroke-width="2"
                                 d="M6 18L18 6M6 6l12 12"
                             />
-                        </svg>
+                        </svg> -->
                     </button>
                 </div>
             </div>
