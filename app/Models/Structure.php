@@ -87,7 +87,6 @@ class Structure extends Model
                      ->orWhere('zip_code', 'like', '%' . $localite . '%')
                 )
         );
-
     }
 
     public function creator(): BelongsTo

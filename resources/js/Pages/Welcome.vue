@@ -202,8 +202,11 @@ const formatCityName = (ville) => {
                     class="mb-8 grid h-auto grid-cols-1 place-items-stretch gap-4 px-1.5 sm:grid-cols-2 md:grid-cols-3 md:px-0 lg:grid-cols-4"
                 >
                     <Link
-                        :href="route('villes.show', city.id)"
-                        :active="route().current('villes.show', city.id)"
+                        :href="
+                            route('villes.show', {
+                                city: city.id,
+                            })
+                        "
                         v-for="city in topVilles"
                         :key="city.id"
                         class="flex items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"

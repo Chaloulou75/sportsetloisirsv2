@@ -27,15 +27,15 @@ class City extends Model
      */
     protected $guarded = [];
 
-    /**
-     * Get the route key for the model.
-     *
-     * @return string
-     */
-    public function getRouteKeyName(): String
-    {
-        return 'id';
-    }
+    // /**
+    //  * Get the route key for the model.
+    //  *
+    //  * @return string
+    //  */
+    // public function getRouteKeyName(): String
+    // {
+    //     return 'id';
+    // }
 
     public function scopeFilter($query, array $filters)
     {
@@ -88,9 +88,4 @@ class City extends Model
         );
     }
 
-    // public function structures(): BelongsToMany
-    // {
-    //     return $this->belongsToMany(Structure::class, 'structure_villes_france', 'villes_france_id', 'structure_id');
-    //     ;
-    // }
 }
