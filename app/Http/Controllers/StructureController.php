@@ -265,9 +265,10 @@ class StructureController extends Controller
     {
         $discipline = request()->discipline;
         $city = request()->city;
+        $departement = request()->departement;
         $category = request()->category;
         $structuretype = request()->structuretype;
-        $departement = request()->departement;
+
 
         $familles = Famille::withWhereHas('disciplines', function ($query) {
             $query->whereHas('structureProduits');
@@ -362,10 +363,14 @@ class StructureController extends Controller
 
             if($category !== null) {
                 $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('id', $category)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
+            } else {
+                $category = null;
             }
 
             if($structuretype !== null) {
                 $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
+            } else {
+                $structuretypeElected = null;
             }
 
         } else {
