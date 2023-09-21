@@ -350,22 +350,22 @@ class StructureController extends Controller
 
         if($discipline !== null) {
 
-            $discipline = ListDiscipline::where('slug', $discipline)
+            $requestDiscipline = ListDiscipline::where('slug', $discipline)
                                         ->select(['id', 'name', 'slug', 'view_count'])
                                         ->first();
 
-            $disciplinesSimilaires = $discipline->disciplinesSimilaires()->select(['famille', 'name', 'slug'])->whereHas('structures')->get();
+            $disciplinesSimilaires = $requestDiscipline->disciplinesSimilaires()->select(['famille', 'name', 'slug'])->whereHas('structures')->get();
 
-            $categories = $structure->activites->pluck('categorie')->where('discipline_id', $discipline->id);
+            $categories = $structure->activites->pluck('categorie')->where('discipline_id', $requestDiscipline->id);
 
-            $categoriesWithoutProduit = LienDisciplineCategorie::whereNotIn('id', $categories->pluck('id'))->where('discipline_id', $discipline->id)
+            $categoriesWithoutProduit = LienDisciplineCategorie::whereNotIn('id', $categories->pluck('id'))->where('discipline_id', $requestDiscipline->id)
             ->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
             ->get();
 
             if($category !== null) {
-                $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('id', $category)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
+                $requestCategory = LienDisciplineCategorie::where('discipline_id', $requestDiscipline->id)->where('id', $category)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
             } else {
-                $category = null;
+                $requestCategory = null;
             }
 
             if($structuretype !== null) {
@@ -375,7 +375,8 @@ class StructureController extends Controller
             }
 
         } else {
-            $category = null;
+            $requestDiscipline = null;
+            $requestCategory = null;
             $categories = null;
             $categoriesWithoutProduit = null;
             $disciplinesSimilaires = null;
@@ -404,7 +405,7 @@ class StructureController extends Controller
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),
             ],
-            'category' => $category,
+            'requestCategory' => $requestCategory,
             'categories' => $categories,
             'categoriesWithoutProduit' => $categoriesWithoutProduit,
             'allStructureTypes' => $allStructureTypes,
@@ -412,7 +413,7 @@ class StructureController extends Controller
             'city' => $city,
             'citiesAround' => $citiesAround,
             'departement' => $departement,
-            'discipline' => $discipline,
+            'requestDiscipline' => $requestDiscipline,
             'disciplinesSimilaires' => $disciplinesSimilaires,
         ]);
     }

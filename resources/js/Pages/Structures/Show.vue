@@ -36,12 +36,12 @@ const props = defineProps({
     logoUrl: String,
     familles: Object,
     listDisciplines: Object,
-    discipline: Object,
+    requestDiscipline: Object,
     disciplinesSimilaires: Object,
     allCities: Object,
     city: Object,
     citiesAround: Object,
-    category: Object,
+    requestCategory: Object,
     categories: Object,
     categoriesWithoutProduit: Object,
     allStructureTypes: Object,
@@ -64,8 +64,12 @@ const uniqueDisciplines = computed(() => {
     return Array.from(disciplinesMap.values());
 });
 
-const selectedDiscipline = ref(null);
-const selectedCategory = ref(null);
+const selectedDiscipline = ref(
+    props.requestDiscipline ? props.requestDiscipline : null
+);
+const selectedCategory = ref(
+    props.requestCategory ? props.requestCategory : null
+);
 // const selectedCriteres = ref({});
 
 const handleDisciplineClick = (discipline) => {
@@ -416,11 +420,13 @@ const events = getEvents();
                                 v-for="discipline in uniqueDisciplines"
                                 :key="discipline.id"
                                 @click="handleDisciplineClick(discipline)"
-                                :class="{
-                                    'rounded border border-gray-100 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500': true,
-                                    'border-gray-100 bg-indigo-500 text-white':
-                                        selectedDiscipline === discipline,
-                                }"
+                                :class="[
+                                    'rounded border border-gray-100 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500',
+                                    selectedDiscipline &&
+                                    selectedDiscipline.id === discipline.id
+                                        ? 'border-gray-100 bg-indigo-500 text-white'
+                                        : '',
+                                ]"
                             >
                                 {{ discipline.name }}
                             </button>
@@ -446,11 +452,13 @@ const events = getEvents();
                                 v-for="categorie in filteredCategories"
                                 :key="categorie.id"
                                 @click="handleCategoryClick(categorie)"
-                                :class="{
-                                    'rounded border border-gray-100 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500': true,
-                                    'border-gray-100 bg-indigo-500 text-white':
-                                        selectedCategory === categorie,
-                                }"
+                                :class="[
+                                    'rounded border border-gray-100 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500',
+                                    selectedCategory &&
+                                    selectedCategory.id === categorie.id
+                                        ? 'border-gray-100 bg-indigo-500 text-white'
+                                        : '',
+                                ]"
                             >
                                 {{ categorie.nom_categorie_client }}
                             </button>
