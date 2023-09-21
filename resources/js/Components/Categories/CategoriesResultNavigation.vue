@@ -42,10 +42,20 @@ const showStructuresTypes = () => {
                         discipline: discipline.slug,
                     })
                 "
-                class="group flex w-full items-center justify-center border-b-8 border-blue-400 bg-white py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
+                class="group flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
+                :class="[
+                    route().current('disciplines.show')
+                        ? ' bg-blue-400 text-white'
+                        : '',
+                ]"
             >
                 <HomeIcon
-                    class="h-7 w-7 text-blue-400 group-hover:text-white group-focus:text-white"
+                    class="h-7 w-7 group-hover:text-white group-focus:text-white"
+                    :class="[
+                        route().current('disciplines.show')
+                            ? ' text-white'
+                            : 'text-blue-400',
+                    ]"
                 />
             </Link>
             <Link
@@ -219,10 +229,20 @@ const showStructuresTypes = () => {
                         discipline: discipline.slug,
                     })
                 "
-                class="group flex w-full items-center justify-center border-b-8 border-blue-400 bg-white py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
+                class="group flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
+                :class="[
+                    route().current('villes.disciplines.show')
+                        ? ' bg-blue-400 text-white'
+                        : '',
+                ]"
             >
                 <HomeIcon
-                    class="h-7 w-7 text-blue-400 group-hover:text-white group-focus:text-white"
+                    class="h-7 w-7 group-hover:text-white group-focus:text-white"
+                    :class="[
+                        route().current('villes.disciplines.show')
+                            ? ' text-white'
+                            : 'text-blue-400',
+                    ]"
                 />
             </Link>
             <Link
@@ -402,10 +422,20 @@ const showStructuresTypes = () => {
                         discipline: discipline.slug,
                     })
                 "
-                class="group flex w-full items-center justify-center border-b-8 border-blue-400 bg-white py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
+                class="group flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
+                :class="[
+                    route().current('departements.disciplines.show')
+                        ? ' bg-blue-400 text-white'
+                        : '',
+                ]"
             >
                 <HomeIcon
-                    class="h-7 w-7 text-blue-400 group-hover:text-white group-focus:text-white"
+                    class="h-7 w-7 group-hover:text-white group-focus:text-white"
+                    :class="[
+                        route().current('departements.disciplines.show')
+                            ? ' text-white'
+                            : 'text-blue-400',
+                    ]"
                 />
             </Link>
             <Link
@@ -602,10 +632,20 @@ const showStructuresTypes = () => {
                         discipline: discipline.slug,
                     })
                 "
-                class="group flex w-full items-center justify-center border-b-8 border-blue-400 bg-white py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
+                class="group flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
+                :class="[
+                    route().current('disciplines.show')
+                        ? ' bg-blue-400 text-white'
+                        : '',
+                ]"
             >
                 <HomeIcon
-                    class="h-7 w-7 text-blue-400 group-hover:text-white group-focus:text-white"
+                    class="h-7 w-7 group-hover:text-white group-focus:text-white"
+                    :class="[
+                        route().current('disciplines.show')
+                            ? ' text-white'
+                            : 'text-blue-400',
+                    ]"
                 />
             </Link>
             <Link
@@ -794,10 +834,20 @@ const showStructuresTypes = () => {
                         discipline: discipline.slug,
                     })
                 "
-                class="group flex w-full items-center justify-center border-b-8 border-blue-400 bg-white py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
+                class="group flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
+                :class="[
+                    route().current('disciplines.show')
+                        ? ' bg-blue-400 text-white'
+                        : '',
+                ]"
             >
                 <HomeIcon
-                    class="h-7 w-7 text-blue-400 group-hover:text-white group-focus:text-white"
+                    class="h-7 w-7 group-hover:text-white group-focus:text-white"
+                    :class="[
+                        route().current('disciplines.show')
+                            ? ' text-white'
+                            : 'text-blue-400',
+                    ]"
                 />
             </Link>
             <Link
