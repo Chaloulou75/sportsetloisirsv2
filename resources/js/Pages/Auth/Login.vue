@@ -41,14 +41,10 @@ const submit = () => {
             <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
                 <template v-slot:title>
-                    <h1
-                        class="border-b-2 border-slate-400 text-2xl font-bold leading-tight tracking-widest text-gray-800 md:text-4xl"
-                    >
-                        <ArrowRightOnRectangleIcon
-                            class="mr-2 inline-block h-6 w-6 text-gray-600"
-                        ></ArrowRightOnRectangleIcon>
-                        Connexion
-                    </h1>
+                    <ArrowRightOnRectangleIcon
+                        class="mr-2 inline-block h-6 w-6 text-gray-600"
+                    ></ArrowRightOnRectangleIcon>
+                    Connexion
                 </template>
                 <template v-slot:ariane>
                     <nav aria-label="Breadcrumb" class="flex">

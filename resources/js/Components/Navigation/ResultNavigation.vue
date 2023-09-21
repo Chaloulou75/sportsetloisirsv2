@@ -417,27 +417,22 @@ const submitForm = async () => {
             class="pb-3 pt-2 lg:hidden"
         >
             <section
-                class="mx-auto flex w-full items-center justify-center px-2 md:flex-row md:space-y-0 lg:hidden"
+                class="mx-auto flex w-full flex-col items-center justify-center space-y-2 px-2 md:flex-row md:space-y-0 lg:hidden"
             >
-                <AutocompleteCityNav
-                    :cities="allCities"
-                    v-model="localite"
-                    class="mr-4"
-                />
+                <AutocompleteCityNav :cities="allCities" v-model="localite" />
                 <AutocompleteDisciplineNav
                     :disciplines="listDisciplines"
                     v-model="search"
-                    class="mr-4"
                 />
-                <div class="w-auto">
+                <div class="w-full">
                     <button
                         @click="submitForm"
                         :disabled="processing"
                         type="submit"
-                        class="mb-0.5 flex w-full items-center justify-center rounded border border-indigo-500 bg-white px-2 py-2 text-sm font-medium text-indigo-500 shadow-sm hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:w-auto"
+                        class="flex w-full items-center justify-center rounded-md border border-gray-500 bg-white px-2 py-2 text-base font-semibold text-gray-800 shadow-sm hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:w-auto"
                     >
-                        <MagnifyingGlassIcon class="h-6 w-6" />
-                        <span class="sr-only">Rechercher</span>
+                        <MagnifyingGlassIcon class="mr-2 h-6 w-6" />
+                        <span class="">Rechercher</span>
                     </button>
                 </div>
             </section>

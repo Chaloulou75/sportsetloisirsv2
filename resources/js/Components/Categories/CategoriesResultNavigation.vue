@@ -33,92 +33,95 @@ const showStructuresTypes = () => {
     <!--  desktop -->
     <div
         v-if="!departement && !city && !structuretypeElected && !category"
-        class="hidden border-b-8 border-indigo-400 bg-slate-100/60 py-2 md:block"
+        class="mx-auto hidden max-w-full md:block"
     >
-        <div class="mx-auto max-w-full">
-            <div
-                class="flex h-full w-full flex-col items-center justify-around space-y-1.5 md:flex-row md:space-y-0 md:divide-x md:divide-gray-700"
+        <div class="flex h-full w-full flex-row items-stretch justify-around">
+            <Link
+                :href="
+                    route('disciplines.show', {
+                        discipline: discipline.slug,
+                    })
+                "
+                class="group flex w-full items-center justify-center border-b-8 border-blue-400 bg-white py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
             >
-                <Link
-                    :href="
-                        route('disciplines.show', {
-                            discipline: discipline.slug,
-                        })
-                    "
-                    class="hidden items-center text-center transition duration-150 ease-in-out focus:outline-none md:inline-flex md:px-4 lg:px-8"
-                >
-                    <HomeIcon
-                        class="h-8 w-8 text-blue-700 hover:text-indigo-700"
-                    />
-                </Link>
-                <Link
-                    preserve-scroll
-                    v-for="categorie in categories"
-                    :key="categorie.id"
-                    :href="
-                        route('disciplines.categories.show', {
-                            discipline: discipline.slug,
-                            category: categorie.id,
-                        })
-                    "
-                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
-                >
-                    {{ categorie.nom_categorie_client }}
-                </Link>
-                <BreezeDropdown align="right" width="48">
-                    <template #trigger>
-                        <span class="inline-flex">
-                            <button
-                                type="button"
-                                class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
-                            >
-                                Plus
-                                <ChevronDownIcon class="ml-2 h-5 w-5" />
-                            </button>
-                        </span>
-                    </template>
-
-                    <template #content>
-                        <BreezeDropdownLink
-                            preserve-scroll
-                            :href="
-                                route('disciplines.categories.show', {
-                                    discipline: discipline.slug,
-                                    category: category.id,
-                                })
-                            "
-                            v-for="category in categoriesWithoutProduit"
-                            :key="category.id"
+                <HomeIcon
+                    class="h-7 w-7 text-blue-400 group-hover:text-white group-focus:text-white"
+                />
+            </Link>
+            <Link
+                preserve-scroll
+                v-for="categorie in categories"
+                :key="categorie.id"
+                :href="
+                    route('disciplines.categories.show', {
+                        discipline: discipline.slug,
+                        category: categorie.id,
+                    })
+                "
+                class="w-full border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
+            >
+                {{ categorie.nom_categorie_client }}
+            </Link>
+            <BreezeDropdown
+                align="right"
+                width="48"
+                class="group w-full border-b-8 border-blue-400 py-2 text-center text-sm font-semibold leading-5 text-gray-700 hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
+            >
+                <template #trigger>
+                    <span class="inline-flex">
+                        <button
+                            type="button"
+                            class="inline-flex w-full items-center py-2 text-center text-sm font-semibold leading-5 text-gray-700 focus:outline-none group-hover:text-white group-focus:text-blue-400"
                         >
-                            {{ category.nom_categorie_pro }}
-                        </BreezeDropdownLink>
-                    </template>
-                </BreezeDropdown>
-                <Link
-                    preserve-scroll
-                    v-for="structureType in allStructureTypes"
-                    :key="structureType.id"
-                    :href="
-                        route('disciplines.structuretypes.show', {
-                            discipline: discipline.slug,
-                            structuretype: structureType.id,
-                        })
-                    "
-                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-sky-700 focus:text-sky-700 focus:outline-none md:px-4 lg:px-8"
-                >
-                    {{ structureType.name }}
-                </Link>
-                <Link
-                    preserve-scroll
-                    :href="route('welcome')"
-                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:text-pink-600 focus:text-pink-600 focus:outline-none md:px-8"
-                >
-                    <NewspaperIcon class="mr-2 h-6 w-6 text-pink-600" />
-                    Blog
-                </Link>
-            </div>
+                            Plus
+                            <ChevronDownIcon class="ml-2 h-5 w-5" />
+                        </button>
+                    </span>
+                </template>
+
+                <template #content>
+                    <BreezeDropdownLink
+                        preserve-scroll
+                        :href="
+                            route('disciplines.categories.show', {
+                                discipline: discipline.slug,
+                                category: category.id,
+                            })
+                        "
+                        v-for="category in categoriesWithoutProduit"
+                        :key="category.id"
+                    >
+                        {{ category.nom_categorie_pro }}
+                    </BreezeDropdownLink>
+                </template>
+            </BreezeDropdown>
+            <Link
+                preserve-scroll
+                v-for="structureType in allStructureTypes"
+                :key="structureType.id"
+                :href="
+                    route('disciplines.structuretypes.show', {
+                        discipline: discipline.slug,
+                        structuretype: structureType.id,
+                    })
+                "
+                class="w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
+            >
+                {{ structureType.name }}
+            </Link>
+            <Link
+                preserve-scroll
+                :href="route('welcome')"
+                class="group inline-flex w-full items-center justify-center border-b-8 border-pink-600 py-3 text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:bg-pink-600 hover:text-white focus:bg-pink-600 focus:text-white focus:outline-none"
+            >
+                <NewspaperIcon
+                    class="mr-2 h-7 w-7 text-pink-600 group-hover:text-white"
+                />
+                Blog
+            </Link>
         </div>
     </div>
+
     <!--  mobile -->
     <div
         v-if="!departement && !city && !structuretypeElected && !category"
@@ -207,109 +210,95 @@ const showStructuresTypes = () => {
         </template>
     </div>
     <!--city desktop -->
-    <div
-        v-if="city"
-        class="hidden border-b-8 border-indigo-400 bg-slate-100/60 py-2 md:block"
-    >
-        <div class="mx-auto max-w-full">
-            <div
-                class="flex h-full w-full flex-col items-center justify-around space-y-1.5 md:flex-row md:space-y-0 md:divide-x md:divide-gray-700"
+    <div v-if="city" class="mx-auto hidden max-w-full md:block">
+        <div class="flex h-full w-full flex-row items-stretch justify-around">
+            <Link
+                :href="
+                    route('villes.disciplines.show', {
+                        city: city.id,
+                        discipline: discipline.slug,
+                    })
+                "
+                class="group flex w-full items-center justify-center border-b-8 border-blue-400 bg-white py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
             >
-                <Link
-                    :href="
-                        route('villes.disciplines.show', {
-                            city: city.id,
-                            discipline: discipline.slug,
-                        })
-                    "
-                    class="hidden items-center text-center transition duration-150 ease-in-out focus:outline-none md:inline-flex md:px-4 lg:px-8"
-                >
-                    <HomeIcon
-                        class="h-8 w-8 text-blue-700 hover:text-indigo-700"
-                    />
-                </Link>
-                <Link
-                    preserve-scroll
-                    v-for="categorie in categories"
-                    :key="categorie.id"
-                    :href="
-                        route('villes.disciplines.categories.show', {
-                            city: city.id,
-                            discipline: discipline.slug,
-                            category: categorie.id,
-                        })
-                    "
-                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
-                    :class="[
-                        route().current('villes.disciplines.categories.show') &&
-                        category.id === categorie.id
-                            ? 'underline decoration-blue-500 decoration-4 underline-offset-2'
-                            : '',
-                    ]"
-                >
-                    {{ categorie.nom_categorie_client }}
-                </Link>
-                <BreezeDropdown align="right" width="48">
-                    <template #trigger>
-                        <span class="inline-flex">
-                            <button
-                                type="button"
-                                class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
-                            >
-                                Plus
-                                <ChevronDownIcon class="ml-2 h-5 w-5" />
-                            </button>
-                        </span>
-                    </template>
-
-                    <template #content>
-                        <BreezeDropdownLink
-                            preserve-scroll
-                            :href="
-                                route('villes.disciplines.categories.show', {
-                                    city: city.id,
-                                    discipline: discipline.slug,
-                                    category: category.id,
-                                })
-                            "
-                            v-for="category in categoriesWithoutProduit"
-                            :key="category.id"
+                <HomeIcon
+                    class="h-7 w-7 text-blue-400 group-hover:text-white group-focus:text-white"
+                />
+            </Link>
+            <Link
+                preserve-scroll
+                v-for="categorie in categories"
+                :key="categorie.id"
+                :href="
+                    route('villes.disciplines.categories.show', {
+                        city: city.id,
+                        discipline: discipline.slug,
+                        category: categorie.id,
+                    })
+                "
+                class="w-full border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
+            >
+                {{ categorie.nom_categorie_client }}
+            </Link>
+            <BreezeDropdown
+                align="right"
+                width="48"
+                class="group w-full border-b-8 border-blue-400 py-2 text-center text-sm font-semibold leading-5 text-gray-700 hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
+            >
+                <template #trigger>
+                    <span class="inline-flex">
+                        <button
+                            type="button"
+                            class="inline-flex w-full items-center py-2 text-center text-sm font-semibold leading-5 text-gray-700 focus:outline-none group-hover:text-white group-focus:text-blue-400"
                         >
-                            {{ category.nom_categorie_pro }}
-                        </BreezeDropdownLink>
-                    </template>
-                </BreezeDropdown>
-                <Link
-                    preserve-scroll
-                    v-for="structureType in allStructureTypes"
-                    :key="structureType.id"
-                    :href="
-                        route('villes.disciplines.structuretypes.show', {
-                            city: city.id,
-                            discipline: discipline.slug,
-                            structuretype: structureType.id,
-                        })
-                    "
-                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-sky-700 transition duration-150 ease-in-out hover:text-sky-800 focus:text-sky-800 focus:outline-none md:px-4 lg:px-8"
-                    :class="[
-                        route().current(
-                            'villes.disciplines.structuretypes.show'
-                        ) && structureType.id === structuretypeElected.id
-                            ? 'underline decoration-sky-700 decoration-4 underline-offset-2'
-                            : '',
-                    ]"
-                >
-                    {{ structureType.name }}
-                </Link>
-                <Link
-                    preserve-scroll
-                    :href="route('welcome')"
-                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:text-pink-600 focus:text-pink-600 focus:outline-none md:px-4 lg:px-8"
-                >
-                    <NewspaperIcon class="mr-2 h-6 w-6 text-pink-600" />
-                    Blog
-                </Link>
-            </div>
+                            Plus
+                            <ChevronDownIcon class="ml-2 h-5 w-5" />
+                        </button>
+                    </span>
+                </template>
+
+                <template #content>
+                    <BreezeDropdownLink
+                        preserve-scroll
+                        :href="
+                            route('villes.disciplines.categories.show', {
+                                city: city.id,
+                                discipline: discipline.slug,
+                                category: category.id,
+                            })
+                        "
+                        v-for="category in categoriesWithoutProduit"
+                        :key="category.id"
+                    >
+                        {{ category.nom_categorie_pro }}
+                    </BreezeDropdownLink>
+                </template>
+            </BreezeDropdown>
+            <Link
+                preserve-scroll
+                v-for="structureType in allStructureTypes"
+                :key="structureType.id"
+                :href="
+                    route('villes.disciplines.structuretypes.show', {
+                        city: city.id,
+                        discipline: discipline.slug,
+                        structuretype: structureType.id,
+                    })
+                "
+                class="w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-sky-700 focus:text-white focus:outline-none"
+            >
+                {{ structureType.name }}
+            </Link>
+            <Link
+                preserve-scroll
+                :href="route('welcome')"
+                class="group inline-flex w-full items-center justify-center border-b-8 border-pink-600 py-3 text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:bg-pink-600 hover:text-white focus:bg-pink-600 focus:text-white focus:outline-none"
+            >
+                <NewspaperIcon
+                    class="mr-2 h-7 w-7 text-pink-600 group-hover:text-white"
+                />
+                Blog
+            </Link>
         </div>
     </div>
     <!--city mobile -->
@@ -404,115 +393,112 @@ const showStructuresTypes = () => {
     </div>
 
     <!--departement desktop -->
-    <div
-        v-if="departement"
-        class="hidden border-b-8 border-indigo-400 bg-slate-100/60 py-2 md:block"
-    >
-        <div class="mx-auto max-w-full">
-            <div
-                class="flex h-full w-full flex-col items-center justify-around space-y-1.5 md:flex-row md:space-y-0 md:divide-x md:divide-gray-700"
+    <div v-if="departement" class="mx-auto hidden max-w-full md:block">
+        <div class="flex h-full w-full flex-row items-stretch justify-around">
+            <Link
+                :href="
+                    route('departements.disciplines.show', {
+                        departement: departement.id,
+                        discipline: discipline.slug,
+                    })
+                "
+                class="group flex w-full items-center justify-center border-b-8 border-blue-400 bg-white py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
             >
-                <Link
-                    :href="
-                        route('departements.disciplines.show', {
-                            departement: departement.id,
-                            discipline: discipline.slug,
-                        })
-                    "
-                    class="hidden items-center text-center transition duration-150 ease-in-out focus:outline-none md:inline-flex md:px-4 lg:px-8"
-                >
-                    <HomeIcon
-                        class="h-8 w-8 text-blue-700 hover:text-indigo-700"
-                    />
-                </Link>
-                <Link
-                    preserve-scroll
-                    v-for="categorie in categories"
-                    :key="categorie.id"
-                    :href="
-                        route('departements.disciplines.categories.show', {
-                            departement: departement.id,
-                            discipline: discipline.slug,
-                            category: categorie.id,
-                        })
-                    "
-                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
-                    :class="[
-                        route().current(
-                            'departements.disciplines.categories.show'
-                        ) && category.id === categorie.id
-                            ? 'underline decoration-blue-500 decoration-4 underline-offset-2'
-                            : '',
-                    ]"
-                >
-                    {{ categorie.nom_categorie_client }}
-                </Link>
-                <BreezeDropdown align="right" width="48">
-                    <template #trigger>
-                        <span class="inline-flex">
-                            <button
-                                type="button"
-                                class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
-                            >
-                                Plus
-                                <ChevronDownIcon class="ml-2 h-5 w-5" />
-                            </button>
-                        </span>
-                    </template>
-
-                    <template #content>
-                        <BreezeDropdownLink
-                            preserve-scroll
-                            :href="
-                                route(
-                                    'departements.disciplines.categories.show',
-                                    {
-                                        departement: departement.id,
-                                        discipline: discipline.slug,
-                                        category: category.id,
-                                    }
-                                )
-                            "
-                            v-for="category in categoriesWithoutProduit"
-                            :key="category.id"
+                <HomeIcon
+                    class="h-7 w-7 text-blue-400 group-hover:text-white group-focus:text-white"
+                />
+            </Link>
+            <Link
+                preserve-scroll
+                v-for="categorie in categories"
+                :key="categorie.id"
+                :href="
+                    route('departements.disciplines.categories.show', {
+                        departement: departement.id,
+                        discipline: discipline.slug,
+                        category: categorie.id,
+                    })
+                "
+                class="w-full border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
+                :class="[
+                    route().current(
+                        'departements.disciplines.categories.show'
+                    ) && category.id === categorie.id
+                        ? 'bg-blue-400 text-white'
+                        : '',
+                ]"
+            >
+                {{ categorie.nom_categorie_client }}
+            </Link>
+            <BreezeDropdown
+                align="right"
+                width="48"
+                class="group w-full border-b-8 border-blue-400 py-2 text-center text-sm font-semibold leading-5 text-gray-700 hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
+            >
+                <template #trigger>
+                    <span class="inline-flex">
+                        <button
+                            type="button"
+                            class="inline-flex w-full items-center py-2 text-center text-sm font-semibold leading-5 text-gray-700 focus:outline-none group-hover:text-white group-focus:text-blue-400"
                         >
-                            {{ category.nom_categorie_pro }}
-                        </BreezeDropdownLink>
-                    </template>
-                </BreezeDropdown>
-                <Link
-                    preserve-scroll
-                    v-for="structureType in allStructureTypes"
-                    :key="structureType.id"
-                    :href="
-                        route('departements.disciplines.structuretypes.show', {
-                            departement: departement.id,
-                            discipline: discipline.slug,
-                            structuretype: structureType.id,
-                        })
-                    "
-                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-sky-700 focus:text-sky-700 focus:outline-none md:px-4 lg:px-8"
-                    :class="[
-                        route().current(
-                            'departements.disciplines.structuretypes.show'
-                        ) && structureType.id === structuretypeElected.id
-                            ? 'underline decoration-sky-700 decoration-4 underline-offset-2'
-                            : '',
-                    ]"
-                >
-                    {{ structureType.name }}
-                </Link>
-                <Link
-                    preserve-scroll
-                    :href="route('welcome')"
-                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:text-pink-600 focus:text-pink-600 focus:outline-none md:px-4 lg:px-8"
-                >
-                    <NewspaperIcon class="mr-2 h-6 w-6 text-pink-600" />
-                    Blog
-                </Link>
-            </div>
+                            Plus
+                            <ChevronDownIcon class="ml-2 h-5 w-5" />
+                        </button>
+                    </span>
+                </template>
+
+                <template #content>
+                    <BreezeDropdownLink
+                        preserve-scroll
+                        :href="
+                            route('departements.disciplines.categories.show', {
+                                departement: departement.id,
+                                discipline: discipline.slug,
+                                category: category.id,
+                            })
+                        "
+                        v-for="category in categoriesWithoutProduit"
+                        :key="category.id"
+                    >
+                        {{ category.nom_categorie_pro }}
+                    </BreezeDropdownLink>
+                </template>
+            </BreezeDropdown>
+            <Link
+                preserve-scroll
+                v-for="structureType in allStructureTypes"
+                :key="structureType.id"
+                :href="
+                    route('departements.disciplines.structuretypes.show', {
+                        departement: departement.id,
+                        discipline: discipline.slug,
+                        structuretype: structureType.id,
+                    })
+                "
+                class="w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-sky-700 focus:text-white focus:outline-none"
+                :class="[
+                    route().current(
+                        'departements.disciplines.structuretypes.show'
+                    ) && structureType.id === structuretypeElected.id
+                        ? ' bg-sky-700 text-white'
+                        : '',
+                ]"
+            >
+                {{ structureType.name }}
+            </Link>
+            <Link
+                preserve-scroll
+                :href="route('welcome')"
+                class="group inline-flex w-full items-center justify-center border-b-8 border-pink-600 py-3 text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:bg-pink-600 hover:text-white focus:bg-pink-600 focus:text-white focus:outline-none"
+            >
+                <NewspaperIcon
+                    class="mr-2 h-7 w-7 text-pink-600 group-hover:text-white"
+                />
+                Blog
+            </Link>
         </div>
     </div>
+
     <!--departement mobile -->
     <div
         v-if="departement"
@@ -607,104 +593,107 @@ const showStructuresTypes = () => {
     <!-- category desktop -->
     <div
         v-if="!departement && !city && category"
-        class="hidden border-b-8 border-indigo-400 bg-slate-100/60 py-2 md:block"
+        class="mx-auto hidden max-w-full md:block"
     >
-        <div class="mx-auto max-w-full">
-            <div
-                class="flex h-full w-full flex-col items-center justify-around space-y-1.5 md:flex-row md:space-y-0 md:divide-x md:divide-gray-700"
+        <div class="flex h-full w-full flex-row items-stretch justify-around">
+            <Link
+                :href="
+                    route('disciplines.show', {
+                        discipline: discipline.slug,
+                    })
+                "
+                class="group flex w-full items-center justify-center border-b-8 border-blue-400 bg-white py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
             >
-                <Link
-                    :href="
-                        route('disciplines.show', {
-                            discipline: discipline.slug,
-                        })
-                    "
-                    class="hidden items-center text-center transition duration-150 ease-in-out focus:outline-none md:inline-flex md:px-4 lg:px-8"
-                >
-                    <HomeIcon
-                        class="h-8 w-8 text-blue-700 hover:text-indigo-700"
-                    />
-                </Link>
-                <Link
-                    preserve-scroll
-                    v-for="categorie in categories"
-                    :key="categorie.id"
-                    :href="
-                        route('disciplines.categories.show', {
-                            discipline: discipline.slug,
-                            category: categorie.id,
-                        })
-                    "
-                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
-                    :class="[
-                        route().current('disciplines.categories.show') &&
-                        category.id === categorie.id
-                            ? 'underline decoration-blue-500 decoration-4 underline-offset-2'
-                            : '',
-                    ]"
-                >
-                    {{ categorie.nom_categorie_client }}
-                </Link>
-                <BreezeDropdown align="right" width="48">
-                    <template #trigger>
-                        <span class="inline-flex">
-                            <button
-                                type="button"
-                                class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
-                            >
-                                Plus
-                                <ChevronDownIcon class="ml-2 h-5 w-5" />
-                            </button>
-                        </span>
-                    </template>
-
-                    <template #content>
-                        <BreezeDropdownLink
-                            preserve-scroll
-                            :href="
-                                route('disciplines.categories.show', {
-                                    discipline: discipline.slug,
-                                    category: category.id,
-                                })
-                            "
-                            v-for="category in categoriesWithoutProduit"
-                            :key="category.id"
+                <HomeIcon
+                    class="h-7 w-7 text-blue-400 group-hover:text-white group-focus:text-white"
+                />
+            </Link>
+            <Link
+                preserve-scroll
+                v-for="categorie in categories"
+                :key="categorie.id"
+                :href="
+                    route('disciplines.categories.show', {
+                        discipline: discipline.slug,
+                        category: categorie.id,
+                    })
+                "
+                class="w-full border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
+                :class="[
+                    route().current('disciplines.categories.show') &&
+                    category.id === categorie.id
+                        ? 'bg-blue-400 text-white'
+                        : '',
+                ]"
+            >
+                {{ categorie.nom_categorie_client }}
+            </Link>
+            <BreezeDropdown
+                align="right"
+                width="48"
+                class="group w-full border-b-8 border-blue-400 py-2 text-center text-sm font-semibold leading-5 text-gray-700 hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
+            >
+                <template #trigger>
+                    <span class="inline-flex">
+                        <button
+                            type="button"
+                            class="inline-flex w-full items-center py-2 text-center text-sm font-semibold leading-5 text-gray-700 focus:outline-none group-hover:text-white group-focus:text-blue-400"
                         >
-                            {{ category.nom_categorie_pro }}
-                        </BreezeDropdownLink>
-                    </template>
-                </BreezeDropdown>
-                <Link
-                    preserve-scroll
-                    v-for="structureType in allStructureTypes"
-                    :key="structureType.id"
-                    :href="
-                        route('disciplines.structuretypes.show', {
-                            discipline: discipline.slug,
-                            structuretype: structureType.id,
-                        })
-                    "
-                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-sky-700 focus:text-sky-700 focus:outline-none md:px-4 lg:px-8"
-                    :class="[
-                        route().current('disciplines.structuretypes.show') &&
-                        structureType.id === structuretypeElected.id
-                            ? 'underline decoration-sky-700 decoration-4 underline-offset-2'
-                            : '',
-                    ]"
-                >
-                    {{ structureType.name }}
-                </Link>
-                <Link
-                    preserve-scroll
-                    :href="route('welcome')"
-                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:text-pink-600 focus:text-pink-600 focus:outline-none md:px-4 lg:px-8"
-                >
-                    <NewspaperIcon class="mr-2 h-6 w-6 text-pink-600" />
-                    Blog
-                </Link>
-            </div>
+                            Plus
+                            <ChevronDownIcon class="ml-2 h-5 w-5" />
+                        </button>
+                    </span>
+                </template>
+
+                <template #content>
+                    <BreezeDropdownLink
+                        preserve-scroll
+                        :href="
+                            route('disciplines.categories.show', {
+                                discipline: discipline.slug,
+                                category: category.id,
+                            })
+                        "
+                        v-for="category in categoriesWithoutProduit"
+                        :key="category.id"
+                    >
+                        {{ category.nom_categorie_pro }}
+                    </BreezeDropdownLink>
+                </template>
+            </BreezeDropdown>
+            <Link
+                preserve-scroll
+                v-for="structureType in allStructureTypes"
+                :key="structureType.id"
+                :href="
+                    route('disciplines.structuretypes.show', {
+                        discipline: discipline.slug,
+                        structuretype: structureType.id,
+                    })
+                "
+                class="w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-sky-700 focus:text-white focus:outline-none"
+                :class="[
+                    route().current('disciplines.structuretypes.show') &&
+                    structureType.id === structuretypeElected.id
+                        ? ' bg-sky-700 text-white'
+                        : '',
+                ]"
+            >
+                {{ structureType.name }}
+            </Link>
+            <Link
+                preserve-scroll
+                :href="route('welcome')"
+                class="group inline-flex w-full items-center justify-center border-b-8 border-pink-600 py-3 text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:bg-pink-600 hover:text-white focus:bg-pink-600 focus:text-white focus:outline-none"
+            >
+                <NewspaperIcon
+                    class="mr-2 h-7 w-7 text-pink-600 group-hover:text-white"
+                />
+                Blog
+            </Link>
         </div>
     </div>
+
     <!-- category mobile -->
     <div
         v-if="!departement && !city && category"
@@ -796,98 +785,101 @@ const showStructuresTypes = () => {
     <!-- structuretypeElected desktop -->
     <div
         v-if="!departement && !city && structuretypeElected"
-        class="hidden border-b-8 border-indigo-400 bg-slate-100/60 py-2 md:block"
+        class="mx-auto hidden max-w-full md:block"
     >
-        <div class="mx-auto max-w-full">
-            <div
-                class="flex h-full w-full flex-col items-center justify-around space-y-1.5 md:flex-row md:space-y-0 md:divide-x md:divide-gray-700"
+        <div class="flex h-full w-full flex-row items-stretch justify-around">
+            <Link
+                :href="
+                    route('disciplines.show', {
+                        discipline: discipline.slug,
+                    })
+                "
+                class="group flex w-full items-center justify-center border-b-8 border-blue-400 bg-white py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
             >
-                <Link
-                    :href="
-                        route('disciplines.show', {
-                            discipline: discipline.slug,
-                        })
-                    "
-                    class="hidden items-center text-center transition duration-150 ease-in-out focus:outline-none md:inline-flex md:px-4 lg:px-8"
-                >
-                    <HomeIcon
-                        class="h-8 w-8 text-blue-700 hover:text-indigo-700"
-                    />
-                </Link>
-                <Link
-                    preserve-scroll
-                    v-for="categorie in categories"
-                    :key="categorie.id"
-                    :href="
-                        route('disciplines.categories.show', {
-                            discipline: discipline.slug,
-                            category: categorie.id,
-                        })
-                    "
-                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
-                >
-                    {{ categorie.nom_categorie_client }}
-                </Link>
-                <BreezeDropdown align="right" width="48">
-                    <template #trigger>
-                        <span class="inline-flex">
-                            <button
-                                type="button"
-                                class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-blue-400 focus:text-blue-400 focus:outline-none md:px-4 lg:px-8"
-                            >
-                                Plus
-                                <ChevronDownIcon class="ml-2 h-5 w-5" />
-                            </button>
-                        </span>
-                    </template>
-
-                    <template #content>
-                        <BreezeDropdownLink
-                            preserve-scroll
-                            :href="
-                                route('disciplines.categories.show', {
-                                    discipline: discipline.slug,
-                                    category: category.id,
-                                })
-                            "
-                            v-for="category in categoriesWithoutProduit"
-                            :key="category.id"
+                <HomeIcon
+                    class="h-7 w-7 text-blue-400 group-hover:text-white group-focus:text-white"
+                />
+            </Link>
+            <Link
+                preserve-scroll
+                v-for="categorie in categories"
+                :key="categorie.id"
+                :href="
+                    route('disciplines.categories.show', {
+                        discipline: discipline.slug,
+                        category: categorie.id,
+                    })
+                "
+                class="w-full border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
+            >
+                {{ categorie.nom_categorie_client }}
+            </Link>
+            <BreezeDropdown
+                align="right"
+                width="48"
+                class="group w-full border-b-8 border-blue-400 py-2 text-center text-sm font-semibold leading-5 text-gray-700 hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
+            >
+                <template #trigger>
+                    <span class="inline-flex">
+                        <button
+                            type="button"
+                            class="inline-flex w-full items-center py-2 text-center text-sm font-semibold leading-5 text-gray-700 focus:outline-none group-hover:text-white group-focus:text-blue-400"
                         >
-                            {{ category.nom_categorie_pro }}
-                        </BreezeDropdownLink>
-                    </template>
-                </BreezeDropdown>
-                <Link
-                    preserve-scroll
-                    v-for="structureType in allStructureTypes"
-                    :key="structureType.id"
-                    :href="
-                        route('disciplines.structuretypes.show', {
-                            discipline: discipline.slug,
-                            structuretype: structureType.id,
-                        })
-                    "
-                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:text-sky-700 focus:text-sky-700 focus:outline-none md:px-4 lg:px-8"
-                    :class="[
-                        route().current('disciplines.structuretypes.show') &&
-                        structureType.id === structuretypeElected.id
-                            ? 'underline decoration-sky-700 decoration-4 underline-offset-2'
-                            : '',
-                    ]"
-                >
-                    {{ structureType.name }}
-                </Link>
-                <Link
-                    preserve-scroll
-                    :href="route('welcome')"
-                    class="inline-flex items-center text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:text-pink-600 focus:text-pink-600 focus:outline-none md:px-4 lg:px-8"
-                >
-                    <NewspaperIcon class="mr-2 h-6 w-6 text-pink-600" />
-                    Blog
-                </Link>
-            </div>
+                            Plus
+                            <ChevronDownIcon class="ml-2 h-5 w-5" />
+                        </button>
+                    </span>
+                </template>
+
+                <template #content>
+                    <BreezeDropdownLink
+                        preserve-scroll
+                        :href="
+                            route('disciplines.categories.show', {
+                                discipline: discipline.slug,
+                                category: category.id,
+                            })
+                        "
+                        v-for="category in categoriesWithoutProduit"
+                        :key="category.id"
+                    >
+                        {{ category.nom_categorie_pro }}
+                    </BreezeDropdownLink>
+                </template>
+            </BreezeDropdown>
+            <Link
+                preserve-scroll
+                v-for="structureType in allStructureTypes"
+                :key="structureType.id"
+                :href="
+                    route('disciplines.structuretypes.show', {
+                        discipline: discipline.slug,
+                        structuretype: structureType.id,
+                    })
+                "
+                class="w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-sky-700 focus:text-white focus:outline-none"
+                :class="[
+                    route().current('disciplines.structuretypes.show') &&
+                    structureType.id === structuretypeElected.id
+                        ? ' bg-sky-700 text-white'
+                        : '',
+                ]"
+            >
+                {{ structureType.name }}
+            </Link>
+            <Link
+                preserve-scroll
+                :href="route('welcome')"
+                class="group inline-flex w-full items-center justify-center border-b-8 border-pink-600 py-3 text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:bg-pink-600 hover:text-white focus:bg-pink-600 focus:text-white focus:outline-none"
+            >
+                <NewspaperIcon
+                    class="mr-2 h-7 w-7 text-pink-600 group-hover:text-white"
+                />
+                Blog
+            </Link>
         </div>
     </div>
+
     <!-- structuretypeElected mobile -->
     <div
         v-if="!departement && !city && structuretypeElected"

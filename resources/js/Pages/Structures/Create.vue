@@ -98,11 +98,7 @@ function submit() {
             <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
                 <template v-slot:title>
-                    <h1
-                        class="border-b-2 border-slate-400 text-center text-xl font-bold leading-tight tracking-widest text-gray-800 md:text-4xl"
-                    >
-                        Inscription de votre structure
-                    </h1>
+                    Inscription de votre structure
                 </template>
                 <template v-slot:ariane>
                     <nav aria-label="Breadcrumb" class="flex">

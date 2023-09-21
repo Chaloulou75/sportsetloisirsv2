@@ -29,13 +29,7 @@ defineProps({
         <template #header>
             <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
-                <template v-slot:title>
-                    <h1
-                        class="border-b-2 border-slate-400 pb-2 text-2xl font-black leading-tight tracking-widest text-gray-600 md:text-4xl"
-                    >
-                        Informations du profil
-                    </h1>
-                </template>
+                <template v-slot:title> Informations du profil </template>
                 <template v-slot:ariane>
                     <nav aria-label="Breadcrumb" class="flex">
                         <ol

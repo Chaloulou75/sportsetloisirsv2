@@ -83,14 +83,10 @@ function hideTooltip() {
     >
         <template #header>
             <FamilleResultNavigation :familles="familles" />
-            <ResultsHeader>
+            <ResultsHeader :discipline="discipline">
                 <template v-slot:title>
-                    <h1
-                        class="border-b-2 border-slate-400 pb-2 text-2xl font-black leading-tight tracking-widest text-gray-600 md:text-4xl"
-                    >
-                        {{ discipline.name }} <span class="lowercase">à</span>
-                        {{ formatCityName(city.ville) }}
-                    </h1>
+                    {{ discipline.name }} <span class="lowercase">à</span>
+                    {{ formatCityName(city.ville) }}
                 </template>
                 <template v-slot:ariane>
                     <nav aria-label="Breadcrumb" class="flex">

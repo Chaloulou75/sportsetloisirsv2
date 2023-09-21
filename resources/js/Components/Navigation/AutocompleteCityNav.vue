@@ -46,8 +46,8 @@ const formatCityName = (ville) => {
     <div class="flex w-full items-center justify-start md:w-1/2">
         <div class="relative flex w-full">
             <span
-                class="px:1.5 inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-xs text-gray-400 md:px-3"
-                ><MapPinIcon class="h-7 w-7"
+                class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-1.5 text-3xl text-gray-800 md:px-3"
+                ><MapPinIcon class="h-6 w-6 md:h-7 md:w-7"
             /></span>
 
             <input

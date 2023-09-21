@@ -1,6 +1,10 @@
 <script setup>
 import { ref, computed, watchEffect } from "vue";
-import { QuestionMarkCircleIcon } from "@heroicons/vue/24/solid";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faQuestion } from "@fortawesome/free-solid-svg-icons";
+library.add(faQuestion);
+
 const emit = defineEmits(["update:model-value"]);
 const props = defineProps({
     disciplines: Object,
@@ -44,9 +48,9 @@ watchEffect(() => {
     <div class="flex w-full items-center justify-start md:w-1/2">
         <div class="relative flex w-full">
             <span
-                class="px:1.5 inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-xs text-gray-400 md:px-3"
-                ><QuestionMarkCircleIcon class="h-7 w-7"
-            /></span>
+                class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-2 text-3xl text-gray-800 md:px-3"
+                ><font-awesome-icon icon="fa-solid fa-question fa-xl" />
+            </span>
             <input
                 type="text"
                 id="search"
