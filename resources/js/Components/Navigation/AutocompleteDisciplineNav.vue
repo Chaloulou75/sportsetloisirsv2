@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watchEffect } from "vue";
+import { ref, computed, watchEffect, onMounted } from "vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faQuestion } from "@fortawesome/free-solid-svg-icons";
@@ -8,9 +8,12 @@ library.add(faQuestion);
 const emit = defineEmits(["update:model-value"]);
 const props = defineProps({
     disciplines: Object,
+    currentDiscipline: Object,
 });
 
-let searchTerm = ref("");
+let searchTerm = ref(
+    props.currentDiscipline ? props.currentDiscipline.name : ""
+);
 
 const searchDisciplines = computed(() => {
     if (searchTerm.value === "") {
@@ -42,6 +45,12 @@ watchEffect(() => {
     if (searchTerm.value === "") {
         selectedDiscipline.value = null;
     }
+});
+
+onMounted(() => {
+    selectedDiscipline.value = ref(
+        props.currentDiscipline ? props.currentDiscipline : null
+    );
 });
 </script>
 <template>

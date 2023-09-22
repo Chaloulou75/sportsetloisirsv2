@@ -18,6 +18,8 @@ const props = defineProps({
     canRegister: Boolean,
     listDisciplines: Object,
     allCities: Object,
+    currentDiscipline: Object,
+    currentCity: Object,
 });
 const page = usePage();
 const user = computed(() => page.props.auth.user);
@@ -75,20 +77,20 @@ const submitForm = async () => {
                     </div>
                 </div>
 
-                <div
-                    class="hidden space-x-8 lg:-my-px lg:ml-10 lg:flex lg:w-full"
-                >
+                <div class="hidden space-x-8 lg:ml-10 lg:flex lg:w-full">
                     <section
                         class="mx-auto flex w-full items-center justify-center px-2 md:flex-row md:space-y-0"
                     >
                         <AutocompleteCityNav
                             :cities="allCities"
                             v-model="localite"
+                            :current-city="currentCity"
                             class="mr-4"
                         />
 
                         <AutocompleteDisciplineNav
                             :disciplines="listDisciplines"
+                            :current-discipline="currentDiscipline"
                             v-model="search"
                             class="mr-4"
                         />
@@ -97,7 +99,7 @@ const submitForm = async () => {
                                 @click="submitForm"
                                 :disabled="processing"
                                 type="submit"
-                                class="flex w-full items-center justify-center rounded border border-indigo-500 bg-white px-2 py-2 text-sm font-medium text-indigo-500 shadow-sm hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:w-auto"
+                                class="flex w-full items-center justify-center rounded border border-indigo-500 bg-gray-700 px-2 py-2 text-sm font-medium text-white shadow-sm hover:bg-white hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:w-auto"
                             >
                                 <MagnifyingGlassIcon
                                     class="h-5 w-5 md:h-7 md:w-7"
@@ -108,9 +110,7 @@ const submitForm = async () => {
                     </section>
                 </div>
 
-                <div
-                    class="hidden h-full lg:ml-6 lg:flex lg:items-center lg:space-x-2"
-                >
+                <div class="hidden h-full lg:flex lg:items-center lg:space-x-2">
                     <div class="relative ml-3">
                         <BreezeDropdown align="right" width="48">
                             <template #trigger>

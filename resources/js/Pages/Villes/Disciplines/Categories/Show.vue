@@ -96,6 +96,7 @@ const formCriteres = useForm({
         :listDisciplines="listDisciplines"
         :allCities="allCities"
         :discipline="discipline"
+        :city="city"
         :categories="categories"
     >
         <template #header>

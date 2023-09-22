@@ -42,7 +42,7 @@ const showStructuresTypes = () => {
                         discipline: discipline.slug,
                     })
                 "
-                class="group flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
+                class="group relative flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
                 :class="[
                     route().current('disciplines.show')
                         ? ' bg-blue-400 text-white'
@@ -57,6 +57,10 @@ const showStructuresTypes = () => {
                             : 'text-blue-400',
                     ]"
                 />
+                <div
+                    v-if="route().current('disciplines.show')"
+                    class="absolute inset-x-1/2 -bottom-4 h-5 w-5 rotate-45 bg-blue-400"
+                ></div>
             </Link>
             <Link
                 preserve-scroll
@@ -194,7 +198,7 @@ const showStructuresTypes = () => {
                         category: category.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out"
+                class="col-span-6 space-y-2 px-4 py-2 transition duration-150 ease-in-out"
                 v-for="category in categories"
                 :key="category.id"
             >
@@ -211,7 +215,7 @@ const showStructuresTypes = () => {
                         structuretype: structureType.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out"
+                class="col-span-6 space-y-2 px-4 py-2 transition duration-150 ease-in-out"
                 v-for="structureType in allStructureTypes"
                 :key="structureType.id"
             >
@@ -229,7 +233,7 @@ const showStructuresTypes = () => {
                         discipline: discipline.slug,
                     })
                 "
-                class="group flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
+                class="group relative flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
                 :class="[
                     route().current('villes.disciplines.show')
                         ? ' bg-blue-400 text-white'
@@ -244,6 +248,10 @@ const showStructuresTypes = () => {
                             : 'text-blue-400',
                     ]"
                 />
+                <div
+                    v-if="route().current('villes.disciplines.show')"
+                    class="absolute inset-x-1/2 -bottom-4 h-5 w-5 rotate-45 bg-blue-400"
+                ></div>
             </Link>
             <Link
                 preserve-scroll
@@ -256,9 +264,22 @@ const showStructuresTypes = () => {
                         category: categorie.id,
                     })
                 "
-                class="w-full border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
+                class="relative w-full border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
+                :class="[
+                    route().current('villes.disciplines.categories.show') &&
+                    category.id === categorie.id
+                        ? 'bg-blue-400 text-white'
+                        : '',
+                ]"
             >
                 {{ categorie.nom_categorie_client }}
+                <div
+                    v-if="
+                        route().current('villes.disciplines.categories.show') &&
+                        category.id === categorie.id
+                    "
+                    class="absolute inset-x-1/2 -bottom-4 h-5 w-5 rotate-45 bg-blue-400"
+                ></div>
             </Link>
             <BreezeDropdown
                 align="right"
@@ -305,9 +326,23 @@ const showStructuresTypes = () => {
                         structuretype: structureType.id,
                     })
                 "
-                class="w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-sky-700 focus:text-white focus:outline-none"
+                class="relative w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-sky-700 focus:text-white focus:outline-none"
+                :class="[
+                    route().current('villes.disciplines.structuretypes.show') &&
+                    structureType.id === structuretypeElected.id
+                        ? ' bg-sky-700 text-white'
+                        : '',
+                ]"
             >
                 {{ structureType.name }}
+                <div
+                    v-if="
+                        route().current(
+                            'villes.disciplines.structuretypes.show'
+                        ) && structureType.id === structuretypeElected.id
+                    "
+                    class="absolute inset-x-1/2 -bottom-4 h-5 w-5 rotate-45 bg-sky-700"
+                ></div>
             </Link>
             <Link
                 preserve-scroll
@@ -385,7 +420,7 @@ const showStructuresTypes = () => {
                         category: category.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out"
+                class="col-span-6 space-y-2 px-4 py-2 transition duration-150 ease-in-out"
                 v-for="category in categories"
                 :key="category.id"
             >
@@ -403,7 +438,7 @@ const showStructuresTypes = () => {
                         structuretype: structureType.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out"
+                class="col-span-6 space-y-2 px-4 py-2 transition duration-150 ease-in-out"
                 v-for="structureType in allStructureTypes"
                 :key="structureType.id"
             >
@@ -422,7 +457,7 @@ const showStructuresTypes = () => {
                         discipline: discipline.slug,
                     })
                 "
-                class="group flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
+                class="group relative flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
                 :class="[
                     route().current('departements.disciplines.show')
                         ? ' bg-blue-400 text-white'
@@ -437,6 +472,10 @@ const showStructuresTypes = () => {
                             : 'text-blue-400',
                     ]"
                 />
+                <div
+                    v-if="route().current('departements.disciplines.show')"
+                    class="absolute inset-x-1/2 -bottom-4 h-5 w-5 rotate-45 bg-blue-400"
+                ></div>
             </Link>
             <Link
                 preserve-scroll
@@ -449,7 +488,7 @@ const showStructuresTypes = () => {
                         category: categorie.id,
                     })
                 "
-                class="w-full border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
+                class="relative w-full border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
                 :class="[
                     route().current(
                         'departements.disciplines.categories.show'
@@ -459,6 +498,14 @@ const showStructuresTypes = () => {
                 ]"
             >
                 {{ categorie.nom_categorie_client }}
+                <div
+                    v-if="
+                        route().current(
+                            'departements.disciplines.categories.show'
+                        ) && category.id === categorie.id
+                    "
+                    class="absolute inset-x-1/2 -bottom-4 h-5 w-5 rotate-45 bg-blue-400"
+                ></div>
             </Link>
             <BreezeDropdown
                 align="right"
@@ -505,7 +552,7 @@ const showStructuresTypes = () => {
                         structuretype: structureType.id,
                     })
                 "
-                class="w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-sky-700 focus:text-white focus:outline-none"
+                class="relative w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-sky-700 focus:text-white focus:outline-none"
                 :class="[
                     route().current(
                         'departements.disciplines.structuretypes.show'
@@ -515,6 +562,14 @@ const showStructuresTypes = () => {
                 ]"
             >
                 {{ structureType.name }}
+                <div
+                    v-if="
+                        route().current(
+                            'departements.disciplines.structuretypes.show'
+                        ) && structureType.id === structuretypeElected.id
+                    "
+                    class="absolute inset-x-1/2 -bottom-4 h-5 w-5 rotate-45 bg-sky-700"
+                ></div>
             </Link>
             <Link
                 preserve-scroll
@@ -593,7 +648,7 @@ const showStructuresTypes = () => {
                         category: category.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out"
+                class="col-span-6 space-y-2 px-4 py-2 transition duration-150 ease-in-out"
                 v-for="category in categories"
                 :key="category.id"
             >
@@ -611,7 +666,7 @@ const showStructuresTypes = () => {
                         structuretype: structureType.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out"
+                class="col-span-6 space-y-2 px-4 py-2 transition duration-150 ease-in-out"
                 v-for="structureType in allStructureTypes"
                 :key="structureType.id"
             >
@@ -632,7 +687,7 @@ const showStructuresTypes = () => {
                         discipline: discipline.slug,
                     })
                 "
-                class="group flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
+                class="group relative flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
                 :class="[
                     route().current('disciplines.show')
                         ? ' bg-blue-400 text-white'
@@ -647,6 +702,10 @@ const showStructuresTypes = () => {
                             : 'text-blue-400',
                     ]"
                 />
+                <div
+                    v-if="route().current('disciplines.show')"
+                    class="absolute inset-x-1/2 -bottom-4 h-5 w-5 rotate-45 bg-blue-400"
+                ></div>
             </Link>
             <Link
                 preserve-scroll
@@ -658,7 +717,7 @@ const showStructuresTypes = () => {
                         category: categorie.id,
                     })
                 "
-                class="w-full border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
+                class="relative w-full border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
                 :class="[
                     route().current('disciplines.categories.show') &&
                     category.id === categorie.id
@@ -667,6 +726,13 @@ const showStructuresTypes = () => {
                 ]"
             >
                 {{ categorie.nom_categorie_client }}
+                <div
+                    v-if="
+                        route().current('disciplines.categories.show') &&
+                        category.id === categorie.id
+                    "
+                    class="absolute inset-x-1/2 -bottom-4 h-5 w-5 rotate-45 bg-blue-400"
+                ></div>
             </Link>
             <BreezeDropdown
                 align="right"
@@ -711,7 +777,7 @@ const showStructuresTypes = () => {
                         structuretype: structureType.id,
                     })
                 "
-                class="w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-sky-700 focus:text-white focus:outline-none"
+                class="relative w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-sky-700 focus:text-white focus:outline-none"
                 :class="[
                     route().current('disciplines.structuretypes.show') &&
                     structureType.id === structuretypeElected.id
@@ -720,6 +786,13 @@ const showStructuresTypes = () => {
                 ]"
             >
                 {{ structureType.name }}
+                <div
+                    v-if="
+                        route().current('disciplines.structuretypes.show') &&
+                        structureType.id === structuretypeElected.id
+                    "
+                    class="absolute inset-x-1/2 -bottom-4 h-5 w-5 rotate-45 bg-sky-700"
+                ></div>
             </Link>
             <Link
                 preserve-scroll
@@ -796,7 +869,7 @@ const showStructuresTypes = () => {
                         category: category.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out"
+                class="col-span-6 space-y-2 px-4 py-2 transition duration-150 ease-in-out"
                 v-for="category in categories"
                 :key="category.id"
             >
@@ -813,7 +886,7 @@ const showStructuresTypes = () => {
                         structuretype: structureType.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out"
+                class="col-span-6 space-y-2 px-4 py-2 transition duration-150 ease-in-out"
                 v-for="structureType in allStructureTypes"
                 :key="structureType.id"
             >
@@ -834,7 +907,7 @@ const showStructuresTypes = () => {
                         discipline: discipline.slug,
                     })
                 "
-                class="group flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
+                class="group relative flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
                 :class="[
                     route().current('disciplines.show')
                         ? ' bg-blue-400 text-white'
@@ -849,6 +922,10 @@ const showStructuresTypes = () => {
                             : 'text-blue-400',
                     ]"
                 />
+                <div
+                    v-if="route().current('disciplines.show')"
+                    class="absolute inset-x-1/2 -bottom-4 h-5 w-5 rotate-45 bg-blue-400"
+                ></div>
             </Link>
             <Link
                 preserve-scroll
@@ -907,7 +984,7 @@ const showStructuresTypes = () => {
                         structuretype: structureType.id,
                     })
                 "
-                class="w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-sky-700 focus:text-white focus:outline-none"
+                class="relative w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-sky-700 focus:text-white focus:outline-none"
                 :class="[
                     route().current('disciplines.structuretypes.show') &&
                     structureType.id === structuretypeElected.id
@@ -916,6 +993,13 @@ const showStructuresTypes = () => {
                 ]"
             >
                 {{ structureType.name }}
+                <div
+                    v-if="
+                        route().current('disciplines.structuretypes.show') &&
+                        structureType.id === structuretypeElected.id
+                    "
+                    class="absolute inset-x-1/2 -bottom-4 h-5 w-5 rotate-45 bg-sky-700"
+                ></div>
             </Link>
             <Link
                 preserve-scroll
@@ -992,7 +1076,7 @@ const showStructuresTypes = () => {
                         category: category.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out"
+                class="col-span-6 space-y-2 px-4 py-2 transition duration-150 ease-in-out"
                 v-for="category in categories"
                 :key="category.id"
             >
@@ -1009,7 +1093,7 @@ const showStructuresTypes = () => {
                         structuretype: structureType.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out"
+                class="col-span-6 space-y-2 px-4 py-2 transition duration-150 ease-in-out"
                 v-for="structureType in allStructureTypes"
                 :key="structureType.id"
             >

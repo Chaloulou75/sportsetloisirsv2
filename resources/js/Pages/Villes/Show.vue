@@ -99,7 +99,11 @@ const formatCityName = (ville) => {
         "
     />
 
-    <ResultLayout :listDisciplines="listDisciplines" :allCities="allCities">
+    <ResultLayout
+        :listDisciplines="listDisciplines"
+        :allCities="allCities"
+        :city="city"
+    >
         <template #header>
             <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>

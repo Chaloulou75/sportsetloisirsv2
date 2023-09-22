@@ -255,5 +255,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/categories-disciplines-criteres-valeurs/{lienDisCatCritValeur}', [CategoryDisciplineCritereValeurController::class, 'destroy'])->name('categories-disciplines-criteres-valeurs.destroy');
     //, 'can:viewAdmin'
 });
-//][/{discipline?}][/{category?}]
+
 Route::get('/activites/{activite:id}', [ActiviteController::class, 'show'])->name('structures.activites.show');

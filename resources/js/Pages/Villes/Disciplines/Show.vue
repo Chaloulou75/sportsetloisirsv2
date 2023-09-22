@@ -79,6 +79,7 @@ function hideTooltip() {
         :listDisciplines="listDisciplines"
         :allCities="allCities"
         :discipline="discipline"
+        :city="city"
         :categories="categories"
     >
         <template #header>

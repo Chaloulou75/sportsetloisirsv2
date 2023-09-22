@@ -1,12 +1,19 @@
 <script setup>
-import { ref, computed, watchEffect } from "vue";
+import { ref, computed, watchEffect, onMounted } from "vue";
 import { MapPinIcon } from "@heroicons/vue/24/solid";
 const emit = defineEmits(["update:model-value"]);
 const props = defineProps({
     cities: Object,
+    currentCity: Object,
 });
 
-let searchTerm = ref("");
+const formatCityName = (ville) => {
+    return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
+};
+
+let searchTerm = ref(
+    props.currentCity ? formatCityName(props.currentCity.ville) : ""
+);
 
 const searchCities = computed(() => {
     if (searchTerm.value === "") {
@@ -24,6 +31,7 @@ const searchCities = computed(() => {
     });
 });
 
+// let selectedCity = ref();
 let selectedCity = ref(props.cities.find((city) => city.id === city));
 
 const selectCity = (city) => {
@@ -38,9 +46,9 @@ watchEffect(() => {
     }
 });
 
-const formatCityName = (ville) => {
-    return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
-};
+onMounted(() => {
+    selectedCity.value = ref(props.currentCity ? props.currentCity : null);
+});
 </script>
 <template>
     <div class="flex w-full items-center justify-start md:w-1/2">

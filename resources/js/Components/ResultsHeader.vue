@@ -115,21 +115,21 @@ const headerClass = computed(() => {
         :class="headerClass"
     >
         <div
-            class="mx-auto my-2 flex w-full flex-col items-center justify-center space-y-2 bg-slate-100/70 px-2 py-2 md:w-1/3"
+            class="mx-auto my-2 flex w-full flex-col items-center justify-center space-y-2 bg-slate-100/70 px-2 py-2 md:w-1/2"
         >
             <h1
-                class="text-2xl font-black leading-tight tracking-widest text-gray-600 md:border-b-2 md:border-slate-400 md:pb-2 md:text-4xl"
+                class="text-center text-2xl font-black leading-tight tracking-widest text-gray-600 md:text-4xl"
             >
                 <slot name="title"></slot>
             </h1>
             <h2
-                class="hidden text-center text-lg font-semibold leading-tight tracking-widest text-gray-600 md:block md:text-2xl"
+                class="hidden text-center text-lg font-semibold leading-tight tracking-widest text-gray-600 md:block md:border-t-2 md:border-slate-400 md:pt-2 md:text-2xl"
             >
                 <slot name="subtitle"></slot>
             </h2>
         </div>
         <div
-            class="mx-auto hidden w-auto flex-col items-center justify-center space-y-2 bg-gray-100/50 px-2 py-2 md:flex md:w-1/3"
+            class="mx-auto hidden w-auto flex-col items-center justify-center space-y-2 bg-gray-100/50 px-2 py-2 md:flex md:w-1/2"
         >
             <slot name="ariane"></slot>
         </div>

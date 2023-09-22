@@ -58,6 +58,7 @@ class CityController extends Controller
      */
     public function show(City $city)
     {
+        // dd($citySlug);
         $familles = Famille::withWhereHas('disciplines', function ($query) {
             $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();

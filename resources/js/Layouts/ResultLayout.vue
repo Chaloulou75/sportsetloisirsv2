@@ -9,6 +9,7 @@ const props = defineProps({
     listDisciplines: Object,
     allCities: Object,
     discipline: Object,
+    city: Object,
 });
 const isShowing = ref(true);
 
@@ -128,6 +129,8 @@ const isShowing = ref(true);
                 <ResultNavigation
                     :listDisciplines="listDisciplines"
                     :allCities="allCities"
+                    :current-discipline="discipline"
+                    :current-city="city"
                 />
 
                 <slot name="header" />

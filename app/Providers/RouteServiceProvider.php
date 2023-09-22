@@ -34,6 +34,13 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
         });
+
+
+        Route::bind('citySlug', function ($value) {
+            // Replace '+' with '-' and make it lowercase
+            return str_replace('+', '-', strtolower($value));
+        });
+
     }
 
     /**
