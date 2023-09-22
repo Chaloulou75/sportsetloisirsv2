@@ -1,6 +1,10 @@
 <script setup>
 import { ref, computed, watchEffect, onMounted } from "vue";
-import { MapPinIcon } from "@heroicons/vue/24/solid";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+library.add(faLocationDot);
+// import { MapPinIcon } from "@heroicons/vue/24/solid";
 const emit = defineEmits(["update:model-value"]);
 const props = defineProps({
     cities: Object,
@@ -54,9 +58,11 @@ onMounted(() => {
     <div class="flex w-full items-center justify-start md:w-1/2">
         <div class="relative flex w-full">
             <span
-                class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-1.5 text-3xl text-gray-800 md:px-3"
-                ><MapPinIcon class="h-6 w-6 md:h-7 md:w-7"
-            /></span>
+                class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-2 text-3xl text-gray-400 md:px-3"
+                ><font-awesome-icon icon="fa-solid fa-location-dot" />
+                <!-- <MapPinIcon class="h-6 w-6 md:h-7 md:w-7"
+            /> -->
+            </span>
 
             <input
                 type="text"

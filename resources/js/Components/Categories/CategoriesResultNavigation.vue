@@ -3,7 +3,11 @@ import { ref } from "vue";
 import { Link } from "@inertiajs/vue3";
 import BreezeDropdown from "@/Components/Dropdown.vue";
 import BreezeDropdownLink from "@/Components/DropdownLink.vue";
-import { HomeIcon, NewspaperIcon } from "@heroicons/vue/24/solid";
+import {
+    HomeIcon,
+    NewspaperIcon,
+    ArrowUturnLeftIcon,
+} from "@heroicons/vue/24/solid";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/vue/24/outline";
 const props = defineProps({
     city: Object,
@@ -49,7 +53,7 @@ const showStructuresTypes = () => {
                         : '',
                 ]"
             >
-                <HomeIcon
+                <ArrowUturnLeftIcon
                     class="h-7 w-7 group-hover:text-white group-focus:text-white"
                     :class="[
                         route().current('disciplines.show')
@@ -78,7 +82,8 @@ const showStructuresTypes = () => {
             </Link>
             <BreezeDropdown
                 align="right"
-                width="48"
+                width="auto"
+                marginTop="4"
                 class="group w-full border-b-8 border-blue-400 py-2 text-center text-sm font-semibold leading-5 text-gray-700 hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
             >
                 <template #trigger>
@@ -156,7 +161,9 @@ const showStructuresTypes = () => {
                 "
                 class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
             >
-                <HomeIcon class="h-6 w-6 text-white hover:text-gray-100" />
+                <ArrowUturnLeftIcon
+                    class="h-6 w-6 text-white hover:text-gray-100"
+                />
             </Link>
         </div>
 
@@ -240,7 +247,7 @@ const showStructuresTypes = () => {
                         : '',
                 ]"
             >
-                <HomeIcon
+                <ArrowUturnLeftIcon
                     class="h-7 w-7 group-hover:text-white group-focus:text-white"
                     :class="[
                         route().current('villes.disciplines.show')
@@ -283,7 +290,8 @@ const showStructuresTypes = () => {
             </Link>
             <BreezeDropdown
                 align="right"
-                width="48"
+                width="auto"
+                marginTop="4"
                 class="group w-full border-b-8 border-blue-400 py-2 text-center text-sm font-semibold leading-5 text-gray-700 hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
             >
                 <template #trigger>
@@ -377,7 +385,9 @@ const showStructuresTypes = () => {
                 "
                 class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
             >
-                <HomeIcon class="h-6 w-6 text-white hover:text-gray-100" />
+                <ArrowUturnLeftIcon
+                    class="h-6 w-6 text-white hover:text-gray-100"
+                />
             </Link>
         </div>
 
@@ -464,7 +474,7 @@ const showStructuresTypes = () => {
                         : '',
                 ]"
             >
-                <HomeIcon
+                <ArrowUturnLeftIcon
                     class="h-7 w-7 group-hover:text-white group-focus:text-white"
                     :class="[
                         route().current('departements.disciplines.show')
@@ -509,7 +519,8 @@ const showStructuresTypes = () => {
             </Link>
             <BreezeDropdown
                 align="right"
-                width="48"
+                width="auto"
+                marginTop="4"
                 class="group w-full border-b-8 border-blue-400 py-2 text-center text-sm font-semibold leading-5 text-gray-700 hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
             >
                 <template #trigger>
@@ -605,7 +616,9 @@ const showStructuresTypes = () => {
                 "
                 class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
             >
-                <HomeIcon class="h-6 w-6 text-white hover:text-gray-100" />
+                <ArrowUturnLeftIcon
+                    class="h-6 w-6 text-white hover:text-gray-100"
+                />
             </Link>
         </div>
 
@@ -694,7 +707,7 @@ const showStructuresTypes = () => {
                         : '',
                 ]"
             >
-                <HomeIcon
+                <ArrowUturnLeftIcon
                     class="h-7 w-7 group-hover:text-white group-focus:text-white"
                     :class="[
                         route().current('disciplines.show')
@@ -736,7 +749,8 @@ const showStructuresTypes = () => {
             </Link>
             <BreezeDropdown
                 align="right"
-                width="48"
+                width="auto"
+                marginTop="4"
                 class="group w-full border-b-8 border-blue-400 py-2 text-center text-sm font-semibold leading-5 text-gray-700 hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
             >
                 <template #trigger>
@@ -827,7 +841,9 @@ const showStructuresTypes = () => {
                 "
                 class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
             >
-                <HomeIcon class="h-6 w-6 text-white hover:text-gray-100" />
+                <ArrowUturnLeftIcon
+                    class="h-6 w-6 text-white hover:text-gray-100"
+                />
             </Link>
         </div>
 
@@ -914,7 +930,7 @@ const showStructuresTypes = () => {
                         : '',
                 ]"
             >
-                <HomeIcon
+                <ArrowUturnLeftIcon
                     class="h-7 w-7 group-hover:text-white group-focus:text-white"
                     :class="[
                         route().current('disciplines.show')
@@ -943,7 +959,8 @@ const showStructuresTypes = () => {
             </Link>
             <BreezeDropdown
                 align="right"
-                width="48"
+                width="auto"
+                marginTop="4"
                 class="group w-full border-b-8 border-blue-400 py-2 text-center text-sm font-semibold leading-5 text-gray-700 hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
             >
                 <template #trigger>
@@ -1034,7 +1051,9 @@ const showStructuresTypes = () => {
                 "
                 class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
             >
-                <HomeIcon class="h-6 w-6 text-white hover:text-gray-100" />
+                <ArrowUturnLeftIcon
+                    class="h-6 w-6 text-white hover:text-gray-100"
+                />
             </Link>
         </div>
 

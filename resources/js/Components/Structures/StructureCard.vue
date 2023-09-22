@@ -122,7 +122,9 @@ const formatCityName = (ville) => {
 
 <template>
     <template v-if="link">
-        <div
+        <Link
+            :href="link"
+            :data="data"
             class="block rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:shadow-2xl md:px-0 md:hover:scale-105"
         >
             <div class="relative">
@@ -150,7 +152,7 @@ const formatCityName = (ville) => {
                 />
             </div>
 
-            <Link :href="link" :data="data" class="">
+            <div class="">
                 <dl class="mt-2 flex flex-col px-3">
                     <p
                         class="text-sm font-medium uppercase tracking-widest text-pink-500"
@@ -295,11 +297,16 @@ const formatCityName = (ville) => {
                         </div>
                     </div>
                 </dl>
-            </Link>
-        </div>
+            </div>
+        </Link>
     </template>
     <template v-else>
-        <div
+        <Link
+            :href="
+                route('structures.show', {
+                    structure: structure.slug,
+                })
+            "
             class="block rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl md:px-0"
         >
             <div class="relative">
@@ -327,13 +334,7 @@ const formatCityName = (ville) => {
                 />
             </div>
 
-            <Link
-                :href="
-                    route('structures.show', {
-                        structure: structure.slug,
-                    })
-                "
-            >
+            <div>
                 <dl class="mt-2 flex flex-col px-3">
                     <p
                         class="text-sm font-medium uppercase tracking-widest text-pink-500"
@@ -478,7 +479,7 @@ const formatCityName = (ville) => {
                         </div>
                     </div>
                 </dl>
-            </Link>
-        </div>
+            </div>
+        </Link>
     </template>
 </template>

@@ -100,7 +100,8 @@ const formatCityName = (ville) => {
 
 <template>
     <template v-if="link">
-        <div
+        <Link
+            :href="link"
             class="block rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:shadow-2xl md:px-0 md:hover:scale-105"
         >
             <div class="relative">
@@ -128,7 +129,7 @@ const formatCityName = (ville) => {
                 />
             </div>
 
-            <Link :href="link" class="mt-2">
+            <div class="mt-2">
                 <dl class="flex flex-col">
                     <p
                         class="px-2 py-1.5 text-center text-sm font-semibold tracking-wide text-gray-600"
@@ -185,7 +186,7 @@ const formatCityName = (ville) => {
                         </div>
                     </div>
                 </dl>
-            </Link>
-        </div>
+            </div>
+        </Link>
     </template>
 </template>
