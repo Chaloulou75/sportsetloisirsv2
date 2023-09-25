@@ -96,7 +96,7 @@ class CityDisciplineController extends Controller
         ])->whereHas('activites', function ($query) use ($discipline) {
             $query->where('discipline_id', $discipline->id);
         })->withCount('disciplines', 'produits', 'activites')
-        ->paginate(6);
+        ->paginate(12);
 
         $city->timestamp = false;
         $city->increment('view_count');

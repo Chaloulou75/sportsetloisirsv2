@@ -80,7 +80,7 @@ class StructureTypeDisciplineController extends Controller
         ->whereHas('activites', function ($query) use ($discipline) {
             $query->where('discipline_id', $discipline->id);
         })
-        ->paginate(6);
+        ->paginate(12);
 
         $discipline->timestamp = false;
         $discipline->increment('view_count');

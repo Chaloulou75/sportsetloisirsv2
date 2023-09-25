@@ -96,7 +96,7 @@ class DepartementDisciplineStructuretypeController extends Controller
             'plannings',
         ])->withCount('disciplines', 'produits', 'activites')
         ->whereHas('activites')
-        ->paginate(6);
+        ->paginate(12);
 
         $departement->timestamp = false;
         $departement->increment('view_count');

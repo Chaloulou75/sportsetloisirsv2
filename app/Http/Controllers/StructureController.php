@@ -78,7 +78,7 @@ class StructureController extends Controller
                             request(['search'])
                         )
                         ->latest()
-                        ->paginate(6)
+                        ->paginate(12)
                         ->through(function ($structure) {
                             $disciplinesCount = $structure->disciplines->count();
                             $activitiesCount = $structure->activites->count();

@@ -108,7 +108,7 @@ class CityDisciplineCategorieController extends Controller
             $query->where('discipline_id', $discipline->id)
                 ->where('categorie_id', $category->id);
         })
-        ->paginate(6);
+        ->paginate(12);
 
         $city->timestamp = false;
         $city->increment('view_count');

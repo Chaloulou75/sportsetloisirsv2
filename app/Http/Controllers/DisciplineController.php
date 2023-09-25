@@ -37,13 +37,13 @@ class DisciplineController extends Controller
                                         ->get();
 
 
-        $disciplines = ListDiscipline::whereHas('structures')->select(['id', 'name', 'slug'])
+        $disciplines = ListDiscipline::with('structures')->select(['id', 'name', 'slug'])
                         ->withCount('structures')
                         ->filter(
                             request(['search'])
                         )
                         ->orderByDesc('structures_count')
-                        ->paginate(12)
+                        ->paginate(30)
                         ->withQueryString();
 
         return Inertia::render('Disciplines/Index', [
@@ -70,7 +70,6 @@ class DisciplineController extends Controller
         $allCities = City::whereHas('produits')
                                         ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
                                         ->get();
-
 
         $discipline = ListDiscipline::where('slug', $discipline->slug)
             ->select(['id', 'name', 'slug', 'view_count'])
@@ -113,7 +112,8 @@ class DisciplineController extends Controller
             'tarifs.tarifType',
             'tarifs.structureTarifTypeInfos',
             'plannings',
-        ])->withCount('produits', 'activites')->paginate(6);
+        ])->withCount('produits', 'activites')
+        ->paginate(12);
 
         $discipline->timestamps = false;
         $discipline->increment('view_count');

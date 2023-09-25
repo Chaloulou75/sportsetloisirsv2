@@ -41,7 +41,7 @@ class DepartementController extends Controller
                             request(['search'])
                         )
                         ->orderByDesc('structures_count')
-                        ->paginate(15)
+                        ->paginate(12)
                         ->withQueryString();
 
         return Inertia::render('Departements/Index', [
@@ -104,7 +104,7 @@ class DepartementController extends Controller
             'tarifs.tarifType',
             'tarifs.structureTarifTypeInfos',
             'plannings',
-        ])->withCount('disciplines', 'produits', 'activites')->paginate(6);
+        ])->withCount('disciplines', 'produits', 'activites')->paginate(12);
 
         $departement->timestamp = false;
         $departement->increment('view_count');

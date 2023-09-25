@@ -109,7 +109,7 @@ class DepartementDisciplineCategorieController extends Controller
             $query->where('discipline_id', $discipline->id)
                 ->where('categorie_id', $category->id);
         })
-        ->paginate(6);
+        ->paginate(12);
 
         $departement->timestamp = false;
         $departement->increment('view_count');

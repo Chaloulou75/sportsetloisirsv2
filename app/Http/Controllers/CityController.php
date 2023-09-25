@@ -39,7 +39,7 @@ class CityController extends Controller
                             request(['search'])
                         )
                         ->orderByDesc('produits_count')
-                        ->paginate(15)
+                        ->paginate(12)
                         ->withQueryString();
 
         return Inertia::render('Villes/Index', [
@@ -113,7 +113,7 @@ class CityController extends Controller
             'tarifs.structureTarifTypeInfos',
             'plannings',
         ])->withCount('disciplines', 'produits', 'activites')
-        ->paginate(6);
+        ->paginate(12);
 
         $produits = $city->produits()->with([
             'structure',
@@ -138,7 +138,7 @@ class CityController extends Controller
             'tarifs.structureTarifTypeInfos',
             'structure.plannings',
         ])
-        ->paginate(6);
+        ->paginate(12);
 
         $city->timestamp = false;
         $city->increment('view_count');

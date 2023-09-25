@@ -99,7 +99,7 @@ class CityDisciplineStructuretypeController extends Controller
             'plannings',
         ])->withCount('disciplines', 'produits', 'activites')
         ->whereHas('activites')
-        ->paginate(6);
+        ->paginate(12);
 
         $city->timestamp = false;
         $city->increment('view_count');

@@ -134,7 +134,7 @@ const showStructuresTypes = () => {
             'bg-blue-500': !openStructuresTypes,
             'bg-sky-800': openStructuresTypes,
         }"
-        class="grid w-full grid-cols-6 gap-y-4 border-b border-gray-100 text-white md:hidden"
+        class="grid w-full grid-cols-6 border-b border-gray-100 text-white md:hidden"
     >
         <div
             class="col-span-1 flex items-center justify-center bg-slate-700 px-2 py-3"
