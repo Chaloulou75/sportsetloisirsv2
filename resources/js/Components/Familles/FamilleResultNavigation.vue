@@ -12,7 +12,7 @@ const props = defineProps({
             >
                 <Link
                     preserve-scroll
-                    class="inline-flex items-center px-8 pt-1 text-sm font-semibold leading-5 text-white transition duration-150 ease-in-out hover:text-gray-100 focus:text-gray-100 focus:outline-none"
+                    class="inline-flex items-center px-8 pt-1 text-sm font-semibold leading-5 text-white transition duration-150 ease-in-out hover:text-gray-900 focus:text-gray-900 focus:outline-none"
                     :href="route('familles.show', famille.slug)"
                     :active="route().current('familles.show', famille.slug)"
                     v-for="(famille, index) in familles"

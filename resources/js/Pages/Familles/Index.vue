@@ -92,7 +92,7 @@ defineProps({
             </div>
         </template>
 
-        <div class="py-12">
+        <div class="py-6 md:py-12">
             <div class="mx-auto max-w-full px-2 sm:px-6 lg:px-8">
                 <div
                     class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"

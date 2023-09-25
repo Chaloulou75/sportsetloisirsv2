@@ -157,7 +157,7 @@ function hideTooltip() {
         </template>
         <template v-if="structures.data.length > 0">
             <div
-                class="relative mx-auto flex min-h-screen max-w-full flex-col px-2 py-12 sm:px-6 md:flex-row md:space-x-4 lg:px-8"
+                class="relative mx-auto flex min-h-screen max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
             >
                 <div ref="listeStructure" class="md:w-1/2">
                     <div

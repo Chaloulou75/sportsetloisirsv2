@@ -199,7 +199,7 @@ const formCriteres = useForm({
         </template>
         <!-- Criteres -->
         <div
-            class="mt-6 flex w-full items-center justify-between border-b border-gray-300 px-2 md:hidden"
+            class="mt-6 flex w-full items-center justify-between border-b border-gray-300 px-2 pb-3 md:hidden"
         >
             <h3 class="font-semibold">
                 {{ category.nom_categorie_client }}
@@ -212,23 +212,27 @@ const formCriteres = useForm({
 
         <div
             v-if="criteres"
-            class="mx-auto w-full flex-col items-start justify-center space-x-0 space-y-2 rounded bg-gray-50 px-2 py-6 md:flex md:flex-row md:space-x-6 md:space-y-0 md:px-6"
+            class="mx-auto w-full flex-col items-start justify-center space-x-0 space-y-2 rounded bg-gray-50 px-2 py-6 md:flex md:flex-row md:items-center md:space-x-6 md:space-y-0 md:px-6"
             :class="{
                 flex: showCriteres,
                 hidden: !showCriteres,
             }"
         >
-            <div v-for="critere in criteres" :key="critere.id" class="max-w-lg">
+            <div
+                v-for="critere in criteres"
+                :key="critere.id"
+                class="w-full max-w-full md:w-auto"
+            >
                 <!-- select -->
                 <div v-if="critere.type_champ_form === 'select'">
-                    <div>
+                    <div class="flex items-center space-x-4">
                         <label
                             :for="critere.nom"
                             class="block text-sm font-medium text-gray-700"
                         >
                             {{ critere.nom }}
                         </label>
-                        <div class="mt-1 flex rounded-md">
+                        <div class="flex w-full rounded-md md:w-auto">
                             <select
                                 :name="critere.nom"
                                 :id="critere.nom"
@@ -252,11 +256,11 @@ const formCriteres = useForm({
                 </div>
                 <!-- checkbox -->
                 <div v-if="critere.type_champ_form === 'checkbox'">
-                    <div class="block">
-                        <span class="text-sm font-medium text-gray-700">{{
-                            critere.nom
-                        }}</span>
-                        <div class="mt-2">
+                    <div class="flex items-center space-x-4">
+                        <div class="text-sm font-medium text-gray-700">
+                            {{ critere.nom }}
+                        </div>
+                        <div class="">
                             <div
                                 v-for="(option, index) in critere.valeurs"
                                 :key="option.id"
@@ -286,51 +290,59 @@ const formCriteres = useForm({
                 </div>
                 <!-- radio -->
                 <div v-if="critere.type_champ_form === 'radio'">
-                    <label
-                        :for="critere.nom"
-                        class="block text-sm font-medium text-gray-700"
-                    >
-                        {{ critere.nom }}
-                    </label>
+                    <div class="flex items-center space-x-4">
+                        <label
+                            :for="critere.nom"
+                            class="block text-sm font-medium text-gray-700"
+                        >
+                            {{ critere.nom }}
+                        </label>
 
-                    <div class="mt-1 flex rounded-md">
-                        <div>
-                            <label
-                                class="inline-flex items-center"
-                                v-for="(option, index) in critere.valeurs"
-                                :key="option.id"
-                            >
-                                <input
-                                    v-model="formCriteres.criteres[critere.id]"
-                                    type="radio"
-                                    class="form-radio"
-                                    :name="option.valeur"
-                                    :value="option.valeur"
-                                    checked
-                                />
-                                <span class="ml-2">{{ option.valeur }}</span>
-                            </label>
+                        <div class="flex rounded-md">
+                            <div>
+                                <label
+                                    class="inline-flex items-center"
+                                    v-for="(option, index) in critere.valeurs"
+                                    :key="option.id"
+                                >
+                                    <input
+                                        v-model="
+                                            formCriteres.criteres[critere.id]
+                                        "
+                                        type="radio"
+                                        class="form-radio"
+                                        :name="option.valeur"
+                                        :value="option.valeur"
+                                        checked
+                                    />
+                                    <span class="ml-2">{{
+                                        option.valeur
+                                    }}</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <!-- input text -->
                 <div v-if="critere.type_champ_form === 'text'">
-                    <label
-                        :for="critere.nom"
-                        class="block text-sm font-medium text-gray-700"
-                    >
-                        {{ critere.nom }}
-                    </label>
-                    <div class="mt-1 flex rounded-md">
-                        <input
-                            type="text"
-                            v-model="formCriteres.criteres[critere.id]"
-                            :name="critere.nom"
-                            :id="critere.nom"
-                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                            placeholder=""
-                            autocomplete="none"
-                        />
+                    <div class="flex items-center space-x-4">
+                        <label
+                            :for="critere.nom"
+                            class="block text-sm font-medium text-gray-700"
+                        >
+                            {{ critere.nom }}
+                        </label>
+                        <div class="flex rounded-md">
+                            <input
+                                type="text"
+                                v-model="formCriteres.criteres[critere.id]"
+                                :name="critere.nom"
+                                :id="critere.nom"
+                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                placeholder=""
+                                autocomplete="none"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -339,7 +351,7 @@ const formCriteres = useForm({
         <!-- Structures -->
         <template v-if="structures.data.length > 0">
             <div
-                class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-12 sm:px-6 md:flex-row md:space-x-4 lg:px-8"
+                class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
             >
                 <div ref="listeStructure" class="md:w-1/2">
                     <div
@@ -404,7 +416,7 @@ const formCriteres = useForm({
         </template>
         <template v-else>
             <div
-                class="mx-auto min-h-screen max-w-full px-2 py-12 sm:px-6 lg:px-8"
+                class="mx-auto min-h-screen max-w-full px-2 py-6 sm:px-6 md:py-12 lg:px-8"
             >
                 <p class="font-medium text-gray-700">
                     Dommage, il n'y a pas encore de structures inscrites dans la

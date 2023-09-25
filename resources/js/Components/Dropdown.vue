@@ -26,9 +26,13 @@ onMounted(() => document.addEventListener("keydown", closeOnEscape));
 onUnmounted(() => document.removeEventListener("keydown", closeOnEscape));
 
 const widthClass = computed(() => {
-    return {
-        48: "w-48",
-    }[props.width.toString()];
+    if (props.width === "w-full") {
+        return "w-full";
+    } else {
+        return {
+            48: "w-48",
+        }[props.width.toString()];
+    }
 });
 
 const marginClass = computed(() => {

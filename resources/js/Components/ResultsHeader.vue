@@ -111,25 +111,28 @@ const headerClass = computed(() => {
 
 <template>
     <div
-        class="mx-auto max-w-full bg-slate-100/20 bg-cover bg-center bg-no-repeat px-10 py-2 bg-blend-soft-light md:py-6"
+        class="mx-auto bg-slate-100/20 bg-cover bg-center bg-no-repeat px-10 py-2 bg-blend-soft-light md:py-6"
         :class="headerClass"
     >
         <div
-            class="mx-auto my-2 flex w-full flex-col items-center justify-center space-y-2 bg-slate-100/70 px-2 py-2 md:w-1/2"
+            class="mx-auto my-2 flex w-full max-w-max flex-col items-center justify-center bg-slate-100/70 px-2 py-2 md:w-auto md:px-6"
         >
             <h1
-                class="text-center text-2xl font-black leading-tight tracking-widest text-gray-600 md:text-4xl"
+                class="w-auto text-center text-2xl font-black leading-tight tracking-widest text-gray-600 md:text-4xl"
+                v-if="$slots.title"
             >
                 <slot name="title"></slot>
             </h1>
             <h2
-                class="hidden text-center text-lg font-semibold leading-tight tracking-widest text-gray-600 md:block md:border-t-2 md:border-slate-400 md:pt-2 md:text-2xl"
+                class="hidden w-auto text-center text-lg font-semibold leading-tight tracking-widest text-gray-600 md:block md:border-t-2 md:border-slate-400 md:pt-2 md:text-2xl"
+                v-if="$slots.subtitle"
             >
                 <slot name="subtitle"></slot>
             </h2>
         </div>
         <div
-            class="mx-auto hidden w-auto flex-col items-center justify-center space-y-2 bg-gray-100/50 px-2 py-2 md:flex md:w-1/2"
+            class="mx-auto hidden w-auto max-w-max flex-col items-center justify-center space-y-2 bg-gray-100/50 px-2 py-2 md:flex md:px-4"
+            v-if="$slots.ariane"
         >
             <slot name="ariane"></slot>
         </div>

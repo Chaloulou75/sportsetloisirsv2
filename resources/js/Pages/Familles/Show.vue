@@ -74,7 +74,7 @@ defineProps({
         </template>
 
         <template v-if="famille.disciplines">
-            <div class="py-12">
+            <div class="py-6 md:py-12">
                 <div
                     class="mx-auto min-h-screen max-w-full px-2 sm:px-6 lg:px-8"
                 >
@@ -100,7 +100,7 @@ defineProps({
             </div>
         </template>
         <template v-else>
-            <div class="py-12">
+            <div class="py-6 md:py-12">
                 <div
                     class="mx-auto min-h-screen max-w-full px-2 sm:px-6 lg:px-8"
                 >

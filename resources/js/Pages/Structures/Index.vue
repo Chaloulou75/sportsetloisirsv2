@@ -126,7 +126,7 @@ watch(
                 </template>
             </ResultsHeader>
         </template>
-        <div class="py-12">
+        <div class="py-6 md:py-12">
             <!-- search box -->
             <div
                 class="mx-auto mb-8 mt-4 flex w-full max-w-3xl flex-col items-center justify-center px-2 md:flex-row"

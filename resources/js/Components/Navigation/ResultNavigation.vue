@@ -26,8 +26,8 @@ const user = computed(() => page.props.auth.user);
 const showingNavigationDropdown = ref(false);
 const showingSearchForm = ref(false);
 
-const search = ref(null);
-const localite = ref(null);
+const search = ref(props.currentDiscipline ? props.currentDiscipline : null);
+const localite = ref(props.currentCity ? props.currentCity : null);
 const processing = ref(false);
 
 const submitForm = async () => {
@@ -99,7 +99,7 @@ const submitForm = async () => {
                                 @click="submitForm"
                                 :disabled="processing"
                                 type="submit"
-                                class="flex w-full items-center justify-center rounded border border-indigo-500 bg-gray-700 px-2 py-2 text-sm font-medium text-white shadow-sm hover:bg-white hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:w-auto"
+                                class="flex w-full items-center justify-center rounded border border-gray-500 bg-gray-50 px-2 py-2 text-sm font-medium text-gray-800 shadow-sm hover:bg-white hover:text-black focus:outline-none focus:ring focus:ring-gray-500 focus:ring-offset-2 md:w-auto"
                             >
                                 <MagnifyingGlassIcon
                                     class="h-5 w-5 md:h-7 md:w-7"
@@ -419,9 +419,14 @@ const submitForm = async () => {
             <section
                 class="mx-auto flex w-full flex-col items-center justify-center space-y-2 px-2 md:flex-row md:space-y-0 lg:hidden"
             >
-                <AutocompleteCityNav :cities="allCities" v-model="localite" />
+                <AutocompleteCityNav
+                    :cities="allCities"
+                    :current-city="currentCity"
+                    v-model="localite"
+                />
                 <AutocompleteDisciplineNav
                     :disciplines="listDisciplines"
+                    :current-discipline="currentDiscipline"
                     v-model="search"
                 />
                 <div class="w-full">

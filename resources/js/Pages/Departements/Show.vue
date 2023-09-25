@@ -166,7 +166,7 @@ watch(
         </template>
         <template v-if="departement.structures_count > 0">
             <div
-                class="mx-auto max-w-full px-2 py-12 sm:px-6 md:space-x-4 lg:px-8"
+                class="mx-auto max-w-full px-2 py-6 sm:px-6 md:space-x-4 md:py-12 lg:px-8"
             >
                 <h3 class="mb-4 text-center font-semibold text-gray-600">
                     Les disciplines pratiquées {{ departement.prefixe }}
@@ -259,7 +259,7 @@ watch(
             </div>
         </template>
         <template v-else>
-            <div class="py-12">
+            <div class="py-6 md:py-12">
                 <div
                     class="mx-auto min-h-screen max-w-full px-2 sm:px-6 lg:px-8"
                 >

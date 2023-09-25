@@ -182,7 +182,7 @@ const formCriteres = useForm({
 
         <div
             v-if="criteres"
-            class="mx-auto w-full flex-col items-start justify-center space-x-0 space-y-2 rounded bg-gray-50 px-2 py-6 md:sticky md:left-0 md:right-0 md:top-16 md:z-[9999] md:flex md:flex-row md:items-center md:space-x-6 md:space-y-0 md:px-6"
+            class="mx-auto w-full flex-col items-start justify-center space-x-0 space-y-2 rounded bg-gray-50 px-2 py-6 md:flex md:flex-row md:items-center md:space-x-6 md:space-y-0 md:px-6"
             :class="{
                 flex: showCriteres,
                 hidden: !showCriteres,
@@ -321,7 +321,7 @@ const formCriteres = useForm({
         <!-- Structures -->
         <template v-if="structures.data.length > 0">
             <div
-                class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-12 sm:px-6 md:flex-row md:space-x-4 lg:px-8"
+                class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
             >
                 <div ref="listeStructure" class="md:w-1/2">
                     <div
@@ -385,7 +385,7 @@ const formCriteres = useForm({
         </template>
         <template v-else>
             <div
-                class="mx-auto min-h-screen max-w-full px-2 py-12 sm:px-6 lg:px-8"
+                class="mx-auto min-h-screen max-w-full px-2 py-6 sm:px-6 md:py-12 lg:px-8"
             >
                 <p class="font-medium text-gray-700">
                     Dommage, il n'y a pas encore de structures inscrites dans la
