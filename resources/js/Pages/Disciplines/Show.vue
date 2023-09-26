@@ -1,7 +1,7 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import { ref, defineAsyncComponent } from "vue";
+import { ref, defineAsyncComponent, provide } from "vue";
 import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
 import DisciplinesSimilaires from "@/Components/Disciplines/DisciplinesSimilaires.vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
@@ -63,6 +63,24 @@ const goToListe = () => {
     listeStructure.value.scrollIntoView({ behavior: "smooth" });
 };
 
+const categoriesEl = ref(null);
+const isCategoriesVisible = useElementVisibility(categoriesEl);
+const scrollToCategories = () => {
+    if (categoriesEl.value) {
+        const offset = window.innerWidth >= 768 ? -60 : -60;
+        const scrollY =
+            window.scrollY +
+            categoriesEl.value.getBoundingClientRect().top +
+            offset;
+        window.scroll({
+            top: scrollY,
+            behavior: "smooth",
+        });
+    }
+};
+
+provide("scrollToCategories", scrollToCategories);
+
 const hoveredStructure = ref(null);
 
 function showTooltip(structure) {
@@ -95,6 +113,8 @@ function hideTooltip() {
         :listDisciplines="listDisciplines"
         :allCities="allCities"
         :discipline="discipline"
+        :categories="props.categories"
+        :is-categories-visible="isCategoriesVisible"
     >
         <template #header>
             <FamilleResultNavigation :familles="familles" />
@@ -146,99 +166,96 @@ function hideTooltip() {
                     </nav>
                 </template>
             </ResultsHeader>
-            <CategoriesResultNavigation
-                :discipline="discipline"
-                :allStructureTypes="allStructureTypes"
-                :categories="categories"
-                :categoriesWithoutProduit="categoriesWithoutProduit"
-            />
+            <div ref="categoriesEl">
+                <CategoriesResultNavigation
+                    :discipline="discipline"
+                    :allStructureTypes="allStructureTypes"
+                    :categories="props.categories"
+                    :categoriesWithoutProduit="categoriesWithoutProduit"
+                />
+            </div>
         </template>
-        <div class="py-6 md:py-12">
-            <div class="mx-auto max-w-full px-2 sm:px-6 lg:px-8">
-                <template v-if="structures.data.length > 0">
-                    <div
-                        class="mx-auto flex min-h-screen max-w-full flex-col px-2 sm:px-6 md:flex-row md:space-x-4 lg:px-8"
-                    >
-                        <div ref="listeStructure" class="md:w-1/2">
-                            <div
-                                class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
-                            >
-                                <StructureCard
-                                    v-for="(
-                                        structure, index
-                                    ) in structures.data"
-                                    :key="structure.id"
-                                    :index="index"
-                                    :structure="structure"
-                                    @mouseover="showTooltip(structure)"
-                                    @mouseout="hideTooltip()"
-                                    :link="
-                                        route('structures.show', {
-                                            structure: structure.slug,
-                                        })
-                                    "
-                                    :data="{
-                                        discipline: discipline.slug,
-                                    }"
-                                />
-                            </div>
-                            <div class="flex justify-end p-10">
-                                <Pagination :links="structures.links" />
-                            </div>
+        <template #default>
+            <template v-if="props.structures.data.length > 0">
+                <div
+                    class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
+                >
+                    <div ref="listeStructure" class="md:w-1/2">
+                        <div
+                            class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
+                        >
+                            <StructureCard
+                                v-for="(structure, index) in props.structures
+                                    .data"
+                                :key="structure.id"
+                                :index="index"
+                                :structure="structure"
+                                @mouseover="showTooltip(structure)"
+                                @mouseout="hideTooltip()"
+                                :link="
+                                    route('structures.show', {
+                                        structure: structure.slug,
+                                    })
+                                "
+                                :data="{
+                                    discipline: discipline.slug,
+                                }"
+                            />
+                        </div>
+                        <div class="flex justify-end p-10">
+                            <Pagination :links="props.structures.links" />
+                        </div>
+                        <button
+                            v-if="!mapIsVisible && listeIsVisible"
+                            type="button"
+                            class="fixed inset-x-2 bottom-4 z-[9999] mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:hidden"
+                            @click="goToMap"
+                        >
+                            <MapIcon class="mr-2 h-5 w-5" />
+                            Carte
+                        </button>
+                    </div>
+                    <div class="space-y-4 md:sticky md:w-1/2">
+                        <div ref="mapStructure">
+                            <LeafletMapMultiple
+                                class="md:top-2"
+                                :structures="props.structures.data"
+                                :hovered-structure="hoveredStructure"
+                                :zoom="12"
+                            />
                             <button
-                                v-if="!mapIsVisible && listeIsVisible"
+                                v-if="mapIsVisible"
                                 type="button"
                                 class="fixed inset-x-2 bottom-4 z-[9999] mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:hidden"
-                                @click="goToMap"
+                                @click="goToListe"
                             >
-                                <MapIcon class="mr-2 h-5 w-5" />
-                                Carte
+                                <ListBulletIcon class="mr-2 h-5 w-5" />
+                                Liste
                             </button>
                         </div>
-                        <div class="space-y-4 md:sticky md:w-1/2">
-                            <div ref="mapStructure">
-                                <LeafletMapMultiple
-                                    class="md:top-2"
-                                    :structures="structures.data"
-                                    :hovered-structure="hoveredStructure"
-                                    :zoom="12"
-                                />
-                                <button
-                                    v-if="mapIsVisible"
-                                    type="button"
-                                    class="fixed inset-x-2 bottom-4 z-[9999] mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:hidden"
-                                    @click="goToListe"
-                                >
-                                    <ListBulletIcon class="mr-2 h-5 w-5" />
-                                    Liste
-                                </button>
-                            </div>
-                            <!-- <CitiesAround :citiesAround="citiesAround" /> -->
-                            <DisciplinesSimilaires
-                                :disciplinesSimilaires="disciplinesSimilaires"
-                            />
-                        </div>
+                        <!-- <CitiesAround :citiesAround="citiesAround" /> -->
+                        <DisciplinesSimilaires
+                            :disciplinesSimilaires="props.disciplinesSimilaires"
+                        />
                     </div>
-                </template>
-                <template v-else>
-                    <div
-                        class="mx-auto flex min-h-screen max-w-full flex-col px-2 sm:px-6 md:flex-row lg:px-8"
-                    >
-                        <p class="w-full font-medium text-gray-700 md:w-2/3">
-                            Il n'y a pas encore de structures inscrites en
-                            <span class="font-semibold">{{
-                                discipline.name
-                            }}</span
-                            >.
-                        </p>
-                        <div class="w-full px-4 md:w-1/3">
-                            <DisciplinesSimilaires
-                                :disciplinesSimilaires="disciplinesSimilaires"
-                            />
-                        </div>
+                </div>
+            </template>
+            <template v-else>
+                <div
+                    class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
+                >
+                    <p class="w-full font-medium text-gray-700 md:w-2/3">
+                        Il n'y a pas encore de structures inscrites en
+                        <span class="font-semibold">{{ discipline.name }}</span
+                        >.
+                    </p>
+                    <div class="w-full px-4 md:w-1/3">
+                        <DisciplinesSimilaires
+                            :disciplinesSimilaires="props.disciplinesSimilaires"
+                        />
                     </div>
-                </template>
-            </div>
-        </div>
+                </div>
+            </template>
+        </template>
     </ResultLayout>
 </template>

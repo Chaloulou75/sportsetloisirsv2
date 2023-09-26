@@ -1,7 +1,7 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
-import { ref, defineAsyncComponent } from "vue";
+import { ref, defineAsyncComponent, provide } from "vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
@@ -52,6 +52,23 @@ const goToListe = () => {
     listeStructure.value.scrollIntoView({ behavior: "smooth" });
 };
 
+const categoriesEl = ref(null);
+const isCategoriesVisible = useElementVisibility(categoriesEl);
+const scrollToCategories = () => {
+    if (categoriesEl.value) {
+        const offset = window.innerWidth >= 768 ? -60 : -60;
+        const scrollY =
+            window.scrollY +
+            categoriesEl.value.getBoundingClientRect().top +
+            offset;
+        window.scroll({
+            top: scrollY,
+            behavior: "smooth",
+        });
+    }
+};
+provide("scrollToCategories", scrollToCategories);
+
 const formatCityName = (ville) => {
     return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
 };
@@ -85,7 +102,8 @@ function hideTooltip() {
         :listDisciplines="listDisciplines"
         :allCities="allCities"
         :discipline="discipline"
-        :categories="categories"
+        :categories="props.categories"
+        :is-categories-visible="isCategoriesVisible"
     >
         <template #header>
             <FamilleResultNavigation :familles="familles" />
@@ -158,16 +176,18 @@ function hideTooltip() {
                     </nav>
                 </template>
             </ResultsHeader>
-            <CategoriesResultNavigation
-                :departement="departement"
-                :discipline="discipline"
-                :allStructureTypes="allStructureTypes"
-                :categories="categories"
-                :categoriesWithoutProduit="categoriesWithoutProduit"
-            />
+            <div ref="categoriesEl">
+                <CategoriesResultNavigation
+                    :departement="departement"
+                    :discipline="discipline"
+                    :allStructureTypes="allStructureTypes"
+                    :categories="props.categories"
+                    :categoriesWithoutProduit="categoriesWithoutProduit"
+                />
+            </div>
         </template>
 
-        <template v-if="structures.data.length > 0">
+        <template v-if="props.structures.data.length > 0">
             <div
                 class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
             >
@@ -176,7 +196,7 @@ function hideTooltip() {
                         class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-2"
                     >
                         <StructureCard
-                            v-for="(structure, index) in structures.data"
+                            v-for="(structure, index) in props.structures.data"
                             :key="structure.id"
                             :index="index"
                             :structure="structure"
@@ -194,7 +214,7 @@ function hideTooltip() {
                         />
                     </div>
                     <div class="flex justify-end p-10">
-                        <Pagination :links="structures.links" />
+                        <Pagination :links="props.structures.links" />
                     </div>
                     <button
                         v-if="!mapIsVisible && listeIsVisible"
@@ -210,7 +230,7 @@ function hideTooltip() {
                     <div ref="mapStructure">
                         <LeafletMapMultiple
                             class="md:top-2"
-                            :structures="structures.data"
+                            :structures="props.structures.data"
                             :hovered-structure="hoveredStructure"
                             :zoom="12"
                         />
@@ -224,9 +244,9 @@ function hideTooltip() {
                             Liste
                         </button>
                     </div>
-                    <CitiesAround :citiesAround="citiesAround" />
+                    <CitiesAround :citiesAround="props.citiesAround" />
                     <DisciplinesSimilaires
-                        :disciplinesSimilaires="disciplinesSimilaires"
+                        :disciplinesSimilaires="props.disciplinesSimilaires"
                     />
                 </div>
             </div>

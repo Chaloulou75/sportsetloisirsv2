@@ -16,6 +16,7 @@ import {
 } from "@heroicons/vue/24/solid";
 
 const scrollToCriteres = inject("scrollToCriteres", null);
+const scrollToCategories = inject("scrollToCategories", null);
 const props = defineProps({
     canLogin: Boolean,
     canRegister: Boolean,
@@ -24,6 +25,8 @@ const props = defineProps({
     currentDiscipline: Object,
     currentCity: Object,
     currentCategory: Object,
+    categories: Object,
+    isCategoriesVisible: Boolean,
     isCriteresVisible: Boolean,
 });
 const page = usePage();
@@ -154,7 +157,7 @@ const submitForm = async () => {
                             </template>
                         </BreezeDropdown>
                     </div>
-                    <div v-if="currentCategory">
+                    <div v-if="currentCategory && !isCriteresVisible">
                         <TransitionRoot
                             :show="!isCriteresVisible"
                             enter="transition-opacity duration-150"
@@ -184,7 +187,49 @@ const submitForm = async () => {
                                         @click="scrollToCriteres"
                                         class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700"
                                     >
-                                        Choix des criteres
+                                        Catégories et criteres
+                                    </button>
+                                </template>
+                            </BreezeDropdown>
+                        </TransitionRoot>
+                    </div>
+                    <div
+                        v-if="
+                            categories &&
+                            !isCategoriesVisible &&
+                            !currentCategory
+                        "
+                    >
+                        <TransitionRoot
+                            :show="!isCategoriesVisible"
+                            enter="transition-opacity duration-150"
+                            enter-from="opacity-0"
+                            enter-to="opacity-100"
+                            leave="transition-opacity duration-150"
+                            leave-from="opacity-100"
+                            leave-to="opacity-0"
+                        >
+                            <BreezeDropdown align="right">
+                                <template #trigger>
+                                    <span class="inline-flex rounded-md">
+                                        <button
+                                            type="button"
+                                            class="inline-flex items-center px-1 py-2 text-white transition duration-150 ease-in-out hover:text-red-500 focus:text-red-500"
+                                        >
+                                            <AdjustmentsHorizontalIcon
+                                                class="h-8 w-8 text-white hover:text-indigo-500 focus:text-indigo-500"
+                                            />
+                                        </button>
+                                    </span>
+                                </template>
+
+                                <template #content>
+                                    <button
+                                        type="button"
+                                        @click="scrollToCategories"
+                                        class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700"
+                                    >
+                                        Choix des categories
                                     </button>
                                 </template>
                             </BreezeDropdown>
@@ -311,7 +356,7 @@ const submitForm = async () => {
                         <MagnifyingGlassIcon class="h-6 w-6" />
                         <span class="sr-only">Rechercher</span>
                     </button>
-                    <div v-if="currentCategory">
+                    <div v-if="currentCategory && !isCriteresVisible">
                         <TransitionRoot
                             :show="!isCriteresVisible"
                             enter="transition-opacity duration-150"
@@ -324,6 +369,33 @@ const submitForm = async () => {
                             <button
                                 type="button"
                                 @click="scrollToCriteres"
+                                class="inline-flex items-center px-1 py-2 text-white transition duration-150 ease-in-out hover:text-red-500 focus:text-red-500"
+                            >
+                                <AdjustmentsHorizontalIcon
+                                    class="h-8 w-8 text-white hover:text-indigo-500 focus:text-indigo-500"
+                                />
+                            </button>
+                        </TransitionRoot>
+                    </div>
+                    <div
+                        v-if="
+                            categories &&
+                            !isCategoriesVisible &&
+                            !currentCategory
+                        "
+                    >
+                        <TransitionRoot
+                            :show="!isCategoriesVisible"
+                            enter="transition-opacity duration-150"
+                            enter-from="opacity-0"
+                            enter-to="opacity-100"
+                            leave="transition-opacity duration-150"
+                            leave-from="opacity-100"
+                            leave-to="opacity-0"
+                        >
+                            <button
+                                type="button"
+                                @click="scrollToCategories"
                                 class="inline-flex items-center px-1 py-2 text-white transition duration-150 ease-in-out hover:text-red-500 focus:text-red-500"
                             >
                                 <AdjustmentsHorizontalIcon

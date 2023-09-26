@@ -10,8 +10,10 @@ const props = defineProps({
     allCities: Object,
     discipline: Object,
     city: Object,
+    isCategoriesVisible: Boolean,
     isCriteresVisible: Boolean,
     currentCategory: Object,
+    categories: Object,
 });
 const isShowing = ref(true);
 </script>
@@ -27,10 +29,12 @@ const isShowing = ref(true);
                 <ResultNavigation
                     :listDisciplines="listDisciplines"
                     :allCities="allCities"
+                    :categories="categories"
                     :current-discipline="discipline"
                     :current-city="city"
                     :current-category="currentCategory"
                     :is-criteres-visible="isCriteresVisible"
+                    :is-categories-visible="isCategoriesVisible"
                 />
 
                 <slot name="header" />
