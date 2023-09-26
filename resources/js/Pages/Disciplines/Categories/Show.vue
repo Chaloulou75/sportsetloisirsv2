@@ -55,7 +55,7 @@ const criteresEl = ref(null);
 const isCriteresVisible = useElementVisibility(criteresEl);
 const scrollToCriteres = () => {
     if (criteresEl.value) {
-        const offset = window.innerWidth >= 768 ? -100 : -80;
+        const offset = window.innerWidth >= 768 ? -125 : -135;
         const scrollY =
             window.scrollY +
             criteresEl.value.getBoundingClientRect().top +
