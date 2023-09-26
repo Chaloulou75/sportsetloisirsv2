@@ -124,7 +124,7 @@ const headerClass = computed(() => {
                 <slot name="title"></slot>
             </h1>
             <h2
-                class="hidden w-auto text-center text-lg font-semibold leading-tight tracking-widest text-gray-600 md:block md:border-t-2 md:border-slate-400 md:pt-2 md:text-2xl"
+                class="hidden w-auto text-center text-lg font-semibold leading-tight tracking-widest text-gray-600 md:block md:border-t-2 md:border-slate-400 md:text-2xl"
                 v-if="$slots.subtitle"
             >
                 <slot name="subtitle"></slot>

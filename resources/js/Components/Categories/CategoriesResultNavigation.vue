@@ -561,6 +561,7 @@ const showStructuresTypes = () => {
             </Link>
         </div>
     </div>
+
     <!-- city AVEC cat / type mobile -->
     <div
         v-if="city && (structuretypeElected || category)"

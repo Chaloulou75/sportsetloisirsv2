@@ -1,18 +1,21 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, inject } from "vue";
 import BreezeApplicationLogo from "@/Components/ApplicationLogo.vue";
 import BreezeDropdown from "@/Components/Dropdown.vue";
 import BreezeDropdownLink from "@/Components/DropdownLink.vue";
 import AutocompleteDisciplineNav from "@/Components/Navigation/AutocompleteDisciplineNav.vue";
 import AutocompleteCityNav from "@/Components/Navigation/AutocompleteCityNav.vue";
 import { Link, usePage, router } from "@inertiajs/vue3";
+import { TransitionRoot } from "@headlessui/vue";
 import {
     HeartIcon,
     MagnifyingGlassIcon,
     ShoppingCartIcon,
     UserIcon,
+    AdjustmentsHorizontalIcon,
 } from "@heroicons/vue/24/solid";
 
+const scrollToCriteres = inject("scrollToCriteres", null);
 const props = defineProps({
     canLogin: Boolean,
     canRegister: Boolean,
@@ -20,6 +23,8 @@ const props = defineProps({
     allCities: Object,
     currentDiscipline: Object,
     currentCity: Object,
+    currentCategory: Object,
+    isCriteresVisible: Boolean,
 });
 const page = usePage();
 const user = computed(() => page.props.auth.user);
@@ -149,6 +154,42 @@ const submitForm = async () => {
                             </template>
                         </BreezeDropdown>
                     </div>
+                    <div v-if="currentCategory">
+                        <TransitionRoot
+                            :show="!isCriteresVisible"
+                            enter="transition-opacity duration-150"
+                            enter-from="opacity-0"
+                            enter-to="opacity-100"
+                            leave="transition-opacity duration-150"
+                            leave-from="opacity-100"
+                            leave-to="opacity-0"
+                        >
+                            <BreezeDropdown align="right">
+                                <template #trigger>
+                                    <span class="inline-flex rounded-md">
+                                        <button
+                                            type="button"
+                                            class="inline-flex items-center px-1 py-2 text-white transition duration-150 ease-in-out hover:text-red-500 focus:text-red-500"
+                                        >
+                                            <AdjustmentsHorizontalIcon
+                                                class="h-8 w-8 text-white hover:text-indigo-500 focus:text-indigo-500"
+                                            />
+                                        </button>
+                                    </span>
+                                </template>
+
+                                <template #content>
+                                    <button
+                                        type="button"
+                                        @click="scrollToCriteres"
+                                        class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700"
+                                    >
+                                        Choix des criteres
+                                    </button>
+                                </template>
+                            </BreezeDropdown>
+                        </TransitionRoot>
+                    </div>
                     <Link
                         preserve-scroll
                         :href="route('welcome')"
@@ -270,6 +311,27 @@ const submitForm = async () => {
                         <MagnifyingGlassIcon class="h-6 w-6" />
                         <span class="sr-only">Rechercher</span>
                     </button>
+                    <div v-if="currentCategory">
+                        <TransitionRoot
+                            :show="!isCriteresVisible"
+                            enter="transition-opacity duration-150"
+                            enter-from="opacity-0"
+                            enter-to="opacity-100"
+                            leave="transition-opacity duration-150"
+                            leave-from="opacity-100"
+                            leave-to="opacity-0"
+                        >
+                            <button
+                                type="button"
+                                @click="scrollToCriteres"
+                                class="inline-flex items-center px-1 py-2 text-white transition duration-150 ease-in-out hover:text-red-500 focus:text-red-500"
+                            >
+                                <AdjustmentsHorizontalIcon
+                                    class="h-8 w-8 text-white hover:text-indigo-500 focus:text-indigo-500"
+                                />
+                            </button>
+                        </TransitionRoot>
+                    </div>
                     <button
                         type="button"
                         class="items-center justify-center rounded bg-transparent px-2 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

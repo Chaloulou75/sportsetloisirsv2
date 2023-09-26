@@ -30,7 +30,6 @@ import {
 import { StarIcon } from "@heroicons/vue/24/solid";
 import {
     Listbox,
-    ListboxLabel,
     ListboxButton,
     ListboxOptions,
     ListboxOption,
