@@ -99,7 +99,7 @@ const submitForm = async () => {
                                 @click="submitForm"
                                 :disabled="processing"
                                 type="submit"
-                                class="flex w-full items-center justify-center rounded border border-gray-500 bg-gray-50 px-2 py-2 text-sm font-medium text-gray-800 shadow-sm hover:bg-white hover:text-black focus:outline-none focus:ring focus:ring-gray-500 focus:ring-offset-2 md:w-auto"
+                                class="flex w-full items-center justify-center rounded border border-gray-300 bg-gray-50 px-2 py-2 text-sm font-medium text-gray-400 shadow-sm hover:bg-white hover:text-gray-800 focus:outline-none focus:ring focus:ring-gray-500 focus:ring-offset-2 md:w-auto"
                             >
                                 <MagnifyingGlassIcon
                                     class="h-5 w-5 md:h-7 md:w-7"

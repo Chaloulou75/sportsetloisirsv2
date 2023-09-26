@@ -134,7 +134,7 @@ const showStructuresTypes = () => {
             'bg-blue-500': !openStructuresTypes,
             'bg-sky-800': openStructuresTypes,
         }"
-        class="grid w-full grid-cols-6 border-b border-gray-100 text-white md:hidden"
+        class="grid w-full grid-cols-6 gap-y-2 border-b border-gray-100 text-white md:hidden"
     >
         <div
             class="col-span-1 flex items-center justify-center bg-slate-700 px-2 py-3"
@@ -191,7 +191,7 @@ const showStructuresTypes = () => {
                         category: category.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 text-sm transition duration-150 ease-in-out"
+                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
                 v-for="category in categories"
                 :key="category.id"
             >
@@ -208,7 +208,7 @@ const showStructuresTypes = () => {
                         structuretype: structureType.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 text-sm transition duration-150 ease-in-out"
+                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
                 v-for="structureType in allStructureTypes"
                 :key="structureType.id"
             >
@@ -348,7 +348,7 @@ const showStructuresTypes = () => {
             'bg-blue-500': !openStructuresTypes,
             'bg-sky-800': openStructuresTypes,
         }"
-        class="grid w-full grid-cols-6 border-b border-gray-100 text-white md:hidden"
+        class="grid w-full grid-cols-6 gap-y-2 border-b border-gray-100 text-white md:hidden"
     >
         <div
             class="col-span-1 flex items-center justify-center bg-slate-700 px-2 py-3"
@@ -406,7 +406,7 @@ const showStructuresTypes = () => {
                         category: category.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 text-sm transition duration-150 ease-in-out"
+                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
                 v-for="category in categories"
                 :key="category.id"
             >
@@ -424,7 +424,7 @@ const showStructuresTypes = () => {
                         structuretype: structureType.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 text-sm transition duration-150 ease-in-out"
+                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
                 v-for="structureType in allStructureTypes"
                 :key="structureType.id"
             >
@@ -568,7 +568,7 @@ const showStructuresTypes = () => {
             'bg-blue-500': !openStructuresTypes,
             'bg-sky-800': openStructuresTypes,
         }"
-        class="grid w-full grid-cols-6 border-b border-gray-100 text-white md:hidden"
+        class="grid w-full grid-cols-6 gap-y-2 border-b border-gray-100 text-white md:hidden"
     >
         <div
             class="col-span-1 flex items-center justify-center bg-slate-700 px-2 py-3"
@@ -627,7 +627,7 @@ const showStructuresTypes = () => {
                         category: category.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 text-sm transition duration-150 ease-in-out"
+                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
                 v-for="category in categories"
                 :key="category.id"
             >
@@ -645,7 +645,7 @@ const showStructuresTypes = () => {
                         structuretype: structureType.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 text-sm transition duration-150 ease-in-out"
+                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
                 v-for="structureType in allStructureTypes"
                 :key="structureType.id"
             >
@@ -788,7 +788,7 @@ const showStructuresTypes = () => {
             'bg-blue-500': !openStructuresTypes,
             'bg-sky-800': openStructuresTypes,
         }"
-        class="grid w-full grid-cols-6 border-b border-gray-100 text-white md:hidden"
+        class="grid w-full grid-cols-6 gap-y-2 border-b border-gray-100 text-white md:hidden"
     >
         <div
             class="col-span-1 flex items-center justify-center bg-slate-700 px-2 py-3"
@@ -847,7 +847,7 @@ const showStructuresTypes = () => {
                         category: category.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 text-sm transition duration-150 ease-in-out"
+                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
                 v-for="category in categories"
                 :key="category.id"
             >
@@ -865,7 +865,7 @@ const showStructuresTypes = () => {
                         structuretype: structureType.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 text-sm transition duration-150 ease-in-out"
+                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
                 v-for="structureType in allStructureTypes"
                 :key="structureType.id"
             >
@@ -1009,7 +1009,7 @@ const showStructuresTypes = () => {
             'bg-blue-500': !openStructuresTypes,
             'bg-sky-800': openStructuresTypes,
         }"
-        class="grid w-full grid-cols-6 border-b border-gray-100 text-white md:hidden"
+        class="grid w-full grid-cols-6 gap-y-2 border-b border-gray-100 text-white md:hidden"
     >
         <div
             class="col-span-1 flex items-center justify-center bg-slate-700 px-2 py-3"
@@ -1068,7 +1068,7 @@ const showStructuresTypes = () => {
                         category: category.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 text-sm transition duration-150 ease-in-out"
+                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
                 v-for="category in categories"
                 :key="category.id"
             >
@@ -1086,7 +1086,7 @@ const showStructuresTypes = () => {
                         structuretype: structureType.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 text-sm transition duration-150 ease-in-out"
+                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
                 v-for="structureType in allStructureTypes"
                 :key="structureType.id"
             >
@@ -1226,7 +1226,7 @@ const showStructuresTypes = () => {
             'bg-blue-500': !openStructuresTypes,
             'bg-sky-800': openStructuresTypes,
         }"
-        class="grid w-full grid-cols-6 border-b border-gray-100 text-white md:hidden"
+        class="grid w-full grid-cols-6 gap-y-2 border-b border-gray-100 text-white md:hidden"
     >
         <div
             class="col-span-1 flex items-center justify-center bg-slate-700 px-2 py-3"
@@ -1283,7 +1283,7 @@ const showStructuresTypes = () => {
                         category: category.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 text-sm transition duration-150 ease-in-out"
+                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
                 v-for="category in categories"
                 :key="category.id"
             >
@@ -1300,7 +1300,7 @@ const showStructuresTypes = () => {
                         structuretype: structureType.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 text-sm transition duration-150 ease-in-out"
+                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
                 v-for="structureType in allStructureTypes"
                 :key="structureType.id"
             >
@@ -1423,7 +1423,7 @@ const showStructuresTypes = () => {
             'bg-blue-500': !openStructuresTypes,
             'bg-sky-800': openStructuresTypes,
         }"
-        class="grid w-full grid-cols-6 border-b border-gray-100 text-white md:hidden"
+        class="grid w-full grid-cols-6 gap-y-2 border-b border-gray-100 text-white md:hidden"
     >
         <div
             class="col-span-1 flex items-center justify-center bg-slate-700 px-2 py-3"
@@ -1480,7 +1480,7 @@ const showStructuresTypes = () => {
                         category: category.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 text-sm transition duration-150 ease-in-out"
+                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
                 v-for="category in categories"
                 :key="category.id"
             >
@@ -1497,7 +1497,7 @@ const showStructuresTypes = () => {
                         structuretype: structureType.id,
                     })
                 "
-                class="col-span-6 px-4 py-2 text-sm transition duration-150 ease-in-out"
+                class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
                 v-for="structureType in allStructureTypes"
                 :key="structureType.id"
             >
