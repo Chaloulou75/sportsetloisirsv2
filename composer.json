@@ -2,7 +2,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.1",
@@ -25,6 +28,9 @@
         "laravel/sail": "^1.21",
         "mockery/mockery": "^1.5.1",
         "nunomaduro/collision": "^7.0.5",
+        "pestphp/pest": "^2.19",
+        "pestphp/pest-plugin-drift": "^2.5",
+        "pestphp/pest-plugin-laravel": "^2.2",
         "phpunit/phpunit": "^10.0.14",
         "spatie/laravel-ignition": "^2.0"
     },
@@ -53,7 +59,8 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
-        ]
+        ],
+        "test": "vendor/bin/pest"
     },
     "extra": {
         "laravel": {

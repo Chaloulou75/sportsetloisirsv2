@@ -85,6 +85,8 @@ class StructureCategorieController extends Controller
         $discipline = ListDiscipline::where('slug', $discipline)->first();
         $categorie = LienDisciplineCategorie::where('id', $categorie)->first();
 
+        $allCategories = LienDisciplineCategorie::where('discipline_id', $discipline->id)->get();
+
         $categoriesListByDiscipline = LienDisciplineCategorie::whereHas('structures_activites', function (Builder $query) use ($structure) {
             $query->where('structure_id', $structure->id);
         })->where('discipline_id', $discipline->id)->get();
@@ -191,6 +193,7 @@ class StructureCategorieController extends Controller
             'criteres' => $criteres,
             'discipline' => $discipline,
             'categorie' => $categorie,
+            'allCategories' => $allCategories,
             'categoriesListByDiscipline' => $categoriesListByDiscipline,
             'categoriesWithoutStructures' => $categoriesWithoutStructures,
             'tarifTypes' => $tarifTypes,

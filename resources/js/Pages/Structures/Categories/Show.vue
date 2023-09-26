@@ -17,6 +17,7 @@ const props = defineProps({
     discipline: Object,
     structureActivites: Object,
     criteres: Object,
+    allCategories: Object,
     categoriesListByDiscipline: Object,
     categoriesWithoutStructures: Object,
     tarifTypes: Object,
@@ -261,7 +262,7 @@ const latestAdresseId = computed(() => {
                 :errors="errors"
                 :structure="structure"
                 :category="categorie"
-                :categories="categoriesListByDiscipline"
+                :categories="allCategories"
                 :discipline="discipline"
                 :criteres="criteres"
                 :show="showAddActiviteModal"
