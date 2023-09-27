@@ -28,7 +28,7 @@ const LeafletMapMultiple = defineAsyncComponent(() =>
 );
 
 const ProduitCard = defineAsyncComponent(() =>
-    import("@/Components/Structures/ProduitCard.vue")
+    import("@/Components/Produits/ProduitCard.vue")
 );
 
 const LeafletMapProduitMultiple = defineAsyncComponent(() =>
@@ -253,62 +253,6 @@ const formatCityName = (ville) => {
                     </div>
                 </div>
             </section>
-        </template>
-        <template v-if="produits.data.length > 0">
-            <div
-                class="mx-auto max-w-full px-2 py-6 sm:px-6 md:space-x-4 md:py-12 lg:px-8"
-            >
-                <h2 class="text-center text-lg font-semibold text-gray-600">
-                    Les activités disponibles à
-                    <span class="text-indigo-700">{{
-                        formatCityName(city.ville)
-                    }}</span>
-                    <span class="text-xs text-gray-600">
-                        ({{ city.code_postal }})</span
-                    >
-                </h2>
-                <div
-                    class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-12 sm:px-6 md:flex-row md:space-x-8 lg:px-8"
-                >
-                    <div class="md:w-1/2">
-                        <div
-                            class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-2"
-                        >
-                            <ProduitCard
-                                v-for="produit in produits.data"
-                                :key="produit.id"
-                                :produit="produit"
-                                @mouseover="showProduitTooltip(produit)"
-                                @mouseout="hideProduitTooltip"
-                            />
-                        </div>
-                        <div class="flex justify-end p-10">
-                            <Pagination :links="produits.links" />
-                        </div>
-                    </div>
-                    <div class="space-y-4 md:sticky md:w-1/2">
-                        <LeafletMapProduitMultiple
-                            class="md:top-2"
-                            :produits="produits.data"
-                            :hovered-produit="hoveredProduit"
-                            :zoom="16"
-                        />
-                        <CitiesAround :citiesAround="citiesAround" />
-                    </div>
-                </div>
-            </div>
-        </template>
-        <template v-if="structures.data.length === 0">
-            <div
-                class="mx-auto min-h-screen max-w-full px-2 py-12 sm:px-6 lg:px-8"
-            >
-                <p class="font-medium text-gray-700">
-                    Dommage, il n'y a pas encore de structures inscrites à
-                    <span class="font-semibold text-gray-800">{{
-                        formatCityName(city.ville)
-                    }}</span>
-                </p>
-            </div>
         </template>
     </ResultLayout>
 </template>
