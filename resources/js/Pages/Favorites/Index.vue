@@ -4,6 +4,7 @@ import { Head, Link } from "@inertiajs/vue3";
 import { ref } from "vue";
 import StructureCard from "@/Components/Structures/StructureCard.vue";
 import ActiviteCard from "@/Components/Structures/ActiviteCard.vue";
+import ProduitCard from "@/Components/Produits/ProduitCard.vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import { HomeIcon } from "@heroicons/vue/24/outline";
@@ -70,6 +71,31 @@ const props = defineProps({
         </template>
 
         <div class="py-6">
+            <template v-if="produits.length > 0">
+                <h2
+                    class="my-8 w-full text-center text-2xl font-semibold text-slate-800"
+                >
+                    Vos produits favoris:
+                </h2>
+                <div class="mx-auto w-full px-2 sm:px-6 lg:px-8">
+                    <div
+                        class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-3"
+                    >
+                        <ProduitCard
+                            v-for="(produit, index) in produits"
+                            :key="produit.id"
+                            :index="index"
+                            :produit="produit"
+                            :link="
+                                route('structures.activites.show', {
+                                    activite: produit.activite.id,
+                                })
+                            "
+                        />
+                    </div>
+                </div>
+            </template>
+
             <template v-if="activites.length > 0">
                 <h2
                     class="my-8 w-full text-center text-2xl font-semibold text-slate-800"

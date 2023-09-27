@@ -30,6 +30,18 @@ class StructureAddress extends Model
         return $this->belongsTo(City::class);
     }
 
+    public function departement()
+    {
+        return $this->hasManyThrough(
+            Departement::class,
+            City::class,
+            'departement',
+            'numero',
+            'city_id',
+            'id'
+        );
+    }
+
     public function produits(): HasMany
     {
         return $this->hasMany(StructureProduit::class, 'lieu_id');

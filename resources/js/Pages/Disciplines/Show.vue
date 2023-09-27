@@ -2,7 +2,7 @@
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { ref, defineAsyncComponent, provide } from "vue";
-import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
+import LeafletMapProduitMultiple from "@/Components/LeafletMapProduitMultiple.vue";
 import DisciplinesSimilaires from "@/Components/Disciplines/DisciplinesSimilaires.vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
@@ -14,36 +14,19 @@ const props = defineProps({
     familles: Object,
     discipline: Object,
     disciplinesSimilaires: Object,
-    structures: Object,
     listDisciplines: Object,
     allCities: Object,
     familles: Object,
     categories: Object,
+    firstCategories: Object,
+    categoriesNotInFirst: Object,
     categoriesWithoutProduit: Object,
     allStructureTypes: Object,
+    produits: Object,
 });
 
-// const selectedCategoryId = ref(null);
-
-// const defaultTabIndex = computed(() => {
-//     return props.categories.findIndex(
-//         (categorie) => categorie.id === selectedCategoryId.value
-//     );
-// });
-
-// const filteredStructures = computed(() => {
-//     return props.structures.data.filter((structure) => {
-//         return (
-//             structure.activites &&
-//             structure.activites.some((activite) => {
-//                 return activite.categorie.id === selectedCategoryId.value;
-//             })
-//         );
-//     });
-// });
-
-const StructureCard = defineAsyncComponent(() =>
-    import("@/Components/Structures/StructureCard.vue")
+const ProduitCard = defineAsyncComponent(() =>
+    import("@/Components/Produits/ProduitCard.vue")
 );
 
 const Pagination = defineAsyncComponent(() =>
@@ -89,12 +72,6 @@ function showTooltip(structure) {
 function hideTooltip() {
     hoveredStructure.value = null;
 }
-
-// onMounted(() => {
-//     if (props.categories && props.categories.length > 0) {
-//         selectedCategoryId.value = props.categories[0].id;
-//     }
-// });
 </script>
 
 <template>
@@ -171,12 +148,14 @@ function hideTooltip() {
                     :discipline="discipline"
                     :allStructureTypes="allStructureTypes"
                     :categories="props.categories"
+                    :firstCategories="firstCategories"
+                    :categoriesNotInFirst="categoriesNotInFirst"
                     :categoriesWithoutProduit="categoriesWithoutProduit"
                 />
             </div>
         </template>
         <template #default>
-            <template v-if="props.structures.data.length > 0">
+            <template v-if="produits.data">
                 <div
                     class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
                 >
@@ -184,26 +163,27 @@ function hideTooltip() {
                         <div
                             class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
                         >
-                            <StructureCard
-                                v-for="(structure, index) in props.structures
-                                    .data"
-                                :key="structure.id"
+                            <ProduitCard
+                                v-for="(produit, index) in produits.data"
+                                :key="produit.id"
                                 :index="index"
-                                :structure="structure"
-                                @mouseover="showTooltip(structure)"
+                                :produit="produit"
+                                :discipline="discipline"
+                                @mouseover="showTooltip(produit)"
                                 @mouseout="hideTooltip()"
                                 :link="
                                     route('structures.show', {
-                                        structure: structure.slug,
+                                        structure: produit.structure.slug,
                                     })
                                 "
                                 :data="{
                                     discipline: discipline.slug,
+                                    category: produit.categorie_id,
                                 }"
                             />
                         </div>
                         <div class="flex justify-end p-10">
-                            <Pagination :links="props.structures.links" />
+                            <Pagination :links="produits.links" />
                         </div>
                         <button
                             v-if="!mapIsVisible && listeIsVisible"
@@ -217,10 +197,10 @@ function hideTooltip() {
                     </div>
                     <div class="space-y-4 md:sticky md:w-1/2">
                         <div ref="mapStructure">
-                            <LeafletMapMultiple
+                            <LeafletMapProduitMultiple
                                 class="md:top-2"
-                                :structures="props.structures.data"
-                                :hovered-structure="hoveredStructure"
+                                :produits="props.produits.data"
+                                :hovered-produit="hoveredProduit"
                                 :zoom="12"
                             />
                             <button
@@ -233,7 +213,6 @@ function hideTooltip() {
                                 Liste
                             </button>
                         </div>
-                        <!-- <CitiesAround :citiesAround="citiesAround" /> -->
                         <DisciplinesSimilaires
                             :disciplinesSimilaires="props.disciplinesSimilaires"
                         />
@@ -245,7 +224,7 @@ function hideTooltip() {
                     class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
                 >
                     <p class="w-full font-medium text-gray-700 md:w-2/3">
-                        Il n'y a pas encore de structures inscrites en
+                        Il n'y a pas encore d'activités en
                         <span class="font-semibold">{{ discipline.name }}</span
                         >.
                     </p>

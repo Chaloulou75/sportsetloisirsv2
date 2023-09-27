@@ -53,8 +53,4 @@ class Departement extends Model
         return $this->hasMany(Structure::class);
     }
 
-    public function activites(): HasMany
-    {
-        return $this->hasMany(Activite::class);
-    }
 }

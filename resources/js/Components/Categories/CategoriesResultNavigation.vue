@@ -9,6 +9,8 @@ const props = defineProps({
     departement: Object,
     discipline: Object,
     categories: Object,
+    firstCategories: Object,
+    categoriesNotInFirst: Object,
     categoriesWithoutProduit: Object,
     allStructureTypes: Object,
     category: Object,
@@ -49,7 +51,7 @@ const showStructuresTypes = () => {
             </Link>
             <Link
                 preserve-scroll
-                v-for="categorie in categories"
+                v-for="categorie in firstCategories"
                 :key="categorie.id"
                 :href="
                     route('disciplines.categories.show', {
@@ -62,6 +64,7 @@ const showStructuresTypes = () => {
                 {{ categorie.nom_categorie_client }}
             </Link>
             <BreezeDropdown
+                v-if="categoriesNotInFirst.length > 0"
                 align="right"
                 width="w-full"
                 marginTop="4"
@@ -89,7 +92,7 @@ const showStructuresTypes = () => {
                                 category: category.id,
                             })
                         "
-                        v-for="category in categoriesWithoutProduit"
+                        v-for="category in categoriesNotInFirst"
                         :key="category.id"
                     >
                         {{ category.nom_categorie_pro }}

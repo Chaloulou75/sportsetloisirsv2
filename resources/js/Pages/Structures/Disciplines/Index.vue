@@ -306,7 +306,7 @@ const openAddTarifModal = (structure) => {
                                     Les disciplines similaires
                                 </h2>
                                 <div
-                                    class="flex w-full flex-col flex-wrap items-center gap-3 text-gray-700 md:flex-row"
+                                    class="flex w-full flex-col flex-wrap items-stretch gap-3 text-gray-700 md:flex-row"
                                 >
                                     <div
                                         v-for="discipline in activiteSimilairesList"
@@ -318,7 +318,7 @@ const openAddTarifModal = (structure) => {
                                                     discipline.id
                                                 ),
                                         }"
-                                        class="inline-block w-48 rounded border border-gray-600 px-4 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                        class="inline-flex w-auto items-center justify-center rounded border border-gray-600 px-4 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                                     >
                                         <button
                                             type="button"

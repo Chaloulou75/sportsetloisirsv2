@@ -46,7 +46,7 @@ const selectDiscipline = (discipline) => {
     selectedDiscipline.value = discipline;
     searchTerm.value = "";
     // Add the selected discipline ID to dejaUsedDisciplinesRef
-    // dejaUsedDisciplinesRef.value.push(discipline.id);
+    dejaUsedDisciplinesRef.value.push(discipline.id);
     emit("update:model-value", discipline.id);
 };
 </script>

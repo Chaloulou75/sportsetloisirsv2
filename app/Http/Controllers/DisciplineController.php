@@ -61,7 +61,7 @@ class DisciplineController extends Controller
      */
     public function show(ListDiscipline $discipline)
     {
-        $familles = Famille::withWhereHas('disciplines', function ($query) {
+        $familles = Famille::whereHas('disciplines', function ($query) {
             $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();
 
@@ -80,39 +80,40 @@ class DisciplineController extends Controller
             ->get();
 
 
-        $categories = LienDisciplineCategorie::withWhereHas('structures_produits')
+        $categories = LienDisciplineCategorie::whereHas('structures_produits')
                 ->where('discipline_id', $discipline->id)
                 ->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+                ->withCount('structures_produits')
+                ->orderByDesc('structures_produits_count')
                 ->get();
 
-        $categoriesWithoutProduit = LienDisciplineCategorie::whereDoesntHave('structures_produits')
-        ->where('discipline_id', $discipline->id)
-        ->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+        $firstCategories = $categories->take(4);
+        $categoriesNotInFirst = $categories->diff($firstCategories);
+
+
+        $allStructureTypes = StructureType::whereHas('structures', function ($query) use ($discipline) {
+            $query->whereHas('produits', function ($subquery) use ($discipline) {
+                $subquery->where('discipline_id', $discipline->id);
+            });
+        })
+        ->select(['id', 'name', 'slug'])
         ->get();
 
-        $allStructureTypes = Structuretype::whereHas('structures')->select(['id', 'name', 'slug'])->get();
-
-        $structures = $discipline->structures()->with([
-            'creator:id,name',
-            'users:id,name',
-            'adresses'  => function ($query) {
-                $query->latest();
-            },
-            'city:id,ville,ville_formatee,code_postal',
-            'departement:id,departement,numero',
-            'structuretype:id,name,slug',
-            'disciplines',
-            'categories',
-            'activites',
-            'activites.discipline',
-            'activites.categorie',
-            'produits',
-            'produits.criteres',
+        $produits = $discipline->structureProduits()->with([
+            'structure:id,name,slug,structuretype_id,address,address_lat,address_lng,zip_code,city_id,city,departement_id,website,view_count',
+            'adresse',
+            'discipline:id,name,slug,view_count',
+            'categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+            'activite:id,discipline_id,categorie_id,structure_id,titre,description,image,actif',
+            'activite.discipline:id,name,slug',
+            'activite.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+            'criteres:id,activite_id,produit_id,critere_id,valeur',
+            'criteres.critere:id,nom',
             'tarifs',
             'tarifs.tarifType',
             'tarifs.structureTarifTypeInfos',
             'plannings',
-        ])->withCount('produits', 'activites')
+        ])
         ->paginate(12);
 
         $discipline->timestamps = false;
@@ -122,13 +123,13 @@ class DisciplineController extends Controller
             'familles' => $familles,
             'discipline' => $discipline,
             'disciplinesSimilaires' => $disciplinesSimilaires,
-            'structures' => $structures,
             'categories' => $categories,
-            'categoriesWithoutProduit' => $categoriesWithoutProduit,
+            'firstCategories' => $firstCategories,
+            'categoriesNotInFirst' => $categoriesNotInFirst,
             'allStructureTypes' => $allStructureTypes,
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,
-
+            'produits' => $produits,
         ]);
     }
     /**

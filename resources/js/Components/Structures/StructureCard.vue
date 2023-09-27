@@ -132,7 +132,7 @@ const formatCityName = (ville) => {
                 <button
                     class="absolute right-2 top-2 bg-transparent"
                     type="button"
-                    @click="() => toggleFavorite(structure.id)"
+                    @click.prevent="() => toggleFavorite(structure.id)"
                 >
                     <HeartIcon
                         class="h-6 w-6"

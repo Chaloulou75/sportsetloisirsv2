@@ -11,6 +11,7 @@ use App\Models\Departement;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use App\Models\StructureProduit;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 class HomeController extends Controller
@@ -23,7 +24,7 @@ class HomeController extends Controller
         $produitsCount = StructureProduit::count();
         $citiesCount = City::count();
 
-        $familles = Famille::withWhereHas('disciplines', function ($query) {
+        $familles = Famille::whereHas('disciplines', function ($query) {
             $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();
 
@@ -47,12 +48,26 @@ class HomeController extends Controller
                         ->limit(12)
                         ->get();
 
-        $topDepartements = Departement::whereHas('structures')
+        $departementCounts = $topVilles->groupBy('departement')
+            ->map(function ($items) {
+                return $items->count();
+            });
+        $numeroDepts = $topVilles->pluck('departement')->unique();
+        $theDepartements = Departement::whereIn('numero', $numeroDepts)
                                 ->select(['id', 'departement', 'numero'])
-                                ->withCount('structures')
-                                ->orderByDesc('structures_count')
                                 ->limit(12)
                                 ->get();
+        $topDepartements = $theDepartements
+            ->map(function ($departement) use ($departementCounts, $topVilles) {
+                $count = $departementCounts->get($departement->numero, 0);
+                $departement->count = $count;
+
+                $departement->produits_count = $topVilles->where('departement', $departement->numero)->sum('produits_count');
+
+                return $departement;
+            })
+            ->sortByDesc('count')
+            ->values();
 
         $lastStructures = Structure::with('structuretype:id,name')
                 ->select(['id', 'name', 'structuretype_id', 'slug', 'city', 'zip_code'])

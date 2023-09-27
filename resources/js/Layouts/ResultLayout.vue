@@ -23,7 +23,7 @@ const isShowing = ref(true);
         <main>
             <!-- Page Heading -->
             <header
-                class="pt-18 mx-auto h-full w-full bg-blend-soft-light shadow-lg"
+                class="mx-auto h-full w-full pt-16 bg-blend-soft-light shadow-lg"
                 v-if="$slots.header"
             >
                 <ResultNavigation
