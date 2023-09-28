@@ -236,7 +236,7 @@ const showStructuresTypes = () => {
             </Link>
             <Link
                 preserve-scroll
-                v-for="categorie in categories"
+                v-for="categorie in firstCategories"
                 :key="categorie.id"
                 :href="
                     route('villes.disciplines.categories.show', {
@@ -263,6 +263,7 @@ const showStructuresTypes = () => {
                 ></div>
             </Link>
             <BreezeDropdown
+                v-if="categoriesNotInFirst.length > 0"
                 align="right"
                 width="w-full"
                 marginTop="4"
@@ -291,7 +292,7 @@ const showStructuresTypes = () => {
                                 category: category.id,
                             })
                         "
-                        v-for="category in categoriesWithoutProduit"
+                        v-for="category in categoriesNotInFirst"
                         :key="category.id"
                     >
                         {{ category.nom_categorie_pro }}
@@ -450,14 +451,10 @@ const showStructuresTypes = () => {
                 <ArrowUturnLeftIcon
                     class="h-7 w-7 text-gray-700 group-hover:text-white group-focus:text-white"
                 />
-                <!-- <div
-                    v-if="route().current('villes.disciplines.show')"
-                    class="absolute inset-x-1/2 -bottom-4 h-5 w-5 rotate-45 bg-blue-400"
-                ></div> -->
             </Link>
             <Link
                 preserve-scroll
-                v-for="categorie in categories"
+                v-for="categorie in firstCategories"
                 :key="categorie.id"
                 :href="
                     route('villes.disciplines.categories.show', {
@@ -484,6 +481,7 @@ const showStructuresTypes = () => {
                 ></div>
             </Link>
             <BreezeDropdown
+                v-if="categoriesNotInFirst.length > 0"
                 align="right"
                 width="w-full"
                 marginTop="4"
@@ -512,7 +510,7 @@ const showStructuresTypes = () => {
                                 category: category.id,
                             })
                         "
-                        v-for="category in categoriesWithoutProduit"
+                        v-for="category in categoriesNotInFirst"
                         :key="category.id"
                     >
                         {{ category.nom_categorie_pro }}
@@ -1119,7 +1117,7 @@ const showStructuresTypes = () => {
             </Link>
             <Link
                 preserve-scroll
-                v-for="categorie in categories"
+                v-for="categorie in firstCategories"
                 :key="categorie.id"
                 :href="
                     route('disciplines.categories.show', {
@@ -1145,6 +1143,7 @@ const showStructuresTypes = () => {
                 ></div>
             </Link>
             <BreezeDropdown
+                v-if="categoriesNotInFirst.length > 0"
                 align="right"
                 width="w-full"
                 marginTop="4"
@@ -1172,7 +1171,7 @@ const showStructuresTypes = () => {
                                 category: category.id,
                             })
                         "
-                        v-for="category in categoriesWithoutProduit"
+                        v-for="category in categoriesNotInFirst"
                         :key="category.id"
                     >
                         {{ category.nom_categorie_pro }}
@@ -1329,7 +1328,7 @@ const showStructuresTypes = () => {
             </Link>
             <Link
                 preserve-scroll
-                v-for="categorie in categories"
+                v-for="categorie in firstCategories"
                 :key="categorie.id"
                 :href="
                     route('disciplines.categories.show', {
@@ -1342,6 +1341,7 @@ const showStructuresTypes = () => {
                 {{ categorie.nom_categorie_client }}
             </Link>
             <BreezeDropdown
+                v-if="categoriesNotInFirst.length > 0"
                 align="right"
                 width="w-full"
                 marginTop="4"
@@ -1369,7 +1369,7 @@ const showStructuresTypes = () => {
                                 category: category.id,
                             })
                         "
-                        v-for="category in categoriesWithoutProduit"
+                        v-for="category in categoriesNotInFirst"
                         :key="category.id"
                     >
                         {{ category.nom_categorie_pro }}

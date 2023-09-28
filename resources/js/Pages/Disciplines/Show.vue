@@ -20,7 +20,6 @@ const props = defineProps({
     categories: Object,
     firstCategories: Object,
     categoriesNotInFirst: Object,
-    categoriesWithoutProduit: Object,
     allStructureTypes: Object,
     produits: Object,
 });
@@ -64,13 +63,13 @@ const scrollToCategories = () => {
 
 provide("scrollToCategories", scrollToCategories);
 
-const hoveredStructure = ref(null);
+const hoveredProduit = ref(null);
 
-function showTooltip(structure) {
-    hoveredStructure.value = structure.id;
+function showTooltip(produit) {
+    hoveredProduit.value = produit.id;
 }
 function hideTooltip() {
-    hoveredStructure.value = null;
+    hoveredProduit.value = null;
 }
 </script>
 
@@ -150,12 +149,11 @@ function hideTooltip() {
                     :categories="props.categories"
                     :firstCategories="firstCategories"
                     :categoriesNotInFirst="categoriesNotInFirst"
-                    :categoriesWithoutProduit="categoriesWithoutProduit"
                 />
             </div>
         </template>
         <template #default>
-            <template v-if="produits.data">
+            <template v-if="produits.data.length > 0">
                 <div
                     class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
                 >
@@ -214,6 +212,7 @@ function hideTooltip() {
                             </button>
                         </div>
                         <DisciplinesSimilaires
+                            v-if="disciplinesSimilaires.length > 0"
                             :disciplinesSimilaires="props.disciplinesSimilaires"
                         />
                     </div>
@@ -228,7 +227,10 @@ function hideTooltip() {
                         <span class="font-semibold">{{ discipline.name }}</span
                         >.
                     </p>
-                    <div class="w-full px-4 md:w-1/3">
+                    <div
+                        v-if="disciplinesSimilaires.length > 0"
+                        class="w-full px-4 md:w-1/3"
+                    >
                         <DisciplinesSimilaires
                             :disciplinesSimilaires="props.disciplinesSimilaires"
                         />

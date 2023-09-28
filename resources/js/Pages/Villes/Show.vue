@@ -12,27 +12,18 @@ const props = defineProps({
     familles: Object,
     city: Object,
     citiesAround: Object,
-    structures: Object,
     produits: Object,
     listDisciplines: Object,
     allCities: Object,
     filters: Object,
 });
 
-const StructureCard = defineAsyncComponent(() =>
-    import("@/Components/Structures/StructureCard.vue")
-);
-
-const LeafletMapMultiple = defineAsyncComponent(() =>
-    import("@/Components/LeafletMapMultiple.vue")
+const LeafletMapProduitMultiple = defineAsyncComponent(() =>
+    import("@/Components/LeafletMapProduitMultiple.vue")
 );
 
 const ProduitCard = defineAsyncComponent(() =>
     import("@/Components/Produits/ProduitCard.vue")
-);
-
-const LeafletMapProduitMultiple = defineAsyncComponent(() =>
-    import("@/Components/LeafletMapProduitMultiple.vue")
 );
 
 const Pagination = defineAsyncComponent(() =>
@@ -54,30 +45,22 @@ const goToListe = () => {
 
 const flattenedDisciplines = computed(() => {
     const uniqueDisciplines = new Map();
-    props.structures.data.forEach((structure) => {
-        structure.disciplines.forEach((discipline) => {
-            const disciplineId = discipline.discipline_id;
-            if (!uniqueDisciplines.has(disciplineId)) {
-                uniqueDisciplines.set(disciplineId, discipline.discipline);
-            }
-        });
+    props.produits.data.forEach((produit) => {
+        const disciplineId = produit.discipline_id;
+        if (!uniqueDisciplines.has(disciplineId)) {
+            uniqueDisciplines.set(disciplineId, produit.discipline);
+        }
     });
     return Array.from(uniqueDisciplines.values());
 });
 
-const hoveredStructure = ref(null);
 const hoveredProduit = ref(null);
 
-const showTooltip = (structure) => {
-    hoveredStructure.value = structure.id;
-};
-const showProduitTooltip = (produit) => {
+const showTooltip = (produit) => {
     hoveredProduit.value = produit.id;
 };
+
 const hideTooltip = () => {
-    hoveredStructure.value = null;
-};
-const hideProduitTooltip = () => {
     hoveredProduit.value = null;
 };
 
@@ -150,13 +133,13 @@ const formatCityName = (ville) => {
                 </template>
             </ResultsHeader>
         </template>
-
-        <template v-if="structures.data.length > 0">
+        <template #default>
             <div
+                v-if="produits.data.length > 0"
                 class="mx-auto max-w-full px-2 py-6 sm:px-6 md:space-x-4 md:py-12 lg:px-8"
             >
                 <h2
-                    class="mb-4 text-center text-lg font-semibold text-gray-600"
+                    class="mb-4 text-center text-lg font-semibold text-gray-600 md:mb-8 md:text-2xl"
                 >
                     Les disciplines pratiquées à
                     <span class="text-indigo-700">{{
@@ -165,9 +148,10 @@ const formatCityName = (ville) => {
                     <span class="text-xs text-gray-600">
                         ({{ city.code_postal }})</span
                     >
+                    et aux alentours
                 </h2>
                 <div
-                    class="flex w-full flex-col flex-wrap items-center justify-center gap-3 text-gray-700 md:flex-row"
+                    class="flex w-full flex-col flex-wrap items-stretch justify-center gap-3 text-gray-700 md:flex-row"
                 >
                     <Link
                         v-for="discipline in flattenedDisciplines"
@@ -178,48 +162,57 @@ const formatCityName = (ville) => {
                                 discipline: discipline.slug,
                             })
                         "
-                        class="inline-block w-48 rounded border border-gray-600 px-4 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                        class="inline-flex items-center rounded border border-gray-600 px-4 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                     >
                         {{ discipline.name }}
                     </Link>
                 </div>
+                <div class="flex justify-center p-10">
+                    <Pagination :links="produits.links" />
+                </div>
             </div>
-            <section>
-                <h2 class="text-center text-lg font-semibold text-gray-600">
-                    Les structures disponibles à
+            <template v-if="produits.data.length > 0">
+                <h2
+                    class="text-center text-lg font-semibold text-gray-600 md:text-2xl"
+                >
+                    Les activités disponibles à
                     <span class="text-indigo-700">{{
                         formatCityName(city.ville)
                     }}</span>
                     <span class="text-xs text-gray-600">
                         ({{ city.code_postal }})</span
                     >
+                    et aux alentours
                 </h2>
                 <div
-                    class="relative mx-auto flex min-h-screen max-w-full flex-col px-2 py-12 sm:px-6 md:flex-row md:space-x-8 lg:px-8"
+                    class="mx-auto flex min-h-full max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
                 >
-                    <div class="md:w-1/2" ref="listeStructure">
+                    <div ref="listeStructure" class="md:w-1/2">
                         <div
-                            class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-2"
+                            class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
                         >
-                            <StructureCard
-                                v-for="(structure, index) in structures.data"
-                                :key="structure.id"
+                            <ProduitCard
+                                v-for="(produit, index) in produits.data"
+                                :key="produit.id"
                                 :index="index"
-                                :structure="structure"
-                                @mouseover="showTooltip(structure)"
-                                @mouseout="hideTooltip"
+                                :produit="produit"
+                                :discipline="discipline"
+                                @mouseover="showTooltip(produit)"
+                                @mouseout="hideTooltip()"
                                 :link="
                                     route('structures.show', {
-                                        structure: structure.slug,
+                                        structure: produit.structure.slug,
                                     })
                                 "
                                 :data="{
                                     city: city.id,
+                                    discipline: produit.discipline.slug,
+                                    category: produit.categorie_id,
                                 }"
                             />
                         </div>
                         <div class="flex justify-end p-10">
-                            <Pagination :links="structures.links" />
+                            <Pagination :links="produits.links" />
                         </div>
                         <button
                             v-if="!mapIsVisible && listeIsVisible"
@@ -233,10 +226,10 @@ const formatCityName = (ville) => {
                     </div>
                     <div class="space-y-4 md:sticky md:w-1/2">
                         <div ref="mapStructure">
-                            <LeafletMapMultiple
+                            <LeafletMapProduitMultiple
                                 class="md:top-2"
-                                :structures="structures.data"
-                                :hovered-structure="hoveredStructure"
+                                :produits="produits.data"
+                                :hovered-produit="hoveredProduit"
                                 :zoom="12"
                             />
                             <button
@@ -249,10 +242,32 @@ const formatCityName = (ville) => {
                                 Liste
                             </button>
                         </div>
-                        <CitiesAround :citiesAround="citiesAround" />
+                        <CitiesAround
+                            v-if="citiesAround.length > 0"
+                            :citiesAround="props.citiesAround"
+                        />
                     </div>
                 </div>
-            </section>
+            </template>
+            <template v-else>
+                <div
+                    class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
+                >
+                    <p class="w-full font-medium text-gray-700 md:w-2/3">
+                        Il n'y a pas encore d'activité à
+                        <span class="font-semibold">{{
+                            formatCityName(city.ville)
+                        }}</span
+                        >.
+                    </p>
+                    <div
+                        v-if="citiesAround.length > 0"
+                        class="w-full px-4 md:w-1/3"
+                    >
+                        <CitiesAround :citiesAround="props.citiesAround" />
+                    </div>
+                </div>
+            </template>
         </template>
     </ResultLayout>
 </template>

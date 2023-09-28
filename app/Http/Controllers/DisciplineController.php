@@ -26,7 +26,7 @@ class DisciplineController extends Controller
     {
         $structuresCount = Structure::count();
 
-        $familles = Famille::withWhereHas('disciplines', function ($query) {
+        $familles = Famille::whereHas('disciplines', function ($query) {
             $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();
 
@@ -37,13 +37,13 @@ class DisciplineController extends Controller
                                         ->get();
 
 
-        $disciplines = ListDiscipline::with('structures')->select(['id', 'name', 'slug'])
-                        ->withCount('structures')
+        $disciplines = ListDiscipline::with('structureProduits')->select(['id', 'name', 'slug'])
+                        ->withCount('structureProduits')
                         ->filter(
                             request(['search'])
                         )
-                        ->orderByDesc('structures_count')
-                        ->paginate(30)
+                        ->orderByDesc('structure_produits_count')
+                        ->paginate(12)
                         ->withQueryString();
 
         return Inertia::render('Disciplines/Index', [
@@ -71,14 +71,13 @@ class DisciplineController extends Controller
                                         ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
                                         ->get();
 
-        $discipline = ListDiscipline::where('slug', $discipline->slug)
+        $discipline = ListDiscipline::with('structureProduits')->where('slug', $discipline->slug)
             ->select(['id', 'name', 'slug', 'view_count'])
             ->first();
 
         $disciplinesSimilaires = $discipline->disciplinesSimilaires()
             ->select('discipline_similaire_id', 'name', 'slug', 'famille')
             ->get();
-
 
         $categories = LienDisciplineCategorie::whereHas('structures_produits')
                 ->where('discipline_id', $discipline->id)
@@ -89,7 +88,6 @@ class DisciplineController extends Controller
 
         $firstCategories = $categories->take(4);
         $categoriesNotInFirst = $categories->diff($firstCategories);
-
 
         $allStructureTypes = StructureType::whereHas('structures', function ($query) use ($discipline) {
             $query->whereHas('produits', function ($subquery) use ($discipline) {

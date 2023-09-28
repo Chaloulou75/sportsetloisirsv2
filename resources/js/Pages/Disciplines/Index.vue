@@ -148,17 +148,17 @@ watch(
                     >
                         <div>{{ discipline.name }}</div>
                         <div
-                            v-if="discipline.structures_count > 0"
-                            class="text-xs"
+                            v-if="discipline.structure_produits_count > 0"
+                            class="text-xs italic"
                         >
-                            ({{ discipline.structures_count }}
-                            <span v-if="discipline.structures_count > 1"
-                                >structures</span
+                            ({{ discipline.structure_produits_count }}
+                            <span v-if="discipline.structure_produits_count > 1"
+                                >activités</span
                             >
-                            <span v-else>structure</span>)
+                            <span v-else>activité</span>)
                         </div>
-                        <div v-else class="text-xs">
-                            (Pas encore de structure inscrite)
+                        <div v-else class="text-xs italic">
+                            (Pas encore d'activité inscrite)
                         </div>
                     </Link>
                 </div>
