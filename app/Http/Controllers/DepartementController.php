@@ -59,8 +59,7 @@ class DepartementController extends Controller
      */
     public function show(Departement $departement)
     {
-
-        $familles = Famille::withWhereHas('disciplines', function ($query) {
+        $familles = Famille::whereHas('disciplines', function ($query) {
             $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();
 
@@ -70,41 +69,35 @@ class DepartementController extends Controller
                                         ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
                                         ->get();
 
+        $departement = Departement::with(['cities' => function ($query) {
+            $query->withWhereHas('produits')->select('id', 'nom_departement', 'departement');
+        }])
+        ->where('id', $departement->id)
+        ->select(['id', 'numero', 'departement', 'prefixe', 'view_count'])
+        ->first();
 
-        $departement = Departement::with(['cities',
-                                        'structures' => function ($query) {
-                                            $query->latest();
-                                        },
-                                        'structures.structuretype:id,name,slug'
-                                    ])
-                                    ->whereHas('structures')
-                                    ->select(['id', 'numero', 'departement', 'prefixe', 'view_count'])
-                                    ->where('numero', $departement->numero)
-                                    ->withCount('structures')
-                                    ->first();
+        $produitsFlat = $departement->cities
+            ->flatMap(function ($city) {
+                return $city->produits;
+            });
 
-        $structures = $departement->structures()->with([
-            'creator:id,name',
-            'users:id,name',
-            'adresses'  => function ($query) {
-                $query->latest();
-            },
-            'city:id,ville,ville_formatee,code_postal',
-            'departement:id,departement,numero',
-            'structuretype:id,name,slug',
-            'disciplines',
-            'disciplines.discipline:id,name,slug',
-            'categories:id,categorie_id',
-            'activites',
-            'activites.discipline',
-            'activites.categorie',
-            'produits',
-            'produits.criteres',
-            'tarifs',
-            'tarifs.tarifType',
-            'tarifs.structureTarifTypeInfos',
-            'plannings',
-        ])->withCount('disciplines', 'produits', 'activites')->paginate(12);
+        $produits = $produitsFlat->each(function ($produit) {
+            $produit->load([
+                'structure:id,name,slug,structuretype_id,address,address_lat,address_lng,zip_code,city_id,city,departement_id,website,view_count',
+                'adresse',
+                'discipline:id,name,slug,view_count',
+                'categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+                'activite:id,discipline_id,categorie_id,structure_id,titre,description,image,actif',
+                'activite.discipline:id,name,slug',
+                'activite.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+                'criteres:id,activite_id,produit_id,critere_id,valeur',
+                'criteres.critere:id,nom',
+                'tarifs',
+                'tarifs.tarifType',
+                'tarifs.structureTarifTypeInfos',
+                'plannings',
+            ]);
+        })->paginate(12);
 
         $departement->timestamp = false;
         $departement->increment('view_count');
@@ -114,7 +107,7 @@ class DepartementController extends Controller
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,
             'departement' => $departement,
-            'structures' => $structures,
+            'produits' => $produits,
         ]);
     }
 

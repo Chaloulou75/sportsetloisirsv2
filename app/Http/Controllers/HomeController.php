@@ -52,11 +52,13 @@ class HomeController extends Controller
             ->map(function ($items) {
                 return $items->count();
             });
+
         $numeroDepts = $topVilles->pluck('departement')->unique();
         $theDepartements = Departement::whereIn('numero', $numeroDepts)
                                 ->select(['id', 'departement', 'numero'])
                                 ->limit(12)
                                 ->get();
+
         $topDepartements = $theDepartements
             ->map(function ($departement) use ($departementCounts, $topVilles) {
                 $count = $departementCounts->get($departement->numero, 0);

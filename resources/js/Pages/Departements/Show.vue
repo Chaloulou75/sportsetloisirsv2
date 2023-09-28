@@ -3,14 +3,17 @@ import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { router, Head, Link } from "@inertiajs/vue3";
 import { ref, watch, computed, defineAsyncComponent } from "vue";
 import { debounce } from "lodash";
-import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import { HomeIcon, ListBulletIcon, MapIcon } from "@heroicons/vue/24/outline";
 import { useElementVisibility } from "@vueuse/core";
 
-const StructureCard = defineAsyncComponent(() =>
-    import("@/Components/Structures/StructureCard.vue")
+const LeafletMapProduitMultiple = defineAsyncComponent(() =>
+    import("@/Components/LeafletMapProduitMultiple.vue")
+);
+
+const ProduitCard = defineAsyncComponent(() =>
+    import("@/Components/Produits/ProduitCard.vue")
 );
 
 const Pagination = defineAsyncComponent(() =>
@@ -22,7 +25,7 @@ const props = defineProps({
     listDisciplines: Object,
     allCities: Object,
     departement: Object,
-    structures: Object,
+    produits: Object,
     filters: Object,
 });
 
@@ -39,27 +42,26 @@ const goToListe = () => {
     listeStructure.value.scrollIntoView({ behavior: "smooth" });
 };
 
+const hoveredProduit = ref(null);
+
+const showTooltip = (produit) => {
+    hoveredProduit.value = produit.id;
+};
+
+const hideTooltip = () => {
+    hoveredProduit.value = null;
+};
+
 const flattenedDisciplines = computed(() => {
     const uniqueDisciplines = new Map();
-    props.structures.data.forEach((structure) => {
-        structure.disciplines.forEach((discipline) => {
-            const disciplineId = discipline.discipline_id;
-            if (!uniqueDisciplines.has(disciplineId)) {
-                uniqueDisciplines.set(disciplineId, discipline.discipline);
-            }
-        });
+    props.produits.data.forEach((produit) => {
+        const disciplineId = produit.discipline_id;
+        if (!uniqueDisciplines.has(disciplineId)) {
+            uniqueDisciplines.set(disciplineId, produit.discipline);
+        }
     });
     return Array.from(uniqueDisciplines.values());
 });
-
-const hoveredStructure = ref(null);
-
-function showTooltip(structure) {
-    hoveredStructure.value = structure.id;
-}
-function hideTooltip() {
-    hoveredStructure.value = null;
-}
 
 const getUniqueActivitesDiscipline = (activites) => {
     const uniqueNames = new Set();
@@ -164,16 +166,21 @@ watch(
                 </template>
             </ResultsHeader>
         </template>
-        <template v-if="departement.structures_count > 0">
+        <template #default>
             <div
+                v-if="produits.data.length > 0"
                 class="mx-auto max-w-full px-2 py-6 sm:px-6 md:space-x-4 md:py-12 lg:px-8"
             >
-                <h3 class="mb-4 text-center font-semibold text-gray-600">
+                <h3
+                    class="mb-4 text-center text-lg font-semibold text-gray-600 md:text-2xl"
+                >
                     Les disciplines pratiquées {{ departement.prefixe }}
-                    {{ departement.departement }}
+                    <span class="text-indigo-700">{{
+                        departement.departement
+                    }}</span>
                 </h3>
                 <div
-                    class="flex w-full flex-col flex-wrap items-center justify-center gap-3 text-gray-700 md:flex-row"
+                    class="flex w-full flex-col flex-wrap items-stretch justify-center gap-3 text-gray-700 md:flex-row"
                 >
                     <div
                         v-for="discipline in flattenedDisciplines"
@@ -186,45 +193,55 @@ watch(
                                     discipline: discipline.slug,
                                 })
                             "
-                            class="inline-block w-48 rounded border border-gray-600 px-4 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                            class="inline-flex items-center rounded border border-gray-600 px-4 py-3 text-center text-base font-medium text-gray-600 shadow-md hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                         >
                             {{ discipline.name }}
                         </Link>
                     </div>
                     <div class="flex justify-end p-10">
-                        <Pagination :links="structures.links" />
+                        <Pagination :links="produits.data.links" />
                     </div>
                 </div>
             </div>
-            <div
-                class="mx-auto min-h-screen max-w-full px-2 py-12 sm:px-6 lg:px-8"
-            >
+            <template v-if="produits.data.length > 0">
+                <h2
+                    class="text-center text-lg font-semibold text-gray-600 md:text-2xl"
+                >
+                    Les activités disponibles à
+                    <span class="text-indigo-700">
+                        {{ departement.prefixe }}
+                        {{ departement.departement }}
+                    </span>
+                </h2>
                 <div
-                    class="relative mx-auto flex min-h-screen max-w-full flex-col px-2 sm:px-6 md:flex-row md:space-x-4 lg:px-8"
+                    class="mx-auto flex min-h-full max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
                 >
                     <div ref="listeStructure" class="md:w-1/2">
                         <div
-                            class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-2"
+                            class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
                         >
-                            <StructureCard
-                                v-for="(structure, index) in structures.data"
-                                :key="structure.id"
+                            <ProduitCard
+                                v-for="(produit, index) in produits.data"
+                                :key="produit.id"
                                 :index="index"
-                                :structure="structure"
-                                @mouseover="showTooltip(structure)"
+                                :produit="produit"
+                                :discipline="discipline"
+                                @mouseover="showTooltip(produit)"
                                 @mouseout="hideTooltip()"
                                 :link="
                                     route('structures.show', {
-                                        structure: structure.slug,
+                                        structure: produit.structure.slug,
                                     })
                                 "
                                 :data="{
                                     departement: departement.id,
+                                    discipline: produit.discipline.slug,
+                                    category: produit.categorie_id,
                                 }"
                             />
                         </div>
                         <div class="flex justify-end p-10">
-                            <Pagination :links="structures.links" />
+                            <Pagination :links="produits.links" />
                         </div>
                         <button
                             v-if="!mapIsVisible && listeIsVisible"
@@ -238,10 +255,10 @@ watch(
                     </div>
                     <div class="space-y-4 md:sticky md:w-1/2">
                         <div ref="mapStructure">
-                            <LeafletMapMultiple
+                            <LeafletMapProduitMultiple
                                 class="md:top-2"
-                                :structures="structures.data"
-                                :hovered-structure="hoveredStructure"
+                                :produits="produits.data"
+                                :hovered-produit="hoveredProduit"
                                 :zoom="12"
                             />
                             <button
@@ -256,22 +273,23 @@ watch(
                         </div>
                     </div>
                 </div>
-            </div>
-        </template>
-        <template v-else>
-            <div class="py-6 md:py-12">
-                <div
-                    class="mx-auto min-h-screen max-w-full px-2 sm:px-6 lg:px-8"
-                >
-                    <p class="font-medium text-gray-700">
-                        Dommage, il n'y a pas encore de structures inscrites
-                        {{ departement.prefixe }}
-                        <span class="font-semibold text-gray-800">{{
-                            departement.departement
-                        }}</span>
-                    </p>
+            </template>
+
+            <template v-else>
+                <div class="py-6 md:py-12">
+                    <div
+                        class="mx-auto min-h-screen max-w-full px-2 sm:px-6 lg:px-8"
+                    >
+                        <p class="font-medium text-gray-700">
+                            Dommage, il n'y a pas encore d'activité inscrite
+                            {{ departement.prefixe }}
+                            <span class="font-semibold text-gray-800">{{
+                                departement.departement
+                            }}</span>
+                        </p>
+                    </div>
                 </div>
-            </div>
+            </template>
         </template>
     </ResultLayout>
 </template>
