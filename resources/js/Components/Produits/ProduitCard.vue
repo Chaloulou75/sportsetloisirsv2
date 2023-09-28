@@ -3,7 +3,7 @@ import { Link } from "@inertiajs/vue3";
 import { ref, nextTick, watch, onMounted, computed } from "vue";
 import { useCookies } from "@vueuse/integrations/useCookies";
 import { classMapping } from "@/Utils/classMapping.js";
-import { BookmarkIcon, MapPinIcon } from "@heroicons/vue/24/outline";
+import { MapPinIcon } from "@heroicons/vue/24/outline";
 import { HeartIcon } from "@heroicons/vue/24/solid";
 
 const emit = defineEmits(["mouseover", "mouseout"]);

@@ -1,6 +1,7 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { computed } from "vue";
+import { classMapping } from "@/Utils/classMapping.js";
 import { TrashIcon, PlusIcon } from "@heroicons/vue/24/outline";
 import BreezeDropdown from "@/Components/Dropdown.vue";
 import BreezeDropdownLink from "@/Components/DropdownLink.vue";
@@ -18,28 +19,38 @@ const props = defineProps({
     activite: Object,
     structure: Object,
 });
+
+const headerClass = computed(() => {
+    const defaultClass = "bg-la-base";
+    if (props.activite && props.activite.discipline_id) {
+        const disciplineId = props.activite.discipline_id;
+        if (classMapping[disciplineId]) {
+            return classMapping[disciplineId];
+        } else {
+            return defaultClass;
+        }
+    } else {
+        return defaultClass;
+    }
+});
 </script>
 
 <template>
     <div
         class="block rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:shadow-2xl"
     >
-        <div class="relative">
+        <div
+            class="relative h-56 w-full rounded-md bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-soft-light"
+            :class="headerClass"
+        >
             <button
                 class="absolute right-2 top-2 bg-red-500 p-1"
                 type="button"
-                @click="emit('openDeleteModal', activite)"
+                @click.prevent="emit('openDeleteModal', activite)"
             >
                 <span class="sr-only">supprimer discipline</span>
                 <TrashIcon class="h-6 w-6 text-red-100 hover:text-white" />
             </button>
-
-            <!-- Image -->
-            <img
-                alt="Home"
-                src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                class="h-56 w-full rounded-md bg-opacity-70 object-cover"
-            />
         </div>
 
         <div class="mt-2">
