@@ -12,6 +12,7 @@ import { HomeIcon } from "@heroicons/vue/24/outline";
 const props = defineProps({
     structures: Object,
     activites: Object,
+    produits: Object,
     familles: Object,
     listDisciplines: Object,
     allCities: Object,
@@ -85,6 +86,7 @@ const props = defineProps({
                             v-for="(produit, index) in produits"
                             :key="produit.id"
                             :index="index"
+                            :discipline="produit.discipline"
                             :produit="produit"
                             :link="
                                 route('structures.activites.show', {
@@ -141,7 +143,11 @@ const props = defineProps({
                 </div>
             </template>
             <template
-                v-else-if="!structures.length > 0 && !activites.length > 0"
+                v-if="
+                    !structures.length > 0 &&
+                    !activites.length > 0 &&
+                    !produits.length > 0
+                "
             >
                 <div class="mx-auto max-w-full px-2 sm:px-6 lg:px-8">
                     <p class="font-medium text-gray-700">

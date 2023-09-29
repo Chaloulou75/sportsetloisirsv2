@@ -122,8 +122,6 @@ class ActiviteController extends Controller
 
     public function show($activite)
     {
-        // dd(request()->all());
-
         $familles = Famille::withWhereHas('disciplines', function ($query) {
             $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();

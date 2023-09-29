@@ -5,8 +5,7 @@ import { ref, defineAsyncComponent, provide } from "vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
-import LeafletMapMultiple from "@/Components/LeafletMapMultiple.vue";
-import CitiesAround from "@/Components/Cities/CitiesAround.vue";
+// import CitiesAround from "@/Components/Cities/CitiesAround.vue";
 import DisciplinesSimilaires from "@/Components/Disciplines/DisciplinesSimilaires.vue";
 import {
     AdjustmentsHorizontalIcon,
@@ -21,20 +20,25 @@ const props = defineProps({
     familles: Object,
     category: Object,
     categories: Object,
-    categoriesWithoutProduit: Object,
+    firstCategories: Object,
+    categoriesNotInFirst: Object,
     allStructureTypes: Object,
     criteres: Object,
     departement: Object,
     citiesAround: Object,
-    structures: Object,
+    produits: Object,
     discipline: Object,
     disciplinesSimilaires: Object,
     listDisciplines: Object,
     allCities: Object,
 });
 
-const StructureCard = defineAsyncComponent(() =>
-    import("@/Components/Structures/StructureCard.vue")
+const ProduitCard = defineAsyncComponent(() =>
+    import("@/Components/Produits/ProduitCard.vue")
+);
+
+const LeafletMapProduitMultiple = defineAsyncComponent(() =>
+    import("@/Components/LeafletMapProduitMultiple.vue")
 );
 
 const Pagination = defineAsyncComponent(() =>
@@ -76,13 +80,13 @@ const formatCityName = (ville) => {
     return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
 };
 
-const hoveredStructure = ref(null);
+const hoveredProduit = ref(null);
 
-function showTooltip(structure) {
-    hoveredStructure.value = structure.id;
+function showTooltip(produit) {
+    hoveredProduit.value = produit.id;
 }
 function hideTooltip() {
-    hoveredStructure.value = null;
+    hoveredProduit.value = null;
 }
 
 const showCriteres = ref(false);
@@ -214,7 +218,8 @@ const formCriteres = useForm({
                 :discipline="discipline"
                 :allStructureTypes="allStructureTypes"
                 :categories="categories"
-                :categoriesWithoutProduit="categoriesWithoutProduit"
+                :firstCategories="firstCategories"
+                :categoriesNotInFirst="categoriesNotInFirst"
             />
         </template>
         <template #default>
@@ -385,8 +390,7 @@ const formCriteres = useForm({
                 </div>
             </div>
 
-            <!-- Structures -->
-            <template v-if="props.structures.data.length > 0">
+            <template v-if="produits.data.length > 0">
                 <div
                     class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
                 >
@@ -394,28 +398,28 @@ const formCriteres = useForm({
                         <div
                             class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
                         >
-                            <StructureCard
-                                v-for="(structure, index) in props.structures
-                                    .data"
-                                :key="structure.id"
+                            <ProduitCard
+                                v-for="(produit, index) in produits.data"
+                                :key="produit.id"
                                 :index="index"
-                                :structure="structure"
-                                @mouseover="showTooltip(structure)"
+                                :produit="produit"
+                                :discipline="discipline"
+                                @mouseover="showTooltip(produit)"
                                 @mouseout="hideTooltip()"
                                 :link="
                                     route('structures.show', {
-                                        structure: structure.slug,
+                                        structure: produit.structure.slug,
                                     })
                                 "
                                 :data="{
                                     departement: departement.id,
                                     discipline: discipline.slug,
-                                    category: category.id,
+                                    category: produit.categorie_id,
                                 }"
                             />
                         </div>
                         <div class="flex justify-end p-10">
-                            <Pagination :links="props.structures.links" />
+                            <Pagination :links="produits.links" />
                         </div>
                         <button
                             v-if="!mapIsVisible && listeIsVisible"
@@ -429,10 +433,10 @@ const formCriteres = useForm({
                     </div>
                     <div class="space-y-4 md:sticky md:w-1/2">
                         <div ref="mapStructure">
-                            <LeafletMapMultiple
+                            <LeafletMapProduitMultiple
                                 class="md:top-2"
-                                :structures="props.structures.data"
-                                :hovered-structure="hoveredStructure"
+                                :produits="props.produits.data"
+                                :hovered-produit="hoveredProduit"
                                 :zoom="12"
                             />
                             <button
@@ -445,8 +449,8 @@ const formCriteres = useForm({
                                 Liste
                             </button>
                         </div>
-                        <CitiesAround :citiesAround="props.citiesAround" />
                         <DisciplinesSimilaires
+                            v-if="disciplinesSimilaires.length > 0"
                             :disciplinesSimilaires="props.disciplinesSimilaires"
                         />
                     </div>
@@ -454,7 +458,7 @@ const formCriteres = useForm({
             </template>
             <template v-else>
                 <div
-                    class="mx-auto min-h-screen max-w-full px-2 py-6 sm:px-6 md:py-12 lg:px-8"
+                    class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
                 >
                     <p class="font-medium text-gray-700">
                         Dommage, il n'y a pas encore de structures inscrites
@@ -471,6 +475,14 @@ const formCriteres = useForm({
                             departement.departement
                         }}</span>
                     </p>
+                    <div
+                        v-if="disciplinesSimilaires.length > 0"
+                        class="w-full px-4 md:w-1/3"
+                    >
+                        <DisciplinesSimilaires
+                            :disciplinesSimilaires="props.disciplinesSimilaires"
+                        />
+                    </div>
                 </div>
             </template>
         </template>

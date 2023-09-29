@@ -19,7 +19,7 @@ class DepartementDisciplineStructuretypeController extends Controller
     public function show(Departement $departement, $discipline, $structuretype)
     {
 
-        $familles = Famille::withWhereHas('disciplines', function ($query) {
+        $familles = Famille::whereHas('disciplines', function ($query) {
             $query->whereHas('structureProduits');
         })->select(['id', 'name', 'slug'])->get();
 
@@ -33,70 +33,71 @@ class DepartementDisciplineStructuretypeController extends Controller
         $discipline = ListDiscipline::where('slug', $discipline)
                             ->select(['id', 'name', 'slug', 'view_count'])
                             ->first();
+
         $disciplinesSimilaires = $discipline->disciplinesSimilaires()
             ->select('discipline_similaire_id', 'name', 'slug', 'famille')
             ->get();
 
         $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
 
-        $departement = Departement::with([
-                            'structures',
-                            'cities' => function ($query) {
-                                $query->has('produits')->with(['produits', 'produits.adresse']);
-                            }])
-                                            ->select(['id', 'numero', 'departement', 'prefixe', 'view_count', 'latitude', 'longitude'])
-                                            ->where('id', $departement->id)
-                                            ->withCount('structures')
-                                            ->first();
+        $departement = Departement::with(['cities' => function ($query) {
+            $query->withWhereHas('produits');
+        }])
+                                ->where('id', $departement->id)
+                                ->select(['id', 'numero', 'departement', 'prefixe', 'view_count'])
+                                ->first();
 
         $categories = LienDisciplineCategorie::withWhereHas('structures_produits.adresse', function ($query) use ($departement) {
             $query->whereIn('city_id', $departement->cities->pluck('id'));
         })
-                                ->where('discipline_id', $discipline->id)
-                                ->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
-                                ->get();
+                        ->where('discipline_id', $discipline->id)
+                        ->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+                        ->get();
 
-        $categoriesWithoutProduit = LienDisciplineCategorie::whereDoesntHave('structures_produits.adresse', function ($query) use ($departement) {
-            $query->whereIn('city_id', $departement->cities->pluck('id'));
+        $firstCategories = $categories->take(4);
+        $categoriesNotInFirst = $categories->diff($firstCategories);
+
+        $allStructureTypes = StructureType::whereHas('structures', function ($query) use ($discipline, $departement) {
+            $query->whereHas('produits', function ($subquery) use ($discipline, $departement) {
+                $subquery->where('discipline_id', $discipline->id)
+                        ->whereHas('adresse', function ($addressQuery) use ($departement) {
+                            $addressQuery->whereIn('city_id', $departement->cities->pluck('id'));
+                        });
+            });
         })
-        ->where('discipline_id', $discipline->id)
-        ->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
-        ->get();
+                        ->select(['id', 'name', 'slug'])
+                        ->get();
 
-        $allStructureTypes = Structuretype::whereHas('structures')->select(['id', 'name', 'slug'])->get();
+        $produitsFlat = $departement->cities
+            ->flatMap(function ($city) use ($discipline) {
+                return $city->produits->where('discipline_id', $discipline->id);
+            });
+
+        $collectionProduits = $produitsFlat->each(function ($produit) {
+            $produit->load([
+                'structure:id,name,slug,structuretype_id,address,address_lat,address_lng,zip_code,city_id,city,departement_id,website,view_count',
+                'adresse',
+                'discipline:id,name,slug,view_count',
+                'categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+                'activite:id,discipline_id,categorie_id,structure_id,titre,description,image,actif',
+                'activite.discipline:id,name,slug',
+                'activite.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+                'criteres:id,activite_id,produit_id,critere_id,valeur',
+                'criteres.critere:id,nom',
+                'tarifs',
+                'tarifs.tarifType',
+                'tarifs.structureTarifTypeInfos',
+                'plannings',
+            ]);
+        });
+
+        $produitsQueryBuilder = $collectionProduits->toBase();
+        $produits = $produitsQueryBuilder->paginate(12);
 
         $citiesAround = $departement->cities()->whereHas('structures')
                             ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
                             ->limit(10)
                             ->get();
-
-        $structures = $departement->structures()->whereHas('disciplines', function ($query) use ($discipline) {
-            $query->where('discipline_id', $discipline->id);
-        })->where('structuretype_id', $structuretypeElected->id)->with([
-            'creator:id,name',
-            'users:id,name',
-            'adresses'  => function ($query) {
-                $query->latest();
-            },
-            'city:id,ville,ville_formatee,code_postal',
-            'departement:id,departement,numero',
-            'structuretype:id,name,slug',
-            'disciplines.discipline:id,name,slug',
-            'categories',
-            'activites' => function ($query) use ($discipline) {
-                $query->where('discipline_id', $discipline->id);
-            },
-            'activites.discipline',
-            'activites.categorie',
-            'produits',
-            'produits.criteres',
-            'tarifs',
-            'tarifs.tarifType',
-            'tarifs.structureTarifTypeInfos',
-            'plannings',
-        ])->withCount('disciplines', 'produits', 'activites')
-        ->whereHas('activites')
-        ->paginate(12);
 
         $departement->timestamp = false;
         $departement->increment('view_count');
@@ -106,11 +107,12 @@ class DepartementDisciplineStructuretypeController extends Controller
             'structuretypeElected' => $structuretypeElected,
             'allStructureTypes' => $allStructureTypes,
             'categories' => $categories,
-            'categoriesWithoutProduit' => $categoriesWithoutProduit,
+            'firstCategories' => $firstCategories,
+            'categoriesNotInFirst' => $categoriesNotInFirst,
             'departement' => $departement,
             'citiesAround' => $citiesAround,
             'disciplinesSimilaires' => $disciplinesSimilaires,
-            'structures' => $structures,
+            'produits' => $produits,
             'discipline' => $discipline,
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,

@@ -18,7 +18,6 @@ class FavoritesController extends Controller
      */
     public function index(Request $request)
     {
-
         $favoriteProduitsCookies = $request->cookie('favoriteProduits');
         $favoriteProduitsIds = json_decode($favoriteProduitsCookies);
         if($favoriteProduitsIds !== null) {

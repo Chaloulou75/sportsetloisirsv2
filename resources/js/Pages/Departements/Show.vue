@@ -1,8 +1,7 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { router, Head, Link } from "@inertiajs/vue3";
-import { ref, watch, computed, defineAsyncComponent } from "vue";
-import { debounce } from "lodash";
+import { Head, Link } from "@inertiajs/vue3";
+import { ref, computed, defineAsyncComponent } from "vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import { HomeIcon, ListBulletIcon, MapIcon } from "@heroicons/vue/24/outline";
@@ -63,40 +62,40 @@ const flattenedDisciplines = computed(() => {
     return Array.from(uniqueDisciplines.values());
 });
 
-const getUniqueActivitesDiscipline = (activites) => {
-    const uniqueNames = new Set();
-    return activites.filter((activite) => {
-        if (!uniqueNames.has(activite.discipline.name)) {
-            uniqueNames.add(activite.discipline.name);
-            return true;
-        }
-        return false;
-    });
-};
+// const getUniqueActivitesDiscipline = (activites) => {
+//     const uniqueNames = new Set();
+//     return activites.filter((activite) => {
+//         if (!uniqueNames.has(activite.discipline.name)) {
+//             uniqueNames.add(activite.discipline.name);
+//             return true;
+//         }
+//         return false;
+//     });
+// };
 
-const getUniqueActivitesTitre = (activites) => {
-    const uniqueNames = new Set();
-    return activites.filter((activite) => {
-        if (!uniqueNames.has(activite.titre)) {
-            uniqueNames.add(activite.titre);
-            return true;
-        }
-        return false;
-    });
-};
+// const getUniqueActivitesTitre = (activites) => {
+//     const uniqueNames = new Set();
+//     return activites.filter((activite) => {
+//         if (!uniqueNames.has(activite.titre)) {
+//             uniqueNames.add(activite.titre);
+//             return true;
+//         }
+//         return false;
+//     });
+// };
 
-let discipline = ref("");
+// let discipline = ref("");
 
-watch(
-    discipline,
-    debounce(function (value) {
-        router.get(
-            "/departements",
-            { discipline: value },
-            { preserveState: true, replace: true }
-        );
-    }, 500)
-);
+// watch(
+//     discipline,
+//     debounce(function (value) {
+//         router.get(
+//             "/departements",
+//             { discipline: value },
+//             { preserveState: true, replace: true }
+//         );
+//     }, 500)
+// );
 </script>
 
 <template>
@@ -172,7 +171,7 @@ watch(
                 class="mx-auto max-w-full px-2 py-6 sm:px-6 md:space-x-4 md:py-12 lg:px-8"
             >
                 <h3
-                    class="mb-4 text-center text-lg font-semibold text-gray-600 md:text-2xl"
+                    class="mb-4 text-center text-lg font-semibold text-gray-600 md:mb-8 md:text-2xl"
                 >
                     Les disciplines pratiquées {{ departement.prefixe }}
                     <span class="text-indigo-700">{{
@@ -182,32 +181,29 @@ watch(
                 <div
                     class="flex w-full flex-col flex-wrap items-stretch justify-center gap-3 text-gray-700 md:flex-row"
                 >
-                    <div
+                    <Link
                         v-for="discipline in flattenedDisciplines"
                         :key="discipline.id"
+                        :href="
+                            route('departements.disciplines.show', {
+                                departement: departement.id,
+                                discipline: discipline.slug,
+                            })
+                        "
+                        class="inline-flex items-center rounded border border-gray-600 px-4 py-3 text-center text-base font-medium text-gray-600 shadow-md hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                     >
-                        <Link
-                            :href="
-                                route('departements.disciplines.show', {
-                                    departement: departement.id,
-                                    discipline: discipline.slug,
-                                })
-                            "
-                            class="inline-flex items-center rounded border border-gray-600 px-4 py-3 text-center text-base font-medium text-gray-600 shadow-md hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
-                        >
-                            {{ discipline.name }}
-                        </Link>
-                    </div>
-                    <div class="flex justify-end p-10">
-                        <Pagination :links="produits.data.links" />
-                    </div>
+                        {{ discipline.name }}
+                    </Link>
+                </div>
+                <div class="flex justify-center p-10">
+                    <Pagination :links="produits.links" />
                 </div>
             </div>
             <template v-if="produits.data.length > 0">
                 <h2
                     class="text-center text-lg font-semibold text-gray-600 md:text-2xl"
                 >
-                    Les activités disponibles à
+                    Les activités disponibles
                     <span class="text-indigo-700">
                         {{ departement.prefixe }}
                         {{ departement.departement }}
@@ -225,7 +221,7 @@ watch(
                                 :key="produit.id"
                                 :index="index"
                                 :produit="produit"
-                                :discipline="discipline"
+                                :discipline="produit.discipline"
                                 @mouseover="showTooltip(produit)"
                                 @mouseout="hideTooltip()"
                                 :link="

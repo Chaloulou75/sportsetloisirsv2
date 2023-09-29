@@ -70,7 +70,7 @@ class DepartementController extends Controller
                                         ->get();
 
         $departement = Departement::with(['cities' => function ($query) {
-            $query->withWhereHas('produits')->select('id', 'nom_departement', 'departement');
+            $query->withWhereHas('produits');
         }])
         ->where('id', $departement->id)
         ->select(['id', 'numero', 'departement', 'prefixe', 'view_count'])
@@ -81,7 +81,7 @@ class DepartementController extends Controller
                 return $city->produits;
             });
 
-        $produits = $produitsFlat->each(function ($produit) {
+        $collectionProduits = $produitsFlat->each(function ($produit) {
             $produit->load([
                 'structure:id,name,slug,structuretype_id,address,address_lat,address_lng,zip_code,city_id,city,departement_id,website,view_count',
                 'adresse',
@@ -97,7 +97,10 @@ class DepartementController extends Controller
                 'tarifs.structureTarifTypeInfos',
                 'plannings',
             ]);
-        })->paginate(12);
+        });
+
+        $produitsQueryBuilder = $collectionProduits->toBase();
+        $produits = $produitsQueryBuilder->paginate(12);
 
         $departement->timestamp = false;
         $departement->increment('view_count');
