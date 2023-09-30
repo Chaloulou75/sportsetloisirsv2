@@ -1,7 +1,7 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import { ref, computed, defineAsyncComponent } from "vue";
+import { ref, defineAsyncComponent } from "vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import DisciplineSmallCard from "@/Components/Disciplines/DisciplineSmallCard.vue";
@@ -26,6 +26,7 @@ const props = defineProps({
     allCities: Object,
     departement: Object,
     produits: Object,
+    flattenedDisciplines: Object,
     filters: Object,
 });
 
@@ -51,17 +52,6 @@ const showTooltip = (produit) => {
 const hideTooltip = () => {
     hoveredProduit.value = null;
 };
-
-const flattenedDisciplines = computed(() => {
-    const uniqueDisciplines = new Map();
-    props.produits.data.forEach((produit) => {
-        const disciplineId = produit.discipline_id;
-        if (!uniqueDisciplines.has(disciplineId)) {
-            uniqueDisciplines.set(disciplineId, produit.discipline);
-        }
-    });
-    return Array.from(uniqueDisciplines.values());
-});
 </script>
 
 <template>
@@ -158,9 +148,6 @@ const flattenedDisciplines = computed(() => {
                             })
                         "
                     />
-                </div>
-                <div class="flex justify-center p-10">
-                    <Pagination :links="produits.links" />
                 </div>
             </div>
             <template v-if="produits.data.length > 0">

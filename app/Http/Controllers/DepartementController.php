@@ -100,6 +100,9 @@ class DepartementController extends Controller
         });
 
         $produitsQueryBuilder = $collectionProduits->toBase();
+
+        $flattenedDisciplines = $produitsQueryBuilder->pluck('discipline')->unique();
+
         $produits = $produitsQueryBuilder->paginate(12);
 
         $departement->timestamp = false;
@@ -108,6 +111,7 @@ class DepartementController extends Controller
         return Inertia::render('Departements/Show', [
             'familles' => $familles,
             'listDisciplines' => $listDisciplines,
+            'flattenedDisciplines' => $flattenedDisciplines,
             'allCities' => $allCities,
             'departement' => $departement,
             'produits' => $produits,

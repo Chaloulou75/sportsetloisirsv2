@@ -122,9 +122,9 @@ class CityController extends Controller
         ])
         ->get();
 
-        $produits = $produitsFromCity->merge($citiesAroundProducts)->paginate(12);
+        $flattenedDisciplines = $produitsFromCity->merge($citiesAroundProducts)->pluck('discipline')->unique();
 
-        // dd($produits);
+        $produits = $produitsFromCity->merge($citiesAroundProducts)->paginate(12);
 
         $city->timestamp = false;
         $city->increment('view_count');
@@ -136,6 +136,7 @@ class CityController extends Controller
             'city' => $city,
             'citiesAround' => $citiesAround,
             'produits' => $produits,
+            'flattenedDisciplines' => $flattenedDisciplines,
             'filters' => request()->all(['discipline']),
         ]);
     }
