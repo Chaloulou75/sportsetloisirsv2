@@ -2,7 +2,12 @@
 import { ref } from "vue";
 import { Link } from "@inertiajs/vue3";
 import BreezeDropdown from "@/Components/Dropdown.vue";
-import { NewspaperIcon, ArrowUturnLeftIcon } from "@heroicons/vue/24/solid";
+import {
+    NewspaperIcon,
+    ArrowLeftIcon,
+    ArrowUturnLeftIcon,
+    HomeIcon,
+} from "@heroicons/vue/24/solid";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/vue/24/outline";
 const props = defineProps({
     city: Object,
@@ -45,7 +50,7 @@ const showStructuresTypes = () => {
                 "
                 class="group relative flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
             >
-                <ArrowUturnLeftIcon
+                <HomeIcon
                     class="h-7 w-7 text-gray-700 group-hover:text-white group-focus:text-white"
                 />
             </Link>
@@ -146,9 +151,7 @@ const showStructuresTypes = () => {
                 "
                 class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
             >
-                <ArrowUturnLeftIcon
-                    class="h-6 w-6 text-white hover:text-gray-100"
-                />
+                <HomeIcon class="h-6 w-6 text-white hover:text-gray-100" />
             </Link>
         </div>
 
@@ -230,7 +233,7 @@ const showStructuresTypes = () => {
                 "
                 class="group relative flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
             >
-                <ArrowUturnLeftIcon
+                <HomeIcon
                     class="h-7 w-7 text-gray-700 group-hover:text-white group-focus:text-white"
                 />
             </Link>
@@ -361,9 +364,7 @@ const showStructuresTypes = () => {
                 "
                 class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
             >
-                <ArrowUturnLeftIcon
-                    class="h-6 w-6 text-white hover:text-gray-100"
-                />
+                <HomeIcon class="h-6 w-6 text-white hover:text-gray-100" />
             </Link>
         </div>
 
@@ -448,7 +449,7 @@ const showStructuresTypes = () => {
                 "
                 class="group relative flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
             >
-                <ArrowUturnLeftIcon
+                <ArrowLeftIcon
                     class="h-7 w-7 text-gray-700 group-hover:text-white group-focus:text-white"
                 />
             </Link>
@@ -580,9 +581,7 @@ const showStructuresTypes = () => {
                 "
                 class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
             >
-                <ArrowUturnLeftIcon
-                    class="h-6 w-6 text-white hover:text-gray-100"
-                />
+                <ArrowLeftIcon class="h-6 w-6 text-white hover:text-gray-100" />
             </Link>
         </div>
 
@@ -666,7 +665,7 @@ const showStructuresTypes = () => {
                 "
                 class="group relative flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
             >
-                <ArrowUturnLeftIcon
+                <HomeIcon
                     class="h-7 w-7 text-gray-700 group-hover:text-white group-focus:text-white"
                 />
             </Link>
@@ -801,9 +800,7 @@ const showStructuresTypes = () => {
                 "
                 class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
             >
-                <ArrowUturnLeftIcon
-                    class="h-6 w-6 text-white hover:text-gray-100"
-                />
+                <HomeIcon class="h-6 w-6 text-white hover:text-gray-100" />
             </Link>
         </div>
 
@@ -888,7 +885,7 @@ const showStructuresTypes = () => {
                 "
                 class="group relative flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
             >
-                <ArrowUturnLeftIcon
+                <ArrowLeftIcon
                     class="h-7 w-7 text-gray-700 group-hover:text-white group-focus:text-white"
                 />
             </Link>
@@ -1023,9 +1020,7 @@ const showStructuresTypes = () => {
                 "
                 class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
             >
-                <ArrowUturnLeftIcon
-                    class="h-6 w-6 text-white hover:text-gray-100"
-                />
+                <ArrowLeftIcon class="h-6 w-6 text-white hover:text-gray-100" />
             </Link>
         </div>
 
@@ -1109,13 +1104,9 @@ const showStructuresTypes = () => {
                 "
                 class="group relative flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
             >
-                <ArrowUturnLeftIcon
+                <ArrowLeftIcon
                     class="h-7 w-7 text-gray-700 group-hover:text-white group-focus:text-white"
                 />
-                <!-- <div
-                    v-if="route().current('disciplines.show')"
-                    class="absolute inset-x-1/2 -bottom-4 h-5 w-5 rotate-45 bg-blue-400"
-                ></div> -->
             </Link>
             <Link
                 preserve-scroll
@@ -1240,9 +1231,7 @@ const showStructuresTypes = () => {
                 "
                 class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
             >
-                <ArrowUturnLeftIcon
-                    class="h-6 w-6 text-white hover:text-gray-100"
-                />
+                <ArrowLeftIcon class="h-6 w-6 text-white hover:text-gray-100" />
             </Link>
         </div>
 
@@ -1324,7 +1313,7 @@ const showStructuresTypes = () => {
                 "
                 class="group relative flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
             >
-                <ArrowUturnLeftIcon
+                <ArrowLeftIcon
                     class="h-7 w-7 text-gray-700 group-hover:text-white group-focus:text-white"
                 />
             </Link>
@@ -1438,9 +1427,7 @@ const showStructuresTypes = () => {
                 "
                 class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
             >
-                <ArrowUturnLeftIcon
-                    class="h-6 w-6 text-white hover:text-gray-100"
-                />
+                <ArrowLeftIcon class="h-6 w-6 text-white hover:text-gray-100" />
             </Link>
         </div>
 
