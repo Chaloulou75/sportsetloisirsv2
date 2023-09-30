@@ -92,6 +92,9 @@ const props = defineProps({
                                     activite: produit.activite.id,
                                 })
                             "
+                            :data="{
+                                produit: produit.id,
+                            }"
                         />
                     </div>
                 </div>
@@ -143,9 +146,9 @@ const props = defineProps({
             </template>
             <template
                 v-if="
-                    !structures.length > 0 &&
-                    !activites.length > 0 &&
-                    !produits.length > 0
+                    structures.length === 0 &&
+                    activites.length === 0 &&
+                    produits.length === 0
                 "
             >
                 <div class="mx-auto max-w-full px-2 sm:px-6 lg:px-8">

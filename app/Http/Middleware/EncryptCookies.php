@@ -13,6 +13,7 @@ class EncryptCookies extends Middleware
      */
     protected $except = [
         "favoriteActivities",
-        "favoriteStructures"
+        "favoriteStructures",
+        "favoriteProduits"
     ];
 }

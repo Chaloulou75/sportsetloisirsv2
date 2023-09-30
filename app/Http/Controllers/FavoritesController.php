@@ -38,8 +38,6 @@ class FavoritesController extends Controller
             ])
             ->whereIn('id', $favoriteProduitsIds)
             ->get();
-        } else {
-            $produits = [];
         }
 
         $favoriteActivitiesCookies = $request->cookie('favoriteActivities');
@@ -60,8 +58,6 @@ class FavoritesController extends Controller
             ])
             ->whereIn('id', $favoriteActivitiesIds)
             ->get();
-        } else {
-            $activites = [];
         }
 
         $favoriteStructuresCookies = $request->cookie('favoriteStructures');
@@ -90,8 +86,6 @@ class FavoritesController extends Controller
                     'plannings',
                     ])->whereIn('id', $favoriteStructuresIds)
                     ->get();
-        } else {
-            $structures = [];
         }
 
         $familles = Famille::whereHas('disciplines', function ($query) {
@@ -106,9 +100,9 @@ class FavoritesController extends Controller
 
         return Inertia::render('Favorites/Index', [
                     'familles' => $familles,
-                    'structures' => $structures,
-                    'activites' => $activites,
-                    'produits' => $produits,
+                    'structures' => $structures ?? [],
+                    'activites' => $activites ?? [],
+                    'produits' => $produits ?? [],
                     'allCities' => $allCities,
                     'listDisciplines' => $listDisciplines,
         ]);
