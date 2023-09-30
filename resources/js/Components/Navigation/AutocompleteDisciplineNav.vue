@@ -56,6 +56,7 @@ const selectDiscipline = (discipline) => {
 watchEffect(() => {
     if (searchTerm.value === "") {
         selectedDiscipline.value = null;
+        emit("update:model-value", null);
     }
 });
 

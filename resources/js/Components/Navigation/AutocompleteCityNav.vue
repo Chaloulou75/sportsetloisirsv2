@@ -5,7 +5,6 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 library.add(faLocationDot);
-// import { MapPinIcon } from "@heroicons/vue/24/solid";
 
 const emit = defineEmits(["update:model-value"]);
 const props = defineProps({
@@ -20,7 +19,6 @@ const handleComponentClickAway = () => {
     isInputFocused.value = false;
 };
 
-// Use the onClickOutside function to handle click-away events
 onClickOutside(target, handleComponentClickAway);
 
 const formatCityName = (ville) => {
@@ -30,7 +28,7 @@ const formatCityName = (ville) => {
 let searchTerm = ref(
     props.currentCity ? formatCityName(props.currentCity.ville) : ""
 );
-
+//
 const searchCities = computed(() => {
     if (searchTerm.value === "") {
         return [];
@@ -47,7 +45,6 @@ const searchCities = computed(() => {
     });
 });
 
-// let selectedCity = ref();
 let selectedCity = ref(props.cities.find((city) => city.id === city));
 
 const selectCity = (city) => {
@@ -60,6 +57,7 @@ const selectCity = (city) => {
 watchEffect(() => {
     if (searchTerm.value === "") {
         selectedCity.value = null;
+        emit("update:model-value", null);
     }
 });
 
