@@ -202,8 +202,8 @@ function hideTooltip() {
                                 :index="index"
                                 :produit="produit"
                                 :discipline="discipline"
-                                @mouseover="showTooltip(produit)"
-                                @mouseout="hideTooltip()"
+                                @card-hover="showTooltip(produit)"
+                                @card-out="hideTooltip"
                                 :link="
                                     route('structures.show', {
                                         structure: produit.structure.slug,

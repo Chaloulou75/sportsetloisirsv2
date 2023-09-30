@@ -5,6 +5,7 @@ import { router, Head, Link } from "@inertiajs/vue3";
 import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
 import AutocompleteDiscipline from "@/Components/Home/AutocompleteDiscipline.vue";
 import AutocompleteCity from "@/Components/Home/AutocompleteCity.vue";
+import DisciplineSmallCard from "@/Components/Disciplines/DisciplineSmallCard.vue";
 import { ArrowSmallRightIcon, CheckIcon } from "@heroicons/vue/24/solid";
 import { MagnifyingGlassIcon } from "@heroicons/vue/24/outline";
 
@@ -169,17 +170,12 @@ const formatCityName = (ville) => {
                 <div
                     class="mb-8 grid h-auto grid-cols-1 place-items-stretch gap-4 px-1.5 sm:grid-cols-2 md:grid-cols-3 md:px-0 lg:grid-cols-4"
                 >
-                    <Link
-                        :href="route('disciplines.show', discipline.slug)"
-                        :active="
-                            route().current('disciplines.show', discipline.slug)
-                        "
+                    <DisciplineSmallCard
                         v-for="discipline in disciplines"
                         :key="discipline.id"
-                        class="flex items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
-                    >
-                        {{ discipline.name }}
-                    </Link>
+                        :discipline="discipline"
+                        :link="route('disciplines.show', discipline.slug)"
+                    />
                 </div>
                 <div class="mb-4 flex items-center justify-center">
                     <Link

@@ -77,7 +77,6 @@ class StructureTypeDisciplineController extends Controller
                     })
                     ->paginate(12);
 
-
         $discipline->timestamp = false;
         $discipline->increment('view_count');
 

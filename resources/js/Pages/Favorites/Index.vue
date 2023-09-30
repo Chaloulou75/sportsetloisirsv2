@@ -16,7 +16,6 @@ const props = defineProps({
     familles: Object,
     listDisciplines: Object,
     allCities: Object,
-    filters: Object,
 });
 </script>
 <template>

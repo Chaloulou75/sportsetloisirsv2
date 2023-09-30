@@ -3,6 +3,7 @@ import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
+import DisciplineSmallCard from "@/Components/Disciplines/DisciplineSmallCard.vue";
 import { HomeIcon } from "@heroicons/vue/24/outline";
 
 defineProps({
@@ -81,20 +82,12 @@ defineProps({
                     <div
                         class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                     >
-                        <Link
-                            :href="route('disciplines.show', discipline.slug)"
-                            :active="
-                                route().current(
-                                    'disciplines.show',
-                                    discipline.slug
-                                )
-                            "
+                        <DisciplineSmallCard
                             v-for="discipline in famille.disciplines"
                             :key="discipline.id"
-                            class="flex flex-col items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
-                        >
-                            {{ discipline.name }}
-                        </Link>
+                            :discipline="discipline"
+                            :link="route('disciplines.show', discipline.slug)"
+                        />
                     </div>
                 </div>
             </div>

@@ -4,6 +4,7 @@ import { Head, Link } from "@inertiajs/vue3";
 import { ref, computed, defineAsyncComponent } from "vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
+import DisciplineSmallCard from "@/Components/Disciplines/DisciplineSmallCard.vue";
 import CitiesAround from "@/Components/Cities/CitiesAround.vue";
 import { HomeIcon, ListBulletIcon, MapIcon } from "@heroicons/vue/24/outline";
 import { useElementVisibility } from "@vueuse/core";
@@ -151,21 +152,19 @@ const formatCityName = (ville) => {
                     et aux alentours
                 </h2>
                 <div
-                    class="flex w-full flex-col flex-wrap items-stretch justify-center gap-3 text-gray-700 md:flex-row"
+                    class="flex w-full flex-col flex-wrap items-stretch justify-center gap-4 text-gray-700 md:flex-row"
                 >
-                    <Link
+                    <DisciplineSmallCard
                         v-for="discipline in flattenedDisciplines"
                         :key="discipline.id"
-                        :href="
+                        :discipline="discipline"
+                        :link="
                             route('villes.disciplines.show', {
                                 city: city.id,
                                 discipline: discipline.slug,
                             })
                         "
-                        class="inline-flex items-center rounded border border-gray-600 px-4 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
-                    >
-                        {{ discipline.name }}
-                    </Link>
+                    />
                 </div>
                 <div class="flex justify-center p-10">
                     <Pagination :links="produits.links" />
@@ -197,8 +196,8 @@ const formatCityName = (ville) => {
                                 :index="index"
                                 :produit="produit"
                                 :discipline="produit.discipline"
-                                @mouseover="showTooltip(produit)"
-                                @mouseout="hideTooltip()"
+                                @card-hover="showTooltip(produit)"
+                                @card-out="hideTooltip"
                                 :link="
                                     route('structures.show', {
                                         structure: produit.structure.slug,

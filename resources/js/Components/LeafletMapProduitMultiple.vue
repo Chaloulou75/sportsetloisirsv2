@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, watch } from "vue";
 import { LMap, LTileLayer, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -9,6 +9,8 @@ const props = defineProps({
     zoom: Number,
 });
 
+const map = ref(null);
+
 const center = ref([
     props.produits[0].adresse.address_lat,
     props.produits[0].adresse.address_lng,
@@ -16,10 +18,13 @@ const center = ref([
 
 const zoom = ref(props.zoom ? props.zoom : 7);
 
+const currentlyHoveredProduit = ref(null);
+
 watch(
     () => props.hoveredProduit,
     (newValue) => {
         if (newValue !== null) {
+            currentlyHoveredProduit.value = newValue;
             const produit = props.produits.find((s) => s.id === newValue);
             if (produit) {
                 center.value = [
@@ -35,15 +40,6 @@ watch(
         }
     }
 );
-
-// a computed ref to get lat & lng
-const lat = computed(() => {
-    return parseFloat(props.produits[0].adresse.address_lat);
-});
-
-const lng = computed(() => {
-    return parseFloat(props.produits[0].adresse.address_lng);
-});
 </script>
 
 <template>
@@ -51,7 +47,6 @@ const lng = computed(() => {
         <l-map
             :useGlobalLeaflet="false"
             ref="map"
-            v-model:zoom="zoom"
             :zoom="zoom"
             :minZoom="2"
             :maxZoom="20"

@@ -9,6 +9,8 @@ import CategoriesResultNavigation from "@/Components/Categories/CategoriesResult
 import { HomeIcon, ListBulletIcon, MapIcon } from "@heroicons/vue/24/outline";
 import { useElementVisibility } from "@vueuse/core";
 
+const emit = defineEmits(["mouseover", "mouseout"]);
+
 const props = defineProps({
     familles: Object,
     discipline: Object,
@@ -68,12 +70,12 @@ provide("scrollToCategories", scrollToCategories);
 
 const hoveredProduit = ref(null);
 
-function showTooltip(produit) {
+const showTooltip = (produit) => {
     hoveredProduit.value = produit.id;
-}
-function hideTooltip() {
+};
+const hideTooltip = () => {
     hoveredProduit.value = null;
-}
+};
 </script>
 
 <template>
@@ -170,8 +172,8 @@ function hideTooltip() {
                                 :index="index"
                                 :produit="produit"
                                 :discipline="discipline"
-                                @mouseover="showTooltip(produit)"
-                                @mouseout="hideTooltip()"
+                                @card-hover="showTooltip(produit)"
+                                @card-out="hideTooltip"
                                 :link="
                                     route('structures.show', {
                                         structure: produit.structure.slug,

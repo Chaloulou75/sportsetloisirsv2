@@ -6,7 +6,7 @@ import { classMapping } from "@/Utils/classMapping.js";
 import { MapPinIcon } from "@heroicons/vue/24/outline";
 import { HeartIcon } from "@heroicons/vue/24/solid";
 
-const emit = defineEmits(["mouseover", "mouseout"]);
+const emit = defineEmits(["card-hover", "card-out"]);
 
 const props = defineProps({
     produit: Object,
@@ -118,6 +118,8 @@ const formatCityName = (ville) => {
     <Link
         :href="link"
         :data="data"
+        @mouseover="emit('card-hover', produit)"
+        @mouseout="emit('card-out')"
         class="block rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:shadow-2xl md:px-0 md:hover:scale-105"
     >
         <div

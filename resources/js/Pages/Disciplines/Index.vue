@@ -5,6 +5,7 @@ import { ref, watch } from "vue";
 import { debounce } from "lodash";
 import { defineAsyncComponent } from "vue";
 import TextInput from "@/Components/TextInput.vue";
+import DisciplineSmallCard from "@/Components/Disciplines/DisciplineSmallCard.vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import { HomeIcon } from "@heroicons/vue/24/outline";
@@ -136,31 +137,12 @@ watch(
                 <div
                     class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                 >
-                    <Link
-                        :href="route('disciplines.show', discipline.slug)"
-                        :active="
-                            route().current('disciplines.show', discipline.slug)
-                        "
-                        v-for="(discipline, index) in disciplines.data"
+                    <DisciplineSmallCard
+                        v-for="discipline in disciplines.data"
                         :key="discipline.id"
-                        :index="index"
-                        class="flex flex-col items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
-                    >
-                        <div>{{ discipline.name }}</div>
-                        <div
-                            v-if="discipline.structure_produits_count > 0"
-                            class="text-xs italic"
-                        >
-                            ({{ discipline.structure_produits_count }}
-                            <span v-if="discipline.structure_produits_count > 1"
-                                >activités</span
-                            >
-                            <span v-else>activité</span>)
-                        </div>
-                        <div v-else class="text-xs italic">
-                            (Pas encore d'activité inscrite)
-                        </div>
-                    </Link>
+                        :discipline="discipline"
+                        :link="route('disciplines.show', discipline.slug)"
+                    />
                 </div>
 
                 <div class="flex justify-end p-10">

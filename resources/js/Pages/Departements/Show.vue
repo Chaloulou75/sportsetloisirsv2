@@ -61,41 +61,6 @@ const flattenedDisciplines = computed(() => {
     });
     return Array.from(uniqueDisciplines.values());
 });
-
-// const getUniqueActivitesDiscipline = (activites) => {
-//     const uniqueNames = new Set();
-//     return activites.filter((activite) => {
-//         if (!uniqueNames.has(activite.discipline.name)) {
-//             uniqueNames.add(activite.discipline.name);
-//             return true;
-//         }
-//         return false;
-//     });
-// };
-
-// const getUniqueActivitesTitre = (activites) => {
-//     const uniqueNames = new Set();
-//     return activites.filter((activite) => {
-//         if (!uniqueNames.has(activite.titre)) {
-//             uniqueNames.add(activite.titre);
-//             return true;
-//         }
-//         return false;
-//     });
-// };
-
-// let discipline = ref("");
-
-// watch(
-//     discipline,
-//     debounce(function (value) {
-//         router.get(
-//             "/departements",
-//             { discipline: value },
-//             { preserveState: true, replace: true }
-//         );
-//     }, 500)
-// );
 </script>
 
 <template>
@@ -222,8 +187,8 @@ const flattenedDisciplines = computed(() => {
                                 :index="index"
                                 :produit="produit"
                                 :discipline="produit.discipline"
-                                @mouseover="showTooltip(produit)"
-                                @mouseout="hideTooltip()"
+                                @card-hover="showTooltip(produit)"
+                                @card-out="hideTooltip"
                                 :link="
                                     route('structures.show', {
                                         structure: produit.structure.slug,
