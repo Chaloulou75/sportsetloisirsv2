@@ -127,7 +127,7 @@ const formatCityName = (ville) => {
             :class="headerClass"
         >
             <button
-                class="absolute right-2 top-2 z-40 bg-transparent"
+                class="absolute right-2 top-2 z-30 bg-transparent"
                 type="button"
                 @click.prevent="() => toggleFavorite(produit.id)"
             >

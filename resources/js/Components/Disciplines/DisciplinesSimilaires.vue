@@ -1,31 +1,30 @@
 <script setup>
-import { Link } from "@inertiajs/vue3";
+import { defineAsyncComponent } from "vue";
+
 const props = defineProps({
     disciplinesSimilaires: Object,
 });
+
+const DisciplineSmallCard = defineAsyncComponent(() =>
+    import("@/Components/Disciplines/DisciplineSmallCard.vue")
+);
 </script>
 <template>
     <div
         class="mx-auto w-full rounded bg-gray-50 px-4 py-4 text-gray-600 shadow-lg"
     >
-        <h3 class="mb-2 text-center font-semibold">
+        <h3 class="mb-4 text-center font-semibold md:text-xl">
             Les disciplines similaires
         </h3>
-        <ul class="list-inside list-disc space-y-1.5">
-            <li
+        <div
+            class="flex w-full flex-col flex-wrap items-stretch justify-start gap-4 md:flex-row"
+        >
+            <DisciplineSmallCard
                 v-for="discipline in disciplinesSimilaires"
                 :key="discipline.id"
-            >
-                <Link
-                    :href="route('disciplines.show', discipline.slug)"
-                    :active="
-                        route().current('disciplines.show', discipline.slug)
-                    "
-                    class="hover:text-gray-800 hover:underline"
-                >
-                    {{ discipline.name }}
-                </Link>
-            </li>
-        </ul>
+                :link="route('disciplines.show', discipline.slug)"
+                :discipline="discipline"
+            />
+        </div>
     </div>
 </template>

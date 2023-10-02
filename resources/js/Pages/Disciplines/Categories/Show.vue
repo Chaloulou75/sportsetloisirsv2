@@ -179,18 +179,21 @@ const formCriteres = useForm({
                     </nav>
                 </template>
             </ResultsHeader>
-            <CategoriesResultNavigation
-                :category="category"
-                :discipline="discipline"
-                :allStructureTypes="allStructureTypes"
-                :categories="categories"
-                :firstCategories="firstCategories"
-                :categoriesNotInFirst="categoriesNotInFirst"
-            />
         </template>
         <template #default>
-            <!-- Criteres -->
-            <div ref="criteresEl">
+            <div
+                ref="criteresEl"
+                class="sticky left-0 right-0 top-16 z-50 bg-transparent backdrop-blur-md"
+            >
+                <CategoriesResultNavigation
+                    :category="category"
+                    :discipline="discipline"
+                    :allStructureTypes="allStructureTypes"
+                    :categories="categories"
+                    :firstCategories="firstCategories"
+                    :categoriesNotInFirst="categoriesNotInFirst"
+                />
+                <!-- Criteres -->
                 <div
                     class="mt-6 flex w-full items-center justify-between border-b border-gray-300 px-2 pb-3 md:hidden"
                 >
@@ -205,7 +208,7 @@ const formCriteres = useForm({
 
                 <div
                     v-if="props.criteres"
-                    class="mx-auto w-full flex-col items-start justify-center space-x-0 space-y-2 rounded bg-gray-50 px-2 py-6 md:flex md:flex-row md:items-center md:space-x-6 md:space-y-0 md:px-6"
+                    class="mx-auto w-full flex-col items-start justify-center space-x-0 space-y-2 rounded bg-transparent px-2 py-6 backdrop-blur-md md:flex md:flex-row md:items-center md:space-x-6 md:space-y-0 md:px-6"
                     :class="{
                         flex: showCriteres,
                         hidden: !showCriteres,

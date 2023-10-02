@@ -130,7 +130,7 @@ const formatCityName = (ville) => {
             <div class="relative">
                 <!-- Button (positioned on top right) -->
                 <button
-                    class="absolute right-2 top-2 bg-transparent"
+                    class="absolute right-2 top-2 z-30 bg-transparent"
                     type="button"
                     @click.prevent="() => toggleFavorite(structure.id)"
                 >
