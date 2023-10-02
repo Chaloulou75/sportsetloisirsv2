@@ -1,6 +1,12 @@
 <script setup>
 import { ref, watch } from "vue";
-import { LMap, LTileLayer, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
+import {
+    LMap,
+    LTileLayer,
+    LMarker,
+    LControlScale,
+    LTooltip,
+} from "@vue-leaflet/vue-leaflet";
 import "leaflet/dist/leaflet.css";
 
 const props = defineProps({
@@ -17,14 +23,15 @@ const center = ref([
 ]);
 
 const zoom = ref(props.zoom ? props.zoom : 7);
-
-const currentlyHoveredProduit = ref(null);
+const imperial = ref(false);
+const mapOptions = ref({
+    zoomSnap: 0.5,
+});
 
 watch(
     () => props.hoveredProduit,
     (newValue) => {
         if (newValue !== null) {
-            currentlyHoveredProduit.value = newValue;
             const produit = props.produits.find((s) => s.id === newValue);
             if (produit) {
                 center.value = [
@@ -43,7 +50,7 @@ watch(
 </script>
 
 <template>
-    <div class="h-[400px] w-full">
+    <div class="h-[400px] w-full shadow-md">
         <l-map
             :useGlobalLeaflet="false"
             ref="map"
@@ -52,7 +59,9 @@ watch(
             :maxZoom="20"
             :zoomAnimation="true"
             :center="center"
+            :options="mapOptions"
         >
+            <l-control-scale :imperial="imperial" />
             <l-tile-layer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -66,10 +75,14 @@ watch(
                     parseFloat(produit.adresse.address_lat),
                     parseFloat(produit.adresse.address_lng),
                 ]"
-                ><l-tooltip class="rouded-lg px-1.5 py-1 font-semibold">
-                    {{ produit.activite.titre }}
-                </l-tooltip></l-marker
             >
+                <l-tooltip
+                    :options="{ interactive: true }"
+                    :content="produit.activite.titre"
+                    class="rouded-lg px-1.5 py-1 font-semibold"
+                >
+                </l-tooltip>
+            </l-marker>
         </l-map>
     </div>
 </template>

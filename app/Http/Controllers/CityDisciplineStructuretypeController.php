@@ -39,24 +39,26 @@ class CityDisciplineStructuretypeController extends Controller
 
         $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
 
-        $allStructureTypes = StructureType::whereHas('structures', function ($query) use ($discipline, $city) {
-            $query->whereHas('produits', function ($subquery) use ($discipline, $city) {
-                $subquery->where('discipline_id', $discipline->id)
-                        ->whereHas('adresse', function ($addressQuery) use ($city) {
-                            $addressQuery->where('city_id', $city->id);
-                        });
-            });
-        })->select(['id', 'name', 'slug'])
-        ->get();
+
 
         $city = City::with(['produits', 'produits.adresse'])->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
                             ->where('id', $city->id)
                             ->withCount('structures')
                             ->first();
 
+        $citiesAround = City::withWhereHas('produits')
+                    ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
+                    ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
+                    ->where('id', '!=', $city->id)
+                    ->havingRaw('distance <= ?', [$city->tolerance_rayon])
+                    ->orderBy('distance', 'ASC')
+                    ->limit(10)
+                    ->get();
 
-        $categories = LienDisciplineCategorie::withWhereHas('structures_produits.adresse', function (Builder $query) use ($city) {
-            $query->where('city_id', $city->id);
+        $cityAroundIds = $citiesAround->pluck('id');
+
+        $categories = LienDisciplineCategorie::withWhereHas('structures_produits.adresse', function (Builder $query) use ($city, $cityAroundIds) {
+            $query->where('city_id', $city->id)->orWhereIn('city_id', $cityAroundIds);
         })
                         ->where('discipline_id', $discipline->id)
                         ->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
@@ -65,14 +67,16 @@ class CityDisciplineStructuretypeController extends Controller
         $firstCategories = $categories->take(4);
         $categoriesNotInFirst = $categories->diff($firstCategories);
 
-        $citiesAround = City::withWhereHas('produits')
-            ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
-            ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
-            ->where('id', '!=', $city->id)
-            ->havingRaw('distance <= ?', [$city->tolerance_rayon])
-            ->orderBy('distance', 'ASC')
-            ->limit(10)
-            ->get();
+
+        $allStructureTypes = StructureType::whereHas('structures', function ($query) use ($discipline, $city, $cityAroundIds) {
+            $query->whereHas('produits', function ($subquery) use ($discipline, $city, $cityAroundIds) {
+                $subquery->where('discipline_id', $discipline->id)
+                        ->whereHas('adresse', function ($addressQuery) use ($city, $cityAroundIds) {
+                            $addressQuery->where('city_id', $city->id)->orWhereIn('city_id', $cityAroundIds);
+                        });
+            });
+        })->select(['id', 'name', 'slug'])
+                ->get();
 
         $citiesAroundProducts = $citiesAround->flatMap(function ($city) use ($discipline, $structuretypeElected) {
             return $city->produits()->with([

@@ -182,6 +182,7 @@ const hideTooltip = () => {
                                 :data="{
                                     discipline: discipline.slug,
                                     category: produit.categorie_id,
+                                    produit: produit.id,
                                 }"
                             />
                         </div>
