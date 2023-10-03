@@ -97,6 +97,38 @@ class DisciplineController extends Controller
         ->select(['id', 'name', 'slug'])
         ->get();
 
+        $structures = Structure::with([
+                'creator:id,name',
+                'users:id,name',
+                'adresses'  => function ($query) {
+                    $query->latest();
+                },
+                'city:id,ville,ville_formatee,code_postal',
+                'departement:id,departement,numero',
+                'structuretype:id,name,slug',
+                'disciplines' => function ($query) use ($discipline) {
+                    $query->where('discipline_id', $discipline->id);
+                },
+                'disciplines.discipline:id,name,slug',
+                'categories',
+                'activites' => function ($query) use ($discipline) {
+                    $query->where('discipline_id', $discipline->id);
+                },
+                'activites.discipline:id,name,slug',
+                'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+                'produits',
+                'produits.criteres:id,activite_id,produit_id,critere_id,valeur',
+                'produits.criteres.critere:id,nom',
+                'tarifs',
+                'tarifs.tarifType',
+                'tarifs.structureTarifTypeInfos',
+            ])
+            ->withCount('disciplines', 'produits', 'activites')
+            ->whereHas('activites', function ($subquery) use ($discipline) {
+                $subquery->where('discipline_id', $discipline->id);
+            })
+            ->paginate(12);
+
         $produits = $discipline->structureProduits()->with([
             'structure:id,name,slug,structuretype_id,address,address_lat,address_lng,zip_code,city_id,city,departement_id,website,view_count',
             'adresse',
@@ -128,6 +160,7 @@ class DisciplineController extends Controller
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,
             'produits' => $produits,
+            'structures' => $structures,
         ]);
     }
     /**
@@ -152,7 +185,7 @@ class DisciplineController extends Controller
             "description" => $request->description,
         ]);
 
-        return to_route('admin.index')->with('success', 'Discipline '. $discipline->name .' créée.');
+        return to_route('admin.index')->with('success', 'Discipline ' . $discipline->name . ' créée.');
     }
     /**
     * Update the specified resource in storage.

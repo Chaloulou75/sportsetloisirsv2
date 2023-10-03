@@ -23,10 +23,15 @@ const props = defineProps({
     categoriesNotInFirst: Object,
     allStructureTypes: Object,
     produits: Object,
+    structures: Object,
 });
 
 const ProduitCard = defineAsyncComponent(() =>
     import("@/Components/Produits/ProduitCard.vue")
+);
+
+const StructureCard = defineAsyncComponent(() =>
+    import("@/Components/Structures/StructureCard.vue")
 );
 
 const LeafletMapProduitMultiple = defineAsyncComponent(() =>
@@ -79,12 +84,21 @@ const scrollToCategories = () => {
 provide("scrollToCategories", scrollToCategories);
 
 const hoveredProduit = ref(null);
+const hoveredStructure = ref(null);
 
 const showTooltip = (produit) => {
     hoveredProduit.value = produit.id;
 };
 const hideTooltip = () => {
     hoveredProduit.value = null;
+};
+
+const showStructureTooltip = (structure) => {
+    hoveredStructure.value = structure.id;
+};
+
+const hideStructureTooltip = () => {
+    hoveredStructure.value = null;
 };
 </script>
 
@@ -160,7 +174,7 @@ const hideTooltip = () => {
         </template>
         <template #default>
             <div
-                class="sticky left-0 right-0 top-16 z-[9998] bg-transparent backdrop-blur-md"
+                class="sticky left-0 right-0 top-16 z-[999] bg-transparent backdrop-blur-md"
                 ref="categoriesEl"
                 v-if="categories.length > 0"
             >
@@ -188,6 +202,14 @@ const hideTooltip = () => {
                             ref="listeStructure"
                             class="w-full px-2 sm:px-6 lg:px-8"
                         >
+                            <h2
+                                class="mb-4 text-center text-lg font-semibold text-gray-600 md:mb-8 md:text-2xl"
+                            >
+                                Les activités disponibles à la pratique de
+                                <span class="text-indigo-700">{{
+                                    discipline.name
+                                }}</span>
+                            </h2>
                             <div
                                 class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-4"
                             >
@@ -214,6 +236,44 @@ const hideTooltip = () => {
                             <div class="flex justify-end p-10">
                                 <Pagination :links="produits.links" />
                             </div>
+
+                            <!-- les structures -->
+                            <h2
+                                class="mb-4 text-center text-lg font-semibold text-gray-600 md:mb-8 md:text-2xl"
+                            >
+                                Les structures disponibles à la pratique de
+                                <span class="text-indigo-700">{{
+                                    discipline.name
+                                }}</span>
+                            </h2>
+                            <div
+                                class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-4"
+                            >
+                                <StructureCard
+                                    v-for="(
+                                        structure, index
+                                    ) in structures.data"
+                                    :key="structure.id"
+                                    :index="index"
+                                    :structure="structure"
+                                    @card-hover="
+                                        showStructureTooltip(structure)
+                                    "
+                                    @card-out="hideStructureTooltip"
+                                    :link="
+                                        route('structures.show', {
+                                            structure: structure.slug,
+                                        })
+                                    "
+                                    :data="{
+                                        discipline: discipline.slug,
+                                    }"
+                                />
+                            </div>
+                            <div class="flex justify-end p-10">
+                                <Pagination :links="structures.links" />
+                            </div>
+                            <!-- les disciplines -->
                             <DisciplinesSimilaires
                                 v-if="disciplinesSimilaires.length > 0"
                                 :disciplinesSimilaires="disciplinesSimilaires"
@@ -221,11 +281,11 @@ const hideTooltip = () => {
                             <button
                                 v-if="displayProduits"
                                 type="button"
-                                class="fixed inset-x-2 bottom-4 z-[9999] mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:w-1/4"
+                                class="fixed inset-x-2 bottom-4 z-100 mx-auto flex w-1/2 max-w-sm items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:w-auto"
                                 @click="goToMap"
                             >
                                 <MapIcon class="mr-2 h-5 w-5" />
-                                Voir la carte
+                                Afficher la carte
                             </button>
                         </div>
                     </TransitionRoot>
@@ -251,11 +311,11 @@ const hideTooltip = () => {
                                 <button
                                     v-if="displayMap"
                                     type="button"
-                                    class="fixed inset-x-2 bottom-4 z-[9999] mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:w-1/4"
+                                    class="fixed inset-x-2 bottom-4 z-[999] mx-auto flex w-1/2 max-w-sm items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:w-1/4"
                                     @click="goToListe"
                                 >
                                     <ListBulletIcon class="mr-2 h-5 w-5" />
-                                    Voir la liste
+                                    Afficher la liste
                                 </button>
                             </div>
                             <DisciplinesSimilaires

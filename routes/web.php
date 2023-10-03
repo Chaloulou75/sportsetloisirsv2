@@ -52,7 +52,7 @@ use App\Http\Controllers\CityDisciplineStructuretypeStructureActiviteController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 Route::get('/', [HomeController::class, 'index'])
     ->name('welcome');

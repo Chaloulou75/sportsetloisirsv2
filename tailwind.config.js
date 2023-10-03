@@ -20,6 +20,11 @@ module.exports = {
                 midnight: "#121b4f",
                 gold: "#ffd700",
             },
+            zIndex: {
+                45: "45",
+                60: "60",
+                100: "100",
+            },
             backgroundImage: {
                 "la-base": "url('/images/0-min.jpg')",
                 "discipline-1": "url('/images/disciplines/1-min.jpg')",

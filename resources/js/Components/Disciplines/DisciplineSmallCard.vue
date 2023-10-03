@@ -1,7 +1,7 @@
 <script setup>
+import { classMapping } from "@/Utils/classMapping.js";
 import { Link } from "@inertiajs/vue3";
 import { computed } from "vue";
-import { classMapping } from "@/Utils/classMapping.js";
 
 const props = defineProps({
     discipline: Object,
@@ -19,6 +19,13 @@ const headerClass = computed(() => {
     const defaultClass = "bg-la-base";
     if (props.discipline && props.discipline.id) {
         const disciplineId = props.discipline.id;
+        if (classMapping[disciplineId]) {
+            return classMapping[disciplineId];
+        } else {
+            return defaultClass;
+        }
+    } else if (props.discipline && props.discipline.discipline_similaire_id) {
+        const disciplineId = props.discipline.discipline_similaire_id;
         if (classMapping[disciplineId]) {
             return classMapping[disciplineId];
         } else {
