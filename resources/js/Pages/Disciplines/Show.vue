@@ -206,10 +206,7 @@ const hideStructureTooltip = () => {
                             <h2
                                 class="mb-4 text-center text-lg font-semibold text-gray-600 md:mb-8 md:text-2xl"
                             >
-                                Les activités disponibles à la pratique de
-                                <span class="text-indigo-700">{{
-                                    discipline.name
-                                }}</span>
+                                Les activités
                             </h2>
                             <div
                                 class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-4"
@@ -242,10 +239,7 @@ const hideStructureTooltip = () => {
                             <h2
                                 class="mb-4 text-center text-lg font-semibold text-gray-600 md:mb-8 md:text-2xl"
                             >
-                                Les structures disponibles à la pratique de
-                                <span class="text-indigo-700">{{
-                                    discipline.name
-                                }}</span>
+                                Les structures
                             </h2>
                             <div
                                 class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-4"

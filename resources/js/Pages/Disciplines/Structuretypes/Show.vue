@@ -226,7 +226,7 @@ const formCriteres = useForm({
                             <h2
                                 class="mb-4 text-center text-lg font-semibold text-gray-600 md:mb-8 md:text-2xl"
                             >
-                                Les activités disponibles
+                                Les activités
                             </h2>
                             <div
                                 class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-4"
@@ -260,7 +260,7 @@ const formCriteres = useForm({
                             <h2
                                 class="mb-4 text-center text-lg font-semibold text-gray-600 md:mb-8 md:text-2xl"
                             >
-                                Les structures disponibles
+                                Les structures
                             </h2>
                             <div
                                 class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-4"
