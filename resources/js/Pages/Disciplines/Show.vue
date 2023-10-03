@@ -289,7 +289,7 @@ const hideStructureTooltip = () => {
                             <button
                                 v-if="displayProduits"
                                 type="button"
-                                class="fixed inset-x-2 bottom-4 z-100 mx-auto flex w-1/2 max-w-sm items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white transition duration-75 hover:scale-105 hover:bg-gray-800 hover:font-semibold md:w-auto"
+                                class="fixed inset-x-2 bottom-4 z-[999] mx-auto flex w-3/4 max-w-xs items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-xs text-white transition duration-75 hover:scale-105 hover:bg-gray-800 hover:font-semibold md:w-auto md:text-sm"
                                 @click="goToMap"
                             >
                                 <MapIcon class="mr-2 h-5 w-5" />
@@ -321,7 +321,7 @@ const hideStructureTooltip = () => {
                                 <button
                                     v-if="displayMap"
                                     type="button"
-                                    class="fixed inset-x-2 bottom-4 z-[999] mx-auto flex w-1/2 max-w-sm items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white transition duration-75 hover:scale-105 hover:bg-gray-800 hover:font-semibold md:w-auto"
+                                    class="fixed inset-x-2 bottom-4 z-[999] mx-auto flex w-3/4 max-w-xs items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-xs text-white transition duration-75 hover:scale-105 hover:bg-gray-800 hover:font-semibold md:w-auto md:text-sm"
                                     @click="goToListe"
                                 >
                                     <ListBulletIcon class="mr-2 h-5 w-5" />
