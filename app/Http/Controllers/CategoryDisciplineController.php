@@ -6,6 +6,7 @@ use App\Models\City;
 use Inertia\Inertia;
 use App\Models\Famille;
 use App\Models\Categorie;
+use App\Models\Structure;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
@@ -61,6 +62,42 @@ class CategoryDisciplineController extends Controller
 
         $criteres = LienDisciplineCategorieCritere::with('valeurs')->where('discipline_id', $discipline->id)->where('categorie_id', $category->id)->get();
 
+
+        $structures = Structure::with([
+                        'creator:id,name',
+                        'users:id,name',
+                        'adresses'  => function ($query) {
+                            $query->latest();
+                        },
+                        'city:id,ville,ville_formatee,code_postal',
+                        'departement:id,departement,numero',
+                        'structuretype:id,name,slug',
+                        'disciplines' => function ($query) use ($discipline) {
+                            $query->where('discipline_id', $discipline->id);
+                        },
+                        'disciplines.discipline:id,name,slug',
+                        'categories',
+                        'activites' => function ($query) use ($discipline, $category) {
+                            $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
+                        },
+                        'activites.discipline:id,name,slug',
+                        'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+                        'produits' => function ($query) use ($discipline, $category) {
+                            $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
+                        },
+                        'produits.criteres:id,activite_id,produit_id,critere_id,valeur',
+                        'produits.criteres.critere:id,nom',
+                        'tarifs',
+                        'tarifs.tarifType',
+                        'tarifs.structureTarifTypeInfos',
+                    ])
+                    ->withCount('disciplines', 'produits', 'activites')
+                    ->whereHas('activites', function ($subquery) use ($discipline, $category) {
+                        $subquery->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
+                    })
+                    ->paginate(12);
+
+
         $produits = $discipline->structureProduits()->with([
                 'structure:id,name,slug,structuretype_id,address,address_lat,address_lng,zip_code,city_id,city,departement_id,website,view_count',
                 'adresse',
@@ -94,6 +131,7 @@ class CategoryDisciplineController extends Controller
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,
             'produits' => $produits,
+            'structures' => $structures,
         ]);
 
     }

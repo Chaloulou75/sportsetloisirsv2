@@ -50,6 +50,7 @@ const mapStructure = ref(null);
 const mapIsVisible = useElementVisibility(mapStructure);
 const listeStructure = ref(null);
 const listeIsVisible = useElementVisibility(listeStructure);
+
 const displayProduits = ref(true);
 const displayMap = ref(false);
 
@@ -222,8 +223,8 @@ const hideStructureTooltip = () => {
                                     @card-hover="showTooltip(produit)"
                                     @card-out="hideTooltip"
                                     :link="
-                                        route('structures.show', {
-                                            structure: produit.structure.slug,
+                                        route('structures.activites.show', {
+                                            activite: produit.activite.id,
                                         })
                                     "
                                     :data="{
@@ -273,7 +274,14 @@ const hideStructureTooltip = () => {
                             <div class="flex justify-end p-10">
                                 <Pagination :links="structures.links" />
                             </div>
-                            <!-- les disciplines -->
+
+                            <!-- Blog -->
+                            <h2
+                                class="mb-4 text-center text-lg font-semibold text-gray-600 md:mb-8 md:text-2xl"
+                            >
+                                Les derniers articles
+                            </h2>
+                            <!-- les disciplines similaires -->
                             <DisciplinesSimilaires
                                 v-if="disciplinesSimilaires.length > 0"
                                 :disciplinesSimilaires="disciplinesSimilaires"
@@ -281,7 +289,7 @@ const hideStructureTooltip = () => {
                             <button
                                 v-if="displayProduits"
                                 type="button"
-                                class="fixed inset-x-2 bottom-4 z-100 mx-auto flex w-1/2 max-w-sm items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:w-auto"
+                                class="fixed inset-x-2 bottom-4 z-100 mx-auto flex w-1/2 max-w-sm items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white transition duration-75 hover:scale-105 hover:bg-gray-800 hover:font-semibold md:w-auto"
                                 @click="goToMap"
                             >
                                 <MapIcon class="mr-2 h-5 w-5" />
@@ -306,22 +314,20 @@ const hideStructureTooltip = () => {
                                     class="md:top-2"
                                     :produits="produits.data"
                                     :hovered-produit="hoveredProduit"
+                                    :structures="structures.data"
+                                    :hovered-structure="hoveredStructure"
                                     :zoom="12"
                                 />
                                 <button
                                     v-if="displayMap"
                                     type="button"
-                                    class="fixed inset-x-2 bottom-4 z-[999] mx-auto flex w-1/2 max-w-sm items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:w-1/4"
+                                    class="fixed inset-x-2 bottom-4 z-[999] mx-auto flex w-1/2 max-w-sm items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white transition duration-75 hover:scale-105 hover:bg-gray-800 hover:font-semibold md:w-auto"
                                     @click="goToListe"
                                 >
                                     <ListBulletIcon class="mr-2 h-5 w-5" />
                                     Afficher la liste
                                 </button>
                             </div>
-                            <DisciplinesSimilaires
-                                v-if="disciplinesSimilaires.length > 0"
-                                :disciplinesSimilaires="disciplinesSimilaires"
-                            />
                         </div>
                     </TransitionRoot>
                 </div>

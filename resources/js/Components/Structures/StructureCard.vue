@@ -127,7 +127,7 @@ const formatCityName = (ville) => {
         :data="data"
         @mouseover="emit('card-hover', structure)"
         @mouseout="emit('card-out')"
-        class="block rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:shadow-2xl md:px-0 md:hover:scale-105"
+        class="block rounded-lg shadow-sm shadow-sky-700 transition duration-300 ease-in-out hover:shadow-2xl md:px-0 md:hover:scale-105"
     >
         <div class="relative">
             <!-- Button (positioned on top right) -->
@@ -157,7 +157,7 @@ const formatCityName = (ville) => {
         <div class="">
             <dl class="mt-2 flex flex-col px-3">
                 <p
-                    class="text-sm font-medium uppercase tracking-widest text-pink-500"
+                    class="text-center text-sm font-medium uppercase tracking-widest text-pink-500"
                 >
                     {{ structure.structuretype.name }}
                 </p>
@@ -188,21 +188,23 @@ const formatCityName = (ville) => {
                     </span>
                 </div>
 
-                <div class="py-1.5">
-                    <dt class="sr-only">tarif</dt>
-
-                    <div
-                        v-for="(tarif, index) in structure.tarifs"
-                        :key="tarif.id"
-                    >
-                        <p class="text-sm text-gray-500">
-                            {{ tarif.tarif_type.type }}:
-                            <span class="font-semibold">{{
-                                formatCurrency(tarif.amount)
-                            }}</span>
-                        </p>
-                    </div>
-                </div>
+                <!-- <div
+                    class="py-1.5 text-sm text-gray-500"
+                    v-if="structure.tarifs.length > 0"
+                >
+                    <p class="mt-2 text-base font-semibold text-gray-700">
+                        Tarifs:
+                    </p>
+                    <ul class="list-inside list-disc text-sm">
+                        <li v-for="tarif in structure.tarifs" :key="tarif.id">
+                            {{ tarif.titre }}:
+                            <span class="font-semibold">
+                                {{ formatCurrency(tarif.amount) }} /
+                                {{ tarif.tarif_type.type }}</span
+                            >
+                        </li>
+                    </ul>
+                </div> -->
 
                 <div class="flex items-center py-1.5">
                     <dt class="sr-only">Ville</dt>
@@ -305,7 +307,7 @@ const formatCityName = (ville) => {
                 structure: structure.slug,
             })
         "
-        class="block rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl md:px-0"
+        class="block rounded-lg shadow-sm shadow-sky-700 transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl md:px-0"
     >
         <div class="relative">
             <!-- Button (positioned on top right) -->
@@ -335,7 +337,7 @@ const formatCityName = (ville) => {
         <div>
             <dl class="mt-2 flex flex-col px-3">
                 <p
-                    class="text-sm font-medium uppercase tracking-widest text-pink-500"
+                    class="text-center text-sm font-medium uppercase tracking-widest text-pink-500"
                 >
                     {{ structure.structuretype.name }}
                 </p>
@@ -366,7 +368,7 @@ const formatCityName = (ville) => {
                     </span>
                 </div>
 
-                <div class="py-1.5">
+                <!-- <div class="py-1.5">
                     <dt class="sr-only">tarif</dt>
 
                     <span
@@ -380,7 +382,25 @@ const formatCityName = (ville) => {
                             }}</span>
                         </dd>
                     </span>
-                </div>
+                </div> -->
+
+                <!-- <div
+                    class="py-1.5 text-sm text-gray-500"
+                    v-if="structure.tarifs.length > 0"
+                >
+                    <p class="mt-2 text-base font-semibold text-gray-700">
+                        Tarifs:
+                    </p>
+                    <ul class="list-inside list-disc text-sm">
+                        <li v-for="tarif in structure.tarifs" :key="tarif.id">
+                            {{ tarif.titre }}:
+                            <span class="font-semibold">
+                                {{ formatCurrency(tarif.amount) }} /
+                                {{ tarif.tarif_type.type }}</span
+                            >
+                        </li>
+                    </ul>
+                </div> -->
 
                 <div class="flex items-center py-1.5">
                     <dt class="sr-only">Ville</dt>

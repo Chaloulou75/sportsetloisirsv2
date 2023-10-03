@@ -140,7 +140,7 @@ const submitForm = async () => {
                                 >
                                     Mes favoris
                                 </BreezeDropdownLink>
-                                <p class="px-4 py-2 text-sm text-gray-700">
+                                <p class="px-2 py-2 text-sm text-gray-700">
                                     Vous pouvez retrouver la liste de vos
                                     activités et structures favorites grâce aux
                                     données enregistrées anonymement dans votre
@@ -157,7 +157,7 @@ const submitForm = async () => {
                             </template>
                         </BreezeDropdown>
                     </div>
-                    <div v-if="currentCategory && !isCriteresVisible">
+                    <!-- <div v-if="currentCategory && !isCriteresVisible">
                         <TransitionRoot
                             :show="!isCriteresVisible"
                             enter="transition-opacity duration-150"
@@ -234,7 +234,7 @@ const submitForm = async () => {
                                 </template>
                             </BreezeDropdown>
                         </TransitionRoot>
-                    </div>
+                    </div> -->
                     <Link
                         preserve-scroll
                         :href="route('welcome')"
@@ -356,7 +356,7 @@ const submitForm = async () => {
                         <MagnifyingGlassIcon class="h-6 w-6" />
                         <span class="sr-only">Rechercher</span>
                     </button>
-                    <div v-if="currentCategory && !isCriteresVisible">
+                    <!-- <div v-if="currentCategory && !isCriteresVisible">
                         <TransitionRoot
                             :show="!isCriteresVisible"
                             enter="transition-opacity duration-150"
@@ -403,7 +403,7 @@ const submitForm = async () => {
                                 />
                             </button>
                         </TransitionRoot>
-                    </div>
+                    </div> -->
                     <button
                         type="button"
                         class="items-center justify-center rounded bg-transparent px-2 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

@@ -116,7 +116,9 @@ class DisciplineController extends Controller
                 },
                 'activites.discipline:id,name,slug',
                 'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
-                'produits',
+                'produits' => function ($query) use ($discipline) {
+                    $query->where('discipline_id', $discipline->id);
+                },
                 'produits.criteres:id,activite_id,produit_id,critere_id,valeur',
                 'produits.criteres.critere:id,nom',
                 'tarifs',

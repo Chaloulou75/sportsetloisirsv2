@@ -5,8 +5,7 @@ import { ref, defineAsyncComponent, provide } from "vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
-import LeafletMapProduitMultiple from "@/Components/LeafletMapProduitMultiple.vue";
-import DisciplinesSimilaires from "@/Components/Disciplines/DisciplinesSimilaires.vue";
+import { TransitionRoot } from "@headlessui/vue";
 import {
     AdjustmentsHorizontalIcon,
     HomeIcon,
@@ -29,10 +28,23 @@ const props = defineProps({
     listDisciplines: Object,
     allCities: Object,
     produits: Object,
+    structures: Object,
 });
 
 const ProduitCard = defineAsyncComponent(() =>
     import("@/Components/Produits/ProduitCard.vue")
+);
+
+const StructureCard = defineAsyncComponent(() =>
+    import("@/Components/Structures/StructureCard.vue")
+);
+
+const LeafletMapProduitMultiple = defineAsyncComponent(() =>
+    import("@/Components/LeafletMapProduitMultiple.vue")
+);
+
+const DisciplinesSimilaires = defineAsyncComponent(() =>
+    import("@/Components/Disciplines/DisciplinesSimilaires.vue")
 );
 
 const Pagination = defineAsyncComponent(() =>
@@ -44,12 +56,19 @@ const mapIsVisible = useElementVisibility(mapStructure);
 const listeStructure = ref(null);
 const listeIsVisible = useElementVisibility(listeStructure);
 
+const displayProduits = ref(true);
+const displayMap = ref(false);
+
 const goToMap = () => {
-    mapStructure.value.scrollIntoView({ behavior: "smooth" });
+    displayProduits.value = !displayProduits.value;
+    displayMap.value = !displayMap.value;
+    // mapStructure.value.scrollIntoView({ behavior: "smooth" });
 };
 
 const goToListe = () => {
-    listeStructure.value.scrollIntoView({ behavior: "smooth" });
+    displayProduits.value = !displayProduits.value;
+    displayMap.value = !displayMap.value;
+    // listeStructure.value.scrollIntoView({ behavior: "smooth" });
 };
 
 const criteresEl = ref(null);
@@ -75,13 +94,22 @@ const formatCityName = (ville) => {
 };
 
 const hoveredProduit = ref(null);
+const hoveredStructure = ref(null);
 
-function showTooltip(produit) {
+const showTooltip = (produit) => {
     hoveredProduit.value = produit.id;
-}
-function hideTooltip() {
+};
+const hideTooltip = () => {
     hoveredProduit.value = null;
-}
+};
+
+const showStructureTooltip = (structure) => {
+    hoveredStructure.value = structure.id;
+};
+
+const hideStructureTooltip = () => {
+    hoveredStructure.value = null;
+};
 
 const showCriteres = ref(false);
 
@@ -183,7 +211,7 @@ const formCriteres = useForm({
         <template #default>
             <div
                 ref="criteresEl"
-                class="sticky left-0 right-0 top-16 z-50 bg-transparent backdrop-blur-md"
+                class="sticky left-0 right-0 top-16 z-[999] bg-transparent backdrop-blur-md"
             >
                 <CategoriesResultNavigation
                     :category="category"
@@ -360,68 +388,156 @@ const formCriteres = useForm({
             </div>
 
             <template v-if="produits.data.length > 0">
-                <div
-                    class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
-                >
-                    <div ref="listeStructure" class="md:w-1/2">
+                <div class="mx-auto min-h-full max-w-full py-6 md:py-12">
+                    <TransitionRoot
+                        as="template"
+                        :show="displayProduits"
+                        enter="transition-opacity duration-150"
+                        enter-from="opacity-0"
+                        enter-to="opacity-100"
+                        leave="transition-opacity duration-150"
+                        leave-from="opacity-100"
+                        leave-to="opacity-0"
+                    >
                         <div
-                            class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
+                            ref="listeStructure"
+                            class="w-full px-2 sm:px-6 lg:px-8"
                         >
-                            <ProduitCard
-                                v-for="(produit, index) in produits.data"
-                                :key="produit.id"
-                                :index="index"
-                                :produit="produit"
-                                :discipline="discipline"
-                                @card-hover="showTooltip(produit)"
-                                @card-out="hideTooltip"
-                                :link="
-                                    route('structures.show', {
-                                        structure: produit.structure.slug,
-                                    })
-                                "
-                                :data="{
-                                    discipline: discipline.slug,
-                                    category: produit.categorie_id,
-                                }"
-                            />
-                        </div>
-                        <div class="flex justify-end p-10">
-                            <Pagination :links="produits.links" />
-                        </div>
-                        <button
-                            v-if="!mapIsVisible && listeIsVisible"
-                            type="button"
-                            class="fixed inset-x-2 bottom-4 z-[9999] mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:hidden"
-                            @click="goToMap"
-                        >
-                            <MapIcon class="mr-2 h-5 w-5" />
-                            Carte
-                        </button>
-                    </div>
-                    <div class="space-y-4 md:sticky md:w-1/2">
-                        <div ref="mapStructure">
-                            <LeafletMapProduitMultiple
-                                class="md:top-2"
-                                :produits="props.produits.data"
-                                :hovered-produit="hoveredProduit"
-                                :zoom="12"
+                            <h2
+                                class="mb-4 text-center text-lg font-semibold text-gray-600 md:mb-8 md:text-2xl"
+                            >
+                                Les activités disponibles:
+                                <span class="text-indigo-700">{{
+                                    category.nom_categorie_client
+                                }}</span>
+                                de
+                                <span class="text-indigo-700">{{
+                                    discipline.name
+                                }}</span>
+                            </h2>
+                            <div
+                                class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-4"
+                            >
+                                <ProduitCard
+                                    v-for="(produit, index) in produits.data"
+                                    :key="produit.id"
+                                    :index="index"
+                                    :produit="produit"
+                                    :discipline="discipline"
+                                    @card-hover="showTooltip(produit)"
+                                    @card-out="hideTooltip"
+                                    :link="
+                                        route('structures.activites.show', {
+                                            activite: produit.activite.id,
+                                        })
+                                    "
+                                    :data="{
+                                        discipline: discipline.slug,
+                                        category: produit.categorie_id,
+                                        produit: produit.id,
+                                    }"
+                                />
+                            </div>
+                            <div class="flex justify-end p-10">
+                                <Pagination :links="produits.links" />
+                            </div>
+
+                            <!-- les structures -->
+                            <h2
+                                class="mb-4 text-center text-lg font-semibold text-gray-600 md:mb-8 md:text-2xl"
+                            >
+                                Les structures disponibles:
+                                <span class="text-indigo-700">{{
+                                    category.nom_categorie_client
+                                }}</span>
+                                de
+                                <span class="text-indigo-700">{{
+                                    discipline.name
+                                }}</span>
+                            </h2>
+                            <div
+                                class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-4"
+                            >
+                                <StructureCard
+                                    v-for="(
+                                        structure, index
+                                    ) in structures.data"
+                                    :key="structure.id"
+                                    :index="index"
+                                    :structure="structure"
+                                    @card-hover="
+                                        showStructureTooltip(structure)
+                                    "
+                                    @card-out="hideStructureTooltip"
+                                    :link="
+                                        route('structures.show', {
+                                            structure: structure.slug,
+                                        })
+                                    "
+                                    :data="{
+                                        discipline: discipline.slug,
+                                    }"
+                                />
+                            </div>
+                            <div class="flex justify-end p-10">
+                                <Pagination :links="structures.links" />
+                            </div>
+
+                            <!-- Blog -->
+                            <h2
+                                class="mb-4 text-center text-lg font-semibold text-gray-600 md:mb-8 md:text-2xl"
+                            >
+                                Les derniers articles
+                            </h2>
+                            <!-- les disciplines similaires -->
+                            <DisciplinesSimilaires
+                                v-if="disciplinesSimilaires.length > 0"
+                                :disciplinesSimilaires="disciplinesSimilaires"
                             />
                             <button
-                                v-if="mapIsVisible"
+                                v-if="displayProduits"
                                 type="button"
-                                class="fixed inset-x-2 bottom-4 z-[9999] mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:hidden"
-                                @click="goToListe"
+                                class="fixed inset-x-2 bottom-4 z-100 mx-auto flex w-1/2 max-w-sm items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white transition duration-75 hover:scale-105 hover:bg-gray-800 hover:font-semibold md:w-auto"
+                                @click="goToMap"
                             >
-                                <ListBulletIcon class="mr-2 h-5 w-5" />
-                                Liste
+                                <MapIcon class="mr-2 h-5 w-5" />
+                                Afficher la carte
                             </button>
                         </div>
-                        <DisciplinesSimilaires
-                            v-if="disciplinesSimilaires.length > 0"
-                            :disciplinesSimilaires="props.disciplinesSimilaires"
-                        />
-                    </div>
+                    </TransitionRoot>
+
+                    <TransitionRoot
+                        as="template"
+                        :show="displayMap"
+                        enter="transition-opacity duration-150"
+                        enter-from="opacity-0"
+                        enter-to="opacity-100"
+                        leave="transition-opacity duration-150"
+                        leave-from="opacity-100"
+                        leave-to="opacity-0"
+                    >
+                        <div class="mx-auto flex w-full flex-col space-y-4">
+                            <div ref="mapStructure" class="w-full">
+                                <LeafletMapProduitMultiple
+                                    class="md:top-2"
+                                    :produits="produits.data"
+                                    :hovered-produit="hoveredProduit"
+                                    :structures="structures.data"
+                                    :hovered-structure="hoveredStructure"
+                                    :zoom="12"
+                                />
+                                <button
+                                    v-if="displayMap"
+                                    type="button"
+                                    class="fixed inset-x-2 bottom-4 z-[999] mx-auto flex w-1/2 max-w-sm items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white transition duration-75 hover:scale-105 hover:bg-gray-800 hover:font-semibold md:w-auto"
+                                    @click="goToListe"
+                                >
+                                    <ListBulletIcon class="mr-2 h-5 w-5" />
+                                    Afficher la liste
+                                </button>
+                            </div>
+                        </div>
+                    </TransitionRoot>
                 </div>
             </template>
             <template v-else>
