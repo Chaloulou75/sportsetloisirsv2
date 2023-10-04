@@ -126,6 +126,54 @@ class CityController extends Controller
 
         $produits = $produitsFromCity->merge($citiesAroundProducts)->paginate(12);
 
+        $citiesAroundStructures = $citiesAround->flatMap(function ($city) {
+            return $city->structures()->with([
+                'creator:id,name',
+                        'adresses'  => function ($query) {
+                            $query->latest();
+                        },
+                        'city:id,ville,ville_formatee,code_postal',
+                        'departement:id,departement,numero',
+                        'structuretype:id,name,slug',
+                        'disciplines',
+                        'disciplines.discipline:id,name,slug',
+                        'categories',
+                        'activites',
+                        'activites.discipline:id,name,slug',
+                        'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+                        'produits',
+                        'produits.criteres:id,activite_id,produit_id,critere_id,valeur',
+                        'produits.criteres.critere:id,nom',
+            ])
+            ->withCount('disciplines', 'produits', 'activites')
+            ->select(['id', 'name', 'slug', 'presentation_courte', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
+            ->get();
+        });
+
+        $structuresFromCity = $city->structures()->with([
+                        'creator:id,name',
+                        'adresses'  => function ($query) {
+                            $query->latest();
+                        },
+                        'city:id,ville,ville_formatee,code_postal',
+                        'departement:id,departement,numero',
+                        'structuretype:id,name,slug',
+                        'disciplines',
+                        'disciplines.discipline:id,name,slug',
+                        'categories',
+                        'activites',
+                        'activites.discipline:id,name,slug',
+                        'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+                        'produits',
+                        'produits.criteres:id,activite_id,produit_id,critere_id,valeur',
+                        'produits.criteres.critere:id,nom',
+        ])
+        ->withCount('disciplines', 'produits', 'activites')
+        ->select(['id', 'name', 'slug', 'presentation_courte', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
+        ->get();
+
+        $structures = $structuresFromCity->merge($citiesAroundStructures)->paginate(12);
+
         $city->timestamp = false;
         $city->increment('view_count');
 
@@ -137,6 +185,7 @@ class CityController extends Controller
             'citiesAround' => $citiesAround,
             'produits' => $produits,
             'flattenedDisciplines' => $flattenedDisciplines,
+            'structures' => $structures,
             'filters' => request()->all(['discipline']),
         ]);
     }

@@ -40,11 +40,11 @@ const headerClass = computed(() => {
 <template>
     <Link
         :href="link"
-        class="group relative flex h-auto w-full items-center justify-center rounded bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-overlay shadow-sm transition duration-150 ease-in-out hover:shadow-lg md:w-auto"
+        class="group relative flex h-auto w-full items-center justify-center rounded bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-overlay shadow transition duration-150 ease-in-out hover:bg-blend-multiply hover:shadow-md md:w-auto"
         :class="headerClass"
     >
         <div
-            class="inline-flex w-full flex-col items-center justify-center rounded px-6 py-3 text-center text-base font-semibold text-gray-900 shadow-sm transition duration-150 group-hover:text-white md:text-lg"
+            class="inline-flex w-full flex-col items-center justify-center rounded px-6 py-3 text-center text-base font-semibold text-gray-700 transition duration-150 group-hover:text-gray-900 md:text-lg"
         >
             {{ discipline.name }}
 

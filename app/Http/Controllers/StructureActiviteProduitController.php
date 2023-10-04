@@ -63,7 +63,7 @@ class StructureActiviteProduitController extends Controller
                     'categorie',
                     'discipline'
                 ])->where('structure_id', $structure->id)
-                    ->where('id', $activite)
+                    ->where('id', $activite->id)
                     ->first();
 
         if($request->date || $request->time) {

@@ -77,10 +77,7 @@ class CityDisciplineCategorieController extends Controller
                 ->select(['id', 'name', 'slug'])
                 ->get();
 
-
         $criteres = LienDisciplineCategorieCritere::with('valeurs')->where('discipline_id', $discipline->id)->where('categorie_id', $category->id)->get();
-
-
 
         $citiesAroundProducts = $citiesAround->flatMap(function ($city) use ($discipline, $category) {
             return $city->produits()->with([
@@ -120,6 +117,72 @@ class CityDisciplineCategorieController extends Controller
 
         $produits = $produitsFromCity->merge($citiesAroundProducts)->paginate(12);
 
+        $citiesAroundStructures = $citiesAround->flatMap(function ($city) use ($discipline, $category) {
+            return $city->structures()->with([
+                'creator:id,name',
+                'adresses'  => function ($query) {
+                    $query->latest();
+                },
+                'city:id,ville,ville_formatee,code_postal',
+                'departement:id,departement,numero',
+                'structuretype:id,name,slug',
+                'disciplines' => function ($query) use ($discipline) {
+                    $query->where('id', $discipline->id);
+                },
+                'disciplines.discipline:id,name,slug',
+                'categories' => function ($query) use ($category) {
+                    $query->where('id', $category->id);
+                },
+                'activites' => function ($query) use ($discipline, $category) {
+                    $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
+                },
+                'activites.discipline:id,name,slug',
+                'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+                'produits' => function ($query) use ($discipline, $category) {
+                    $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
+                },
+                'produits.criteres:id,activite_id,produit_id,critere_id,valeur',
+                'produits.criteres.critere:id,nom',
+            ])->whereHas('activites', function ($query) use ($discipline, $category) {
+                $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
+            })
+            ->withCount('disciplines', 'produits', 'activites')
+            ->select(['id', 'name', 'slug', 'presentation_courte', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
+            ->get();
+        });
+
+        $structuresFromCity = $city->structures()->with([
+            'creator:id,name',
+            'adresses' => function ($query) {
+                $query->latest();
+            },
+            'city:id,ville,ville_formatee,code_postal',
+            'departement:id,departement,numero',
+            'structuretype:id,name,slug',
+            'disciplines' => function ($query) use ($discipline) {
+                $query->where('id', $discipline->id);
+            },
+            'disciplines.discipline:id,name,slug',
+            'categories' => function ($query) use ($category) {
+                $query->where('id', $category->id);
+            },
+            'activites' => function ($query) use ($discipline, $category) {
+                $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
+            },
+            'activites.discipline:id,name,slug',
+            'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+            'produits',
+            'produits.criteres:id,activite_id,produit_id,critere_id,valeur',
+            'produits.criteres.critere:id,nom',
+        ])
+        ->whereHas('activites', function ($query) use ($discipline, $category) {
+            $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
+        })
+        ->withCount('disciplines', 'produits', 'activites')
+        ->select(['id', 'name', 'slug', 'presentation_courte', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
+        ->get();
+
+        $structures = $structuresFromCity->merge($citiesAroundStructures)->paginate(12);
 
         $city->timestamp = false;
         $city->increment('view_count');
@@ -135,6 +198,7 @@ class CityDisciplineCategorieController extends Controller
             'citiesAround' => $citiesAround,
             'disciplinesSimilaires' => $disciplinesSimilaires,
             'produits' => $produits,
+            'structures' => $structures,
             'discipline' => $discipline,
             'criteres' => $criteres,
             'listDisciplines' => $listDisciplines,

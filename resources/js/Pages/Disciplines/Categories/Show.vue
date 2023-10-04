@@ -211,7 +211,7 @@ const formCriteres = useForm({
         <template #default>
             <div
                 ref="criteresEl"
-                class="sticky left-0 right-0 top-16 z-[999] bg-transparent backdrop-blur-md"
+                class="sticky left-0 right-0 top-16 z-[1199] bg-transparent backdrop-blur-md"
             >
                 <CategoriesResultNavigation
                     :category="category"
@@ -220,10 +220,12 @@ const formCriteres = useForm({
                     :categories="categories"
                     :firstCategories="firstCategories"
                     :categoriesNotInFirst="categoriesNotInFirst"
+                    :showCriteres="showCriteres"
+                    @call-toggle-criteres="toggleCriteres"
                 />
                 <!-- Criteres -->
                 <div
-                    class="mt-6 flex w-full items-center justify-between border-b border-gray-300 px-2 pb-3 md:hidden"
+                    class="flex w-full items-center justify-between border-b border-gray-300 px-2 py-3 md:hidden"
                 >
                     <h3 class="font-semibold">
                         {{ category.nom_categorie_client }}
@@ -233,10 +235,9 @@ const formCriteres = useForm({
                         <AdjustmentsHorizontalIcon v-else class="h-6 w-6" />
                     </button>
                 </div>
-
                 <div
                     v-if="props.criteres"
-                    class="mx-auto w-full flex-col items-start justify-center space-x-0 space-y-2 rounded bg-transparent px-2 py-6 backdrop-blur-md md:flex md:flex-row md:items-center md:space-x-6 md:space-y-0 md:px-6"
+                    class="mx-auto w-full flex-col items-start justify-center space-x-0 space-y-2 rounded bg-transparent px-2 py-2 backdrop-blur-md md:flex-row md:items-center md:space-x-6 md:space-y-0 md:px-6 md:py-4"
                     :class="{
                         flex: showCriteres,
                         hidden: !showCriteres,
@@ -388,9 +389,9 @@ const formCriteres = useForm({
             </div>
 
             <template v-if="produits.data.length > 0">
-                <div class="mx-auto min-h-full max-w-full py-6 md:py-12">
+                <div class="mx-auto py-6 md:py-12">
                     <TransitionRoot
-                        as="template"
+                        as="div"
                         :show="displayProduits"
                         enter="transition-opacity duration-150"
                         enter-from="opacity-0"
@@ -399,97 +400,111 @@ const formCriteres = useForm({
                         leave-from="opacity-100"
                         leave-to="opacity-0"
                     >
-                        <div
-                            ref="listeStructure"
-                            class="w-full px-2 sm:px-6 lg:px-8"
+                        <h2
+                            class="mb-4 w-full text-center text-lg font-semibold text-gray-600 md:mb-8 md:w-1/2 md:text-2xl"
                         >
-                            <h2
-                                class="mb-4 text-center text-lg font-semibold text-gray-600 md:mb-8 md:text-2xl"
-                            >
-                                Les activités
-                            </h2>
+                            Les activités
+                        </h2>
+                        <div
+                            class="mx-auto flex w-full flex-col px-2 md:flex-row md:space-x-4"
+                        >
                             <div
-                                class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-4"
+                                ref="listeStructure"
+                                class="w-full px-2 md:w-1/2"
                             >
-                                <ProduitCard
-                                    v-for="(produit, index) in produits.data"
-                                    :key="produit.id"
-                                    :index="index"
-                                    :produit="produit"
-                                    :discipline="discipline"
-                                    @card-hover="showTooltip(produit)"
-                                    @card-out="hideTooltip"
-                                    :link="
-                                        route('structures.activites.show', {
-                                            activite: produit.activite.id,
-                                        })
-                                    "
-                                    :data="{
-                                        discipline: discipline.slug,
-                                        category: produit.categorie_id,
-                                        produit: produit.id,
-                                    }"
-                                />
-                            </div>
-                            <div class="flex justify-end p-10">
-                                <Pagination :links="produits.links" />
-                            </div>
+                                <div
+                                    class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
+                                >
+                                    <ProduitCard
+                                        v-for="(
+                                            produit, index
+                                        ) in produits.data"
+                                        :key="produit.id"
+                                        :index="index"
+                                        :produit="produit"
+                                        :discipline="discipline"
+                                        @card-hover="showTooltip(produit)"
+                                        @card-out="hideTooltip"
+                                        :link="
+                                            route('structures.activites.show', {
+                                                activite: produit.activite.id,
+                                            })
+                                        "
+                                        :data="{
+                                            produit: produit.id,
+                                        }"
+                                    />
+                                </div>
+                                <div class="flex justify-end p-10">
+                                    <Pagination :links="produits.links" />
+                                </div>
 
-                            <!-- les structures -->
-                            <h2
-                                class="mb-4 text-center text-lg font-semibold text-gray-600 md:mb-8 md:text-2xl"
-                            >
-                                Les structures
-                            </h2>
-                            <div
-                                class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-4"
-                            >
-                                <StructureCard
-                                    v-for="(
-                                        structure, index
-                                    ) in structures.data"
-                                    :key="structure.id"
-                                    :index="index"
-                                    :structure="structure"
-                                    @card-hover="
-                                        showStructureTooltip(structure)
-                                    "
-                                    @card-out="hideStructureTooltip"
-                                    :link="
-                                        route('structures.show', {
-                                            structure: structure.slug,
-                                        })
-                                    "
-                                    :data="{
-                                        discipline: discipline.slug,
-                                    }"
-                                />
-                            </div>
-                            <div class="flex justify-end p-10">
-                                <Pagination :links="structures.links" />
-                            </div>
+                                <!-- les structures -->
+                                <h2
+                                    v-if="structures.data.length > 0"
+                                    class="mb-4 text-center text-lg font-semibold text-gray-600 md:mb-8 md:text-2xl"
+                                >
+                                    Les structures
+                                </h2>
+                                <div
+                                    class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
+                                >
+                                    <StructureCard
+                                        v-for="(
+                                            structure, index
+                                        ) in structures.data"
+                                        :key="structure.id"
+                                        :index="index"
+                                        :structure="structure"
+                                        @card-hover="
+                                            showStructureTooltip(structure)
+                                        "
+                                        @card-out="hideStructureTooltip"
+                                        :link="
+                                            route('structures.show', {
+                                                structure: structure.slug,
+                                            })
+                                        "
+                                        :data="{
+                                            discipline: discipline.slug,
+                                            category: category.id,
+                                        }"
+                                    />
+                                </div>
+                                <div class="flex justify-end p-10">
+                                    <Pagination :links="structures.links" />
+                                </div>
 
-                            <!-- Blog -->
-                            <h2
-                                class="mb-4 text-center text-lg font-semibold text-gray-600 md:mb-8 md:text-2xl"
-                            >
-                                Les derniers articles
-                            </h2>
-                            <!-- les disciplines similaires -->
-                            <DisciplinesSimilaires
-                                v-if="disciplinesSimilaires.length > 0"
-                                :disciplinesSimilaires="disciplinesSimilaires"
+                                <button
+                                    v-if="displayProduits"
+                                    type="button"
+                                    class="fixed inset-x-2 bottom-4 z-[999] mx-auto flex w-3/4 max-w-xs items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-xs text-white transition duration-75 hover:scale-105 hover:bg-gray-800 hover:font-semibold md:hidden md:w-auto md:text-sm"
+                                    @click="goToMap"
+                                >
+                                    <MapIcon class="mr-2 h-5 w-5" />
+                                    Afficher la carte
+                                </button>
+                            </div>
+                            <LeafletMapProduitMultiple
+                                class="sticky top-32 hidden md:block md:w-1/2"
+                                :produits="produits.data"
+                                :hovered-produit="hoveredProduit"
+                                :structures="structures.data"
+                                :hovered-structure="hoveredStructure"
+                                :zoom="11"
                             />
-                            <button
-                                v-if="displayProduits"
-                                type="button"
-                                class="fixed inset-x-2 bottom-4 z-[999] mx-auto flex w-3/4 max-w-xs items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-xs text-white transition duration-75 hover:scale-105 hover:bg-gray-800 hover:font-semibold md:w-auto md:text-sm"
-                                @click="goToMap"
-                            >
-                                <MapIcon class="mr-2 h-5 w-5" />
-                                Afficher la carte
-                            </button>
                         </div>
+                        <!-- Blog -->
+                        <h2
+                            class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
+                        >
+                            Les derniers articles
+                        </h2>
+                        <!-- les disciplines similaires -->
+                        <DisciplinesSimilaires
+                            v-if="disciplinesSimilaires.length > 0"
+                            :disciplinesSimilaires="disciplinesSimilaires"
+                        />
                     </TransitionRoot>
 
                     <TransitionRoot
@@ -515,7 +530,7 @@ const formCriteres = useForm({
                                 <button
                                     v-if="displayMap"
                                     type="button"
-                                    class="fixed inset-x-2 bottom-4 z-[999] mx-auto flex w-3/4 max-w-xs items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-xs text-white transition duration-75 hover:scale-105 hover:bg-gray-800 hover:font-semibold md:w-auto md:text-sm"
+                                    class="fixed inset-x-2 bottom-4 z-[999] mx-auto flex w-3/4 max-w-xs items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-xs text-white transition duration-75 hover:scale-105 hover:bg-gray-800 hover:font-semibold md:hidden md:w-auto md:text-sm"
                                     @click="goToListe"
                                 >
                                     <ListBulletIcon class="mr-2 h-5 w-5" />

@@ -220,13 +220,15 @@ const formCriteres = useForm({
                 :categories="categories"
                 :firstCategories="firstCategories"
                 :categoriesNotInFirst="categoriesNotInFirst"
+                :showCriteres="showCriteres"
+                @call-toggle-criteres="toggleCriteres"
             />
         </template>
         <template #default>
             <!-- critères -->
             <div ref="criteresEl">
                 <div
-                    class="mt-6 flex w-full items-center justify-between border-b border-gray-300 px-2 pb-3 md:hidden"
+                    class="flex w-full items-center justify-between border-b border-gray-300 px-2 py-3 md:hidden"
                 >
                     <h3 class="font-semibold">
                         {{ category.nom_categorie_client }}
@@ -239,7 +241,7 @@ const formCriteres = useForm({
 
                 <div
                     v-if="props.criteres"
-                    class="mx-auto w-full flex-col items-start justify-center space-x-0 space-y-2 rounded bg-gray-50 px-2 py-6 md:flex md:flex-row md:items-center md:space-x-6 md:space-y-0 md:px-6"
+                    class="mx-auto w-full flex-col items-start justify-center space-x-0 space-y-2 rounded bg-gray-50 px-2 py-2 md:flex-row md:items-center md:space-x-6 md:space-y-0 md:px-6 md:py-4"
                     :class="{
                         flex: showCriteres,
                         hidden: !showCriteres,

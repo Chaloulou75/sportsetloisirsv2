@@ -5,10 +5,17 @@ import BreezeDropdown from "@/Components/Dropdown.vue";
 import {
     NewspaperIcon,
     ArrowLeftIcon,
-    ArrowUturnLeftIcon,
+    AdjustmentsHorizontalIcon,
     HomeIcon,
 } from "@heroicons/vue/24/solid";
-import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/vue/24/outline";
+import {
+    ChevronDownIcon,
+    ChevronUpIcon,
+    XMarkIcon,
+} from "@heroicons/vue/24/outline";
+
+const emit = defineEmits(["call-toggle-criteres"]);
+
 const props = defineProps({
     city: Object,
     departement: Object,
@@ -20,6 +27,7 @@ const props = defineProps({
     allStructureTypes: Object,
     category: Object,
     structuretypeElected: Object,
+    showCriteres: Boolean,
 });
 
 const openCategories = ref(false);
@@ -464,7 +472,7 @@ const showStructuresTypes = () => {
                         category: categorie.id,
                     })
                 "
-                class="relative w-full border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
+                class="relative flex w-full items-center justify-center border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
                 :class="[
                     route().current('villes.disciplines.categories.show') &&
                     category.id === categorie.id
@@ -473,6 +481,24 @@ const showStructuresTypes = () => {
                 ]"
             >
                 {{ categorie.nom_categorie_client }}
+                <AdjustmentsHorizontalIcon
+                    v-if="
+                        route().current('villes.disciplines.categories.show') &&
+                        category.id === categorie.id &&
+                        !showCriteres
+                    "
+                    @click.prevent="emit('call-toggle-criteres')"
+                    class="z-20 ml-1.5 h-6 w-6 text-white hover:text-gray-700"
+                />
+                <XMarkIcon
+                    v-if="
+                        route().current('villes.disciplines.categories.show') &&
+                        category.id === categorie.id &&
+                        showCriteres
+                    "
+                    @click.prevent="emit('call-toggle-criteres')"
+                    class="z-20 ml-1.5 h-6 w-6 text-white hover:text-gray-700"
+                />
                 <div
                     v-if="
                         route().current('villes.disciplines.categories.show') &&
@@ -900,7 +926,7 @@ const showStructuresTypes = () => {
                         category: categorie.id,
                     })
                 "
-                class="relative w-full border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
+                class="relative flex w-full items-center justify-center border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
                 :class="[
                     route().current(
                         'departements.disciplines.categories.show'
@@ -910,6 +936,28 @@ const showStructuresTypes = () => {
                 ]"
             >
                 {{ categorie.nom_categorie_client }}
+                <AdjustmentsHorizontalIcon
+                    v-if="
+                        route().current(
+                            'departements.disciplines.categories.show'
+                        ) &&
+                        category.id === categorie.id &&
+                        !showCriteres
+                    "
+                    @click.prevent="emit('call-toggle-criteres')"
+                    class="z-20 ml-1.5 h-6 w-6 text-white hover:text-gray-700"
+                />
+                <XMarkIcon
+                    v-if="
+                        route().current(
+                            'departements.disciplines.categories.show'
+                        ) &&
+                        category.id === categorie.id &&
+                        showCriteres
+                    "
+                    @click.prevent="emit('call-toggle-criteres')"
+                    class="z-20 ml-1.5 h-6 w-6 text-white hover:text-gray-700"
+                />
                 <div
                     v-if="
                         route().current(
@@ -1118,7 +1166,7 @@ const showStructuresTypes = () => {
                         category: categorie.id,
                     })
                 "
-                class="relative w-full border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
+                class="relative flex w-full items-center justify-center border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
                 :class="[
                     route().current('disciplines.categories.show') &&
                     category.id === categorie.id
@@ -1127,6 +1175,24 @@ const showStructuresTypes = () => {
                 ]"
             >
                 {{ categorie.nom_categorie_client }}
+                <AdjustmentsHorizontalIcon
+                    v-if="
+                        route().current('disciplines.categories.show') &&
+                        category.id === categorie.id &&
+                        !showCriteres
+                    "
+                    @click.prevent="emit('call-toggle-criteres')"
+                    class="z-20 ml-1.5 h-6 w-6 text-white hover:text-gray-700"
+                />
+                <XMarkIcon
+                    v-if="
+                        route().current('disciplines.categories.show') &&
+                        category.id === categorie.id &&
+                        showCriteres
+                    "
+                    @click.prevent="emit('call-toggle-criteres')"
+                    class="z-20 ml-1.5 h-6 w-6 text-white hover:text-gray-700"
+                />
                 <div
                     v-if="
                         route().current('disciplines.categories.show') &&

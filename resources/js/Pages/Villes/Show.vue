@@ -6,6 +6,7 @@ import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigati
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import DisciplineSmallCard from "@/Components/Disciplines/DisciplineSmallCard.vue";
 import CitiesAround from "@/Components/Cities/CitiesAround.vue";
+import { TransitionRoot } from "@headlessui/vue";
 import { HomeIcon, ListBulletIcon, MapIcon } from "@heroicons/vue/24/outline";
 import { useElementVisibility } from "@vueuse/core";
 
@@ -14,6 +15,7 @@ const props = defineProps({
     city: Object,
     citiesAround: Object,
     produits: Object,
+    structures: Object,
     flattenedDisciplines: Object,
     listDisciplines: Object,
     allCities: Object,
@@ -28,6 +30,10 @@ const ProduitCard = defineAsyncComponent(() =>
     import("@/Components/Produits/ProduitCard.vue")
 );
 
+const StructureCard = defineAsyncComponent(() =>
+    import("@/Components/Structures/StructureCard.vue")
+);
+
 const Pagination = defineAsyncComponent(() =>
     import("@/Components/Pagination.vue")
 );
@@ -37,22 +43,37 @@ const mapIsVisible = useElementVisibility(mapStructure);
 const listeStructure = ref(null);
 const listeIsVisible = useElementVisibility(listeStructure);
 
+const displayProduits = ref(true);
+const displayMap = ref(false);
+
 const goToMap = () => {
-    mapStructure.value.scrollIntoView({ behavior: "smooth" });
+    displayProduits.value = !displayProduits.value;
+    displayMap.value = !displayMap.value;
+    // mapStructure.value.scrollIntoView({ behavior: "smooth" });
 };
 
 const goToListe = () => {
-    listeStructure.value.scrollIntoView({ behavior: "smooth" });
+    displayProduits.value = !displayProduits.value;
+    displayMap.value = !displayMap.value;
+    // listeStructure.value.scrollIntoView({ behavior: "smooth" });
 };
 
 const hoveredProduit = ref(null);
+const hoveredStructure = ref(null);
 
 const showTooltip = (produit) => {
     hoveredProduit.value = produit.id;
 };
-
 const hideTooltip = () => {
     hoveredProduit.value = null;
+};
+
+const showStructureTooltip = (structure) => {
+    hoveredStructure.value = structure.id;
+};
+
+const hideStructureTooltip = () => {
+    hoveredStructure.value = null;
 };
 
 const formatCityName = (ville) => {
@@ -170,69 +191,152 @@ const formatCityName = (ville) => {
                     >
                     et aux alentours
                 </h2>
-                <div
-                    class="mx-auto flex min-h-full max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
-                >
-                    <div ref="listeStructure" class="md:w-1/2">
+                <div class="mx-auto py-6 md:py-12">
+                    <TransitionRoot
+                        as="div"
+                        :show="displayProduits"
+                        enter="transition-opacity duration-150"
+                        enter-from="opacity-0"
+                        enter-to="opacity-100"
+                        leave="transition-opacity duration-150"
+                        leave-from="opacity-100"
+                        leave-to="opacity-0"
+                    >
+                        <h2
+                            class="mb-4 w-full text-center text-lg font-semibold text-gray-600 md:mb-8 md:w-1/2 md:text-2xl"
+                        >
+                            Les activités
+                        </h2>
                         <div
-                            class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
+                            class="mx-auto flex w-full flex-col px-2 md:flex-row md:space-x-4"
                         >
-                            <ProduitCard
-                                v-for="(produit, index) in produits.data"
-                                :key="produit.id"
-                                :index="index"
-                                :produit="produit"
-                                :discipline="produit.discipline"
-                                @card-hover="showTooltip(produit)"
-                                @card-out="hideTooltip"
-                                :link="
-                                    route('structures.show', {
-                                        structure: produit.structure.slug,
-                                    })
-                                "
-                                :data="{
-                                    city: city.id,
-                                    discipline: produit.discipline.slug,
-                                    category: produit.categorie_id,
-                                }"
-                            />
-                        </div>
-                        <div class="flex justify-end p-10">
-                            <Pagination :links="produits.links" />
-                        </div>
-                        <button
-                            v-if="!mapIsVisible && listeIsVisible"
-                            type="button"
-                            class="fixed inset-x-2 bottom-4 z-[9999] mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:hidden"
-                            @click="goToMap"
-                        >
-                            <MapIcon class="mr-2 h-5 w-5" />
-                            Carte
-                        </button>
-                    </div>
-                    <div class="space-y-4 md:sticky md:w-1/2">
-                        <div ref="mapStructure">
+                            <div
+                                ref="listeStructure"
+                                class="w-full px-2 md:w-1/2"
+                            >
+                                <div
+                                    class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
+                                >
+                                    <ProduitCard
+                                        v-for="(
+                                            produit, index
+                                        ) in produits.data"
+                                        :key="produit.id"
+                                        :index="index"
+                                        :produit="produit"
+                                        :discipline="discipline"
+                                        @card-hover="showTooltip(produit)"
+                                        @card-out="hideTooltip"
+                                        :link="
+                                            route('structures.activites.show', {
+                                                activite: produit.activite.id,
+                                            })
+                                        "
+                                        :data="{
+                                            produit: produit.id,
+                                        }"
+                                    />
+                                </div>
+                                <div class="flex justify-end p-10">
+                                    <Pagination :links="produits.links" />
+                                </div>
+
+                                <!-- les structures -->
+                                <h2
+                                    v-if="structures.data.length > 0"
+                                    class="mb-4 text-center text-lg font-semibold text-gray-600 md:mb-8 md:text-2xl"
+                                >
+                                    Les structures
+                                </h2>
+                                <div
+                                    class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
+                                >
+                                    <StructureCard
+                                        v-for="(
+                                            structure, index
+                                        ) in structures.data"
+                                        :key="structure.id"
+                                        :index="index"
+                                        :structure="structure"
+                                        @card-hover="
+                                            showStructureTooltip(structure)
+                                        "
+                                        @card-out="hideStructureTooltip"
+                                        :link="
+                                            route('structures.show', {
+                                                structure: structure.slug,
+                                            })
+                                        "
+                                        :data="{}"
+                                    />
+                                </div>
+                                <div class="flex justify-end p-10">
+                                    <Pagination :links="structures.links" />
+                                </div>
+
+                                <button
+                                    v-if="displayProduits"
+                                    type="button"
+                                    class="fixed inset-x-2 bottom-4 z-[999] mx-auto flex w-3/4 max-w-xs items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-xs text-white transition duration-75 hover:scale-105 hover:bg-gray-800 hover:font-semibold md:hidden md:w-auto md:text-sm"
+                                    @click="goToMap"
+                                >
+                                    <MapIcon class="mr-2 h-5 w-5" />
+                                    Afficher la carte
+                                </button>
+                            </div>
                             <LeafletMapProduitMultiple
-                                class="md:top-2"
+                                class="sticky top-32 hidden md:block md:w-1/2"
                                 :produits="produits.data"
                                 :hovered-produit="hoveredProduit"
-                                :zoom="12"
+                                :structures="structures.data"
+                                :hovered-structure="hoveredStructure"
+                                :zoom="11"
                             />
-                            <button
-                                v-if="mapIsVisible"
-                                type="button"
-                                class="fixed inset-x-2 bottom-4 z-[9999] mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:hidden"
-                                @click="goToListe"
-                            >
-                                <ListBulletIcon class="mr-2 h-5 w-5" />
-                                Liste
-                            </button>
                         </div>
+                        <!-- Blog -->
+                        <h2
+                            class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
+                        >
+                            Les derniers articles
+                        </h2>
                         <CitiesAround
                             v-if="citiesAround.length > 0"
                             :citiesAround="props.citiesAround"
                         />
-                    </div>
+                    </TransitionRoot>
+
+                    <TransitionRoot
+                        as="template"
+                        :show="displayMap"
+                        enter="transition-opacity duration-150"
+                        enter-from="opacity-0"
+                        enter-to="opacity-100"
+                        leave="transition-opacity duration-150"
+                        leave-from="opacity-100"
+                        leave-to="opacity-0"
+                    >
+                        <div class="mx-auto flex w-full flex-col space-y-4">
+                            <div ref="mapStructure" class="w-full">
+                                <LeafletMapProduitMultiple
+                                    class="md:top-2"
+                                    :produits="produits.data"
+                                    :hovered-produit="hoveredProduit"
+                                    :structures="structures.data"
+                                    :hovered-structure="hoveredStructure"
+                                    :zoom="12"
+                                />
+                                <button
+                                    v-if="displayMap"
+                                    type="button"
+                                    class="fixed inset-x-2 bottom-4 z-[1199] mx-auto flex w-3/4 max-w-xs items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-xs text-white transition duration-75 hover:scale-105 hover:bg-gray-800 hover:font-semibold md:w-auto md:text-sm"
+                                    @click="goToListe"
+                                >
+                                    <ListBulletIcon class="mr-2 h-5 w-5" />
+                                    Afficher la liste
+                                </button>
+                            </div>
+                        </div>
+                    </TransitionRoot>
                 </div>
             </template>
             <template v-else>
