@@ -142,62 +142,56 @@ const formatCityName = (ville) => {
             </button>
         </div>
 
-        <div class="mt-2">
-            <dl class="flex flex-col">
-                <div
-                    v-if="produit.activite"
-                    class="inline-flex flex-col items-center justify-center px-2 py-1.5 text-center text-lg font-semibold tracking-wide text-gray-600"
-                >
-                    {{ produit.activite.titre }}
-                    <span class="mt-0.5 text-sm">{{
-                        produit.structure.name
-                    }}</span>
-                </div>
+        <div class="mt-2 flex flex-col">
+            <div
+                v-if="produit.activite"
+                class="inline-flex flex-col items-center justify-center px-2 py-1.5 text-center text-lg font-semibold tracking-wide text-gray-600"
+            >
+                {{ produit.activite.titre }}
+                <span class="mt-0.5 text-sm">{{ produit.structure.name }}</span>
+            </div>
 
-                <div class="w-full px-4 py-2 text-slate-700">
-                    <dt class="sr-only">Produit</dt>
-                    <p class="text-xs">Produit n° {{ produit.id }}:</p>
-                    <div
-                        v-if="produit.adresse"
-                        class="flex items-center py-1.5 text-base"
-                    >
-                        <dt class="sr-only">Ville</dt>
-                        <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
-                        <p class="font-semibold">
-                            {{ produit.adresse.address }},
-                            {{ produit.adresse.city }} ({{
-                                produit.adresse.zip_code
-                            }})
-                        </p>
-                    </div>
-                    <div v-if="produit.criteres.length > 0">
-                        <p class="mt-2 text-base font-semibold">Critères:</p>
-                        <ul class="list-inside list-disc text-base">
-                            <li
-                                v-for="critere in produit.criteres"
-                                :key="critere.id"
-                            >
-                                {{ critere.critere.nom }}:
-                                <span class="font-semibold">{{
-                                    critere.valeur
-                                }}</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div v-if="produit.tarifs.length > 0">
-                        <p class="mt-2 text-base font-semibold">Tarifs:</p>
-                        <ul class="list-inside list-disc text-base">
-                            <li v-for="tarif in produit.tarifs" :key="tarif.id">
-                                {{ tarif.titre }}:
-                                <span class="font-semibold">
-                                    {{ tarif.amount }} € /
-                                    {{ tarif.tarif_type.type }}</span
-                                >
-                            </li>
-                        </ul>
-                    </div>
+            <div class="w-full px-4 py-2 text-slate-700">
+                <div
+                    v-if="produit.adresse"
+                    class="flex items-center py-1.5 text-base"
+                >
+                    <dt class="sr-only">Ville</dt>
+                    <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
+                    <p class="font-semibold">
+                        {{ produit.adresse.address }},
+                        {{ produit.adresse.city }} ({{
+                            produit.adresse.zip_code
+                        }})
+                    </p>
                 </div>
-            </dl>
+                <div v-if="produit.criteres.length > 0">
+                    <p class="mt-2 text-base font-semibold">Critères:</p>
+                    <ul class="list-inside list-disc text-base">
+                        <li
+                            v-for="critere in produit.criteres"
+                            :key="critere.id"
+                        >
+                            {{ critere.critere.nom }}:
+                            <span class="font-semibold">{{
+                                critere.valeur
+                            }}</span>
+                        </li>
+                    </ul>
+                </div>
+                <div v-if="produit.tarifs.length > 0">
+                    <p class="mt-2 text-base font-semibold">Tarifs:</p>
+                    <ul class="list-inside list-disc text-base">
+                        <li v-for="tarif in produit.tarifs" :key="tarif.id">
+                            {{ tarif.titre }}:
+                            <span class="font-semibold">
+                                {{ tarif.amount }} € /
+                                {{ tarif.tarif_type.type }}</span
+                            >
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </Link>
 </template>

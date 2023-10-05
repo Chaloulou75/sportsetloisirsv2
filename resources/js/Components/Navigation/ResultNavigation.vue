@@ -91,8 +91,8 @@ const submitForm = async () => {
                     >
                         <AutocompleteCityNav
                             :cities="allCities"
-                            v-model="localite"
                             :current-city="currentCity"
+                            v-model="localite"
                             class="mr-4"
                         />
 

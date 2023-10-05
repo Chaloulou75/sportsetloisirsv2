@@ -1,11 +1,13 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, defineAsyncComponent } from "vue";
+import { Link } from "@inertiajs/vue3";
 import L from "leaflet";
 import {
     LMap,
     LTileLayer,
     LMarker,
     LControlScale,
+    LPopup,
     LTooltip,
     LIcon,
 } from "@vue-leaflet/vue-leaflet";
@@ -19,7 +21,12 @@ const props = defineProps({
     zoom: Number,
 });
 
+const ProduitCardXS = defineAsyncComponent(() =>
+    import("@/Components/Produits/ProduitCardXS.vue")
+);
+
 const map = ref(null);
+const markerProd = ref([]);
 
 const center = ref([
     props.produits[0].adresse.address_lat,
@@ -54,7 +61,6 @@ watch(
                     produit.adresse.address_lat,
                     produit.adresse.address_lng,
                 ];
-                // openTooltip(produit.id);
             }
         } else {
             center.value = [
@@ -114,13 +120,29 @@ watch(
                         parseFloat(produit.adresse.address_lat),
                         parseFloat(produit.adresse.address_lng),
                     ]"
+                    :ref="markerProd"
                 >
-                    <l-tooltip
-                        :options="{ interactive: true }"
-                        :content="produit.activite.titre"
-                        class="rouded-lg px-1.5 py-1 font-semibold"
+                    <l-popup
+                        :options="{
+                            interactive: true,
+                            autoPan: true,
+                            autoPanPadding: [4, 4],
+                            keepInView: true,
+                        }"
                     >
-                    </l-tooltip>
+                        <ProduitCardXS
+                            :produit="produit"
+                            :discipline="produit.discipline"
+                            :link="
+                                route('structures.activites.show', {
+                                    activite: produit.activite.id,
+                                })
+                            "
+                            :data="{
+                                produit: produit.id,
+                            }"
+                        />
+                    </l-popup>
                 </l-marker>
                 <l-marker
                     v-for="structure in structures"
@@ -131,12 +153,17 @@ watch(
                     ]"
                     :icon="structureIcon"
                 >
-                    <l-tooltip
-                        :options="{ interactive: true }"
-                        :content="structure.name"
-                        class="rouded-lg px-1.5 py-1 font-semibold"
-                    >
-                    </l-tooltip>
+                    <l-popup :options="{ interactive: true }">
+                        <Link
+                            class="rouded-lg px-1.5 py-1 font-semibold text-green-600 hover:text-green-800"
+                            :href="
+                                route('structures.show', {
+                                    structure: structure.slug,
+                                })
+                            "
+                            >{{ structure.name }}</Link
+                        >
+                    </l-popup>
                 </l-marker>
             </l-map>
         </div>

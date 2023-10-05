@@ -1,10 +1,13 @@
 <script setup>
-import AppLayout from "@/Layouts/AppLayout.vue";
-import { ref } from "vue";
+import ResultLayout from "@/Layouts/ResultLayout.vue";
+import { ref, defineAsyncComponent } from "vue";
 import { router, Head, Link } from "@inertiajs/vue3";
-import FamilleNavigation from "@/Components/Familles/FamilleNavigation.vue";
+import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
+import ResultsHeader from "@/Components/ResultsHeader.vue";
 import AutocompleteDiscipline from "@/Components/Home/AutocompleteDiscipline.vue";
 import AutocompleteCity from "@/Components/Home/AutocompleteCity.vue";
+import AutocompleteDisciplineNav from "@/Components/Navigation/AutocompleteDisciplineNav.vue";
+import AutocompleteCityNav from "@/Components/Navigation/AutocompleteCityNav.vue";
 import DisciplineSmallCard from "@/Components/Disciplines/DisciplineSmallCard.vue";
 import { ArrowSmallRightIcon, CheckIcon } from "@heroicons/vue/24/solid";
 import { MagnifyingGlassIcon } from "@heroicons/vue/24/outline";
@@ -71,23 +74,23 @@ const formatCityName = (ville) => {
         description="Sports-et-loisirs.fr recense les structures proposant des activités de sport ou de loisirs en France - plus de 300 disciplines et 32000 structures référencées."
     />
 
-    <AppLayout>
-        <header>
-            <FamilleNavigation
-                v-if="familles.length > 0"
-                :familles="familles"
-                class="my-3"
-            />
-        </header>
-        <div>
+    <ResultLayout :listDisciplines="listDisciplines" :allCities="allCities">
+        <template #header>
+            <FamilleResultNavigation :familles="familles" />
+            <ResultsHeader>
+                <template v-slot:title> Sports et loisirs </template>
+            </ResultsHeader>
+        </template>
+        <template #default>
             <section
-                class="mx-auto flex w-full max-w-full flex-col items-end justify-center space-x-0 space-y-4 bg-gradient-to-br from-green-100 to-blue-100 px-2 py-8 md:flex-row md:space-x-4 md:space-y-0 md:px-8"
+                class="mx-auto flex w-full max-w-full flex-col items-end justify-center space-x-0 space-y-4 px-2 py-8 md:flex-row md:space-x-4 md:space-y-0 md:px-8"
             >
                 <AutocompleteCity :cities="allCities" v-model="localite" />
                 <AutocompleteDiscipline
                     :disciplines="listDisciplines"
                     v-model="search"
                 />
+
                 <div class="w-full md:w-auto">
                     <button
                         @click="submitForm"
@@ -373,6 +376,6 @@ const formatCityName = (ville) => {
                     </div>
                 </div>
             </section>
-        </div>
-    </AppLayout>
+        </template>
+    </ResultLayout>
 </template>
