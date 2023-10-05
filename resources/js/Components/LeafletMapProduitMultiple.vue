@@ -54,6 +54,7 @@ watch(
                     produit.adresse.address_lat,
                     produit.adresse.address_lng,
                 ];
+                // openTooltip(produit.id);
             }
         } else {
             center.value = [
@@ -83,52 +84,61 @@ watch(
 </script>
 
 <template>
-    <div class="h-[400px] w-full shadow-md">
-        <l-map
-            :useGlobalLeaflet="false"
-            ref="map"
-            :zoom="zoom"
-            :minZoom="2"
-            :maxZoom="20"
-            :zoomAnimation="true"
-            :center="center"
-            :options="mapOptions"
-        >
-            <l-control-scale :imperial="imperial" />
-            <l-tile-layer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                layer-type="base"
-                name="OpenStreetMap"
-            ></l-tile-layer>
-            <l-marker
-                v-for="produit in produits"
-                :key="produit.id"
-                :lat-lng="[
-                    parseFloat(produit.adresse.address_lat),
-                    parseFloat(produit.adresse.address_lng),
-                ]"
+    <div class="flex h-full flex-col items-center justify-start space-y-4 pb-4">
+        <div class="flex items-center justify-start space-x-4">
+            <label for="zoomSize">Zoom:</label>
+            <input id="zoomSize" v-model="zoom" type="range" min="2" max="20" />
+        </div>
+        <div class="h-[400px] w-full shadow-md">
+            <l-map
+                :useGlobalLeaflet="false"
+                ref="map"
+                :zoom="zoom"
+                :minZoom="2"
+                :maxZoom="20"
+                :zoomAnimation="true"
+                :center="center"
+                :options="mapOptions"
             >
-                <l-tooltip
-                    :options="{ interactive: true }"
-                    :content="produit.activite.titre"
-                    class="rouded-lg px-1.5 py-1 font-semibold"
+                <l-control-scale :imperial="imperial" position="topright" />
+                <l-tile-layer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                    layer-type="base"
+                    name="OpenStreetMap"
+                ></l-tile-layer>
+                <l-marker
+                    v-for="produit in produits"
+                    :key="produit.id"
+                    :lat-lng="[
+                        parseFloat(produit.adresse.address_lat),
+                        parseFloat(produit.adresse.address_lng),
+                    ]"
                 >
-                </l-tooltip>
-            </l-marker>
-            <l-marker
-                v-for="structure in structures"
-                :key="structure.id"
-                :lat-lng="[
-                    parseFloat(structure.address_lat),
-                    parseFloat(structure.address_lng),
-                ]"
-                :icon="structureIcon"
-            >
-                <l-tooltip class="rouded-lg px-1.5 py-1 font-semibold">
-                    {{ structure.name }}
-                </l-tooltip>
-            </l-marker>
-        </l-map>
+                    <l-tooltip
+                        :options="{ interactive: true }"
+                        :content="produit.activite.titre"
+                        class="rouded-lg px-1.5 py-1 font-semibold"
+                    >
+                    </l-tooltip>
+                </l-marker>
+                <l-marker
+                    v-for="structure in structures"
+                    :key="structure.id"
+                    :lat-lng="[
+                        parseFloat(structure.address_lat),
+                        parseFloat(structure.address_lng),
+                    ]"
+                    :icon="structureIcon"
+                >
+                    <l-tooltip
+                        :options="{ interactive: true }"
+                        :content="structure.name"
+                        class="rouded-lg px-1.5 py-1 font-semibold"
+                    >
+                    </l-tooltip>
+                </l-marker>
+            </l-map>
+        </div>
     </div>
 </template>

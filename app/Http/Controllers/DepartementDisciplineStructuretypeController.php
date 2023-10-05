@@ -94,6 +94,46 @@ class DepartementDisciplineStructuretypeController extends Controller
         $produitsQueryBuilder = $collectionProduits->toBase();
         $produits = $produitsQueryBuilder->paginate(12);
 
+        $structuresFlat = $departement->cities
+                                    ->flatMap(function ($city) use ($structuretypeElected) {
+                                        return $city->structures->where('structuretype_id', $structuretypeElected->id);
+                                    });
+
+        $collectionStructures = $structuresFlat->each(function ($structure) use ($discipline, $structuretypeElected) {
+            $structure->load([
+                'creator:id,name',
+                'adresses'  => function ($query) {
+                    $query->latest();
+                },
+                'city:id,ville,ville_formatee,code_postal',
+                'departement:id,departement,numero',
+                'structuretype:id,name,slug',
+                'disciplines' => function ($query) use ($discipline) {
+                    $query->where('id', $discipline->id);
+                },
+                'disciplines.discipline:id,name,slug',
+                'categories',
+                'activites' => function ($query) use ($discipline) {
+                    $query->where('discipline_id', $discipline->id);
+                },
+                'activites.discipline:id,name,slug',
+                'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+                'produits' => function ($query) use ($discipline) {
+                    $query->where('discipline_id', $discipline->id);
+                },
+                'produits.criteres:id,activite_id,produit_id,critere_id,valeur',
+                'produits.criteres.critere:id,nom',
+            ])
+            ->where('structuretype_id', $structuretypeElected->id)
+            ->whereHas('activites', function ($query) use ($discipline) {
+                $query->where('discipline_id', $discipline->id);
+            })->select(['id', 'name', 'slug', 'presentation_courte', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])->get();
+        });
+
+        $structuresQueryBuilder = $collectionStructures->toBase();
+        $structures = $structuresQueryBuilder->paginate(12);
+
+
         $citiesAround = $departement->cities()->whereHas('structures')
                             ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
                             ->limit(10)
@@ -113,6 +153,7 @@ class DepartementDisciplineStructuretypeController extends Controller
             'citiesAround' => $citiesAround,
             'disciplinesSimilaires' => $disciplinesSimilaires,
             'produits' => $produits,
+            'structures' => $structures,
             'discipline' => $discipline,
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,

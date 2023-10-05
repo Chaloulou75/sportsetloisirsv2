@@ -486,7 +486,7 @@ const formCriteres = useForm({
                                 </button>
                             </div>
                             <LeafletMapProduitMultiple
-                                class="sticky top-32 hidden md:block md:w-1/2"
+                                class="sticky top-48 hidden md:block md:w-1/2"
                                 :produits="produits.data"
                                 :hovered-produit="hoveredProduit"
                                 :structures="structures.data"

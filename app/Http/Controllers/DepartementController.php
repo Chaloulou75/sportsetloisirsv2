@@ -105,6 +105,35 @@ class DepartementController extends Controller
 
         $produits = $produitsQueryBuilder->paginate(12);
 
+        $structuresFlat = $departement->cities
+                    ->flatMap(function ($city) {
+                        return $city->structures;
+                    });
+
+        $collectionStructures = $structuresFlat->each(function ($structure) {
+            $structure->load([
+                'creator:id,name',
+                'adresses'  => function ($query) {
+                    $query->latest();
+                },
+                'city:id,ville,ville_formatee,code_postal',
+                'departement:id,departement,numero',
+                'structuretype:id,name,slug',
+                'disciplines',
+                'disciplines.discipline:id,name,slug',
+                'categories',
+                'activites',
+                'activites.discipline:id,name,slug',
+                'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+                'produits',
+                'produits.criteres:id,activite_id,produit_id,critere_id,valeur',
+                'produits.criteres.critere:id,nom',
+            ])->select(['id', 'name', 'slug', 'presentation_courte', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])->get();
+        });
+
+        $structuresQueryBuilder = $collectionStructures->toBase();
+        $structures = $structuresQueryBuilder->paginate(12);
+
         $departement->timestamp = false;
         $departement->increment('view_count');
 
@@ -115,6 +144,7 @@ class DepartementController extends Controller
             'allCities' => $allCities,
             'departement' => $departement,
             'produits' => $produits,
+            'structures' => $structures,
         ]);
     }
 

@@ -97,11 +97,49 @@ class DepartementDisciplineCategorieController extends Controller
         $produits = $produitsQueryBuilder->paginate(12);
 
 
+        $structuresFlat = $departement->cities
+                                    ->flatMap(function ($city) {
+                                        return $city->structures;
+                                    });
+
+        $collectionStructures = $structuresFlat->each(function ($structure) use ($discipline, $category) {
+            $structure->load([
+                'creator:id,name',
+                'adresses'  => function ($query) {
+                    $query->latest();
+                },
+                'city:id,ville,ville_formatee,code_postal',
+                'departement:id,departement,numero',
+                'structuretype:id,name,slug',
+                'disciplines' => function ($query) use ($discipline) {
+                    $query->where('id', $discipline->id);
+                },
+                'disciplines.discipline:id,name,slug',
+                'categories' => function ($query) use ($category) {
+                    $query->where('id', $category->id);
+                },
+                'activites' => function ($query) use ($discipline, $category) {
+                    $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
+                },
+                'activites.discipline:id,name,slug',
+                'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+                'produits' => function ($query) use ($discipline, $category) {
+                    $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
+                },
+                'produits.criteres:id,activite_id,produit_id,critere_id,valeur',
+                'produits.criteres.critere:id,nom',
+            ])->whereHas('activites', function ($query) use ($discipline, $category) {
+                $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
+            })->select(['id', 'name', 'slug', 'presentation_courte', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])->get();
+        });
+
+        $structuresQueryBuilder = $collectionStructures->toBase();
+        $structures = $structuresQueryBuilder->paginate(12);
+
         $citiesAround = $departement->cities()->whereHas('produits')
                             ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
                             ->limit(10)
                             ->get();
-
 
         $departement->timestamp = false;
         $departement->increment('view_count');
@@ -118,6 +156,7 @@ class DepartementDisciplineCategorieController extends Controller
             'citiesAround' => $citiesAround,
             'disciplinesSimilaires' => $disciplinesSimilaires,
             'produits' => $produits,
+            'structures' => $structures,
             'discipline' => $discipline,
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,

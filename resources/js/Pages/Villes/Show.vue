@@ -224,7 +224,7 @@ const formatCityName = (ville) => {
                                         :key="produit.id"
                                         :index="index"
                                         :produit="produit"
-                                        :discipline="discipline"
+                                        :discipline="produit.discipline"
                                         @card-hover="showTooltip(produit)"
                                         @card-out="hideTooltip"
                                         :link="
