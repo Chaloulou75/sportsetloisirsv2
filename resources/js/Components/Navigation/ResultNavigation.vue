@@ -85,7 +85,10 @@ const submitForm = async () => {
                     </div>
                 </div>
 
-                <div class="hidden space-x-8 lg:ml-10 lg:flex lg:w-full">
+                <div
+                    v-if="!route().current('welcome')"
+                    class="hidden space-x-8 lg:ml-10 lg:flex lg:w-full"
+                >
                     <section
                         class="mx-auto flex w-full items-center justify-center px-2 md:flex-row md:space-y-0"
                     >

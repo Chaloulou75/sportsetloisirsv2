@@ -1,13 +1,11 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { ref, defineAsyncComponent } from "vue";
+import { ref } from "vue";
 import { router, Head, Link } from "@inertiajs/vue3";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import AutocompleteDiscipline from "@/Components/Home/AutocompleteDiscipline.vue";
 import AutocompleteCity from "@/Components/Home/AutocompleteCity.vue";
-import AutocompleteDisciplineNav from "@/Components/Navigation/AutocompleteDisciplineNav.vue";
-import AutocompleteCityNav from "@/Components/Navigation/AutocompleteCityNav.vue";
 import DisciplineSmallCard from "@/Components/Disciplines/DisciplineSmallCard.vue";
 import { ArrowSmallRightIcon, CheckIcon } from "@heroicons/vue/24/solid";
 import { MagnifyingGlassIcon } from "@heroicons/vue/24/outline";
@@ -96,7 +94,11 @@ const formatCityName = (ville) => {
                         @click="submitForm"
                         :disabled="processing"
                         type="submit"
-                        class="mb-0.5 flex w-full items-center justify-center rounded border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-600 shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 md:w-auto"
+                        :class="{
+                            'bg-sky-600 text-white': localite && search,
+                            'bg-white': !localite || !search,
+                        }"
+                        class="flex w-full items-center justify-center rounded border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-600 shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 md:w-auto"
                     >
                         <span class="mr-4 inline-block md:hidden">Trouver</span>
                         <MagnifyingGlassIcon class="h-5 w-5" />

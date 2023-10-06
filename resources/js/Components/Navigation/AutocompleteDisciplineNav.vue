@@ -19,7 +19,6 @@ const handleComponentClickAway = () => {
     isInputFocused.value = false;
 };
 
-// Use the onClickOutside function to handle click-away events
 onClickOutside(target, handleComponentClickAway);
 
 let searchTerm = ref(
