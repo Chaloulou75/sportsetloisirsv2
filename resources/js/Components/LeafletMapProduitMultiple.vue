@@ -24,6 +24,9 @@ const props = defineProps({
 const ProduitCardXS = defineAsyncComponent(() =>
     import("@/Components/Produits/ProduitCardXS.vue")
 );
+const StructureCardXS = defineAsyncComponent(() =>
+    import("@/Components/Structures/StructureCardXS.vue")
+);
 
 const map = ref(null);
 const markerProd = ref([]);
@@ -122,6 +125,7 @@ watch(
                     ]"
                     :ref="markerProd"
                 >
+                    <l-tooltip :content="produit.activite.titre"></l-tooltip>
                     <l-popup
                         :options="{
                             interactive: true,
@@ -153,16 +157,17 @@ watch(
                     ]"
                     :icon="structureIcon"
                 >
+                    <l-tooltip :content="structure.name"></l-tooltip>
                     <l-popup :options="{ interactive: true }">
-                        <Link
-                            class="rouded-lg px-1.5 py-1 font-semibold text-green-600 hover:text-green-800"
-                            :href="
+                        <StructureCardXS
+                            :structure="structure"
+                            :link="
                                 route('structures.show', {
                                     structure: structure.slug,
                                 })
                             "
-                            >{{ structure.name }}</Link
-                        >
+                            :data="{}"
+                        />
                     </l-popup>
                 </l-marker>
             </l-map>

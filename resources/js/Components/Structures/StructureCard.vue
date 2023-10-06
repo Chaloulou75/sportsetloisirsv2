@@ -154,41 +154,28 @@ const formatCityName = (ville) => {
             />
         </div>
 
-        <div class="">
-            <dl class="mt-2 flex flex-col px-3">
-                <p
-                    class="text-center text-sm font-medium uppercase tracking-widest text-pink-500"
+        <div class="mt-2 flex flex-col px-3">
+            <p class="text-center text-sm font-medium uppercase text-pink-500">
+                {{ structure.structuretype.name }}
+            </p>
+            <p
+                class="py-1.5 text-center text-base font-semibold tracking-widest text-gray-600"
+            >
+                {{ structure.name }}
+            </p>
+            <ul>
+                <li
+                    class="list-inside list-disc text-sm font-semibold"
+                    v-for="(activite, index) in getUniqueActivitesTitre(
+                        structure.activites
+                    )"
+                    :key="activite.id"
                 >
-                    {{ structure.structuretype.name }}
-                </p>
-                <p
-                    class="py-1.5 text-sm font-medium tracking-widest text-gray-600"
-                >
-                    {{ structure.name }}
-                </p>
-                <div class="py-1.5">
-                    <span
-                        class="text-sm font-semibold"
-                        v-for="(activite, index) in getUniqueActivitesTitre(
-                            structure.activites
-                        )"
-                        :key="activite.id"
-                    >
-                        {{ activite.titre }}
-                        <span
-                            v-if="
-                                index <
-                                getUniqueActivitesTitre(structure.activites)
-                                    .length -
-                                    1
-                            "
-                        >
-                            -
-                        </span>
-                    </span>
-                </div>
+                    {{ activite.titre }}
+                </li>
+            </ul>
 
-                <!-- <div
+            <!-- <div
                     class="py-1.5 text-sm text-gray-500"
                     v-if="structure.tarifs.length > 0"
                 >
@@ -206,97 +193,96 @@ const formatCityName = (ville) => {
                     </ul>
                 </div> -->
 
-                <div class="flex items-center py-1.5">
-                    <dt class="sr-only">Ville</dt>
-                    <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
-                    <dd
-                        v-if="structure.adresses.length > 0"
-                        class="text-sm font-medium"
+            <div class="flex items-center py-1.5">
+                <dt class="sr-only">Ville</dt>
+                <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
+                <dd
+                    v-if="structure.adresses.length > 0"
+                    class="text-sm font-medium"
+                >
+                    {{ formatCityName(structure.adresses[0].city) }}
+                    <span class="text-xs"
+                        >({{ structure.adresses[0].zip_code }})</span
                     >
-                        {{ formatCityName(structure.adresses[0].city) }}
-                        <span class="text-xs"
-                            >({{ structure.adresses[0].zip_code }})</span
+                </dd>
+                <dd v-else class="text-sm font-medium">
+                    {{ formatCityName(structure.city) }}
+                    <span class="text-xs">({{ structure.zip_code }})</span>
+                </dd>
+            </div>
+
+            <div
+                class="mt-auto flex items-center justify-around gap-1 py-1.5 text-xs"
+            >
+                <div
+                    v-if="structure.disciplines_count"
+                    class="inline-flex shrink-0 items-center"
+                >
+                    <svg
+                        class="mr-1 h-4 w-4 text-indigo-700"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"
+                        />
+                    </svg>
+                    <p class="font-medium text-gray-600">
+                        {{ structure.disciplines_count }}
+                        <span v-if="structure.disciplines_count > 1"
+                            >Disciplines</span
                         >
-                    </dd>
-                    <dd v-else class="text-sm font-medium">
-                        {{ formatCityName(structure.city) }}
-                        <span class="text-xs">({{ structure.zip_code }})</span>
-                    </dd>
+                        <span v-else>Discipline</span>
+                    </p>
                 </div>
 
                 <div
-                    class="mt-auto flex items-center justify-around gap-1 py-1.5 text-xs"
+                    v-if="structure.activites_count"
+                    class="inline-flex shrink-0 items-center"
                 >
-                    <div
-                        v-if="structure.disciplines_count"
-                        class="inline-flex shrink-0 items-center"
+                    <svg
+                        class="mr-1 h-4 w-4 text-indigo-700"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
                     >
-                        <svg
-                            class="mr-1 h-4 w-4 text-indigo-700"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                        />
+                    </svg>
+
+                    <p class="font-medium text-gray-600">
+                        {{ structure.activites_count }}
+                        <span v-if="structure.activites_count > 1"
+                            >Activités</span
                         >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"
-                            />
-                        </svg>
-                        <p class="font-medium text-gray-600">
-                            {{ structure.disciplines_count }}
-                            <span v-if="structure.disciplines_count > 1"
-                                >Disciplines</span
-                            >
-                            <span v-else>Discipline</span>
-                        </p>
-                    </div>
-
-                    <div
-                        v-if="structure.activites_count"
-                        class="inline-flex shrink-0 items-center"
-                    >
-                        <svg
-                            class="mr-1 h-4 w-4 text-indigo-700"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-                            />
-                        </svg>
-
-                        <p class="font-medium text-gray-600">
-                            {{ structure.activites_count }}
-                            <span v-if="structure.activites_count > 1"
-                                >Activités</span
-                            >
-                            <span v-else>Activité</span>
-                        </p>
-                    </div>
-
-                    <div
-                        v-if="structure.produits_count"
-                        class="inline-flex shrink-0 items-center"
-                    >
-                        <BookmarkIcon class="mr-1 h-4 w-4 text-indigo-700" />
-                        <p class="font-medium text-gray-600">
-                            {{ structure.produits_count }}
-                            <span v-if="structure.produits_count > 1"
-                                >Produits</span
-                            >
-                            <span v-else>Produit</span>
-                        </p>
-                    </div>
+                        <span v-else>Activité</span>
+                    </p>
                 </div>
-            </dl>
+
+                <div
+                    v-if="structure.produits_count"
+                    class="inline-flex shrink-0 items-center"
+                >
+                    <BookmarkIcon class="mr-1 h-4 w-4 text-indigo-700" />
+                    <p class="font-medium text-gray-600">
+                        {{ structure.produits_count }}
+                        <span v-if="structure.produits_count > 1"
+                            >Produits</span
+                        >
+                        <span v-else>Produit</span>
+                    </p>
+                </div>
+            </div>
         </div>
     </Link>
 

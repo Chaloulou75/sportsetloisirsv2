@@ -222,7 +222,7 @@ const formCriteres = useForm({
                         <h2
                             class="mb-4 w-full text-center text-lg font-semibold text-gray-600 md:mb-8 md:w-1/2 md:text-2xl"
                         >
-                            Les activités
+                            Les structures
                         </h2>
                         <div
                             class="mx-auto flex w-full flex-col px-2 md:flex-row md:space-x-4"
@@ -231,40 +231,7 @@ const formCriteres = useForm({
                                 ref="listeStructure"
                                 class="w-full px-2 md:w-1/2"
                             >
-                                <div
-                                    class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
-                                >
-                                    <ProduitCard
-                                        v-for="(
-                                            produit, index
-                                        ) in produits.data"
-                                        :key="produit.id"
-                                        :index="index"
-                                        :produit="produit"
-                                        :discipline="discipline"
-                                        @card-hover="showTooltip(produit)"
-                                        @card-out="hideTooltip"
-                                        :link="
-                                            route('structures.activites.show', {
-                                                activite: produit.activite.id,
-                                            })
-                                        "
-                                        :data="{
-                                            produit: produit.id,
-                                        }"
-                                    />
-                                </div>
-                                <div class="flex justify-end p-10">
-                                    <Pagination :links="produits.links" />
-                                </div>
-
                                 <!-- les structures -->
-                                <h2
-                                    v-if="structures.data.length > 0"
-                                    class="mb-4 text-center text-lg font-semibold text-gray-600 md:mb-8 md:text-2xl"
-                                >
-                                    Les structures
-                                </h2>
                                 <div
                                     class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
                                 >
@@ -291,6 +258,40 @@ const formCriteres = useForm({
                                 </div>
                                 <div class="flex justify-end p-10">
                                     <Pagination :links="structures.links" />
+                                </div>
+
+                                <h2
+                                    v-if="structures.data.length > 0"
+                                    class="mb-4 text-center text-lg font-semibold text-gray-600 md:mb-8 md:text-2xl"
+                                >
+                                    Les activités
+                                </h2>
+
+                                <div
+                                    class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
+                                >
+                                    <ProduitCard
+                                        v-for="(
+                                            produit, index
+                                        ) in produits.data"
+                                        :key="produit.id"
+                                        :index="index"
+                                        :produit="produit"
+                                        :discipline="discipline"
+                                        @card-hover="showTooltip(produit)"
+                                        @card-out="hideTooltip"
+                                        :link="
+                                            route('structures.activites.show', {
+                                                activite: produit.activite.id,
+                                            })
+                                        "
+                                        :data="{
+                                            produit: produit.id,
+                                        }"
+                                    />
+                                </div>
+                                <div class="flex justify-end p-10">
+                                    <Pagination :links="produits.links" />
                                 </div>
 
                                 <button

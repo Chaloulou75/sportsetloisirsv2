@@ -110,7 +110,13 @@ const submitForm = async () => {
                                 @click="submitForm"
                                 :disabled="processing"
                                 type="submit"
-                                class="flex w-full items-center justify-center rounded border border-gray-300 bg-gray-50 px-2 py-2 text-sm font-medium text-gray-400 shadow-sm hover:bg-white hover:text-gray-800 focus:outline-none focus:ring focus:ring-gray-500 focus:ring-offset-2 md:w-auto"
+                                :class="{
+                                    'bg-sky-700 text-white ring-sky-700 ring-offset-2 hover:bg-sky-800 hover:font-semibold hover:text-white':
+                                        localite && search,
+                                    'bg-gray-50 text-gray-400 hover:bg-sky-800 hover:text-white':
+                                        !localite || !search,
+                                }"
+                                class="flex w-full items-center justify-center rounded border border-gray-300 px-2 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring focus:ring-gray-500 focus:ring-offset-2 md:w-auto"
                             >
                                 <MagnifyingGlassIcon
                                     class="h-5 w-5 md:h-7 md:w-7"
@@ -571,7 +577,13 @@ const submitForm = async () => {
                         @click="submitForm"
                         :disabled="processing"
                         type="submit"
-                        class="flex w-full items-center justify-center rounded-md border border-gray-500 bg-white px-2 py-2 text-base font-semibold text-gray-800 shadow-sm hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:w-auto"
+                        :class="{
+                            'bg-sky-700 text-white ring-sky-700 ring-offset-2 hover:bg-sky-800 hover:font-semibold hover:text-white':
+                                localite && search,
+                            'bg-white text-gray-700 hover:bg-sky-800 hover:text-white':
+                                !localite || !search,
+                        }"
+                        class="flex w-full items-center justify-center rounded-md border border-gray-500 px-2 py-2 text-base font-semibold shadow-sm hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:w-auto"
                     >
                         <MagnifyingGlassIcon class="mr-2 h-6 w-6" />
                         <span class="">Rechercher</span>
