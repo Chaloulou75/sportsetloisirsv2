@@ -243,7 +243,7 @@ const submitReservation = () => {
 
                             <Link
                                 preserve-scroll
-                                :href="route('villes.show', city.id)"
+                                :href="route('villes.show', city.slug)"
                                 class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                             >
                                 {{ formatCityName(city.ville) }}
@@ -259,7 +259,7 @@ const submitReservation = () => {
                                 preserve-scroll
                                 :href="
                                     route('villes.disciplines.show', {
-                                        city: city.id,
+                                        city: city.slug,
                                         discipline: discipline.slug,
                                     })
                                 "
@@ -280,7 +280,7 @@ const submitReservation = () => {
                                     route(
                                         'villes.disciplines.categories.show',
                                         {
-                                            city: city.id,
+                                            city: city.slug,
                                             discipline: discipline.slug,
                                             category: category.id,
                                         }
@@ -311,7 +311,7 @@ const submitReservation = () => {
                                         route(
                                             'villes.disciplines.categories.show',
                                             {
-                                                city: city.id,
+                                                city: city.slug,
                                                 discipline: discipline.slug,
                                                 category: categorie.id,
                                             }
@@ -335,7 +335,7 @@ const submitReservation = () => {
                                         route(
                                             'villes.disciplines.structuretypes.show',
                                             {
-                                                city: city.id,
+                                                city: city.slug,
                                                 discipline: discipline.slug,
                                                 structuretype: structureType.id,
                                             }
@@ -363,7 +363,7 @@ const submitReservation = () => {
                                 route(
                                     'villes.disciplines.categories.structures.show',
                                     {
-                                        city: city.id,
+                                        city: city.slug,
                                         discipline: discipline.slug,
                                         category: category.id,
                                         structure: structure.slug,
@@ -405,7 +405,7 @@ const submitReservation = () => {
                                     route(
                                         'villes.disciplines.categories.structures.show',
                                         {
-                                            city: city.id,
+                                            city: city.slug,
                                             discipline: discipline.slug,
                                             category: category.id,
                                             structure: structure.slug,

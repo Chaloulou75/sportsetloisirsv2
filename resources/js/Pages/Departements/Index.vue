@@ -142,9 +142,12 @@ watch(
                     class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                 >
                     <Link
-                        :href="route('departements.show', departement.id)"
+                        :href="route('departements.show', departement.slug)"
                         :active="
-                            route().current('departements.show', departement.id)
+                            route().current(
+                                'departements.show',
+                                departement.slug
+                            )
                         "
                         v-for="(departement, index) in departements.data"
                         :key="departement.id"

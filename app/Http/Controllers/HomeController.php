@@ -55,7 +55,7 @@ class HomeController extends Controller
 
         $numeroDepts = $topVilles->pluck('departement')->unique();
         $theDepartements = Departement::whereIn('numero', $numeroDepts)
-                                ->select(['id', 'departement', 'numero'])
+                                ->select(['id', 'slug', 'departement', 'numero'])
                                 ->limit(12)
                                 ->get();
 

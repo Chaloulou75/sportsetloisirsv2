@@ -134,7 +134,7 @@ const formatCityName = (ville) => {
 
                                 <Link
                                     preserve-scroll
-                                    :href="route('villes.show', city.id)"
+                                    :href="route('villes.show', city.slug)"
                                     class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     {{ formatCityName(city.ville) }}
@@ -171,7 +171,7 @@ const formatCityName = (ville) => {
                         :discipline="discipline"
                         :link="
                             route('villes.disciplines.show', {
-                                city: city.id,
+                                city: city.slug,
                                 discipline: discipline.slug,
                             })
                         "
@@ -229,7 +229,7 @@ const formatCityName = (ville) => {
                                         @card-out="hideTooltip"
                                         :link="
                                             route('villes.activites.show', {
-                                                city: city.id,
+                                                city: city.slug,
                                                 activite: produit.activite,
                                                 produit: produit.id,
                                             })
@@ -264,7 +264,7 @@ const formatCityName = (ville) => {
                                         @card-out="hideStructureTooltip"
                                         :link="
                                             route('villes.structures.show', {
-                                                city: city.id,
+                                                city: city.slug,
                                                 structure: structure.slug,
                                             })
                                         "

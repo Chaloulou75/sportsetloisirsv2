@@ -164,7 +164,7 @@ const formatCityName = (ville) => {
                                     :href="
                                         route(
                                             'departements.show',
-                                            departement.id
+                                            departement.slug
                                         )
                                     "
                                     class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
@@ -182,7 +182,7 @@ const formatCityName = (ville) => {
                                     preserve-scroll
                                     :href="
                                         route('departements.disciplines.show', {
-                                            departement: departement.id,
+                                            departement: departement.slug,
                                             discipline: discipline.slug,
                                         })
                                     "
@@ -252,7 +252,8 @@ const formatCityName = (ville) => {
                                             route(
                                                 'departements.disciplines.activites.show',
                                                 {
-                                                    departement: departement.id,
+                                                    departement:
+                                                        departement.slug,
                                                     discipline: discipline.slug,
                                                     activite:
                                                         produit.activite.id,
@@ -292,7 +293,8 @@ const formatCityName = (ville) => {
                                             route(
                                                 'departements.disciplines.structures.show',
                                                 {
-                                                    departement: departement.id,
+                                                    departement:
+                                                        departement.slug,
                                                     discipline: discipline.slug,
                                                     structure: structure.slug,
                                                 }

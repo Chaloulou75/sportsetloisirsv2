@@ -69,7 +69,7 @@ class CityController extends Controller
 
         $city = City::with(['produits'])
                     ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
-                    ->where('id', $city->id)
+                    ->where('slug', $city->slug)
                     ->withCount('produits')
                     ->first();
 
@@ -81,7 +81,7 @@ class CityController extends Controller
                             sin(radians({$city->latitude})) * sin(radians(latitude))
                         )) AS distance
                     ")
-                    ->where('id', '!=', $city->id)
+                    ->where('slug', '!=', $city->slug)
                     ->havingRaw('distance <= ?', [$city->tolerance_rayon])
                     ->orderBy('distance', 'ASC')
                     ->limit(10)

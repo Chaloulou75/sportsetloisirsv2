@@ -129,7 +129,7 @@ const hideStructureTooltip = () => {
                                     :href="
                                         route(
                                             'departements.show',
-                                            departement.id
+                                            departement.slug
                                         )
                                     "
                                     class="flex h-10 shrink-0 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
@@ -164,7 +164,7 @@ const hideStructureTooltip = () => {
                         :discipline="discipline"
                         :link="
                             route('departements.disciplines.show', {
-                                departement: departement.id,
+                                departement: departement.slug,
                                 discipline: discipline.slug,
                             })
                         "
@@ -221,7 +221,8 @@ const hideStructureTooltip = () => {
                                             route(
                                                 'departements.activites.show',
                                                 {
-                                                    departement: departement.id,
+                                                    departement:
+                                                        departement.slug,
                                                     activite:
                                                         produit.activite.id,
                                                     produit: produit.id,
@@ -260,7 +261,8 @@ const hideStructureTooltip = () => {
                                             route(
                                                 'departements.structures.show',
                                                 {
-                                                    departement: departement.id,
+                                                    departement:
+                                                        departement.slug,
                                                     structure: structure.slug,
                                                 }
                                             )

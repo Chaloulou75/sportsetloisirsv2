@@ -41,8 +41,8 @@ class CityDisciplineStructuretypeController extends Controller
 
 
 
-        $city = City::with(['produits', 'produits.adresse'])->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
-                            ->where('id', $city->id)
+        $city = City::with(['produits', 'produits.adresse'])->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
+                            ->where('slug', $city->slug)
                             ->withCount('structures')
                             ->first();
 

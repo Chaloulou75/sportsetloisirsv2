@@ -182,7 +182,7 @@ const formCriteres = useForm({
                                     :href="
                                         route(
                                             'departements.show',
-                                            departement.id
+                                            departement.slug
                                         )
                                     "
                                     class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
@@ -200,7 +200,7 @@ const formCriteres = useForm({
                                     preserve-scroll
                                     :href="
                                         route('departements.disciplines.show', {
-                                            departement: departement.id,
+                                            departement: departement.slug,
                                             discipline: discipline.slug,
                                         })
                                     "
@@ -221,7 +221,7 @@ const formCriteres = useForm({
                                         route(
                                             'departements.disciplines.categories.show',
                                             {
-                                                departement: departement.id,
+                                                departement: departement.slug,
                                                 discipline: discipline.slug,
                                                 category: category.id,
                                             }
@@ -460,7 +460,8 @@ const formCriteres = useForm({
                                             route(
                                                 'departements.disciplines.categories.activites.show',
                                                 {
-                                                    departement: departement.id,
+                                                    departement:
+                                                        departement.slug,
                                                     discipline: discipline.slug,
                                                     category: category.id,
                                                     activite:
@@ -501,7 +502,8 @@ const formCriteres = useForm({
                                             route(
                                                 'departements.disciplines.categories.structures.show',
                                                 {
-                                                    departement: departement.id,
+                                                    departement:
+                                                        departement.slug,
                                                     discipline: discipline.slug,
                                                     category: category.id,
                                                     structure: structure.slug,

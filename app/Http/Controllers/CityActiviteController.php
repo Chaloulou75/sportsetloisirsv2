@@ -30,8 +30,8 @@ class CityActiviteController extends Controller
                         'produits',
                         'produits.adresse'
                     ])
-                    ->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
-                    ->where('id', $city->id)
+                    ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
+                    ->where('slug', $city->slug)
                     ->withCount('structures')
                     ->first();
 

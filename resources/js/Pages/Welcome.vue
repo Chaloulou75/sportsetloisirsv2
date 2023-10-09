@@ -207,7 +207,7 @@ const formatCityName = (ville) => {
                     <Link
                         :href="
                             route('villes.show', {
-                                city: city.id,
+                                city: city.slug,
                             })
                         "
                         v-for="city in topVilles"
@@ -241,9 +241,12 @@ const formatCityName = (ville) => {
                     class="mb-8 grid h-auto grid-cols-1 place-items-stretch gap-4 px-1.5 sm:grid-cols-2 md:grid-cols-3 md:px-0 lg:grid-cols-4"
                 >
                     <Link
-                        :href="route('departements.show', departement.id)"
+                        :href="route('departements.show', departement.slug)"
                         :active="
-                            route().current('departements.show', departement.id)
+                            route().current(
+                                'departements.show',
+                                departement.slug
+                            )
                         "
                         v-for="departement in topDepartements"
                         :key="departement.id"

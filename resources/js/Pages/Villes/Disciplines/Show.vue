@@ -166,7 +166,7 @@ const hideStructureTooltip = () => {
 
                                 <Link
                                     preserve-scroll
-                                    :href="route('villes.show', city.id)"
+                                    :href="route('villes.show', city.slug)"
                                     class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     {{ formatCityName(city.ville) }}
@@ -182,7 +182,7 @@ const hideStructureTooltip = () => {
                                     preserve-scroll
                                     :href="
                                         route('villes.disciplines.show', {
-                                            city: city.id,
+                                            city: city.slug,
                                             discipline: discipline.slug,
                                         })
                                     "
@@ -253,7 +253,7 @@ const hideStructureTooltip = () => {
                                             route(
                                                 'villes.disciplines.activites.show',
                                                 {
-                                                    city: city.id,
+                                                    city: city.slug,
                                                     discipline: discipline.slug,
                                                     activite:
                                                         produit.activite.id,
@@ -293,7 +293,7 @@ const hideStructureTooltip = () => {
                                             route(
                                                 'villes.disciplines.structures.show',
                                                 {
-                                                    city: city.id,
+                                                    city: city.slug,
                                                     discipline: discipline.slug,
                                                     structure: structure.slug,
                                                 }

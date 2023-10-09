@@ -43,8 +43,8 @@ class DepartementDisciplineStructuretypeController extends Controller
         $departement = Departement::with(['cities' => function ($query) {
             $query->withWhereHas('produits');
         }])
-                                ->where('id', $departement->id)
-                                ->select(['id', 'numero', 'departement', 'prefixe', 'view_count'])
+                                ->where('slug', $departement->slug)
+                                ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count'])
                                 ->first();
 
         $categories = LienDisciplineCategorie::withWhereHas('structures_produits.adresse', function ($query) use ($departement) {

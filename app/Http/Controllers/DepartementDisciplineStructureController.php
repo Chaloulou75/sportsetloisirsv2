@@ -72,7 +72,7 @@ class DepartementDisciplineStructureController extends Controller
                         'cities' => function ($query) {
                             $query->has('produits')->with(['produits', 'produits.adresse']);
                         }])
-                                        ->select(['id', 'numero', 'departement', 'prefixe', 'view_count', 'latitude', 'longitude'])
+                                        ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count', 'latitude', 'longitude'])
                                         ->where('id', $departement)
                                         ->withCount('structures')
                                         ->first();
@@ -87,8 +87,8 @@ class DepartementDisciplineStructureController extends Controller
                 'produits',
                 'produits.adresse'
             ])
-            ->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
-            ->where('id', $city->id)
+            ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
+            ->where('slug', $city->slug)
             ->withCount('structures')
             ->first();
 

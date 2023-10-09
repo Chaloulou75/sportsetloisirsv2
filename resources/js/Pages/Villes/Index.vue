@@ -140,8 +140,8 @@ watch(
                     class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                 >
                     <Link
-                        :href="route('villes.show', city.id)"
-                        :active="route().current('villes.show', city.id)"
+                        :href="route('villes.show', city.slug)"
+                        :active="route().current('villes.show', city.slug)"
                         v-for="(city, index) in cities.data"
                         :key="city.id"
                         :index="index"

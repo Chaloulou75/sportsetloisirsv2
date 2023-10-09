@@ -17,8 +17,8 @@ const formatCityName = (ville) => {
         <ul class="list-inside list-disc space-y-1.5">
             <li v-for="city in citiesAround" :key="city.id">
                 <Link
-                    :href="route('villes.show', city.id)"
-                    :active="route().current('villes.show', city.id)"
+                    :href="route('villes.show', city.slug)"
+                    :active="route().current('villes.show', city.slug)"
                     class="hover:text-gray-800 hover:underline"
                 >
                     {{ formatCityName(city.ville) }}

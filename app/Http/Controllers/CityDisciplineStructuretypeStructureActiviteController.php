@@ -31,8 +31,8 @@ class CityDisciplineStructuretypeStructureActiviteController extends Controller
                 ->select(['id', 'name', 'slug'])
                 ->get();
 
-        $city = City::with(['structures'])->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
-                                    ->where('id', $city->id)
+        $city = City::with(['structures'])->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
+                                    ->where('slug', $city->slug)
                                     ->withCount('structures')
                                     ->first();
 
@@ -118,7 +118,7 @@ class CityDisciplineStructuretypeStructureActiviteController extends Controller
 
         return Inertia::render('Villes/Disciplines/Structuretypes/Structures/Activites/Show', [
                     'familles' => $familles,
-                    'city'=> $city,
+                    'city' => $city,
                     'discipline' => $discipline,
                     'structuretypeElected' => $structuretypeElected,
                     'allStructureTypes' => $allStructureTypes,

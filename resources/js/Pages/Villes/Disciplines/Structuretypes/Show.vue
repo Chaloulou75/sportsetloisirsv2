@@ -168,7 +168,7 @@ const hideStructureTooltip = () => {
 
                                 <Link
                                     preserve-scroll
-                                    :href="route('villes.show', city.id)"
+                                    :href="route('villes.show', city.slug)"
                                     class="flex h-10 shrink-0 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     {{ formatCityName(city.ville) }}
@@ -184,7 +184,7 @@ const hideStructureTooltip = () => {
                                     preserve-scroll
                                     :href="
                                         route('villes.disciplines.show', {
-                                            city: city.id,
+                                            city: city.slug,
                                             discipline: discipline.slug,
                                         })
                                     "
@@ -205,7 +205,7 @@ const hideStructureTooltip = () => {
                                         route(
                                             'villes.disciplines.structuretypes.show',
                                             {
-                                                city: city.id,
+                                                city: city.slug,
                                                 discipline: discipline.slug,
                                                 structuretype:
                                                     structuretypeElected.id,
@@ -278,7 +278,7 @@ const hideStructureTooltip = () => {
                                             route(
                                                 'villes.disciplines.structuretypes.activites.show',
                                                 {
-                                                    city: city.id,
+                                                    city: city.slug,
                                                     discipline: discipline.slug,
                                                     structuretype:
                                                         structuretypeElected.id,
@@ -320,7 +320,7 @@ const hideStructureTooltip = () => {
                                             route(
                                                 'villes.disciplines.structuretypes.structures.show',
                                                 {
-                                                    city: city.id,
+                                                    city: city.slug,
                                                     discipline: discipline.slug,
                                                     structuretype:
                                                         structuretypeElected.id,
@@ -400,75 +400,6 @@ const hideStructureTooltip = () => {
                         </div>
                     </TransitionRoot>
                 </div>
-                <!-- <div
-                    class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
-                >
-                    <div ref="listeStructure" class="md:w-1/2">
-                        <div
-                            class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
-                        >
-                            <ProduitCard
-                                v-for="(produit, index) in produits.data"
-                                :key="produit.id"
-                                :index="index"
-                                :produit="produit"
-                                :discipline="discipline"
-                                @card-hover="showTooltip(produit)"
-                                @card-out="hideTooltip"
-                                :link="
-                                    route('structures.show', {
-                                        structure: produit.structure.slug,
-                                    })
-                                "
-                                :data="{
-                                    city: city.id,
-                                    discipline: discipline.slug,
-                                    category: produit.categorie_id,
-                                    structuretype: structuretypeElected.id,
-                                }"
-                            />
-                        </div>
-                        <div class="flex justify-end p-10">
-                            <Pagination :links="produits.links" />
-                        </div>
-                        <button
-                            v-if="!mapIsVisible && listeIsVisible"
-                            type="button"
-                            class="fixed inset-x-2 bottom-4 z-[9999] mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:hidden"
-                            @click="goToMap"
-                        >
-                            <MapIcon class="mr-2 h-5 w-5" />
-                            Carte
-                        </button>
-                    </div>
-                    <div class="space-y-4 md:sticky md:w-1/2">
-                        <div ref="mapStructure">
-                            <LeafletMapProduitMultiple
-                                class="md:top-2"
-                                :produits="props.produits.data"
-                                :hovered-produit="hoveredProduit"
-                                :zoom="12"
-                            />
-                            <button
-                                v-if="mapIsVisible"
-                                type="button"
-                                class="fixed inset-x-2 bottom-4 z-[9999] mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:hidden"
-                                @click="goToListe"
-                            >
-                                <ListBulletIcon class="mr-2 h-5 w-5" />
-                                Liste
-                            </button>
-                        </div>
-                        <DisciplinesSimilaires
-                            v-if="disciplinesSimilaires.length > 0"
-                            :disciplinesSimilaires="props.disciplinesSimilaires"
-                        />
-                        <CitiesAround
-                            v-if="citiesAround.length > 0"
-                            :citiesAround="props.citiesAround"
-                        />
-                    </div>
-                </div> -->
             </template>
             <template v-else>
                 <div

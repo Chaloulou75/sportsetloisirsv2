@@ -37,15 +37,15 @@ class CityDisciplineController extends Controller
             ->get();
 
         $city = City::with(['structures', 'produits', 'produits.adresse'])
-                            ->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
-                            ->where('id', $city->id)
+                            ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
+                            ->where('slug', $city->slug)
                             ->withCount('produits')
                             ->first();
 
         $citiesAround = City::withWhereHas('produits')
-                            ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
+                            ->select('id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
                             ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
-                            ->where('id', '!=', $city->id)
+                            ->where('slug', '!=', $city->slug)
                             ->havingRaw('distance <= ?', [$city->tolerance_rayon])
                             ->orderBy('distance', 'ASC')
                             ->limit(10)

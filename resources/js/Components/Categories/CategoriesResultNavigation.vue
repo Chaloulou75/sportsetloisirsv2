@@ -236,7 +236,7 @@ const showStructuresTypes = () => {
             <Link
                 :href="
                     route('villes.show', {
-                        city: city.id,
+                        city: city.slug,
                     })
                 "
                 class="group relative flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
@@ -251,7 +251,7 @@ const showStructuresTypes = () => {
                 :key="categorie.id"
                 :href="
                     route('villes.disciplines.categories.show', {
-                        city: city.id,
+                        city: city.slug,
                         discipline: discipline.slug,
                         category: categorie.id,
                     })
@@ -298,7 +298,7 @@ const showStructuresTypes = () => {
                         preserve-scroll
                         :href="
                             route('villes.disciplines.categories.show', {
-                                city: city.id,
+                                city: city.slug,
                                 discipline: discipline.slug,
                                 category: category.id,
                             })
@@ -316,7 +316,7 @@ const showStructuresTypes = () => {
                 :key="structureType.id"
                 :href="
                     route('villes.disciplines.structuretypes.show', {
-                        city: city.id,
+                        city: city.slug,
                         discipline: discipline.slug,
                         structuretype: structureType.id,
                     })
@@ -367,7 +367,7 @@ const showStructuresTypes = () => {
             <Link
                 :href="
                     route('villes.show', {
-                        city: city.id,
+                        city: city.slug,
                     })
                 "
                 class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
@@ -410,7 +410,7 @@ const showStructuresTypes = () => {
                 preserve-scroll
                 :href="
                     route('villes.disciplines.categories.show', {
-                        city: city.id,
+                        city: city.slug,
                         discipline: discipline.slug,
                         category: category.id,
                     })
@@ -428,7 +428,7 @@ const showStructuresTypes = () => {
                 preserve-scroll
                 :href="
                     route('villes.disciplines.structuretypes.show', {
-                        city: city.id,
+                        city: city.slug,
                         discipline: discipline.slug,
                         structuretype: structureType.id,
                     })
@@ -451,7 +451,7 @@ const showStructuresTypes = () => {
             <Link
                 :href="
                     route('villes.disciplines.show', {
-                        city: city.id,
+                        city: city.slug,
                         discipline: discipline.slug,
                     })
                 "
@@ -467,7 +467,7 @@ const showStructuresTypes = () => {
                 :key="categorie.id"
                 :href="
                     route('villes.disciplines.categories.show', {
-                        city: city.id,
+                        city: city.slug,
                         discipline: discipline.slug,
                         category: categorie.id,
                     })
@@ -532,7 +532,7 @@ const showStructuresTypes = () => {
                         preserve-scroll
                         :href="
                             route('villes.disciplines.categories.show', {
-                                city: city.id,
+                                city: city.slug,
                                 discipline: discipline.slug,
                                 category: category.id,
                             })
@@ -550,7 +550,7 @@ const showStructuresTypes = () => {
                 :key="structureType.id"
                 :href="
                     route('villes.disciplines.structuretypes.show', {
-                        city: city.id,
+                        city: city.slug,
                         discipline: discipline.slug,
                         structuretype: structureType.id,
                     })
@@ -601,7 +601,7 @@ const showStructuresTypes = () => {
             <Link
                 :href="
                     route('villes.disciplines.show', {
-                        city: city.id,
+                        city: city.slug,
                         discipline: discipline.slug,
                     })
                 "
@@ -645,7 +645,7 @@ const showStructuresTypes = () => {
                 preserve-scroll
                 :href="
                     route('villes.disciplines.categories.show', {
-                        city: city.id,
+                        city: city.slug,
                         discipline: discipline.slug,
                         category: category.id,
                     })
@@ -663,7 +663,7 @@ const showStructuresTypes = () => {
                 preserve-scroll
                 :href="
                     route('villes.disciplines.structuretypes.show', {
-                        city: city.id,
+                        city: city.slug,
                         discipline: discipline.slug,
                         structuretype: structureType.id,
                     })
@@ -686,7 +686,7 @@ const showStructuresTypes = () => {
             <Link
                 :href="
                     route('departements.show', {
-                        departement: departement.id,
+                        departement: departement.slug,
                     })
                 "
                 class="group relative flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
@@ -701,7 +701,7 @@ const showStructuresTypes = () => {
                 :key="categorie.id"
                 :href="
                     route('departements.disciplines.categories.show', {
-                        departement: departement.id,
+                        departement: departement.slug,
                         discipline: discipline.slug,
                         category: categorie.id,
                     })
@@ -750,7 +750,7 @@ const showStructuresTypes = () => {
                         preserve-scroll
                         :href="
                             route('departements.disciplines.categories.show', {
-                                departement: departement.id,
+                                departement: departement.slug,
                                 discipline: discipline.slug,
                                 category: category.id,
                             })
@@ -768,7 +768,7 @@ const showStructuresTypes = () => {
                 :key="structureType.id"
                 :href="
                     route('departements.disciplines.structuretypes.show', {
-                        departement: departement.id,
+                        departement: departement.slug,
                         discipline: discipline.slug,
                         structuretype: structureType.id,
                     })
@@ -820,7 +820,7 @@ const showStructuresTypes = () => {
             <Link
                 :href="
                     route('departements.disciplines.show', {
-                        departement: departement.id,
+                        departement: departement.slug,
                         discipline: discipline.slug,
                     })
                 "
@@ -864,7 +864,7 @@ const showStructuresTypes = () => {
                 preserve-scroll
                 :href="
                     route('departements.disciplines.categories.show', {
-                        departement: departement.id,
+                        departement: departement.slug,
                         discipline: discipline.slug,
                         category: category.id,
                     })
@@ -882,7 +882,7 @@ const showStructuresTypes = () => {
                 preserve-scroll
                 :href="
                     route('departements.disciplines.structuretypes.show', {
-                        departement: departement.id,
+                        departement: departement.slug,
                         discipline: discipline.slug,
                         structuretype: structureType.id,
                     })
@@ -905,7 +905,7 @@ const showStructuresTypes = () => {
             <Link
                 :href="
                     route('departements.disciplines.show', {
-                        departement: departement.id,
+                        departement: departement.slug,
                         discipline: discipline.slug,
                     })
                 "
@@ -921,7 +921,7 @@ const showStructuresTypes = () => {
                 :key="categorie.id"
                 :href="
                     route('departements.disciplines.categories.show', {
-                        departement: departement.id,
+                        departement: departement.slug,
                         discipline: discipline.slug,
                         category: categorie.id,
                     })
@@ -992,7 +992,7 @@ const showStructuresTypes = () => {
                         preserve-scroll
                         :href="
                             route('departements.disciplines.categories.show', {
-                                departement: departement.id,
+                                departement: departement.slug,
                                 discipline: discipline.slug,
                                 category: category.id,
                             })
@@ -1010,7 +1010,7 @@ const showStructuresTypes = () => {
                 :key="structureType.id"
                 :href="
                     route('departements.disciplines.structuretypes.show', {
-                        departement: departement.id,
+                        departement: departement.slug,
                         discipline: discipline.slug,
                         structuretype: structureType.id,
                     })
@@ -1062,7 +1062,7 @@ const showStructuresTypes = () => {
             <Link
                 :href="
                     route('departements.disciplines.show', {
-                        departement: departement.id,
+                        departement: departement.slug,
                         discipline: discipline.slug,
                     })
                 "
@@ -1106,7 +1106,7 @@ const showStructuresTypes = () => {
                 preserve-scroll
                 :href="
                     route('departements.disciplines.categories.show', {
-                        departement: departement.id,
+                        departement: departement.slug,
                         discipline: discipline.slug,
                         category: category.id,
                     })
@@ -1124,7 +1124,7 @@ const showStructuresTypes = () => {
                 preserve-scroll
                 :href="
                     route('departements.disciplines.structuretypes.show', {
-                        departement: departement.id,
+                        departement: departement.slug,
                         discipline: discipline.slug,
                         structuretype: structureType.id,
                     })

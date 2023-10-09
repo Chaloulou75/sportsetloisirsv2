@@ -37,8 +37,6 @@ return new class () extends Migration {
                     ->references('id')
                     ->on('structures_horaires')
                     ->onDelete('cascade');
-
-
         });
     }
 
@@ -48,13 +46,11 @@ return new class () extends Migration {
     public function down(): void
     {
         Schema::table('structures_produits', function (Blueprint $table) {
-
             $table->dropForeign(['structure_id']);
             $table->dropForeign(['discipline_id']);
             $table->dropForeign(['categorie_id']);
             $table->dropForeign(['activite_id']);
             $table->dropForeign(['lieu_id']);
-
         });
     }
 };

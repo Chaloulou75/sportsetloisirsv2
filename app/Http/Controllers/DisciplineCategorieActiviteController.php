@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\City;
-use App\Models\Departement;
 use Inertia\Inertia;
 use App\Models\Famille;
 use Illuminate\Http\Request;
