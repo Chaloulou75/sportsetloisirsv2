@@ -41,6 +41,11 @@ import {
 dayjs.locale("fr");
 
 const props = defineProps({
+    departement: Object,
+    city: Object,
+    citiesAround: Object,
+    discipline: Object,
+    disciplineSimilaires: Object,
     structure: Object,
     logoUrl: String,
     familles: Object,

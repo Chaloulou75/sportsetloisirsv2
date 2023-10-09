@@ -285,13 +285,19 @@ const formCriteres = useForm({
                                         @card-hover="showTooltip(produit)"
                                         @card-out="hideTooltip"
                                         :link="
-                                            route('structures.activites.show', {
-                                                activite: produit.activite.id,
-                                            })
+                                            route(
+                                                'disciplines.structuretypes.activites.show',
+                                                {
+                                                    discipline: discipline.slug,
+                                                    structuretype:
+                                                        structuretypeElected.id,
+                                                    activite:
+                                                        produit.activite.id,
+                                                    produit: produit.id,
+                                                }
+                                            )
                                         "
-                                        :data="{
-                                            produit: produit.id,
-                                        }"
+                                        :data="{}"
                                     />
                                 </div>
                                 <div class="flex justify-end p-10">

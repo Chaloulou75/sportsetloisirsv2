@@ -26,7 +26,7 @@ class DepartementDisciplineStructuretypeController extends Controller
         $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
 
         $allCities = City::whereHas('produits')
-                                        ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                                        ->select(['id', 'slug',  'code_postal', 'ville', 'ville_formatee'])
                                         ->get();
 
 

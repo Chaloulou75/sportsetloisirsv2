@@ -218,13 +218,17 @@ const hideStructureTooltip = () => {
                                         @card-hover="showTooltip(produit)"
                                         @card-out="hideTooltip"
                                         :link="
-                                            route('structures.activites.show', {
-                                                activite: produit.activite.id,
-                                            })
+                                            route(
+                                                'departements.activites.show',
+                                                {
+                                                    departement: departement.id,
+                                                    activite:
+                                                        produit.activite.id,
+                                                    produit: produit.id,
+                                                }
+                                            )
                                         "
-                                        :data="{
-                                            produit: produit.id,
-                                        }"
+                                        :data="{}"
                                     />
                                 </div>
                                 <div class="flex justify-end p-10">

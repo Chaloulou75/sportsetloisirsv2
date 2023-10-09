@@ -33,7 +33,7 @@ class DisciplineController extends Controller
         $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
 
         $allCities = City::whereHas('produits')
-                                        ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                                        ->select(['id', 'slug',  'code_postal', 'ville', 'ville_formatee'])
                                         ->get();
 
 
@@ -68,7 +68,7 @@ class DisciplineController extends Controller
         $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
 
         $allCities = City::whereHas('produits')
-                                        ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                                        ->select(['id', 'slug',  'code_postal', 'ville', 'ville_formatee'])
                                         ->get();
 
         $discipline = ListDiscipline::with('structureProduits')->where('slug', $discipline->slug)

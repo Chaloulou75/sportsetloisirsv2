@@ -19,7 +19,6 @@ class CityStructureController extends Controller
     public function show(City $city, $structure)
     {
         $discipline = request()->discipline;
-        $city = request()->city;
         $departement = request()->departement;
         $category = request()->category;
         $structuretype = request()->structuretype;

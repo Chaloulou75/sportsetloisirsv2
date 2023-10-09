@@ -15,6 +15,7 @@ use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\DepartementController;
+use App\Http\Controllers\CityActiviteController;
 use App\Http\Controllers\CityStructureController;
 use App\Http\Controllers\StructureUserController;
 use App\Http\Controllers\CityDisciplineController;
@@ -24,29 +25,39 @@ use App\Http\Controllers\FamilleDisciplineController;
 use App\Http\Controllers\StructureAddresseController;
 use App\Http\Controllers\StructurePlanningController;
 use App\Http\Controllers\CategoryDisciplineController;
+use App\Http\Controllers\DisciplineActiviteController;
 use App\Http\Controllers\ProductReservationController;
 use App\Http\Controllers\StructureCategorieController;
+use App\Http\Controllers\DepartementActiviteController;
 use App\Http\Controllers\DisciplineSimilaireController;
 use App\Http\Controllers\DisciplineStructureController;
 use App\Http\Controllers\StructureDisciplineController;
 use App\Http\Controllers\DepartementStructureController;
 use App\Http\Controllers\StructureStatistiqueController;
 use App\Http\Controllers\DepartementDisciplineController;
+use App\Http\Controllers\CityDisciplineActiviteController;
 use App\Http\Controllers\CityDisciplineCategorieController;
 use App\Http\Controllers\CityDisciplineStructureController;
 use App\Http\Controllers\StructureTypeDisciplineController;
 use App\Http\Controllers\StructureActiviteProduitController;
 use App\Http\Controllers\CategoryDisciplineCritereController;
 use App\Http\Controllers\CityDisciplineStructuretypeController;
+use App\Http\Controllers\DisciplineCategorieActiviteController;
 use App\Http\Controllers\DisciplineCategorieStructureController;
+use App\Http\Controllers\DepartementDisciplineActiviteController;
 use App\Http\Controllers\DepartementDisciplineCategorieController;
 use App\Http\Controllers\DepartementDisciplineStructureController;
 use App\Http\Controllers\CategoryDisciplineCritereValeurController;
+use App\Http\Controllers\CityDisciplineCategorieActiviteController;
+use App\Http\Controllers\DisciplineStructuretypeActiviteController;
 use App\Http\Controllers\CityDisciplineCategorieStructureController;
 use App\Http\Controllers\DisciplineStructuretypeStructureController;
 use App\Http\Controllers\DepartementDisciplineStructuretypeController;
+use App\Http\Controllers\CityDisciplineStructuretypeActiviteController;
 use App\Http\Controllers\CityDisciplineStructuretypeStructureController;
+use App\Http\Controllers\DepartementDisciplineCategorieActiviteController;
 use App\Http\Controllers\CityDisciplineCategorieStructureActiviteController;
+use App\Http\Controllers\DepartementDisciplineStructuretypeActiviteController;
 use App\Http\Controllers\DepartementDisciplineStructuretypeStructureController;
 use App\Http\Controllers\CityDisciplineStructuretypeStructureActiviteController;
 
@@ -93,8 +104,10 @@ Route::resource('disciplines', DisciplineController::class)->only([
 ]);
 
 Route::get('/dis-{discipline:slug}', [DisciplineController::class, 'show'])->name('disciplines.show');
+
 Route::get('/dis-{discipline:slug}/str-{structure:slug}', [DisciplineStructureController::class, 'show'])->name('disciplines.structures.show');
 
+Route::get('/dis-{discipline:slug}/activite-{activite:id}', [DisciplineActiviteController::class, 'show'])->name('disciplines.activites.show');
 
 Route::resource('villes', CityController::class, [
     'parameters' => [
@@ -118,21 +131,29 @@ Route::get('/localite-{city:id}-1/str-{structure:slug}', [CityStructureControlle
 ])->name('villes.structures.show');
 
 
+Route::get('/localite-{city:id}-1/activites-{activite:id}', [CityActiviteController::class, 'show'], [
+    'parameters' => [
+        'villes' => 'city',
+    ]
+])->name('villes.activites.show');
+
 Route::resource('departements', DepartementController::class)->only([
     'index'
 ]);
 
 Route::get('/localite-{departement:id}-2', [DepartementController::class, 'show'])->name('departements.show');
 
-
 Route::get('/localite-{departement:id}-2/str-{structure:slug}', [DepartementStructureController::class, 'show'])->name('departements.structures.show');
 
+Route::get('/localite-{departement:id}-2/activites-{activite:id}', [DepartementActiviteController::class, 'show'])->name('departements.activites.show');
 
 Route::get('/structures', [StructureController::class, 'index'])
         ->name('structures.index');
 
 Route::get('str-{structure:slug}', [StructureController::class, 'show'])
     ->name('structures.show');
+
+Route::get('/activites-{activite:id}', [ActiviteController::class, 'show'])->name('structures.activites.show');
 
 Route::get('/localite-{city}-1/dis-{discipline:slug}', [CityDisciplineController::class, 'show'], [
     'parameters' => [
@@ -147,23 +168,34 @@ Route::get('/localite-{city}-1/dis-{discipline:slug}/str-{structure:slug}', [Cit
     ]
 ])->name('villes.disciplines.structures.show');
 
-// disciplines/
+
+Route::get('/localite-{city}-1/dis-{discipline:slug}/activites-{activite:id}', [CityDisciplineActiviteController::class, 'show'], [
+    'parameters' => [
+        'villes' => 'city'
+    ]
+])->name('villes.disciplines.activites.show');
+
 
 Route::get('/localite-{city}-1/dis-{discipline:slug}/cat-{category:id}', [CityDisciplineCategorieController::class, 'show'])->name('villes.disciplines.categories.show');
 // /villes/disciplines/categories/
 
+Route::get('/localite-{city}-1/dis-{discipline:slug}/cat-{category:id}/str-{structure:slug}', [CityDisciplineCategorieStructureController::class, 'show'])->name('villes.disciplines.categories.structures.show');
+
+Route::get('/localite-{city}-1/dis-{discipline:slug}/cat-{category:id}/activites-{activite:id}', [CityDisciplineCategorieActiviteController::class, 'show'])->name('villes.disciplines.categories.activites.show');
+
+
 Route::get('/localite-{city}-1/dis-{discipline:slug}/typ-{structuretype:id}', [CityDisciplineStructuretypeController::class, 'show'])->name('villes.disciplines.structuretypes.show');
 // /villes/disciplines/structuretypes/
 
-Route::get('/localite-{city}-1/dis-{discipline:slug}/cat-{category:id}/str-{structure:slug}', [CityDisciplineCategorieStructureController::class, 'show'])->name('villes.disciplines.categories.structures.show');
-
-Route::get('/localite-{city}-1/{discipline:slug}/typ-{structuretype:id}/{structure}', [CityDisciplineStructuretypeStructureController::class, 'show'])->name('villes.disciplines.structuretypes.structures.show');
+Route::get('/localite-{city}-1/{discipline:slug}/typ-{structuretype:id}/str-{structure:slug}', [CityDisciplineStructuretypeStructureController::class, 'show'])->name('villes.disciplines.structuretypes.structures.show');
 // /villes/disciplines/structuretypes/structures/
 
-Route::get('/localite-{city}-1/{discipline:slug}/cat-{category:id}/{structure}/{activite:id}', [CityDisciplineCategorieStructureActiviteController::class, 'show'])->name('villes.disciplines.categories.structures.activites.show');
-// /villes/disciplines/categories/structures/activites/
 
-Route::get('/localite-{city}-1/{discipline:slug}/typ-{structuretype:id}/{structure}/{activite:id}', [CityDisciplineStructuretypeStructureActiviteController::class, 'show'])->name('villes.disciplines.structuretypes.structures.activites.show');
+Route::get('/localite-{city}-1/dis-{discipline:slug}/typ-{structuretype:id}/activites-{activite:id}', [CityDisciplineStructuretypeActiviteController::class, 'show'])->name('villes.disciplines.structuretypes.activites.show');
+// /villes/disciplines/structuretypes/activites/
+
+
+// Route::get('/localite-{city}-1/{discipline:slug}/typ-{structuretype:id}/{structure}/{activite:id}', [CityDisciplineStructuretypeStructureActiviteController::class, 'show'])->name('villes.disciplines.structuretypes.structures.activites.show');
 // /villes/disciplines/structuretypes/structures/activites/
 
 Route::get('/discipline/index.{extension?}', function ($extension = null) {
@@ -188,6 +220,8 @@ Route::get('/localite-{departement}-2/dis-{discipline:slug}', [DepartementDiscip
 
 Route::get('/localite-{departement}-2/dis-{discipline:slug}/str-{structure:slug}', [DepartementDisciplineStructureController::class, 'show'])->name('departements.disciplines.structures.show');
 
+Route::get('/localite-{departement}-2/dis-{discipline:slug}/activite-{activite:slug}', [DepartementDisciplineActiviteController::class, 'show'])->name('departements.disciplines.activites.show');
+
 
 Route::get('/localite-{departement}-2/dis-{discipline:slug}/cat-{category:id}', [DepartementDisciplineCategorieController::class, 'show'])->name('departements.disciplines.categories.show');
 // /departements/disciplines/categories/
@@ -195,10 +229,17 @@ Route::get('/localite-{departement}-2/dis-{discipline:slug}/cat-{category:id}', 
 Route::get('/localite-{departement}-2/dis-{discipline:slug}/cat-{category:id}/str-{structure:slug}', [DepartementDisciplineCategorieController::class, 'show'])->name('departements.disciplines.categories.structures.show');
 // /departements/disciplines/categories/structure
 
+Route::get('/localite-{departement}-2/dis-{discipline:slug}/cat-{category:id}/activite-{activite:slug}', [DepartementDisciplineCategorieActiviteController::class, 'show'])->name('departements.disciplines.categories.activites.show');
+// /departements/disciplines/categories/activite
+
+
 Route::get('localite-{departement}-2/dis-{discipline:slug}/type-{structuretype:id}', [DepartementDisciplineStructuretypeController::class, 'show'])->name('departements.disciplines.structuretypes.show');
 // /departements/disciplines/structuretypes/
 
 Route::get('localite-{departement}-2/dis-{discipline:slug}/type-{structuretype:id}/str-{structure:slug}', [DepartementDisciplineStructuretypeStructureController::class, 'show'])->name('departements.disciplines.structuretypes.structures.show');
+
+Route::get('localite-{departement}-2/dis-{discipline:slug}/type-{structuretype:id}/activite-{activite:id}', [DepartementDisciplineStructuretypeActiviteController::class, 'show'])->name('departements.disciplines.structuretypes.activites.show');
+
 
 Route::get('/localite-1/index.{extension?}', function ($extension = null) {
     return redirect('/villes/', 301);
@@ -212,9 +253,13 @@ Route::get('/dis-{discipline:slug}/cat-{category:id}', [CategoryDisciplineContro
 
 Route::get('/dis-{discipline:slug}/cat-{category:id}/str-{structure:slug}', [DisciplineCategorieStructureController::class, 'show'])->name('disciplines.categories.structures.show');
 
+Route::get('/dis-{discipline:slug}/cat-{category:id}/activite-{activite:id}', [DisciplineCategorieActiviteController::class, 'show'])->name('disciplines.categories.activites.show');
+
 Route::get('/dis-{discipline:slug}/typ-{structuretype:id}', [StructureTypeDisciplineController::class, 'show'])->name('disciplines.structuretypes.show');
 
 Route::get('/dis-{discipline:slug}/typ-{structuretype:id}/str-{structure:slug}', [DisciplineStructuretypeStructureController::class, 'show'])->name('disciplines.structuretypes.structures.show');
+
+Route::get('/dis-{discipline:slug}/typ-{structuretype:id}/activite-{activite:id}', [DisciplineStructuretypeActiviteController::class, 'show'])->name('disciplines.structuretypes.activites.show');
 
 Route::resource('product_reservations', ProductReservationController::class)->only([
     'store'
@@ -296,5 +341,3 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/categories-disciplines-criteres-valeurs/{lienDisCatCritValeur}', [CategoryDisciplineCritereValeurController::class, 'destroy'])->name('categories-disciplines-criteres-valeurs.destroy');
     //, 'can:viewAdmin'
 });
-
-Route::get('/activites/{activite:id}', [ActiviteController::class, 'show'])->name('structures.activites.show');

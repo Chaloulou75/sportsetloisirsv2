@@ -78,7 +78,7 @@ class ActiviteController extends Controller
             ]);
             $structureActiviteCategorie->with('discipline')->first();
 
-            $titre = $lienActCat->nom_categorie_pro .' de '. $structureActiviteCategorie->discipline->name ;
+            $titre = $lienActCat->nom_categorie_pro . ' de ' . $structureActiviteCategorie->discipline->name ;
 
             $structureActivite = StructureActivite::create([
                 'structure_id' => $validated['structure_id'],
@@ -129,7 +129,7 @@ class ActiviteController extends Controller
         $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
 
         $allCities = City::whereHas('produits')
-                                        ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                                        ->select(['id', 'slug',  'code_postal', 'ville', 'ville_formatee'])
                                         ->get();
 
 
@@ -512,7 +512,7 @@ class ActiviteController extends Controller
             'structure_id' => $structure->id,
             'discipline_id' => $request->discipline_id,
             'categorie_id' => $request->categorie_id,
-            'titre' => $request->titre ?? $categorieDiscName->nom_categorie_pro.' de '. $categorieDiscName->discipline->name,
+            'titre' => $request->titre ?? $categorieDiscName->nom_categorie_pro . ' de ' . $categorieDiscName->discipline->name,
             'description' => $request->description,
             'image' => "",
             "actif" => 1,
