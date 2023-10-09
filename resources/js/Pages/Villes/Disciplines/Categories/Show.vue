@@ -496,14 +496,17 @@ const formCriteres = useForm({
                                         "
                                         @card-out="hideStructureTooltip"
                                         :link="
-                                            route('structures.show', {
-                                                structure: structure.slug,
-                                            })
+                                            route(
+                                                'villes.disciplines.categories.structures.show',
+                                                {
+                                                    city: city.id,
+                                                    discipline: discipline.slug,
+                                                    category: category.id,
+                                                    structure: structure.slug,
+                                                }
+                                            )
                                         "
-                                        :data="{
-                                            discipline: discipline.slug,
-                                            category: category.id,
-                                        }"
+                                        :data="{}"
                                     />
                                 </div>
                                 <div class="flex justify-end p-10">

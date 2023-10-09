@@ -291,13 +291,18 @@ const hideStructureTooltip = () => {
                                         "
                                         @card-out="hideStructureTooltip"
                                         :link="
-                                            route('structures.show', {
-                                                structure: structure.slug,
-                                            })
+                                            route(
+                                                'departements.disciplines.structuretypes.structures.show',
+                                                {
+                                                    departement: departement.id,
+                                                    discipline: discipline.slug,
+                                                    structuretype:
+                                                        structuretypeElected.id,
+                                                    structure: structure.slug,
+                                                }
+                                            )
                                         "
-                                        :data="{
-                                            discipline: discipline.slug,
-                                        }"
+                                        :data="{}"
                                     />
                                 </div>
                                 <div class="flex justify-end p-10">

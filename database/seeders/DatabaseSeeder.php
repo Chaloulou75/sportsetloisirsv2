@@ -37,6 +37,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AListePaysTableSeeder::class);
         $this->call(DepartementsTableSeeder::class);
         $this->call(VillesFranceTableSeeder::class);
+        $this->call(VillesFranceSlugSeeder::class);
         $this->call(ListeFamillesTableSeeder::class);
         $this->call(ListeDisciplinesTableSeeder::class);
         $this->call(ListeCriteresTableSeeder::class);

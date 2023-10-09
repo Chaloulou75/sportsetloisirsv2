@@ -28,11 +28,11 @@ class CityController extends Controller
         $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
 
         $allCities = City::whereHas('produits')
-                        ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                        ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee'])
                         ->get();
 
 
-        $cities = City::whereHas('produits')->select(['id', 'ville', 'ville_formatee', 'code_postal'])
+        $cities = City::whereHas('produits')->select(['id', 'slug', 'ville', 'ville_formatee', 'code_postal'])
                         ->withCount('produits')
                         ->filter(
                             request(['search'])
@@ -64,17 +64,17 @@ class CityController extends Controller
         $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
 
         $allCities = City::whereHas('produits')
-                                        ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                                        ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee'])
                                         ->get();
 
         $city = City::with(['produits'])
-                    ->select(['id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
+                    ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
                     ->where('id', $city->id)
                     ->withCount('produits')
                     ->first();
 
         $citiesAround = City::whereHas('produits')
-                    ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
+                    ->select('id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
                     ->selectRaw("
                         (6366 * acos(
                             cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) +
@@ -129,21 +129,21 @@ class CityController extends Controller
         $citiesAroundStructures = $citiesAround->flatMap(function ($city) {
             return $city->structures()->with([
                 'creator:id,name',
-                        'adresses'  => function ($query) {
-                            $query->latest();
-                        },
-                        'city:id,ville,ville_formatee,code_postal',
-                        'departement:id,departement,numero',
-                        'structuretype:id,name,slug',
-                        'disciplines',
-                        'disciplines.discipline:id,name,slug',
-                        'categories',
-                        'activites',
-                        'activites.discipline:id,name,slug',
-                        'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
-                        'produits',
-                        'produits.criteres:id,activite_id,produit_id,critere_id,valeur',
-                        'produits.criteres.critere:id,nom',
+                'adresses'  => function ($query) {
+                    $query->latest();
+                },
+                'city:id,slug,ville,ville_formatee,code_postal',
+                'departement:id,departement,numero',
+                'structuretype:id,name,slug',
+                'disciplines',
+                'disciplines.discipline:id,name,slug',
+                'categories',
+                'activites',
+                'activites.discipline:id,name,slug',
+                'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+                'produits',
+                'produits.criteres:id,activite_id,produit_id,critere_id,valeur',
+                'produits.criteres.critere:id,nom',
             ])
             ->withCount('disciplines', 'produits', 'activites')
             ->select(['id', 'name', 'slug', 'presentation_courte', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
@@ -155,7 +155,7 @@ class CityController extends Controller
                         'adresses'  => function ($query) {
                             $query->latest();
                         },
-                        'city:id,ville,ville_formatee,code_postal',
+                        'city:id,slug,ville,ville_formatee,code_postal',
                         'departement:id,departement,numero',
                         'structuretype:id,name,slug',
                         'disciplines',

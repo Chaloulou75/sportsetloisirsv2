@@ -37,12 +37,12 @@ class HomeController extends Controller
                         ->get();
 
         $allCities = City::whereHas('produits')
-                                ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
+                                ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee'])
                                 ->get();
 
 
         $topVilles = City::whereHas('produits')
-                        ->select(['id', 'code_postal', 'ville', 'ville_formatee', 'departement', 'nom_departement'])
+                        ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'departement', 'nom_departement'])
                         ->withCount('produits')
                         ->orderByDesc('produits_count')
                         ->limit(12)

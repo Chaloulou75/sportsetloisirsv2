@@ -96,14 +96,14 @@ watch(
     <div class="flex h-full flex-col items-center justify-start space-y-4 pb-4">
         <div class="flex items-center justify-start space-x-4">
             <label for="zoomSize">Zoom:</label>
-            <input id="zoomSize" v-model="zoom" type="range" min="2" max="20" />
+            <input id="zoomSize" v-model="zoom" type="range" min="5" max="20" />
         </div>
         <div class="h-[400px] w-full shadow-md">
             <l-map
                 :useGlobalLeaflet="false"
                 ref="map"
                 :zoom="zoom"
-                :minZoom="2"
+                :minZoom="5"
                 :maxZoom="20"
                 :zoomAnimation="true"
                 :center="center"
@@ -163,6 +163,11 @@ watch(
                             :structure="structure"
                             :link="
                                 route('structures.show', {
+                                    city: null,
+                                    departement: null,
+                                    discipline: null,
+                                    category: null,
+                                    structuretype: null,
                                     structure: structure.slug,
                                 })
                             "

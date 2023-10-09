@@ -536,7 +536,7 @@ class StructureController extends Controller
         if($request->hasFile('logo')) {
             request()->validate(['logo' => ['nullable','image','max:2048']]);
             if($structure->logo !== null) {
-                Storage::delete('structures/' . $structure->id .'/'. $structure->logo);
+                Storage::delete('structures/' . $structure->id . '/' . $structure->logo);
             }
             $path = $request->file('logo')->store('public/structures/' . $structure->id);
             $url = Storage::url($path);

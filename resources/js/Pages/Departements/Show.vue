@@ -253,9 +253,13 @@ const hideStructureTooltip = () => {
                                         "
                                         @card-out="hideStructureTooltip"
                                         :link="
-                                            route('structures.show', {
-                                                structure: structure.slug,
-                                            })
+                                            route(
+                                                'departements.structures.show',
+                                                {
+                                                    departement: departement.id,
+                                                    structure: structure.slug,
+                                                }
+                                            )
                                         "
                                         :data="{}"
                                     />

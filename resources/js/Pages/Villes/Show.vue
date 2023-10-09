@@ -263,7 +263,8 @@ const formatCityName = (ville) => {
                                         "
                                         @card-out="hideStructureTooltip"
                                         :link="
-                                            route('structures.show', {
+                                            route('villes.structures.show', {
+                                                city: city.id,
                                                 structure: structure.slug,
                                             })
                                         "
