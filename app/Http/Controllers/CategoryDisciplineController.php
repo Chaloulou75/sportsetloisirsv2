@@ -53,9 +53,7 @@ class CategoryDisciplineController extends Controller
                         ->select(['id', 'name', 'slug'])
                         ->get();
 
-
         $criteres = LienDisciplineCategorieCritere::with('valeurs')->where('discipline_id', $discipline->id)->where('categorie_id', $category->id)->get();
-
 
         $structures = Structure::with([
                         'creator:id,name',

@@ -99,6 +99,7 @@ Route::resource('familles', FamilleController::class)->only([
     'index', 'show'
 ]);
 
+// disciplines routes
 Route::resource('disciplines', DisciplineController::class)->only([
     'index'
 ]);
@@ -121,14 +122,17 @@ Route::get('/dis-{discipline:slug}/typ-{structuretype:id}/str-{structure:slug}',
 
 Route::get('/dis-{discipline:slug}/typ-{structuretype:id}/activite-{activite:id}', [DisciplineStructuretypeActiviteController::class, 'show'])->name('disciplines.structuretypes.activites.show');
 
+// structures route
 Route::get('/structures', [StructureController::class, 'index'])
         ->name('structures.index');
 
 Route::get('str-{structure:slug}', [StructureController::class, 'show'])
     ->name('structures.show');
 
+// activites route
 Route::get('/activites-{activite:id}', [ActiviteController::class, 'show'])->name('structures.activites.show');
 
+// Departements routes
 Route::resource('departements', DepartementController::class)->only([
     'index'
 ]);
@@ -161,7 +165,7 @@ Route::get('/dept-{departement:slug}/dis-{discipline:slug}/type-{structuretype:i
 
 Route::get('/dept-{departement:slug}/dis-{discipline:slug}/type-{structuretype:id}/activite-{activite:id}', [DepartementDisciplineStructuretypeActiviteController::class, 'show'])->name('departements.disciplines.structuretypes.activites.show');
 
-
+//cities route
 Route::resource('villes', CityController::class, [
     'parameters' => [
         'villes' => 'city'
@@ -188,8 +192,6 @@ Route::get('/{city:slug}/activites-{activite:id}', [CityActiviteController::clas
     ]
 ])->name('villes.activites.show');
 
-
-
 Route::get('/{city:slug}/dis-{discipline:slug}', [CityDisciplineController::class, 'show'], [
     'parameters' => [
         'villes' => 'city'
@@ -202,13 +204,11 @@ Route::get('/{city:slug}/dis-{discipline:slug}/str-{structure:slug}', [CityDisci
     ]
 ])->name('villes.disciplines.structures.show');
 
-
 Route::get('/{city:slug}/dis-{discipline:slug}/activites-{activite:id}', [CityDisciplineActiviteController::class, 'show'], [
     'parameters' => [
         'villes' => 'city'
     ]
 ])->name('villes.disciplines.activites.show');
-
 
 Route::get('/{city:slug}/dis-{discipline:slug}/cat-{category:id}', [CityDisciplineCategorieController::class, 'show'])->name('villes.disciplines.categories.show');
 // /villes/disciplines/categories/
@@ -226,9 +226,6 @@ Route::get('/{city:slug}/{discipline:slug}/typ-{structuretype:id}/str-{structure
 Route::get('/{city:slug}/dis-{discipline:slug}/typ-{structuretype:id}/activites-{activite:id}', [CityDisciplineStructuretypeActiviteController::class, 'show'])->name('villes.disciplines.structuretypes.activites.show');
 // /villes/disciplines/structuretypes/activites/
 
-// Route::get('/localite-{city}-1/{discipline:slug}/typ-{structuretype:id}/{structure}/{activite:id}', [CityDisciplineStructuretypeStructureActiviteController::class, 'show'])->name('villes.disciplines.structuretypes.structures.activites.show');
-// /villes/disciplines/structuretypes/structures/activites/
-
 Route::get('/discipline/index.{extension?}', function ($extension = null) {
     return redirect('/disciplines/', 301);
 });
@@ -237,8 +234,6 @@ Route::get('/dis-{disciplineWithPlus}-{id}.{extension?}', function ($disciplineW
     $discipline = str_replace('+', '-', strtolower($disciplineWithPlus));
     return redirect('/dis' . $discipline, 301);
 });
-
-
 
 Route::get('/localite-2/index.{extension?}', function ($extension = null) {
     return redirect('/departements/', 301);
@@ -249,9 +244,6 @@ Route::get('/{departementWithPlus}-{id}-2.{extension?}', function ($departementW
     return redirect('/departements/' . $id, 301);
 });
 
-
-
-
 Route::get('/localite-1/index.{extension?}', function ($extension = null) {
     return redirect('/villes/', 301);
 });
@@ -259,8 +251,6 @@ Route::get('/{villeWithPlus}-{id}-1.{extension?}', function ($villeWithPlus, $id
     $ville = str_replace('+', '-', strtolower($villeWithPlus));
     return redirect('/villes/' . $id, 301);
 });
-
-
 
 Route::resource('product_reservations', ProductReservationController::class)->only([
     'store'

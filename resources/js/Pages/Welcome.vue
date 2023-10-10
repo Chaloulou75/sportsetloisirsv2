@@ -102,7 +102,9 @@ const formatCityName = (ville) => {
                         }"
                         class="flex w-full items-center justify-center rounded border border-gray-300 px-4 py-3 text-base font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-700 focus:ring-offset-2 md:w-auto"
                     >
-                        <MagnifyingGlassIcon class="mr-2 h-6 w-6" />
+                        <MagnifyingGlassIcon
+                            class="mr-2 h-6 w-6 md:mr-0 md:h-5 md:w-5"
+                        />
                         <span class="inline-block md:hidden">Rechercher</span>
                         <span class="sr-only">Rechercher</span>
                     </button>

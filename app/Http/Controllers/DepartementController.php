@@ -104,7 +104,7 @@ class DepartementController extends Controller
                 'adresses'  => function ($query) {
                     $query->latest();
                 },
-                'city:id,ville,ville_formatee,code_postal',
+                'city:id,slug,ville,ville_formatee,code_postal',
                 'departement:id,departement,numero',
                 'structuretype:id,name,slug',
                 'disciplines',
