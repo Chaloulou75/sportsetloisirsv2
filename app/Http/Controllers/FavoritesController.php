@@ -88,15 +88,11 @@ class FavoritesController extends Controller
                     ->get();
         }
 
-        $familles = Famille::whereHas('disciplines', function ($query) {
-            $query->whereHas('structureProduits');
-        })->select(['id', 'name', 'slug'])->get();
 
-        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
+        $familles = Famille::withProducts()->get();
+        $listDisciplines = ListDiscipline::withProducts()->get();
+        $allCities = City::withProducts()->get();
 
-        $allCities = City::whereHas('produits')
-                                ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
-                                ->get();
 
         return Inertia::render('Favorites/Index', [
                     'familles' => $familles,

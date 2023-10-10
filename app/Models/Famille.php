@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Famille extends Model
 {
@@ -17,6 +18,15 @@ class Famille extends Model
     public function getRouteKeyName(): String
     {
         return 'slug';
+    }
+
+    /**
+     * Scope a query to only include familles with products.
+     */
+    public function scopeWithProducts(Builder $query): void
+    {
+        $query->whereHas('disciplines.structureProduits')
+                ->select(['id', 'name', 'slug']);
     }
 
     public function disciplines(): BelongsToMany

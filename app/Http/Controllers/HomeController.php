@@ -24,22 +24,15 @@ class HomeController extends Controller
         $produitsCount = StructureProduit::count();
         $citiesCount = City::count();
 
-        $familles = Famille::whereHas('disciplines', function ($query) {
-            $query->whereHas('structureProduits');
-        })->select(['id', 'name', 'slug'])->get();
-
-        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
+        $familles = Famille::withProducts()->get();
+        $listDisciplines = ListDiscipline::withProducts()->get();
+        $allCities = City::withProducts()->get();
 
         $disciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])
                         ->withCount('structureProduits')
                         ->orderByDesc('structure_produits_count')
                         ->limit(12)
                         ->get();
-
-        $allCities = City::whereHas('produits')
-                                ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee'])
-                                ->get();
-
 
         $topVilles = City::whereHas('produits')
                         ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'departement', 'nom_departement'])

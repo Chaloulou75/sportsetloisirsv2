@@ -109,12 +109,25 @@ Route::get('/dis-{discipline:slug}/str-{structure:slug}', [DisciplineStructureCo
 
 Route::get('/dis-{discipline:slug}/activite-{activite:id}', [DisciplineActiviteController::class, 'show'])->name('disciplines.activites.show');
 
+Route::get('/dis-{discipline:slug}/cat-{category:id}', [CategoryDisciplineController::class, 'show'])->name('disciplines.categories.show');
+
+Route::get('/dis-{discipline:slug}/cat-{category:id}/str-{structure:slug}', [DisciplineCategorieStructureController::class, 'show'])->name('disciplines.categories.structures.show');
+
+Route::get('/dis-{discipline:slug}/cat-{category:id}/activite-{activite:id}', [DisciplineCategorieActiviteController::class, 'show'])->name('disciplines.categories.activites.show');
+
+Route::get('/dis-{discipline:slug}/typ-{structuretype:id}', [StructureTypeDisciplineController::class, 'show'])->name('disciplines.structuretypes.show');
+
+Route::get('/dis-{discipline:slug}/typ-{structuretype:id}/str-{structure:slug}', [DisciplineStructuretypeStructureController::class, 'show'])->name('disciplines.structuretypes.structures.show');
+
+Route::get('/dis-{discipline:slug}/typ-{structuretype:id}/activite-{activite:id}', [DisciplineStructuretypeActiviteController::class, 'show'])->name('disciplines.structuretypes.activites.show');
+
 Route::get('/structures', [StructureController::class, 'index'])
         ->name('structures.index');
 
 Route::get('str-{structure:slug}', [StructureController::class, 'show'])
     ->name('structures.show');
 
+Route::get('/activites-{activite:id}', [ActiviteController::class, 'show'])->name('structures.activites.show');
 
 Route::resource('departements', DepartementController::class)->only([
     'index'
@@ -163,7 +176,6 @@ Route::get('/{city:slug}', [CityController::class, 'show'], [
     ]
 ])->name('villes.show');
 
-
 Route::get('/{city:slug}/str-{structure:slug}', [CityStructureController::class, 'show'], [
     'parameters' => [
         'villes' => 'city',
@@ -177,10 +189,6 @@ Route::get('/{city:slug}/activites-{activite:id}', [CityActiviteController::clas
 ])->name('villes.activites.show');
 
 
-
-
-
-Route::get('/activites-{activite:id}', [ActiviteController::class, 'show'])->name('structures.activites.show');
 
 Route::get('/{city:slug}/dis-{discipline:slug}', [CityDisciplineController::class, 'show'], [
     'parameters' => [
@@ -252,17 +260,7 @@ Route::get('/{villeWithPlus}-{id}-1.{extension?}', function ($villeWithPlus, $id
     return redirect('/villes/' . $id, 301);
 });
 
-Route::get('/dis-{discipline:slug}/cat-{category:id}', [CategoryDisciplineController::class, 'show'])->name('disciplines.categories.show');
 
-Route::get('/dis-{discipline:slug}/cat-{category:id}/str-{structure:slug}', [DisciplineCategorieStructureController::class, 'show'])->name('disciplines.categories.structures.show');
-
-Route::get('/dis-{discipline:slug}/cat-{category:id}/activite-{activite:id}', [DisciplineCategorieActiviteController::class, 'show'])->name('disciplines.categories.activites.show');
-
-Route::get('/dis-{discipline:slug}/typ-{structuretype:id}', [StructureTypeDisciplineController::class, 'show'])->name('disciplines.structuretypes.show');
-
-Route::get('/dis-{discipline:slug}/typ-{structuretype:id}/str-{structure:slug}', [DisciplineStructuretypeStructureController::class, 'show'])->name('disciplines.structuretypes.structures.show');
-
-Route::get('/dis-{discipline:slug}/typ-{structuretype:id}/activite-{activite:id}', [DisciplineStructuretypeActiviteController::class, 'show'])->name('disciplines.structuretypes.activites.show');
 
 Route::resource('product_reservations', ProductReservationController::class)->only([
     'store'

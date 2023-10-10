@@ -24,15 +24,9 @@ class CityStructureController extends Controller
         $structuretype = request()->structuretype;
 
 
-        $familles = Famille::withWhereHas('disciplines', function ($query) {
-            $query->whereHas('structureProduits');
-        })->select(['id', 'name', 'slug'])->get();
-
-        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
-
-        $allCities = City::whereHas('produits')
-                                ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
-                                ->get();
+        $familles = Famille::withProducts()->get();
+        $listDisciplines = ListDiscipline::withProducts()->get();
+        $allCities = City::withProducts()->get();
 
         $structure = Structure::with([
                     'creator:id,name',

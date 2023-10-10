@@ -19,15 +19,9 @@ class CityDisciplineCategorieController extends Controller
      */
     public function show(City $city, $discipline, $category)
     {
-        $familles = Famille::whereHas('disciplines', function ($query) {
-            $query->whereHas('structureProduits');
-        })->select(['id', 'name', 'slug'])->get();
-
-        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
-
-        $allCities = City::whereHas('produits')
-                        ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
-                        ->get();
+        $familles = Famille::withProducts()->get();
+        $listDisciplines = ListDiscipline::withProducts()->get();
+        $allCities = City::withProducts()->get();
 
         $discipline = ListDiscipline::with('structureProduits')->where('slug', $discipline)
                             ->select(['id', 'name', 'slug', 'view_count'])

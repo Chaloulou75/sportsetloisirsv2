@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -59,6 +60,15 @@ class City extends Model
                 $query->where('slug', $discipline)
             )
         );
+    }
+
+    /**
+     * Scope a query to only include cities with products.
+     */
+    public function scopeWithProducts(Builder $query): void
+    {
+        $query->whereHas('produits')
+        ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee']);
     }
 
     public function departement(): BelongsTo

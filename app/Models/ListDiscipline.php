@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -22,6 +23,14 @@ class ListDiscipline extends Model
     public function getRouteKeyName(): String
     {
         return 'slug';
+    }
+
+    /**
+     * Scope a query to only include disciplines with products.
+     */
+    public function scopeWithProducts(Builder $query): void
+    {
+        $query->whereHas('structureProduits')->select(['id', 'name', 'slug']);
     }
 
     public function scopeFilter($query, array $filters): void

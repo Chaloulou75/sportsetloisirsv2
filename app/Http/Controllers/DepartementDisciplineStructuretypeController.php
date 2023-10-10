@@ -19,16 +19,9 @@ class DepartementDisciplineStructuretypeController extends Controller
     public function show(Departement $departement, $discipline, $structuretype)
     {
 
-        $familles = Famille::whereHas('disciplines', function ($query) {
-            $query->whereHas('structureProduits');
-        })->select(['id', 'name', 'slug'])->get();
-
-        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
-
-        $allCities = City::whereHas('produits')
-                                        ->select(['id', 'slug',  'code_postal', 'ville', 'ville_formatee'])
-                                        ->get();
-
+        $familles = Famille::withProducts()->get();
+        $listDisciplines = ListDiscipline::withProducts()->get();
+        $allCities = City::withProducts()->get();
 
         $discipline = ListDiscipline::where('slug', $discipline)
                             ->select(['id', 'name', 'slug', 'view_count'])

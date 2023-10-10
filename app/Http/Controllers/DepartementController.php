@@ -20,16 +20,9 @@ class DepartementController extends Controller
     {
         $structuresCount = Structure::count();
 
-        $familles = Famille::withWhereHas('disciplines', function ($query) {
-            $query->whereHas('structureProduits');
-        })->select(['id', 'name', 'slug'])->get();
-
-        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
-
-        $allCities = City::whereHas('produits')
-                        ->select(['id', 'code_postal', 'ville', 'ville_formatee'])
-                        ->get();
-
+        $familles = Famille::withProducts()->get();
+        $listDisciplines = ListDiscipline::withProducts()->get();
+        $allCities = City::withProducts()->get();
 
         $departements = Departement::with([
                             'structures:id,name,slug,presentation_courte,address,city,zip_code,address_lat,address_lng,departement_id'
@@ -59,22 +52,17 @@ class DepartementController extends Controller
      */
     public function show(Departement $departement)
     {
-        $familles = Famille::whereHas('disciplines', function ($query) {
-            $query->whereHas('structureProduits');
-        })->select(['id', 'name', 'slug'])->get();
-
-        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
-
-        $allCities = City::whereHas('produits')
-                                        ->select(['id', 'slug',  'code_postal', 'ville', 'ville_formatee'])
-                                        ->get();
+        $familles = Famille::withProducts()->get();
+        $listDisciplines = ListDiscipline::withProducts()->get();
+        $allCities = City::withProducts()->get();
 
         $departement = Departement::with(['cities' => function ($query) {
-            $query->withWhereHas('produits');
+            $query->whereHas('produits');
         }])
         ->where('slug', $departement->slug)
         ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count'])
         ->first();
+
 
         $produitsFlat = $departement->cities
             ->flatMap(function ($city) {

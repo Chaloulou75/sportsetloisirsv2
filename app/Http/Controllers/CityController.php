@@ -21,16 +21,9 @@ class CityController extends Controller
         $structuresCount = Structure::count();
         $produitsCount = StructureProduit::count();
 
-        $familles = Famille::whereHas('disciplines', function ($query) {
-            $query->whereHas('structureProduits');
-        })->select(['id', 'name', 'slug'])->get();
-
-        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
-
-        $allCities = City::whereHas('produits')
-                        ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee'])
-                        ->get();
-
+        $familles = Famille::withProducts()->get();
+        $listDisciplines = ListDiscipline::withProducts()->get();
+        $allCities = City::withProducts()->get();
 
         $cities = City::whereHas('produits')->select(['id', 'slug', 'ville', 'ville_formatee', 'code_postal'])
                         ->withCount('produits')
@@ -57,15 +50,10 @@ class CityController extends Controller
      */
     public function show(City $city)
     {
-        $familles = Famille::whereHas('disciplines', function ($query) {
-            $query->whereHas('structureProduits');
-        })->select(['id', 'name', 'slug'])->get();
 
-        $listDisciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])->get();
-
-        $allCities = City::whereHas('produits')
-                                        ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee'])
-                                        ->get();
+        $familles = Famille::withProducts()->get();
+        $listDisciplines = ListDiscipline::withProducts()->get();
+        $allCities = City::withProducts()->get();
 
         $city = City::with(['produits'])
                     ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
