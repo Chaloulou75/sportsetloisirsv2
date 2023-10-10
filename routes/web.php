@@ -56,6 +56,7 @@ use App\Http\Controllers\DepartementDisciplineStructuretypeController;
 use App\Http\Controllers\CityDisciplineStructuretypeActiviteController;
 use App\Http\Controllers\CityDisciplineStructuretypeStructureController;
 use App\Http\Controllers\DepartementDisciplineCategorieActiviteController;
+use App\Http\Controllers\DepartementDisciplineCategorieStructureController;
 use App\Http\Controllers\CityDisciplineCategorieStructureActiviteController;
 use App\Http\Controllers\DepartementDisciplineStructuretypeActiviteController;
 use App\Http\Controllers\DepartementDisciplineStructuretypeStructureController;
@@ -152,7 +153,7 @@ Route::get('/dept-{departement:slug}/dis-{discipline:slug}/activite-{activite:id
 Route::get('/dept-{departement:slug}/dis-{discipline:slug}/cat-{category:slug}', [DepartementDisciplineCategorieController::class, 'show'])->name('departements.disciplines.categories.show');
 // /departements/disciplines/categories/
 
-Route::get('/dept-{departement:slug}/dis-{discipline:slug}/cat-{category:slug}/str-{structure:slug}', [DepartementDisciplineCategorieController::class, 'show'])->name('departements.disciplines.categories.structures.show');
+Route::get('/dept-{departement:slug}/dis-{discipline:slug}/cat-{category:slug}/str-{structure:slug}', [DepartementDisciplineCategorieStructureController::class, 'show'])->name('departements.disciplines.categories.structures.show');
 // /departements/disciplines/categories/structure
 
 Route::get('/dept-{departement:slug}/dis-{discipline:slug}/cat-{category:slug}/activite-{activite:slug}', [DepartementDisciplineCategorieActiviteController::class, 'show'])->name('departements.disciplines.categories.activites.show');

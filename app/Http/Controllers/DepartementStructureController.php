@@ -69,7 +69,7 @@ class DepartementStructureController extends Controller
                             $query->has('produits')->with(['produits', 'produits.adresse']);
                         }])
                                         ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count', 'latitude', 'longitude'])
-                                        ->where('id', $departement)
+                                        ->where('slug', $departement->slug)
                                         ->withCount('structures')
                                         ->first();
 
