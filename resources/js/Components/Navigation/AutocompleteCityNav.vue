@@ -45,13 +45,13 @@ const searchCities = computed(() => {
     });
 });
 
-let selectedCity = ref(props.cities.find((city) => city.id === city));
+let selectedCity = ref(props.cities.find((city) => city.slug === city));
 
 const selectCity = (city) => {
     selectedCity.value = city;
     searchTerm.value = formatCityName(selectedCity.value.ville);
     isInputFocused.value = false;
-    emit("update:model-value", city.id);
+    emit("update:model-value", city.slug);
 };
 
 watchEffect(() => {
