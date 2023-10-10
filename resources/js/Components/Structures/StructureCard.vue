@@ -81,16 +81,16 @@ onMounted(() => {
     updateIsFavorite();
 });
 
-const getUniqueActivitesDiscipline = (activites) => {
-    const uniqueNames = new Set();
-    return activites.filter((activite) => {
-        if (!uniqueNames.has(activite.discipline.name)) {
-            uniqueNames.add(activite.discipline.name);
-            return true;
-        }
-        return false;
-    });
-};
+// const getUniqueActivitesDiscipline = (activites) => {
+//     const uniqueNames = new Set();
+//     return activites.filter((activite) => {
+//         if (!uniqueNames.has(activite.discipline.name)) {
+//             uniqueNames.add(activite.discipline.name);
+//             return true;
+//         }
+//         return false;
+//     });
+// };
 
 const getUniqueActivitesTitre = (activites) => {
     const uniqueNames = new Set();
@@ -103,17 +103,17 @@ const getUniqueActivitesTitre = (activites) => {
     });
 };
 
-const formatCurrency = (value) => {
-    const numericValue = Number(value.replace(/[^0-9.-]+/g, ""));
-    if (!isNaN(numericValue)) {
-        if (numericValue % 1 === 0) {
-            return numericValue.toLocaleString() + " €";
-        } else {
-            return numericValue.toFixed(2) + " €";
-        }
-    }
-    return value;
-};
+// const formatCurrency = (value) => {
+//     const numericValue = Number(value.replace(/[^0-9.-]+/g, ""));
+//     if (!isNaN(numericValue)) {
+//         if (numericValue % 1 === 0) {
+//             return numericValue.toLocaleString() + " €";
+//         } else {
+//             return numericValue.toFixed(2) + " €";
+//         }
+//     }
+//     return value;
+// };
 
 const formatCityName = (ville) => {
     return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
@@ -174,24 +174,6 @@ const formatCityName = (ville) => {
                     {{ activite.titre }}
                 </li>
             </ul>
-
-            <!-- <div
-                    class="py-1.5 text-sm text-gray-500"
-                    v-if="structure.tarifs.length > 0"
-                >
-                    <p class="mt-2 text-base font-semibold text-gray-700">
-                        Tarifs:
-                    </p>
-                    <ul class="list-inside list-disc text-sm">
-                        <li v-for="tarif in structure.tarifs" :key="tarif.id">
-                            {{ tarif.titre }}:
-                            <span class="font-semibold">
-                                {{ formatCurrency(tarif.amount) }} /
-                                {{ tarif.tarif_type.type }}</span
-                            >
-                        </li>
-                    </ul>
-                </div> -->
 
             <div class="flex items-center py-1.5">
                 <dt class="sr-only">Ville</dt>
@@ -353,40 +335,6 @@ const formatCityName = (ville) => {
                         </span>
                     </span>
                 </div>
-
-                <!-- <div class="py-1.5">
-                    <dt class="sr-only">tarif</dt>
-
-                    <span
-                        v-for="(tarif, index) in structure.tarifs"
-                        :key="tarif.id"
-                    >
-                        <dd class="text-sm text-gray-500">
-                            {{ tarif.tarif_type.type }}:
-                            <span class="font-semibold">{{
-                                formatCurrency(tarif.amount)
-                            }}</span>
-                        </dd>
-                    </span>
-                </div> -->
-
-                <!-- <div
-                    class="py-1.5 text-sm text-gray-500"
-                    v-if="structure.tarifs.length > 0"
-                >
-                    <p class="mt-2 text-base font-semibold text-gray-700">
-                        Tarifs:
-                    </p>
-                    <ul class="list-inside list-disc text-sm">
-                        <li v-for="tarif in structure.tarifs" :key="tarif.id">
-                            {{ tarif.titre }}:
-                            <span class="font-semibold">
-                                {{ formatCurrency(tarif.amount) }} /
-                                {{ tarif.tarif_type.type }}</span
-                            >
-                        </li>
-                    </ul>
-                </div> -->
 
                 <div class="flex items-center py-1.5">
                     <dt class="sr-only">Ville</dt>

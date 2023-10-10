@@ -146,7 +146,11 @@ const formatCityName = (ville) => {
                         <h3
                             class="pb-4 text-lg font-semibold text-gray-600 underline decoration-sky-600 decoration-4 underline-offset-2"
                         >
-                            Plus de {{ structuresCount }} structures référencées
+                            Plus de {{ structuresCount }}
+                            <span v-if="structuresCount > 1"
+                                >structures référencées</span
+                            >
+                            <span v-else>structure référencée</span>
                         </h3>
                         <p class="text-gray-600">
                             De très nombreuses structures référencées, prêtes à
