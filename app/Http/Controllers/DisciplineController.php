@@ -69,7 +69,7 @@ class DisciplineController extends Controller
 
         $categories = LienDisciplineCategorie::whereHas('structures_produits')
                 ->where('discipline_id', $discipline->id)
-                ->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+                ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
                 ->withCount('structures_produits')
                 ->orderByDesc('structures_produits_count')
                 ->get();

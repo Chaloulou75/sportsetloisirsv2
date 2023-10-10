@@ -223,7 +223,7 @@ const formCriteres = useForm({
                                             {
                                                 departement: departement.slug,
                                                 discipline: discipline.slug,
-                                                category: category.id,
+                                                category: category.slug,
                                             }
                                         )
                                     "
@@ -463,7 +463,7 @@ const formCriteres = useForm({
                                                     departement:
                                                         departement.slug,
                                                     discipline: discipline.slug,
-                                                    category: category.id,
+                                                    category: category.slug,
                                                     activite:
                                                         produit.activite.id,
                                                     produit: produit.id,
@@ -505,7 +505,7 @@ const formCriteres = useForm({
                                                     departement:
                                                         departement.slug,
                                                     discipline: discipline.slug,
-                                                    category: category.id,
+                                                    category: category.slug,
                                                     structure: structure.slug,
                                                 }
                                             )

@@ -69,7 +69,7 @@ const showStructuresTypes = () => {
                 :href="
                     route('disciplines.categories.show', {
                         discipline: discipline.slug,
-                        category: categorie.id,
+                        category: categorie.slug,
                     })
                 "
                 class="w-full border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
@@ -102,7 +102,7 @@ const showStructuresTypes = () => {
                         :href="
                             route('disciplines.categories.show', {
                                 discipline: discipline.slug,
-                                category: category.id,
+                                category: category.slug,
                             })
                         "
                         v-for="category in categoriesNotInFirst"
@@ -198,7 +198,7 @@ const showStructuresTypes = () => {
                 :href="
                     route('disciplines.categories.show', {
                         discipline: discipline.slug,
-                        category: category.id,
+                        category: category.slug,
                     })
                 "
                 class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
@@ -253,7 +253,7 @@ const showStructuresTypes = () => {
                     route('villes.disciplines.categories.show', {
                         city: city.slug,
                         discipline: discipline.slug,
-                        category: categorie.id,
+                        category: categorie.slug,
                     })
                 "
                 class="relative w-full border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
@@ -300,7 +300,7 @@ const showStructuresTypes = () => {
                             route('villes.disciplines.categories.show', {
                                 city: city.slug,
                                 discipline: discipline.slug,
-                                category: category.id,
+                                category: category.slug,
                             })
                         "
                         v-for="category in categoriesNotInFirst"
@@ -412,7 +412,7 @@ const showStructuresTypes = () => {
                     route('villes.disciplines.categories.show', {
                         city: city.slug,
                         discipline: discipline.slug,
-                        category: category.id,
+                        category: category.slug,
                     })
                 "
                 class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
@@ -469,7 +469,7 @@ const showStructuresTypes = () => {
                     route('villes.disciplines.categories.show', {
                         city: city.slug,
                         discipline: discipline.slug,
-                        category: categorie.id,
+                        category: categorie.slug,
                     })
                 "
                 class="relative flex w-full items-center justify-center border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
@@ -534,7 +534,7 @@ const showStructuresTypes = () => {
                             route('villes.disciplines.categories.show', {
                                 city: city.slug,
                                 discipline: discipline.slug,
-                                category: category.id,
+                                category: category.slug,
                             })
                         "
                         v-for="category in categoriesNotInFirst"
@@ -647,7 +647,7 @@ const showStructuresTypes = () => {
                     route('villes.disciplines.categories.show', {
                         city: city.slug,
                         discipline: discipline.slug,
-                        category: category.id,
+                        category: category.slug,
                     })
                 "
                 class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
@@ -703,7 +703,7 @@ const showStructuresTypes = () => {
                     route('departements.disciplines.categories.show', {
                         departement: departement.slug,
                         discipline: discipline.slug,
-                        category: categorie.id,
+                        category: categorie.slug,
                     })
                 "
                 class="relative w-full border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
@@ -752,7 +752,7 @@ const showStructuresTypes = () => {
                             route('departements.disciplines.categories.show', {
                                 departement: departement.slug,
                                 discipline: discipline.slug,
-                                category: category.id,
+                                category: category.slug,
                             })
                         "
                         v-for="category in categoriesNotInFirst"
@@ -866,7 +866,7 @@ const showStructuresTypes = () => {
                     route('departements.disciplines.categories.show', {
                         departement: departement.slug,
                         discipline: discipline.slug,
-                        category: category.id,
+                        category: category.slug,
                     })
                 "
                 class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
@@ -923,7 +923,7 @@ const showStructuresTypes = () => {
                     route('departements.disciplines.categories.show', {
                         departement: departement.slug,
                         discipline: discipline.slug,
-                        category: categorie.id,
+                        category: categorie.slug,
                     })
                 "
                 class="relative flex w-full items-center justify-center border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
@@ -994,7 +994,7 @@ const showStructuresTypes = () => {
                             route('departements.disciplines.categories.show', {
                                 departement: departement.slug,
                                 discipline: discipline.slug,
-                                category: category.id,
+                                category: category.slug,
                             })
                         "
                         v-for="category in categoriesNotInFirst"
@@ -1108,7 +1108,7 @@ const showStructuresTypes = () => {
                     route('departements.disciplines.categories.show', {
                         departement: departement.slug,
                         discipline: discipline.slug,
-                        category: category.id,
+                        category: category.slug,
                     })
                 "
                 class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
@@ -1163,7 +1163,7 @@ const showStructuresTypes = () => {
                 :href="
                     route('disciplines.categories.show', {
                         discipline: discipline.slug,
-                        category: categorie.id,
+                        category: categorie.slug,
                     })
                 "
                 class="relative flex w-full items-center justify-center border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
@@ -1227,7 +1227,7 @@ const showStructuresTypes = () => {
                         :href="
                             route('disciplines.categories.show', {
                                 discipline: discipline.slug,
-                                category: category.id,
+                                category: category.slug,
                             })
                         "
                         v-for="category in categoriesNotInFirst"
@@ -1336,7 +1336,7 @@ const showStructuresTypes = () => {
                 :href="
                     route('disciplines.categories.show', {
                         discipline: discipline.slug,
-                        category: category.id,
+                        category: category.slug,
                     })
                 "
                 class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
@@ -1390,7 +1390,7 @@ const showStructuresTypes = () => {
                 :href="
                     route('disciplines.categories.show', {
                         discipline: discipline.slug,
-                        category: categorie.id,
+                        category: categorie.slug,
                     })
                 "
                 class="w-full border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
@@ -1423,7 +1423,7 @@ const showStructuresTypes = () => {
                         :href="
                             route('disciplines.categories.show', {
                                 discipline: discipline.slug,
-                                category: category.id,
+                                category: category.slug,
                             })
                         "
                         v-for="category in categoriesNotInFirst"
@@ -1532,7 +1532,7 @@ const showStructuresTypes = () => {
                 :href="
                     route('disciplines.categories.show', {
                         discipline: discipline.slug,
-                        category: category.id,
+                        category: category.slug,
                     })
                 "
                 class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"

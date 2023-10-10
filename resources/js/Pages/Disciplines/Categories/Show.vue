@@ -195,7 +195,7 @@ const formCriteres = useForm({
                                     :href="
                                         route('disciplines.categories.show', {
                                             discipline: discipline.slug,
-                                            category: category.id,
+                                            category: category.slug,
                                         })
                                     "
                                     class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
@@ -430,7 +430,7 @@ const formCriteres = useForm({
                                                 'disciplines.categories.activites.show',
                                                 {
                                                     discipline: discipline.slug,
-                                                    category: category.id,
+                                                    category: category.slug,
                                                     activite:
                                                         produit.activite.id,
                                                     produit: produit.id,
@@ -470,7 +470,7 @@ const formCriteres = useForm({
                                                 'disciplines.categories.structures.show',
                                                 {
                                                     discipline: discipline.slug,
-                                                    category: category.id,
+                                                    category: category.slug,
                                                     structure: structure.slug,
                                                 }
                                             )

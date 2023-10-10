@@ -319,7 +319,7 @@ const submitReservation = () => {
                                         {
                                             city: city.slug,
                                             discipline: discipline.slug,
-                                            category: categorie.id,
+                                            category: categorie.slug,
                                         }
                                     )
                                 "

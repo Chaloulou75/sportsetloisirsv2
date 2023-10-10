@@ -52,7 +52,7 @@ class CityDisciplineController extends Controller
             $query->where('city_id', $city->id)->orWhereIn('city_id', $cityAroundIds);
         })
         ->where('discipline_id', $discipline->id)
-        ->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+        ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
         ->get();
 
         $firstCategories = $categories->take(4);

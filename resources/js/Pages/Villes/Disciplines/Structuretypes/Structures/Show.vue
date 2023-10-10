@@ -336,7 +336,7 @@ const events = getEvents();
                                         {
                                             city: city.slug,
                                             discipline: discipline.slug,
-                                            category: categorie.id,
+                                            category: categorie.slug,
                                         }
                                     )
                                 "

@@ -282,7 +282,7 @@ const submitReservation = () => {
                                         {
                                             city: city.slug,
                                             discipline: discipline.slug,
-                                            category: category.id,
+                                            category: category.slug,
                                         }
                                     )
                                 "
@@ -313,7 +313,7 @@ const submitReservation = () => {
                                             {
                                                 city: city.slug,
                                                 discipline: discipline.slug,
-                                                category: categorie.id,
+                                                category: categorie.slug,
                                             }
                                         )
                                     "
@@ -365,7 +365,7 @@ const submitReservation = () => {
                                     {
                                         city: city.slug,
                                         discipline: discipline.slug,
-                                        category: category.id,
+                                        category: category.slug,
                                         structure: structure.slug,
                                     }
                                 )
@@ -407,7 +407,7 @@ const submitReservation = () => {
                                         {
                                             city: city.slug,
                                             discipline: discipline.slug,
-                                            category: category.id,
+                                            category: category.slug,
                                             structure: structure.slug,
                                         }
                                     )

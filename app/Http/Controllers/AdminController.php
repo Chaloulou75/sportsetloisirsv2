@@ -77,7 +77,7 @@ class AdminController extends Controller
         $disciplineFamillesIds = $discipline->familles()->select('famille_id')
             ->pluck('famille_id');
 
-        $categories = LienDisciplineCategorie::with(['discipline', 'categorie'])->where('discipline_id', $discipline->id)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
+        $categories = LienDisciplineCategorie::with(['discipline', 'categorie'])->where('discipline_id', $discipline->id)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
 
         $categoriesIds = $categories->pluck('categorie_id');
 

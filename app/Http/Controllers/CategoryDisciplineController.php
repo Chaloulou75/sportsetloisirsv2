@@ -33,11 +33,11 @@ class CategoryDisciplineController extends Controller
             ->select('discipline_similaire_id', 'name', 'slug', 'famille')
             ->get();
 
-        $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('id', $category)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
+        $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('slug', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
 
         $categories = LienDisciplineCategorie::whereHas('structures_produits')
                         ->where('discipline_id', $discipline->id)
-                        ->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+                        ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
                         ->withCount('structures_produits')
                         ->orderByDesc('structures_produits_count')
                         ->get();

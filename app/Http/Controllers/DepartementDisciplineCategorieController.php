@@ -32,7 +32,7 @@ class DepartementDisciplineCategorieController extends Controller
             ->select('discipline_similaire_id', 'name', 'slug', 'famille')
             ->get();
 
-        $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('id', $category)->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
+        $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('slug', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
 
         $criteres = LienDisciplineCategorieCritere::with('valeurs')->where('discipline_id', $discipline->id)->where('categorie_id', $category->id)->get();
 
@@ -47,7 +47,7 @@ class DepartementDisciplineCategorieController extends Controller
             $query->whereIn('city_id', $departement->cities->pluck('id'));
         })
                         ->where('discipline_id', $discipline->id)
-                        ->select(['id', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+                        ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
                         ->get();
 
         $firstCategories = $categories->take(4);
