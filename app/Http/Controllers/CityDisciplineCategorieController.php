@@ -39,13 +39,13 @@ class CityDisciplineCategorieController extends Controller
                             ->first();
 
         $citiesAround = City::withWhereHas('produits')
-                                    ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
-                                    ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
-                                    ->where('id', '!=', $city->id)
-                                    ->havingRaw('distance <= ?', [$city->tolerance_rayon])
-                                    ->orderBy('distance', 'ASC')
-                                    ->limit(10)
-                                    ->get();
+            ->select('id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
+            ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
+            ->where('id', '!=', $city->id)
+            ->havingRaw('distance <= ?', [$city->tolerance_rayon])
+            ->orderBy('distance', 'ASC')
+            ->limit(10)
+            ->get();
 
         $cityAroundIds = $citiesAround->pluck('id');
 
@@ -75,13 +75,10 @@ class CityDisciplineCategorieController extends Controller
 
         $citiesAroundProducts = $citiesAround->flatMap(function ($city) use ($discipline, $category) {
             return $city->produits()->with([
-                'structure:id,name,slug,structuretype_id,address,address_lat,address_lng,zip_code,city_id,city,departement_id,website,view_count',
+                'structure:id,name',
                 'adresse',
-                'discipline:id,name,slug,view_count',
-                'categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
-                'activite:id,discipline_id,categorie_id,structure_id,titre,description,image,actif',
-                'activite.discipline:id,name,slug',
-                'activite.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+                'discipline:id,name,slug',
+                'activite:id,titre',
                 'criteres:id,activite_id,produit_id,critere_id,valeur',
                 'criteres.critere:id,nom',
                 'tarifs',
@@ -92,13 +89,10 @@ class CityDisciplineCategorieController extends Controller
         });
 
         $produitsFromCity = $city->produits()->with([
-            'structure:id,name,slug,structuretype_id,address,address_lat,address_lng,zip_code,city_id,city,departement_id,website,view_count',
+            'structure:id,name',
             'adresse',
-            'discipline:id,name,slug,view_count',
-            'categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
-            'activite:id,discipline_id,categorie_id,structure_id,titre,description,image,actif',
-            'activite.discipline:id,name,slug',
-            'activite.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+            'discipline:id,name,slug',
+            'activite:id,titre',
             'criteres:id,activite_id,produit_id,critere_id,valeur',
             'criteres.critere:id,nom',
             'tarifs',
@@ -113,67 +107,39 @@ class CityDisciplineCategorieController extends Controller
 
         $citiesAroundStructures = $citiesAround->flatMap(function ($city) use ($discipline, $category) {
             return $city->structures()->with([
-                'creator:id,name',
                 'adresses'  => function ($query) {
                     $query->latest();
                 },
-                'city:id,ville,ville_formatee,code_postal',
-                'departement:id,departement,numero',
+                'city:id,slug,ville,ville_formatee,code_postal',
                 'structuretype:id,name,slug',
-                'disciplines' => function ($query) use ($discipline) {
-                    $query->where('id', $discipline->id);
-                },
-                'disciplines.discipline:id,name,slug',
-                'categories' => function ($query) use ($category) {
-                    $query->where('id', $category->id);
-                },
                 'activites' => function ($query) use ($discipline, $category) {
                     $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
                 },
                 'activites.discipline:id,name,slug',
                 'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
-                'produits' => function ($query) use ($discipline, $category) {
-                    $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
-                },
-                'produits.criteres:id,activite_id,produit_id,critere_id,valeur',
-                'produits.criteres.critere:id,nom',
             ])->whereHas('activites', function ($query) use ($discipline, $category) {
                 $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
             })
-            ->withCount('disciplines', 'produits', 'activites')
-            ->select(['id', 'name', 'slug', 'presentation_courte', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
+            ->select(['id', 'name', 'slug', 'structuretype_id', 'address', 'zip_code', 'city', 'address_lat', 'address_lng'])
             ->get();
         });
 
         $structuresFromCity = $city->structures()->with([
-            'creator:id,name',
-            'adresses' => function ($query) {
+            'adresses'  => function ($query) {
                 $query->latest();
             },
-            'city:id,ville,ville_formatee,code_postal',
-            'departement:id,departement,numero',
+            'city:id,slug,ville,ville_formatee,code_postal',
             'structuretype:id,name,slug',
-            'disciplines' => function ($query) use ($discipline) {
-                $query->where('id', $discipline->id);
-            },
-            'disciplines.discipline:id,name,slug',
-            'categories' => function ($query) use ($category) {
-                $query->where('id', $category->id);
-            },
             'activites' => function ($query) use ($discipline, $category) {
                 $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
             },
             'activites.discipline:id,name,slug',
             'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
-            'produits',
-            'produits.criteres:id,activite_id,produit_id,critere_id,valeur',
-            'produits.criteres.critere:id,nom',
         ])
         ->whereHas('activites', function ($query) use ($discipline, $category) {
             $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
         })
-        ->withCount('disciplines', 'produits', 'activites')
-        ->select(['id', 'name', 'slug', 'presentation_courte', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
+        ->select(['id', 'name', 'slug', 'structuretype_id', 'address', 'zip_code', 'city', 'address_lat', 'address_lng'])
         ->get();
 
         $structures = $structuresFromCity->merge($citiesAroundStructures)->paginate(12);

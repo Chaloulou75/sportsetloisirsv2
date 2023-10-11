@@ -101,7 +101,7 @@ class DepartementDisciplineStructuretypeController extends Controller
             ->where('structuretype_id', $structuretypeElected->id)
             ->whereHas('activites', function ($query) use ($discipline) {
                 $query->where('discipline_id', $discipline->id);
-            })->select(['id', 'name', 'slug', 'address', 'zip_code', 'city', 'address_lat', 'address_lng'])->get();
+            })->select(['id', 'name', 'slug', 'structuretype_id', 'address', 'zip_code', 'city', 'address_lat', 'address_lng'])->get();
         })->paginate(12);
 
         $citiesAround = $departement->cities()->whereHas('structures')

@@ -95,7 +95,7 @@ class DepartementDisciplineController extends Controller
                 'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
             ])->whereHas('activites', function ($query) use ($discipline) {
                 $query->where('discipline_id', $discipline->id);
-            })->select(['id', 'name', 'slug', 'address', 'zip_code', 'city', 'address_lat', 'address_lng'])->get();
+            })->select(['id', 'name', 'slug', 'structuretype_id', 'address', 'zip_code', 'city', 'address_lat', 'address_lng'])->get();
         })->paginate(12);
 
         $departement->timestamp = false;

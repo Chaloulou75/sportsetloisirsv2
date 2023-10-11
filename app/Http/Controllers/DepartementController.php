@@ -98,7 +98,7 @@ class DepartementController extends Controller
                 'activites',
                 'activites.discipline:id,name,slug',
                 'activites.categorie:id,slug,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
-            ])->select(['id', 'name', 'slug', 'address', 'zip_code', 'city', 'address_lat', 'address_lng'])->get();
+            ])->select(['id', 'name', 'slug', 'structuretype_id', 'address', 'zip_code', 'city', 'address_lat', 'address_lng'])->get();
         })->paginate(12);
 
         $departement->timestamp = false;

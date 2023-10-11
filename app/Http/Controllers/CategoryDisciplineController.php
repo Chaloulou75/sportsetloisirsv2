@@ -36,11 +36,11 @@ class CategoryDisciplineController extends Controller
         $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('slug', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
 
         $categories = LienDisciplineCategorie::whereHas('structures_produits')
-                        ->where('discipline_id', $discipline->id)
-                        ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
-                        ->withCount('structures_produits')
-                        ->orderByDesc('structures_produits_count')
-                        ->get();
+            ->where('discipline_id', $discipline->id)
+            ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+            ->withCount('structures_produits')
+            ->orderByDesc('structures_produits_count')
+            ->get();
 
         $firstCategories = $categories->take(4);
         $categoriesNotInFirst = $categories->diff($firstCategories);
@@ -56,56 +56,35 @@ class CategoryDisciplineController extends Controller
         $criteres = LienDisciplineCategorieCritere::with('valeurs')->where('discipline_id', $discipline->id)->where('categorie_id', $category->id)->get();
 
         $structures = Structure::with([
-                        'creator:id,name',
-                        'users:id,name',
-                        'adresses'  => function ($query) {
-                            $query->latest();
-                        },
-                        'city:id,ville,ville_formatee,code_postal',
-                        'departement:id,departement,numero',
-                        'structuretype:id,name,slug',
-                        'disciplines' => function ($query) use ($discipline) {
-                            $query->where('discipline_id', $discipline->id);
-                        },
-                        'disciplines.discipline:id,name,slug',
-                        'categories',
-                        'activites' => function ($query) use ($discipline, $category) {
-                            $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
-                        },
-                        'activites.discipline:id,name,slug',
-                        'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
-                        'produits' => function ($query) use ($discipline, $category) {
-                            $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
-                        },
-                        'produits.criteres:id,activite_id,produit_id,critere_id,valeur',
-                        'produits.criteres.critere:id,nom',
-                        'tarifs',
-                        'tarifs.tarifType',
-                        'tarifs.structureTarifTypeInfos',
-                    ])
-                    ->withCount('disciplines', 'produits', 'activites')
-                    ->whereHas('activites', function ($subquery) use ($discipline, $category) {
-                        $subquery->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
-                    })
-                    ->paginate(12);
-
+            'adresses'  => function ($query) {
+                $query->latest();
+            },
+            'city:id,slug,ville,ville_formatee,code_postal',
+            'structuretype:id,name,slug',
+            'activites' => function ($query) use ($discipline, $category) {
+                $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
+            },
+            'activites.discipline:id,name,slug',
+            'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+        ])
+        ->whereHas('activites', function ($subquery) use ($discipline, $category) {
+            $subquery->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
+        })
+        ->paginate(12);
 
         $produits = $discipline->structureProduits()->with([
-                'structure:id,name,slug,structuretype_id,address,address_lat,address_lng,zip_code,city_id,city,departement_id,website,view_count',
-                'adresse',
-                'discipline:id,name,slug,view_count',
-                'categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
-                'activite:id,discipline_id,categorie_id,structure_id,titre,description,image,actif',
-                'activite.discipline:id,name,slug',
-                'activite.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
-                'criteres:id,activite_id,produit_id,critere_id,valeur',
-                'criteres.critere:id,nom',
-                'tarifs',
-                'tarifs.tarifType',
-                'tarifs.structureTarifTypeInfos',
-                'plannings',
-            ])->where('categorie_id', $category->id)
-            ->paginate(12);
+            'structure:id,name',
+            'adresse',
+            'discipline:id,name,slug',
+            'activite:id,titre',
+            'criteres:id,activite_id,produit_id,critere_id,valeur',
+            'criteres.critere:id,nom',
+            'tarifs',
+            'tarifs.tarifType',
+            'tarifs.structureTarifTypeInfos',
+            'plannings',
+        ])->where('categorie_id', $category->id)
+        ->paginate(12);
 
         $discipline->timestamp = false;
         $discipline->increment('view_count');
