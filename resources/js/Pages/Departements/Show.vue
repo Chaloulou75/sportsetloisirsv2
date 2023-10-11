@@ -73,6 +73,11 @@ const showStructureTooltip = (structure) => {
 const hideStructureTooltip = () => {
     hoveredStructure.value = null;
 };
+
+const filteredProduits = ref(props.produits.data);
+const onFilteredProduitsUpdate = (filtered) => {
+    filteredProduits.value = filtered;
+};
 </script>
 
 <template>
@@ -210,7 +215,7 @@ const hideStructureTooltip = () => {
                                     <ProduitCard
                                         v-for="(
                                             produit, index
-                                        ) in produits.data"
+                                        ) in filteredProduits"
                                         :key="produit.id"
                                         :index="index"
                                         :produit="produit"
@@ -290,6 +295,10 @@ const hideStructureTooltip = () => {
                                 :hovered-produit="hoveredProduit"
                                 :structures="structures.data"
                                 :hovered-structure="hoveredStructure"
+                                v-model:filteredProduits="filteredProduits"
+                                @update:filteredProduits="
+                                    onFilteredProduitsUpdate
+                                "
                                 :zoom="11"
                             />
                         </div>

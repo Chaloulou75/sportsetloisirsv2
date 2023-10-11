@@ -1,7 +1,14 @@
 <script setup>
-import { ref, watch, defineAsyncComponent } from "vue";
-import { Link } from "@inertiajs/vue3";
-import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import {
+    ref,
+    watch,
+    nextTick,
+    computed,
+    onMounted,
+    defineAsyncComponent,
+} from "vue";
+import * as L from "leaflet/dist/leaflet-src.esm";
 import {
     LMap,
     LTileLayer,
@@ -11,7 +18,8 @@ import {
     LTooltip,
     LIcon,
 } from "@vue-leaflet/vue-leaflet";
-import "leaflet/dist/leaflet.css";
+
+const emit = defineEmits(["update:filteredProduits"]);
 
 const props = defineProps({
     produits: Object,
@@ -29,12 +37,14 @@ const StructureCardXS = defineAsyncComponent(() =>
 );
 
 const map = ref(null);
-const markerProd = ref([]);
 
 const center = ref([
     props.produits[0].adresse.address_lat,
     props.produits[0].adresse.address_lng,
 ]);
+
+const bounds = ref(null);
+const filteredProduits = ref([]);
 
 const zoom = ref(props.zoom ? props.zoom : 7);
 const imperial = ref(false);
@@ -54,6 +64,26 @@ const structureIcon = L.divIcon({
     iconAnchor: [16, 37],
 });
 
+const produitRefs = ref([]);
+const structureRefs = ref([]);
+
+const openMarkerPopup = (markerId) => {
+    nextTick(() => {
+        const markerRef = produitRefs.value.find(
+            (marker) => marker.options.produitId === markerId
+        );
+        const structureRef = structureRefs.value.find(
+            (marker) => marker.options.structureId === markerId
+        );
+        if (markerRef) {
+            markerRef.leafletObject.openPopup();
+        }
+        if (structureRef) {
+            structureRef.leafletObject.openPopup();
+        }
+    });
+};
+
 watch(
     () => props.hoveredProduit,
     (newValue) => {
@@ -64,12 +94,14 @@ watch(
                     produit.adresse.address_lat,
                     produit.adresse.address_lng,
                 ];
+                openMarkerPopup(produit.id);
             }
         } else {
             center.value = [
                 props.produits[0].adresse.address_lat,
                 props.produits[0].adresse.address_lng,
             ];
+            map.value.leafletObject.closePopup();
         }
     }
 );
@@ -82,12 +114,37 @@ watch(
             if (structure) {
                 center.value = [structure.address_lat, structure.address_lng];
             }
+            openMarkerPopup(structure.id);
         } else {
             center.value = [
                 props.structures[0].address_lat,
                 props.structures[0].address_lng,
             ];
+            map.value.leafletObject.closePopup();
         }
+    }
+);
+
+const filterProduits = () => {
+    if (bounds.value) {
+        const filtered = props.produits.filter((produit) => {
+            const latLng = L.latLng(
+                parseFloat(produit.adresse.address_lat),
+                parseFloat(produit.adresse.address_lng)
+            );
+            return bounds.value.contains(latLng);
+        });
+        filteredProduits.value = filtered;
+        emit("update:filteredProduits", filtered);
+    }
+};
+
+watch(
+    () => zoom.value,
+    () => {
+        const theMap = map.value.leafletObject;
+        bounds.value = theMap.getBounds();
+        filterProduits();
     }
 );
 </script>
@@ -96,15 +153,15 @@ watch(
     <div class="flex h-full flex-col items-center justify-start space-y-4 pb-4">
         <div class="flex items-center justify-start space-x-4">
             <label for="zoomSize">Zoom:</label>
-            <input id="zoomSize" v-model="zoom" type="range" min="5" max="20" />
+            <input id="zoomSize" v-model="zoom" type="range" min="7" max="18" />
         </div>
         <div class="h-[400px] w-full shadow-md">
             <l-map
                 :useGlobalLeaflet="false"
                 ref="map"
-                :zoom="zoom"
-                :minZoom="5"
-                :maxZoom="20"
+                v-model:zoom="zoom"
+                :minZoom="7"
+                :maxZoom="18"
                 :zoomAnimation="true"
                 :center="center"
                 :options="mapOptions"
@@ -117,13 +174,14 @@ watch(
                     name="OpenStreetMap"
                 ></l-tile-layer>
                 <l-marker
+                    ref="produitRefs"
                     v-for="produit in produits"
                     :key="produit.id"
+                    :options="{ produitId: produit.id, produit: produit }"
                     :lat-lng="[
                         parseFloat(produit.adresse.address_lat),
                         parseFloat(produit.adresse.address_lng),
                     ]"
-                    :ref="markerProd"
                 >
                     <l-tooltip :content="produit.activite.titre"></l-tooltip>
                     <l-popup
@@ -148,7 +206,9 @@ watch(
                         />
                     </l-popup>
                 </l-marker>
+
                 <l-marker
+                    ref="structureRefs"
                     v-for="structure in structures"
                     :key="structure.id"
                     :lat-lng="[
@@ -156,9 +216,13 @@ watch(
                         parseFloat(structure.address_lng),
                     ]"
                     :icon="structureIcon"
+                    :options="{
+                        structureId: structure.id,
+                        structure: structure,
+                    }"
                 >
                     <l-tooltip :content="structure.name"></l-tooltip>
-                    <l-popup :options="{ interactive: true }">
+                    <l-popup :options="{ interactive: true }" ref="popup">
                         <StructureCardXS
                             :structure="structure"
                             :link="
