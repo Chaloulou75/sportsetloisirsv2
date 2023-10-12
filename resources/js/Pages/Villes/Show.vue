@@ -247,6 +247,20 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                         :data="{}"
                                     />
                                 </div>
+                                <div v-if="filteredProduits.length === 0">
+                                    <p
+                                        class="text-lg font-medium text-gray-700"
+                                    >
+                                        Pas d'activité dans cette zone de la
+                                        carte
+                                        <span class="text-base italic"
+                                            >(Utilisez la carte ou les liens de
+                                            pagination ci dessous pour trouver
+                                            des activités dans votre
+                                            région).</span
+                                        >
+                                    </p>
+                                </div>
                                 <div class="flex justify-end p-10">
                                     <Pagination :links="produits.links" />
                                 </div>
@@ -280,6 +294,19 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                         "
                                         :data="{}"
                                     />
+                                </div>
+                                <div v-if="filteredStructures.length === 0">
+                                    <p
+                                        class="text-lg font-medium text-gray-700"
+                                    >
+                                        Pas de structure dans cette zone de la
+                                        carte
+                                        <span class="text-base italic"
+                                            >(Utilisez la carte ou les liens de
+                                            pagination pour trouver des
+                                            structures dans votre région).</span
+                                        >
+                                    </p>
                                 </div>
                                 <div class="flex justify-end p-10">
                                     <Pagination :links="structures.links" />
