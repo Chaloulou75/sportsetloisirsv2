@@ -105,6 +105,16 @@ const showStructureTooltip = (structure) => {
 const hideStructureTooltip = () => {
     hoveredStructure.value = null;
 };
+
+const filteredProduits = ref(props.produits.data);
+const onFilteredProduitsUpdate = (filtered) => {
+    filteredProduits.value = filtered;
+};
+
+const filteredStructures = ref(props.structures.data);
+const onfilteredStructuresUpdate = (filteredStr) => {
+    filteredStructures.value = filteredStr;
+};
 </script>
 
 <template>
@@ -242,7 +252,7 @@ const hideStructureTooltip = () => {
                                     <ProduitCard
                                         v-for="(
                                             produit, index
-                                        ) in produits.data"
+                                        ) in filteredProduits"
                                         :key="produit.id"
                                         :index="index"
                                         :produit="produit"
@@ -281,7 +291,7 @@ const hideStructureTooltip = () => {
                                     <StructureCard
                                         v-for="(
                                             structure, index
-                                        ) in structures.data"
+                                        ) in filteredStructures"
                                         :key="structure.id"
                                         :index="index"
                                         :structure="structure"
@@ -322,6 +332,14 @@ const hideStructureTooltip = () => {
                                 :hovered-produit="hoveredProduit"
                                 :structures="structures.data"
                                 :hovered-structure="hoveredStructure"
+                                v-model:filteredProduits="filteredProduits"
+                                @update:filteredProduits="
+                                    onFilteredProduitsUpdate
+                                "
+                                v-model:filteredStructures="filteredStructures"
+                                @update:filteredStructures="
+                                    onfilteredStructuresUpdate
+                                "
                                 :zoom="11"
                             />
                         </div>

@@ -119,9 +119,25 @@ const toggleCriteres = () => {
     showCriteres.value = !showCriteres.value;
 };
 
+const showCriteresLg = ref(true);
+
+const toggleCriteresLg = () => {
+    showCriteresLg.value = !showCriteresLg.value;
+};
+
 const formCriteres = useForm({
     criteres: ref([]),
 });
+
+const filteredProduits = ref(props.produits.data);
+const onFilteredProduitsUpdate = (filtered) => {
+    filteredProduits.value = filtered;
+};
+
+const filteredStructures = ref(props.structures.data);
+const onfilteredStructuresUpdate = (filteredStr) => {
+    filteredStructures.value = filteredStr;
+};
 </script>
 
 <template>
@@ -251,8 +267,8 @@ const formCriteres = useForm({
                     :categories="categories"
                     :firstCategories="firstCategories"
                     :categoriesNotInFirst="categoriesNotInFirst"
-                    :showCriteres="showCriteres"
-                    @call-toggle-criteres="toggleCriteres"
+                    :showCriteres="showCriteresLg"
+                    @call-toggle-criteres="toggleCriteresLg"
                 />
                 <div
                     class="flex w-full items-center justify-between border-b border-gray-300 px-2 py-3 md:hidden"
@@ -272,6 +288,8 @@ const formCriteres = useForm({
                     :class="{
                         flex: showCriteres,
                         hidden: !showCriteres,
+                        'md:flex': showCriteresLg,
+                        'md:hidden': !showCriteresLg,
                     }"
                 >
                     <div
@@ -449,7 +467,7 @@ const formCriteres = useForm({
                                     <ProduitCard
                                         v-for="(
                                             produit, index
-                                        ) in produits.data"
+                                        ) in filteredProduits"
                                         :key="produit.id"
                                         :index="index"
                                         :produit="produit"
@@ -490,7 +508,7 @@ const formCriteres = useForm({
                                     <StructureCard
                                         v-for="(
                                             structure, index
-                                        ) in structures.data"
+                                        ) in filteredStructures"
                                         :key="structure.id"
                                         :index="index"
                                         :structure="structure"
@@ -533,6 +551,14 @@ const formCriteres = useForm({
                                 :hovered-produit="hoveredProduit"
                                 :structures="structures.data"
                                 :hovered-structure="hoveredStructure"
+                                v-model:filteredProduits="filteredProduits"
+                                @update:filteredProduits="
+                                    onFilteredProduitsUpdate
+                                "
+                                v-model:filteredStructures="filteredStructures"
+                                @update:filteredStructures="
+                                    onfilteredStructuresUpdate
+                                "
                                 :zoom="11"
                             />
                         </div>

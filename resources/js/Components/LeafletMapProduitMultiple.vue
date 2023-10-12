@@ -1,13 +1,6 @@
 <script setup>
 import "leaflet/dist/leaflet.css";
-import {
-    ref,
-    watch,
-    nextTick,
-    computed,
-    onMounted,
-    defineAsyncComponent,
-} from "vue";
+import { ref, watch, nextTick, onMounted, defineAsyncComponent } from "vue";
 import * as L from "leaflet/dist/leaflet-src.esm";
 import {
     LMap,
@@ -19,7 +12,10 @@ import {
     LIcon,
 } from "@vue-leaflet/vue-leaflet";
 
-const emit = defineEmits(["update:filteredProduits"]);
+const emit = defineEmits([
+    "update:filteredProduits",
+    "update:filteredStructures",
+]);
 
 const props = defineProps({
     produits: Object,
@@ -27,6 +23,8 @@ const props = defineProps({
     structures: Object,
     hoveredStructure: Number,
     zoom: Number,
+    filteredProduits: Array,
+    filteredStructures: Array,
 });
 
 const ProduitCardXS = defineAsyncComponent(() =>
@@ -37,15 +35,13 @@ const StructureCardXS = defineAsyncComponent(() =>
 );
 
 const map = ref(null);
-
 const center = ref([
     props.produits[0].adresse.address_lat,
     props.produits[0].adresse.address_lng,
 ]);
-
 const bounds = ref(null);
-const filteredProduits = ref([]);
-
+const filteredProduits = ref(props.filteredProduits);
+const filteredStructures = ref(props.filteredStructures);
 const zoom = ref(props.zoom ? props.zoom : 7);
 const imperial = ref(false);
 const mapOptions = ref({
@@ -136,17 +132,26 @@ const filterProduits = () => {
         });
         filteredProduits.value = filtered;
         emit("update:filteredProduits", filtered);
+
+        const filteredStr = props.structures.filter((structure) => {
+            const latLng = L.latLng(
+                parseFloat(structure.address_lat),
+                parseFloat(structure.address_lng)
+            );
+            return bounds.value.contains(latLng);
+        });
+        filteredStructures.value = filteredStr;
+        emit("update:filteredStructures", filteredStr);
     }
 };
 
-watch(
-    () => zoom.value,
-    () => {
+const handleMoveEnd = () => {
+    if (window.innerWidth >= 768) {
         const theMap = map.value.leafletObject;
         bounds.value = theMap.getBounds();
         filterProduits();
     }
-);
+};
 </script>
 
 <template>
@@ -165,6 +170,8 @@ watch(
                 :zoomAnimation="true"
                 :center="center"
                 :options="mapOptions"
+                @update:center="handleMoveEnd"
+                @update:zoom="handleMoveEnd"
             >
                 <l-control-scale :imperial="imperial" position="topright" />
                 <l-tile-layer
@@ -227,11 +234,6 @@ watch(
                             :structure="structure"
                             :link="
                                 route('structures.show', {
-                                    city: null,
-                                    departement: null,
-                                    discipline: null,
-                                    category: null,
-                                    structuretype: null,
                                     structure: structure.slug,
                                 })
                             "

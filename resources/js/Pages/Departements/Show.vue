@@ -78,6 +78,11 @@ const filteredProduits = ref(props.produits.data);
 const onFilteredProduitsUpdate = (filtered) => {
     filteredProduits.value = filtered;
 };
+
+const filteredStructures = ref(props.structures.data);
+const onfilteredStructuresUpdate = (filteredStr) => {
+    filteredStructures.value = filteredStr;
+};
 </script>
 
 <template>
@@ -254,7 +259,7 @@ const onFilteredProduitsUpdate = (filtered) => {
                                     <StructureCard
                                         v-for="(
                                             structure, index
-                                        ) in structures.data"
+                                        ) in filteredStructures"
                                         :key="structure.id"
                                         :index="index"
                                         :structure="structure"
@@ -298,6 +303,10 @@ const onFilteredProduitsUpdate = (filtered) => {
                                 v-model:filteredProduits="filteredProduits"
                                 @update:filteredProduits="
                                     onFilteredProduitsUpdate
+                                "
+                                v-model:filteredStructures="filteredStructures"
+                                @update:filteredStructures="
+                                    onfilteredStructuresUpdate
                                 "
                                 :zoom="11"
                             />

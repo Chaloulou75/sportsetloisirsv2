@@ -102,6 +102,16 @@ const toggleCriteres = () => {
 const formCriteres = useForm({
     criteres: ref([]),
 });
+
+const filteredProduits = ref(props.produits.data);
+const onFilteredProduitsUpdate = (filtered) => {
+    filteredProduits.value = filtered;
+};
+
+const filteredStructures = ref(props.structures.data);
+const onfilteredStructuresUpdate = (filteredStr) => {
+    filteredStructures.value = filteredStr;
+};
 </script>
 
 <template>
@@ -238,7 +248,7 @@ const formCriteres = useForm({
                                     <StructureCard
                                         v-for="(
                                             structure, index
-                                        ) in structures.data"
+                                        ) in filteredStructures"
                                         :key="structure.id"
                                         :index="index"
                                         :structure="structure"
@@ -277,7 +287,7 @@ const formCriteres = useForm({
                                     <ProduitCard
                                         v-for="(
                                             produit, index
-                                        ) in produits.data"
+                                        ) in filteredProduits"
                                         :key="produit.id"
                                         :index="index"
                                         :produit="produit"
@@ -320,6 +330,14 @@ const formCriteres = useForm({
                                 :hovered-produit="hoveredProduit"
                                 :structures="structures.data"
                                 :hovered-structure="hoveredStructure"
+                                v-model:filteredProduits="filteredProduits"
+                                @update:filteredProduits="
+                                    onFilteredProduitsUpdate
+                                "
+                                v-model:filteredStructures="filteredStructures"
+                                @update:filteredStructures="
+                                    onfilteredStructuresUpdate
+                                "
                                 :zoom="11"
                             />
                         </div>

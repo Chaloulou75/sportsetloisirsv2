@@ -116,7 +116,11 @@ const getUniqueActivitesTitre = (activites) => {
 // };
 
 const formatCityName = (ville) => {
-    return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
+    if (ville) {
+        return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
+    } else {
+        return ""; // ou une valeur par défaut appropriée si `ville` est null
+    }
 };
 </script>
 
@@ -178,22 +182,25 @@ const formatCityName = (ville) => {
             <div class="flex items-center py-1.5">
                 <dt class="sr-only">Ville</dt>
                 <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
-                <dd
+                <div
                     v-if="structure.adresses.length > 0"
                     class="text-sm font-medium"
                 >
+                    {{ structure.adresses[0].address }},
                     {{ formatCityName(structure.adresses[0].city) }}
                     <span class="text-xs"
                         >({{ structure.adresses[0].zip_code }})</span
                     >
-                </dd>
-                <dd v-else class="text-sm font-medium">
-                    {{ formatCityName(structure.city) }}
+                </div>
+
+                <div v-else class="text-sm font-medium">
+                    {{ structure.address }},
+                    <span>{{ formatCityName(structure.city) }}</span>
                     <span class="text-xs">({{ structure.zip_code }})</span>
-                </dd>
+                </div>
             </div>
 
-            <div
+            <!-- <div
                 class="mt-auto flex items-center justify-around gap-1 py-1.5 text-xs"
             >
                 <div
@@ -264,7 +271,7 @@ const formatCityName = (ville) => {
                         <span v-else>Produit</span>
                     </p>
                 </div>
-            </div>
+            </div> -->
         </div>
     </Link>
 
@@ -339,22 +346,14 @@ const formatCityName = (ville) => {
                 <div class="flex items-center py-1.5">
                     <dt class="sr-only">Ville</dt>
                     <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
-                    <dd
-                        v-if="structure.adresses.length > 0"
-                        class="text-sm font-medium"
-                    >
-                        {{ formatCityName(structure.adresses[0].city) }}
-                        <span class="text-xs"
-                            >({{ structure.adresses[0].zip_code }})</span
-                        >
-                    </dd>
-                    <dd v-else class="text-sm font-medium">
+                    <div class="text-sm font-medium">
+                        {{ structure.address }},
                         {{ formatCityName(structure.city) }}
                         <span class="text-xs">({{ structure.zip_code }})</span>
-                    </dd>
+                    </div>
                 </div>
 
-                <div
+                <!-- <div
                     class="mt-auto flex items-center justify-around gap-1 py-1.5 text-xs"
                 >
                     <div
@@ -425,7 +424,7 @@ const formatCityName = (ville) => {
                             <span v-else>Produit</span>
                         </p>
                     </div>
-                </div>
+                </div> -->
             </dl>
         </div>
     </Link>

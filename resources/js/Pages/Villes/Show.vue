@@ -79,6 +79,16 @@ const hideStructureTooltip = () => {
 const formatCityName = (ville) => {
     return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
 };
+
+const filteredProduits = ref(props.produits.data);
+const onFilteredProduitsUpdate = (filtered) => {
+    filteredProduits.value = filtered;
+};
+
+const filteredStructures = ref(props.structures.data);
+const onfilteredStructuresUpdate = (filteredStr) => {
+    filteredStructures.value = filteredStr;
+};
 </script>
 
 <template>
@@ -220,7 +230,7 @@ const formatCityName = (ville) => {
                                     <ProduitCard
                                         v-for="(
                                             produit, index
-                                        ) in produits.data"
+                                        ) in filteredProduits"
                                         :key="produit.id"
                                         :index="index"
                                         :produit="produit"
@@ -254,7 +264,7 @@ const formatCityName = (ville) => {
                                     <StructureCard
                                         v-for="(
                                             structure, index
-                                        ) in structures.data"
+                                        ) in filteredStructures"
                                         :key="structure.id"
                                         :index="index"
                                         :structure="structure"
@@ -291,6 +301,14 @@ const formatCityName = (ville) => {
                                 :hovered-produit="hoveredProduit"
                                 :structures="structures.data"
                                 :hovered-structure="hoveredStructure"
+                                v-model:filteredProduits="filteredProduits"
+                                @update:filteredProduits="
+                                    onFilteredProduitsUpdate
+                                "
+                                v-model:filteredStructures="filteredStructures"
+                                @update:filteredStructures="
+                                    onfilteredStructuresUpdate
+                                "
                                 :zoom="11"
                             />
                         </div>
