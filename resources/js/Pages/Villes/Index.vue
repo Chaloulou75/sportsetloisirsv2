@@ -39,7 +39,7 @@ watch(
             { search: value },
             { preserveState: true, replace: true }
         );
-    }, 500)
+    }, 400)
 );
 </script>
 

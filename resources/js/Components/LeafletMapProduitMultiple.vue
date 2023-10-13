@@ -11,6 +11,7 @@ import {
     LTooltip,
     LIcon,
 } from "@vue-leaflet/vue-leaflet";
+import { debounce } from "lodash";
 
 const emit = defineEmits([
     "update:filteredProduits",
@@ -82,7 +83,7 @@ const openMarkerPopup = (markerId) => {
 
 watch(
     () => props.hoveredProduit,
-    (newValue) => {
+    debounce((newValue) => {
         if (newValue !== null) {
             const produit = props.produits.find((s) => s.id === newValue);
             if (produit) {
@@ -99,12 +100,12 @@ watch(
             ];
             map.value.leafletObject.closePopup();
         }
-    }
+    }, 300)
 );
 
 watch(
     () => props.hoveredStructure,
-    (newValue) => {
+    debounce((newValue) => {
         if (newValue !== null) {
             const structure = props.structures.find((s) => s.id === newValue);
             if (structure) {
@@ -118,10 +119,10 @@ watch(
             ];
             map.value.leafletObject.closePopup();
         }
-    }
+    }, 300)
 );
 
-const filterProduits = () => {
+const filterProduits = debounce(() => {
     if (bounds.value) {
         const filtered = props.produits.filter((produit) => {
             const latLng = L.latLng(
@@ -143,7 +144,7 @@ const filterProduits = () => {
         filteredStructures.value = filteredStr;
         emit("update:filteredStructures", filteredStr);
     }
-};
+}, 300);
 
 const handleMoveEnd = () => {
     if (window.innerWidth >= 768) {
