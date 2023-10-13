@@ -1,6 +1,6 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
-import { computed } from "vue";
+import { ref, computed } from "vue";
 import { classMapping } from "@/Utils/classMapping.js";
 import { TrashIcon, PlusIcon } from "@heroicons/vue/24/outline";
 import BreezeDropdown from "@/Components/Dropdown.vue";
