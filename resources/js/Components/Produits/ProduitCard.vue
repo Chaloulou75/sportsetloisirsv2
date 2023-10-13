@@ -5,6 +5,7 @@ import { useCookies } from "@vueuse/integrations/useCookies";
 import { classMapping } from "@/Utils/classMapping.js";
 import { MapPinIcon } from "@heroicons/vue/24/outline";
 import { HeartIcon } from "@heroicons/vue/24/solid";
+import { TransitionRoot } from "@headlessui/vue";
 
 const emit = defineEmits(["card-hover", "card-out"]);
 
@@ -20,6 +21,8 @@ const props = defineProps({
         default: null,
     },
 });
+
+const isShowing = ref(true);
 
 const headerClass = computed(() => {
     const defaultClass = "bg-la-base";
@@ -115,83 +118,96 @@ const formatCityName = (ville) => {
 </script>
 
 <template>
-    <Link
-        :href="link"
-        :data="data"
-        @mouseover="emit('card-hover', produit)"
-        @mouseout="emit('card-out')"
-        class="block rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:shadow-2xl md:px-0 md:hover:scale-105"
+    <TransitionRoot
+        appear
+        :show="isShowing"
+        enter="transition-opacity ease-linear duration-400"
+        enter-from="opacity-0"
+        enter-to="opacity-100"
+        leave="transition-opacity ease-linear duration-300"
+        leave-from="opacity-100"
+        leave-to="opacity-0"
     >
-        <div
-            class="relative h-56 w-full rounded-md bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-soft-light"
-            :class="headerClass"
+        <Link
+            :href="link"
+            :data="data"
+            @mouseover="emit('card-hover', produit)"
+            @mouseout="emit('card-out')"
+            class="block rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:shadow-2xl md:px-0 md:hover:scale-105"
         >
-            <button
-                class="absolute right-2 top-2 z-30 bg-transparent"
-                type="button"
-                @click.prevent="() => toggleFavorite(produit.id)"
-            >
-                <HeartIcon
-                    class="h-6 w-6"
-                    :class="
-                        isFavorite
-                            ? 'text-red-500'
-                            : 'text-white hover:text-red-500'
-                    "
-                />
-            </button>
-        </div>
-
-        <div class="mt-2 flex flex-col">
             <div
-                v-if="produit.activite"
-                class="inline-flex flex-col items-center justify-center px-2 py-1.5 text-center text-lg font-semibold tracking-wide text-gray-600"
+                class="relative h-56 w-full rounded-md bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-soft-light"
+                :class="headerClass"
             >
-                {{ produit.activite.titre }}
-                <span class="mt-0.5 text-sm">{{ produit.structure.name }}</span>
+                <button
+                    class="absolute right-2 top-2 z-30 bg-transparent"
+                    type="button"
+                    @click.prevent="() => toggleFavorite(produit.id)"
+                >
+                    <HeartIcon
+                        class="h-6 w-6"
+                        :class="
+                            isFavorite
+                                ? 'text-red-500'
+                                : 'text-white hover:text-red-500'
+                        "
+                    />
+                </button>
             </div>
 
-            <div class="w-full px-4 py-2 text-slate-700">
+            <div class="mt-2 flex flex-col">
                 <div
-                    v-if="produit.adresse"
-                    class="flex items-center py-1.5 text-base"
+                    v-if="produit.activite"
+                    class="inline-flex flex-col items-center justify-center px-2 py-1.5 text-center text-lg font-semibold tracking-wide text-gray-600"
                 >
-                    <dt class="sr-only">Ville</dt>
-                    <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
-                    <p class="font-semibold">
-                        {{ produit.adresse.address }},
-                        {{ produit.adresse.city }} ({{
-                            produit.adresse.zip_code
-                        }})
-                    </p>
+                    {{ produit.activite.titre }}
+                    <span class="mt-0.5 text-sm">{{
+                        produit.structure.name
+                    }}</span>
                 </div>
-                <div v-if="produit.criteres.length > 0">
-                    <p class="mt-2 text-base font-semibold">Critères:</p>
-                    <ul class="list-inside list-disc text-base">
-                        <li
-                            v-for="critere in produit.criteres"
-                            :key="critere.id"
-                        >
-                            {{ critere.critere.nom }}:
-                            <span class="font-semibold">{{
-                                critere.valeur
-                            }}</span>
-                        </li>
-                    </ul>
-                </div>
-                <div v-if="produit.tarifs.length > 0">
-                    <p class="mt-2 text-base font-semibold">Tarifs:</p>
-                    <ul class="list-inside list-disc text-base">
-                        <li v-for="tarif in produit.tarifs" :key="tarif.id">
-                            {{ tarif.titre }}:
-                            <span class="font-semibold">
-                                {{ tarif.amount }} € /
-                                {{ tarif.tarif_type.type }}</span
+
+                <div class="w-full px-4 py-2 text-slate-700">
+                    <div
+                        v-if="produit.adresse"
+                        class="flex items-center py-1.5 text-base"
+                    >
+                        <dt class="sr-only">Ville</dt>
+                        <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
+                        <p class="font-semibold">
+                            {{ produit.adresse.address }},
+                            {{ produit.adresse.city }} ({{
+                                produit.adresse.zip_code
+                            }})
+                        </p>
+                    </div>
+                    <div v-if="produit.criteres.length > 0">
+                        <p class="mt-2 text-base font-semibold">Critères:</p>
+                        <ul class="list-inside list-disc text-base">
+                            <li
+                                v-for="critere in produit.criteres"
+                                :key="critere.id"
                             >
-                        </li>
-                    </ul>
+                                {{ critere.critere.nom }}:
+                                <span class="font-semibold">{{
+                                    critere.valeur
+                                }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div v-if="produit.tarifs.length > 0">
+                        <p class="mt-2 text-base font-semibold">Tarifs:</p>
+                        <ul class="list-inside list-disc text-base">
+                            <li v-for="tarif in produit.tarifs" :key="tarif.id">
+                                {{ tarif.titre }}:
+                                <span class="font-semibold">
+                                    {{ tarif.amount }} € /
+                                    {{ tarif.tarif_type.type }}</span
+                                >
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-    </Link>
+        </Link>
+    </TransitionRoot>
 </template>

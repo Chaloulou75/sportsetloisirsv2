@@ -44,7 +44,7 @@ const isShowing = ref(true);
             <TransitionRoot
                 appear
                 :show="isShowing"
-                enter="transition-opacity duration-200"
+                enter="transition-opacity duration-300"
                 enter-from="opacity-0"
                 enter-to="opacity-100"
                 leave="transition-opacity duration-150"
