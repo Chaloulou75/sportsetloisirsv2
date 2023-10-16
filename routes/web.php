@@ -12,29 +12,20 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActiviteController;
 use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\StructureController;
-use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\StructureUserController;
 use App\Http\Controllers\StructureTarifController;
 use App\Http\Controllers\StructureGestionController;
 use App\Http\Controllers\FamilleDisciplineController;
 use App\Http\Controllers\StructureAddresseController;
 use App\Http\Controllers\StructurePlanningController;
-use App\Http\Controllers\CategoryDisciplineController;
-use App\Http\Controllers\DisciplineActiviteController;
 use App\Http\Controllers\ProductReservationController;
 use App\Http\Controllers\StructureCategorieController;
 use App\Http\Controllers\DisciplineSimilaireController;
-use App\Http\Controllers\DisciplineStructureController;
 use App\Http\Controllers\StructureDisciplineController;
 use App\Http\Controllers\StructureStatistiqueController;
-use App\Http\Controllers\StructureTypeDisciplineController;
 use App\Http\Controllers\StructureActiviteProduitController;
 use App\Http\Controllers\CategoryDisciplineCritereController;
-use App\Http\Controllers\DisciplineCategorieActiviteController;
-use App\Http\Controllers\DisciplineCategorieStructureController;
 use App\Http\Controllers\CategoryDisciplineCritereValeurController;
-use App\Http\Controllers\DisciplineStructuretypeActiviteController;
-use App\Http\Controllers\DisciplineStructuretypeStructureController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,27 +66,7 @@ Route::resource('familles', FamilleController::class)->only([
 ]);
 
 // disciplines routes
-Route::resource('disciplines', DisciplineController::class)->only([
-    'index'
-]);
-
-Route::get('/dis-{discipline:slug}', [DisciplineController::class, 'show'])->name('disciplines.show');
-
-Route::get('/dis-{discipline:slug}/str-{structure:slug}', [DisciplineStructureController::class, 'show'])->name('disciplines.structures.show');
-
-Route::get('/dis-{discipline:slug}/activite-{activite:id}', [DisciplineActiviteController::class, 'show'])->name('disciplines.activites.show');
-
-Route::get('/dis-{discipline:slug}/cat-{category:slug}', [CategoryDisciplineController::class, 'show'])->name('disciplines.categories.show');
-
-Route::get('/dis-{discipline:slug}/cat-{category:slug}/str-{structure:slug}', [DisciplineCategorieStructureController::class, 'show'])->name('disciplines.categories.structures.show');
-
-Route::get('/dis-{discipline:slug}/cat-{category:slug}/activite-{activite:id}', [DisciplineCategorieActiviteController::class, 'show'])->name('disciplines.categories.activites.show');
-
-Route::get('/dis-{discipline:slug}/typ-{structuretype:id}', [StructureTypeDisciplineController::class, 'show'])->name('disciplines.structuretypes.show');
-
-Route::get('/dis-{discipline:slug}/typ-{structuretype:id}/str-{structure:slug}', [DisciplineStructuretypeStructureController::class, 'show'])->name('disciplines.structuretypes.structures.show');
-
-Route::get('/dis-{discipline:slug}/typ-{structuretype:id}/activite-{activite:id}', [DisciplineStructuretypeActiviteController::class, 'show'])->name('disciplines.structuretypes.activites.show');
+require __DIR__ . '/discipline.php';
 
 // structures route
 Route::get('/structures', [StructureController::class, 'index'])
@@ -202,7 +173,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/familles-disciplines/{discipline}', [FamilleDisciplineController::class, 'store'])->name('familles-disciplines.store');
     Route::put('/familles-disciplines/{discipline}', [FamilleDisciplineController::class, 'detach'])->name('familles-disciplines.detach');
-
 
     Route::post('/categories-disciplines/{discipline}', [CategoryDisciplineController::class, 'store'])->name('categories-disciplines.store');
     Route::put('/categories-disciplines/{discipline}', [CategoryDisciplineController::class, 'detach'])->name('categories-disciplines.detach');

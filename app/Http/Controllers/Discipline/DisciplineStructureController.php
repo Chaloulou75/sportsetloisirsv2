@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Discipline;
 
 use App\Models\City;
 use Inertia\Inertia;
@@ -10,20 +10,22 @@ use App\Models\Departement;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
 
-class DisciplineStructuretypeStructureController extends Controller
+class DisciplineStructureController extends Controller
 {
     /**
-      * Display the specified resource.
-      */
-    public function show(ListDiscipline $discipline, $structuretype, $structure)
+    * Display the specified resource.
+    */
+    public function show(ListDiscipline $discipline, $structure)
     {
         $city = request()->city;
         $departement = request()->departement;
         $category = request()->category;
+        $structuretype = request()->structuretype;
 
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();

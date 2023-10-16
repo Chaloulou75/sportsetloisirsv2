@@ -1,6 +1,7 @@
 <script setup>
 import "leaflet/dist/leaflet.css";
-import { ref, watch, nextTick, onMounted, defineAsyncComponent } from "vue";
+import { debounce } from "lodash";
+import { ref, watch, nextTick, defineAsyncComponent } from "vue";
 import * as L from "leaflet/dist/leaflet-src.esm";
 import {
     LMap,
@@ -11,7 +12,6 @@ import {
     LTooltip,
     LIcon,
 } from "@vue-leaflet/vue-leaflet";
-import { debounce } from "lodash";
 
 const emit = defineEmits([
     "update:filteredProduits",

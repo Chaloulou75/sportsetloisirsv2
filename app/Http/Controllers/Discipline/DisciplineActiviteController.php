@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Discipline;
 
 use App\Models\City;
 use Inertia\Inertia;
@@ -8,11 +8,12 @@ use App\Models\Famille;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use App\Models\StructureActivite;
+use App\Http\Controllers\Controller;
 use App\Models\LienDisciplineCategorieCritere;
 
-class DisciplineCategorieActiviteController extends Controller
+class DisciplineActiviteController extends Controller
 {
-    public function show(ListDiscipline $discipline, $category, $activite, ?string $produit = null)
+    public function show(ListDiscipline $discipline, $activite, ?string $produit = null)
     {
 
         $familles = Famille::withProducts()->get();

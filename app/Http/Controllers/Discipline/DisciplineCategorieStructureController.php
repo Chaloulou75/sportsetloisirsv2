@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Discipline;
 
 use App\Models\City;
 use Inertia\Inertia;
@@ -10,20 +10,20 @@ use App\Models\Departement;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
 
-class DisciplineStructureController extends Controller
+class DisciplineCategorieStructureController extends Controller
 {
     /**
-    * Display the specified resource.
-    */
-    public function show(ListDiscipline $discipline, $structure)
+       * Display the specified resource.
+       */
+    public function show(ListDiscipline $discipline, $category, $structure)
     {
         $city = request()->city;
         $departement = request()->departement;
-        $category = request()->category;
         $structuretype = request()->structuretype;
 
         $familles = Famille::withProducts()->get();
@@ -113,7 +113,7 @@ class DisciplineStructureController extends Controller
             ->get();
 
             if($category !== null) {
-                $requestCategory = LienDisciplineCategorie::where('discipline_id', $requestDiscipline->id)->where('id', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
+                $requestCategory = LienDisciplineCategorie::where('discipline_id', $requestDiscipline->id)->where('slug', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
             } else {
                 $requestCategory = null;
             }
