@@ -8,6 +8,7 @@ use App\Models\Famille;
 use App\Models\Departement;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
+use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Http\Controllers\Controller;
 use App\Models\LienDisciplineCategorieCritere;
@@ -16,6 +17,7 @@ class DepartementActiviteController extends Controller
 {
     public function show(Departement $departement, $activite, ?string $produit = null)
     {
+        $selectedProduit = StructureProduit::where('id', request()->produit)->first();
 
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();
@@ -92,7 +94,8 @@ class DepartementActiviteController extends Controller
                     'logoUrl' => $logoUrl,
                     'activite' => $activite,
                     'criteres' => $criteres,
-                    'activiteSimilaires' => $activiteSimilaires
+                    'activiteSimilaires' => $activiteSimilaires,
+                    'selectedProduit' => $selectedProduit,
         ]);
     }
 }

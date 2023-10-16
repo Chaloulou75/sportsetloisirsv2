@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Models\Famille;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
+use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Http\Controllers\Controller;
 use App\Models\LienDisciplineCategorieCritere;
@@ -15,6 +16,8 @@ class CityActiviteController extends Controller
 {
     public function show(City $city, $activite, ?string $produit = null)
     {
+        $selectedProduit = StructureProduit::where('id', request()->produit)->first();
+
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
@@ -103,7 +106,8 @@ class CityActiviteController extends Controller
                     'criteres' => $criteres,
                     'city' => $city,
                     'citiesAround' => $citiesAround,
-                    'activiteSimilaires' => $activiteSimilaires
+                    'activiteSimilaires' => $activiteSimilaires,
+                    'selectedProduit' => $selectedProduit,
         ]);
     }
 }

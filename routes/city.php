@@ -73,3 +73,11 @@ Route::get('/{city:slug}/{discipline:slug}/typ-{structuretype:id}/str-{structure
 
 Route::get('/{city:slug}/dis-{discipline:slug}/typ-{structuretype:id}/activites-{activite:id}', [CityDisciplineStructuretypeActiviteController::class, 'show'])->name('villes.disciplines.structuretypes.activites.show');
 // /villes/disciplines/structuretypes/activites/
+
+Route::get('/localite-1/index.{extension?}', function ($extension = null) {
+    return redirect('/villes/', 301);
+});
+Route::get('/{villeWithPlus}-{id}-1.{extension?}', function ($villeWithPlus, $id, $extension = null) {
+    $ville = str_replace('+', '-', strtolower($villeWithPlus));
+    return redirect('/villes/' . $id, 301);
+});

@@ -45,3 +45,12 @@ Route::get('/dept-{departement:slug}/dis-{discipline:slug}/type-{structuretype:i
 Route::get('/dept-{departement:slug}/dis-{discipline:slug}/type-{structuretype:id}/str-{structure:slug}', [DepartementDisciplineStructuretypeStructureController::class, 'show'])->name('departements.disciplines.structuretypes.structures.show');
 
 Route::get('/dept-{departement:slug}/dis-{discipline:slug}/type-{structuretype:id}/activite-{activite:id}', [DepartementDisciplineStructuretypeActiviteController::class, 'show'])->name('departements.disciplines.structuretypes.activites.show');
+
+Route::get('/localite-2/index.{extension?}', function ($extension = null) {
+    return redirect('/departements/', 301);
+});
+
+Route::get('/{departementWithPlus}-{id}-2.{extension?}', function ($departementWithPlus, $id, $extension = null) {
+    $departement = str_replace('+', '-', strtolower($departementWithPlus));
+    return redirect('/departements/' . $id, 301);
+});

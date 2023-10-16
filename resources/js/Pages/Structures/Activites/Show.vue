@@ -54,6 +54,7 @@ const props = defineProps({
     activite: Object,
     criteres: Object,
     activiteSimilaires: Object,
+    selectedProduit: Object,
 });
 
 const filteredCriteres = computed(() => {
@@ -224,7 +225,25 @@ const submitReservation = () => {
                                 </Link>
                             </li>
 
-                            <li class="relative flex items-center">
+                            <li v-if="city" class="relative flex items-center">
+                                <span
+                                    class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
+                                >
+                                </span>
+
+                                <Link
+                                    preserve-scroll
+                                    :href="route('villes.show', city.slug)"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                                >
+                                    {{ formatCityName(city.ville) }}
+                                </Link>
+                            </li>
+
+                            <li
+                                v-if="departement"
+                                class="relative flex items-center"
+                            >
                                 <span
                                     class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
                                 >
@@ -233,13 +252,40 @@ const submitReservation = () => {
                                 <Link
                                     preserve-scroll
                                     :href="
-                                        route('structures.show', structure.slug)
+                                        route(
+                                            'departements.show',
+                                            departement.slug
+                                        )
                                     "
                                     class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
-                                    {{ structure.name }}
+                                    {{ departement.departement }}
                                 </Link>
                             </li>
+
+                            <li
+                                v-if="discipline"
+                                class="relative flex items-center"
+                            >
+                                <span
+                                    class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
+                                >
+                                </span>
+
+                                <Link
+                                    preserve-scroll
+                                    :href="
+                                        route(
+                                            'disciplines.show',
+                                            discipline.slug
+                                        )
+                                    "
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                                >
+                                    {{ discipline.name }}
+                                </Link>
+                            </li>
+
                             <li class="relative flex items-center">
                                 <span
                                     class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
@@ -583,6 +629,11 @@ const submitReservation = () => {
                                                             v-model="
                                                                 reservationForm.produit
                                                             "
+                                                            :checked="
+                                                                selectedProduit &&
+                                                                produit.id ===
+                                                                    selectedProduit.id
+                                                            "
                                                             name="produit"
                                                             type="radio"
                                                             class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
@@ -612,6 +663,10 @@ const submitReservation = () => {
                                                         <p
                                                             class="font-semibold"
                                                         >
+                                                            {{
+                                                                produit.adresse
+                                                                    .address
+                                                            }},
                                                             {{
                                                                 produit.adresse
                                                                     .city

@@ -10,11 +10,13 @@ use App\Models\ListDiscipline;
 use App\Models\StructureActivite;
 use App\Http\Controllers\Controller;
 use App\Models\LienDisciplineCategorieCritere;
+use App\Models\StructureProduit;
 
 class DisciplineActiviteController extends Controller
 {
     public function show(ListDiscipline $discipline, $activite, ?string $produit = null)
     {
+        $selectedProduit = StructureProduit::where('id', request()->produit)->first();
 
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();
@@ -44,17 +46,17 @@ class DisciplineActiviteController extends Controller
         ])->where('id', $activite)->first();
 
         $structure = $activite->structure()->with([
-                    'creator:id,name',
-                    'users:id,name',
-                    'adresses'  => function ($query) {
-                        $query->latest();
-                    },
-                    'city:id,ville,ville_formatee,code_postal',
-                    'departement:id,departement,numero',
-                    'structuretype:id,name,slug',
-                    ])
-                    ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
-                    ->first();
+            'creator:id,name',
+            'users:id,name',
+            'adresses'  => function ($query) {
+                $query->latest();
+            },
+            'city:id,ville,ville_formatee,code_postal',
+            'departement:id,departement,numero',
+            'structuretype:id,name,slug',
+        ])
+        ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
+        ->first();
 
         $logoUrl = asset($structure->logo);
 
@@ -82,6 +84,7 @@ class DisciplineActiviteController extends Controller
             ->get();
 
         return Inertia::render('Structures/Activites/Show', [
+                    'selectedProduit' => $selectedProduit ?? null,
                     'discipline' => $discipline,
                     'disciplinesSimilaires' => $disciplinesSimilaires,
                     'structure' => $structure,

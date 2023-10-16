@@ -6,7 +6,6 @@ use Illuminate\Foundation\Application;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\FamilleController;
 use App\Http\Controllers\MentionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActiviteController;
@@ -46,24 +45,16 @@ Route::get('/mentions', [MentionController::class, 'index'])->name('mentions.ind
 
 Route::get('/faq', [FaqController::class, 'index'])->name('faq.index');
 
-Route::resource('favoris', FavoritesController::class)->only([
-    'index'
-]);
+Route::get('/favoris', [FavoritesController::class, 'index'])->name(
+    'favoris.index'
+);
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/rubrique/index.{extension?}', function ($extension = null) {
-    return redirect('/familles/', 301);
-});
-Route::get('/rub-{rubriqueWithPlus}-{id}.{extension?}', function ($rubriqueWithPlus, $id, $extension = null) {
-    $famille = str_replace('+', '-', strtolower($rubriqueWithPlus));
-    return redirect('/familles/' . $famille, 301);
-});
-Route::resource('familles', FamilleController::class)->only([
-    'index', 'show'
-]);
+// familles routes
+require __DIR__ . '/famille.php';
 
 // disciplines routes
 require __DIR__ . '/discipline.php';
@@ -80,32 +71,6 @@ Route::get('/activites-{activite:id}', [ActiviteController::class, 'show'])->nam
 
 // Departements routes
 require __DIR__ . '/departement.php';
-
-Route::get('/discipline/index.{extension?}', function ($extension = null) {
-    return redirect('/disciplines/', 301);
-});
-
-Route::get('/dis-{disciplineWithPlus}-{id}.{extension?}', function ($disciplineWithPlus, $id, $extension = null) {
-    $discipline = str_replace('+', '-', strtolower($disciplineWithPlus));
-    return redirect('/dis' . $discipline, 301);
-});
-
-Route::get('/localite-2/index.{extension?}', function ($extension = null) {
-    return redirect('/departements/', 301);
-});
-
-Route::get('/{departementWithPlus}-{id}-2.{extension?}', function ($departementWithPlus, $id, $extension = null) {
-    $departement = str_replace('+', '-', strtolower($departementWithPlus));
-    return redirect('/departements/' . $id, 301);
-});
-
-Route::get('/localite-1/index.{extension?}', function ($extension = null) {
-    return redirect('/villes/', 301);
-});
-Route::get('/{villeWithPlus}-{id}-1.{extension?}', function ($villeWithPlus, $id, $extension = null) {
-    $ville = str_replace('+', '-', strtolower($villeWithPlus));
-    return redirect('/villes/' . $id, 301);
-});
 
 Route::resource('product_reservations', ProductReservationController::class)->only([
     'store'

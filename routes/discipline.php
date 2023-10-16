@@ -32,3 +32,12 @@ Route::get('/dis-{discipline:slug}/typ-{structuretype:id}', [StructureTypeDiscip
 Route::get('/dis-{discipline:slug}/typ-{structuretype:id}/str-{structure:slug}', [DisciplineStructuretypeStructureController::class, 'show'])->name('disciplines.structuretypes.structures.show');
 
 Route::get('/dis-{discipline:slug}/typ-{structuretype:id}/activite-{activite:id}', [DisciplineStructuretypeActiviteController::class, 'show'])->name('disciplines.structuretypes.activites.show');
+
+Route::get('/discipline/index.{extension?}', function ($extension = null) {
+    return redirect('/disciplines/', 301);
+});
+
+Route::get('/dis-{disciplineWithPlus}-{id}.{extension?}', function ($disciplineWithPlus, $id, $extension = null) {
+    $discipline = str_replace('+', '-', strtolower($disciplineWithPlus));
+    return redirect('/dis' . $discipline, 301);
+});

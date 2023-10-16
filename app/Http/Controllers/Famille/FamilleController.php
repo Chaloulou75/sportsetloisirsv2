@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Famille;
 
 use App\Models\City;
 use Inertia\Inertia;
@@ -9,6 +9,7 @@ use App\Models\Structure;
 use App\Models\Discipline;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Resources\FamilleResource;
 use Illuminate\Database\Eloquent\Builder;
