@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Structure;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Mail\ReservationAsked;
+use App\Mail\ReservationConfirmed;
 use App\Models\StructureTarif;
 use Illuminate\Validation\Rule;
 use App\Models\StructureProduit;
@@ -231,6 +233,14 @@ class ProductReservationController extends Controller
      */
     public function update(Request $request, Structure $structure, ProductReservation $reservation)
     {
+        $user = User::where('id', $reservation->user_id)->first();
+        $userEmail = $user->email;
+        $produit = StructureProduit::where('id', $reservation->produit_id)->first();
+        $tarif = StructureTarif::where('id', $reservation->tarif_id)->first();
+        $planning = StructurePlanning::where('id', $reservation->planning_id)->first();
+        $activiteId = $produit->activite->id;
+        $activite = StructureActivite::where('id', $activiteId)->first();
+
 
         if($request->status === "confirmed") {
             $randomCode = strval(rand(0000, 9999));
@@ -243,7 +253,9 @@ class ProductReservationController extends Controller
             ]);
 
             //envoie email avec le code à 4 chiffres
-            return to_route('structures.gestion.reservations.index', $structure)->with('success', 'Réservation modifiée.');
+            Mail::to($userEmail)->send(new ReservationConfirmed($activite, $produit, $planning, $tarif, $reservation, $user));
+
+            return to_route('structures.gestion.reservations.index', $structure)->with('success', 'Réservation modifiée, un email de confirmation avec le code a été envoyé à l\'utlilisateur.');
 
         } elseif($request->status === "refused") {
             $reservation->update([

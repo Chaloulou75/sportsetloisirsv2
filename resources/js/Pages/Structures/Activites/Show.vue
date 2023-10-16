@@ -144,6 +144,10 @@ function formatPhoneNumber(phoneNumber) {
     return phoneNumber;
 }
 
+const formatCityName = (ville) => {
+    return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
+};
+
 const displayPlanning = ref(false);
 
 const getEvents = () => {
