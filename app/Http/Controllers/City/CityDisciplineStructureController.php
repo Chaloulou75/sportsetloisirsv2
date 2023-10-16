@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\City;
 
 use App\Models\City;
 use Inertia\Inertia;
@@ -10,27 +10,25 @@ use App\Models\Departement;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
 
-class DepartementStructureController extends Controller
+class CityDisciplineStructureController extends Controller
 {
     /**
      * Display the specified resource.
      */
-    public function show(Departement $departement, $structure)
+    public function show(City $city, $discipline, $structure)
     {
-        $discipline = request()->discipline;
-        $city = request()->city;
+        $departement = request()->departement;
         $category = request()->category;
         $structuretype = request()->structuretype;
-
 
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
-
 
         $structure = Structure::with([
                     'creator:id,name',
@@ -69,7 +67,7 @@ class DepartementStructureController extends Controller
                             $query->has('produits')->with(['produits', 'produits.adresse']);
                         }])
                                         ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count', 'latitude', 'longitude'])
-                                        ->where('slug', $departement->slug)
+                                        ->where('slug', $departement)
                                         ->withCount('structures')
                                         ->first();
 
@@ -170,4 +168,27 @@ class DepartementStructureController extends Controller
         ]);
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
 }

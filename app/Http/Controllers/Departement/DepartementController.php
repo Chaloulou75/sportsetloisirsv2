@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Departement;
 
 use App\Models\City;
 use Inertia\Inertia;
@@ -10,6 +10,7 @@ use App\Models\Departement;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class DepartementController extends Controller
 {

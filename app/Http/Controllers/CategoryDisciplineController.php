@@ -33,6 +33,8 @@ class CategoryDisciplineController extends Controller
             ->select('discipline_similaire_id', 'name', 'slug', 'famille')
             ->get();
 
+        dd($disciplinesSimilaires);
+
         $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('slug', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
 
         $categories = LienDisciplineCategorie::whereHas('structures_produits')

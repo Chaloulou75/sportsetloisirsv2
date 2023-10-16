@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Departement;
 
 use App\Models\City;
 use Inertia\Inertia;
@@ -10,19 +10,17 @@ use App\Models\Departement;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
 
-class CityStructureController extends Controller
+class DepartementDisciplineCategorieStructureController extends Controller
 {
-    public function show(City $city, $structure)
+    public function show(Departement $departement, $discipline, $category, $structure)
     {
-        $discipline = request()->discipline;
-        $departement = request()->departement;
-        $category = request()->category;
+        $city = request()->city;
         $structuretype = request()->structuretype;
-
 
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();
@@ -65,7 +63,7 @@ class CityStructureController extends Controller
                             $query->has('produits')->with(['produits', 'produits.adresse']);
                         }])
                                         ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count', 'latitude', 'longitude'])
-                                        ->where('slug', $departement)
+                                        ->where('slug', $departement->slug)
                                         ->withCount('structures')
                                         ->first();
 

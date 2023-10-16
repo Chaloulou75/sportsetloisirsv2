@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Departement;
 
 use App\Models\City;
 use Inertia\Inertia;
@@ -9,17 +9,16 @@ use App\Models\Departement;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use App\Models\StructureActivite;
+use App\Http\Controllers\Controller;
 use App\Models\LienDisciplineCategorieCritere;
 
-class DepartementDisciplineActiviteController extends Controller
+class DepartementDisciplineCategorieActiviteController extends Controller
 {
-    public function show(Departement $departement, $discipline, $activite, ?string $produit = null)
+    public function show(Departement $departement, $discipline, $category, $activite, ?string $produit = null)
     {
-
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
-
 
         $departement = Departement::with(['cities' => function ($query) {
             $query->withWhereHas('produits');

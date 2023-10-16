@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\City;
 
 use App\Models\City;
 use Inertia\Inertia;
@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use App\Models\StructureProduit;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class CityController extends Controller
 {

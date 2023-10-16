@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Departement;
 
 use App\Models\City;
 use Inertia\Inertia;
@@ -10,18 +10,19 @@ use App\Models\Departement;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
 
-class CityDisciplineStructureController extends Controller
+class DepartementDisciplineStructureController extends Controller
 {
     /**
-     * Display the specified resource.
-     */
-    public function show(City $city, $discipline, $structure)
+         * Display the specified resource.
+         */
+    public function show(Departement $departement, $discipline, $structure)
     {
-        $departement = request()->departement;
+        $city = request()->city;
         $category = request()->category;
         $structuretype = request()->structuretype;
 
@@ -66,7 +67,7 @@ class CityDisciplineStructureController extends Controller
                             $query->has('produits')->with(['produits', 'produits.adresse']);
                         }])
                                         ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count', 'latitude', 'longitude'])
-                                        ->where('slug', $departement)
+                                        ->where('slug', $departement->slug)
                                         ->withCount('structures')
                                         ->first();
 
@@ -165,29 +166,5 @@ class CityDisciplineStructureController extends Controller
             'requestDiscipline' => $requestDiscipline,
             'disciplinesSimilaires' => $disciplinesSimilaires,
         ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\City;
 
 use App\Models\City;
 use Inertia\Inertia;
@@ -8,17 +8,16 @@ use App\Models\Famille;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use App\Models\StructureActivite;
+use App\Http\Controllers\Controller;
 use App\Models\LienDisciplineCategorieCritere;
 
-class CityDisciplineStructuretypeActiviteController extends Controller
+class CityActiviteController extends Controller
 {
-    public function show(City $city, $discipline, $structuretype, $activite, ?string $produit = null)
+    public function show(City $city, $activite, ?string $produit = null)
     {
-
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
-
 
         $city = City::with([
                         'structures',
@@ -31,7 +30,7 @@ class CityDisciplineStructuretypeActiviteController extends Controller
                     ->first();
 
         $citiesAround = City::with('structures', 'produits', 'produits.adresse')
-                            ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
+                            ->select('id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
                             ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
                             ->where('id', '!=', $city->id)
                             ->havingRaw('distance <= ?', [$city->tolerance_rayon])
@@ -39,9 +38,7 @@ class CityDisciplineStructuretypeActiviteController extends Controller
                             ->limit(10)
                             ->get();
 
-        $discipline = ListDiscipline::where('slug', $discipline)
-                                                ->select(['id', 'name', 'slug', 'view_count'])
-                                                ->first();
+        dd($citiesAround);
 
         $activite = StructureActivite::with([
             'structure',
@@ -106,7 +103,6 @@ class CityDisciplineStructuretypeActiviteController extends Controller
                     'criteres' => $criteres,
                     'city' => $city,
                     'citiesAround' => $citiesAround,
-                    'discipline' => $discipline,
                     'activiteSimilaires' => $activiteSimilaires
         ]);
     }

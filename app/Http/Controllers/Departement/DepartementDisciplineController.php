@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Departement;
 
 use App\Models\City;
 use Inertia\Inertia;
@@ -9,6 +9,7 @@ use App\Models\Departement;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
+use App\Http\Controllers\Controller;
 use App\Models\LienDisciplineCategorie;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 

@@ -4,7 +4,6 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\FaqController;
-use App\Http\Controllers\CityController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FamilleController;
@@ -14,11 +13,7 @@ use App\Http\Controllers\ActiviteController;
 use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\DisciplineController;
-use App\Http\Controllers\DepartementController;
-use App\Http\Controllers\CityActiviteController;
-use App\Http\Controllers\CityStructureController;
 use App\Http\Controllers\StructureUserController;
-use App\Http\Controllers\CityDisciplineController;
 use App\Http\Controllers\StructureTarifController;
 use App\Http\Controllers\StructureGestionController;
 use App\Http\Controllers\FamilleDisciplineController;
@@ -28,39 +23,18 @@ use App\Http\Controllers\CategoryDisciplineController;
 use App\Http\Controllers\DisciplineActiviteController;
 use App\Http\Controllers\ProductReservationController;
 use App\Http\Controllers\StructureCategorieController;
-use App\Http\Controllers\DepartementActiviteController;
 use App\Http\Controllers\DisciplineSimilaireController;
 use App\Http\Controllers\DisciplineStructureController;
 use App\Http\Controllers\StructureDisciplineController;
-use App\Http\Controllers\DepartementStructureController;
 use App\Http\Controllers\StructureStatistiqueController;
-use App\Http\Controllers\DepartementDisciplineController;
-use App\Http\Controllers\CityDisciplineActiviteController;
-use App\Http\Controllers\CityDisciplineCategorieController;
-use App\Http\Controllers\CityDisciplineStructureController;
 use App\Http\Controllers\StructureTypeDisciplineController;
 use App\Http\Controllers\StructureActiviteProduitController;
 use App\Http\Controllers\CategoryDisciplineCritereController;
-use App\Http\Controllers\CityDisciplineStructuretypeController;
 use App\Http\Controllers\DisciplineCategorieActiviteController;
 use App\Http\Controllers\DisciplineCategorieStructureController;
-use App\Http\Controllers\DepartementDisciplineActiviteController;
-use App\Http\Controllers\DepartementDisciplineCategorieController;
-use App\Http\Controllers\DepartementDisciplineStructureController;
 use App\Http\Controllers\CategoryDisciplineCritereValeurController;
-use App\Http\Controllers\CityDisciplineCategorieActiviteController;
 use App\Http\Controllers\DisciplineStructuretypeActiviteController;
-use App\Http\Controllers\CityDisciplineCategorieStructureController;
 use App\Http\Controllers\DisciplineStructuretypeStructureController;
-use App\Http\Controllers\DepartementDisciplineStructuretypeController;
-use App\Http\Controllers\CityDisciplineStructuretypeActiviteController;
-use App\Http\Controllers\CityDisciplineStructuretypeStructureController;
-use App\Http\Controllers\DepartementDisciplineCategorieActiviteController;
-use App\Http\Controllers\DepartementDisciplineCategorieStructureController;
-use App\Http\Controllers\CityDisciplineCategorieStructureActiviteController;
-use App\Http\Controllers\DepartementDisciplineStructuretypeActiviteController;
-use App\Http\Controllers\DepartementDisciplineStructuretypeStructureController;
-use App\Http\Controllers\CityDisciplineStructuretypeStructureActiviteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -134,37 +108,7 @@ Route::get('str-{structure:slug}', [StructureController::class, 'show'])
 Route::get('/activites-{activite:id}', [ActiviteController::class, 'show'])->name('structures.activites.show');
 
 // Departements routes
-Route::resource('departements', DepartementController::class)->only([
-    'index'
-]);
-
-Route::get('/dept-{departement:slug}', [DepartementController::class, 'show'])->name('departements.show');
-
-Route::get('/dept-{departement:slug}/str-{structure:slug}', [DepartementStructureController::class, 'show'])->name('departements.structures.show');
-
-Route::get('/dept-{departement:slug}/activites-{activite:id}', [DepartementActiviteController::class, 'show'])->name('departements.activites.show');
-
-Route::get('/dept-{departement:slug}/dis-{discipline:slug}', [DepartementDisciplineController::class, 'show'])->name('departements.disciplines.show');
-
-Route::get('/dept-{departement:slug}/dis-{discipline:slug}/str-{structure:slug}', [DepartementDisciplineStructureController::class, 'show'])->name('departements.disciplines.structures.show');
-
-Route::get('/dept-{departement:slug}/dis-{discipline:slug}/activite-{activite:id}', [DepartementDisciplineActiviteController::class, 'show'])->name('departements.disciplines.activites.show');
-
-Route::get('/dept-{departement:slug}/dis-{discipline:slug}/cat-{category:slug}', [DepartementDisciplineCategorieController::class, 'show'])->name('departements.disciplines.categories.show');
-// /departements/disciplines/categories/
-
-Route::get('/dept-{departement:slug}/dis-{discipline:slug}/cat-{category:slug}/str-{structure:slug}', [DepartementDisciplineCategorieStructureController::class, 'show'])->name('departements.disciplines.categories.structures.show');
-// /departements/disciplines/categories/structure
-
-Route::get('/dept-{departement:slug}/dis-{discipline:slug}/cat-{category:slug}/activite-{activite:slug}', [DepartementDisciplineCategorieActiviteController::class, 'show'])->name('departements.disciplines.categories.activites.show');
-// /departements/disciplines/categories/activite
-
-Route::get('/dept-{departement:slug}/dis-{discipline:slug}/type-{structuretype:id}', [DepartementDisciplineStructuretypeController::class, 'show'])->name('departements.disciplines.structuretypes.show');
-// /departements/disciplines/structuretypes/
-
-Route::get('/dept-{departement:slug}/dis-{discipline:slug}/type-{structuretype:id}/str-{structure:slug}', [DepartementDisciplineStructuretypeStructureController::class, 'show'])->name('departements.disciplines.structuretypes.structures.show');
-
-Route::get('/dept-{departement:slug}/dis-{discipline:slug}/type-{structuretype:id}/activite-{activite:id}', [DepartementDisciplineStructuretypeActiviteController::class, 'show'])->name('departements.disciplines.structuretypes.activites.show');
+require __DIR__ . '/departement.php';
 
 Route::get('/discipline/index.{extension?}', function ($extension = null) {
     return redirect('/disciplines/', 301);
@@ -274,62 +218,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 //cities route
-Route::resource('villes', CityController::class, [
-    'parameters' => [
-        'villes' => 'city'
-    ]
-])->only([
-    'index'
-]);
-
-Route::get('/{city:slug}', [CityController::class, 'show'], [
-    'parameters' => [
-        'villes' => 'city'
-    ]
-])->name('villes.show');
-
-Route::get('/{city:slug}/str-{structure:slug}', [CityStructureController::class, 'show'], [
-    'parameters' => [
-        'villes' => 'city',
-    ]
-])->name('villes.structures.show');
-
-Route::get('/{city:slug}/activites-{activite:id}', [CityActiviteController::class, 'show'], [
-    'parameters' => [
-        'villes' => 'city',
-    ]
-])->name('villes.activites.show');
-
-Route::get('/{city:slug}/dis-{discipline:slug}', [CityDisciplineController::class, 'show'], [
-    'parameters' => [
-        'villes' => 'city'
-    ]
-])->name('villes.disciplines.show');
-
-Route::get('/{city:slug}/dis-{discipline:slug}/str-{structure:slug}', [CityDisciplineStructureController::class, 'show'], [
-    'parameters' => [
-        'villes' => 'city'
-    ]
-])->name('villes.disciplines.structures.show');
-
-Route::get('/{city:slug}/dis-{discipline:slug}/activites-{activite:id}', [CityDisciplineActiviteController::class, 'show'], [
-    'parameters' => [
-        'villes' => 'city'
-    ]
-])->name('villes.disciplines.activites.show');
-
-Route::get('/{city:slug}/dis-{discipline:slug}/cat-{category:slug}', [CityDisciplineCategorieController::class, 'show'])->name('villes.disciplines.categories.show');
-// /villes/disciplines/categories/
-
-Route::get('/{city:slug}/dis-{discipline:slug}/cat-{category:slug}/str-{structure:slug}', [CityDisciplineCategorieStructureController::class, 'show'])->name('villes.disciplines.categories.structures.show');
-
-Route::get('/{city:slug}/dis-{discipline:slug}/cat-{category:slug}/activites-{activite:id}', [CityDisciplineCategorieActiviteController::class, 'show'])->name('villes.disciplines.categories.activites.show');
-
-Route::get('/{city:slug}/dis-{discipline:slug}/typ-{structuretype:id}', [CityDisciplineStructuretypeController::class, 'show'])->name('villes.disciplines.structuretypes.show');
-// /villes/disciplines/structuretypes/
-
-Route::get('/{city:slug}/{discipline:slug}/typ-{structuretype:id}/str-{structure:slug}', [CityDisciplineStructuretypeStructureController::class, 'show'])->name('villes.disciplines.structuretypes.structures.show');
-// /villes/disciplines/structuretypes/structures/
-
-Route::get('/{city:slug}/dis-{discipline:slug}/typ-{structuretype:id}/activites-{activite:id}', [CityDisciplineStructuretypeActiviteController::class, 'show'])->name('villes.disciplines.structuretypes.activites.show');
-// /villes/disciplines/structuretypes/activites/
+require __DIR__ . '/city.php';

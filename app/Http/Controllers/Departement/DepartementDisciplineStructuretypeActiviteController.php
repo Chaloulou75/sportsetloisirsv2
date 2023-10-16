@@ -1,41 +1,42 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Departement;
 
 use App\Models\City;
 use Inertia\Inertia;
 use App\Models\Famille;
+use App\Models\Departement;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use App\Models\StructureActivite;
+use App\Http\Controllers\Controller;
 use App\Models\LienDisciplineCategorieCritere;
 
-class CityActiviteController extends Controller
+class DepartementDisciplineStructuretypeActiviteController extends Controller
 {
-    public function show(City $city, $activite, ?string $produit = null)
+    public function show(Departement $departement, $discipline, $structuretype, $activite, ?string $produit = null)
     {
+
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
-        $city = City::with([
-                        'structures',
-                        'produits',
-                        'produits.adresse'
-                    ])
-                    ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
-                    ->where('slug', $city->slug)
-                    ->withCount('structures')
-                    ->first();
 
-        $citiesAround = City::with('structures', 'produits', 'produits.adresse')
-                            ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
-                            ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
-                            ->where('id', '!=', $city->id)
-                            ->havingRaw('distance <= ?', [$city->tolerance_rayon])
-                            ->orderBy('distance', 'ASC')
-                            ->limit(10)
-                            ->get();
+        $departement = Departement::with(['cities' => function ($query) {
+            $query->withWhereHas('produits');
+        }])
+                ->where('slug', $departement->slug)
+                ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count'])
+                ->first();
+
+
+        $discipline = ListDiscipline::with('structureProduits')->where('slug', $discipline)
+                                    ->select(['id', 'name', 'slug', 'view_count'])
+                                    ->first();
+
+        $disciplinesSimilaires = $discipline->disciplinesSimilaires()
+            ->select('discipline_similaire_id', 'name', 'slug', 'famille')
+            ->get();
 
         $activite = StructureActivite::with([
             'structure',
@@ -91,6 +92,9 @@ class CityActiviteController extends Controller
             ->get();
 
         return Inertia::render('Structures/Activites/Show', [
+                    'departement' => $departement,
+                    'discipline' => $discipline,
+                    'disciplinesSimilaires' => $disciplinesSimilaires,
                     'structure' => $structure,
                     'familles' => $familles,
                     'listDisciplines' => $listDisciplines,
@@ -98,9 +102,8 @@ class CityActiviteController extends Controller
                     'logoUrl' => $logoUrl,
                     'activite' => $activite,
                     'criteres' => $criteres,
-                    'city' => $city,
-                    'citiesAround' => $citiesAround,
                     'activiteSimilaires' => $activiteSimilaires
         ]);
+
     }
 }

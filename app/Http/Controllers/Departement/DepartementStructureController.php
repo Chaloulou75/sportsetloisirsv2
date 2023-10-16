@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Departement;
 
 use App\Models\City;
 use Inertia\Inertia;
@@ -10,19 +10,22 @@ use App\Models\Departement;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
 
-class CityDisciplineStructuretypeStructureController extends Controller
+class DepartementStructureController extends Controller
 {
     /**
-      * Display the specified resource.
-      */
-    public function show(City $city, $discipline, $structuretype, $structure)
+     * Display the specified resource.
+     */
+    public function show(Departement $departement, $structure)
     {
-        $departement = request()->departement;
+        $discipline = request()->discipline;
+        $city = request()->city;
         $category = request()->category;
+        $structuretype = request()->structuretype;
 
 
         $familles = Famille::withProducts()->get();
@@ -67,7 +70,7 @@ class CityDisciplineStructuretypeStructureController extends Controller
                             $query->has('produits')->with(['produits', 'produits.adresse']);
                         }])
                                         ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count', 'latitude', 'longitude'])
-                                        ->where('slug', $departement)
+                                        ->where('slug', $departement->slug)
                                         ->withCount('structures')
                                         ->first();
 
@@ -167,4 +170,5 @@ class CityDisciplineStructuretypeStructureController extends Controller
             'disciplinesSimilaires' => $disciplinesSimilaires,
         ]);
     }
+
 }

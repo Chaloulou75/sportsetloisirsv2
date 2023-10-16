@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\City;
 
 use App\Models\City;
-use App\Models\Departement;
 use Inertia\Inertia;
 use App\Models\Famille;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use App\Models\StructureActivite;
+use App\Http\Controllers\Controller;
 use App\Models\LienDisciplineCategorieCritere;
 
-class DepartementDisciplineStructuretypeActiviteController extends Controller
+class CityDisciplineStructuretypeActiviteController extends Controller
 {
-    public function show(Departement $departement, $discipline, $structuretype, $activite, ?string $produit = null)
+    public function show(City $city, $discipline, $structuretype, $activite, ?string $produit = null)
     {
 
         $familles = Famille::withProducts()->get();
@@ -21,21 +21,28 @@ class DepartementDisciplineStructuretypeActiviteController extends Controller
         $allCities = City::withProducts()->get();
 
 
-        $departement = Departement::with(['cities' => function ($query) {
-            $query->withWhereHas('produits');
-        }])
-                ->where('slug', $departement->slug)
-                ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count'])
-                ->first();
+        $city = City::with([
+                        'structures',
+                        'produits',
+                        'produits.adresse'
+                    ])
+                    ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
+                    ->where('slug', $city->slug)
+                    ->withCount('structures')
+                    ->first();
 
+        $citiesAround = City::with('structures', 'produits', 'produits.adresse')
+                            ->select('id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
+                            ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
+                            ->where('id', '!=', $city->id)
+                            ->havingRaw('distance <= ?', [$city->tolerance_rayon])
+                            ->orderBy('distance', 'ASC')
+                            ->limit(10)
+                            ->get();
 
-        $discipline = ListDiscipline::with('structureProduits')->where('slug', $discipline)
-                                    ->select(['id', 'name', 'slug', 'view_count'])
-                                    ->first();
-
-        $disciplinesSimilaires = $discipline->disciplinesSimilaires()
-            ->select('discipline_similaire_id', 'name', 'slug', 'famille')
-            ->get();
+        $discipline = ListDiscipline::where('slug', $discipline)
+                                                ->select(['id', 'name', 'slug', 'view_count'])
+                                                ->first();
 
         $activite = StructureActivite::with([
             'structure',
@@ -91,9 +98,6 @@ class DepartementDisciplineStructuretypeActiviteController extends Controller
             ->get();
 
         return Inertia::render('Structures/Activites/Show', [
-                    'departement' => $departement,
-                    'discipline' => $discipline,
-                    'disciplinesSimilaires' => $disciplinesSimilaires,
                     'structure' => $structure,
                     'familles' => $familles,
                     'listDisciplines' => $listDisciplines,
@@ -101,8 +105,10 @@ class DepartementDisciplineStructuretypeActiviteController extends Controller
                     'logoUrl' => $logoUrl,
                     'activite' => $activite,
                     'criteres' => $criteres,
+                    'city' => $city,
+                    'citiesAround' => $citiesAround,
+                    'discipline' => $discipline,
                     'activiteSimilaires' => $activiteSimilaires
         ]);
-
     }
 }
