@@ -235,6 +235,7 @@ const updateValeur = (valeur) => {
         {
             valeur: valeurForm.value[valeur.id].valeur,
             id: valeurForm.value[valeur.id].id,
+            discipline_id: props.discipline.id,
         },
         {
             preserveScroll: true,

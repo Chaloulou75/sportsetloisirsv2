@@ -6,6 +6,7 @@ use App\Models\LienDisciplineCategorieCritere;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\LienDisciplineCategorieCritereValeur;
+use App\Models\ListDiscipline;
 
 class CategoryDisciplineCritereValeurController extends Controller
 {
@@ -38,15 +39,17 @@ class CategoryDisciplineCritereValeurController extends Controller
         $request->validate([
             'valeur' => ['required', 'string', 'max:255'],
             'id' => ['required', Rule::exists('liens_disciplines_categories_criteres_valeurs', 'id')],
+            'discipline_id' => ['required', Rule::exists('liste_disciplines', 'id')],
         ]);
 
-        $discipline = $lienDisCatCritValeur->discipline;
+        $disciplineId = $request->discipline_id;
+        $discipline = ListDiscipline::find($disciplineId);
 
         $lienDisCatCritValeur = LienDisciplineCategorieCritereValeur::where('id', $lienDisCatCritValeur->id)->firstOrFail();
 
         $lienDisCatCritValeur->update(['valeur' => $request->valeur]);
 
-        return to_route('admin.edit', $discipline)->with('success', 'Valeur du critère modifiée');
+        return to_route('admin.edit', ['discipline' => $discipline->slug])->with('success', 'Valeur du critère modifiée');
 
     }
 
@@ -55,8 +58,10 @@ class CategoryDisciplineCritereValeurController extends Controller
      */
     public function destroy(LienDisciplineCategorieCritereValeur $lienDisCatCritValeur)
     {
-        $discipline = $lienDisCatCritValeur->discipline;
-        $valeur = LienDisciplineCategorieCritereValeur::where('id', $lienDisCatCritValeur->id)->firstOrFail();
+        $valeur = LienDisciplineCategorieCritereValeur::with(['critere', 'critere.discipline'])->where('id', $lienDisCatCritValeur->id)->firstOrFail();
+
+        $discipline = $valeur->critere->discipline->slug;
+
         $valeur->delete();
 
         return to_route('admin.edit', $discipline)->with('success', 'Valeur supprimée');

@@ -308,7 +308,6 @@ class ProductReservationController extends Controller
                         ]);
             //email annulée
             return to_route('structures.gestion.reservations.index', $structure)->with('success', 'Réservation annulée.');
-
         }
 
         // envoie email à l'user et la structure

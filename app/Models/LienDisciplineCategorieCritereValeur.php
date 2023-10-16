@@ -21,16 +21,16 @@ class LienDisciplineCategorieCritereValeur extends Model
 
     public function critere(): BelongsTo
     {
-        return $this->belongsTo(LienDisciplineCategorieCritere::class, 'critere_id');
+        return $this->belongsTo(LienDisciplineCategorieCritere::class, 'discipline_categorie_critere_id');
     }
 
-    public function discipline(): BelongsTo
-    {
-        return $this->belongsTo(LienDisciplineCategorieCritere::class, 'discipline_id');
-    }
+    // public function discipline(): BelongsTo
+    // {
+    //     return $this->belongsTo(LienDisciplineCategorieCritere::class, 'discipline_id');
+    // }
 
-    public function categorie(): BelongsTo
-    {
-        return $this->belongsTo(LienDisciplineCategorieCritere::class, 'categorie_id');
-    }
+    // public function categorie(): BelongsTo
+    // {
+    //     return $this->belongsTo(LienDisciplineCategorieCritere::class, 'categorie_id');
+    // }
 }
