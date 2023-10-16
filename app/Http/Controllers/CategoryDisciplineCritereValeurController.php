@@ -39,17 +39,15 @@ class CategoryDisciplineCritereValeurController extends Controller
         $request->validate([
             'valeur' => ['required', 'string', 'max:255'],
             'id' => ['required', Rule::exists('liens_disciplines_categories_criteres_valeurs', 'id')],
-            'discipline_id' => ['required', Rule::exists('liste_disciplines', 'id')],
         ]);
 
-        $disciplineId = $request->discipline_id;
-        $discipline = ListDiscipline::find($disciplineId);
+        $lienDisCatCritValeur = LienDisciplineCategorieCritereValeur::with(['critere.discipline'])->where('id', $lienDisCatCritValeur->id)->firstOrFail();
 
-        $lienDisCatCritValeur = LienDisciplineCategorieCritereValeur::where('id', $lienDisCatCritValeur->id)->firstOrFail();
+        $discipline = $lienDisCatCritValeur->critere->discipline->slug;
 
         $lienDisCatCritValeur->update(['valeur' => $request->valeur]);
 
-        return to_route('admin.edit', ['discipline' => $discipline->slug])->with('success', 'Valeur du critère modifiée');
+        return to_route('admin.edit', $discipline)->with('success', 'Valeur du critère modifiée');
 
     }
 
