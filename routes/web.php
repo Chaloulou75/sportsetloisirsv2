@@ -24,6 +24,7 @@ use App\Http\Controllers\StructureDisciplineController;
 use App\Http\Controllers\StructureStatistiqueController;
 use App\Http\Controllers\StructureActiviteProduitController;
 use App\Http\Controllers\CategoryDisciplineCritereController;
+use App\Http\Controllers\Discipline\CategoryDisciplineController;
 use App\Http\Controllers\CategoryDisciplineCritereValeurController;
 
 /*

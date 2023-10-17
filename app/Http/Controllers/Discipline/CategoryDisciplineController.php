@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Models\Famille;
 use App\Models\Categorie;
 use App\Models\Structure;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
@@ -115,7 +116,15 @@ class CategoryDisciplineController extends Controller
 
         $categorieNotInId = $request->input('categorieNotIn');
         $categorieNotIn = Categorie::findOrFail($categorieNotInId);
-        $discipline->categories()->attach($categorieNotIn);
+        $discipline->categories()->attach($categorieNotIn, [
+            'slug' => Str::slug($categorieNotIn->nom),
+            'nom_categorie_client' => $categorieNotIn->nom,
+            'nom_categorie_pro' => $categorieNotIn->nom,
+        ]);
+
+        $attached = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('categorie_id', $categorieNotIn->id)->first();
+
+        $attached->update(['slug' => $attached->slug . '-' . $attached->id]);
 
         return to_route('admin.edit', $discipline)->with('success', 'Catégorie ajoutée');
     }
@@ -165,12 +174,14 @@ class CategoryDisciplineController extends Controller
             'id' => ['required', Rule::exists('liens_disciplines_categories', 'id')],
         ]);
 
-        $categorieDiscipline = LienDisciplineCategorie::where('id', $request->id)->firstOrFail();
+        $categorieDiscipline = LienDisciplineCategorie::findOrFail($request->id);
 
         $categorieDiscipline->update([
+            'slug' => Str::slug($request->nom_categorie_client) . '-' . $categorieDiscipline->id,
             'nom_categorie_client' => $request->nom_categorie_client,
             'nom_categorie_pro' => $request->nom_categorie_pro,
         ]);
+
         return to_route('admin.edit', $discipline)->with('success', 'Catégorie mise à jour');
     }
 }

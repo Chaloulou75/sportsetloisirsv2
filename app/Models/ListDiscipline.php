@@ -37,9 +37,9 @@ class ListDiscipline extends Model
     {
         $query->when(
             $filters['search'] ?? false,
-            fn ($query, $search) =>
+            fn($query, $search) =>
             $query->where(
-                fn ($query) =>
+                fn($query) =>
                 $query->where('name', 'like', '%' . $search . '%')
                     ->orWhere('slug', 'like', '%' . $search . '%')
             )
@@ -53,7 +53,7 @@ class ListDiscipline extends Model
 
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(Categorie::class, 'liens_disciplines_categories', 'discipline_id', 'categorie_id')->withPivot('nom_categorie_pro', 'nom_categorie_client');
+        return $this->belongsToMany(Categorie::class, 'liens_disciplines_categories', 'discipline_id', 'categorie_id')->withPivot('slug', 'nom_categorie_pro', 'nom_categorie_client');
     }
 
     public function structures(): BelongsToMany

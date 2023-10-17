@@ -177,14 +177,15 @@ const updateCategorie = (index) => {
             discipline: props.discipline,
         }),
         {
-            nom_categorie_client: categorieForms[index].nom_categorie_client,
-            nom_categorie_pro: categorieForms[index].nom_categorie_pro,
+            nom_categorie_client:
+                categorieForms.value[index].nom_categorie_client,
+            nom_categorie_pro: categorieForms.value[index].nom_categorie_pro,
             id: props.categories[index].id,
         },
         {
             preserveScroll: true,
             onSuccess: () => {
-                categorieForms.reset();
+                categorieForm.reset();
             },
         }
     );
