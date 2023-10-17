@@ -474,7 +474,10 @@ const showStructuresTypes = () => {
                 "
                 class="relative flex w-full items-center justify-center border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
                 :class="[
-                    route().current('villes.disciplines.categories.show') &&
+                    (route().current('villes.disciplines.categories.show') ||
+                        route().current(
+                            'villes.disciplines.categories.structures.show'
+                        )) &&
                     category.id === categorie.id
                         ? 'bg-blue-400 text-white'
                         : '',
@@ -557,7 +560,12 @@ const showStructuresTypes = () => {
                 "
                 class="relative w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-sky-700 focus:text-white focus:outline-none"
                 :class="[
-                    route().current('villes.disciplines.structuretypes.show') &&
+                    (route().current(
+                        'villes.disciplines.structuretypes.show'
+                    ) ||
+                        route().current(
+                            'villes.disciplines.structuretypes.structures.show'
+                        )) &&
                     structureType.id === structuretypeElected.id
                         ? ' bg-sky-700 text-white'
                         : '',
@@ -928,9 +936,13 @@ const showStructuresTypes = () => {
                 "
                 class="relative flex w-full items-center justify-center border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
                 :class="[
-                    route().current(
+                    (route().current(
                         'departements.disciplines.categories.show'
-                    ) && category.id === categorie.id
+                    ) ||
+                        route().current(
+                            'departements.disciplines.categories.structures.show'
+                        )) &&
+                    category.id === categorie.id
                         ? 'bg-blue-400 text-white'
                         : '',
                 ]"
@@ -1017,9 +1029,13 @@ const showStructuresTypes = () => {
                 "
                 class="relative w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-sky-700 focus:text-white focus:outline-none"
                 :class="[
-                    route().current(
+                    (route().current(
                         'departements.disciplines.structuretypes.show'
-                    ) && structureType.id === structuretypeElected.id
+                    ) ||
+                        route().current(
+                            'departements.disciplines.structuretypes.structures.show'
+                        )) &&
+                    structureType.id === structuretypeElected.id
                         ? ' bg-sky-700 text-white'
                         : '',
                 ]"
@@ -1168,7 +1184,10 @@ const showStructuresTypes = () => {
                 "
                 class="relative flex w-full items-center justify-center border-b-8 border-blue-400 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-400 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
                 :class="[
-                    route().current('disciplines.categories.show') &&
+                    (route().current('disciplines.categories.show') ||
+                        route().current(
+                            'disciplines.categories.structures.show'
+                        )) &&
                     category.id === categorie.id
                         ? 'bg-blue-400 text-white'
                         : '',
@@ -1445,7 +1464,10 @@ const showStructuresTypes = () => {
                 "
                 class="relative w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-sky-700 focus:text-white focus:outline-none"
                 :class="[
-                    route().current('disciplines.structuretypes.show') &&
+                    (route().current('disciplines.structuretypes.show') ||
+                        route().current(
+                            'disciplines.structuretypes.structures.show'
+                        )) &&
                     structureType.id === structuretypeElected.id
                         ? ' bg-sky-700 text-white'
                         : '',

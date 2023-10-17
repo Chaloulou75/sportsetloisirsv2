@@ -4,6 +4,7 @@ import { Head, Link } from "@inertiajs/vue3";
 import { ref, reactive, computed } from "vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
+import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
 import LeafletMap from "@/Components/LeafletMap.vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
@@ -43,7 +44,8 @@ const props = defineProps({
     citiesAround: Object,
     requestCategory: Object,
     categories: Object,
-    categoriesWithoutProduit: Object,
+    firstCategories: Object,
+    categoriesNotInFirst: Object,
     allStructureTypes: Object,
     structuretypeElected: Object,
     criteres: Object,
@@ -319,14 +321,42 @@ const events = getEvents();
                                 <Link
                                     preserve-scroll
                                     :href="
-                                        route(
-                                            'disciplines.show',
-                                            requestCategory.slug
-                                        )
+                                        route('disciplines.categories.show', {
+                                            discipline: requestDiscipline.slug,
+                                            category: requestCategory.slug,
+                                        })
                                     "
                                     class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     {{ requestCategory.nom_categorie_client }}
+                                </Link>
+                            </li>
+
+                            <li
+                                v-if="structuretypeElected"
+                                class="relative flex items-center"
+                            >
+                                <span
+                                    class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
+                                >
+                                </span>
+
+                                <Link
+                                    preserve-scroll
+                                    :href="
+                                        route(
+                                            'disciplines.structuretypes.show',
+                                            {
+                                                discipline:
+                                                    requestDiscipline.slug,
+                                                structuretype:
+                                                    structuretypeElected.id,
+                                            }
+                                        )
+                                    "
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                                >
+                                    {{ structuretypeElected.name }}
                                 </Link>
                             </li>
 
@@ -351,390 +381,426 @@ const events = getEvents();
                 </template>
             </ResultsHeader>
         </template>
-
-        <section
-            class="mx-auto max-w-full px-0 py-2 sm:px-4 md:my-4 md:py-6 lg:px-8"
-        >
+        <template #default>
             <div
-                class="flex flex-col-reverse justify-between rounded-lg bg-white px-4 shadow md:flex-row md:space-x-6 md:py-6"
+                class="sticky left-0 right-0 top-16 z-[1199] bg-transparent backdrop-blur-md"
+                ref="categoriesEl"
+                v-if="categories && categories.length > 0"
             >
-                <div class="w-full space-y-12 md:w-1/3">
-                    <div class="my-4 flex items-center justify-center md:mb-8">
-                        <h3 class="text-base font-semibold uppercase">
-                            Coordonnées de la structure
-                        </h3>
-                    </div>
-                    <div class="flex flex-col space-y-3">
-                        <h3 class="text-base">
-                            Localisation:
-                            <span class="font-semibold">
-                                {{ structure.adresses[0].city }},
-                                {{ structure.adresses[0].zip_code }}
-                            </span>
-                        </h3>
-                        <LeafletMap :item="structure" />
-                    </div>
-                    <div
-                        class="flex w-full flex-col space-y-3 rounded-md bg-indigo-100 px-2 py-4 text-slate-800"
-                    >
-                        <h3 class="text-center text-base font-semibold">
-                            Contact
-                        </h3>
+                <CategoriesResultNavigation
+                    :city="city"
+                    :departement="departement"
+                    :discipline="requestDiscipline"
+                    :allStructureTypes="allStructureTypes"
+                    :categories="categories"
+                    :firstCategories="firstCategories"
+                    :categoriesNotInFirst="categoriesNotInFirst"
+                    :category="requestCategory"
+                    :structuretypeElected="structuretypeElected"
+                />
+            </div>
+            <section
+                class="mx-auto max-w-full px-0 py-2 sm:px-4 md:my-4 md:py-6 lg:px-8"
+            >
+                <div
+                    class="flex flex-col-reverse justify-between rounded-lg bg-white px-4 shadow md:flex-row md:space-x-6 md:py-6"
+                >
+                    <div class="w-full space-y-12 md:w-1/3">
+                        <div
+                            class="my-4 flex items-center justify-center md:mb-8"
+                        >
+                            <h3 class="text-base font-semibold uppercase">
+                                Coordonnées de la structure
+                            </h3>
+                        </div>
+                        <div class="flex flex-col space-y-3">
+                            <h3 class="text-base">
+                                Localisation:
+                                <span class="font-semibold">
+                                    {{ structure.adresses[0].city }},
+                                    {{ structure.adresses[0].zip_code }}
+                                </span>
+                            </h3>
+                            <LeafletMap :item="structure" />
+                        </div>
+                        <div
+                            class="flex w-full flex-col space-y-3 rounded-md bg-indigo-100 px-2 py-4 text-slate-800"
+                        >
+                            <h3 class="text-center text-base font-semibold">
+                                Contact
+                            </h3>
 
-                        <p class="text-base font-semibold text-gray-700">
-                            <UserIcon class="inline-block h-4 w-4" />
-                            {{ structure.creator.name }}
-                        </p>
-                        <p
-                            v-if="structure.website"
-                            class="text-base font-medium text-gray-700"
-                        >
-                            <GlobeAltIcon class="mr-1.5 inline-block h-4 w-4" />
-                            Site web:
-                            <a
-                                :href="structure.website"
-                                target="_blank"
-                                class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
+                            <p class="text-base font-semibold text-gray-700">
+                                <UserIcon class="inline-block h-4 w-4" />
+                                {{ structure.creator.name }}
+                            </p>
+                            <p
+                                v-if="structure.website"
+                                class="text-base font-medium text-gray-700"
                             >
-                                {{ structure.website }}
-                            </a>
-                        </p>
-                        <p
-                            v-if="structure.facebook"
-                            class="text-base font-medium text-gray-700"
-                        >
-                            <GlobeAltIcon class="mr-1.5 inline-block h-4 w-4" />
-                            Facebook:
-                            <a
-                                :href="structure.facebook"
-                                target="_blank"
-                                class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
+                                <GlobeAltIcon
+                                    class="mr-1.5 inline-block h-4 w-4"
+                                />
+                                Site web:
+                                <a
+                                    :href="structure.website"
+                                    target="_blank"
+                                    class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
+                                >
+                                    {{ structure.website }}
+                                </a>
+                            </p>
+                            <p
+                                v-if="structure.facebook"
+                                class="text-base font-medium text-gray-700"
                             >
-                                {{ structure.facebook }}
-                            </a>
-                        </p>
-                        <p
-                            v-if="structure.instagram"
-                            class="text-base font-medium text-gray-700"
-                        >
-                            <GlobeAltIcon class="mr-1.5 inline-block h-4 w-4" />
-                            Instagram:
-                            <a
-                                :href="structure.instagram"
-                                target="_blank"
-                                class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
+                                <GlobeAltIcon
+                                    class="mr-1.5 inline-block h-4 w-4"
+                                />
+                                Facebook:
+                                <a
+                                    :href="structure.facebook"
+                                    target="_blank"
+                                    class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
+                                >
+                                    {{ structure.facebook }}
+                                </a>
+                            </p>
+                            <p
+                                v-if="structure.instagram"
+                                class="text-base font-medium text-gray-700"
                             >
-                                {{ structure.instagram }}
-                            </a>
-                        </p>
-                        <p
-                            v-if="structure.youtube"
-                            class="text-base font-medium text-gray-700"
-                        >
-                            <GlobeAltIcon class="mr-1.5 inline-block h-4 w-4" />
-                            Youtube:
-                            <a
-                                :href="structure.youtube"
-                                target="_blank"
-                                class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
+                                <GlobeAltIcon
+                                    class="mr-1.5 inline-block h-4 w-4"
+                                />
+                                Instagram:
+                                <a
+                                    :href="structure.instagram"
+                                    target="_blank"
+                                    class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
+                                >
+                                    {{ structure.instagram }}
+                                </a>
+                            </p>
+                            <p
+                                v-if="structure.youtube"
+                                class="text-base font-medium text-gray-700"
                             >
-                                {{ structure.youtube }}
-                            </a>
-                        </p>
+                                <GlobeAltIcon
+                                    class="mr-1.5 inline-block h-4 w-4"
+                                />
+                                Youtube:
+                                <a
+                                    :href="structure.youtube"
+                                    target="_blank"
+                                    class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
+                                >
+                                    {{ structure.youtube }}
+                                </a>
+                            </p>
 
-                        <p
-                            v-if="structure.phone1"
-                            class="text-base font-medium text-gray-700"
-                        >
-                            <PhoneIcon class="inline-block h-4 w-4" />
-                            <a
-                                :href="`tel:${structure.phone1}`"
-                                target="_blank"
-                                class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
+                            <p
+                                v-if="structure.phone1"
+                                class="text-base font-medium text-gray-700"
                             >
-                                {{ formatPhoneNumber(structure.phone1) }}
-                            </a>
-                        </p>
-                        <p
-                            v-if="structure.email"
-                            class="text-base font-medium text-gray-700"
-                        >
-                            <AtSymbolIcon class="inline-block h-4 w-4" />
-                            {{ structure.email }}
-                        </p>
+                                <PhoneIcon class="inline-block h-4 w-4" />
+                                <a
+                                    :href="`tel:${structure.phone1}`"
+                                    target="_blank"
+                                    class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
+                                >
+                                    {{ formatPhoneNumber(structure.phone1) }}
+                                </a>
+                            </p>
+                            <p
+                                v-if="structure.email"
+                                class="text-base font-medium text-gray-700"
+                            >
+                                <AtSymbolIcon class="inline-block h-4 w-4" />
+                                {{ structure.email }}
+                            </p>
+                        </div>
                     </div>
-                </div>
-                <div class="w-full space-y-12 md:w-2/3 md:pr-10">
-                    <!-- titre -->
-                    <div class="relative mb-4 md:mb-6">
-                        <p
-                            class="mb-2 text-right text-sm font-medium uppercase tracking-wider text-gray-500 md:text-base"
-                        >
-                            {{ structure.structuretype.name }}
-                        </p>
-                        <h2
-                            class="text-center text-xl font-semibold text-black sm:text-2xl sm:leading-7 md:text-3xl"
-                        >
-                            {{ structure.name }}
-                        </h2>
+                    <div class="w-full space-y-12 md:w-2/3 md:pr-10">
+                        <!-- titre -->
+                        <div class="relative mb-4 md:mb-6">
+                            <p
+                                class="mb-2 text-right text-sm font-medium uppercase tracking-wider text-gray-500 md:text-base"
+                            >
+                                {{ structure.structuretype.name }}
+                            </p>
+                            <h2
+                                class="text-center text-xl font-semibold text-black sm:text-2xl sm:leading-7 md:text-3xl"
+                            >
+                                {{ structure.name }}
+                            </h2>
 
-                        <!-- <div v-if="structure.logo">
+                            <!-- <div v-if="structure.logo">
                                 <img
                                     alt="img"
                                     :src="structure.logo"
                                     class="h-14 w-14 shrink-0 rounded-full object-cover object-center md:h-20 md:w-20"
                                 />
                             </div> -->
-                    </div>
-                    <!-- Resume -->
-                    <div>
-                        <p
-                            v-if="structure.presentation_longue"
-                            class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
-                        >
-                            {{ structure.presentation_longue }}
-                        </p>
-                        <p
-                            v-else
-                            class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
-                        >
-                            {{ structure.presentation_courte }}
-                        </p>
-                    </div>
-                    <!-- Disciplines -->
-                    <div>
-                        <h3 class="my-4 text-lg font-semibold text-gray-700">
-                            Les disciplines proposées:
-                        </h3>
-                        <div
-                            class="grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3 lg:grid-cols-4 lg:gap-6"
-                        >
-                            <button
-                                v-for="discipline in uniqueDisciplines"
-                                :key="discipline.id"
-                                @click="handleDisciplineClick(discipline)"
-                                :class="[
-                                    'rounded border border-gray-100 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500',
-                                    selectedDiscipline &&
-                                    selectedDiscipline.id === discipline.id
-                                        ? 'border-gray-100 bg-indigo-500 text-white'
-                                        : '',
-                                ]"
-                            >
-                                {{ discipline.name }}
-                            </button>
                         </div>
-                    </div>
-                    <!-- Categories -->
-                    <div>
-                        <h3
-                            v-if="selectedDiscipline"
-                            class="my-4 text-lg font-semibold text-gray-700"
-                        >
-                            Les catégories proposées pour
-                            <span class="text-indigo-500">{{
-                                selectedDiscipline.name
-                            }}</span>
-                            :
-                        </h3>
-                        <div
-                            v-if="selectedDiscipline"
-                            class="grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3 lg:grid-cols-4 lg:gap-6"
-                        >
-                            <button
-                                v-for="categorie in filteredCategories"
-                                :key="categorie.id"
-                                @click="handleCategoryClick(categorie)"
-                                :class="[
-                                    'rounded border border-gray-100 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500',
-                                    selectedCategory &&
-                                    selectedCategory.id === categorie.id
-                                        ? 'border-gray-100 bg-indigo-500 text-white'
-                                        : '',
-                                ]"
+                        <!-- Resume -->
+                        <div>
+                            <p
+                                v-if="structure.presentation_longue"
+                                class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
                             >
-                                {{ categorie.nom_categorie_client }}
-                            </button>
+                                {{ structure.presentation_longue }}
+                            </p>
+                            <p
+                                v-else
+                                class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
+                            >
+                                {{ structure.presentation_courte }}
+                            </p>
                         </div>
-                    </div>
-                    <!-- Filters -->
-                    <div>
-                        <h3
-                            v-if="selectedCategory"
-                            class="my-4 text-lg font-semibold text-gray-700"
-                        >
-                            Les activités proposées pour
-                            <span class="text-indigo-500">{{
-                                selectedCategory.nom_categorie_client
-                            }}</span>
-                            de
-                            <span class="text-indigo-500">{{
-                                selectedDiscipline.name
-                            }}</span
-                            >:
-                        </h3>
-
-                        <div
-                            v-if="selectedCategory"
-                            class="my-6 grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3"
-                        >
-                            <Listbox
-                                v-for="critere in filteredCriteres"
-                                :key="critere.id"
-                                class="w-full"
-                                v-model="selectedCriteres[critere.id]"
+                        <!-- Disciplines -->
+                        <div>
+                            <h3
+                                class="my-4 text-lg font-semibold text-gray-700"
                             >
-                                <div class="relative mt-1">
-                                    <label
-                                        :for="critere.nom"
-                                        class="block text-sm font-medium text-gray-700"
-                                    >
-                                        {{ critere.nom }}:
-                                    </label>
-                                    <ListboxButton
-                                        class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
-                                    >
-                                        <span class="block truncate">
-                                            {{
-                                                selectedCriteres[critere.id]
-                                                    .valeur
-                                            }}
-                                        </span>
-                                        <span
-                                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
-                                        >
-                                            <ChevronUpDownIcon
-                                                class="h-5 w-5 text-gray-400"
-                                                aria-hidden="true"
-                                            />
-                                        </span>
-                                    </ListboxButton>
+                                Les disciplines proposées:
+                            </h3>
+                            <div
+                                class="grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3 lg:grid-cols-4 lg:gap-6"
+                            >
+                                <button
+                                    v-for="discipline in uniqueDisciplines"
+                                    :key="discipline.id"
+                                    @click="handleDisciplineClick(discipline)"
+                                    :class="[
+                                        'rounded border border-gray-100 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500',
+                                        selectedDiscipline &&
+                                        selectedDiscipline.id === discipline.id
+                                            ? 'border-gray-100 bg-indigo-500 text-white'
+                                            : '',
+                                    ]"
+                                >
+                                    {{ discipline.name }}
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Categories -->
+                        <div>
+                            <h3
+                                v-if="selectedDiscipline"
+                                class="my-4 text-lg font-semibold text-gray-700"
+                            >
+                                Les catégories proposées pour
+                                <span class="text-indigo-500">{{
+                                    selectedDiscipline.name
+                                }}</span>
+                                :
+                            </h3>
+                            <div
+                                v-if="selectedDiscipline"
+                                class="grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3 lg:grid-cols-4 lg:gap-6"
+                            >
+                                <button
+                                    v-for="categorie in filteredCategories"
+                                    :key="categorie.id"
+                                    @click="handleCategoryClick(categorie)"
+                                    :class="[
+                                        'rounded border border-gray-100 px-6 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500',
+                                        selectedCategory &&
+                                        selectedCategory.id === categorie.id
+                                            ? 'border-gray-100 bg-indigo-500 text-white'
+                                            : '',
+                                    ]"
+                                >
+                                    {{ categorie.nom_categorie_client }}
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Filters -->
+                        <div>
+                            <h3
+                                v-if="selectedCategory"
+                                class="my-4 text-lg font-semibold text-gray-700"
+                            >
+                                Les activités proposées pour
+                                <span class="text-indigo-500">{{
+                                    selectedCategory.nom_categorie_client
+                                }}</span>
+                                de
+                                <span class="text-indigo-500">{{
+                                    selectedDiscipline.name
+                                }}</span
+                                >:
+                            </h3>
 
-                                    <transition
-                                        leave-active-class="transition duration-100 ease-in"
-                                        leave-from-class="opacity-100"
-                                        leave-to-class="opacity-0"
-                                    >
-                                        <ListboxOptions
-                                            class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                            <div
+                                v-if="selectedCategory"
+                                class="my-6 grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3"
+                            >
+                                <Listbox
+                                    v-for="critere in filteredCriteres"
+                                    :key="critere.id"
+                                    class="w-full"
+                                    v-model="selectedCriteres[critere.id]"
+                                >
+                                    <div class="relative mt-1">
+                                        <label
+                                            :for="critere.nom"
+                                            class="block text-sm font-medium text-gray-700"
                                         >
-                                            <ListboxOption
-                                                v-slot="{ active, selected }"
-                                                v-for="critereValue in critere.valeurs"
-                                                :key="critereValue.id"
-                                                :value="critereValue"
-                                                as="template"
+                                            {{ critere.nom }}:
+                                        </label>
+                                        <ListboxButton
+                                            class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                                        >
+                                            <span class="block truncate">
+                                                {{
+                                                    selectedCriteres[critere.id]
+                                                        .valeur
+                                                }}
+                                            </span>
+                                            <span
+                                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
                                             >
-                                                <li
-                                                    :class="[
-                                                        active
-                                                            ? 'bg-amber-100 text-amber-900'
-                                                            : 'text-gray-900',
-                                                        'relative cursor-default select-none py-2 pl-10 pr-4',
-                                                    ]"
-                                                >
-                                                    <span
-                                                        :class="[
-                                                            selected
-                                                                ? 'font-medium'
-                                                                : 'font-normal',
-                                                            'block truncate',
-                                                        ]"
-                                                        >{{
-                                                            critereValue.valeur
-                                                        }}</span
-                                                    >
-                                                    <span
-                                                        v-if="selected"
-                                                        class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
-                                                    >
-                                                        <CheckCircleIcon
-                                                            class="h-5 w-5"
-                                                            aria-hidden="true"
-                                                        />
-                                                    </span>
-                                                </li>
-                                            </ListboxOption>
-                                        </ListboxOptions>
-                                    </transition>
-                                </div>
-                            </Listbox>
-                        </div>
-                    </div>
+                                                <ChevronUpDownIcon
+                                                    class="h-5 w-5 text-gray-400"
+                                                    aria-hidden="true"
+                                                />
+                                            </span>
+                                        </ListboxButton>
 
-                    <TabGroup v-if="selectedCategory">
-                        <TabList
-                            class="flex space-x-1 rounded-xl bg-sky-700 p-1"
-                        >
-                            <Tab as="template" v-slot="{ selected }">
-                                <button
-                                    :class="[
-                                        'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-100',
-                                        'ring-white ring-opacity-60 ring-offset-1 ring-offset-blue-400 focus:outline-none focus:ring-2',
-                                        selected
-                                            ? 'bg-white text-sky-700 shadow'
-                                            : 'text-blue-100 hover:bg-white/[0.12] hover:text-white',
-                                    ]"
-                                >
-                                    Activités
-                                </button>
-                            </Tab>
-                            <Tab as="template" v-slot="{ selected }">
-                                <button
-                                    :class="[
-                                        'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-100',
-                                        'ring-white ring-opacity-60 ring-offset-1 ring-offset-blue-400 focus:outline-none focus:ring-2',
-                                        selected
-                                            ? 'bg-white text-sky-700 shadow'
-                                            : 'text-blue-100 hover:bg-white/[0.12] hover:text-white',
-                                    ]"
-                                >
-                                    Planning
-                                </button>
-                            </Tab>
-                        </TabList>
-                        <TabPanels class="mt-2">
-                            <!-- Activites Cards -->
-                            <TabPanel>
-                                <div
-                                    v-if="selectedCategory"
-                                    class="my-6 grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3"
-                                >
-                                    <ActiviteCard
-                                        v-for="activite in filteredActivitesWithCriteres"
-                                        :key="activite.id"
-                                        :activite="activite"
-                                        :link="
-                                            route('structures.activites.show', {
-                                                activite: activite.id,
-                                            })
-                                        "
-                                    /></div
-                            ></TabPanel>
-                            <!-- Planning -->
-                            <TabPanel>
-                                <div
-                                    v-if="selectedCategory"
-                                    class="mt-6 min-h-full w-full overflow-x-auto rounded-sm shadow-lg"
-                                >
-                                    <vue-cal
-                                        small
-                                        :time-from="6 * 60"
-                                        :time-to="24 * 60"
-                                        :time-step="30"
-                                        locale="fr"
-                                        :snap-to-time="15"
-                                        :disable-views="['years', 'year']"
-                                        :cell-click-hold="false"
-                                        :events="getEvents()"
-                                    />
-                                </div>
-                            </TabPanel>
-                        </TabPanels>
-                    </TabGroup>
+                                        <transition
+                                            leave-active-class="transition duration-100 ease-in"
+                                            leave-from-class="opacity-100"
+                                            leave-to-class="opacity-0"
+                                        >
+                                            <ListboxOptions
+                                                class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                                            >
+                                                <ListboxOption
+                                                    v-slot="{
+                                                        active,
+                                                        selected,
+                                                    }"
+                                                    v-for="critereValue in critere.valeurs"
+                                                    :key="critereValue.id"
+                                                    :value="critereValue"
+                                                    as="template"
+                                                >
+                                                    <li
+                                                        :class="[
+                                                            active
+                                                                ? 'bg-amber-100 text-amber-900'
+                                                                : 'text-gray-900',
+                                                            'relative cursor-default select-none py-2 pl-10 pr-4',
+                                                        ]"
+                                                    >
+                                                        <span
+                                                            :class="[
+                                                                selected
+                                                                    ? 'font-medium'
+                                                                    : 'font-normal',
+                                                                'block truncate',
+                                                            ]"
+                                                            >{{
+                                                                critereValue.valeur
+                                                            }}</span
+                                                        >
+                                                        <span
+                                                            v-if="selected"
+                                                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
+                                                        >
+                                                            <CheckCircleIcon
+                                                                class="h-5 w-5"
+                                                                aria-hidden="true"
+                                                            />
+                                                        </span>
+                                                    </li>
+                                                </ListboxOption>
+                                            </ListboxOptions>
+                                        </transition>
+                                    </div>
+                                </Listbox>
+                            </div>
+                        </div>
+
+                        <TabGroup v-if="selectedCategory">
+                            <TabList
+                                class="flex space-x-1 rounded-xl bg-sky-700 p-1"
+                            >
+                                <Tab as="template" v-slot="{ selected }">
+                                    <button
+                                        :class="[
+                                            'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-100',
+                                            'ring-white ring-opacity-60 ring-offset-1 ring-offset-blue-400 focus:outline-none focus:ring-2',
+                                            selected
+                                                ? 'bg-white text-sky-700 shadow'
+                                                : 'text-blue-100 hover:bg-white/[0.12] hover:text-white',
+                                        ]"
+                                    >
+                                        Activités
+                                    </button>
+                                </Tab>
+                                <Tab as="template" v-slot="{ selected }">
+                                    <button
+                                        :class="[
+                                            'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-100',
+                                            'ring-white ring-opacity-60 ring-offset-1 ring-offset-blue-400 focus:outline-none focus:ring-2',
+                                            selected
+                                                ? 'bg-white text-sky-700 shadow'
+                                                : 'text-blue-100 hover:bg-white/[0.12] hover:text-white',
+                                        ]"
+                                    >
+                                        Planning
+                                    </button>
+                                </Tab>
+                            </TabList>
+                            <TabPanels class="mt-2">
+                                <!-- Activites Cards -->
+                                <TabPanel>
+                                    <div
+                                        v-if="selectedCategory"
+                                        class="my-6 grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3"
+                                    >
+                                        <ActiviteCard
+                                            v-for="activite in filteredActivitesWithCriteres"
+                                            :key="activite.id"
+                                            :activite="activite"
+                                            :link="
+                                                route(
+                                                    'structures.activites.show',
+                                                    {
+                                                        activite: activite.id,
+                                                    }
+                                                )
+                                            "
+                                        /></div
+                                ></TabPanel>
+                                <!-- Planning -->
+                                <TabPanel>
+                                    <div
+                                        v-if="selectedCategory"
+                                        class="mt-6 min-h-full w-full overflow-x-auto rounded-sm shadow-lg"
+                                    >
+                                        <vue-cal
+                                            small
+                                            :time-from="6 * 60"
+                                            :time-to="24 * 60"
+                                            :time-step="30"
+                                            locale="fr"
+                                            :snap-to-time="15"
+                                            :disable-views="['years', 'year']"
+                                            :cell-click-hold="false"
+                                            :events="getEvents()"
+                                        />
+                                    </div>
+                                </TabPanel>
+                            </TabPanels>
+                        </TabGroup>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </template>
     </ResultLayout>
 </template>
 

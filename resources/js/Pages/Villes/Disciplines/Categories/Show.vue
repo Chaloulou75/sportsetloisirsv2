@@ -292,6 +292,8 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                     :class="{
                         flex: showCriteres,
                         hidden: !showCriteres,
+                        'md:flex': showCriteresLg,
+                        'md:hidden': !showCriteresLg,
                     }"
                 >
                     <div

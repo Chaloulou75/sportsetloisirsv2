@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class CityDisciplineStructuretypeStructureController extends Controller
 {
@@ -22,14 +23,9 @@ class CityDisciplineStructuretypeStructureController extends Controller
       */
     public function show(City $city, $discipline, $structuretype, $structure)
     {
-        $departement = request()->departement;
-        $category = request()->category;
-
-
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
-
 
         $structure = Structure::with([
                     'creator:id,name',
@@ -61,80 +57,53 @@ class CityDisciplineStructuretypeStructureController extends Controller
 
         $logoUrl = asset($structure->logo);
 
-        if($departement !== null) {
-            $departement = Departement::with([
-                        'structures',
-                        'cities' => function ($query) {
-                            $query->has('produits')->with(['produits', 'produits.adresse']);
-                        }])
-                                        ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count', 'latitude', 'longitude'])
-                                        ->where('slug', $departement)
-                                        ->withCount('structures')
-                                        ->first();
+        $city = City::with(['structures', 'produits', 'produits.adresse'])
+                            ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
+                            ->where('slug', $city->slug)
+                            ->withCount('produits')
+                            ->first();
 
-        } else {
-            $departement = null;
-        }
+        $citiesAround = City::withWhereHas('produits')
+            ->select('id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
+            ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
+            ->where('slug', '!=', $city->slug)
+            ->havingRaw('distance <= ?', [$city->tolerance_rayon])
+            ->orderBy('distance', 'ASC')
+            ->limit(10)
+            ->get();
 
-        if ($city !== null) {
-            $city = City::with([
-                'structures',
-                'produits',
-                'produits.adresse'
-            ])
-            ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
-            ->where('slug', $city->slug)
-            ->withCount('structures')
-            ->first();
+        $cityAroundIds = $citiesAround->pluck('id');
 
-            $citiesAround = City::with('structures', 'produits', 'produits.adresse')
-                                ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
-                                ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
-                                ->where('id', '!=', $city->id)
-                                ->havingRaw('distance <= ?', [$city->tolerance_rayon])
-                                ->orderBy('distance', 'ASC')
-                                ->limit(10)
-                                ->get();
-        } else {
-            $citiesAround = null;
-        }
+        $requestDiscipline = ListDiscipline::with('structureProduits')->where('slug', $discipline)
+                            ->select(['id', 'name', 'slug', 'view_count'])
+                            ->first();
 
-        if($discipline !== null) {
+        $disciplinesSimilaires = $requestDiscipline->disciplinesSimilaires()
+                    ->select('discipline_similaire_id', 'name', 'slug', 'famille')
+                    ->get();
 
-            $requestDiscipline = ListDiscipline::where('slug', $discipline)
-                                        ->select(['id', 'name', 'slug', 'view_count'])
-                                        ->first();
-
-            $disciplinesSimilaires = $requestDiscipline->disciplinesSimilaires()->select(['famille', 'name', 'slug'])->whereHas('structures')->get();
-
-            $categories = $structure->activites->pluck('categorie')->where('discipline_id', $requestDiscipline->id);
-
-            $categoriesWithoutProduit = LienDisciplineCategorie::whereNotIn('id', $categories->pluck('id'))->where('discipline_id', $requestDiscipline->id)
+        $categories = LienDisciplineCategorie::withWhereHas('structures_produits.adresse', function (Builder $query) use ($city, $cityAroundIds) {
+            $query->where('city_id', $city->id)->orWhereIn('city_id', $cityAroundIds);
+        })
+            ->where('discipline_id', $requestDiscipline->id)
             ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
             ->get();
 
-            if($category !== null) {
-                $requestCategory = LienDisciplineCategorie::where('discipline_id', $requestDiscipline->id)->where('id', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
-            } else {
-                $requestCategory = null;
-            }
+        $firstCategories = $categories->take(4);
+        $categoriesNotInFirst = $categories->diff($firstCategories);
 
-            if($structuretype !== null) {
-                $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
-            } else {
-                $structuretypeElected = null;
-            }
+        $allStructureTypes = StructureType::whereHas('structures', function ($query) use ($requestDiscipline, $city, $cityAroundIds) {
+            $query->whereHas('produits', function ($subquery) use ($requestDiscipline, $city, $cityAroundIds) {
+                $subquery->where('discipline_id', $requestDiscipline->id)
+                        ->whereHas('adresse', function ($addressQuery) use ($city, $cityAroundIds) {
+                            $addressQuery->where('city_id', $city->id)->orWhereIn('city_id', $cityAroundIds);
+                        });
+            });
+        })
+                ->select(['id', 'name', 'slug'])
+                ->get();
 
-        } else {
-            $requestDiscipline = null;
-            $requestCategory = null;
-            $categories = null;
-            $categoriesWithoutProduit = null;
-            $disciplinesSimilaires = null;
-            $structuretypeElected = null;
-        }
-
-        $allStructureTypes = Structuretype::whereHas('structures')->select(['id', 'name', 'slug'])->get();
+        $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
 
         $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
             $query->orderBy('defaut', 'desc');
@@ -156,14 +125,13 @@ class CityDisciplineStructuretypeStructureController extends Controller
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),
             ],
-            'requestCategory' => $requestCategory,
             'categories' => $categories,
-            'categoriesWithoutProduit' => $categoriesWithoutProduit,
+            'firstCategories' => $firstCategories,
+            'categoriesNotInFirst' => $categoriesNotInFirst,
             'allStructureTypes' => $allStructureTypes,
             'structuretypeElected' => $structuretypeElected,
             'city' => $city,
             'citiesAround' => $citiesAround,
-            'departement' => $departement,
             'requestDiscipline' => $requestDiscipline,
             'disciplinesSimilaires' => $disciplinesSimilaires,
         ]);
