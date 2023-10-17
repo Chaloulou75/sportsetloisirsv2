@@ -7,10 +7,12 @@ use Inertia\Inertia;
 use App\Models\Famille;
 use App\Models\Departement;
 use Illuminate\Http\Request;
+use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Http\Controllers\Controller;
+use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
 
 class DepartementDisciplineStructuretypeActiviteController extends Controller
@@ -23,22 +25,43 @@ class DepartementDisciplineStructuretypeActiviteController extends Controller
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
+        $requestDiscipline = ListDiscipline::with('structureProduits')->where('slug', $discipline)
+                                                            ->select(['id', 'name', 'slug', 'view_count'])
+                                                            ->first();
+
+        $disciplinesSimilaires = $requestDiscipline->disciplinesSimilaires()
+            ->select('discipline_similaire_id', 'name', 'slug', 'famille')
+            ->get();
 
         $departement = Departement::with(['cities' => function ($query) {
-            $query->withWhereHas('produits');
+            $query->whereHas('produits');
         }])
                 ->where('slug', $departement->slug)
                 ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count'])
                 ->first();
 
+        $categories = LienDisciplineCategorie::whereHas('structures_produits.adresse', function ($query) use ($departement) {
+            $query->whereIn('city_id', $departement->cities->pluck('id'));
+        })
+                        ->where('discipline_id', $requestDiscipline->id)
+                        ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+                        ->get();
 
-        $discipline = ListDiscipline::with('structureProduits')->where('slug', $discipline)
-                                    ->select(['id', 'name', 'slug', 'view_count'])
-                                    ->first();
+        $firstCategories = $categories->take(4);
+        $categoriesNotInFirst = $categories->diff($firstCategories);
 
-        $disciplinesSimilaires = $discipline->disciplinesSimilaires()
-            ->select('discipline_similaire_id', 'name', 'slug', 'famille')
-            ->get();
+        $allStructureTypes = StructureType::whereHas('structures', function ($query) use ($requestDiscipline, $departement) {
+            $query->whereHas('produits', function ($subquery) use ($requestDiscipline, $departement) {
+                $subquery->where('discipline_id', $requestDiscipline->id)
+                        ->whereHas('adresse', function ($addressQuery) use ($departement) {
+                            $addressQuery->whereIn('city_id', $departement->cities->pluck('id'));
+                        });
+            });
+        })
+                        ->select(['id', 'name', 'slug'])
+                        ->get();
+        $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
+
 
         $activite = StructureActivite::with([
             'structure',
@@ -94,18 +117,23 @@ class DepartementDisciplineStructuretypeActiviteController extends Controller
             ->get();
 
         return Inertia::render('Structures/Activites/Show', [
-                    'departement' => $departement,
-                    'discipline' => $discipline,
-                    'disciplinesSimilaires' => $disciplinesSimilaires,
-                    'structure' => $structure,
-                    'familles' => $familles,
-                    'listDisciplines' => $listDisciplines,
-                    'allCities' => $allCities,
-                    'logoUrl' => $logoUrl,
-                    'activite' => $activite,
-                    'criteres' => $criteres,
-                    'activiteSimilaires' => $activiteSimilaires,
-                    'selectedProduit' => $selectedProduit,
+            'departement' => $departement,
+            'discipline' => $requestDiscipline,
+            'disciplinesSimilaires' => $disciplinesSimilaires,
+            'structure' => $structure,
+            'familles' => $familles,
+            'listDisciplines' => $listDisciplines,
+            'allCities' => $allCities,
+            'logoUrl' => $logoUrl,
+            'activite' => $activite,
+            'criteres' => $criteres,
+            'activiteSimilaires' => $activiteSimilaires,
+            'selectedProduit' => $selectedProduit,
+            'categories' => $categories,
+            'firstCategories' => $firstCategories,
+            'categoriesNotInFirst' => $categoriesNotInFirst,
+            'allStructureTypes' => $allStructureTypes,
+            'structuretypeElected' => $structuretypeElected,
         ]);
 
     }

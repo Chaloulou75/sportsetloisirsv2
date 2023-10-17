@@ -6,11 +6,13 @@ use App\Models\City;
 use Inertia\Inertia;
 use App\Models\Famille;
 use Illuminate\Http\Request;
+use App\Models\Structuretype;
 use App\Models\ListDiscipline;
+use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Http\Controllers\Controller;
+use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
-use App\Models\StructureProduit;
 
 class DisciplineActiviteController extends Controller
 {
@@ -22,13 +24,32 @@ class DisciplineActiviteController extends Controller
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
-        $discipline = ListDiscipline::with('structureProduits')->where('slug', $discipline->slug)
-                                    ->select(['id', 'name', 'slug', 'view_count'])
-                                    ->first();
+        $requestDiscipline = ListDiscipline::with('structureProduits')->where('slug', $discipline->slug)
+                            ->select(['id', 'name', 'slug', 'view_count'])
+                            ->first();
 
-        $disciplinesSimilaires = $discipline->disciplinesSimilaires()
+        $disciplinesSimilaires = $requestDiscipline->disciplinesSimilaires()
             ->select('discipline_similaire_id', 'name', 'slug', 'famille')
             ->get();
+
+        $categories = LienDisciplineCategorie::whereHas('structures_produits')
+                ->where('discipline_id', $requestDiscipline->id)
+                ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+                ->withCount('structures_produits')
+                ->orderByDesc('structures_produits_count')
+                ->get();
+
+        $firstCategories = $categories->take(4);
+        $categoriesNotInFirst = $categories->diff($firstCategories);
+
+        $allStructureTypes = StructureType::whereHas('structures', function ($query) use ($requestDiscipline) {
+            $query->whereHas('produits', function ($subquery) use ($requestDiscipline) {
+                $subquery->where('discipline_id', $requestDiscipline->id);
+            });
+        })
+        ->select(['id', 'name', 'slug'])
+        ->get();
+
 
         $activite = StructureActivite::with([
             'structure',
@@ -84,17 +105,21 @@ class DisciplineActiviteController extends Controller
             ->get();
 
         return Inertia::render('Structures/Activites/Show', [
-                    'selectedProduit' => $selectedProduit ?? null,
-                    'discipline' => $discipline,
-                    'disciplinesSimilaires' => $disciplinesSimilaires,
-                    'structure' => $structure,
-                    'familles' => $familles,
-                    'listDisciplines' => $listDisciplines,
-                    'allCities' => $allCities,
-                    'logoUrl' => $logoUrl,
-                    'activite' => $activite,
-                    'criteres' => $criteres,
-                    'activiteSimilaires' => $activiteSimilaires
+            'selectedProduit' => $selectedProduit ?? null,
+            'discipline' => $requestDiscipline,
+            'disciplinesSimilaires' => $disciplinesSimilaires,
+            'structure' => $structure,
+            'familles' => $familles,
+            'listDisciplines' => $listDisciplines,
+            'allCities' => $allCities,
+            'logoUrl' => $logoUrl,
+            'activite' => $activite,
+            'criteres' => $criteres,
+            'activiteSimilaires' => $activiteSimilaires,
+            'categories' => $categories,
+            'firstCategories' => $firstCategories,
+            'categoriesNotInFirst' => $categoriesNotInFirst,
+            'allStructureTypes' => $allStructureTypes,
         ]);
     }
 }

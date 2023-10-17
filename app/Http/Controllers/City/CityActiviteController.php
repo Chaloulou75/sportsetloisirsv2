@@ -41,8 +41,6 @@ class CityActiviteController extends Controller
                             ->limit(10)
                             ->get();
 
-        dd($citiesAround);
-
         $activite = StructureActivite::with([
             'structure',
             'discipline:id,name',

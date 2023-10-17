@@ -477,6 +477,9 @@ const showStructuresTypes = () => {
                     (route().current('villes.disciplines.categories.show') ||
                         route().current(
                             'villes.disciplines.categories.structures.show'
+                        ) ||
+                        route().current(
+                            'villes.disciplines.categories.activites.show'
                         )) &&
                     category.id === categorie.id
                         ? 'bg-blue-400 text-white'
@@ -565,6 +568,9 @@ const showStructuresTypes = () => {
                     ) ||
                         route().current(
                             'villes.disciplines.structuretypes.structures.show'
+                        ) ||
+                        route().current(
+                            'villes.disciplines.structuretypes.activites.show'
                         )) &&
                     structureType.id === structuretypeElected.id
                         ? ' bg-sky-700 text-white'
@@ -941,6 +947,9 @@ const showStructuresTypes = () => {
                     ) ||
                         route().current(
                             'departements.disciplines.categories.structures.show'
+                        ) ||
+                        route().current(
+                            'departements.disciplines.categories.activites.show'
                         )) &&
                     category.id === categorie.id
                         ? 'bg-blue-400 text-white'
@@ -1034,6 +1043,9 @@ const showStructuresTypes = () => {
                     ) ||
                         route().current(
                             'departements.disciplines.structuretypes.structures.show'
+                        ) ||
+                        route().current(
+                            'departements.disciplines.structuretypes.activites.show'
                         )) &&
                     structureType.id === structuretypeElected.id
                         ? ' bg-sky-700 text-white'
@@ -1187,6 +1199,9 @@ const showStructuresTypes = () => {
                     (route().current('disciplines.categories.show') ||
                         route().current(
                             'disciplines.categories.structures.show'
+                        ) ||
+                        route().current(
+                            'disciplines.categories.activites.show'
                         )) &&
                     category.id === categorie.id
                         ? 'bg-blue-400 text-white'
@@ -1467,6 +1482,9 @@ const showStructuresTypes = () => {
                     (route().current('disciplines.structuretypes.show') ||
                         route().current(
                             'disciplines.structuretypes.structures.show'
+                        ) ||
+                        route().current(
+                            'disciplines.structuretypes.activites.show'
                         )) &&
                     structureType.id === structuretypeElected.id
                         ? ' bg-sky-700 text-white'

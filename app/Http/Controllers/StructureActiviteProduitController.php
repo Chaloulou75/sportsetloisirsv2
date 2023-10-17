@@ -341,7 +341,7 @@ class StructureActiviteProduitController extends Controller
         $originalProduit = StructureProduit::with('criteres')->where('id', $produit->id)->firstOrFail();
 
         $originalProduitCriteres = StructureProduitCritere::where('produit_id', $originalProduit->id)->get();
-        // dd($originalProduit->tarifs);
+
         $newProduit = new StructureProduit();
         $newProduit->structure_id = $originalProduit->structure_id;
         $newProduit->discipline_id = $originalProduit->discipline_id;

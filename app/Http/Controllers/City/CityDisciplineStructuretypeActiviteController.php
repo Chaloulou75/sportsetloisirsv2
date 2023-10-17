@@ -6,11 +6,14 @@ use App\Models\City;
 use Inertia\Inertia;
 use App\Models\Famille;
 use Illuminate\Http\Request;
+use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Http\Controllers\Controller;
+use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class CityDisciplineStructuretypeActiviteController extends Controller
 {
@@ -23,28 +26,53 @@ class CityDisciplineStructuretypeActiviteController extends Controller
         $allCities = City::withProducts()->get();
 
 
-        $city = City::with([
-                        'structures',
-                        'produits',
-                        'produits.adresse'
-                    ])
-                    ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
-                    ->where('slug', $city->slug)
-                    ->withCount('structures')
-                    ->first();
+        $city = City::with(['structures', 'produits', 'produits.adresse'])
+                                    ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
+                                    ->where('slug', $city->slug)
+                                    ->withCount('produits')
+                                    ->first();
 
-        $citiesAround = City::with('structures', 'produits', 'produits.adresse')
-                            ->select('id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
-                            ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
-                            ->where('id', '!=', $city->id)
-                            ->havingRaw('distance <= ?', [$city->tolerance_rayon])
-                            ->orderBy('distance', 'ASC')
-                            ->limit(10)
-                            ->get();
+        $citiesAround = City::withWhereHas('produits')
+            ->select('id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
+            ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
+            ->where('slug', '!=', $city->slug)
+            ->havingRaw('distance <= ?', [$city->tolerance_rayon])
+            ->orderBy('distance', 'ASC')
+            ->limit(10)
+            ->get();
 
-        $discipline = ListDiscipline::where('slug', $discipline)
-                                                ->select(['id', 'name', 'slug', 'view_count'])
-                                                ->first();
+        $cityAroundIds = $citiesAround->pluck('id');
+
+        $requestDiscipline = ListDiscipline::with('structureProduits')->where('slug', $discipline)
+                            ->select(['id', 'name', 'slug', 'view_count'])
+                            ->first();
+
+        $disciplinesSimilaires = $requestDiscipline->disciplinesSimilaires()
+                    ->select('discipline_similaire_id', 'name', 'slug', 'famille')
+                    ->get();
+
+        $categories = LienDisciplineCategorie::withWhereHas('structures_produits.adresse', function (Builder $query) use ($city, $cityAroundIds) {
+            $query->where('city_id', $city->id)->orWhereIn('city_id', $cityAroundIds);
+        })
+            ->where('discipline_id', $requestDiscipline->id)
+            ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+            ->get();
+
+        $firstCategories = $categories->take(4);
+        $categoriesNotInFirst = $categories->diff($firstCategories);
+
+        $allStructureTypes = StructureType::whereHas('structures', function ($query) use ($requestDiscipline, $city, $cityAroundIds) {
+            $query->whereHas('produits', function ($subquery) use ($requestDiscipline, $city, $cityAroundIds) {
+                $subquery->where('discipline_id', $requestDiscipline->id)
+                        ->whereHas('adresse', function ($addressQuery) use ($city, $cityAroundIds) {
+                            $addressQuery->where('city_id', $city->id)->orWhereIn('city_id', $cityAroundIds);
+                        });
+            });
+        })
+                ->select(['id', 'name', 'slug'])
+                ->get();
+
+        $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
 
         $activite = StructureActivite::with([
             'structure',
@@ -100,18 +128,24 @@ class CityDisciplineStructuretypeActiviteController extends Controller
             ->get();
 
         return Inertia::render('Structures/Activites/Show', [
-                    'structure' => $structure,
-                    'familles' => $familles,
-                    'listDisciplines' => $listDisciplines,
-                    'allCities' => $allCities,
-                    'logoUrl' => $logoUrl,
-                    'activite' => $activite,
-                    'criteres' => $criteres,
-                    'city' => $city,
-                    'citiesAround' => $citiesAround,
-                    'discipline' => $discipline,
-                    'activiteSimilaires' => $activiteSimilaires,
-                    'selectedProduit' => $selectedProduit,
+            'structure' => $structure,
+            'familles' => $familles,
+            'listDisciplines' => $listDisciplines,
+            'allCities' => $allCities,
+            'logoUrl' => $logoUrl,
+            'activite' => $activite,
+            'criteres' => $criteres,
+            'city' => $city,
+            'citiesAround' => $citiesAround,
+            'discipline' => $requestDiscipline,
+            'structuretypeElected' => $structuretypeElected,
+            'activiteSimilaires' => $activiteSimilaires,
+            'disciplinesSimilaires' => $disciplinesSimilaires,
+            'selectedProduit' => $selectedProduit,
+            'categories' => $categories,
+            'firstCategories' => $firstCategories,
+            'categoriesNotInFirst' => $categoriesNotInFirst,
+            'allStructureTypes' => $allStructureTypes,
         ]);
     }
 }

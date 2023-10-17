@@ -201,7 +201,6 @@ class ActiviteController extends Controller
      */
     public function update(Request $request, Structure $structure, $activite)
     {
-        // dd($request->all());
         if (! Gate::allows('update-structure', $structure)) {
             return to_route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de modifier cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
