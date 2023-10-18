@@ -8,6 +8,9 @@ import SelectForm from "@/Components/Forms/SelectForm.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
 import RadioForm from "@/Components/Forms/RadioForm.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
+import OpenDaysForm from "@/Components/Forms/DayTime/OpenDaysForm.vue";
+import OpenTimesForm from "@/Components/Forms/DayTime/OpenTimesForm.vue";
+
 import {
     TransitionRoot,
     TransitionChild,
@@ -419,19 +422,6 @@ onMounted(() => {
                                                             placeholder=""
                                                             autocomplete="none"
                                                         />
-                                                        <!-- <input
-                                                            type="text"
-                                                            v-model="
-                                                                form.criteres[
-                                                                    critere.id
-                                                                ]
-                                                            "
-                                                            :name="critere.nom"
-                                                            :id="critere.nom"
-                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                            placeholder=""
-                                                            autocomplete="none"
-                                                        /> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -518,45 +508,17 @@ onMounted(() => {
                                         <div
                                             class="flex w-full flex-col items-center justify-between space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
                                         >
-                                            <div class="z-10 w-full">
-                                                <label
-                                                    for="date"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Dates d'ouvertures
-                                                </label>
-                                                <VueDatePicker
-                                                    v-model="form.date"
-                                                    range
-                                                    multi-calendars
-                                                    locale="fr"
-                                                    :format="'dd/MM/yyyy'"
-                                                    :enableTimePicker="false"
-                                                    cancelText="annuler"
-                                                    selectText="confirmer"
-                                                    placeholder="Selectionner vos dates"
-                                                >
-                                                </VueDatePicker>
-                                            </div>
-
-                                            <div class="w-full">
-                                                <label
-                                                    for="time"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Horaires (ouverture /
-                                                    fermeture)
-                                                </label>
-                                                <VueDatePicker
-                                                    v-model="form.time"
-                                                    time-picker
-                                                    range
-                                                    locale="fr"
-                                                    cancelText="annuler"
-                                                    selectText="confirmer"
-                                                    placeholder="Selectionnez vos horaires"
-                                                />
-                                            </div>
+                                            <OpenDaysForm
+                                                class="w-full"
+                                                v-model="form.date"
+                                                :name="`Dates d'ouvertures`"
+                                            />
+                                            <OpenTimesForm
+                                                class="w-full"
+                                                v-model="form.time"
+                                                :name="`Horaires (ouverture /
+                                                    fermeture)`"
+                                            />
                                         </div>
                                     </div>
                                 </div>
