@@ -5,7 +5,7 @@ import { ref, reactive, computed } from "vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
-import LeafletMap from "@/Components/LeafletMap.vue";
+import LeafletMap from "@/Components/Maps/LeafletMap.vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 import {

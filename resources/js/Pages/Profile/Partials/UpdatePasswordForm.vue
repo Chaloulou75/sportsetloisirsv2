@@ -1,8 +1,8 @@
 <script setup>
-import InputError from "@/Components/InputError.vue";
-import InputLabel from "@/Components/InputLabel.vue";
+import InputError from "@/Components/Forms/InputError.vue";
+import InputLabel from "@/Components/Forms/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import TextInput from "@/Components/TextInput.vue";
+import TextInput from "@/Components/Forms/TextInput.vue";
 import { useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
 
@@ -58,7 +58,7 @@ const updatePassword = () => {
                     ref="currentPasswordInput"
                     v-model="form.current_password"
                     type="password"
-                    class="block w-full mt-1"
+                    class="mt-1 block w-full"
                     autocomplete="current-password"
                 />
 
@@ -76,7 +76,7 @@ const updatePassword = () => {
                     ref="passwordInput"
                     v-model="form.password"
                     type="password"
-                    class="block w-full mt-1"
+                    class="mt-1 block w-full"
                     autocomplete="new-password"
                 />
 
@@ -93,7 +93,7 @@ const updatePassword = () => {
                     id="password_confirmation"
                     v-model="form.password_confirmation"
                     type="password"
-                    class="block w-full mt-1"
+                    class="mt-1 block w-full"
                     autocomplete="new-password"
                 />
 

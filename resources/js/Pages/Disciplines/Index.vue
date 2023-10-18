@@ -4,7 +4,7 @@ import { router, Head, Link } from "@inertiajs/vue3";
 import { ref, watch } from "vue";
 import { debounce } from "lodash";
 import { defineAsyncComponent } from "vue";
-import TextInput from "@/Components/TextInput.vue";
+import TextInput from "@/Components/Forms/TextInput.vue";
 import DisciplineSmallCard from "@/Components/Disciplines/DisciplineSmallCard.vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";

@@ -4,6 +4,10 @@ import { ref, watch, onMounted, computed, defineAsyncComponent } from "vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { XCircleIcon } from "@heroicons/vue/24/outline";
+import SelectForm from "@/Components/Forms/SelectForm.vue";
+import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
+import RadioForm from "@/Components/Forms/RadioForm.vue";
+import TextInput from "@/Components/Forms/TextInput.vue";
 import {
     TransitionRoot,
     TransitionChild,
@@ -335,189 +339,57 @@ onMounted(() => {
                                                 class="w-full"
                                             >
                                                 <!-- select -->
-                                                <div
+                                                <SelectForm
                                                     v-if="
                                                         critere.type_champ_form ===
                                                         'select'
                                                     "
-                                                >
-                                                    <div>
-                                                        <label
-                                                            :for="critere.nom"
-                                                            class="block text-sm font-medium text-gray-700"
-                                                        >
-                                                            {{ critere.nom }}
-                                                        </label>
-                                                        <div
-                                                            class="mt-1 flex rounded-md"
-                                                        >
-                                                            <select
-                                                                :name="
-                                                                    critere.nom
-                                                                "
-                                                                :id="
-                                                                    critere.nom
-                                                                "
-                                                                v-model="
-                                                                    form
-                                                                        .criteres[
-                                                                        critere
-                                                                            .id
-                                                                    ]
-                                                                "
-                                                                class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
-                                                            >
-                                                                <option
-                                                                    disabled
-                                                                    value=""
-                                                                >
-                                                                    Selectionner
-                                                                    un
-                                                                    {{
-                                                                        critere.nom
-                                                                    }}
-                                                                </option>
-                                                                <option
-                                                                    v-for="(
-                                                                        option,
-                                                                        index
-                                                                    ) in critere.valeurs"
-                                                                    :key="
-                                                                        option.id
-                                                                    "
-                                                                    :value="
-                                                                        option.valeur
-                                                                    "
-                                                                >
-                                                                    {{
-                                                                        option.valeur
-                                                                    }}
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                    :name="critere.nom"
+                                                    v-model="
+                                                        form.criteres[
+                                                            critere.id
+                                                        ]
+                                                    "
+                                                    :options="critere.valeurs"
+                                                />
+
                                                 <!-- checkbox -->
-                                                <div
+                                                <CheckboxForm
                                                     v-if="
                                                         critere.type_champ_form ===
                                                         'checkbox'
                                                     "
-                                                >
-                                                    <div class="block">
-                                                        <span
-                                                            class="text-sm font-medium text-gray-700"
-                                                            >{{
-                                                                critere.nom
-                                                            }}</span
-                                                        >
-                                                        <div class="mt-2">
-                                                            <div
-                                                                v-for="(
-                                                                    option,
-                                                                    index
-                                                                ) in critere.valeurs"
-                                                                :key="option.id"
-                                                            >
-                                                                <label
-                                                                    class="inline-flex items-center"
-                                                                    :for="
-                                                                        option.valeur
-                                                                    "
-                                                                >
-                                                                    <input
-                                                                        :checked="
-                                                                            isCheckboxSelected(
-                                                                                critere.id,
-                                                                                option.valeur
-                                                                            )
-                                                                        "
-                                                                        @change="
-                                                                            updateSelectedCheckboxes(
-                                                                                critere.id,
-                                                                                option.valeur,
-                                                                                $event
-                                                                                    .target
-                                                                                    .checked
-                                                                            )
-                                                                        "
-                                                                        :id="
-                                                                            option.valeur
-                                                                        "
-                                                                        :value="
-                                                                            option.valeur
-                                                                        "
-                                                                        :name="
-                                                                            option.valeur
-                                                                        "
-                                                                        type="checkbox"
-                                                                        class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
-                                                                    />
-                                                                    <span
-                                                                        class="ml-2 text-sm font-medium text-gray-700"
-                                                                        >{{
-                                                                            option.valeur
-                                                                        }}</span
-                                                                    >
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                    :critere="critere"
+                                                    :name="critere.nom"
+                                                    v-model="
+                                                        form.criteres[
+                                                            critere.id
+                                                        ]
+                                                    "
+                                                    :options="critere.valeurs"
+                                                    :is-checkbox-selected="
+                                                        isCheckboxSelected
+                                                    "
+                                                    @update-selected-checkboxes="
+                                                        updateSelectedCheckboxes
+                                                    "
+                                                />
+
                                                 <!-- radio -->
-                                                <div
+                                                <RadioForm
                                                     v-if="
                                                         critere.type_champ_form ===
                                                         'radio'
                                                     "
-                                                >
-                                                    <label
-                                                        :for="critere.nom"
-                                                        class="block text-sm font-medium text-gray-700"
-                                                    >
-                                                        {{ critere.nom }}
-                                                    </label>
+                                                    :name="critere.nom"
+                                                    v-model="
+                                                        form.criteres[
+                                                            critere.id
+                                                        ]
+                                                    "
+                                                    :options="critere.valeurs"
+                                                />
 
-                                                    <div
-                                                        class="mt-1 flex rounded-md"
-                                                    >
-                                                        <div>
-                                                            <label
-                                                                class="inline-flex items-center"
-                                                                v-for="(
-                                                                    option,
-                                                                    index
-                                                                ) in critere.valeurs"
-                                                                :key="option.id"
-                                                            >
-                                                                <input
-                                                                    v-model="
-                                                                        form
-                                                                            .criteres[
-                                                                            critere
-                                                                                .id
-                                                                        ]
-                                                                    "
-                                                                    type="radio"
-                                                                    class="form-radio"
-                                                                    :name="
-                                                                        option.valeur
-                                                                    "
-                                                                    :value="
-                                                                        option.valeur
-                                                                    "
-                                                                    checked
-                                                                />
-                                                                <span
-                                                                    class="ml-2"
-                                                                    >{{
-                                                                        option.valeur
-                                                                    }}</span
-                                                                >
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
                                                 <!-- input text -->
                                                 <div
                                                     v-if="
@@ -534,7 +406,7 @@ onMounted(() => {
                                                     <div
                                                         class="mt-1 flex rounded-md"
                                                     >
-                                                        <input
+                                                        <TextInput
                                                             type="text"
                                                             v-model="
                                                                 form.criteres[
@@ -547,6 +419,19 @@ onMounted(() => {
                                                             placeholder=""
                                                             autocomplete="none"
                                                         />
+                                                        <!-- <input
+                                                            type="text"
+                                                            v-model="
+                                                                form.criteres[
+                                                                    critere.id
+                                                                ]
+                                                            "
+                                                            :name="critere.nom"
+                                                            :id="critere.nom"
+                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                            placeholder=""
+                                                            autocomplete="none"
+                                                        /> -->
                                                     </div>
                                                 </div>
                                             </div>

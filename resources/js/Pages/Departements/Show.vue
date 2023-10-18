@@ -10,7 +10,7 @@ import { HomeIcon, ListBulletIcon, MapIcon } from "@heroicons/vue/24/outline";
 import { useElementVisibility } from "@vueuse/core";
 
 const LeafletMapProduitMultiple = defineAsyncComponent(() =>
-    import("@/Components/LeafletMapProduitMultiple.vue")
+    import("@/Components/Maps/LeafletMapProduitMultiple.vue")
 );
 
 const ProduitCard = defineAsyncComponent(() =>

@@ -5,7 +5,7 @@ import { ref, watch, defineAsyncComponent } from "vue";
 import { debounce } from "lodash";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
-import TextInput from "@/Components/TextInput.vue";
+import TextInput from "@/Components/Forms/TextInput.vue";
 import { HomeIcon } from "@heroicons/vue/24/outline";
 
 const props = defineProps({

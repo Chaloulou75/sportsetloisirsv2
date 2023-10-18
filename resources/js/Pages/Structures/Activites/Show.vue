@@ -6,7 +6,7 @@ import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigati
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
 import ActiviteCard from "@/Components/Structures/ActiviteCard.vue";
-import LeafletMap from "@/Components/LeafletMap.vue";
+import LeafletMap from "@/Components/Maps/LeafletMap.vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 import dayjs from "dayjs";

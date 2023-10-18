@@ -27,7 +27,7 @@ const props = defineProps({
 });
 
 const LeafletMapProduitMultiple = defineAsyncComponent(() =>
-    import("@/Components/LeafletMapProduitMultiple.vue")
+    import("@/Components/Maps/LeafletMapProduitMultiple.vue")
 );
 
 const ProduitCard = defineAsyncComponent(() =>

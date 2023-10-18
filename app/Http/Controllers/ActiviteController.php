@@ -385,35 +385,40 @@ class ActiviteController extends Controller
 
         $criteres = LienDisciplineCategorieCritere::with('valeurs')->where('discipline_id', $request->discipline_id)->where('categorie_id', $request->categorie_id)->get();
 
+        $critereIds = $criteres->pluck('id');
+
         $criteresValues = $request->criteres;
 
         if(isset($criteresValues)) {
-            foreach ($criteresValues as $key => $critereValue) {
-                $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $key)->first();
-
-                if (isset($critereValue)) {
-                    if (is_array($critereValue)) {
-                        foreach ($critereValue as $value) {
-                            $structureProduitCriteres = StructureProduitCritere::create([
-                                'structure_id' => $structure->id,
-                                'discipline_id' => $request->discipline_id,
-                                'categorie_id' => $request->categorie_id,
-                                'activite_id' => $structureActivite->id,
-                                'produit_id' => $structureProduit->id,
-                                'critere_id' => $key,
-                                'valeur' => $value,
-                            ]);
+            foreach($critereIds as $critereId) {
+                foreach ($criteresValues as $key => $critereValue) {
+                    $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $key)->first();
+                    if($critereId === $key) {
+                        if (isset($critereValue)) {
+                            if (is_array($critereValue)) {
+                                foreach ($critereValue as $value) {
+                                    $structureProduitCriteres = StructureProduitCritere::create([
+                                        'structure_id' => $structure->id,
+                                        'discipline_id' => $request->discipline_id,
+                                        'categorie_id' => $request->categorie_id,
+                                        'activite_id' => $structureActivite->id,
+                                        'produit_id' => $structureProduit->id,
+                                        'critere_id' => $key,
+                                        'valeur' => $value,
+                                    ]);
+                                }
+                            } else {
+                                $structureProduitCriteres = StructureProduitCritere::create([
+                                    'structure_id' => $structure->id,
+                                    'discipline_id' => $request->discipline_id,
+                                    'categorie_id' => $request->categorie_id,
+                                    'activite_id' => $structureActivite->id,
+                                    'produit_id' => $structureProduit->id,
+                                    'critere_id' => $key,
+                                    'valeur' => $critereValue ?? $defaut->valeur,
+                                ]);
+                            }
                         }
-                    } else {
-                        $structureProduitCriteres = StructureProduitCritere::create([
-                            'structure_id' => $structure->id,
-                            'discipline_id' => $request->discipline_id,
-                            'categorie_id' => $request->categorie_id,
-                            'activite_id' => $structureActivite->id,
-                            'produit_id' => $structureProduit->id,
-                            'critere_id' => $key,
-                            'valeur' => $critereValue ?? $defaut->valeur,
-                        ]);
                     }
                 }
             }

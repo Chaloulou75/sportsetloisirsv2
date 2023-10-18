@@ -254,6 +254,8 @@ class StructureDisciplineController extends Controller
             $query->where('structure_id', $structure->id);
         })->where('discipline_id', $discipline->id)->get();
 
+        $allCategories = $categoriesListByDiscipline->merge($categoriesWithoutStructures);
+
         $structureActivites = StructureActivite::with([
             'structure:id,name,slug,presentation_courte',
             'categorie:id,nom_categorie_pro',
@@ -352,6 +354,7 @@ class StructureDisciplineController extends Controller
             'discipline' => $discipline,
             'categoriesListByDiscipline' => $categoriesListByDiscipline,
             'categoriesWithoutStructures' => $categoriesWithoutStructures,
+            'allCategories' => $allCategories,
             'tarifTypes' => $tarifTypes,
             'activiteForTarifs' => $activiteForTarifs,
             'allReservationsCount' => $allReservationsCount,

@@ -3,7 +3,7 @@ import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { router, Head, Link } from "@inertiajs/vue3";
 import { ref, watch, defineAsyncComponent } from "vue";
 import { debounce } from "lodash";
-import TextInput from "@/Components/TextInput.vue";
+import TextInput from "@/Components/Forms/TextInput.vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import { HomeIcon } from "@heroicons/vue/24/outline";

@@ -35,7 +35,7 @@ const StructureCard = defineAsyncComponent(() =>
 );
 
 const LeafletMapProduitMultiple = defineAsyncComponent(() =>
-    import("@/Components/LeafletMapProduitMultiple.vue")
+    import("@/Components/Maps/LeafletMapProduitMultiple.vue")
 );
 
 const DisciplinesSimilaires = defineAsyncComponent(() =>
