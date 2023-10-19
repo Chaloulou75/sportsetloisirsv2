@@ -4,6 +4,7 @@ import { ref, nextTick, watch, computed, onMounted } from "vue";
 import { useCookies } from "@vueuse/integrations/useCookies";
 import { MapPinIcon } from "@heroicons/vue/24/outline";
 import { HeartIcon } from "@heroicons/vue/24/solid";
+import { TransitionRoot } from "@headlessui/vue";
 
 const props = defineProps({
     activite: Object,
@@ -13,6 +14,7 @@ const props = defineProps({
     },
 });
 
+const isShowing = ref(true);
 const cookies = useCookies(["favoriteActivities"]);
 const favoriteActivities = ref(cookies.get("favoriteActivities") || []);
 const isFavorite = ref(false);
@@ -99,90 +101,103 @@ const formatCityName = (ville) => {
 </script>
 
 <template v-if="link">
-    <Link
-        :href="link"
-        class="block rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:shadow-2xl md:px-0 md:hover:scale-105"
+    <TransitionRoot
+        appear
+        :show="isShowing"
+        enter="transition-opacity ease-linear duration-400"
+        enter-from="opacity-0"
+        enter-to="opacity-100"
+        leave="transition-opacity ease-linear duration-300"
+        leave-from="opacity-100"
+        leave-to="opacity-0"
     >
-        <div class="relative">
-            <!-- Button (positioned on top right) -->
-            <button
-                class="absolute right-2 top-2 z-30 bg-transparent"
-                type="button"
-                @click.prevent="() => toggleFavorite(activite.id)"
-            >
-                <HeartIcon
-                    class="h-6 w-6"
-                    :class="
-                        isFavorite
-                            ? 'text-red-500'
-                            : 'text-white hover:text-red-500'
-                    "
-                />
-            </button>
-
-            <!-- Image -->
-            <img
-                alt="Home"
-                src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                class="h-56 w-full rounded-md bg-opacity-75 object-cover"
-            />
-        </div>
-
-        <div class="mt-2">
-            <dl class="flex flex-col">
-                <p
-                    class="px-2 py-1.5 text-center text-sm font-semibold tracking-wide text-gray-600"
+        <Link
+            :href="link"
+            class="block rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:shadow-2xl md:px-0 md:hover:scale-105"
+        >
+            <div class="relative">
+                <!-- Button (positioned on top right) -->
+                <button
+                    class="absolute right-2 top-2 z-30 bg-transparent"
+                    type="button"
+                    @click.prevent="() => toggleFavorite(activite.id)"
                 >
-                    {{ activite.titre }}
-                </p>
+                    <HeartIcon
+                        class="h-6 w-6"
+                        :class="
+                            isFavorite
+                                ? 'text-red-500'
+                                : 'text-white hover:text-red-500'
+                        "
+                    />
+                </button>
 
-                <div class="w-full divide-y divide-slate-200">
-                    <dt class="sr-only">Produits</dt>
-                    <div
-                        class="px-2 py-3 odd:bg-white even:bg-slate-50"
-                        v-for="produit in activite.produits"
-                        :key="produit.id"
+                <!-- Image -->
+                <img
+                    alt="Home"
+                    src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                    class="h-56 w-full rounded-md bg-opacity-75 object-cover"
+                />
+            </div>
+
+            <div class="mt-2">
+                <dl class="flex flex-col">
+                    <p
+                        class="px-2 py-1.5 text-center text-sm font-semibold tracking-wide text-gray-600"
                     >
-                        <p class="text-xs">Produit n° {{ produit.id }}:</p>
-                        <div class="flex items-center py-1.5 text-xs">
-                            <dt class="sr-only">Ville</dt>
-                            <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
-                            <p class="font-semibold">
-                                {{ produit.adresse.city }} ({{
-                                    produit.adresse.zip_code
-                                }})
+                        {{ activite.titre }}
+                    </p>
+
+                    <div class="w-full divide-y divide-slate-200">
+                        <dt class="sr-only">Produits</dt>
+                        <div
+                            class="px-2 py-3 odd:bg-white even:bg-slate-50"
+                            v-for="produit in activite.produits"
+                            :key="produit.id"
+                        >
+                            <p class="text-xs">Produit n° {{ produit.id }}:</p>
+                            <div class="flex items-center py-1.5 text-xs">
+                                <dt class="sr-only">Ville</dt>
+                                <MapPinIcon
+                                    class="mr-1 h-4 w-4 text-indigo-700"
+                                />
+                                <p class="font-semibold">
+                                    {{ produit.adresse.city }} ({{
+                                        produit.adresse.zip_code
+                                    }})
+                                </p>
+                            </div>
+                            <p
+                                class="text-sm"
+                                v-for="critere in produit.criteres"
+                                :key="critere.id"
+                            >
+                                {{ critere.critere.nom }}:
+                                <span class="font-semibold">{{
+                                    critere.valeur
+                                }}</span>
+                            </p>
+                            <p
+                                v-if="produit.tarifs.length > 0"
+                                class="mt-2 text-sm"
+                            >
+                                Tarifs:
+                            </p>
+                            <p
+                                class="text-sm"
+                                v-for="tarif in produit.tarifs"
+                                :key="tarif.id"
+                            >
+                                <span class=""> {{ tarif.titre }}: </span>
+                                <span class="font-semibold">
+                                    {{ tarif.amount }} € /
+                                    {{ tarif.tarif_type.type }}</span
+                                >
                             </p>
                         </div>
-                        <p
-                            class="text-sm"
-                            v-for="critere in produit.criteres"
-                            :key="critere.id"
-                        >
-                            {{ critere.critere.nom }}:
-                            <span class="font-semibold">{{
-                                critere.valeur
-                            }}</span>
-                        </p>
-                        <p
-                            v-if="produit.tarifs.length > 0"
-                            class="mt-2 text-sm"
-                        >
-                            Tarifs:
-                        </p>
-                        <p
-                            class="text-sm"
-                            v-for="tarif in produit.tarifs"
-                            :key="tarif.id"
-                        >
-                            <span class=""> {{ tarif.titre }}: </span>
-                            <span class="font-semibold">
-                                {{ tarif.amount }} € /
-                                {{ tarif.tarif_type.type }}</span
-                            >
-                        </p>
                     </div>
-                </div>
-            </dl>
-        </div>
-    </Link>
+                </dl>
+            </div>
+        </Link>
+    </TransitionRoot>
 </template>

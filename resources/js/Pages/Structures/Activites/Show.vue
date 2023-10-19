@@ -565,7 +565,7 @@ const submitReservation = () => {
                                 </p>
                             </div>
                             <!-- instructeurs -->
-                            <div v-if="activite.instructeurs">
+                            <div v-if="activite.instructeurs.length > 0">
                                 <p class="text-base font-medium text-gray-700">
                                     Vos instructeurs:
                                 </p>

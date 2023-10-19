@@ -12,6 +12,7 @@ import OpenDaysForm from "@/Components/Forms/DayTime/OpenDaysForm.vue";
 import SingleDateForm from "@/Components/Forms/DayTime/SingleDateForm.vue";
 import SingleTimeForm from "@/Components/Forms/DayTime/SingleTimeForm.vue";
 import OpenTimesForm from "@/Components/Forms/DayTime/OpenTimesForm.vue";
+import OpenMonthsForm from "@/Components/Forms/DayTime/OpenMonthsForm.vue";
 import InstructeurForm from "@/Components/Forms/InstructeurForm.vue";
 import {
     TransitionRoot,
@@ -74,10 +75,11 @@ const form = useForm({
     country: ref(null),
     address_lat: ref(null),
     address_lng: ref(null),
-    date: ref([new Date(), new Date()]),
-    time: ref([new Date(), new Date()]),
-    date_debut: ref(new Date()),
-    time_debut: ref(new Date()),
+    date: ref(null),
+    time: ref(null),
+    date_debut: ref(null),
+    time_debut: ref(null),
+    months: ref(null),
     instructeur_email: ref(null),
     instructeur_contact: ref(null),
     instructeur_phone: ref(null),
@@ -524,6 +526,11 @@ onMounted(() => {
                                                 class="w-full"
                                                 v-model="form.time_debut"
                                                 :name="`Horaire de début`"
+                                            />
+                                            <OpenMonthsForm
+                                                class="w-full"
+                                                v-model="form.months"
+                                                :name="`Mois d'ouverture`"
                                             />
                                         </div>
 
