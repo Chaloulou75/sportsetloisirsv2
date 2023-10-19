@@ -25,9 +25,11 @@ const model = computed({
 });
 
 onMounted(() => {
-    const startDate = new Date();
-    const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
-    model.value = [startDate, endDate];
+    const startTime = {
+        hours: 10,
+        minutes: 0,
+    };
+    model.value = startTime;
 });
 </script>
 <template>
@@ -47,13 +49,9 @@ onMounted(() => {
             </label>
             <VueDatePicker
                 v-model="model"
-                range
-                multi-calendars
-                :year-range="[2022, 2030]"
-                locale="fr"
                 :transitions="true"
-                :format="'dd/MM/yyyy'"
-                :enableTimePicker="false"
+                time-picker
+                locale="fr"
                 cancelText="annuler"
                 selectText="confirmer"
                 :placeholder="name"

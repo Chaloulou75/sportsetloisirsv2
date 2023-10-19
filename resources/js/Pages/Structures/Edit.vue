@@ -5,6 +5,7 @@ import { ref, watch, onMounted, computed, defineAsyncComponent } from "vue";
 import {
     ArrowPathIcon,
     PlusIcon,
+    MinusIcon,
     TrashIcon,
     ChevronLeftIcon,
 } from "@heroicons/vue/24/outline";
@@ -986,6 +987,11 @@ const submit = () => {
                                         >Ajouter une adresse</span
                                     >
                                     <PlusIcon
+                                        v-if="!addAddress"
+                                        class="ml-4 h-5 w-5 text-blue-500 group-hover:text-white"
+                                    />
+                                    <MinusIcon
+                                        v-else
                                         class="ml-4 h-5 w-5 text-blue-500 group-hover:text-white"
                                     />
                                 </button>

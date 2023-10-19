@@ -38,14 +38,14 @@ class StructureUserController extends Controller
             'activites' => ['nullable'],
         ]);
 
-        $structure = Structure::where('id', $structure->id)->firstOrFail();
+        $structure = Structure::findOrFail($structure->id);
 
         $user = User::where('email', $request->email)->firstOrFail();
 
         $structureUser = $user->structures()->attach($structure, [
             'contact' => $request->contact,
-            'phone' => $request->phone,
             'niveau' => $request->niveau,
+            'email' => $request->email,
             'phone' => $request->phone,
         ]);
 

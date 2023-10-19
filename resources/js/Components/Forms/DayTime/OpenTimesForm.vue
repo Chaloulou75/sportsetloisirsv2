@@ -1,13 +1,12 @@
 <script setup>
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { TransitionRoot } from "@headlessui/vue";
 
 const props = defineProps({
     modelValue: {
-        type: [Object, String],
-        required: true,
+        type: [Date, Object, String],
     },
     name: String,
 });
@@ -23,6 +22,18 @@ const model = computed({
     set(value) {
         emit("update:modelValue", value);
     },
+});
+
+onMounted(() => {
+    const startTime = {
+        hours: 10,
+        minutes: 0,
+    };
+    const endTime = {
+        hours: 20,
+        minutes: 0,
+    };
+    model.value = [startTime, endTime];
 });
 </script>
 <template>
@@ -42,6 +53,7 @@ const model = computed({
             </label>
             <VueDatePicker
                 v-model="model"
+                :transitions="true"
                 time-picker
                 range
                 locale="fr"

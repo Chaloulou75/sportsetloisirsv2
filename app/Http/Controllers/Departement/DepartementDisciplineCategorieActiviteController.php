@@ -70,6 +70,7 @@ class DepartementDisciplineCategorieActiviteController extends Controller
 
         $activite = StructureActivite::with([
             'structure',
+            'instructeurs',
             'discipline:id,name',
             'categorie:id,categorie_id,discipline_id,nom_categorie_client',
             'produits',

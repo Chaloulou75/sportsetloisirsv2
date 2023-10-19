@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 
 use App\Models\City;
+use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Famille;
 use App\Models\Categorie;
@@ -128,6 +129,7 @@ class ActiviteController extends Controller
 
         $activite = StructureActivite::with([
             'structure',
+            'instructeurs',
             'discipline:id,name',
             'categorie:id,categorie_id,discipline_id,nom_categorie_client',
             'produits',
@@ -316,9 +318,12 @@ class ActiviteController extends Controller
             'address_lng' => ['nullable'],
             'date' => ['nullable'],
             'time' => ['nullable'],
+            'instructeur_email' => ['nullable', 'email:filter', 'exists:users,email'],
+            'instructeur_contact' => ['nullable'],
+            'instructeur_phone' => ['nullable'],
         ]);
 
-        $structure = Structure::with('adresses')->where('id', $request->structure_id)->firstOrfail();
+        $structure = Structure::with('adresses')->findOrFail($structure->id);
 
         $categorieDiscName = LienDisciplineCategorie::with('discipline')->where('id', $request->categorie_id)->first();
 
@@ -449,6 +454,17 @@ class ActiviteController extends Controller
 
             $structureProduit->update(['lieu_id' => $structureAddress->id]);
 
+        }
+
+        if($request->instructeur_email) {
+
+            $user = User::where('email', $request->instructeur_email)->firstOrFail();
+
+            $instructeur = $structureActivite->instructeurs()->attach($user, [
+                'contact' => $request->instructeur_contact,
+                'email' => $request->instructeur_email,
+                'phone' => $request->instructeur_phone,
+            ]);
         }
 
         return to_route('structures.disciplines.show', ['structure' => $structure->slug, 'discipline' => $discipline])->with('success', 'Activité ajoutée, ajoutez d\'autres activités à votre structure.');

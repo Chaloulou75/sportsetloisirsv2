@@ -5,7 +5,6 @@ import { TransitionRoot } from "@headlessui/vue";
 const props = defineProps({
     modelValue: {
         type: [Object, String, Number],
-        required: true,
     },
     options: Array,
     name: String,

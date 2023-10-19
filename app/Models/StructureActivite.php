@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class StructureActivite extends Model
 {
@@ -45,6 +46,11 @@ class StructureActivite extends Model
     {
         return $this->hasMany(StructurePlanning::class, 'activite_id');
 
+    }
+
+    public function instructeurs(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)->withPivot('contact', 'email', 'phone');
     }
 
 }

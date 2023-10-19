@@ -564,6 +564,21 @@ const submitReservation = () => {
                                     {{ structure.presentation_courte }}
                                 </p>
                             </div>
+                            <!-- instructeurs -->
+                            <div v-if="activite.instructeurs">
+                                <p class="text-base font-medium text-gray-700">
+                                    Vos instructeurs:
+                                </p>
+                                <ul>
+                                    <li
+                                        v-for="instructeur in activite.instructeurs"
+                                        class="list-inside list-disc text-base font-semibold text-gray-600"
+                                    >
+                                        {{ instructeur.pivot.contact }} -
+                                        {{ instructeur.pivot.email }}
+                                    </li>
+                                </ul>
+                            </div>
                             <!-- Filters -->
                             <div>
                                 <div

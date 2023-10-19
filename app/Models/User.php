@@ -51,4 +51,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Structure::class);
     }
+
+    public function structureActivites(): BelongsToMany
+    {
+        return $this->belongsToMany(StructureActivite::class);
+    }
 }

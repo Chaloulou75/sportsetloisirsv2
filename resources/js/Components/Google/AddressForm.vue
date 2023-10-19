@@ -1,7 +1,7 @@
 <script>
 import { onMounted, onUnmounted, ref } from "vue";
 import useScript from "@/composables/useScript.js";
-
+import { TransitionRoot } from "@headlessui/vue";
 export default {
     props: {
         errors: Object,
@@ -36,6 +36,7 @@ export default {
     },
 
     setup(props, context) {
+        const isShowing = ref(true);
         const streetRef = ref(null);
         let autocomplete;
 
@@ -106,83 +107,96 @@ export default {
 
         return {
             streetRef,
+            isShowing,
         };
     },
 };
 </script>
 
 <template>
-    <div class="grid grid-cols-4 gap-6">
-        <!-- Adresse -->
-        <div class="col-span-4 sm:col-span-2">
-            <label
-                for="address"
-                class="block text-sm font-medium text-gray-700"
-            >
-                Adresse *
-            </label>
-            <div class="mt-1 flex rounded-md shadow-sm">
+    <TransitionRoot
+        appear
+        :show="isShowing"
+        enter="transition-opacity ease-linear duration-400"
+        enter-from="opacity-0"
+        enter-to="opacity-100"
+        leave="transition-opacity ease-linear duration-300"
+        leave-from="opacity-100"
+        leave-to="opacity-0"
+    >
+        <div class="grid grid-cols-4 gap-6">
+            <!-- Adresse -->
+            <div class="col-span-4 sm:col-span-2">
+                <label
+                    for="address"
+                    class="block text-sm font-medium text-gray-700"
+                >
+                    Adresse *
+                </label>
+                <div class="mt-1 flex rounded-md shadow-sm">
+                    <input
+                        @input="$emit('update:address', $event.target.value)"
+                        :value="address"
+                        ref="streetRef"
+                        type="text"
+                        name="address"
+                        id="address"
+                        autocomplete="off"
+                        data-lpignore="true"
+                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        placeholder="33 rue des pins..."
+                    />
+                </div>
+                <div v-if="errors.address" class="mt-2 text-xs text-red-500">
+                    {{ errors.address }}
+                </div>
+            </div>
+
+            <!-- city-->
+            <div class="col-span-4 sm:col-span-2">
+                <label
+                    for="city"
+                    class="block text-sm font-medium text-gray-700"
+                    >Ville *</label
+                >
                 <input
-                    @input="$emit('update:address', $event.target.value)"
-                    :value="address"
-                    ref="streetRef"
+                    @input="$emit('update:city', $event.target.value)"
+                    :value="city"
                     type="text"
-                    name="address"
-                    id="address"
+                    name="city"
+                    id="city"
                     autocomplete="off"
                     data-lpignore="true"
-                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    placeholder="33 rue des pins..."
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
+                <div v-if="errors.city" class="mt-2 text-xs text-red-500">
+                    {{ errors.city }}
+                </div>
             </div>
-            <div v-if="errors.address" class="mt-2 text-xs text-red-500">
-                {{ errors.address }}
-            </div>
-        </div>
 
-        <!-- city-->
-        <div class="col-span-4 sm:col-span-2">
-            <label for="city" class="block text-sm font-medium text-gray-700"
-                >Ville *</label
-            >
-            <input
-                @input="$emit('update:city', $event.target.value)"
-                :value="city"
-                type="text"
-                name="city"
-                id="city"
-                autocomplete="off"
-                data-lpignore="true"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-            />
-            <div v-if="errors.city" class="mt-2 text-xs text-red-500">
-                {{ errors.city }}
+            <!-- code postal -->
+            <div class="col-span-4 sm:col-span-2">
+                <label
+                    for="zip_code"
+                    class="block text-sm font-medium text-gray-700"
+                    >ZIP / Code Postal *</label
+                >
+                <input
+                    @input="$emit('update:zip_code', $event.target.value)"
+                    :value="zip_code"
+                    type="text"
+                    name="zip_code"
+                    id="zip_code"
+                    autocomplete="off"
+                    data-lpignore="true"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                />
+                <div v-if="errors.zip_code" class="mt-2 text-xs text-red-500">
+                    {{ errors.zip_code }}
+                </div>
             </div>
-        </div>
-
-        <!-- code postal -->
-        <div class="col-span-4 sm:col-span-2">
-            <label
-                for="zip_code"
-                class="block text-sm font-medium text-gray-700"
-                >ZIP / Code Postal *</label
-            >
-            <input
-                @input="$emit('update:zip_code', $event.target.value)"
-                :value="zip_code"
-                type="text"
-                name="zip_code"
-                id="zip_code"
-                autocomplete="off"
-                data-lpignore="true"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-            />
-            <div v-if="errors.zip_code" class="mt-2 text-xs text-red-500">
-                {{ errors.zip_code }}
-            </div>
-        </div>
-        <!-- department_code -->
-        <!-- <div class="col-span-3 sm:col-span-1">
+            <!-- department_code -->
+            <!-- <div class="col-span-3 sm:col-span-1">
             <label
                 for="department_code"
                 class="block text-sm font-medium text-gray-700"
@@ -217,24 +231,27 @@ export default {
                 {{ errors.department_code }}
             </div>
         </div> -->
-        <!-- pays -->
-        <div class="col-span-4 sm:col-span-2">
-            <label for="country" class="block text-sm font-medium text-gray-700"
-                >Pays *</label
-            >
-            <select
-                @input="$emit('update:country', $event.target.value)"
-                :value="country"
-                id="country"
-                name="country"
-                autocomplete="off"
-                class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-            >
-                <option value="France">France</option>
-            </select>
-            <div v-if="errors.country" class="mt-2 text-xs text-red-500">
-                {{ errors.country }}
+            <!-- pays -->
+            <div class="col-span-4 sm:col-span-2">
+                <label
+                    for="country"
+                    class="block text-sm font-medium text-gray-700"
+                    >Pays *</label
+                >
+                <select
+                    @input="$emit('update:country', $event.target.value)"
+                    :value="country"
+                    id="country"
+                    name="country"
+                    autocomplete="off"
+                    class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                >
+                    <option value="France">France</option>
+                </select>
+                <div v-if="errors.country" class="mt-2 text-xs text-red-500">
+                    {{ errors.country }}
+                </div>
             </div>
         </div>
-    </div>
+    </TransitionRoot>
 </template>

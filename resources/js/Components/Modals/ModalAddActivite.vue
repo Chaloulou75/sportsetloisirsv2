@@ -1,16 +1,18 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
 import { ref, watch, onMounted, computed, defineAsyncComponent } from "vue";
-import VueDatePicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
+// import VueDatePicker from "@vuepic/vue-datepicker";
+// import "@vuepic/vue-datepicker/dist/main.css";
 import { XCircleIcon } from "@heroicons/vue/24/outline";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
 import RadioForm from "@/Components/Forms/RadioForm.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
 import OpenDaysForm from "@/Components/Forms/DayTime/OpenDaysForm.vue";
+import SingleDateForm from "@/Components/Forms/DayTime/SingleDateForm.vue";
+import SingleTimeForm from "@/Components/Forms/DayTime/SingleTimeForm.vue";
 import OpenTimesForm from "@/Components/Forms/DayTime/OpenTimesForm.vue";
-
+import InstructeurForm from "@/Components/Forms/InstructeurForm.vue";
 import {
     TransitionRoot,
     TransitionChild,
@@ -48,6 +50,8 @@ const latestAdresseId = computed(() => {
     return null; // Return a default value if there are no adresses
 });
 
+const addInstructeur = ref(false);
+
 // const filteredCriteres = computed(() => {
 //     return props.criteres.filter(
 //         (critere) => critere.categorie_id === form.categorie_id
@@ -70,8 +74,13 @@ const form = useForm({
     country: ref(null),
     address_lat: ref(null),
     address_lng: ref(null),
-    date: ref(null),
-    time: ref(null),
+    date: ref([new Date(), new Date()]),
+    time: ref([new Date(), new Date()]),
+    date_debut: ref(new Date()),
+    time_debut: ref(new Date()),
+    instructeur_email: ref(null),
+    instructeur_contact: ref(null),
+    instructeur_phone: ref(null),
 });
 
 watch(
@@ -142,19 +151,6 @@ function onSubmit() {
 
 onMounted(() => {
     form.categorie_id = ref(props.category?.id ?? null);
-    const startDate = new Date();
-    const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
-    form.date = [startDate, endDate];
-
-    const startTime = {
-        hours: 10,
-        minutes: 0,
-    };
-    const endTime = {
-        hours: 20,
-        minutes: 0,
-    };
-    form.time = [startTime, endTime];
 });
 </script>
 <template>
@@ -506,7 +502,7 @@ onMounted(() => {
 
                                         <!-- Jours et Heures -->
                                         <div
-                                            class="flex w-full flex-col items-center justify-between space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
+                                            class="grid grid-cols-1 gap-4 md:grid-cols-2"
                                         >
                                             <OpenDaysForm
                                                 class="w-full"
@@ -519,7 +515,51 @@ onMounted(() => {
                                                 :name="`Horaires (ouverture /
                                                     fermeture)`"
                                             />
+                                            <SingleDateForm
+                                                class="w-full"
+                                                v-model="form.date_debut"
+                                                :name="`Date de début`"
+                                            />
+                                            <SingleTimeForm
+                                                class="w-full"
+                                                v-model="form.time_debut"
+                                                :name="`Horaire de début`"
+                                            />
                                         </div>
+
+                                        <!-- Instructeur -->
+                                        <div class="flex items-center">
+                                            <input
+                                                v-model="addInstructeur"
+                                                id="addInstructeur"
+                                                type="checkbox"
+                                                class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                            />
+                                            <label
+                                                for="addInstructeur"
+                                                class="ml-2 text-sm font-medium text-gray-700"
+                                                >Ajouter un instructeur
+                                                <span
+                                                    class="text-xs italic text-gray-600"
+                                                    >(celui-ci doit
+                                                    préalablement être inscrit
+                                                    sur sports-et-loisirs)</span
+                                                >
+                                            </label>
+                                        </div>
+                                        <InstructeurForm
+                                            v-if="addInstructeur"
+                                            v-model:instructeur_email="
+                                                form.instructeur_email
+                                            "
+                                            v-model:instructeur_contact="
+                                                form.instructeur_contact
+                                            "
+                                            v-model:instructeur_phone="
+                                                form.instructeur_phone
+                                            "
+                                            :errors="errors"
+                                        />
                                     </div>
                                 </div>
                                 <div
