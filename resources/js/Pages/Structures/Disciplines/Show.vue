@@ -140,7 +140,7 @@ const latestAdresseId = computed(() => {
                         v-for="category in categoriesListByDiscipline"
                         :key="category.id"
                         :index="category.id"
-                        class="flex h-full w-full flex-col items-center border border-gray-200 bg-white py-2.5 text-xs text-slate-700 md:py-4"
+                        class="flex h-full w-full flex-col items-center border border-gray-200 bg-white py-2.5 text-xs text-slate-500 hover:bg-gray-100 hover:text-slate-700 md:py-4"
                     >
                         <AcademicCapIcon
                             class="hidden h-6 w-6 md:inline-flex"

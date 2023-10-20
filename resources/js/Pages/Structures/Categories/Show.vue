@@ -144,11 +144,11 @@ const latestAdresseId = computed(() => {
                         "
                         v-for="category in categoriesListByDiscipline"
                         :key="category.id"
-                        class="flex h-full w-full flex-col items-center border border-gray-200 py-2.5 text-xs md:py-4"
+                        class="flex h-full w-full flex-col items-center border border-gray-200 py-2.5 text-xs hover:bg-gray-100 hover:text-slate-700 md:py-4"
                         :class="{
                             'bg-green-500 text-white':
                                 category.id === categorie.id,
-                            'bg-white text-slate-700':
+                            'bg-white text-slate-500':
                                 category.id !== categorie.id,
                         }"
                     >

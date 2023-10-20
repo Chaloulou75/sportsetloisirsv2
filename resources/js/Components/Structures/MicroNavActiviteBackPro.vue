@@ -30,7 +30,7 @@ const getButtonClass = (buttonName) => {
             class="flex w-full flex-col items-center divide-x-2 divide-gray-200 md:w-auto md:flex-row"
         >
             <button
-                class="group relative w-full px-4 py-1.5 text-left text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 md:w-auto md:px-6 md:py-2.5 md:text-base md:font-semibold"
+                class="group relative w-full px-4 py-2 text-left text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 md:w-auto md:px-6 md:py-2.5 md:text-base md:font-semibold"
                 type="button"
                 @click="emitEvent('Mes activites')"
                 :class="getButtonClass('Mes activites')"
@@ -52,7 +52,7 @@ const getButtonClass = (buttonName) => {
                 ></div>
             </button>
             <button
-                class="group relative w-full px-4 py-1.5 text-left text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 md:w-auto md:px-6 md:py-2.5 md:text-base md:font-semibold"
+                class="group relative w-full px-4 py-2 text-left text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 md:w-auto md:px-6 md:py-2.5 md:text-base md:font-semibold"
                 type="button"
                 @click="emitEvent('Planning')"
                 :class="getButtonClass('Planning')"
@@ -70,7 +70,7 @@ const getButtonClass = (buttonName) => {
             </button>
 
             <button
-                class="group relative w-full px-4 py-1.5 text-left text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 md:w-auto md:px-6 md:py-2.5 md:text-base md:font-semibold"
+                class="group relative w-full px-4 py-2 text-left text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 md:w-auto md:px-6 md:py-2.5 md:text-base md:font-semibold"
                 type="button"
                 @click="emitEvent('Mes tarifs')"
                 :class="getButtonClass('Mes tarifs')"
