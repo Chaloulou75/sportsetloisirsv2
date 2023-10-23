@@ -165,7 +165,7 @@ const onSubmitPlanningForm = () => {
                                         <button type="button">
                                             <XCircleIcon
                                                 @click="emit('close')"
-                                                class="h-6 w-6 text-gray-600 hover:text-gray-800"
+                                                class="h-6 w-6 text-gray-600 hover:text-red-600"
                                             />
                                         </button>
                                     </DialogTitle>

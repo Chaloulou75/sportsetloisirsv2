@@ -74,7 +74,10 @@ const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
 
 // Check if a checkbox is selected
 const isCheckboxSelected = (critereId, optionValue) => {
-    return formAddProduit.criteres[critereId] && formAddProduit.criteres[critereId].includes(optionValue);
+    return (
+        formAddProduit.criteres[critereId] &&
+        formAddProduit.criteres[critereId].includes(optionValue)
+    );
 };
 
 const formAddProduit = useForm({
@@ -178,7 +181,7 @@ const onSubmitAddProduitForm = () => {
                                         <button type="button">
                                             <XCircleIcon
                                                 @click="emit('close')"
-                                                class="h-6 w-6 text-gray-600 hover:text-gray-800"
+                                                class="h-6 w-6 text-gray-600 hover:text-red-600"
                                             />
                                         </button>
                                     </DialogTitle>
@@ -269,31 +272,75 @@ const onSubmitAddProduitForm = () => {
                                                         </div>
                                                         <!-- checkbox -->
                                                         <div
-                                                        v-if="
-                                                            critere.type_champ_form ===
-                                                            'checkbox'
-                                                        "
-                                                    >
-                                                        <div class="block">
-                                                            <span class="text-sm font-medium text-gray-700">{{ critere.nom }}</span>
-                                                            <div class="mt-2">
-                                                                <div v-for="(option, index) in critere.valeurs" :key="option.id">
-                                                                    <label class="inline-flex items-center" :for="option.valeur">
-                                                                    <input
-                                                                        :checked="isCheckboxSelected(critere.id, option.valeur)"
-                                                                        @change="updateSelectedCheckboxes(critere.id, option.valeur, $event.target.checked)"
-                                                                        :id="option.valeur"
-                                                                        :value="option.valeur"
-                                                                        :name="option.valeur"
-                                                                        type="checkbox"
-                                                                        class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
-                                                                        />
-                                                                        <span class="ml-2 text-sm font-medium text-gray-700">{{ option.valeur }}</span>
-                                                                    </label>
+                                                            v-if="
+                                                                critere.type_champ_form ===
+                                                                'checkbox'
+                                                            "
+                                                        >
+                                                            <div class="block">
+                                                                <span
+                                                                    class="text-sm font-medium text-gray-700"
+                                                                    >{{
+                                                                        critere.nom
+                                                                    }}</span
+                                                                >
+                                                                <div
+                                                                    class="mt-2"
+                                                                >
+                                                                    <div
+                                                                        v-for="(
+                                                                            option,
+                                                                            index
+                                                                        ) in critere.valeurs"
+                                                                        :key="
+                                                                            option.id
+                                                                        "
+                                                                    >
+                                                                        <label
+                                                                            class="inline-flex items-center"
+                                                                            :for="
+                                                                                option.valeur
+                                                                            "
+                                                                        >
+                                                                            <input
+                                                                                :checked="
+                                                                                    isCheckboxSelected(
+                                                                                        critere.id,
+                                                                                        option.valeur
+                                                                                    )
+                                                                                "
+                                                                                @change="
+                                                                                    updateSelectedCheckboxes(
+                                                                                        critere.id,
+                                                                                        option.valeur,
+                                                                                        $event
+                                                                                            .target
+                                                                                            .checked
+                                                                                    )
+                                                                                "
+                                                                                :id="
+                                                                                    option.valeur
+                                                                                "
+                                                                                :value="
+                                                                                    option.valeur
+                                                                                "
+                                                                                :name="
+                                                                                    option.valeur
+                                                                                "
+                                                                                type="checkbox"
+                                                                                class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
+                                                                            />
+                                                                            <span
+                                                                                class="ml-2 text-sm font-medium text-gray-700"
+                                                                                >{{
+                                                                                    option.valeur
+                                                                                }}</span
+                                                                            >
+                                                                        </label>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
                                                         <!-- radio -->
                                                         <div
                                                             v-if="

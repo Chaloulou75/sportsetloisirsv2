@@ -209,7 +209,7 @@ onMounted(() => {
                                     <button type="button">
                                         <XCircleIcon
                                             @click="emit('close')"
-                                            class="h-6 w-6 text-gray-600 hover:text-gray-800"
+                                            class="h-6 w-6 text-gray-600 hover:text-red-600"
                                         />
                                     </button>
                                 </DialogTitle>
@@ -509,20 +509,23 @@ onMounted(() => {
                                         <div
                                             class="grid grid-cols-1 gap-4 md:grid-cols-2"
                                         >
-                                            <div class="flex items-center">
-                                                <input
-                                                    v-model="addDatesOpened"
-                                                    id="addDatesOpened"
-                                                    type="checkbox"
-                                                    class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                                />
-                                                <label
-                                                    for="addDatesOpened"
-                                                    class="ml-2 text-sm font-medium text-gray-700"
-                                                    >Ajouter vos dates
-                                                    d'ouvertures
-                                                </label>
-
+                                            <div
+                                                class="flex flex-col items-start space-y-3"
+                                            >
+                                                <div class="flex items-center">
+                                                    <input
+                                                        v-model="addDatesOpened"
+                                                        id="addDatesOpened"
+                                                        type="checkbox"
+                                                        class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                    />
+                                                    <label
+                                                        for="addDatesOpened"
+                                                        class="ml-2 text-sm font-medium text-gray-700"
+                                                        >Ajouter vos dates
+                                                        d'ouvertures
+                                                    </label>
+                                                </div>
                                                 <OpenDaysForm
                                                     v-if="addDatesOpened"
                                                     class="w-full"
@@ -530,20 +533,23 @@ onMounted(() => {
                                                     :name="`Dates d'ouvertures`"
                                                 />
                                             </div>
-                                            <div class="flex items-center">
-                                                <input
-                                                    v-model="addHoursOpened"
-                                                    id="addHoursOpened"
-                                                    type="checkbox"
-                                                    class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                                />
-                                                <label
-                                                    for="addHoursOpened"
-                                                    class="ml-2 text-sm font-medium text-gray-700"
-                                                    >Ajouter vos horaires
-                                                    d'ouvertures
-                                                </label>
-
+                                            <div
+                                                class="flex flex-col items-start space-y-3"
+                                            >
+                                                <div class="flex items-center">
+                                                    <input
+                                                        v-model="addHoursOpened"
+                                                        id="addHoursOpened"
+                                                        type="checkbox"
+                                                        class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                    />
+                                                    <label
+                                                        for="addHoursOpened"
+                                                        class="ml-2 text-sm font-medium text-gray-700"
+                                                        >Ajouter vos horaires
+                                                        d'ouvertures
+                                                    </label>
+                                                </div>
                                                 <OpenTimesForm
                                                     v-if="addHoursOpened"
                                                     class="w-full"
@@ -552,19 +558,23 @@ onMounted(() => {
                                                     fermeture)`"
                                                 />
                                             </div>
-                                            <div class="flex items-center">
-                                                <input
-                                                    v-model="addDateOpen"
-                                                    id="addDateOpen"
-                                                    type="checkbox"
-                                                    class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                                />
-                                                <label
-                                                    for="addDateOpen"
-                                                    class="ml-2 text-sm font-medium text-gray-700"
-                                                    >Ajouter une date de début
-                                                </label>
-
+                                            <div
+                                                class="flex flex-col items-start space-y-3"
+                                            >
+                                                <div class="flex items-center">
+                                                    <input
+                                                        v-model="addDateOpen"
+                                                        id="addDateOpen"
+                                                        type="checkbox"
+                                                        class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                    />
+                                                    <label
+                                                        for="addDateOpen"
+                                                        class="ml-2 text-sm font-medium text-gray-700"
+                                                        >Ajouter une date de
+                                                        début
+                                                    </label>
+                                                </div>
                                                 <SingleDateForm
                                                     v-if="addDateOpen"
                                                     class="w-full"
@@ -572,20 +582,23 @@ onMounted(() => {
                                                     :name="`Date de début`"
                                                 />
                                             </div>
-                                            <div class="flex items-center">
-                                                <input
-                                                    v-model="addHourOpen"
-                                                    id="addHourOpen"
-                                                    type="checkbox"
-                                                    class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                                />
-                                                <label
-                                                    for="addHourOpen"
-                                                    class="ml-2 text-sm font-medium text-gray-700"
-                                                    >Ajouter une heure
-                                                    d'ouverture
-                                                </label>
-
+                                            <div
+                                                class="flex flex-col items-start space-y-3"
+                                            >
+                                                <div class="flex items-center">
+                                                    <input
+                                                        v-model="addHourOpen"
+                                                        id="addHourOpen"
+                                                        type="checkbox"
+                                                        class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                    />
+                                                    <label
+                                                        for="addHourOpen"
+                                                        class="ml-2 text-sm font-medium text-gray-700"
+                                                        >Ajouter une heure
+                                                        d'ouverture
+                                                    </label>
+                                                </div>
                                                 <SingleTimeForm
                                                     v-if="addHourOpen"
                                                     class="w-full"
@@ -593,20 +606,23 @@ onMounted(() => {
                                                     :name="`Horaire de début`"
                                                 />
                                             </div>
-                                            <div class="flex items-center">
-                                                <input
-                                                    v-model="addMonthsOpen"
-                                                    id="addMonthsOpen"
-                                                    type="checkbox"
-                                                    class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                                />
-                                                <label
-                                                    for="addMonthsOpen"
-                                                    class="ml-2 text-sm font-medium text-gray-700"
-                                                    >Ajouter vos mois
-                                                    d'ouvertures
-                                                </label>
-
+                                            <div
+                                                class="flex flex-col items-start space-y-3"
+                                            >
+                                                <div class="flex items-center">
+                                                    <input
+                                                        v-model="addMonthsOpen"
+                                                        id="addMonthsOpen"
+                                                        type="checkbox"
+                                                        class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                    />
+                                                    <label
+                                                        for="addMonthsOpen"
+                                                        class="ml-2 text-sm font-medium text-gray-700"
+                                                        >Ajouter vos mois
+                                                        d'ouvertures
+                                                    </label>
+                                                </div>
                                                 <OpenMonthsForm
                                                     v-if="addMonthsOpen"
                                                     class="w-full"

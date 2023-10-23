@@ -318,6 +318,9 @@ class ActiviteController extends Controller
             'address_lng' => ['nullable'],
             'date' => ['nullable'],
             'time' => ['nullable'],
+            'date_debut' => ['nullable'],
+            'time_debut' => ['nullable'],
+            'months' => ['nullable'],
             'instructeur_email' => ['nullable', 'email:filter', 'exists:users,email'],
             'instructeur_contact' => ['nullable'],
             'instructeur_phone' => ['nullable'],
@@ -335,6 +338,32 @@ class ActiviteController extends Controller
                 }
             }
         }
+
+
+        if($request->date_debut) {
+            $date_debut = Carbon::parse($request->date_debut)->format('Y-m-d');
+        }
+
+        if($request->time_debut) {
+            $hour_debut = $request->time_debut['hours'];
+            $minute_debut = $request->time_debut['minutes'];
+            $time_debut = sprintf('%02d:%02d', $hour_debut, $minute_debut);
+        }
+
+        if($request->months) {
+            $month_start = $request->months[0]['month'] + 1;
+            $year_start = $request->months[0]['year'];
+            $full_month_start = sprintf('%04d-%02d', $year_start, $month_start);
+            $startMonth = Carbon::parse($full_month_start)->format('Y-m');
+
+            $month_end = $request->months[1]['month'] + 1;
+            $year_end = $request->months[1]['year'];
+            $full_month_end = sprintf('%04d-%02d', $year_end, $month_end);
+            $endMonth = Carbon::parse($full_month_end)->format('Y-m');
+        }
+
+        dd($date_debut, $time_debut, $startMonth, $endMonth);
+
 
         if($request->date || $request->time) {
 
@@ -359,6 +388,8 @@ class ActiviteController extends Controller
                 'hourclose' => $hourclose ?? "",
             ]);
         }
+
+
 
         $structureActivite = StructureActivite::create([
             'structure_id' => $structure->id,

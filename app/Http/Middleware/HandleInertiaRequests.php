@@ -32,10 +32,10 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             'auth' => [
-                'user' => fn () => $request->user() ? $request->user()->load('structures')->only('id', 'name', 'email', 'structures') : null,
+                'user' => fn() => $request->user() ? $request->user()->load('structures:id,name,slug')->only('id', 'name', 'email', 'structures') : null,
             ],
             'user_can' => [
-                'view_admin' => fn () => $request->user() ? $request->user()->can('viewAdmin', User::class) : false,
+                'view_admin' => fn() => $request->user() ? $request->user()->can('viewAdmin', User::class) : false,
             ],
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy())->toArray(), [

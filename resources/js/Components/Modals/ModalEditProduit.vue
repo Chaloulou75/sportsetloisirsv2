@@ -61,54 +61,65 @@ watch(
                 if (Array.isArray(critereValue)) {
                     // For checkboxes with multiple values
                     if (!Array.isArray(formEditProduit.criteres[critereId])) {
-                    // If the critereId doesn't exist in the form object, create a new array with the critereValue
-                    formEditProduit.criteres[critereId] = critereValue.slice();
+                        // If the critereId doesn't exist in the form object, create a new array with the critereValue
+                        formEditProduit.criteres[critereId] =
+                            critereValue.slice();
                     } else {
-                    // If the critereId exists, append the critereValue to the existing array
-                    formEditProduit.criteres[critereId].push(...critereValue);
+                        // If the critereId exists, append the critereValue to the existing array
+                        formEditProduit.criteres[critereId].push(
+                            ...critereValue
+                        );
                     }
                 } else {
                     // For other types of fields
                     if (!formEditProduit.criteres[critereId]) {
-                    // If the critereId doesn't exist in the form object, assign the critereValue as a single value
-                    formEditProduit.criteres[critereId] = critereValue;
+                        // If the critereId doesn't exist in the form object, assign the critereValue as a single value
+                        formEditProduit.criteres[critereId] = critereValue;
                     } else {
-                    // If the critereId exists, convert the existing value to an array and push the new critereValue
-                    const existingValue = formEditProduit.criteres[critereId];
-                    if (!Array.isArray(existingValue)) {
-                        formEditProduit.criteres[critereId] = [existingValue];
-                    }
-                    formEditProduit.criteres[critereId].push(critereValue);
+                        // If the critereId exists, convert the existing value to an array and push the new critereValue
+                        const existingValue =
+                            formEditProduit.criteres[critereId];
+                        if (!Array.isArray(existingValue)) {
+                            formEditProduit.criteres[critereId] = [
+                                existingValue,
+                            ];
+                        }
+                        formEditProduit.criteres[critereId].push(critereValue);
                     }
                 }
             });
-
         }
     }
 );
 
 const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
-  if (checked) {
-    if (!Array.isArray(formEditProduit.criteres[critereId])) {
-      // If the critereId exists but is not an array, convert it to an array and assign the new array with the optionValue
-      formEditProduit.criteres[critereId] = [formEditProduit.criteres[critereId]];
+    if (checked) {
+        if (!Array.isArray(formEditProduit.criteres[critereId])) {
+            // If the critereId exists but is not an array, convert it to an array and assign the new array with the optionValue
+            formEditProduit.criteres[critereId] = [
+                formEditProduit.criteres[critereId],
+            ];
+        }
+        // Push the optionValue to the array
+        formEditProduit.criteres[critereId].push(optionValue);
+    } else {
+        // Remove the optionValue from the array
+        if (Array.isArray(formEditProduit.criteres[critereId])) {
+            const index =
+                formEditProduit.criteres[critereId].indexOf(optionValue);
+            if (index !== -1) {
+                formEditProduit.criteres[critereId].splice(index, 1);
+            }
+        }
     }
-    // Push the optionValue to the array
-    formEditProduit.criteres[critereId].push(optionValue);
-  } else {
-    // Remove the optionValue from the array
-    if (Array.isArray(formEditProduit.criteres[critereId])) {
-      const index = formEditProduit.criteres[critereId].indexOf(optionValue);
-      if (index !== -1) {
-        formEditProduit.criteres[critereId].splice(index, 1);
-      }
-    }
-  }
 };
 
 // Check if a checkbox is selected
 const isCheckboxSelected = (critereId, optionValue) => {
-    return formEditProduit.criteres[critereId] && formEditProduit.criteres[critereId].includes(optionValue);
+    return (
+        formEditProduit.criteres[critereId] &&
+        formEditProduit.criteres[critereId].includes(optionValue)
+    );
 };
 
 const formEditProduit = useForm({
@@ -209,7 +220,7 @@ const onSubmitEditProduitForm = () => {
                                         <button type="button">
                                             <XCircleIcon
                                                 @click="emit('close')"
-                                                class="h-6 w-6 text-gray-600 hover:text-gray-800"
+                                                class="h-6 w-6 text-gray-600 hover:text-red-600"
                                             />
                                         </button>
                                     </DialogTitle>
@@ -341,31 +352,75 @@ const onSubmitEditProduitForm = () => {
                                                         </div>
                                                         <!-- checkbox -->
                                                         <div
-                                                        v-if="
-                                                            critere.type_champ_form ===
-                                                            'checkbox'
-                                                        "
-                                                    >
-                                                        <div class="block">
-                                                            <span class="text-sm font-medium text-gray-700">{{ critere.nom }}</span>
-                                                            <div class="mt-2">
-                                                                <div v-for="(option, index) in critere.valeurs" :key="option.id">
-                                                                    <label class="inline-flex items-center" :for="option.valeur">
-                                                                    <input
-                                                                        :checked="isCheckboxSelected(critere.id, option.valeur)"
-                                                                        @change="updateSelectedCheckboxes(critere.id, option.valeur, $event.target.checked)"
-                                                                        :id="option.valeur"
-                                                                        :value="option.valeur"
-                                                                        :name="option.valeur"
-                                                                        type="checkbox"
-                                                                        class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
-                                                                        />
-                                                                        <span class="ml-2 text-sm font-medium text-gray-700">{{ option.valeur }}</span>
-                                                                    </label>
+                                                            v-if="
+                                                                critere.type_champ_form ===
+                                                                'checkbox'
+                                                            "
+                                                        >
+                                                            <div class="block">
+                                                                <span
+                                                                    class="text-sm font-medium text-gray-700"
+                                                                    >{{
+                                                                        critere.nom
+                                                                    }}</span
+                                                                >
+                                                                <div
+                                                                    class="mt-2"
+                                                                >
+                                                                    <div
+                                                                        v-for="(
+                                                                            option,
+                                                                            index
+                                                                        ) in critere.valeurs"
+                                                                        :key="
+                                                                            option.id
+                                                                        "
+                                                                    >
+                                                                        <label
+                                                                            class="inline-flex items-center"
+                                                                            :for="
+                                                                                option.valeur
+                                                                            "
+                                                                        >
+                                                                            <input
+                                                                                :checked="
+                                                                                    isCheckboxSelected(
+                                                                                        critere.id,
+                                                                                        option.valeur
+                                                                                    )
+                                                                                "
+                                                                                @change="
+                                                                                    updateSelectedCheckboxes(
+                                                                                        critere.id,
+                                                                                        option.valeur,
+                                                                                        $event
+                                                                                            .target
+                                                                                            .checked
+                                                                                    )
+                                                                                "
+                                                                                :id="
+                                                                                    option.valeur
+                                                                                "
+                                                                                :value="
+                                                                                    option.valeur
+                                                                                "
+                                                                                :name="
+                                                                                    option.valeur
+                                                                                "
+                                                                                type="checkbox"
+                                                                                class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
+                                                                            />
+                                                                            <span
+                                                                                class="ml-2 text-sm font-medium text-gray-700"
+                                                                                >{{
+                                                                                    option.valeur
+                                                                                }}</span
+                                                                            >
+                                                                        </label>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
 
                                                         <!-- radio -->
                                                         <div

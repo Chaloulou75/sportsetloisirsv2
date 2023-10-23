@@ -102,7 +102,7 @@ function destroy(id) {
                                                 >
                                                     <XCircleIcon
                                                         @click="$emit('close')"
-                                                        class="h-6 w-6 text-gray-500 hover:text-gray-800"
+                                                        class="h-6 w-6 text-gray-500 hover:text-red-600"
                                                     />
                                                 </button>
                                             </DialogTitle>
