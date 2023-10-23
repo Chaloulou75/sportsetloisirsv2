@@ -70,14 +70,14 @@ class CityController extends Controller
                             sin(radians({$city->latitude})) * sin(radians(latitude))
                         )) AS distance
                     ")
-                    ->where('slug', '!=', $city->slug)
+                    ->whereNot('slug', $city->slug)
                     ->havingRaw('distance <= ?', [$city->tolerance_rayon])
                     ->orderBy('distance', 'ASC')
                     ->limit(10)
                     ->get();
 
-        $citiesAroundProducts = $citiesAround->flatMap(function ($city) {
-            return $city->produits()->with([
+        $citiesAroundProducts = $citiesAround->flatMap(function ($cityAr) {
+            return $cityAr->produits()->with([
             'structure:id,name',
             'adresse',
             'discipline:id,name,slug',

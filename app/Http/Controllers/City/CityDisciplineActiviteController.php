@@ -34,7 +34,7 @@ class CityDisciplineActiviteController extends Controller
         $citiesAround = City::withWhereHas('produits')
             ->select('id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
             ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
-            ->where('slug', '!=', $city->slug)
+            ->whereNot('id', $city->id)
             ->havingRaw('distance <= ?', [$city->tolerance_rayon])
             ->orderBy('distance', 'ASC')
             ->limit(10)
