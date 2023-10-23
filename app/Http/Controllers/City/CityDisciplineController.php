@@ -46,6 +46,7 @@ class CityDisciplineController extends Controller
                             ->orderBy('distance', 'ASC')
                             ->limit(10)
                             ->get();
+        // $citiesAround = $city->getCitiesAround($city->latitude, $city->longitude, $city->tolerance_rayon);
 
         $cityAroundIds = $citiesAround->pluck('id');
 

@@ -72,6 +72,17 @@ class City extends Model
         ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee']);
     }
 
+    // public function getCitiesAround($latitude, $longitude, $toleranceRayon)
+    // {
+    //     return $this->select('id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
+    //         ->selectRaw("(6366 * acos(cos(radians($latitude)) * cos(radians(latitude)) * cos(radians(longitude) - radians($longitude)) + sin(radians($latitude)) * sin(radians(latitude))) AS distance")
+    //         ->whereNot('id', $this->id)
+    //         ->havingRaw('distance <= ?', [$toleranceRayon])
+    //         ->orderBy('distance', 'ASC')
+    //         ->limit(10)
+    //         ->get();
+    // }
+
     public function departement(): BelongsTo
     {
         return $this->belongsTo(Departement::class);
