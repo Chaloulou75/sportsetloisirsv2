@@ -75,7 +75,7 @@ class CityDisciplineStructuretypeActiviteController extends Controller
         $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
 
         $activite = StructureActivite::with([
-            'structure',
+            'structure', 'dates',
             'instructeurs',
             'discipline:id,name',
             'categorie:id,categorie_id,discipline_id,nom_categorie_client',

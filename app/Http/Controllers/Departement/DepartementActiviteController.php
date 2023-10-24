@@ -31,9 +31,9 @@ class DepartementActiviteController extends Controller
                 ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count'])
                 ->first();
 
-
         $activite = StructureActivite::with([
             'structure:id,name,slug',
+            'dates',
             'instructeurs',
             'discipline:id,name',
             'categorie:id,categorie_id,discipline_id,nom_categorie_client',

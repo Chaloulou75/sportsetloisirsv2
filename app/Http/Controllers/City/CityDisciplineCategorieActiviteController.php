@@ -74,7 +74,7 @@ class CityDisciplineCategorieActiviteController extends Controller
         $requestCategory = LienDisciplineCategorie::where('discipline_id', $requestDiscipline->id)->where('slug', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
 
         $activite = StructureActivite::with([
-            'structure',
+            'structure', 'dates',
             'instructeurs',
             'discipline:id,name',
             'categorie:id,categorie_id,discipline_id,nom_categorie_client',

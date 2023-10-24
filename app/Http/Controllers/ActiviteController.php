@@ -128,7 +128,7 @@ class ActiviteController extends Controller
         $allCities = City::withProducts()->get();
 
         $activite = StructureActivite::with([
-            'structure',
+            'structure', 'dates',
             'instructeurs',
             'discipline:id,name',
             'categorie:id,categorie_id,discipline_id,nom_categorie_client',
@@ -359,12 +359,13 @@ class ActiviteController extends Controller
             $newStructureAddress = StructureAddress::create($validatedAddress);
             $structureAddressId = $newStructureAddress->id;
 
-        } elseif($request->adresse) {
-            $structureAddressId = $request->addresse;
+        } elseif ($request->adresse) {
+            $structureAddressId = $request->adresse;
         } else {
             $structureAddressId = $structure->adresses->first()->id;
         }
 
+        // Dates et horaires
         if($request->date_debut) {
             $date_debut = Carbon::parse($request->date_debut)->format('Y-m-d');
         }
@@ -419,7 +420,8 @@ class ActiviteController extends Controller
             "actif" => true,
         ]);
 
-        $structureActivite->dates()->create([
+        if(isset($dayopen) || isset($dayclose) || isset($houropen) || isset($hourclose) || isset($date_debut) || isset($time_debut) || isset($startMonth) || isset($endMonth)) {
+            $structureActivite->dates()->create([
                 'structure_activite_id' => $structureActivite->id,
                 'dayopen' => $dayopen ?? null,
                 'dayclose' => $dayclose ?? null,
@@ -429,7 +431,8 @@ class ActiviteController extends Controller
                 'time_debut' => $time_debut ?? null,
                 'start_month' => $startMonth ?? null,
                 'end_month' => $endMonth ?? null,
-        ]);
+            ]);
+        }
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('public/structures/' . $structure->id . '/activites/' . $structureActivite->id);
@@ -443,7 +446,7 @@ class ActiviteController extends Controller
             'categorie_id' => $request->categorie_id,
             'activite_id' => $structureActivite->id,
             "actif" => true,
-            'lieu_id' => $structureAddressId,
+            'lieu_id' => $structureAddressId ?? null,
             'horaire_id' => $dayTime->id ?? null,
             // 'tarif_id' => $structureTarif->id,
             'reservable' => 0,
