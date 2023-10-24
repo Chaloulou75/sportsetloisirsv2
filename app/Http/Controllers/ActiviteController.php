@@ -420,8 +420,12 @@ class ActiviteController extends Controller
             "actif" => true,
         ]);
 
-        if(isset($dayopen) || isset($dayclose) || isset($houropen) || isset($hourclose) || isset($date_debut) || isset($time_debut) || isset($startMonth) || isset($endMonth)) {
-            $structureActivite->dates()->create([
+
+        if (
+            isset($dayopen) || isset($dayclose) || isset($houropen) || isset($hourclose) ||
+            isset($date_debut) || isset($time_debut) || isset($startMonth) || isset($endMonth)
+        ) {
+            $data = [
                 'structure_activite_id' => $structureActivite->id,
                 'dayopen' => $dayopen ?? null,
                 'dayclose' => $dayclose ?? null,
@@ -431,8 +435,11 @@ class ActiviteController extends Controller
                 'time_debut' => $time_debut ?? null,
                 'start_month' => $startMonth ?? null,
                 'end_month' => $endMonth ?? null,
-            ]);
+            ];
+
+            $structureActivite->dates()->create($data);
         }
+
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('public/structures/' . $structure->id . '/activites/' . $structureActivite->id);
