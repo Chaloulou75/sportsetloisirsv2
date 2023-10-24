@@ -324,21 +324,46 @@ class ActiviteController extends Controller
             'instructeur_email' => ['nullable', 'email:filter', 'exists:users,email'],
             'instructeur_contact' => ['nullable'],
             'instructeur_phone' => ['nullable'],
+            'rayon_km' => ['nullable'],
         ]);
 
         $structure = Structure::with('adresses')->findOrFail($structure->id);
 
         $categorieDiscName = LienDisciplineCategorie::with('discipline')->where('id', $request->categorie_id)->first();
 
-        //check if address exist
-        if($structure->id === $request->structure_id) {
+        if($request->address) {
+            //check if address exist
             foreach($structure->adresses as $address) {
                 if (($address->address_lat === $request->address_lat) && ($address->address_lng === $request->address_lng)) {
                     return to_route('structures.disciplines.show', ['structure' => $structure->slug, 'discipline' => $discipline])->with('error', 'Cette adresse existe déjà dans votre liste d\'adresses');
                 }
             }
-        }
+            $city = City::where('code_postal', $request->zip_code)->firstOrFail();
+            $cityId = $city->id;
 
+            $validatedAddress = [
+                'structure_id' => $structure->id,
+                'name' => $structure->name,
+                'address' => $request->address,
+                'zip_code' => $request->zip_code,
+                'city' => $request->city,
+                'country' => $request->country,
+                'city_id' => $cityId,
+                'country_id' => $structure->country_id,
+                'address_lat' => $request->address_lat,
+                'address_lng' => $request->address_lng,
+                'phone' => $structure->phone1,
+                'email' => $structure->email,
+            ];
+
+            $newStructureAddress = StructureAddress::create($validatedAddress);
+            $structureAddressId = $newStructureAddress->id;
+
+        } elseif($request->adresse) {
+            $structureAddressId = $request->addresse;
+        } else {
+            $structureAddressId = $structure->adresses->first()->id;
+        }
 
         if($request->date_debut) {
             $date_debut = Carbon::parse($request->date_debut)->format('Y-m-d');
@@ -353,18 +378,13 @@ class ActiviteController extends Controller
         if($request->months) {
             $month_start = $request->months[0]['month'] + 1;
             $year_start = $request->months[0]['year'];
-            $full_month_start = sprintf('%04d-%02d', $year_start, $month_start);
-            $startMonth = Carbon::parse($full_month_start)->format('Y-m');
+            $startMonth = Carbon::create($year_start, $month_start, 1, 0, 0, 0)->format('Y-m-d');
+
 
             $month_end = $request->months[1]['month'] + 1;
             $year_end = $request->months[1]['year'];
-            $full_month_end = sprintf('%04d-%02d', $year_end, $month_end);
-            $endMonth = Carbon::parse($full_month_end)->format('Y-m');
+            $endMonth = Carbon::create($year_end, $month_end, 1, 0, 0, 0)->endOfMonth()->format('Y-m-d');
         }
-
-        dd($date_debut, $time_debut, $startMonth, $endMonth);
-
-
         if($request->date || $request->time) {
 
             $dayopen = Carbon::parse($request->date[0])->format('Y-m-d');
@@ -382,14 +402,12 @@ class ActiviteController extends Controller
 
             $dayTime = StructureHoraire::firstOrCreate([
                 'structure_id' => $structure->id,
-                'dayopen' => $dayopen ?? "",
-                'dayclose' => $dayclose ?? "",
-                'houropen' => $houropen ?? "",
-                'hourclose' => $hourclose ?? "",
+                'dayopen' => $dayopen ?? null,
+                'dayclose' => $dayclose ?? null,
+                'houropen' => $houropen ?? null,
+                'hourclose' => $hourclose ?? null,
             ]);
         }
-
-
 
         $structureActivite = StructureActivite::create([
             'structure_id' => $structure->id,
@@ -398,7 +416,19 @@ class ActiviteController extends Controller
             'titre' => $request->titre ?? $categorieDiscName->nom_categorie_pro . ' de ' . $categorieDiscName->discipline->name,
             'description' => $request->description,
             'image' => "",
-            "actif" => 1,
+            "actif" => true,
+        ]);
+
+        $structureActivite->dates()->create([
+                'structure_activite_id' => $structureActivite->id,
+                'dayopen' => $dayopen ?? null,
+                'dayclose' => $dayclose ?? null,
+                'houropen' => $houropen ?? null,
+                'hourclose' => $hourclose ?? null,
+                'date_debut' => $date_debut ?? null,
+                'time_debut' => $time_debut ?? null,
+                'start_month' => $startMonth ?? null,
+                'end_month' => $endMonth ?? null,
         ]);
 
         if ($request->hasFile('image')) {
@@ -412,8 +442,8 @@ class ActiviteController extends Controller
             'discipline_id' => $request->discipline_id,
             'categorie_id' => $request->categorie_id,
             'activite_id' => $structureActivite->id,
-            "actif" => 1,
-            'lieu_id' => $request->adresse ?? $structure->adresses->first()->id,
+            "actif" => true,
+            'lieu_id' => $structureAddressId,
             'horaire_id' => $dayTime->id ?? null,
             // 'tarif_id' => $structureTarif->id,
             'reservable' => 0,
@@ -458,33 +488,6 @@ class ActiviteController extends Controller
                     }
                 }
             }
-        }
-
-        // newAdresse
-        if($request->address) {
-
-            $city = City::where('code_postal', $request->zip_code)->firstOrFail();
-            $cityId = $city->id;
-
-            $validatedAddress = [
-                        'structure_id' => $structure->id,
-                        'name' => $structure->name,
-                        'address' => $request->address,
-                        'zip_code' => $request->zip_code,
-                        'city' => $request->city,
-                        'country' => $request->country,
-                        'city_id' => $cityId,
-                        'country_id' => $structure->country_id,
-                        'address_lat' => $request->address_lat,
-                        'address_lng' => $request->address_lng,
-                        'phone' => $structure->phone1,
-                        'email' => $structure->email,
-                    ];
-
-            $structureAddress = StructureAddress::create($validatedAddress);
-
-            $structureProduit->update(['lieu_id' => $structureAddress->id]);
-
         }
 
         if($request->instructeur_email) {

@@ -1,116 +1,89 @@
-<script>
+<script setup>
 import { onMounted, onUnmounted, ref } from "vue";
 import useScript from "@/composables/useScript.js";
 import { TransitionRoot } from "@headlessui/vue";
-export default {
-    props: {
-        errors: Object,
-        label: {
-            type: String,
-            default: "",
-        },
-        address: {
-            type: String,
-            default: "",
-        },
-        city: {
-            type: String,
-            default: "",
-        },
-        zip_code: {
-            type: String,
-            default: "",
-        },
-        country: {
-            type: String,
-            default: "",
-        },
-        address_lat: {
-            type: Number,
-            default: "",
-        },
-        address_lng: {
-            type: Number,
-            default: "",
-        },
-    },
 
-    setup(props, context) {
-        const isShowing = ref(true);
-        const streetRef = ref(null);
-        let autocomplete;
+const props = defineProps({
+    errors: Object,
+    label: String,
+    address: String,
+    city: String,
+    zip_code: String,
+    country: String,
+    address_lat: Number,
+    address_lng: Number,
+});
 
-        onMounted(async () => {
-            await useScript(
-                `https://maps.googleapis.com/maps/api/js?key=${
-                    import.meta.env.VITE_GOOGLE_MAP_API_KEY
-                }&libraries=places`
-            );
-            autocomplete = new google.maps.places.Autocomplete(
-                streetRef.value,
-                {
-                    types: ["address"],
-                    componentRestrictions: { country: ["FR"] },
-                    fields: ["name", "address_components", "geometry"],
-                }
-            );
+const emit = defineEmits([
+    "update:address",
+    "update:city",
+    "update:zip_code",
+    "update:country",
+    "update:address_lat",
+    "update:address_lng",
+]);
 
-            google.maps.event.addListener(autocomplete, "place_changed", () => {
-                const mapping = {
-                    locality: "update:city",
-                    postal_code: "update:zip_code",
-                    country: "update:country",
-                };
+const updateAddress = (event) => emit("update:address", event.target.value);
+const updateCity = (event) => emit("update:city", event.target.value);
+const updateZipCode = (event) => emit("update:zip_code", event.target.value);
+const updateCountry = (event) => emit("update:country", event.target.value);
 
-                let address = "update:address";
-                let address_lat = "update:address_lat";
-                let address_lng = "update:address_lng";
+const isShowing = ref(true);
+const streetRef = ref(null);
+let autocomplete;
 
-                //reset form in case of change
-                for (const type in mapping) {
-                    context.emit(mapping[type], "");
-                }
+onMounted(async () => {
+    await useScript(
+        `https://maps.googleapis.com/maps/api/js?key=${
+            import.meta.env.VITE_GOOGLE_MAP_API_KEY
+        }&libraries=places`
+    );
 
-                let place = autocomplete.getPlace();
+    autocomplete = new google.maps.places.Autocomplete(streetRef.value, {
+        types: ["address"],
+        componentRestrictions: { country: ["FR"] },
+        fields: ["name", "address_components", "geometry"],
+    });
 
-                context.emit(address, place.name);
-                context.emit(address_lat, place.geometry.location.lat());
-                context.emit(address_lng, place.geometry.location.lng());
-
-                place.address_components.forEach((component) => {
-                    component.types.forEach((type) => {
-                        if (mapping.hasOwnProperty(type)) {
-                            context.emit(mapping[type], component.long_name);
-                        }
-                    });
-                    // document.getElementById("department_code").focus();
-                });
-            });
-
-            google.maps.event.addDomListener(
-                streetRef.value,
-                "keydown",
-                (event) => {
-                    if (event.key === "Enter") {
-                        event.preventDefault();
-                        // document.getElementById("department_code").focus();
-                    }
-                }
-            );
-        });
-
-        onUnmounted(() => {
-            if (autocomplete) {
-                google.maps.event.clearInstanceListeners(autocomplete);
-            }
-        });
-
-        return {
-            streetRef,
-            isShowing,
+    google.maps.event.addListener(autocomplete, "place_changed", () => {
+        const mapping = {
+            locality: "update:city",
+            postal_code: "update:zip_code",
+            country: "update:country",
         };
-    },
-};
+
+        // Reset form in case of change
+        for (const type in mapping) {
+            emit(mapping[type], "");
+        }
+
+        let place = autocomplete.getPlace();
+
+        emit("update:address", place.name);
+        emit("update:address_lat", place.geometry.location.lat());
+        emit("update:address_lng", place.geometry.location.lng());
+
+        place.address_components.forEach((component) => {
+            component.types.forEach((type) => {
+                if (mapping.hasOwnProperty(type)) {
+                    emit(mapping[type], component.long_name);
+                }
+            });
+        });
+    });
+
+    streetRef.value.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+        }
+    });
+});
+
+onUnmounted(() => {
+    if (autocomplete) {
+        google.maps.event.clearInstanceListeners(autocomplete);
+    }
+});
 </script>
 
 <template>
@@ -135,7 +108,7 @@ export default {
                 </label>
                 <div class="mt-1 flex rounded-md shadow-sm">
                     <input
-                        @input="$emit('update:address', $event.target.value)"
+                        @input="updateAddress"
                         :value="address"
                         ref="streetRef"
                         type="text"
@@ -160,7 +133,7 @@ export default {
                     >Ville *</label
                 >
                 <input
-                    @input="$emit('update:city', $event.target.value)"
+                    @input="updateCity"
                     :value="city"
                     type="text"
                     name="city"
@@ -182,7 +155,7 @@ export default {
                     >ZIP / Code Postal *</label
                 >
                 <input
-                    @input="$emit('update:zip_code', $event.target.value)"
+                    @input="updateZipCode"
                     :value="zip_code"
                     type="text"
                     name="zip_code"
@@ -195,42 +168,6 @@ export default {
                     {{ errors.zip_code }}
                 </div>
             </div>
-            <!-- department_code -->
-            <!-- <div class="col-span-3 sm:col-span-1">
-            <label
-                for="department_code"
-                class="block text-sm font-medium text-gray-700"
-            >
-                Code département
-            </label>
-            <div class="mt-1">
-                <select
-                    name="department_code"
-                    id="department_code"
-                    @input="
-                        $emit('update:department_code', $event.target.value)
-                    "
-                    :value="department_code"
-                    class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
-                >
-                    <option
-                        v-for="department in departments"
-                        :key="department.id"
-                        :value="department.id"
-                    >
-                        {{ department.code }}
-                        -
-                        {{ department.name }}
-                    </option>
-                </select>
-            </div>
-            <div
-                v-if="errors.department_code"
-                class="mt-2 text-xs text-red-500"
-            >
-                {{ errors.department_code }}
-            </div>
-        </div> -->
             <!-- pays -->
             <div class="col-span-4 sm:col-span-2">
                 <label
@@ -239,7 +176,7 @@ export default {
                     >Pays *</label
                 >
                 <select
-                    @input="$emit('update:country', $event.target.value)"
+                    @input="updateCountry"
                     :value="country"
                     id="country"
                     name="country"

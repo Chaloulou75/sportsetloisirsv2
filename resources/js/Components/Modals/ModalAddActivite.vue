@@ -5,6 +5,7 @@ import { XCircleIcon } from "@heroicons/vue/24/outline";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
 import RadioForm from "@/Components/Forms/RadioForm.vue";
+import RangeInputForm from "@/Components/Forms/RangeInputForm.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
 import OpenDaysForm from "@/Components/Forms/DayTime/OpenDaysForm.vue";
 import SingleDateForm from "@/Components/Forms/DayTime/SingleDateForm.vue";
@@ -55,6 +56,7 @@ const addHoursOpened = ref(false);
 const addDateOpen = ref(false);
 const addHourOpen = ref(false);
 const addMonthsOpen = ref(false);
+const addRayon = ref(false);
 
 // const filteredCriteres = computed(() => {
 //     return props.criteres.filter(
@@ -86,6 +88,7 @@ const form = useForm({
     instructeur_email: ref(null),
     instructeur_contact: ref(null),
     instructeur_phone: ref(null),
+    rayon_km: ref(0),
 });
 
 watch(
@@ -664,6 +667,29 @@ onMounted(() => {
                                                 form.instructeur_phone
                                             "
                                             :errors="errors"
+                                        />
+
+                                        <!-- Range km  -->
+                                        <div class="flex items-center">
+                                            <input
+                                                v-model="addRayon"
+                                                id="addRayon"
+                                                type="checkbox"
+                                                class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                            />
+                                            <label
+                                                for="addRayon"
+                                                class="ml-2 text-sm font-medium text-gray-700"
+                                                >Ajouter un rayon d'action
+                                            </label>
+                                        </div>
+                                        <RangeInputForm
+                                            v-if="addRayon"
+                                            v-model="form.rayon_km"
+                                            :min="0"
+                                            :max="200"
+                                            :name="`Rayon de déplacement (en km)`"
+                                            :metric="`Km`"
                                         />
                                     </div>
                                 </div>

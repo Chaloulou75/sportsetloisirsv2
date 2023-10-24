@@ -53,4 +53,9 @@ class StructureActivite extends Model
         return $this->belongsToMany(User::class)->withPivot('contact', 'email', 'phone');
     }
 
+    public function dates(): HasMany
+    {
+        return $this->hasMany(StructureActiviteDate::class, 'structure_activite_id');
+    }
+
 }
