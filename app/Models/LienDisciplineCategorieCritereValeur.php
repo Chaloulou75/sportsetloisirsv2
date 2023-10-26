@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -22,6 +23,11 @@ class LienDisciplineCategorieCritereValeur extends Model
     public function critere(): BelongsTo
     {
         return $this->belongsTo(LienDisciplineCategorieCritere::class, 'discipline_categorie_critere_id');
+    }
+
+    public function sous_criteres(): HasMany
+    {
+        return $this->hasMany(LiensDisCatCritValSsCrit::class, 'dis_cat_crit_val_id');
     }
 
     // public function discipline(): BelongsTo

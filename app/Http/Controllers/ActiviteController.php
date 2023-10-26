@@ -309,6 +309,7 @@ class ActiviteController extends Controller
             'image' => 'nullable|image|max:2048',
             'actif' => 'required|boolean',
             'criteres' => 'nullable',
+            'souscriteres' => 'nullable',
             'adresse' => ['nullable', Rule::exists('structure_adresse', 'id')],
             'address' => ['nullable'],
             'city' => ['nullable'],
@@ -326,6 +327,8 @@ class ActiviteController extends Controller
             'instructeur_phone' => ['nullable'],
             'rayon_km' => ['nullable'],
         ]);
+
+        // dd($request->criteres, $request->souscriteres);
 
         $structure = Structure::with('adresses')->findOrFail($structure->id);
 
@@ -376,15 +379,9 @@ class ActiviteController extends Controller
             $time_debut = sprintf('%02d:%02d', $hour_debut, $minute_debut);
         }
 
-        if($request->months) {
-            $month_start = $request->months[0]['month'] + 1;
-            $year_start = $request->months[0]['year'];
-            $startMonth = Carbon::create($year_start, $month_start, 1, 0, 0, 0)->format('Y-m-d');
-
-
-            $month_end = $request->months[1]['month'] + 1;
-            $year_end = $request->months[1]['year'];
-            $endMonth = Carbon::create($year_end, $month_end, 1, 0, 0, 0)->endOfMonth()->format('Y-m-d');
+        if (is_array($request->months) && count($request->months) === 2) {
+            $startMonth = Carbon::create($request->months[0]['year'], $request->months[0]['month'] + 1, 1)->startOfMonth();
+            $endMonth = Carbon::create($request->months[1]['year'], $request->months[1]['month'] + 1, 1)->endOfMonth();
         }
         if($request->date || $request->time) {
 
@@ -422,8 +419,14 @@ class ActiviteController extends Controller
 
 
         if (
-            isset($dayopen) || isset($dayclose) || isset($houropen) || isset($hourclose) ||
-            isset($date_debut) || isset($time_debut) || isset($startMonth) || isset($endMonth)
+            (isset($dayopen) && !empty($dayopen)) ||
+            (isset($dayclose) && !empty($dayclose)) ||
+            (isset($houropen) && !empty($houropen)) ||
+            (isset($hourclose) && !empty($hourclose)) ||
+            (isset($date_debut) && !empty($date_debut)) ||
+            (isset($time_debut) && !empty($time_debut)) ||
+            (isset($startMonth) && !empty($startMonth)) ||
+            (isset($endMonth) && !empty($endMonth))
         ) {
             $data = [
                 'structure_activite_id' => $structureActivite->id,
@@ -453,7 +456,7 @@ class ActiviteController extends Controller
             'categorie_id' => $request->categorie_id,
             'activite_id' => $structureActivite->id,
             "actif" => true,
-            'lieu_id' => $structureAddressId ?? null,
+            'lieu_id' => $structureAddressId,
             'horaire_id' => $dayTime->id ?? null,
             // 'tarif_id' => $structureTarif->id,
             'reservable' => 0,
@@ -468,8 +471,12 @@ class ActiviteController extends Controller
         if(isset($criteresValues)) {
             foreach($critereIds as $critereId) {
                 foreach ($criteresValues as $key => $critereValue) {
+                    dd($criteresValues, $critereValue);
+
                     $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $key)->first();
+
                     if($critereId === $key) {
+
                         if (isset($critereValue)) {
                             if (is_array($critereValue)) {
                                 foreach ($critereValue as $value) {
@@ -480,10 +487,11 @@ class ActiviteController extends Controller
                                         'activite_id' => $structureActivite->id,
                                         'produit_id' => $structureProduit->id,
                                         'critere_id' => $key,
-                                        'valeur' => $value,
+                                        'valeur' => isset($value['valeur']) ?? $defaut->valeur,
                                     ]);
                                 }
                             } else {
+
                                 $structureProduitCriteres = StructureProduitCritere::create([
                                     'structure_id' => $structure->id,
                                     'discipline_id' => $request->discipline_id,
@@ -491,7 +499,7 @@ class ActiviteController extends Controller
                                     'activite_id' => $structureActivite->id,
                                     'produit_id' => $structureProduit->id,
                                     'critere_id' => $key,
-                                    'valeur' => $critereValue ?? $defaut->valeur,
+                                    'valeur' => $critereValue['valeur'] ?? $defaut->valeur,
                                 ]);
                             }
                         }

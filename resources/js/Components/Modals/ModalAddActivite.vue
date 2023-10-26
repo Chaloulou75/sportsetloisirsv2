@@ -50,6 +50,7 @@ const latestAdresseId = computed(() => {
     return null; // Return a default value if there are no adresses
 });
 
+const showNewSelect = ref(false);
 const addInstructeur = ref(false);
 const addDatesOpened = ref(false);
 const addHoursOpened = ref(false);
@@ -58,61 +59,83 @@ const addHourOpen = ref(false);
 const addMonthsOpen = ref(false);
 const addRayon = ref(false);
 
-// const filteredCriteres = computed(() => {
-//     return props.criteres.filter(
-//         (critere) => critere.categorie_id === form.categorie_id
-//     );
-// });
-
 const form = useForm({
-    structure_id: ref(props.structure.id),
-    discipline_id: ref(props.discipline.id),
-    categorie_id: ref(null),
-    titre: ref(null),
-    description: ref(null),
-    image: ref(null),
-    actif: ref(1),
-    criteres: ref({}),
+    structure_id: props.structure.id,
+    discipline_id: props.discipline.id,
+    categorie_id: null,
+    titre: null,
+    description: null,
+    image: null,
+    actif: 1,
+    criteres: {},
+    souscriteres: {},
     adresse: ref(latestAdresseId.value),
-    address: ref(null),
-    city: ref(null),
-    zip_code: ref(null),
-    country: ref(null),
-    address_lat: ref(null),
-    address_lng: ref(null),
-    date: ref(null),
-    time: ref(null),
-    date_debut: ref(null),
-    time_debut: ref(null),
-    months: ref(null),
-    instructeur_email: ref(null),
-    instructeur_contact: ref(null),
-    instructeur_phone: ref(null),
-    rayon_km: ref(0),
+    address: null,
+    city: null,
+    zip_code: null,
+    country: null,
+    address_lat: null,
+    address_lng: null,
+    date: null,
+    time: null,
+    date_debut: null,
+    time_debut: null,
+    months: null,
+    instructeur_email: null,
+    instructeur_contact: null,
+    instructeur_phone: null,
+    rayon_km: 0,
 });
 
 watch(
     () => form.categorie_id,
     (newCategorieId) => {
+        showNewSelect.value = false;
         filteredCriteres.value = props.criteres.filter(
             (critere) => critere.categorie_id === newCategorieId
         );
+        form.criteres = {};
+        form.souscriteres = {};
     }
 );
 
 watch(
-    filteredCriteres.value,
+    () => filteredCriteres.value,
     (newFilteredCriteres) => {
         newFilteredCriteres.forEach((critere) => {
             if (
                 critere.type_champ_form === "select" &&
                 critere.valeurs.length > 0
             ) {
-                form.criteres[critere.id] = critere.valeurs[0].valeur;
+                form.criteres[critere.id] = critere.valeurs[0];
             }
         });
     },
     { immediate: true }
+);
+
+watch(
+    () => form.criteres,
+    (newCriteres) => {
+        showNewSelect.value = false;
+        form.souscriteres = {};
+        const criteresArray = Object.values(newCriteres);
+        criteresArray.forEach((valeur) => {
+            if (valeur.sous_criteres && valeur.sous_criteres.length > 0) {
+                valeur.sous_criteres.forEach((souscritere) => {
+                    if (
+                        souscritere.type_champ_form === "select" &&
+                        souscritere.dis_cat_crit_val_id === valeur.id
+                    ) {
+                        showNewSelect.value = true;
+                        form.souscriteres[souscritere.id] =
+                            souscritere.sous_valeurs[0];
+                    }
+                });
+            }
+        });
+    },
+    { deep: true }
 );
 
 const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
@@ -338,12 +361,12 @@ onMounted(() => {
                                         <!-- Criteres -->
                                         <div
                                             v-if="filteredCriteres.length > 0"
-                                            class="flex w-full flex-col items-center justify-between space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
+                                            class="flex w-full flex-col items-center justify-start space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
                                         >
                                             <div
                                                 v-for="critere in filteredCriteres"
                                                 :key="critere.id"
-                                                class="w-full"
+                                                class="w-full max-w-sm"
                                             >
                                                 <!-- select -->
                                                 <SelectForm
@@ -359,6 +382,35 @@ onMounted(() => {
                                                     "
                                                     :options="critere.valeurs"
                                                 />
+                                                <template v-if="showNewSelect">
+                                                    <div
+                                                        v-for="valeur in critere.valeurs"
+                                                        :key="valeur.id"
+                                                    >
+                                                        <div
+                                                            v-for="souscritere in valeur.sous_criteres"
+                                                            :key="
+                                                                souscritere.id
+                                                            "
+                                                        >
+                                                            <SelectForm
+                                                                :name="
+                                                                    souscritere.nom
+                                                                "
+                                                                v-model="
+                                                                    form
+                                                                        .souscriteres[
+                                                                        souscritere
+                                                                            .id
+                                                                    ]
+                                                                "
+                                                                :options="
+                                                                    souscritere.sous_valeurs
+                                                                "
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </template>
 
                                                 <!-- checkbox -->
                                                 <CheckboxForm

@@ -93,9 +93,12 @@ class StructureCategorieController extends Controller
             ->get();
 
         $criteres = LienDisciplineCategorieCritere::with([
-            'valeurs' => function ($query) {
-                $query->orderBy('defaut', 'desc');
-            }])
+                'valeurs' => function ($query) {
+                    $query->orderBy('defaut', 'desc');
+                },
+                'valeurs.sous_criteres',
+                'valeurs.sous_criteres.sous_valeurs'
+            ])
             ->where('discipline_id', $discipline->id)
             ->get();
 

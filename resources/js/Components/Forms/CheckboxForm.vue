@@ -14,7 +14,6 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue", "updateSelectedCheckboxes"]);
 
-const checkbox = ref(null);
 const isShowing = ref(true);
 
 const model = computed({
@@ -51,18 +50,16 @@ const updateSelectedCheckboxes = (id, valeur, checked) => {
                         :for="option.valeur"
                     >
                         <input
-                            :checked="
-                                isCheckboxSelected(critere.id, option.valeur)
-                            "
+                            :checked="isCheckboxSelected(critere.id, option)"
                             @change="
                                 updateSelectedCheckboxes(
                                     critere.id,
-                                    option.valeur,
+                                    option,
                                     $event.target.checked
                                 )
                             "
                             :id="option.valeur"
-                            :value="option.valeur"
+                            :value="option"
                             :name="option.valeur"
                             type="checkbox"
                             class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"

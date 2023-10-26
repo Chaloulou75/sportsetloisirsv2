@@ -55,7 +55,7 @@ const model = computed({
                     <option
                         v-for="(option, index) in options"
                         :key="option.id"
-                        :value="option.valeur"
+                        :value="option"
                     >
                         {{ option.valeur }}
                     </option>
