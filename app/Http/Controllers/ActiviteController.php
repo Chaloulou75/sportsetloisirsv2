@@ -328,8 +328,6 @@ class ActiviteController extends Controller
             'rayon_km' => ['nullable'],
         ]);
 
-        // dd($request->criteres, $request->souscriteres);
-
         $structure = Structure::with('adresses')->findOrFail($structure->id);
 
         $categorieDiscName = LienDisciplineCategorie::with('discipline')->where('id', $request->categorie_id)->first();

@@ -361,7 +361,7 @@ onMounted(() => {
                                         <!-- Criteres -->
                                         <div
                                             v-if="filteredCriteres.length > 0"
-                                            class="flex w-full flex-col items-center justify-start space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
+                                            class="flex w-full flex-col items-start justify-start space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
                                         >
                                             <div
                                                 v-for="critere in filteredCriteres"
@@ -388,6 +388,7 @@ onMounted(() => {
                                                         :key="valeur.id"
                                                     >
                                                         <div
+                                                            class="py-2"
                                                             v-for="souscritere in valeur.sous_criteres"
                                                             :key="
                                                                 souscritere.id

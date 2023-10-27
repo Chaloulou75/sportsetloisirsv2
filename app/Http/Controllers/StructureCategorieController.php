@@ -214,7 +214,7 @@ class StructureCategorieController extends Controller
         $categorie = LienDisciplineCategorie::where('id', $categorie)->firstOrFail();
 
         $structureCategorie = StructureCategorie::where('structure_id', $structure->id)->where('categorie_id', $categorie->id)->first();
-        // dd($structureCategorie);
+
         $discipline = $structureCategorie->discipline;
 
         $activites = StructureActivite::where('structure_id', $structure->id)->where('categorie_id', $categorie->id)->get();
