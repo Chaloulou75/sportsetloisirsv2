@@ -209,11 +209,12 @@ class StructureCategorieController extends Controller
      */
     public function destroy(Structure $structure, $categorie): RedirectResponse
     {
+
         $structure = Structure::where('slug', $structure->slug)->firstOrFail();
         $categorie = LienDisciplineCategorie::where('id', $categorie)->firstOrFail();
 
         $structureCategorie = StructureCategorie::where('structure_id', $structure->id)->where('categorie_id', $categorie->id)->first();
-
+        // dd($structureCategorie);
         $discipline = $structureCategorie->discipline;
 
         $activites = StructureActivite::where('structure_id', $structure->id)->where('categorie_id', $categorie->id)->get();

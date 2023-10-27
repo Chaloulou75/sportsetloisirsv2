@@ -52,7 +52,7 @@ const model = computed({
                         type="radio"
                         class="form-radio"
                         :name="option.valeur"
-                        :value="option.valeur"
+                        :value="option"
                         checked
                     />
                     <span class="ml-2">{{ option.valeur }}</span>

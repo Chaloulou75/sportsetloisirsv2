@@ -2,8 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\FamilleController;
-use App\Http\Controllers\DisciplineController;
+use App\Http\Controllers\Famille\FamilleController;
+use App\Http\Controllers\Discipline\DisciplineController;
 
 /*
 |--------------------------------------------------------------------------

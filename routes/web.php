@@ -26,6 +26,7 @@ use App\Http\Controllers\StructureActiviteProduitController;
 use App\Http\Controllers\CategoryDisciplineCritereController;
 use App\Http\Controllers\Discipline\CategoryDisciplineController;
 use App\Http\Controllers\CategoryDisciplineCritereValeurController;
+use App\Http\Controllers\Discipline\DisciplineController;
 
 /*
 |--------------------------------------------------------------------------

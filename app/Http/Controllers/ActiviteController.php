@@ -462,56 +462,24 @@ class ActiviteController extends Controller
             'reservable' => 0,
         ]);
 
-        $criteres = LienDisciplineCategorieCritere::with('valeurs')->where('discipline_id', $request->discipline_id)->where('categorie_id', $request->categorie_id)->get();
-
+        $criteres = LienDisciplineCategorieCritere::with('valeurs')
+        ->where('discipline_id', $request->discipline_id)
+        ->where('categorie_id', $request->categorie_id)
+        ->get();
         $critereIds = $criteres->pluck('id');
 
-        $criteresValues = $request->criteres;
+        $criteresValuesSets = $request->criteres;
 
-        if(isset($criteresValues)) {
-            foreach($critereIds as $critereId) {
-                foreach ($criteresValues as $key => $critereValue) {
-                    dd($criteresValues, $critereValue);
+        if (isset($criteresValuesSets)) {
+            foreach ($criteresValuesSets as $critereId => $criteresValues) {
+                $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $critereId)->first();
 
-                    $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $key)->first();
-
-                    if($critereId === $key) {
-
-                        if (isset($critereValue)) {
-                            if (is_array($critereValue)) {
-                                foreach ($critereValue as $value) {
-                                    $structureProduitCriteres = StructureProduitCritere::create([
-                                        'structure_id' => $structure->id,
-                                        'discipline_id' => $request->discipline_id,
-                                        'categorie_id' => $request->categorie_id,
-                                        'activite_id' => $structureActivite->id,
-                                        'produit_id' => $structureProduit->id,
-                                        'critere_id' => $key,
-                                        'valeur' => isset($value['valeur']) ?? $defaut->valeur,
-                                    ]);
-                                }
-                            } else {
-
-                                $structureProduitCriteres = StructureProduitCritere::create([
-                                    'structure_id' => $structure->id,
-                                    'discipline_id' => $request->discipline_id,
-                                    'categorie_id' => $request->categorie_id,
-                                    'activite_id' => $structureActivite->id,
-                                    'produit_id' => $structureProduit->id,
-                                    'critere_id' => $key,
-                                    'valeur' => $critereValue['valeur'] ?? $defaut->valeur,
-                                ]);
-                            }
-                        }
-                    }
-                }
+                $this->insertCriteresRecursively($structure, $structureActivite, $structureProduit, $critereId, $criteresValues, $defaut);
             }
         }
 
         if($request->instructeur_email) {
-
             $user = User::where('email', $request->instructeur_email)->firstOrFail();
-
             $instructeur = $structureActivite->instructeurs()->attach($user, [
                 'contact' => $request->instructeur_contact,
                 'email' => $request->instructeur_email,
@@ -520,6 +488,32 @@ class ActiviteController extends Controller
         }
 
         return to_route('structures.disciplines.show', ['structure' => $structure->slug, 'discipline' => $discipline])->with('success', 'Activité ajoutée, ajoutez d\'autres activités à votre structure.');
-
     }
+
+    private function insertCriteresRecursively($structure, $structureActivite, $structureProduit, $critereId, $criteresValues, $defaut)
+    {
+        if (isset($criteresValues['valeur'])) {
+            $critereValue = $criteresValues['valeur'];
+            $valeur = isset($critereValue) ? $critereValue : ($defaut ? $defaut->valeur : null);
+            $this->createStructureProduitCritere($structure, $structureActivite, $structureProduit, $critereId, $valeur);
+        } else {
+            foreach ($criteresValues as $critereValue) {
+                $this->insertCriteresRecursively($structure, $structureActivite, $structureProduit, $critereId, $critereValue, $defaut);
+            }
+        }
+    }
+
+    private function createStructureProduitCritere($structure, $structureActivite, $structureProduit, $critereId, $valeur)
+    {
+        StructureProduitCritere::create([
+            'structure_id' => $structure->id,
+            'discipline_id' => $structureActivite->discipline_id,
+            'categorie_id' => $structureActivite->categorie_id,
+            'activite_id' => $structureActivite->id,
+            'produit_id' => $structureProduit->id,
+            'critere_id' => $critereId,
+            'valeur' => $valeur,
+        ]);
+    }
+
 }
