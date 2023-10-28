@@ -9,13 +9,6 @@ import { TransitionRoot } from "@headlessui/vue";
 
 const emit = defineEmits(["openDeleteModal", "openDeleteCategorieModal"]);
 
-const openDeleteModal = (activite) => {
-    emit("openDeleteModal", activite);
-};
-
-const openDeleteCategorieModal = (categorie) => {
-    emit("openDeleteCategorieModal", categorie);
-};
 const props = defineProps({
     activite: Object,
     structure: Object,

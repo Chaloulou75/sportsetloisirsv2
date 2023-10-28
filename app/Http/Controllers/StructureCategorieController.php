@@ -254,13 +254,14 @@ class StructureCategorieController extends Controller
         }
 
         //supprimer StructureDiscipline basé sur structureCategorie if no categories
-        $structureDiscipline = StructureDiscipline::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->first();
-        $categories = StructureCategorie::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->get();
+        $structureDisciplines = StructureDiscipline::doesntHave('categories')->where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->get();
 
-        if($categories->isEmpty()) {
-            $structureDiscipline->delete();
+        if($structureDisciplines->isNotEmpty()) {
+            foreach($structureDisciplines as $structureDiscipline) {
+                $structureDiscipline->delete();
+            }
         };
 
-        return to_route('structures.disciplines.index', $structure)->with('success', 'Discipline supprimée de votre liste.');
+        return to_route('structures.disciplines.index', $structure)->with('success', 'Catégorie supprimée de votre liste.');
     }
 }

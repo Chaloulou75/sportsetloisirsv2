@@ -12,7 +12,7 @@ import {
     XCircleIcon,
 } from "@heroicons/vue/24/outline";
 
-const emit = defineEmits(["close"]);
+const emit = defineEmits(["close", "deleteCategorie"]);
 
 const props = defineProps({
     structure: Object,
@@ -26,6 +26,7 @@ function destroyCategorie(categorie) {
         preserveScroll: true,
         onSuccess: () => {
             emit("close");
+            emit("deleteCategorie");
         },
         structure: props.structure.slug,
         categorie: categorie.categorie_id,

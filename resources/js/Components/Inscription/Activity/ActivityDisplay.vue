@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, nextTick, defineAsyncComponent } from "vue";
+import { ref, nextTick, defineAsyncComponent } from "vue";
 import { useForm, router } from "@inertiajs/vue3";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";

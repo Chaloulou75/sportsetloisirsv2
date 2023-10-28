@@ -26,14 +26,14 @@ class StructureActivite extends Model
         return $this->belongsTo(Structure::class);
     }
 
-    public function categorie(): BelongsTo
-    {
-        return $this->belongsTo(LienDisciplineCategorie::class, 'categorie_id');
-    }
-
     public function discipline(): BelongsTo
     {
         return $this->belongsTo(ListDiscipline::class, 'discipline_id');
+    }
+
+    public function categorie(): BelongsTo
+    {
+        return $this->belongsTo(LienDisciplineCategorie::class, 'categorie_id');
     }
 
     public function produits(): HasMany

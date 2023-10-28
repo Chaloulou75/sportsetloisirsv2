@@ -1,6 +1,6 @@
 <script setup>
 import ProLayout from "@/Layouts/ProLayout.vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
+import { Head, Link, useForm, router } from "@inertiajs/vue3";
 import { ref, watch, defineAsyncComponent } from "vue";
 import { ChevronLeftIcon, PlusIcon } from "@heroicons/vue/24/outline";
 
@@ -80,7 +80,7 @@ const form = useForm({
 
 const categoriesList = ref([]);
 const activiteSimilairesList = ref([]);
-const selectedDiscipline = ref(null);
+const selectedDiscipline = ref({});
 const dejaUsedDisciplinesRef = ref(props.dejaUsedDisciplines);
 
 const currentActivite = ref(null);
@@ -105,22 +105,24 @@ const updateDiscipline = (discipline) => {
 watch(
     () => form.discipline_id,
     async (newDisciplineID) => {
-        axios
-            .get("/api/listdisciplines/" + newDisciplineID)
-            .then((response) => {
-                categoriesList.value = response.data.data;
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-        axios
-            .get("/api/listdisciplines_similaires/" + newDisciplineID)
-            .then((response) => {
-                activiteSimilairesList.value = response.data.data;
-            })
-            .catch((e) => {
-                console.log(e);
-            });
+        if (newDisciplineID) {
+            axios
+                .get("/api/listdisciplines/" + newDisciplineID)
+                .then((response) => {
+                    categoriesList.value = response.data.data;
+                })
+                .catch((e) => {
+                    console.log(e);
+                });
+            axios
+                .get("/api/listdisciplines_similaires/" + newDisciplineID)
+                .then((response) => {
+                    activiteSimilairesList.value = response.data.data;
+                })
+                .catch((e) => {
+                    console.log(e);
+                });
+        }
     }
 );
 
@@ -128,7 +130,12 @@ const removeDiscipline = (disciplineId) => {
     dejaUsedDisciplinesRef.value = dejaUsedDisciplinesRef.value.filter(
         (id) => id !== disciplineId
     );
-    selectedDiscipline.value = "";
+    selectedDiscipline.value = null;
+};
+
+const refreshPage = () => {
+    router.reload({ only: [props.dejaUsedDisciplines] });
+    selectedDiscipline.value = null;
 };
 
 const submit = () => {
@@ -396,6 +403,7 @@ const openAddTarifModal = (structure) => {
                 :categorie="currentCategorie"
                 :show="showDeleteCategorieModal"
                 @close="showDeleteCategorieModal = false"
+                @deleteCategorie="refreshPage"
             />
             <ModalDeleteDiscipline
                 :structure="structure"

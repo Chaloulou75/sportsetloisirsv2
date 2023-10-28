@@ -27,7 +27,7 @@ const props = defineProps({
 
 const selectedActivite = ref(props.structureActivites[0]);
 const selectedProduct = ref(props.structureActivites[0]?.produits?.[0] ?? "");
-const selectedTitle = ref(props.structureActivites[0].titre);
+const selectedTitle = ref(props.structureActivites[0]?.titre ?? "");
 const selectedEvent = ref({});
 const isOpen = ref(false);
 

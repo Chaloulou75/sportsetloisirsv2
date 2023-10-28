@@ -44,12 +44,12 @@ class ActiviteController extends Controller
             'discipline_id' => ['required', Rule::exists('liste_disciplines', 'id')],
         ]);
 
-        $structure = Structure::where('id', $validated['structure_id'])->firstOrFail();
+        $structure = Structure::findOrFail($validated['structure_id']);
 
         $structureAdresse = StructureAddress::where('structure_id', $structure->id)->firstOrfail();
 
         // check if structure_id and discipline_id combined exists in StructureDiscipline
-        $exists = StructureDiscipline::where('structure_id', $validated['structure_id'])
+        $exists = StructureDiscipline::where('structure_id', $structure->id)
                                     ->where('discipline_id', $validated['discipline_id'])
                                     ->exists();
         if($exists) {
@@ -57,7 +57,7 @@ class ActiviteController extends Controller
         }
 
         $structureDiscipline = StructureDiscipline::create([
-            'structure_id' => $validated['structure_id'],
+            'structure_id' => $structure->id,
             'discipline_id' => $validated['discipline_id'],
         ]);
         $structureDiscipline->increment('nb_produits');
@@ -73,7 +73,7 @@ class ActiviteController extends Controller
 
             $validated['categorie_id'] = $lienActCat->id;
             $structureActiviteCategorie = StructureCategorie::create([
-                'structure_id' => $validated['structure_id'],
+                'structure_id' => $structure->id,
                 'discipline_id' => $validated['discipline_id'],
                 'categorie_id' => $validated['categorie_id'],
             ]);
@@ -82,7 +82,7 @@ class ActiviteController extends Controller
             $titre = $lienActCat->nom_categorie_pro . ' de ' . $structureActiviteCategorie->discipline->name ;
 
             $structureActivite = StructureActivite::create([
-                'structure_id' => $validated['structure_id'],
+                'structure_id' => $structure->id,
                 'discipline_id' => $validated['discipline_id'],
                 'categorie_id' => $validated['categorie_id'],
                 'titre' => $titre,
@@ -92,7 +92,7 @@ class ActiviteController extends Controller
             ]);
 
             $produit = StructureProduit::create([
-                'structure_id' => $validated['structure_id'],
+                'structure_id' => $structure->id,
                 'discipline_id' => $validated['discipline_id'],
                 'categorie_id' => $validated['categorie_id'],
                 'activite_id' => $structureActivite->id,
@@ -106,15 +106,7 @@ class ActiviteController extends Controller
             foreach($disciplineCategorieCriteres as $disciplineCategorieCritere) {
                 $ActCatCriVal = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $disciplineCategorieCritere->id)->first();
 
-                $critere = StructureProduitCritere::create([
-                    'structure_id' => $validated['structure_id'],
-                    'discipline_id' => $validated['discipline_id'],
-                    'categorie_id' => $validated['categorie_id'],
-                    'activite_id' => $structureActivite->id,
-                    'produit_id' => $produit->id,
-                    'critere_id' => $disciplineCategorieCritere->id,
-                    'valeur' => $ActCatCriVal->valeur ?? 'Tous',
-                ]);
+                $this->createStructureProduitCritere($structure, $structureActivite, $produit, $disciplineCategorieCritere->id, $ActCatCriVal->id, $ActCatCriVal->valeur);
             }
         }
 
@@ -441,7 +433,6 @@ class ActiviteController extends Controller
             $structureActivite->dates()->create($data);
         }
 
-
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('public/structures/' . $structure->id . '/activites/' . $structureActivite->id);
             $url = Storage::url($path);
@@ -491,9 +482,12 @@ class ActiviteController extends Controller
     private function insertCriteresRecursively($structure, $structureActivite, $structureProduit, $critereId, $criteresValues, $defaut)
     {
         if (isset($criteresValues['valeur'])) {
+            $critereValueId = $criteresValues['id'];
             $critereValue = $criteresValues['valeur'];
+            $valeurId = isset($critereValueId) ? $critereValueId : ($defaut ? $defaut->id : null);
             $valeur = isset($critereValue) ? $critereValue : ($defaut ? $defaut->valeur : null);
-            $this->createStructureProduitCritere($structure, $structureActivite, $structureProduit, $critereId, $valeur);
+
+            $this->createStructureProduitCritere($structure, $structureActivite, $structureProduit, $critereId, $valeurId, $valeur);
         } else {
             foreach ($criteresValues as $critereValue) {
                 $this->insertCriteresRecursively($structure, $structureActivite, $structureProduit, $critereId, $critereValue, $defaut);
@@ -501,7 +495,7 @@ class ActiviteController extends Controller
         }
     }
 
-    private function createStructureProduitCritere($structure, $structureActivite, $structureProduit, $critereId, $valeur)
+    private function createStructureProduitCritere($structure, $structureActivite, $structureProduit, $critereId, $valeurId, $valeur)
     {
         StructureProduitCritere::create([
             'structure_id' => $structure->id,
@@ -510,6 +504,7 @@ class ActiviteController extends Controller
             'activite_id' => $structureActivite->id,
             'produit_id' => $structureProduit->id,
             'critere_id' => $critereId,
+            'valeur_id' => $valeurId,
             'valeur' => $valeur,
         ]);
     }

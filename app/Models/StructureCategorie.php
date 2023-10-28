@@ -36,6 +36,16 @@ class StructureCategorie extends Model
         return $this->belongsTo(ListDiscipline::class, 'discipline_id');
     }
 
+    public function activites(): HasMany
+    {
+        return $this->hasMany(StructureActivite::class, 'categorie_id');
+    }
+
+    public function produits(): HasMany
+    {
+        return $this->hasMany(StructureProduit::class, 'categorie_id');
+    }
+
     public function plannings(): HasMany
     {
         return $this->hasMany(StructurePlanning::class, 'categorie_id');

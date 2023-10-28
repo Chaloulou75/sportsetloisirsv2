@@ -103,7 +103,7 @@ function destroyDiscipline(discipline) {
                                                     class="hidden md:block"
                                                 >
                                                     <XCircleIcon
-                                                        @click="$emit('close')"
+                                                        @click="emit('close')"
                                                         class="h-6 w-6 text-gray-600 hover:text-red-600"
                                                     />
                                                 </button>

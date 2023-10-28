@@ -30,14 +30,24 @@ class StructureDiscipline extends Model
         return $this->belongsTo(ListDiscipline::class, 'discipline_id');
     }
 
-    public function plannings(): HasMany
+    public function categories(): HasMany
     {
-        return $this->hasMany(StructurePlanning::class, 'discipline_id');
+        return $this->hasMany(StructureCategorie::class, 'discipline_id');
     }
 
     public function activites(): HasMany
     {
-        return $this->hasMany(StructureActivite::class, 'structure_id', 'structure_id')->where('discipline_id', $this->discipline_id);
+        return $this->hasMany(StructureActivite::class, 'discipline_id');
+    }
+
+    public function produits(): HasMany
+    {
+        return $this->hasMany(StructureProduit::class, 'discipline_id');
+    }
+
+    public function plannings(): HasMany
+    {
+        return $this->hasMany(StructurePlanning::class, 'discipline_id');
     }
 
 }
