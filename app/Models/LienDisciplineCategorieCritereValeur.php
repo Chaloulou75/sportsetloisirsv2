@@ -29,14 +29,4 @@ class LienDisciplineCategorieCritereValeur extends Model
     {
         return $this->hasMany(LiensDisCatCritValSsCrit::class, 'dis_cat_crit_val_id');
     }
-
-    // public function discipline(): BelongsTo
-    // {
-    //     return $this->belongsTo(LienDisciplineCategorieCritere::class, 'discipline_id');
-    // }
-
-    // public function categorie(): BelongsTo
-    // {
-    //     return $this->belongsTo(LienDisciplineCategorieCritere::class, 'categorie_id');
-    // }
 }

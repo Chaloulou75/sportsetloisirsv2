@@ -52,6 +52,11 @@ class StructureProduit extends Model
         return $this->hasMany(StructureProduitCritere::class, 'produit_id');
     }
 
+    public function sousCriteres(): HasMany
+    {
+        return $this->hasMany(StructureProduitSousCritere::class, 'produit_id');
+    }
+
     public function horaire(): BelongsTo
     {
         return $this->belongsTo(StructureHoraire::class, 'horaire_id');

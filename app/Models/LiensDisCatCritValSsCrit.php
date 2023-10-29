@@ -20,7 +20,7 @@ class LiensDisCatCritValSsCrit extends Model
         return $this->belongsTo(LienDisciplineCategorieCritereValeur::class, 'dis_cat_crit_val_id');
     }
 
-    public function sous_valeurs(): HasMany
+    public function sous_criteres_valeurs(): HasMany
     {
         return $this->hasMany(LiensDisCatCritValSsCritValeur::class, 'dcc_val_ss_crit_id');
     }

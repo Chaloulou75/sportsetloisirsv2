@@ -256,7 +256,7 @@ class StructureDisciplineController extends Controller
 
         $allCategories = $categoriesListByDiscipline->merge($categoriesWithoutStructures);
 
-        $structureActivites = StructureActivite::with([
+        $structureActivites = $structure->activites()->with([
             'structure:id,name,slug,presentation_courte',
             'categorie:id,nom_categorie_pro',
             'discipline:id,name,slug',
@@ -265,23 +265,34 @@ class StructureDisciplineController extends Controller
             'produits.adresse',
             'produits.criteres',
             'produits.criteres.critere',
+            // 'produits.criteres.valeurs.sous_criteres',
+            // 'produits.criteres.valeurs.sous_criteres.sous_critere_valeur',
             'produits.horaire',
             'produits.tarifs',
             'produits.tarifs.structureTarifTypeInfos',
             'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut',
             'produits.tarifs.tarifType'
             ])
-            ->where('structure_id', $structure->id)
             ->where('discipline_id', $discipline->id)
             ->latest()
             ->get();
+
+        $test = StructureActivite::with([
+            'produits.criteres',
+            'produits.criteres.critere',
+            'produits.sousCriteres',
+            // 'produits.criteres.valeurs.sous_criteres.sous_critere_valeur',
+        ])
+        ->find(310);
+
+        dd($test);
 
         $criteres = LienDisciplineCategorieCritere::with([
                 'valeurs' => function ($query) {
                     $query->orderBy('defaut', 'desc');
                 },
                 'valeurs.sous_criteres',
-                'valeurs.sous_criteres.sous_valeurs'
+                'valeurs.sous_criteres.sous_criteres_valeurs'
             ])
             ->where('discipline_id', $discipline->id)
             ->get();

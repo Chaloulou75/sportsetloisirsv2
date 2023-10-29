@@ -97,7 +97,7 @@ class StructureCategorieController extends Controller
                     $query->orderBy('defaut', 'desc');
                 },
                 'valeurs.sous_criteres',
-                'valeurs.sous_criteres.sous_valeurs'
+                'valeurs.sous_criteres.sous_criteres_valeurs'
             ])
             ->where('discipline_id', $discipline->id)
             ->get();

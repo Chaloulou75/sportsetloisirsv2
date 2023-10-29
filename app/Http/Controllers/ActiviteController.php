@@ -29,8 +29,10 @@ use App\Models\LienDisciplineCategorie;
 use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
+use App\Models\StructureProduitSousCritere;
 use App\Models\LienDisciplineCategorieCritere;
 use App\Models\LienDisciplineCategorieCritereValeur;
+use App\Models\LiensDisCatCritValSsCrit;
 
 class ActiviteController extends Controller
 {
@@ -395,8 +397,7 @@ class ActiviteController extends Controller
             ]);
         }
 
-        $structureActivite = StructureActivite::create([
-            'structure_id' => $structure->id,
+        $structureActivite = $structure->activites()->create([
             'discipline_id' => $request->discipline_id,
             'categorie_id' => $request->categorie_id,
             'titre' => $request->titre ?? $categorieDiscName->nom_categorie_pro . ' de ' . $categorieDiscName->discipline->name,
@@ -437,23 +438,21 @@ class ActiviteController extends Controller
             $structureActivite->update(['image' => $url]);
         }
 
-        $structureProduit = StructureProduit::create([
-            'structure_id' => $structure->id,
+        $structureProduit = $structure->produits()->create([
             'discipline_id' => $request->discipline_id,
             'categorie_id' => $request->categorie_id,
             'activite_id' => $structureActivite->id,
             "actif" => true,
             'lieu_id' => $structureAddressId,
             'horaire_id' => $dayTime->id ?? null,
-            // 'tarif_id' => $structureTarif->id,
             'reservable' => 0,
         ]);
 
-        $criteres = LienDisciplineCategorieCritere::with('valeurs')
-        ->where('discipline_id', $request->discipline_id)
-        ->where('categorie_id', $request->categorie_id)
-        ->get();
-        $critereIds = $criteres->pluck('id');
+        // $criteres = LienDisciplineCategorieCritere::with('valeurs')
+        // ->where('discipline_id', $request->discipline_id)
+        // ->where('categorie_id', $request->categorie_id)
+        // ->get();
+        // $critereIds = $criteres->pluck('id');
 
         $criteresValuesSets = $request->criteres;
 
@@ -462,6 +461,23 @@ class ActiviteController extends Controller
                 $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $critereId)->first();
 
                 $this->insertCriteresRecursively($structure, $structureActivite, $structureProduit, $critereId, $criteresValues, $defaut);
+            }
+        }
+
+        $souscriteresValues = $request->souscriteres;
+        if(isset($souscriteresValues)) {
+            foreach ($souscriteresValues as $souscritereId => $souscritereValue) {
+
+                $sousCritere = LiensDisCatCritValSsCrit::with([
+                    'critere_valeur',
+                    'sous_criteres_valeurs'
+                ])->find($souscritereId);
+
+                $critereId = $sousCritere->critere_valeur->discipline_categorie_critere_id;
+                $critereValeurId = $sousCritere->critere_valeur->id;
+                $sousCritereId = $sousCritere->id;
+
+                $this->insertSousCriteresRecursively($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $souscritereValue);
             }
         }
 
@@ -504,6 +520,30 @@ class ActiviteController extends Controller
             'critere_id' => $critereId,
             'valeur_id' => $valeurId,
             'valeur' => $valeur,
+        ]);
+    }
+
+    private function insertSousCriteresRecursively($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $souscritereValue)
+    {
+        if (isset($souscritereValue['id'])) {
+            $this->createProduitSousCritere($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $souscritereValue);
+        } else {
+            foreach ($souscritereValue as $subSouscriteresValue) {
+                $this->insertSousCriteresRecursively($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $subSouscriteresValue);
+            }
+        }
+    }
+
+    private function createProduitSousCritere($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $souscriteresValues)
+    {
+        StructureProduitSousCritere::create([
+            'activite_id' => $structureActivite->id,
+            'produit_id' => $structureProduit->id,
+            'critere_id' => $critereId,
+            'critere_valeur_id' => $critereValeurId,
+            'sous_critere_id' => $sousCritereId,
+            'sous_critere_valeur_id' => $souscriteresValues['id'],
+            'valeur' => $souscriteresValues['valeur'],
         ]);
     }
 

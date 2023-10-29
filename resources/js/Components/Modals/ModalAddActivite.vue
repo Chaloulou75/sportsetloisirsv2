@@ -129,7 +129,7 @@ watch(
                     ) {
                         showNewSelect.value = true;
                         form.souscriteres[souscritere.id] =
-                            souscritere.sous_valeurs[0];
+                            souscritere.sous_criteres_valeurs[0];
                     }
                 });
             }
@@ -406,7 +406,7 @@ onMounted(() => {
                                                                     ]
                                                                 "
                                                                 :options="
-                                                                    souscritere.sous_valeurs
+                                                                    souscritere.sous_criteres_valeurs
                                                                 "
                                                             />
                                                         </div>
