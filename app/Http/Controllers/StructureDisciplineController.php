@@ -265,8 +265,7 @@ class StructureDisciplineController extends Controller
             'produits.adresse',
             'produits.criteres',
             'produits.criteres.critere',
-            // 'produits.criteres.valeurs.sous_criteres',
-            // 'produits.criteres.valeurs.sous_criteres.sous_critere_valeur',
+            'produits.criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
             'produits.horaire',
             'produits.tarifs',
             'produits.tarifs.structureTarifTypeInfos',
@@ -276,16 +275,6 @@ class StructureDisciplineController extends Controller
             ->where('discipline_id', $discipline->id)
             ->latest()
             ->get();
-
-        $test = StructureActivite::with([
-            'produits.criteres',
-            'produits.criteres.critere',
-            'produits.sousCriteres',
-            // 'produits.criteres.valeurs.sous_criteres.sous_critere_valeur',
-        ])
-        ->find(310);
-
-        dd($test);
 
         $criteres = LienDisciplineCategorieCritere::with([
                 'valeurs' => function ($query) {

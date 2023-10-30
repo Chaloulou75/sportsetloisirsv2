@@ -117,7 +117,9 @@ const latestAdresseId = computed(() => {
                 >
                     <ChevronLeftIcon class="h-10 w-10 text-white" />
                 </Link>
-                <div class="flex h-full w-full flex-col md:flex-row">
+                <div
+                    class="flex h-full w-full flex-col items-center md:flex-row"
+                >
                     <Link
                         :href="
                             route('structures.disciplines.show', {

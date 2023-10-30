@@ -51,6 +51,11 @@ class StructureProduitCritere extends Model
         return $this->belongsTo(LienDisciplineCategorieCritere::class, 'critere_id');
     }
 
+    public function critere_valeur(): BelongsTo
+    {
+        return $this->belongsTo(LienDisciplineCategorieCritereValeur::class, 'valeur_id');
+    }
+
     public function valeurs(): HasMany
     {
         return $this->hasMany(LienDisciplineCategorieCritereValeur::class, 'discipline_categorie_critere_id');

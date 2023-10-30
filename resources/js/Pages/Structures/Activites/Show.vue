@@ -42,7 +42,6 @@ import {
 dayjs.locale("fr");
 
 const props = defineProps({
-    structure: Object,
     logoUrl: String,
     departement: Object,
     city: Object,
@@ -204,9 +203,9 @@ const submitReservation = () => {
 
 <template>
     <Head
-        :title="activite.titre + ' - ' + structure.name"
+        :title="activite.titre + ' - ' + activite.structure.name"
         :description="
-            'Fiche détaillée de ' + structure.name + '. Horaires et tarifs.'
+            'Fiche détaillée de ' + activite.titre + '. Horaires et tarifs.'
         "
     />
 
@@ -397,11 +396,16 @@ const submitReservation = () => {
                         <Link
                             class="my-6 flex items-center justify-center rounded border border-indigo-600 bg-indigo-600 px-6 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 hover:shadow focus:outline-none focus:ring active:text-indigo-500"
                             preserve-scroll
-                            :href="route('structures.show', structure.slug)"
+                            :href="
+                                route(
+                                    'structures.show',
+                                    activite.structure.slug
+                                )
+                            "
                         >
                             <ArrowUturnLeftIcon class="mr-2 h-5 w-5" />
                             Retour vers l'accueil de la structure
-                            {{ structure.name }}
+                            {{ activite.structure.name }}
                         </Link>
                         <div
                             class="my-4 flex items-center justify-center md:mb-4"
@@ -414,31 +418,39 @@ const submitReservation = () => {
                             <h3 class="text-base">
                                 Localisation:
                                 <span class="font-semibold">
-                                    {{ structure.adresses[0].city }},
-                                    {{ structure.adresses[0].zip_code }}
+                                    {{ activite.structure.adresses[0].city }},
+                                    {{
+                                        activite.structure.adresses[0].zip_code
+                                    }}
                                 </span>
                             </h3>
-                            <LeafletMap :item="structure" />
+                            <LeafletMap :item="activite.structure" />
                         </div>
                         <div
                             class="flex w-full flex-col space-y-3 rounded-md bg-indigo-100 px-2 py-4 text-slate-800"
                         >
                             <h3 class="text-center text-base font-semibold">
-                                Activité proposée par: {{ structure.name }}
+                                Activité proposée par:
+                                {{ activite.structure.name }}
                             </h3>
                             <Link
                                 class="my-6 flex items-center justify-center rounded border border-indigo-600 bg-indigo-600 px-6 py-3 text-sm font-medium text-white hover:bg-white hover:text-indigo-600 hover:shadow focus:outline-none focus:ring active:text-indigo-500"
                                 preserve-scroll
-                                :href="route('structures.show', structure.slug)"
+                                :href="
+                                    route(
+                                        'structures.show',
+                                        activite.structure.slug
+                                    )
+                                "
                             >
                                 Voir la fiche
                             </Link>
                             <p class="text-base font-semibold text-gray-700">
                                 <UserIcon class="inline-block h-4 w-4" />
-                                {{ structure.creator.name }}
+                                {{ activite.structure.creator.name }}
                             </p>
                             <p
-                                v-if="structure.website"
+                                v-if="activite.structure.website"
                                 class="text-base font-medium text-gray-700"
                             >
                                 <GlobeAltIcon
@@ -446,15 +458,15 @@ const submitReservation = () => {
                                 />
                                 Site web:
                                 <a
-                                    :href="structure.website"
+                                    :href="activite.structure.website"
                                     target="_blank"
                                     class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
                                 >
-                                    {{ structure.website }}
+                                    {{ activite.structure.website }}
                                 </a>
                             </p>
                             <p
-                                v-if="structure.facebook"
+                                v-if="activite.structure.facebook"
                                 class="text-base font-medium text-gray-700"
                             >
                                 <GlobeAltIcon
@@ -462,15 +474,15 @@ const submitReservation = () => {
                                 />
                                 Facebook:
                                 <a
-                                    :href="structure.facebook"
+                                    :href="activite.structure.facebook"
                                     target="_blank"
                                     class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
                                 >
-                                    {{ structure.facebook }}
+                                    {{ activite.structure.facebook }}
                                 </a>
                             </p>
                             <p
-                                v-if="structure.instagram"
+                                v-if="activite.structure.instagram"
                                 class="text-base font-medium text-gray-700"
                             >
                                 <GlobeAltIcon
@@ -478,15 +490,15 @@ const submitReservation = () => {
                                 />
                                 Instagram:
                                 <a
-                                    :href="structure.instagram"
+                                    :href="activite.structure.instagram"
                                     target="_blank"
                                     class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
                                 >
-                                    {{ structure.instagram }}
+                                    {{ activite.structure.instagram }}
                                 </a>
                             </p>
                             <p
-                                v-if="structure.youtube"
+                                v-if="activite.structure.youtube"
                                 class="text-base font-medium text-gray-700"
                             >
                                 <GlobeAltIcon
@@ -494,33 +506,37 @@ const submitReservation = () => {
                                 />
                                 Youtube:
                                 <a
-                                    :href="structure.youtube"
+                                    :href="activite.structure.youtube"
                                     target="_blank"
                                     class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
                                 >
-                                    {{ structure.youtube }}
+                                    {{ activite.structure.youtube }}
                                 </a>
                             </p>
 
                             <p
-                                v-if="structure.phone1"
+                                v-if="activite.structure.phone1"
                                 class="text-base font-medium text-gray-700"
                             >
                                 <PhoneIcon class="inline-block h-4 w-4" />
                                 <a
-                                    :href="`tel:${structure.phone1}`"
+                                    :href="`tel:${activite.structure.phone1}`"
                                     target="_blank"
                                     class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
                                 >
-                                    {{ formatPhoneNumber(structure.phone1) }}
+                                    {{
+                                        formatPhoneNumber(
+                                            activite.structure.phone1
+                                        )
+                                    }}
                                 </a>
                             </p>
                             <p
-                                v-if="structure.email"
+                                v-if="activite.structure.email"
                                 class="text-base font-medium text-gray-700"
                             >
                                 <AtSymbolIcon class="inline-block h-4 w-4" />
-                                {{ structure.email }}
+                                {{ activite.structure.email }}
                             </p>
                         </div>
                     </div>
@@ -530,10 +546,10 @@ const submitReservation = () => {
                             <div
                                 class="my-4 flex items-center justify-start space-x-4"
                             >
-                                <div v-if="structure.logo">
+                                <div v-if="activite.structure.logo">
                                     <img
                                         alt="img"
-                                        :src="structure.logo"
+                                        :src="activite.structure.logo"
                                         class="h-14 w-14 shrink-0 rounded-full object-cover object-center md:h-20 md:w-20"
                                     />
                                 </div>
@@ -552,16 +568,18 @@ const submitReservation = () => {
                                     {{ activite.description }}
                                 </p>
                                 <p
-                                    v-else-if="structure.presentation_longue"
+                                    v-else-if="
+                                        activite.structure.presentation_longue
+                                    "
                                     class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
                                 >
-                                    {{ structure.presentation_longue }}
+                                    {{ activite.structure.presentation_longue }}
                                 </p>
                                 <p
                                     v-else
                                     class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
                                 >
-                                    {{ structure.presentation_courte }}
+                                    {{ activite.structure.presentation_courte }}
                                 </p>
                             </div>
                             <!-- instructeurs -->

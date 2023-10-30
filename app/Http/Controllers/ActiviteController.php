@@ -120,7 +120,16 @@ class ActiviteController extends Controller
         $allCities = City::withProducts()->get();
 
         $activite = StructureActivite::with([
-            'structure', 'dates',
+            'structure:id,name,slug,presentation_courte,presentation_longue,address,zip_code,city,country,address_lat,address_lng,user_id,structuretype_id,website,email,facebook,instagram,youtube,tiktok,phone1,phone2,date_creation,view_count,departement_id,logo',
+            'structure.creator:id,name',
+            'structure.users:id,name',
+            'structure.adresses'  => function ($query) {
+                $query->latest();
+            },
+            'structure.city:id,ville,ville_formatee,code_postal',
+            'structure.departement:id,departement,numero',
+            'structure.structuretype:id,name,slug',
+            'dates',
             'instructeurs',
             'discipline:id,name',
             'categorie:id,categorie_id,discipline_id,nom_categorie_client',
@@ -128,6 +137,7 @@ class ActiviteController extends Controller
             'produits.adresse',
             'produits.criteres',
             'produits.criteres.critere',
+            'produits.criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
             'produits.tarifs',
             'produits.tarifs.tarifType',
             'produits.tarifs.structureTarifTypeInfos',
@@ -135,25 +145,16 @@ class ActiviteController extends Controller
             'produits.plannings',
         ])->where('id', $activite)->first();
 
-        $structure = $activite->structure()->with([
-                    'creator:id,name',
-                    'users:id,name',
-                    'adresses'  => function ($query) {
-                        $query->latest();
-                    },
-                    'city:id,ville,ville_formatee,code_postal',
-                    'departement:id,departement,numero',
-                    'structuretype:id,name,slug',
-                    ])
-                    ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
-                    ->first();
+        $logoUrl = asset($activite->structure->logo);
 
-        $logoUrl = asset($structure->logo);
-
-        $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
-            $query->orderBy('defaut', 'desc');
-        }])
-                ->whereIn('discipline_id', $structure->disciplines->pluck('discipline_id'))->whereIn('categorie_id', $structure->categories->pluck('categorie_id'))
+        $criteres = LienDisciplineCategorieCritere::with([
+                'valeurs' => function ($query) {
+                    $query->orderBy('defaut', 'desc');
+                },
+                'valeurs.sous_criteres',
+                'valeurs.sous_criteres.sous_criteres_valeurs'
+            ])
+                ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))->whereIn('categorie_id', $activite->structure->categories->pluck('categorie_id'))
                 ->get();
 
         $activiteSimilaires = StructureActivite::with([
@@ -163,6 +164,7 @@ class ActiviteController extends Controller
             'produits.adresse',
             'produits.criteres',
             'produits.criteres.critere',
+            'produits.criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
             'produits.tarifs',
             'produits.tarifs.tarifType',
             'produits.tarifs.structureTarifTypeInfos',
@@ -174,7 +176,6 @@ class ActiviteController extends Controller
             ->get();
 
         return Inertia::render('Structures/Activites/Show', [
-                    'structure' => $structure,
                     'familles' => $familles,
                     'listDisciplines' => $listDisciplines,
                     'allCities' => $allCities,

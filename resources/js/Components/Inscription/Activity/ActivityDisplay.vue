@@ -1,6 +1,6 @@
 <script setup>
 import { ref, nextTick, defineAsyncComponent } from "vue";
-import { useForm, router } from "@inertiajs/vue3";
+import { useForm, router, Link } from "@inertiajs/vue3";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import localeData from "dayjs/plugin/localeData";
@@ -256,8 +256,19 @@ const destroyTarif = (tarif, produit) => {
     >
         <div class="flex w-full flex-col rounded border border-gray-200">
             <div class="flex w-full items-center justify-between bg-gray-700">
-                <h2 class="px-2 py-4 font-semibold text-white">
+                <h2 class="px-2 font-semibold text-white">
                     {{ structureActivite.titre }}
+                    <Link
+                        class="text-xs italic text-gray-300 hover:text-gray-100 md:text-sm"
+                        :href="
+                            route(
+                                'structures.activites.show',
+                                structureActivite.id
+                            )
+                        "
+                    >
+                        (voir la fiche)</Link
+                    >
                 </h2>
                 <div class="flex h-full items-center">
                     <button
@@ -556,7 +567,7 @@ const destroyTarif = (tarif, produit) => {
 
                     <button
                         type="button"
-                        @click="openAddProduitModal(structureActivite)"
+                        @click.prevent="openAddProduitModal(structureActivite)"
                         class="flex h-full w-auto items-center justify-center bg-green-500 px-3 py-3 hover:bg-green-600"
                     >
                         <PlusIcon class="h-6 w-6 text-white" />
@@ -585,7 +596,7 @@ const destroyTarif = (tarif, produit) => {
                                 <div
                                     v-for="critere in produit.criteres"
                                     :key="critere.id"
-                                    class="col-span-1 flex items-start"
+                                    class="col-span-1 flex items-center"
                                 >
                                     <InformationCircleIcon
                                         class="mr-1 h-5 w-5 text-gray-600"
@@ -602,6 +613,31 @@ const destroyTarif = (tarif, produit) => {
                                             class="text-sm font-semibold text-gray-600"
                                             >{{ critere.valeur }}</span
                                         >
+                                        <span
+                                            v-if="
+                                                critere.critere_valeur
+                                                    .sous_criteres &&
+                                                critere.critere_valeur
+                                                    .sous_criteres.length > 0
+                                            "
+                                            class="text-xs font-medium text-gray-600"
+                                        >
+                                            <span
+                                                v-for="sousCriteres in critere
+                                                    .critere_valeur
+                                                    .sous_criteres"
+                                                :key="sousCriteres.id"
+                                                class="text-xs font-medium text-gray-600"
+                                                ><span
+                                                    v-for="sousCritValeur in sousCriteres.prod_sous_crit_valeurs"
+                                                    :key="sousCritValeur.id"
+                                                    class="text-xs font-medium text-gray-600"
+                                                    >({{
+                                                        sousCritValeur.valeur
+                                                    }})</span
+                                                ></span
+                                            >
+                                        </span>
                                     </div>
                                 </div>
                             </div>

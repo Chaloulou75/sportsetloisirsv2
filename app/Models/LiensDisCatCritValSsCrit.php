@@ -23,5 +23,13 @@ class LiensDisCatCritValSsCrit extends Model
     public function sous_criteres_valeurs(): HasMany
     {
         return $this->hasMany(LiensDisCatCritValSsCritValeur::class, 'dcc_val_ss_crit_id');
+
     }
+
+    public function prodSousCritValeurs(): HasMany
+    {
+        return $this->hasMany(StructureProduitSousCritere::class, 'sous_critere_valeur_id');
+
+    }
+
 }
