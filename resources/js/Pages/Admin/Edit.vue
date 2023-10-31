@@ -306,7 +306,20 @@ const showAddCritereForm = (categorie) => {
     return critereFormsVisibility.value[categorie.categorie.id] || false;
 };
 
-const type_champs = [{ type: "select" }, { type: "checkbox" }];
+const type_champs = [
+    { type: "select" },
+    { type: "checkbox" },
+    { type: "text" },
+    { type: "number" },
+    { type: "adresse" },
+    { type: "date" },
+    { type: "dates" },
+    { type: "time" },
+    { type: "times" },
+    { type: "mois" },
+    { type: "rayon" },
+    { type: "instructeur" },
+];
 
 const addCritereForm = useForm({
     critere: ref(props.listeCriteres[0]),

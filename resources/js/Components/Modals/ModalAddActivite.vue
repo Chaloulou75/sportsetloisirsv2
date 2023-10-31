@@ -361,7 +361,7 @@ onMounted(() => {
                                         <!-- Criteres -->
                                         <div
                                             v-if="filteredCriteres.length > 0"
-                                            class="flex w-full flex-col items-start justify-start space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
+                                            class="flex w-full flex-col flex-wrap items-start justify-start gap-4 space-y-2 md:flex-row md:space-y-0"
                                         >
                                             <div
                                                 v-for="critere in filteredCriteres"
@@ -486,17 +486,93 @@ onMounted(() => {
                                                     </div>
                                                 </div>
 
+                                                <!-- Adresse -->
+                                                <div
+                                                    v-if="
+                                                        critere.type_champ_form ===
+                                                        'adresse'
+                                                    "
+                                                    class="flex w-full items-end justify-between space-x-4"
+                                                >
+                                                    <div
+                                                        v-if="!addAddress"
+                                                        class="flex-1"
+                                                    >
+                                                        <label
+                                                            for="
+                                                            adresse
+                                                        "
+                                                            class="block text-sm font-medium text-gray-700"
+                                                        >
+                                                            Adresse
+                                                        </label>
+                                                        <div
+                                                            class="mt-1 flex rounded-md"
+                                                        >
+                                                            <select
+                                                                name="
+                                                                adresse
+                                                            "
+                                                                id="
+                                                                adresse
+                                                            "
+                                                                v-model="
+                                                                    form.adresse
+                                                                "
+                                                                class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                            >
+                                                                <option
+                                                                    v-for="adresse in structure.adresses"
+                                                                    :key="
+                                                                        adresse.id
+                                                                    "
+                                                                    :value="
+                                                                        adresse.id
+                                                                    "
+                                                                >
+                                                                    {{
+                                                                        adresse.address
+                                                                    }}
+                                                                    -
+                                                                    {{
+                                                                        adresse.zip_code
+                                                                    }},
+                                                                    {{
+                                                                        adresse.city
+                                                                    }}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="flex items-center"
+                                                    >
+                                                        <input
+                                                            v-model="addAddress"
+                                                            id="addAddress"
+                                                            type="checkbox"
+                                                            class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                        />
+                                                        <label
+                                                            for="addAddress"
+                                                            class="ml-2 text-sm font-medium text-gray-700"
+                                                            >Ajouter une
+                                                            adresse</label
+                                                        >
+                                                    </div>
+                                                </div>
+
                                                 <!-- sous criteres -->
                                                 <div
                                                     v-for="valeur in critere.valeurs"
                                                     :key="valeur.id"
                                                 >
                                                     <div
-                                                        class="py-2"
                                                         v-for="souscritere in valeur.sous_criteres"
                                                         :key="souscritere.id"
                                                     >
                                                         <SelectForm
+                                                            class="py-2"
                                                             v-if="
                                                                 form.criteres[
                                                                     critere.id
@@ -520,13 +596,56 @@ onMounted(() => {
                                                                 souscritere.sous_criteres_valeurs
                                                             "
                                                         />
+                                                        <InputLabel
+                                                            class="w-full py-2"
+                                                            for="
+                                                                Nombre
+                                                            "
+                                                            value="
+                                                                Nobre
+                                                            "
+                                                            v-if="
+                                                                form.criteres[
+                                                                    critere.id
+                                                                ] === valeur &&
+                                                                souscritere.type_champ_form ===
+                                                                    'number' &&
+                                                                souscritere.dis_cat_crit_val_id ===
+                                                                    valeur.id
+                                                            "
+                                                        />
+                                                        <TextInput
+                                                            type="number"
+                                                            id="
+                                                                Nombre
+                                                            "
+                                                            name="
+                                                                Nombre
+                                                            "
+                                                            v-if="
+                                                                form.criteres[
+                                                                    critere.id
+                                                                ] === valeur &&
+                                                                souscritere.type_champ_form ===
+                                                                    'number' &&
+                                                                souscritere.dis_cat_crit_val_id ===
+                                                                    valeur.id
+                                                            "
+                                                            v-model="
+                                                                form
+                                                                    .souscriteres[
+                                                                    souscritere
+                                                                        .id
+                                                                ]
+                                                            "
+                                                        />
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <!-- Adresse -->
-                                        <div
+                                        <!-- Adresse By itself -->
+                                        <!-- <div
                                             class="flex w-full items-end justify-between space-x-4"
                                         >
                                             <div
@@ -584,7 +703,7 @@ onMounted(() => {
                                                     >Ajouter une adresse</label
                                                 >
                                             </div>
-                                        </div>
+                                        </div> -->
 
                                         <!-- newAddress -->
                                         <AddressForm
