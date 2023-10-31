@@ -615,6 +615,7 @@ const destroyTarif = (tarif, produit) => {
                                         >
                                         <span
                                             v-if="
+                                                critere.critere_valeur &&
                                                 critere.critere_valeur
                                                     .sous_criteres &&
                                                 critere.critere_valeur
@@ -627,16 +628,23 @@ const destroyTarif = (tarif, produit) => {
                                                     .critere_valeur
                                                     .sous_criteres"
                                                 :key="sousCriteres.id"
-                                                class="text-xs font-medium text-gray-600"
-                                                ><span
+                                            >
+                                                <span
                                                     v-for="sousCritValeur in sousCriteres.prod_sous_crit_valeurs"
                                                     :key="sousCritValeur.id"
-                                                    class="text-xs font-medium text-gray-600"
-                                                    >({{
-                                                        sousCritValeur.valeur
-                                                    }})</span
-                                                ></span
-                                            >
+                                                    class="text-xs font-semibold text-gray-600"
+                                                >
+                                                    <span
+                                                        v-if="
+                                                            sousCritValeur.produit_id ===
+                                                            produit.id
+                                                        "
+                                                        >({{
+                                                            sousCritValeur.valeur
+                                                        }})</span
+                                                    ></span
+                                                >
+                                            </span>
                                         </span>
                                     </div>
                                 </div>

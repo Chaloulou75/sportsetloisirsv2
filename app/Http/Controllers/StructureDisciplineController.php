@@ -215,7 +215,7 @@ class StructureDisciplineController extends Controller
      */
     public function show(Structure $structure, $discipline)
     {
-        if (! Gate::allows('update-structure', $structure)) {
+        if (!Gate::allows('update-structure', $structure)) {
             return to_route('structures.disciplines.index', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
 
@@ -260,6 +260,7 @@ class StructureDisciplineController extends Controller
             'structure:id,name,slug,presentation_courte',
             'categorie:id,nom_categorie_pro',
             'discipline:id,name,slug',
+            'instructeurs',
             'plannings',
             'produits',
             'produits.adresse',
@@ -275,6 +276,8 @@ class StructureDisciplineController extends Controller
             ->where('discipline_id', $discipline->id)
             ->latest()
             ->get();
+        // dd($structureActivites->find(325));
+        // $instructeurs = $structureActivites->pluck('instructeurs')->flatten();
 
         $criteres = LienDisciplineCategorieCritere::with([
                 'valeurs' => function ($query) {

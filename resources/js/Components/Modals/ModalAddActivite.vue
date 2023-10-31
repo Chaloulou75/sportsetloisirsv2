@@ -50,7 +50,7 @@ const latestAdresseId = computed(() => {
     return null; // Return a default value if there are no adresses
 });
 
-const showNewSelect = ref(false);
+// const showNewSelect = ref(false);
 const addInstructeur = ref(false);
 const addDatesOpened = ref(false);
 const addHoursOpened = ref(false);
@@ -81,6 +81,7 @@ const form = useForm({
     date_debut: null,
     time_debut: null,
     months: null,
+    instructeurId: null,
     instructeur_email: null,
     instructeur_contact: null,
     instructeur_phone: null,
@@ -90,7 +91,7 @@ const form = useForm({
 watch(
     () => form.categorie_id,
     (newCategorieId) => {
-        showNewSelect.value = false;
+        // showNewSelect.value = false;
         filteredCriteres.value = props.criteres.filter(
             (critere) => critere.categorie_id === newCategorieId
         );
@@ -114,29 +115,28 @@ watch(
     { immediate: true }
 );
 
-watch(
-    () => form.criteres,
-    (newCriteres) => {
-        showNewSelect.value = false;
-        form.souscriteres = {};
-        const criteresArray = Object.values(newCriteres);
-        criteresArray.forEach((valeur) => {
-            if (valeur.sous_criteres && valeur.sous_criteres.length > 0) {
-                valeur.sous_criteres.forEach((souscritere) => {
-                    if (
-                        souscritere.type_champ_form === "select" &&
-                        souscritere.dis_cat_crit_val_id === valeur.id
-                    ) {
-                        showNewSelect.value = true;
-                        form.souscriteres[souscritere.id] =
-                            souscritere.sous_criteres_valeurs[0];
-                    }
-                });
-            }
-        });
-    },
-    { deep: true }
-);
+// watch(
+//     () => form.criteres,
+//     (newCriteres) => {
+//         // showNewSelect.value = false;
+//         // form.souscriteres = {};
+//         const criteresArray = Object.values(newCriteres);
+//         criteresArray.forEach((valeur) => {
+//             if (valeur.sous_criteres && valeur.sous_criteres.length > 0) {
+//                 valeur.sous_criteres.forEach((souscritere) => {
+//                     if (
+//                         souscritere.type_champ_form === "select" &&
+//                         souscritere.dis_cat_crit_val_id === valeur.id
+//                     ) {
+//                         form.souscriteres[souscritere.id] =
+//                             souscritere.sous_criteres_valeurs[0];
+//                     }
+//                 });
+//             }
+//         });
+//     },
+//     { deep: true }
+// );
 
 const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
     if (checked) {
@@ -164,7 +164,7 @@ const isCheckboxSelected = (critereId, optionValue) => {
     );
 };
 
-function onSubmit() {
+const onSubmit = () => {
     form.post(
         route("structures.activites.newactivitystore", {
             structure: props.structure.slug,
@@ -178,7 +178,7 @@ function onSubmit() {
             },
         }
     );
-}
+};
 
 onMounted(() => {
     form.categorie_id = ref(props.category?.id ?? null);
@@ -382,36 +382,6 @@ onMounted(() => {
                                                     "
                                                     :options="critere.valeurs"
                                                 />
-                                                <template v-if="showNewSelect">
-                                                    <div
-                                                        v-for="valeur in critere.valeurs"
-                                                        :key="valeur.id"
-                                                    >
-                                                        <div
-                                                            class="py-2"
-                                                            v-for="souscritere in valeur.sous_criteres"
-                                                            :key="
-                                                                souscritere.id
-                                                            "
-                                                        >
-                                                            <SelectForm
-                                                                :name="
-                                                                    souscritere.nom
-                                                                "
-                                                                v-model="
-                                                                    form
-                                                                        .souscriteres[
-                                                                        souscritere
-                                                                            .id
-                                                                    ]
-                                                                "
-                                                                :options="
-                                                                    souscritere.sous_criteres_valeurs
-                                                                "
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </template>
 
                                                 <!-- checkbox -->
                                                 <CheckboxForm
@@ -512,6 +482,43 @@ onMounted(() => {
                                                             class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                             placeholder=""
                                                             autocomplete="none"
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <!-- sous criteres -->
+                                                <div
+                                                    v-for="valeur in critere.valeurs"
+                                                    :key="valeur.id"
+                                                >
+                                                    <div
+                                                        class="py-2"
+                                                        v-for="souscritere in valeur.sous_criteres"
+                                                        :key="souscritere.id"
+                                                    >
+                                                        <SelectForm
+                                                            v-if="
+                                                                form.criteres[
+                                                                    critere.id
+                                                                ] === valeur &&
+                                                                souscritere.type_champ_form ===
+                                                                    'select' &&
+                                                                souscritere.dis_cat_crit_val_id ===
+                                                                    valeur.id
+                                                            "
+                                                            :name="
+                                                                souscritere.nom
+                                                            "
+                                                            v-model="
+                                                                form
+                                                                    .souscriteres[
+                                                                    souscritere
+                                                                        .id
+                                                                ]
+                                                            "
+                                                            :options="
+                                                                souscritere.sous_criteres_valeurs
+                                                            "
                                                         />
                                                     </div>
                                                 </div>
@@ -723,7 +730,7 @@ onMounted(() => {
                                         </div>
 
                                         <!-- Instructeur -->
-                                        <div class="flex items-center">
+                                        <div class="flex w-full items-start">
                                             <input
                                                 v-model="addInstructeur"
                                                 id="addInstructeur"

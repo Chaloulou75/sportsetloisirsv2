@@ -196,7 +196,7 @@ class ActiviteController extends Controller
      */
     public function update(Request $request, Structure $structure, $activite)
     {
-        if (! Gate::allows('update-structure', $structure)) {
+        if (!Gate::allows('update-structure', $structure)) {
             return to_route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de modifier cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
 
@@ -301,8 +301,8 @@ class ActiviteController extends Controller
             'description' => 'nullable|string',
             'image' => 'nullable|image|max:2048',
             'actif' => 'required|boolean',
-            'criteres' => 'nullable',
-            'souscriteres' => 'nullable',
+            'criteres' => ['nullable'],
+            'souscriteres' => ['nullable'],
             'adresse' => ['nullable', Rule::exists('structure_adresse', 'id')],
             'address' => ['nullable'],
             'city' => ['nullable'],
@@ -320,6 +320,8 @@ class ActiviteController extends Controller
             'instructeur_phone' => ['nullable'],
             'rayon_km' => ['nullable'],
         ]);
+
+        // dd($request->souscriteres);
 
         $structure = Structure::with('adresses')->findOrFail($structure->id);
 
@@ -520,7 +522,7 @@ class ActiviteController extends Controller
             'produit_id' => $structureProduit->id,
             'critere_id' => $critereId,
             'valeur_id' => $valeurId,
-            'valeur' => $valeur,
+            'valeur' => $valeur ?? "",
         ]);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -18,4 +19,5 @@ class LiensDisCatCritValSsCritValeur extends Model
     {
         return $this->belongsTo(LiensDisCatCritValSsCrit::class, 'dcc_val_ss_crit_id');
     }
+
 }
