@@ -1,14 +1,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 
-const props = defineProps({
-    modelValue: {
-        type: [Object, String, Number],
-    },
-    name: String,
-    min: [String, Number],
-    max: [String, Number],
-});
+defineProps(["modelValue"]);
 
 defineEmits(["update:modelValue"]);
 

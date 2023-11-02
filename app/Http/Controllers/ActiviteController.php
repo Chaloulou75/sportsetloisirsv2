@@ -321,7 +321,7 @@ class ActiviteController extends Controller
             'rayon_km' => ['nullable'],
         ]);
 
-        // dd($request->souscriteres);
+        // dd($request->criteres, $request->souscriteres);
 
         $structure = Structure::with('adresses')->findOrFail($structure->id);
 
@@ -493,7 +493,7 @@ class ActiviteController extends Controller
             ]);
         }
 
-        return to_route('structures.disciplines.show', ['structure' => $structure->slug, 'discipline' => $discipline])->with('success', 'Activité ajoutée, ajoutez d\'autres activités à votre structure.');
+        return to_route('structures.disciplines.show', ['structure' => $structure->slug, 'discipline' => $discipline])->with('success', 'Activité ajoutée avec succès, ajoutez d\'autres activités à votre structure.');
     }
 
     private function insertCriteresRecursively($structure, $structureActivite, $structureProduit, $critereId, $criteresValues, $defaut)
@@ -530,10 +530,12 @@ class ActiviteController extends Controller
     {
         if (isset($souscritereValue['id'])) {
             $this->createProduitSousCritere($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $souscritereValue);
-        } else {
+        } elseif(is_array($souscritereValue)) {
             foreach ($souscritereValue as $subSouscriteresValue) {
                 $this->insertSousCriteresRecursively($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $subSouscriteresValue);
             }
+        } else {
+            $this->createProduitSousCritere($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $souscritereValue);
         }
     }
 
@@ -545,8 +547,8 @@ class ActiviteController extends Controller
             'critere_id' => $critereId,
             'critere_valeur_id' => $critereValeurId,
             'sous_critere_id' => $sousCritereId,
-            'sous_critere_valeur_id' => $souscriteresValues['id'],
-            'valeur' => $souscriteresValues['valeur'],
+            'sous_critere_valeur_id' => $souscriteresValues['id'] ?? null,
+            'valeur' => $souscriteresValues['valeur'] ?? $souscriteresValues,
         ]);
     }
 

@@ -7,6 +7,7 @@ import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
 import RadioForm from "@/Components/Forms/RadioForm.vue";
 import RangeInputForm from "@/Components/Forms/RangeInputForm.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
+import InputLabel from "@/Components/Forms/InputLabel.vue";
 import OpenDaysForm from "@/Components/Forms/DayTime/OpenDaysForm.vue";
 import SingleDateForm from "@/Components/Forms/DayTime/SingleDateForm.vue";
 import SingleTimeForm from "@/Components/Forms/DayTime/SingleTimeForm.vue";
@@ -366,10 +367,11 @@ onMounted(() => {
                                             <div
                                                 v-for="critere in filteredCriteres"
                                                 :key="critere.id"
-                                                class="w-full max-w-sm"
+                                                class="flex-grow"
                                             >
                                                 <!-- select -->
                                                 <SelectForm
+                                                    class="max-w-sm"
                                                     v-if="
                                                         critere.type_champ_form ===
                                                         'select'
@@ -385,6 +387,7 @@ onMounted(() => {
 
                                                 <!-- checkbox -->
                                                 <CheckboxForm
+                                                    class="max-w-sm"
                                                     v-if="
                                                         critere.type_champ_form ===
                                                         'checkbox'
@@ -407,6 +410,7 @@ onMounted(() => {
 
                                                 <!-- radio -->
                                                 <RadioForm
+                                                    class="max-w-sm"
                                                     v-if="
                                                         critere.type_champ_form ===
                                                         'radio'
@@ -422,6 +426,7 @@ onMounted(() => {
 
                                                 <!-- input text -->
                                                 <div
+                                                    class="max-w-sm"
                                                     v-if="
                                                         critere.type_champ_form ===
                                                         'text'
@@ -454,6 +459,7 @@ onMounted(() => {
 
                                                 <!-- number text -->
                                                 <div
+                                                    class="max-w-sm"
                                                     v-if="
                                                         critere.type_champ_form ===
                                                         'number'
@@ -570,9 +576,10 @@ onMounted(() => {
                                                     <div
                                                         v-for="souscritere in valeur.sous_criteres"
                                                         :key="souscritere.id"
+                                                        class=""
                                                     >
                                                         <SelectForm
-                                                            class="py-2"
+                                                            class="max-w-sm py-2"
                                                             v-if="
                                                                 form.criteres[
                                                                     critere.id
@@ -596,13 +603,14 @@ onMounted(() => {
                                                                 souscritere.sous_criteres_valeurs
                                                             "
                                                         />
+
                                                         <InputLabel
-                                                            class="w-full py-2"
+                                                            class="py-2"
                                                             for="
                                                                 Nombre
                                                             "
                                                             value="
-                                                                Nobre
+                                                                Nombre
                                                             "
                                                             v-if="
                                                                 form.criteres[
@@ -615,6 +623,7 @@ onMounted(() => {
                                                             "
                                                         />
                                                         <TextInput
+                                                            class="w-full"
                                                             type="number"
                                                             id="
                                                                 Nombre
