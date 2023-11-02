@@ -23,6 +23,8 @@ use Database\Seeders\LiensFamillesDisciplinesTableSeeder;
 use Database\Seeders\ListeTarifsTypesAttributsTableSeeder;
 use Database\Seeders\LiensDisciplinesCategoriesTableSeeder;
 use Database\Seeders\LiensDisciplinesSimilairesTableSeeder;
+use Database\Seeders\LiensDisCatCritValSousCriteresTableSeeder;
+use Database\Seeders\LiensDisCatCritValSsCritValeurTableSeeder;
 use Database\Seeders\LiensDisciplinesCategoriesCriteresTableSeeder;
 use Database\Seeders\LiensDisciplinesCategoriesCriteresValeursTableSeeder;
 
@@ -55,6 +57,8 @@ class DatabaseSeeder extends Seeder
         $this->call(LienDisciplineCategorieSlugSeeder::class);
         $this->call(LiensDisciplinesCategoriesCriteresTableSeeder::class);
         $this->call(LiensDisciplinesCategoriesCriteresValeursTableSeeder::class);
+        $this->call(LiensDisCatCritValSousCriteresTableSeeder::class);
+        $this->call(LiensDisCatCritValSsCritValeurTableSeeder::class);
         // $this->call(LiensDisciplinesSimilairesTableSeeder::class);
         // $this->call(LiensFamillesDisciplinesTableSeeder::class);
 
@@ -67,5 +71,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'tonio20@hotmail.fr',
         ]);
 
+        $this->call(LiensDisCatCritValSsCritValeurTableSeeder::class);
+        $this->call(LiensDisCatCritValSousCriteresTableSeeder::class);
     }
 }

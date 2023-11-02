@@ -1,5 +1,6 @@
 <script setup>
-import { ref, nextTick, defineAsyncComponent } from "vue";
+import { classMapping } from "@/Utils/classMapping.js";
+import { ref, computed, nextTick, defineAsyncComponent } from "vue";
 import { useForm, router, Link } from "@inertiajs/vue3";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
@@ -75,6 +76,20 @@ const openTarif = ref(false);
 const currentTarif = ref(null);
 const showEditTarifModal = ref(false);
 const showAddTarifModal = ref(false);
+
+const headerClass = computed(() => {
+    const defaultClass = "bg-la-base";
+    if (props.structureActivite && props.structureActivite.discipline_id) {
+        const disciplineId = props.structureActivite.discipline_id;
+        if (classMapping[disciplineId]) {
+            return classMapping[disciplineId];
+        } else {
+            return defaultClass;
+        }
+    } else {
+        return defaultClass;
+    }
+});
 
 const openAddTarifModal = (structure) => {
     showAddTarifModal.value = true;
@@ -481,20 +496,21 @@ const destroyTarif = (tarif, produit) => {
             </div>
             <div class="flex w-full flex-col items-start md:flex-row">
                 <div
-                    class="mx-auto h-60 w-full border border-gray-100 bg-purple-300 md:w-auto"
+                    class="h-56 w-full max-w-sm bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-soft-light"
+                    :class="headerClass"
                 >
-                    <img
+                    <!-- <img
                         v-if="structureActivite.image"
                         alt="image"
                         :src="structureActivite.image"
                         class="h-full w-full object-cover"
-                    />
-                    <img
+                    /> -->
+                    <!-- <img
                         v-else
                         alt="image"
                         src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
                         class="h-full w-full object-cover"
-                    />
+                    /> -->
                 </div>
                 <div
                     class="flex flex-1 flex-col items-start space-y-3 px-2 py-2 md:space-y-6 md:px-4"
@@ -510,7 +526,6 @@ const destroyTarif = (tarif, produit) => {
                             "
                             class="relative inline-flex h-6 w-11 items-center rounded-full"
                         >
-                            <span class="sr-only">Actif</span>
                             <span
                                 :class="
                                     structureActivite.actif
@@ -591,7 +606,7 @@ const destroyTarif = (tarif, produit) => {
                             <!-- criteres -->
                             <div
                                 v-if="produit.criteres.length > 0"
-                                class="col-span-2 grid h-full w-full grid-cols-2 place-items-center gap-2"
+                                class="col-span-2 grid h-full w-full grid-cols-2 place-items-center gap-2 p-1"
                             >
                                 <div
                                     v-for="critere in produit.criteres"
@@ -611,39 +626,40 @@ const destroyTarif = (tarif, produit) => {
                                         <span
                                             v-if="critere.valeur"
                                             class="text-sm font-semibold text-gray-600"
-                                            >{{ critere.valeur }}</span
-                                        >
-                                        <span
-                                            v-if="
-                                                critere.critere_valeur &&
-                                                critere.critere_valeur
-                                                    .sous_criteres &&
-                                                critere.critere_valeur
-                                                    .sous_criteres.length > 0
-                                            "
-                                            class="text-xs font-medium text-gray-600"
-                                        >
+                                            >{{ critere.valeur }}
                                             <span
-                                                v-for="sousCriteres in critere
-                                                    .critere_valeur
-                                                    .sous_criteres"
-                                                :key="sousCriteres.id"
+                                                v-if="
+                                                    critere.critere_valeur &&
+                                                    critere.critere_valeur
+                                                        .sous_criteres &&
+                                                    critere.critere_valeur
+                                                        .sous_criteres.length >
+                                                        0
+                                                "
+                                                class="text-xs font-medium text-gray-600"
                                             >
                                                 <span
-                                                    v-for="sousCritValeur in sousCriteres.prod_sous_crit_valeurs"
-                                                    :key="sousCritValeur.id"
-                                                    class="text-xs font-semibold text-gray-600"
+                                                    v-for="sousCriteres in critere
+                                                        .critere_valeur
+                                                        .sous_criteres"
+                                                    :key="sousCriteres.id"
                                                 >
                                                     <span
-                                                        v-if="
-                                                            sousCritValeur.produit_id ===
-                                                            produit.id
-                                                        "
-                                                        >({{
-                                                            sousCritValeur.valeur
-                                                        }})</span
-                                                    ></span
-                                                >
+                                                        v-for="sousCritValeur in sousCriteres.prod_sous_crit_valeurs"
+                                                        :key="sousCritValeur.id"
+                                                        class="text-xs font-semibold text-gray-600"
+                                                    >
+                                                        <span
+                                                            v-if="
+                                                                sousCritValeur.produit_id ===
+                                                                produit.id
+                                                            "
+                                                            >({{
+                                                                sousCritValeur.valeur
+                                                            }})</span
+                                                        ></span
+                                                    >
+                                                </span>
                                             </span>
                                         </span>
                                     </div>

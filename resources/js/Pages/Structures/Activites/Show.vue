@@ -6,6 +6,11 @@ import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigati
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
 import ActiviteCard from "@/Components/Structures/ActiviteCard.vue";
+import SelectForm from "@/Components/Forms/SelectForm.vue";
+import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
+import RadioForm from "@/Components/Forms/RadioForm.vue";
+import TextInput from "@/Components/Forms/TextInput.vue";
+import InputLabel from "@/Components/Forms/InputLabel.vue";
 import LeafletMap from "@/Components/Maps/LeafletMap.vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
@@ -86,6 +91,32 @@ const selectedCriteres = computed(() => {
     return reactive(initialSelectedCriteres);
 });
 
+const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
+    if (checked) {
+        if (!selectedCriteres[critereId]) {
+            // If the critereId doesn't exist in the form object, create a new array with the optionValue
+            selectedCriteres[critereId] = [optionValue];
+        } else {
+            // If the critereId exists, push the optionValue to the existing array
+            selectedCriteres[critereId].push(optionValue);
+        }
+    } else {
+        // Remove the optionValue from the array
+        const index = selectedCriteres[critereId].indexOf(optionValue);
+        if (index !== -1) {
+            selectedCriteres[critereId].splice(index, 1);
+        }
+    }
+};
+
+// Check if a checkbox is selected
+const isCheckboxSelected = (critereId, optionValue) => {
+    return (
+        selectedCriteres[critereId] &&
+        selectedCriteres[critereId].includes(optionValue)
+    );
+};
+
 const filteredProductsWithCriteres = computed(() => {
     const filteredProducts = props.activite.produits.filter(
         (produit) =>
@@ -134,12 +165,12 @@ const formatCurrency = (value) => {
     return value;
 };
 
-function formatDate(dateString) {
+const formatDate = (dateString) => {
     const date = dayjs(dateString);
     return date.format("dddd D MMMM YYYY à H[h]mm");
-}
+};
 
-function formatPhoneNumber(phoneNumber) {
+const formatPhoneNumber = (phoneNumber) => {
     const cleanPhoneNumber = phoneNumber.replace(/\D/g, "");
     if (cleanPhoneNumber.startsWith("33")) {
         return `+33 ${cleanPhoneNumber.substr(3, 2)} ${cleanPhoneNumber.substr(
@@ -148,7 +179,7 @@ function formatPhoneNumber(phoneNumber) {
         )} ${cleanPhoneNumber.substr(7, 2)} ${cleanPhoneNumber.substr(9, 2)}`;
     }
     return phoneNumber;
-}
+};
 
 const formatCityName = (ville) => {
     return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
@@ -598,95 +629,141 @@ const submitReservation = () => {
                                 </ul>
                             </div>
                             <!-- Filters -->
-                            <div>
+                            <div v-if="filteredCriteres.length > 0">
                                 <div
                                     class="my-6 grid w-full grid-cols-1 gap-4 md:grid-cols-3"
                                 >
-                                    <Listbox
+                                    <div
                                         v-for="critere in filteredCriteres"
                                         :key="critere.id"
-                                        class="w-full"
-                                        v-model="selectedCriteres[critere.id]"
+                                        class="col-span-1"
                                     >
-                                        <div class="relative mt-1">
-                                            <label
-                                                :for="critere.nom"
-                                                class="block text-sm font-medium"
+                                        <!-- select -->
+                                        <SelectForm
+                                            class="max-w-sm"
+                                            v-if="
+                                                critere.type_champ_form ===
+                                                'select'
+                                            "
+                                            :name="critere.nom"
+                                            v-model="
+                                                selectedCriteres[critere.id]
+                                            "
+                                            :options="critere.valeurs"
+                                        />
+
+                                        <!-- checkbox -->
+                                        <CheckboxForm
+                                            class="max-w-sm"
+                                            v-if="
+                                                critere.type_champ_form ===
+                                                'checkbox'
+                                            "
+                                            :critere="critere"
+                                            :name="critere.nom"
+                                            v-model="
+                                                selectedCriteres[critere.id]
+                                            "
+                                            :options="critere.valeurs"
+                                            :is-checkbox-selected="
+                                                isCheckboxSelected
+                                            "
+                                            @update-selected-checkboxes="
+                                                updateSelectedCheckboxes
+                                            "
+                                        />
+
+                                        <!-- radio -->
+                                        <RadioForm
+                                            class="max-w-sm"
+                                            v-if="
+                                                critere.type_champ_form ===
+                                                'radio'
+                                            "
+                                            :name="critere.nom"
+                                            v-model="
+                                                selectedCriteres[critere.id]
+                                            "
+                                            :options="critere.valeurs"
+                                        />
+
+                                        <!-- sous criteres -->
+                                        <div
+                                            v-for="valeur in critere.valeurs"
+                                            :key="valeur.id"
+                                        >
+                                            <div
+                                                v-for="souscritere in valeur.sous_criteres"
+                                                :key="souscritere.id"
+                                                class=""
                                             >
-                                                {{ critere.nom }}:
-                                            </label>
-                                            <ListboxButton
-                                                class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
-                                            >
-                                                <span class="block truncate">
-                                                    {{
+                                                <SelectForm
+                                                    class="max-w-sm py-2"
+                                                    v-if="
                                                         selectedCriteres[
                                                             critere.id
-                                                        ].valeur
-                                                    }}
-                                                </span>
-                                                <span
-                                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
-                                                >
-                                                    <ChevronUpDownIcon
-                                                        class="h-5 w-5 text-gray-400"
-                                                        aria-hidden="true"
-                                                    />
-                                                </span>
-                                            </ListboxButton>
+                                                        ] === valeur &&
+                                                        souscritere.type_champ_form ===
+                                                            'select' &&
+                                                        souscritere.dis_cat_crit_val_id ===
+                                                            valeur.id
+                                                    "
+                                                    :name="souscritere.nom"
+                                                    v-model="
+                                                        selectedCriteres[
+                                                            souscritere.id
+                                                        ]
+                                                    "
+                                                    :options="
+                                                        souscritere.sous_criteres_valeurs
+                                                    "
+                                                />
 
-                                            <transition
-                                                leave-active-class="transition duration-100 ease-in"
-                                                leave-from-class="opacity-100"
-                                                leave-to-class="opacity-0"
-                                            >
-                                                <ListboxOptions
-                                                    class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-                                                >
-                                                    <ListboxOption
-                                                        v-slot="{
-                                                            active,
-                                                            selected,
-                                                        }"
-                                                        v-for="critereValue in critere.valeurs"
-                                                        :key="critereValue.id"
-                                                        :value="critereValue"
-                                                        as="template"
-                                                    >
-                                                        <li
-                                                            :class="[
-                                                                active
-                                                                    ? 'bg-amber-100 text-amber-900'
-                                                                    : 'text-gray-900',
-                                                                'relative cursor-default select-none py-2 pl-10 pr-4',
-                                                            ]"
-                                                        >
-                                                            <span
-                                                                :class="[
-                                                                    selected
-                                                                        ? 'font-medium'
-                                                                        : 'font-normal',
-                                                                    'block truncate',
-                                                                ]"
-                                                                >{{
-                                                                    critereValue.valeur
-                                                                }}</span
-                                                            >
-                                                            <span
-                                                                v-if="selected"
-                                                                class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
-                                                            >
-                                                                <CheckCircleIcon
-                                                                    class="h-5 w-5"
-                                                                    aria-hidden="true"
-                                                                />
-                                                            </span>
-                                                        </li>
-                                                    </ListboxOption>
-                                                </ListboxOptions>
-                                            </transition>
+                                                <InputLabel
+                                                    class="py-2"
+                                                    for="
+                                                                Nombre
+                                                            "
+                                                    value="
+                                                                Nombre
+                                                            "
+                                                    v-if="
+                                                        selectedCriteres[
+                                                            critere.id
+                                                        ] === valeur &&
+                                                        souscritere.type_champ_form ===
+                                                            'number' &&
+                                                        souscritere.dis_cat_crit_val_id ===
+                                                            valeur.id
+                                                    "
+                                                />
+                                                <TextInput
+                                                    class="w-full"
+                                                    type="number"
+                                                    id="
+                                                                Nombre
+                                                            "
+                                                    name="
+                                                                Nombre
+                                                            "
+                                                    v-if="
+                                                        selectedCriteres[
+                                                            critere.id
+                                                        ] === valeur &&
+                                                        souscritere.type_champ_form ===
+                                                            'number' &&
+                                                        souscritere.dis_cat_crit_val_id ===
+                                                            valeur.id
+                                                    "
+                                                    v-model="
+                                                        selectedCriteres[
+                                                            souscritere.id
+                                                        ]
+                                                    "
+                                                />
+                                            </div>
                                         </div>
-                                    </Listbox>
+                                    </div>
                                 </div>
                             </div>
 

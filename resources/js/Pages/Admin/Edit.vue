@@ -192,6 +192,7 @@ const updateCategorie = (index) => {
 };
 
 const deleteCritere = (disciplineCategorieCritere) => {
+    console.log(disciplineCategorieCritere);
     router.delete(
         route("categories-disciplines-criteres.destroy", {
             lienDisciplineCategorieCritere: disciplineCategorieCritere,
@@ -268,7 +269,7 @@ const addValeur = (critere) => {
         }),
         {
             valeur: addValeurForm.valeur,
-            disciplineCategorieCritereId: critere.disciplineCategorieCritere,
+            disciplineCategorieCritereId: critere.disciplineCategorieCritere.id,
         },
         {
             preserveScroll: true,
@@ -808,7 +809,7 @@ const addFromScratchCritere = (categorie) => {
                         >
                             <li
                                 v-for="critere in categorie.criteres"
-                                :key="critere.disciplineCategorieCritere"
+                                :key="critere.id"
                                 class="flex flex-col text-base text-slate-600"
                             >
                                 <div
@@ -816,10 +817,22 @@ const addFromScratchCritere = (categorie) => {
                                 >
                                     <span class="flex-grow"
                                         >Critère:
-                                        <span class="font-semibold">{{
-                                            critere.critere.nom
-                                        }}</span></span
-                                    >
+                                        <span class="font-semibold"
+                                            >{{
+                                                critere
+                                                    .disciplineCategorieCritere
+                                                    .nom
+                                            }}
+                                            <span class="text-xs font-medium"
+                                                >(Type de champ:
+                                                {{
+                                                    critere
+                                                        .disciplineCategorieCritere
+                                                        .type_champ_form
+                                                }})</span
+                                            ></span
+                                        >
+                                    </span>
 
                                     <button
                                         type="button"
@@ -992,7 +1005,15 @@ const addFromScratchCritere = (categorie) => {
                                 >
                                     <button
                                         class="inline-flex items-center justify-center space-y-1 rounded-lg border border-gray-300 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
-                                        v-if="!showAddValeurForm(critere)"
+                                        v-if="
+                                            !showAddValeurForm(critere) &&
+                                            (critere.disciplineCategorieCritere
+                                                .type_champ_form === 'select' ||
+                                                critere
+                                                    .disciplineCategorieCritere
+                                                    .type_champ_form ===
+                                                    'checkbox')
+                                        "
                                         type="button"
                                         @click="toggleAddValeurForm(critere)"
                                     >

@@ -234,17 +234,27 @@ class ActiviteController extends Controller
      */
     public function destroy(Structure $structure, $activite): RedirectResponse
     {
-        $activite = StructureActivite::where('id', $activite)->first();
+        $activite = StructureActivite::findOrFail($activite);
+
+        $discipline = $activite->discipline;
 
         $produits = StructureProduit::where('activite_id', $activite->id)->get();
 
         $criteres = StructureProduitCritere::where('activite_id', $activite->id)->get();
+
+        $souscriteres = StructureProduitSousCritere::where('activite_id', $activite->id)->get();
 
         $plannings = StructurePlanning::where('activite_id', $activite->id)->get();
 
         if($plannings->isNotEmpty()) {
             foreach($plannings as $planning) {
                 $planning->delete();
+            }
+        }
+
+        if($souscriteres->isNotEmpty()) {
+            foreach($souscriteres as $souscritere) {
+                $souscritere->delete();
             }
         }
 
@@ -268,7 +278,7 @@ class ActiviteController extends Controller
             $activite->delete();
         }
 
-        return to_route('structures.disciplines.index', ['structure' => $structure->slug ])->with('success', 'l\'activité a été supprimée.');
+        return to_route('structures.disciplines.show', ['structure' => $structure->slug, 'discipline' => $discipline ])->with('success', 'l\'activité a été supprimée.');
 
     }
 

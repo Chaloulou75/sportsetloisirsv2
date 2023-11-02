@@ -117,7 +117,7 @@ class AdminController extends Controller
                     $firstCriterionItem = $criterionItems->first();
 
                     return [
-                        'disciplineCategorieCritere' => $firstCriterionItem->id,
+                        'disciplineCategorieCritere' => $firstCriterionItem,
                         'critere' => $firstCriterionItem->critere,
                         'valeurs' => $criterionItems->flatMap->valeurs,
                     ];
@@ -133,6 +133,8 @@ class AdminController extends Controller
                 ];
             });
         }
+
+        // dd($groupedData);
 
         $listeCriteres = Critere::select(['id', 'nom'])->get();
 

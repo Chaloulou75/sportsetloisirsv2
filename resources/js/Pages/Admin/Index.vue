@@ -127,16 +127,17 @@ const submitCreateInfoBase = () => {
                     class="flex flex-col items-end justify-around space-y-6 md:flex-row md:justify-center md:space-x-6 md:space-y-0"
                 >
                     <div
-                        class="flex w-full flex-col items-end justify-center gap-x-4 md:w-2/3 md:flex-row"
+                        class="flex w-full flex-col items-end justify-center gap-x-4 space-y-2 md:flex-row md:space-y-0"
                     >
                         <AutocompleteDiscipline
+                            class="w-full md:w-2/3"
                             :disciplines="listDisciplines"
                             v-model="discipline"
                         />
-                        <template v-if="discipline" class="w-full md:w-auto">
+                        <template v-if="discipline" class="w-full md:w-1/3">
                             <Link
                                 :href="route('admin.edit', discipline)"
-                                class="group mb-0.5 flex w-full items-center justify-center rounded border border-gray-300 bg-white px-4 py-2.5 text-base font-medium text-gray-600 shadow-sm hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring-2 md:w-auto"
+                                class="group flex w-full items-center justify-center rounded border border-gray-300 bg-white px-4 py-2.5 text-base font-medium text-gray-600 shadow-sm hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring-2 md:w-auto"
                             >
                                 <span
                                     class="mr-4 inline-block group-hover:text-white"
@@ -145,11 +146,10 @@ const submitCreateInfoBase = () => {
                                 <MagnifyingGlassIcon
                                     class="h-5 w-5 text-indigo-500 group-hover:text-white"
                                 />
-                                <span class="sr-only">Rechercher</span>
                             </Link>
                         </template>
                     </div>
-                    <div class="w-full md:w-1/3">
+                    <div class="w-full md:w-1/3" v-if="!discipline">
                         <button
                             v-if="!displayCreateDisciplineForm"
                             @click="showCreateDisciplineForm"
