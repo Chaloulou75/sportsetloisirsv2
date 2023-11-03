@@ -801,10 +801,10 @@ onMounted(() => {
                                                         <InputLabel
                                                             class="py-2"
                                                             for="
-                                                                Nombre
+                                                                Quantité
                                                             "
                                                             value="
-                                                                Nombre
+                                                                Quantité
                                                             "
                                                             v-if="
                                                                 form.criteres[

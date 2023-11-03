@@ -23,8 +23,6 @@ import {
     GlobeAltIcon,
     PhoneIcon,
     HomeIcon,
-    CheckCircleIcon,
-    ChevronUpDownIcon,
     ArrowUturnLeftIcon,
     UsersIcon,
     UserGroupIcon,
@@ -33,17 +31,7 @@ import {
     ChevronRightIcon,
 } from "@heroicons/vue/24/outline";
 import { StarIcon } from "@heroicons/vue/24/solid";
-import {
-    Listbox,
-    ListboxButton,
-    ListboxOptions,
-    ListboxOption,
-    TabGroup,
-    TabList,
-    Tab,
-    TabPanels,
-    TabPanel,
-} from "@headlessui/vue";
+import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 dayjs.locale("fr");
 
 const props = defineProps({
@@ -66,6 +54,7 @@ const props = defineProps({
     categoriesNotInFirst: Object,
     allStructureTypes: Object,
     structuretypeElected: Object,
+    produits: Object,
 });
 
 const filteredCriteres = computed(() => {
@@ -88,7 +77,42 @@ const selectedCriteres = computed(() => {
             initialSelectedCriteres[critere.id] = "";
         }
     }
+
+    // for (const produit of props.produits) {
+    //     for (const critere of produit.criteres) {
+    //         console.log("produit critere:", critere.critere_valeur);
+    //         initialSelectedCriteres[critere.id] = critere.critere_valeur;
+    //     }
+    // }
     return reactive(initialSelectedCriteres);
+});
+
+const filteredProductsWithCriteres = computed(() => {
+    const filteredProducts = props.produits;
+    if (!selectedCriteres.value || filteredProducts.length === 0) {
+        return filteredProducts;
+    }
+    return filteredProducts;
+
+    // return filteredProducts.filter((produit) => {
+    //     let isMatch = true;
+
+    //     for (const critereId in selectedCriteres.value) {
+    //         const selectedCritereValue = selectedCriteres.value[critereId];
+    //         const hasMatchingCritere = produit.criteres.some(
+    //             (critere) =>
+    //                 critere.critere_id === parseInt(critereId) &&
+    //                 critere.critere_valeur.valeur ===
+    //                     selectedCritereValue.valeur
+    //         );
+
+    //         if (!hasMatchingCritere) {
+    //             isMatch = false;
+    //             break;
+    //         }
+    //     }
+    //     return isMatch;
+    // });
 });
 
 const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
@@ -116,36 +140,6 @@ const isCheckboxSelected = (critereId, optionValue) => {
         selectedCriteres[critereId].includes(optionValue)
     );
 };
-
-const filteredProductsWithCriteres = computed(() => {
-    const filteredProducts = props.activite.produits.filter(
-        (produit) =>
-            produit.discipline_id === props.activite.discipline_id &&
-            produit.categorie_id === props.activite.categorie_id
-    );
-    if (!selectedCriteres.value || filteredProducts.length === 0) {
-        return filteredProducts;
-    }
-    return filteredProducts.filter((produit) => {
-        let isMatch = true;
-
-        for (const critereId in selectedCriteres.value) {
-            const selectedCritereValue = selectedCriteres.value[critereId];
-
-            const hasMatchingCritere = produit.criteres.some(
-                (critere) =>
-                    critere.critere_id === parseInt(critereId) &&
-                    critere.valeur === selectedCritereValue.valeur
-            );
-
-            if (!hasMatchingCritere) {
-                isMatch = false;
-                break;
-            }
-        }
-        return isMatch;
-    });
-});
 
 const formatCurrency = (value) => {
     // Remove the non-numeric characters from the currency value
@@ -722,10 +716,10 @@ const submitReservation = () => {
                                                 <InputLabel
                                                     class="py-2"
                                                     for="
-                                                                Nombre
+                                                                Quantité
                                                             "
                                                     value="
-                                                                Nombre
+                                                                Quantité
                                                             "
                                                     v-if="
                                                         selectedCriteres[

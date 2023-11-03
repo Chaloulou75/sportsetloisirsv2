@@ -47,6 +47,7 @@ class DepartementStructureController extends Controller
                     'activites.produits.adresse',
                     'activites.produits.criteres',
                     'activites.produits.criteres.critere',
+                    'activites.produits.criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
                     'activites.produits.tarifs',
                     'activites.produits.tarifs.tarifType',
                     'activites.produits.tarifs.structureTarifTypeInfos',

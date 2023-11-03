@@ -33,8 +33,6 @@ class DepartementDisciplineCategorieActiviteController extends Controller
             ->select('discipline_similaire_id', 'name', 'slug', 'famille')
             ->get();
 
-
-
         $departement = Departement::with(['cities' => function ($query) {
             $query->whereHas('produits');
         }])
@@ -77,6 +75,7 @@ class DepartementDisciplineCategorieActiviteController extends Controller
             'produits.adresse',
             'produits.criteres',
             'produits.criteres.critere',
+            'produits.criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
             'produits.tarifs',
             'produits.tarifs.tarifType',
             'produits.tarifs.structureTarifTypeInfos',

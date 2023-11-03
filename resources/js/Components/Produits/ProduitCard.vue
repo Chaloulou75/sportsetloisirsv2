@@ -188,9 +188,41 @@ const formatCityName = (ville) => {
                                 :key="critere.id"
                             >
                                 {{ critere.critere.nom }}:
-                                <span class="font-semibold">{{
-                                    critere.valeur
-                                }}</span>
+                                <span class="font-semibold"
+                                    >{{ critere.valeur }}
+                                    <span
+                                        v-if="
+                                            critere.critere_valeur &&
+                                            critere.critere_valeur
+                                                .sous_criteres &&
+                                            critere.critere_valeur.sous_criteres
+                                                .length > 0
+                                        "
+                                        class="text-xs font-medium text-gray-600"
+                                    >
+                                        <span
+                                            v-for="sousCriteres in critere
+                                                .critere_valeur.sous_criteres"
+                                            :key="sousCriteres.id"
+                                        >
+                                            <span
+                                                v-for="sousCritValeur in sousCriteres.prod_sous_crit_valeurs"
+                                                :key="sousCritValeur.id"
+                                                class="text-xs font-semibold text-gray-600"
+                                            >
+                                                <span
+                                                    v-if="
+                                                        sousCritValeur.produit_id ===
+                                                        produit.id
+                                                    "
+                                                    >({{
+                                                        sousCritValeur.valeur
+                                                    }})</span
+                                                ></span
+                                            >
+                                        </span>
+                                    </span>
+                                </span>
                             </li>
                         </ul>
                     </div>

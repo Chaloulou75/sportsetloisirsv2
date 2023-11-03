@@ -71,6 +71,7 @@ class DepartementDisciplineActiviteController extends Controller
             'produits.adresse',
             'produits.criteres',
             'produits.criteres.critere',
+            'produits.criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
             'produits.tarifs',
             'produits.tarifs.tarifType',
             'produits.tarifs.structureTarifTypeInfos',

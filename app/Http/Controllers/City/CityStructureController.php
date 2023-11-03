@@ -48,6 +48,7 @@ class CityStructureController extends Controller
                     'activites.produits.adresse',
                     'activites.produits.criteres',
                     'activites.produits.criteres.critere',
+                    'activites.criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
                     'activites.produits.tarifs',
                     'activites.produits.tarifs.tarifType',
                     'activites.produits.tarifs.structureTarifTypeInfos',

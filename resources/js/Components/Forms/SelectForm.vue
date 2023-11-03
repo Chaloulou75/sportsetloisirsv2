@@ -46,7 +46,7 @@ const model = computed({
                     :name="name"
                     :id="name"
                     v-model="model"
-                    class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                    class="block w-full rounded-md border-gray-300 text-sm text-gray-800 shadow-sm"
                 >
                     <option disabled value="">
                         Selectionner un

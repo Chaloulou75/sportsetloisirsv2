@@ -133,7 +133,9 @@ class ActiviteController extends Controller
             'instructeurs',
             'discipline:id,name',
             'categorie:id,categorie_id,discipline_id,nom_categorie_client',
-            'produits',
+            'produits' => function ($query) {
+                $query->latest();
+            },
             'produits.adresse',
             'produits.criteres',
             'produits.criteres.critere',
@@ -144,6 +146,8 @@ class ActiviteController extends Controller
             'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut',
             'produits.plannings',
         ])->where('id', $activite)->first();
+
+        $produits = $activite->produits;
 
         $logoUrl = asset($activite->structure->logo);
 
@@ -181,6 +185,7 @@ class ActiviteController extends Controller
                     'allCities' => $allCities,
                     'logoUrl' => $logoUrl,
                     'activite' => $activite,
+                    'produits' => $produits,
                     'criteres' => $criteres,
                     'activiteSimilaires' => $activiteSimilaires
         ]);
