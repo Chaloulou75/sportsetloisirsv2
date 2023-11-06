@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
-import { ref, watch, onMounted, defineAsyncComponent, nextTick } from "vue";
+import { ref, watch, onMounted, defineAsyncComponent } from "vue";
 import {
     XCircleIcon,
     PlusCircleIcon,
@@ -16,6 +16,7 @@ import {
     ListboxButton,
     ListboxOptions,
     ListboxOption,
+    TransitionRoot,
 } from "@headlessui/vue";
 
 const Pagination = defineAsyncComponent(() =>
@@ -34,11 +35,11 @@ const props = defineProps({
     disciplinesSimilaires: Object,
     listDisciplines: Object,
     familles: Object,
-    disciplineCategorieCriteres: Object,
-    groupedData: Object,
     user_can: Object,
     listeCriteres: Object,
 });
+
+const isShowing = ref(true);
 
 const updateInfoBaseForm = useForm({
     name: ref(props.discipline.name),
@@ -183,9 +184,10 @@ const updateCategorie = (index) => {
             id: props.categories[index].id,
         },
         {
+            errorBag: "categorieForms",
             preserveScroll: true,
             onSuccess: () => {
-                categorieForm.reset();
+                categorieForms.reset();
             },
         }
     );
@@ -265,6 +267,7 @@ const updateValeur = (valeur) => {
             id: valeurForm.value[valeur.id].id,
         },
         {
+            errorBag: "valeurForm",
             preserveScroll: true,
         }
     );
@@ -273,12 +276,12 @@ const updateValeur = (valeur) => {
 const valeurFormsVisibility = ref({});
 
 const toggleAddValeurForm = (critere) => {
-    valeurFormsVisibility.value[critere] =
-        !valeurFormsVisibility.value[critere];
+    valeurFormsVisibility.value[critere.id] =
+        !valeurFormsVisibility.value[critere.id];
 };
 
 const showAddValeurForm = (critere) => {
-    return valeurFormsVisibility.value[critere] || false;
+    return valeurFormsVisibility.value[critere.id] || false;
 };
 
 const addValeurForm = useForm({
@@ -296,6 +299,7 @@ const addValeur = (critere) => {
             disciplineCategorieCritereId: critere.id,
         },
         {
+            errorBag: "addValeurForm",
             preserveScroll: true,
             onSuccess: () => {
                 initializeValeurForm();
@@ -331,6 +335,7 @@ const updateSousValeur = (sousvaleur) => {
             id: sousvaleurForm.value[sousvaleur.id].id,
         },
         {
+            errorBag: "sousvaleurForm",
             preserveScroll: true,
         }
     );
@@ -339,12 +344,12 @@ const updateSousValeur = (sousvaleur) => {
 const sousValeurFormsVisibility = ref({});
 
 const toggleAddSousValeurForm = (souscritere) => {
-    sousValeurFormsVisibility.value[souscritere] =
-        !sousValeurFormsVisibility.value[souscritere];
+    sousValeurFormsVisibility.value[souscritere.id] =
+        !sousValeurFormsVisibility.value[souscritere.id];
 };
 
 const showAddSousValeurForm = (souscritere) => {
-    return sousValeurFormsVisibility.value[souscritere] || false;
+    return sousValeurFormsVisibility.value[souscritere.id] || false;
 };
 
 const addSousValeurForm = useForm({
@@ -362,6 +367,7 @@ const addSousValeur = (souscritere) => {
             dccValSsCritId: souscritere.id,
         },
         {
+            errorBag: "addSousValeurForm",
             preserveScroll: true,
             onSuccess: () => {
                 initializeValeurForm();
@@ -427,6 +433,7 @@ const addCritere = (categorie) => {
             type_champ: addCritereForm.type_champ,
         },
         {
+            errorBag: "addCritereForm",
             preserveScroll: true,
             onSuccess: () => {
                 addCritereForm.reset();
@@ -464,6 +471,7 @@ const addSousCritere = (valeur) => {
             type_champ: addSousCritereForm.type_champ.type,
         },
         {
+            errorBag: "addSousCritereForm",
             preserveScroll: true,
             onSuccess: () => {
                 addSousCritereForm.reset();
@@ -891,12 +899,12 @@ const addSousCritere = (valeur) => {
             </h2>
             <template v-if="categories.length > 0" class="w-full">
                 <ul
-                    class="grid grid-cols-1 place-items-start justify-items-stretch gap-4 md:grid-cols-3 md:gap-8"
+                    class="grid grid-cols-1 place-items-start justify-items-stretch gap-2 md:grid-cols-2 md:gap-4 lg:grid-cols-3 lg:gap-8"
                 >
                     <li
                         v-for="categorie in categories"
                         :key="categorie.id"
-                        class="rounded-md border border-indigo-600 bg-gray-50 px-1 py-6 shadow-sm md:px-3"
+                        class="rounded-md border border-indigo-300 bg-gray-50 px-1 py-6 shadow-lg md:px-3"
                     >
                         <p
                             class="text-center text-lg text-slate-600 underline decoration-yellow-400 decoration-4 underline-offset-4"
@@ -963,40 +971,24 @@ const addSousCritere = (valeur) => {
                                                     updateValeur(valeur)
                                                 "
                                             >
-                                                <div>
-                                                    <label
-                                                        :for="valeur[valeur.id]"
-                                                        class="block text-sm font-medium text-gray-700"
-                                                    >
-                                                        <span
-                                                            class="text-xs italic"
-                                                        ></span>
-                                                    </label>
-                                                    <div
-                                                        class="mt-1 flex rounded-md"
-                                                    >
-                                                        <input
-                                                            v-model="
-                                                                valeurForm[
-                                                                    valeur.id
-                                                                ].valeur
-                                                            "
-                                                            type="text"
-                                                            :name="
-                                                                valeur[
-                                                                    valeur.id
-                                                                ]
-                                                            "
-                                                            :id="
-                                                                valeur[
-                                                                    valeur.id
-                                                                ]
-                                                            "
-                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                            placeholder=""
-                                                            autocomplete="none"
-                                                        />
-                                                    </div>
+                                                <div
+                                                    class="mt-1 flex flex-col rounded-md"
+                                                >
+                                                    <input
+                                                        v-model="
+                                                            valeurForm[
+                                                                valeur.id
+                                                            ].valeur
+                                                        "
+                                                        type="text"
+                                                        :name="
+                                                            valeur[valeur.id]
+                                                        "
+                                                        :id="valeur[valeur.id]"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                        placeholder=""
+                                                        autocomplete="none"
+                                                    />
                                                     <div
                                                         v-if="
                                                             valeurForm[
@@ -1012,6 +1004,7 @@ const addSousCritere = (valeur) => {
                                                         }}
                                                     </div>
                                                 </div>
+
                                                 <div class="flex items-center">
                                                     <button type="submit">
                                                         <ArrowPathIcon
@@ -1073,7 +1066,7 @@ const addSousCritere = (valeur) => {
                                                             class="flex flex-grow items-center justify-around"
                                                         >
                                                             <div
-                                                                class="underline decoration-pink-300 decoration-2 underline-offset-2"
+                                                                class="underline decoration-gray-300 decoration-2 underline-offset-2"
                                                             >
                                                                 Sous critère:
                                                                 <span
@@ -1112,26 +1105,28 @@ const addSousCritere = (valeur) => {
                                                             class="ml-4 list-inside list-disc marker:text-indigo-600"
                                                         >
                                                             <li
-                                                                v-for="valeur in souscritere.sous_criteres_valeurs"
-                                                                :key="valeur.id"
+                                                                v-for="sousvaleur in souscritere.sous_criteres_valeurs"
+                                                                :key="
+                                                                    sousvaleur.id
+                                                                "
                                                                 class="text-sm text-slate-600"
                                                             >
                                                                 <form
                                                                     v-if="
-                                                                        valeur
+                                                                        sousvaleur
                                                                     "
                                                                     class="inline-flex space-x-4"
                                                                     @submit.prevent="
                                                                         updateSousValeur(
-                                                                            valeur
+                                                                            sousvaleur
                                                                         )
                                                                     "
                                                                 >
                                                                     <div>
                                                                         <label
                                                                             :for="
-                                                                                valeur[
-                                                                                    valeur
+                                                                                sousvaleur[
+                                                                                    sousvaleur
                                                                                         .id
                                                                                 ]
                                                                             "
@@ -1147,21 +1142,21 @@ const addSousCritere = (valeur) => {
                                                                             <input
                                                                                 v-model="
                                                                                     sousvaleurForm[
-                                                                                        valeur
+                                                                                        sousvaleur
                                                                                             .id
                                                                                     ]
                                                                                         .valeur
                                                                                 "
                                                                                 type="text"
                                                                                 :name="
-                                                                                    valeur[
-                                                                                        valeur
+                                                                                    sousvaleur[
+                                                                                        sousvaleur
                                                                                             .id
                                                                                     ]
                                                                                 "
                                                                                 :id="
-                                                                                    valeur[
-                                                                                        valeur
+                                                                                    sousvaleur[
+                                                                                        sousvaleur
                                                                                             .id
                                                                                     ]
                                                                                 "
@@ -1173,7 +1168,7 @@ const addSousCritere = (valeur) => {
                                                                         <div
                                                                             v-if="
                                                                                 sousvaleurForm[
-                                                                                    valeur
+                                                                                    sousvaleur
                                                                                         .id
                                                                                 ]
                                                                                     .errors
@@ -1183,11 +1178,11 @@ const addSousCritere = (valeur) => {
                                                                         >
                                                                             {{
                                                                                 sousvaleurForm[
-                                                                                    valeur
+                                                                                    sousvaleur
                                                                                         .id
                                                                                 ]
                                                                                     .errors
-                                                                                    .valeur[0]
+                                                                                    .valeur
                                                                             }}
                                                                         </div>
                                                                     </div>
@@ -1215,7 +1210,7 @@ const addSousCritere = (valeur) => {
                                                                         class="inline-flex items-center"
                                                                         @click="
                                                                             removeSousValeur(
-                                                                                valeur
+                                                                                sousvaleur
                                                                             )
                                                                         "
                                                                     >
@@ -1411,10 +1406,16 @@ const addSousCritere = (valeur) => {
                                                                 </span>
                                                             </ListboxButton>
 
-                                                            <transition
-                                                                leave-active-class="transition duration-100 ease-in"
-                                                                leave-from-class="opacity-100"
-                                                                leave-to-class="opacity-0"
+                                                            <TransitionRoot
+                                                                :show="
+                                                                    isShowing
+                                                                "
+                                                                enter="transition-opacity duration-75"
+                                                                enter-from="opacity-0"
+                                                                enter-to="opacity-100"
+                                                                leave="transition-opacity duration-150"
+                                                                leave-from="opacity-100"
+                                                                leave-to="opacity-0"
                                                             >
                                                                 <ListboxOptions
                                                                     class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
@@ -1469,7 +1470,7 @@ const addSousCritere = (valeur) => {
                                                                         </li>
                                                                     </ListboxOption>
                                                                 </ListboxOptions>
-                                                            </transition>
+                                                            </TransitionRoot>
                                                         </div>
                                                     </Listbox>
                                                 </div>
