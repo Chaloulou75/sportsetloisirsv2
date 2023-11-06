@@ -73,11 +73,24 @@ class AdminController extends Controller
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 
-        $discipline = ListDiscipline::with('familles')->where('id', $discipline->id)->firstOrFail();
+        $discipline = ListDiscipline::with('familles')->findOrFail($discipline->id);
         $disciplineFamillesIds = $discipline->familles()->select('famille_id')
             ->pluck('famille_id');
 
-        $categories = LienDisciplineCategorie::with(['discipline', 'categorie'])->where('discipline_id', $discipline->id)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->get();
+        $categories = LienDisciplineCategorie::with([
+            'discipline',
+            'categorie',
+            'criteres',
+            'criteres.critere',
+            'criteres.valeurs',
+            'criteres.valeurs.sous_criteres',
+            'criteres.valeurs.sous_criteres.sous_criteres_valeurs'
+            ])
+            ->where('discipline_id', $discipline->id)
+            ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+            ->get();
+
+        // dd($categories);
 
         $categoriesIds = $categories->pluck('categorie_id');
 
@@ -95,47 +108,6 @@ class AdminController extends Controller
 
         $familles = Famille::select('id', 'name', 'slug', 'nom_long')->whereNotIn('id', $disciplineFamillesIds)->get();
 
-        $disciplineCategorieCriteres = LienDisciplineCategorieCritere::with([
-            'discipline', 'categorie', 'critere', 'valeurs',
-        ])->where('discipline_id', $discipline->id)
-        ->orderBy('categorie_id')
-        ->get();
-
-        if($disciplineCategorieCriteres->isEmpty()) {
-            $groupedData = collect();
-        } else {
-            $groupedData = $disciplineCategorieCriteres->groupBy(function ($item) {
-                return $item->categorie->id;
-            })
-            ->map(function ($categoryItems) {
-                $firstItem = $categoryItems->first();
-
-                $criteres = $categoryItems->groupBy(function ($item) {
-                    return $item->critere->id;
-                })
-                ->map(function ($criterionItems) {
-                    $firstCriterionItem = $criterionItems->first();
-
-                    return [
-                        'disciplineCategorieCritere' => $firstCriterionItem,
-                        'critere' => $firstCriterionItem->critere,
-                        'valeurs' => $criterionItems->flatMap->valeurs,
-                    ];
-                });
-
-                return [
-                    'categorie' => $firstItem->categorie,
-                    'categoriebase' => [
-                        'id' => $firstItem->categorie->categorie->id,
-                        'nom' => $firstItem->categorie->categorie->nom,
-                    ],
-                    'criteres' => $criteres,
-                ];
-            });
-        }
-
-        // dd($groupedData);
-
         $listeCriteres = Critere::select(['id', 'nom'])->get();
 
         return Inertia::render('Admin/Edit', [
@@ -148,8 +120,6 @@ class AdminController extends Controller
             'disciplinesSimilaires' => $disciplinesSimilaires,
             'listDisciplines' => $listDisciplines,
             'familles' => $familles,
-            'disciplineCategorieCriteres' => $disciplineCategorieCriteres,
-            'groupedData' => $groupedData,
             'listeCriteres' => $listeCriteres,
         ]);
 

@@ -56,17 +56,52 @@ class ListeCriteresTableSeeder extends Seeder
             ),
             5 =>
             array(
+                'id' => 6,
+                'nom' => 'Horaire',
+                'created_at' => '2023-11-02 16:10:41',
+                'updated_at' => '2023-11-02 16:10:41',
+            ),
+            6 =>
+            array(
                 'id' => 7,
                 'nom' => 'Rythme de pratique',
                 'created_at' => '2023-06-22 20:07:31',
                 'updated_at' => '2023-06-22 20:07:31',
             ),
-            6 =>
+            7 =>
+            array(
+                'id' => 8,
+                'nom' => 'Durée',
+                'created_at' => '2023-10-30 11:52:10',
+                'updated_at' => '2023-10-30 11:52:10',
+            ),
+            8 =>
+            array(
+                'id' => 9,
+                'nom' => 'Rayon',
+                'created_at' => '2023-11-02 16:09:41',
+                'updated_at' => '2023-11-02 16:09:41',
+            ),
+            9 =>
+            array(
+                'id' => 10,
+                'nom' => 'Dates',
+                'created_at' => '2023-11-02 16:11:03',
+                'updated_at' => '2023-11-02 16:11:03',
+            ),
+            10 =>
             array(
                 'id' => 11,
                 'nom' => 'Interventions',
                 'created_at' => '2023-06-22 20:07:31',
                 'updated_at' => '2023-06-22 20:07:31',
+            ),
+            11 =>
+            array(
+                'id' => 12,
+                'nom' => 'Mois',
+                'created_at' => '2023-11-02 16:11:50',
+                'updated_at' => '2023-11-02 16:11:50',
             ),
         ));
 

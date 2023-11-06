@@ -15,7 +15,7 @@ class CategoryDisciplineCritereValeurController extends Controller
      */
     public function store(Request $request, LienDisciplineCategorieCritere $critere)
     {
-        $critere = LienDisciplineCategorieCritere::with('discipline')->where('id', $critere->id)->firstOrFail();
+        $critere = LienDisciplineCategorieCritere::with('discipline')->findOrFail($critere->id);
         $request->validate([
             'valeur' => ['required', 'string', 'max:255'],
             'disciplineCategorieCritereId' => ['required', Rule::exists('liens_disciplines_categories_criteres', 'id')],
@@ -41,7 +41,7 @@ class CategoryDisciplineCritereValeurController extends Controller
             'id' => ['required', Rule::exists('liens_disciplines_categories_criteres_valeurs', 'id')],
         ]);
 
-        $lienDisCatCritValeur = LienDisciplineCategorieCritereValeur::with(['critere.discipline'])->where('id', $lienDisCatCritValeur->id)->firstOrFail();
+        $lienDisCatCritValeur = LienDisciplineCategorieCritereValeur::with(['critere.discipline'])->findOrFail($lienDisCatCritValeur->id);
 
         $discipline = $lienDisCatCritValeur->critere->discipline->slug;
 
@@ -56,7 +56,7 @@ class CategoryDisciplineCritereValeurController extends Controller
      */
     public function destroy(LienDisciplineCategorieCritereValeur $lienDisCatCritValeur)
     {
-        $valeur = LienDisciplineCategorieCritereValeur::with(['critere', 'critere.discipline'])->where('id', $lienDisCatCritValeur->id)->firstOrFail();
+        $valeur = LienDisciplineCategorieCritereValeur::with(['critere', 'critere.discipline'])->findOrFail($lienDisCatCritValeur->id);
 
         $discipline = $valeur->critere->discipline->slug;
 

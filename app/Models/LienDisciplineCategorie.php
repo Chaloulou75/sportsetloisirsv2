@@ -42,7 +42,6 @@ class LienDisciplineCategorie extends Model
 
     public function criteres(): HasMany
     {
-        return $this->hasMany(LienDisciplineCategorieCritere::class, 'categorie_id', 'categorie_id')
-                ->where('discipline_id', $this->discipline_id);
+        return $this->hasMany(LienDisciplineCategorieCritere::class, 'categorie_id');
     }
 }

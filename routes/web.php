@@ -22,11 +22,13 @@ use App\Http\Controllers\StructureCategorieController;
 use App\Http\Controllers\DisciplineSimilaireController;
 use App\Http\Controllers\StructureDisciplineController;
 use App\Http\Controllers\StructureStatistiqueController;
+use App\Http\Controllers\Discipline\DisciplineController;
+use App\Http\Controllers\LienDisCatCritValSsCritController;
 use App\Http\Controllers\StructureActiviteProduitController;
 use App\Http\Controllers\CategoryDisciplineCritereController;
 use App\Http\Controllers\Discipline\CategoryDisciplineController;
+use App\Http\Controllers\LienDisCatCritValSsCritValeurController;
 use App\Http\Controllers\CategoryDisciplineCritereValeurController;
-use App\Http\Controllers\Discipline\DisciplineController;
 
 /*
 |--------------------------------------------------------------------------
@@ -152,6 +154,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/categories-disciplines-criteres-valeurs/{lienDisCatCritValeur}', [CategoryDisciplineCritereValeurController::class, 'update'])->name('categories-disciplines-criteres-valeurs.update');
     Route::delete('/categories-disciplines-criteres-valeurs/{lienDisCatCritValeur}', [CategoryDisciplineCritereValeurController::class, 'destroy'])->name('categories-disciplines-criteres-valeurs.destroy');
     //, 'can:viewAdmin'
+    //Sous critere
+    Route::post('/dcc-sous-criteres/{valeur}', [LienDisCatCritValSsCritController::class, 'store'])->name('dcc-sous-criteres.store');
+    Route::delete('/dcc-sous-criteres/{souscritere}', [LienDisCatCritValSsCritController::class, 'destroy'])->name('dcc-sous-criteres.destroy');
+
+    // Sous critere Valeurs
+    Route::post('/dcc-sous-criteres-valeurs/{souscritere}', [LienDisCatCritValSsCritValeurController::class, 'store'])->name('dcc-sous-criteres-valeurs.store');
+    Route::patch('/dcc-sous-criteres-valeurs/{sousvaleur}', [LienDisCatCritValSsCritValeurController::class, 'update'])->name('dcc-sous-criteres-valeurs.update');
+    Route::delete('/dcc-sous-criteres-valeurs/{sousvaleur}', [LienDisCatCritValSsCritValeurController::class, 'destroy'])->name('dcc-sous-criteres-valeurs.destroy');
+
 });
 
 //cities route
