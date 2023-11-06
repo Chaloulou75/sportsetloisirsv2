@@ -891,7 +891,7 @@ const addSousCritere = (valeur) => {
             </h2>
             <template v-if="categories.length > 0" class="w-full">
                 <ul
-                    class="grid grid-cols-1 place-items-start justify-items-stretch gap-12 md:grid-cols-3"
+                    class="grid grid-cols-1 place-items-start justify-items-stretch gap-4 md:grid-cols-3 md:gap-8"
                 >
                     <li
                         v-for="categorie in categories"
@@ -923,7 +923,7 @@ const addSousCritere = (valeur) => {
                                     class="inline-flex w-full items-center justify-between"
                                 >
                                     <div
-                                        class="flex-grow underline decoration-blue-500 decoration-2 underline-offset-2"
+                                        class="flex-grow pb-2 underline decoration-blue-500 decoration-2 underline-offset-2"
                                     >
                                         Critère:
                                         <span class="font-semibold">
@@ -1050,7 +1050,7 @@ const addSousCritere = (valeur) => {
                                                         )
                                                     "
                                                 >
-                                                    <div>
+                                                    <div class="">
                                                         Ajouter un sous critère
                                                         à
                                                         <span
