@@ -2,6 +2,7 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import { ref, watch, onMounted, defineAsyncComponent } from "vue";
+import Checkbox from "@/Components/Forms/Checkbox.vue";
 import {
     XCircleIcon,
     PlusCircleIcon,
@@ -192,6 +193,21 @@ const updateCategorie = (index) => {
         }
     );
 };
+// keep it up!
+const updateCritereFrontVisibility = (critere) => {
+    router.patch(
+        route("categories-disciplines-criteres.update", {
+            critere: critere,
+        }),
+        {
+            visible_front:
+                critereFrontVisibilityForm.value[critere.id].visible_front,
+        },
+        {
+            preserveScroll: true,
+        }
+    );
+};
 
 const deleteCritere = (disciplineCategorieCritere) => {
     router.delete(
@@ -218,6 +234,7 @@ const deleteSousCritere = (souscritere) => {
     );
 };
 
+const critereFrontVisibilityForm = ref({});
 const valeurForm = ref({});
 const sousvaleurForm = ref({});
 const initializeValeurForm = () => {
@@ -226,6 +243,10 @@ const initializeValeurForm = () => {
 
         for (const critereId in category.criteres) {
             const critere = category.criteres[critereId];
+            critereFrontVisibilityForm.value[critere.id] = useForm({
+                visible_front: ref(!!critere.visible_front),
+                remember: true,
+            });
 
             for (const valeurId in critere.valeurs) {
                 const valeur = critere.valeurs[valeurId];
@@ -429,7 +450,7 @@ const addCritere = (categorie) => {
         route("categories-disciplines-criteres.store"),
         {
             critere: addCritereForm.critere,
-            categorie: categorie.categorie,
+            categorie: categorie,
             type_champ: addCritereForm.type_champ,
         },
         {
@@ -438,6 +459,7 @@ const addCritere = (categorie) => {
             onSuccess: () => {
                 addCritereForm.reset();
                 toggleAddCritereForm(categorie);
+                initializeValeurForm();
             },
         }
     );
@@ -945,15 +967,36 @@ const addSousCritere = (valeur) => {
                                         </span>
                                     </div>
 
-                                    <button
-                                        type="button"
-                                        class="inline-flex items-center"
-                                        @click="deleteCritere(critere)"
-                                    >
-                                        <TrashIcon
-                                            class="h-5 w-5 text-red-500"
-                                        />
-                                    </button>
+                                    <div class="flex space-x-2">
+                                        <label class="flex items-center">
+                                            <Checkbox
+                                                v-model:checked="
+                                                    critereFrontVisibilityForm[
+                                                        critere.id
+                                                    ].visible_front
+                                                "
+                                                @change="
+                                                    updateCritereFrontVisibility(
+                                                        critere
+                                                    )
+                                                "
+                                            />
+                                            <span
+                                                class="ml-2 text-sm text-gray-600"
+                                                >Visible Front</span
+                                            ></label
+                                        >
+
+                                        <button
+                                            type="button"
+                                            class="inline-flex items-center"
+                                            @click="deleteCritere(critere)"
+                                        >
+                                            <TrashIcon
+                                                class="h-5 w-5 text-red-500"
+                                            />
+                                        </button>
+                                    </div>
                                 </div>
                                 <ul
                                     class="list-inside list-disc marker:text-indigo-600"
