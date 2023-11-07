@@ -55,7 +55,15 @@ class CategoryDisciplineController extends Controller
                         ->select(['id', 'name', 'slug'])
                         ->get();
 
-        $criteres = LienDisciplineCategorieCritere::with('valeurs')->where('discipline_id', $discipline->id)->where('categorie_id', $category->id)->get();
+        $criteres = LienDisciplineCategorieCritere::with([
+            'valeurs',
+            'valeurs.sous_criteres',
+            'valeurs.sous_criteres.sous_criteres_valeurs',
+        ])
+        ->where('discipline_id', $discipline->id)
+        ->where('categorie_id', $category->id)
+        ->where('visible_front', true)
+        ->get();
 
         $structures = Structure::with([
             'adresses'  => function ($query) {
@@ -91,6 +99,8 @@ class CategoryDisciplineController extends Controller
 
         $discipline->timestamp = false;
         $discipline->increment('view_count');
+
+        // dd($produits);
 
         return Inertia::render('Disciplines/Categories/Show', [
             'familles' => $familles,

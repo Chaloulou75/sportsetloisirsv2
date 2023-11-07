@@ -1,7 +1,7 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
-import { ref, defineAsyncComponent, provide } from "vue";
+import { ref, defineAsyncComponent, provide, watch } from "vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
@@ -123,8 +123,8 @@ const toggleCriteresLg = () => {
     showCriteresLg.value = !showCriteresLg.value;
 };
 
-const formCriteres = useForm({
-    criteres: ref([]),
+const formCriteres = ref({
+    criteres: [],
 });
 
 const filteredProduits = ref(props.produits.data);
@@ -136,6 +136,36 @@ const filteredStructures = ref(props.structures.data);
 const onfilteredStructuresUpdate = (filteredStr) => {
     filteredStructures.value = filteredStr;
 };
+
+watch(
+    () => formCriteres.value.criteres,
+    (newCriteres) => {
+        // newCriteres.forEach((valeur) => {
+        //     const valeurId = valeur.id;
+        //     console.log(valeur, valeurId);
+        //     // filteredProduits.value = props.produits.data.filter(
+        //     //     (produit) => produit.criteres.valeur_id === valeurId
+        //     // );
+        // });
+        const selectedCriteriaIds = Object.keys(newCriteres);
+
+        // Filter produits based on the selected criteria
+        filteredProduits.value = props.produits.data.filter((produit) => {
+            return selectedCriteriaIds.every((critereId) => {
+                const critere = produit.criteres.find(
+                    (c) => c.critere_id === critereId
+                );
+                return critere
+                    ? critere.valeur_id === newCriteres[critereId]
+                    : true;
+            });
+        });
+    },
+    {
+        immediate: true,
+        deep: true,
+    }
+);
 </script>
 
 <template>
@@ -293,7 +323,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                                 option, index
                                             ) in critere.valeurs"
                                             :key="option.id"
-                                            :value="option.valeur"
+                                            :value="option"
                                         >
                                             {{ option.valeur }}
                                         </option>
@@ -325,7 +355,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                                     ]
                                                 "
                                                 :id="option.valeur"
-                                                :value="option.valeur"
+                                                :value="option"
                                                 :name="option.valeur"
                                                 type="checkbox"
                                                 class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"

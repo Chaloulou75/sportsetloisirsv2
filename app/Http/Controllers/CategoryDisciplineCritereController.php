@@ -55,8 +55,7 @@ class CategoryDisciplineCritereController extends Controller
             'visible_front' => $request->visible_front
         ]);
 
-
-        return to_route('admin.edit', $discCatCritere->discipline->slug)->with('success', 'Critère mis à jour');
+        return to_route('admin.edit', $discCatCritere->discipline->slug)->with('success', 'Visibilité du critère mise à jour');
     }
     /**
      * Remove the specified resource from storage.

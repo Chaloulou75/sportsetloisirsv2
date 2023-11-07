@@ -89,9 +89,9 @@ const selectedCriteres = computed(() => {
 
 const filteredProductsWithCriteres = computed(() => {
     const filteredProducts = props.produits;
-    if (!selectedCriteres.value || filteredProducts.length === 0) {
-        return filteredProducts;
-    }
+    // if (!selectedCriteres.value || filteredProducts.length === 0) {
+    //     return filteredProducts;
+    // }
     return filteredProducts;
 
     // return filteredProducts.filter((produit) => {
@@ -182,23 +182,26 @@ const formatCityName = (ville) => {
 const displayPlanning = ref(false);
 
 const getEvents = () => {
+    console.log(filteredProductsWithCriteres.value);
     const events = [];
 
     for (const produit of filteredProductsWithCriteres.value) {
-        for (const planning of produit.plannings) {
-            if (planning) {
-                const event = {
-                    start: planning.start,
-                    end: planning.end,
-                    title: planning.title ?? props.activite.titre,
-                    content: props.activite.description,
-                    activiteId: props.activite.id,
-                    produitId: planning.produit_id,
-                    planningId: planning.id,
-                    class: "course",
-                };
+        if (produit.plannings.length > 0) {
+            for (const planning of produit.plannings) {
+                if (planning) {
+                    const event = {
+                        start: planning.start,
+                        end: planning.end,
+                        title: planning.title ?? props.activite.titre,
+                        content: props.activite.description,
+                        activiteId: props.activite.id,
+                        produitId: planning.produit_id,
+                        planningId: planning.id,
+                        class: "course",
+                    };
 
-                events.push(event);
+                    events.push(event);
+                }
             }
         }
     }
