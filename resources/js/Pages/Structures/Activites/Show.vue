@@ -182,7 +182,7 @@ const formatCityName = (ville) => {
 const displayPlanning = ref(false);
 
 const getEvents = () => {
-    console.log(filteredProductsWithCriteres.value);
+    // console.log(filteredProductsWithCriteres.value);
     const events = [];
 
     for (const produit of filteredProductsWithCriteres.value) {

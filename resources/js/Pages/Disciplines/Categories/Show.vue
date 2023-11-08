@@ -1,7 +1,14 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
-import { ref, defineAsyncComponent, provide, watch } from "vue";
+import {
+    ref,
+    defineAsyncComponent,
+    provide,
+    watch,
+    onMounted,
+    nextTick,
+} from "vue";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
@@ -129,13 +136,14 @@ const toggleCriteresLg = () => {
 const formCriteres = ref({
     criteres: {},
 });
-
+const selectedCriteres = ref([]);
 const filteredProduits = ref(props.produits.data);
+const filteredStructures = ref(props.structures.data);
+
 const onFilteredProduitsUpdate = (filtered) => {
     filteredProduits.value = filtered;
 };
 
-const filteredStructures = ref(props.structures.data);
 const onfilteredStructuresUpdate = (filteredStr) => {
     filteredStructures.value = filteredStr;
 };
@@ -163,29 +171,46 @@ const isCheckboxSelected = (critereId, optionValue) => {
     );
 };
 
+const filterProducts = async () => {
+    if (selectedCriteres.value.length === 0) {
+        filteredProduits.value = props.produits.data;
+    } else {
+        filteredProduits.value = props.produits.data.filter((produit) => {
+            return selectedCriteres.value.every((selectedCritere) => {
+                return produit.criteres.some((produitCritere) => {
+                    return produitCritere.valeur_id === selectedCritere.id;
+                });
+            });
+        });
+    }
+    await nextTick();
+};
+
 watch(
     () => formCriteres.value.criteres,
     (newCriteres) => {
-        for (const newValeurId in newCriteres) {
-            const newCritere = newCriteres[newValeurId];
-            filteredProduits.value = props.produits.data.filter((produit) => {
-                return produit.criteres.some((produitCritere) => {
-                    const produitValeurId = produitCritere.valeur_id;
-                    return produitValeurId === newCritere.id;
-                });
-            });
-        }
+        // Here Tomorrow
+        // if (Array.isArray(newCriteres)) {
+        //     newCriteres.forEach(() => {
+        //         console.log("yo");
+        //     });
+        // }
+        selectedCriteres.value = Object.values(newCriteres).filter(Boolean);
+        filterProducts();
+        console.log(selectedCriteres.value);
     },
-    {
-        immediate: true,
-        deep: true,
-    }
+    { deep: true }
 );
 
 const resetFormCriteres = () => {
     formCriteres.value.criteres = {};
-    filteredProduits.value = props.produits.data;
+    selectedCriteres.value = [];
+    filterProducts();
 };
+
+onMounted(() => {
+    filterProducts();
+});
 </script>
 
 <template>
@@ -494,7 +519,7 @@ const resetFormCriteres = () => {
                                         class="text-lg font-medium text-gray-700"
                                     >
                                         Pas d'activité dans cette zone de la
-                                        carte
+                                        carte, ou avec ces critères
                                         <span class="text-base italic"
                                             >(Utilisez la carte ou les liens de
                                             pagination ci dessous pour trouver

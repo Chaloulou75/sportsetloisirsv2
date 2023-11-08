@@ -12,7 +12,7 @@ const props = defineProps({
     isCheckboxSelected: Function,
 });
 
-const emit = defineEmits(["update:modelValue", "updateSelectedCheckboxes"]);
+const emit = defineEmits(["update:model-value", "update-selected-checkboxes"]);
 
 const isShowing = ref(true);
 
@@ -21,12 +21,12 @@ const model = computed({
         return props.modelValue;
     },
     set(value) {
-        emit("update:modelValue", value);
+        emit("update:model-value", value);
     },
 });
 
 const updateSelectedCheckboxes = (id, valeur, checked) => {
-    emit("updateSelectedCheckboxes", id, valeur, checked);
+    emit("update-selected-checkboxes", id, valeur, checked);
 };
 </script>
 
