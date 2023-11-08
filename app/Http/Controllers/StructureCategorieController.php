@@ -29,7 +29,7 @@ class StructureCategorieController extends Controller
      */
     public function show(Structure $structure, $discipline, $categorie)
     {
-        if (! Gate::allows('update-structure', $structure)) {
+        if (!Gate::allows('update-structure', $structure)) {
             return to_route('structures.disciplines.index', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
 
@@ -71,22 +71,7 @@ class StructureCategorieController extends Controller
             $query->where('structure_id', $structure->id);
         })->where('discipline_id', $discipline->id)->get();
 
-        $structureActivites = StructureActivite::with([
-            'structure:id,name,slug,presentation_courte',
-            'categorie:id,nom_categorie_pro',
-            'discipline:id,name',
-            'plannings',
-            'produits',
-            'produits.adresse',
-            'produits.criteres',
-            'produits.criteres.critere',
-            'produits.criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
-            'produits.horaire',
-            'produits.tarifs',
-            'produits.tarifs.structureTarifTypeInfos',
-            'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut',
-            'produits.tarifs.tarifType'
-            ])
+        $structureActivites = StructureActivite::withRelations()
             ->where('structure_id', $structure->id)
             ->where('discipline_id', $discipline->id)
             ->where('categorie_id', $categorie->id)

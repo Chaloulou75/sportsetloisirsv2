@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -32,5 +33,21 @@ class ProductReservation extends Model
     public function planning(): BelongsTo
     {
         return $this->belongsTo(StructurePlanning::class, 'planning_id');
+    }
+
+    public function scopeWithRelations(Builder $query): void
+    {
+        $query->with([
+                'user',
+                'produit',
+                'produit.criteres',
+                'produit.criteres.critere',
+                'produit.activite',
+                'tarif',
+                'tarif.tarifType',
+                'tarif.structureTarifTypeInfos',
+                'tarif.structureTarifTypeInfos.tarifTypeAttribut',
+                'planning'
+        ]);
     }
 }

@@ -16,50 +16,18 @@ class StructureStatistiqueController extends Controller
     public function index(Structure $structure)
     {
 
-        $allReservations = ProductReservation::with([
-                    'user',
-                    'produit',
-                    'produit.criteres',
-                    'produit.criteres.critere',
-                    'produit.activite',
-                    'tarif',
-                    'tarif.tarifType',
-                    'tarif.structureTarifTypeInfos',
-                    'tarif.structureTarifTypeInfos.tarifTypeAttribut',
-                    'planning'
-                ])->get();
+        $allReservations = ProductReservation::withRelations()
+                ->get();
 
         $allReservationsCount = $allReservations->count();
 
-        $pendingReservations = ProductReservation::with([
-                'user',
-                'produit',
-                'produit.criteres',
-                'produit.criteres.critere',
-                'produit.activite',
-                'tarif',
-                'tarif.tarifType',
-                'tarif.structureTarifTypeInfos',
-                'tarif.structureTarifTypeInfos.tarifTypeAttribut',
-                'planning'
-            ])
+        $pendingReservations = ProductReservation::withRelations()
             ->where('pending', true)
             ->get();
 
         $pendingReservationsCount = $pendingReservations->count();
 
-        $confirmedReservations = ProductReservation::with([
-                'user',
-                'produit',
-                'produit.criteres',
-                'produit.criteres.critere',
-                'produit.activite',
-                'tarif',
-                'tarif.tarifType',
-                'tarif.structureTarifTypeInfos',
-                'tarif.structureTarifTypeInfos.tarifTypeAttribut',
-                'planning'
-            ])
+        $confirmedReservations = ProductReservation::withRelations()
             ->where('confirmed', true)
             ->get();
 
@@ -73,36 +41,9 @@ class StructureStatistiqueController extends Controller
             return $reservation->tarif->amount;
         });
 
-        $structure = Structure::with([
-                    'adresses'  => function ($query) {
-                        $query->latest();
-                    },
-                    'creator:id,name,email',
-                    'users:id,name',
-                    'cities:id,ville,ville_formatee',
-                    'departement:id,departement,numero',
-                    'structuretype:id,name,slug',
-                    'disciplines',
-                    'disciplines.discipline:id,name,slug',
-                    'categories',
-                    'activites' => function ($query) {
-                        $query->latest()->limit(3);
-                    },
-                    'activites.discipline',
-                    'activites.categorie',
-                    'activites.produits',
-                    'activites.produits.adresse',
-                    'activites.produits.criteres',
-                    'activites.produits.criteres.critere',
-                    'activites.produits.tarifs',
-                    'activites.produits.tarifs.tarifType',
-                    'activites.produits.tarifs.structureTarifTypeInfos',
-                    'activites.produits.plannings',
-                    ])
-                    ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'abo_news', 'abo_promo', 'logo'])
+        $structure = Structure::withRelations()
                     ->where('slug', $structure->slug)
                     ->firstOrFail();
-
 
         return Inertia::render('Structures/Gestion/Statistiques/Index', [
             'structure' => $structure,

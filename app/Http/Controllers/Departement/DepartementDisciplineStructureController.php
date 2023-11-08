@@ -27,34 +27,9 @@ class DepartementDisciplineStructureController extends Controller
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
-        $structure = Structure::with([
-                    'creator:id,name',
-                    'users:id,name',
-                    'adresses'  => function ($query) {
-                        $query->latest();
-                    },
-                    'city:id,ville,ville_formatee,code_postal',
-                    'departement:id,departement,numero',
-                    'structuretype:id,name,slug',
-                    'disciplines',
-                    'disciplines.discipline:id,name,slug',
-                    'categories',
-                    'activites',
-                    'activites.discipline:id,name',
-                    'activites.categorie:id,categorie_id,discipline_id,nom_categorie_client,nom_categorie_pro',
-                    'activites.produits',
-                    'activites.produits.adresse',
-                    'activites.produits.criteres',
-                    'activites.produits.criteres.critere',
-                    'activites.produits.criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
-                    'activites.produits.tarifs',
-                    'activites.produits.tarifs.tarifType',
-                    'activites.produits.tarifs.structureTarifTypeInfos',
-                    'activites.produits.plannings',
-                    ])
-                    ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])
-                    ->where('slug', $structure)
-                    ->first();
+        $structure = Structure::withRelations()
+                            ->where('slug', $structure)
+                            ->first();
 
         $logoUrl = asset($structure->logo);
 

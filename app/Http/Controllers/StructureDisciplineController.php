@@ -256,28 +256,10 @@ class StructureDisciplineController extends Controller
 
         $allCategories = $categoriesListByDiscipline->merge($categoriesWithoutStructures);
 
-        $structureActivites = $structure->activites()->with([
-            'structure:id,name,slug,presentation_courte',
-            'categorie:id,nom_categorie_pro',
-            'discipline:id,name,slug',
-            'instructeurs',
-            'plannings',
-            'produits',
-            'produits.adresse',
-            'produits.criteres',
-            'produits.criteres.critere',
-            'produits.criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
-            'produits.horaire',
-            'produits.tarifs',
-            'produits.tarifs.structureTarifTypeInfos',
-            'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut',
-            'produits.tarifs.tarifType'
-            ])
+        $structureActivites = $structure->activites()->withRelations()
             ->where('discipline_id', $discipline->id)
             ->latest()
             ->get();
-        // dd($structureActivites->find(325));
-        // $instructeurs = $structureActivites->pluck('instructeurs')->flatten();
 
         $criteres = LienDisciplineCategorieCritere::with([
                 'valeurs' => function ($query) {
