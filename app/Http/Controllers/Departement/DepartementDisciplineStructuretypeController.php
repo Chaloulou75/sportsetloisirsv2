@@ -34,9 +34,7 @@ class DepartementDisciplineStructuretypeController extends Controller
 
         $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
 
-        $departement = Departement::with(['cities' => function ($query) {
-            $query->withWhereHas('produits');
-        }])
+        $departement = Departement::withCitiesAndRelations()
                                 ->where('slug', $departement->slug)
                                 ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count'])
                                 ->first();
@@ -61,20 +59,6 @@ class DepartementDisciplineStructuretypeController extends Controller
         })
                         ->select(['id', 'name', 'slug'])
                         ->get();
-
-
-        $departement->load([
-            'cities.produits.structure:id,name',
-            'cities.produits.adresse',
-            'cities.produits.activite:id,titre',
-            'cities.produits.criteres:id,activite_id,produit_id,critere_id,valeur_id,valeur',
-            'cities.produits.criteres.critere:id,nom',
-            'cities.produits.criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
-            'cities.produits.tarifs',
-            'cities.produits.tarifs.tarifType',
-            'cities.produits.tarifs.structureTarifTypeInfos',
-            'cities.produits.plannings',
-        ]);
 
         $produits = $departement->cities->flatMap(function ($city) use ($discipline) {
             return $city->produits->where('discipline_id', $discipline->id);

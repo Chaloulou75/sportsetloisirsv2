@@ -72,19 +72,7 @@ class StructureTypeDisciplineController extends Controller
         ->paginate(12);
 
 
-        $produits = $discipline->structureProduits()->with([
-            'structure:id,name',
-            'adresse',
-            'discipline:id,name,slug',
-            'activite:id,titre',
-            'criteres:id,activite_id,produit_id,critere_id,valeur_id,valeur',
-            'criteres.critere:id,nom',
-            'criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
-            'tarifs',
-            'tarifs.tarifType',
-            'tarifs.structureTarifTypeInfos',
-            'plannings',
-        ])->whereHas('structure', function ($query) use ($structuretypeElected) {
+        $produits = $discipline->structureProduits()->withRelations()->whereHas('structure', function ($query) use ($structuretypeElected) {
             $query->where('structuretype_id', $structuretypeElected->id);
         })
         ->paginate(12);

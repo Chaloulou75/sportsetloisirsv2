@@ -78,13 +78,13 @@ class AdminController extends Controller
             ->pluck('famille_id');
 
         $categories = LienDisciplineCategorie::with([
-            'discipline',
-            'categorie',
-            'criteres',
-            'criteres.critere',
-            'criteres.valeurs',
-            'criteres.valeurs.sous_criteres',
-            'criteres.valeurs.sous_criteres.sous_criteres_valeurs'
+                'discipline',
+                'categorie',
+                'criteres',
+                'criteres.critere',
+                'criteres.valeurs',
+                'criteres.valeurs.sous_criteres',
+                'criteres.valeurs.sous_criteres.sous_criteres_valeurs'
             ])
             ->where('discipline_id', $discipline->id)
             ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])

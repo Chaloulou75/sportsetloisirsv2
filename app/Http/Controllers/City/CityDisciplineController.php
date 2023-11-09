@@ -72,33 +72,10 @@ class CityDisciplineController extends Controller
                 ->get();
 
         $citiesAroundProducts = $citiesAround->flatMap(function ($city) use ($discipline) {
-            return $city->produits()->with([
-                'structure:id,name',
-                'adresse',
-                'discipline:id,name,slug',
-                'activite:id,titre',
-                'criteres:id,activite_id,produit_id,critere_id,valeur_id,valeur',
-                'criteres.critere:id,nom',
-                'criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
-                'tarifs',
-                'tarifs.tarifType',
-                'tarifs.structureTarifTypeInfos',
-                'plannings',
-            ])->where('discipline_id', $discipline->id)->get();
+            return $city->produits()->withRelations()->where('discipline_id', $discipline->id)->get();
         });
 
-        $produitsFromCity = $city->produits()->with([
-            'structure:id,name',
-            'adresse',
-            'discipline:id,name,slug',
-            'activite:id,titre',
-            'criteres:id,activite_id,produit_id,critere_id,valeur',
-            'criteres.critere:id,nom',
-            'tarifs',
-            'tarifs.tarifType',
-            'tarifs.structureTarifTypeInfos',
-            'plannings',
-        ])->where('discipline_id', $discipline->id)
+        $produitsFromCity = $city->produits()->withRelations()->where('discipline_id', $discipline->id)
         ->get();
 
         $produits = $produitsFromCity->merge($citiesAroundProducts)->paginate(12);

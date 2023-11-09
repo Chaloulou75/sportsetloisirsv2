@@ -71,37 +71,13 @@ class CityDisciplineStructuretypeController extends Controller
                 ->get();
 
         $citiesAroundProducts = $citiesAround->flatMap(function ($city) use ($discipline, $structuretypeElected) {
-            return $city->produits()->with([
-                'structure:id,name',
-                'adresse',
-                'discipline:id,name,slug',
-                'activite:id,titre',
-                'criteres:id,activite_id,produit_id,critere_id,valeur',
-                'criteres.critere:id,nom',
-                'criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
-                'tarifs',
-                'tarifs.tarifType',
-                'tarifs.structureTarifTypeInfos',
-                'plannings',
-            ])->where('discipline_id', $discipline->id)
+            return $city->produits()->withRelations()->where('discipline_id', $discipline->id)
             ->whereHas('structure', function ($query) use ($structuretypeElected) {
                 $query->where('structuretype_id', $structuretypeElected->id);
             })->get();
         });
 
-        $produitsFromCity = $city->produits()->with([
-            'structure:id,name',
-            'adresse',
-            'discipline:id,name,slug',
-            'activite:id,titre',
-            'criteres:id,activite_id,produit_id,critere_id,valeur_id,valeur',
-            'criteres.critere:id,nom',
-            'criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
-            'tarifs',
-            'tarifs.tarifType',
-            'tarifs.structureTarifTypeInfos',
-            'plannings',
-        ])->where('discipline_id', $discipline->id)
+        $produitsFromCity = $city->produits()->withRelations()->where('discipline_id', $discipline->id)
         ->whereHas('structure', function ($query) use ($structuretypeElected) {
             $query->where('structuretype_id', $structuretypeElected->id);
         })

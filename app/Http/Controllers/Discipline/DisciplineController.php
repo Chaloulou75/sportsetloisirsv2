@@ -103,18 +103,7 @@ class DisciplineController extends Controller
             })
             ->paginate(12);
 
-        $produits = $discipline->structureProduits()->with([
-            'structure:id,name',
-            'adresse',
-            'discipline:id,name,slug',
-            'activite:id,titre',
-            'criteres:id,activite_id,produit_id,critere_id,valeur',
-            'criteres.critere:id,nom',
-            'tarifs',
-            'tarifs.tarifType',
-            'tarifs.structureTarifTypeInfos',
-            'plannings',
-        ])
+        $produits = $discipline->structureProduits()->withRelations()
         ->paginate(12);
 
         $discipline->timestamps = false;

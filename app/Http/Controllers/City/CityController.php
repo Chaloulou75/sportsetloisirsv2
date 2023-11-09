@@ -77,33 +77,10 @@ class CityController extends Controller
                     ->get();
 
         $citiesAroundProducts = $citiesAround->flatMap(function ($cityAr) {
-            return $cityAr->produits()->with([
-            'structure:id,name',
-            'adresse',
-            'discipline:id,name,slug',
-            'activite:id,titre',
-            'criteres:id,activite_id,produit_id,critere_id,valeur',
-            'criteres.critere:id,nom',
-            'tarifs',
-            'tarifs.tarifType',
-            'tarifs.structureTarifTypeInfos',
-            'plannings',
-            ])->get();
+            return $cityAr->produits()->withRelations()->get();
         });
 
-        $produitsFromCity = $city->produits()->with([
-            'structure:id,name',
-            'adresse',
-            'discipline:id,name,slug',
-            'activite:id,titre',
-            'criteres:id,activite_id,produit_id,critere_id,valeur',
-            'criteres.critere:id,nom',
-            'tarifs',
-            'tarifs.tarifType',
-            'tarifs.structureTarifTypeInfos',
-            'plannings',
-        ])
-        ->get();
+        $produitsFromCity = $city->produits()->withRelations()->get();
 
         $flattenedDisciplines = $produitsFromCity->merge($citiesAroundProducts)->pluck('discipline')->unique();
 

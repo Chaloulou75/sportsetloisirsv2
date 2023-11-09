@@ -25,9 +25,10 @@ class DepartementDisciplineCategorieActiviteController extends Controller
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
-        $requestDiscipline = ListDiscipline::with('structureProduits')->where('slug', $discipline)
-                                                    ->select(['id', 'name', 'slug', 'view_count'])
-                                                    ->first();
+        $requestDiscipline = ListDiscipline::with('structureProduits')
+        ->where('slug', $discipline)
+        ->select(['id', 'name', 'slug', 'view_count'])
+        ->first();
 
         $disciplinesSimilaires = $requestDiscipline->disciplinesSimilaires()
             ->select('discipline_similaire_id', 'name', 'slug', 'famille')
@@ -71,7 +72,6 @@ class DepartementDisciplineCategorieActiviteController extends Controller
         $produits = $activite->produits;
 
         $logoUrl = asset($activite->structure->logo);
-
 
         $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
             $query->orderBy('defaut', 'desc');

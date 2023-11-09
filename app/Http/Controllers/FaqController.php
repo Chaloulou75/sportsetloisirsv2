@@ -12,11 +12,9 @@ class FaqController extends Controller
 {
     public function index()
     {
-
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
-
 
         return Inertia::render('Faq/Index', [
             'familles' => $familles,

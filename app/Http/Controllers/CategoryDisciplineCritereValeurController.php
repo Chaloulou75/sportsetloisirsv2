@@ -16,6 +16,7 @@ class CategoryDisciplineCritereValeurController extends Controller
     public function store(Request $request, LienDisciplineCategorieCritere $critere)
     {
         $critere = LienDisciplineCategorieCritere::with('discipline')->findOrFail($critere->id);
+
         $request->validate([
             'valeur' => ['required', 'string', 'max:255'],
             'disciplineCategorieCritereId' => ['required', Rule::exists('liens_disciplines_categories_criteres', 'id')],

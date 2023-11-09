@@ -60,7 +60,6 @@ class DisciplineStructuretypeActiviteController extends Controller
 
         $logoUrl = asset($activite->structure->logo);
 
-
         $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
             $query->orderBy('defaut', 'desc');
         }])

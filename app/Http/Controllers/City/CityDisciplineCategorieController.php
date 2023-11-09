@@ -34,10 +34,14 @@ class CityDisciplineCategorieController extends Controller
 
         $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('slug', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
 
-        $city = City::with(['produits', 'produits.adresse'])->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
-                            ->where('slug', $city->slug)
-                            ->withCount('structures')
-                            ->first();
+        $city = City::with([
+                'produits',
+                'produits.adresse'
+            ])
+            ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
+            ->where('slug', $city->slug)
+            ->withCount('structures')
+            ->first();
 
         $citiesAround = City::withWhereHas('produits')
             ->select('id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
@@ -75,35 +79,13 @@ class CityDisciplineCategorieController extends Controller
         $criteres = LienDisciplineCategorieCritere::with('valeurs')->where('discipline_id', $discipline->id)->where('categorie_id', $category->id)->get();
 
         $citiesAroundProducts = $citiesAround->flatMap(function ($city) use ($discipline, $category) {
-            return $city->produits()->with([
-                'structure:id,name',
-                'adresse',
-                'discipline:id,name,slug',
-                'activite:id,titre',
-                'criteres:id,activite_id,produit_id,critere_id,valeur_id,valeur',
-                'criteres.critere:id,nom',
-                'criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
-                'tarifs',
-                'tarifs.tarifType',
-                'tarifs.structureTarifTypeInfos',
-                'plannings',
-            ])->where('discipline_id', $discipline->id)->where('categorie_id', $category->id)->get();
+            return $city->produits()->withRelations()->where('discipline_id', $discipline->id)->where('categorie_id', $category->id)->get();
         });
 
-        $produitsFromCity = $city->produits()->with([
-            'structure:id,name',
-            'adresse',
-            'discipline:id,name,slug',
-            'activite:id,titre',
-            'criteres:id,activite_id,produit_id,critere_id,valeur',
-            'criteres.critere:id,nom',
-            'tarifs',
-            'tarifs.tarifType',
-            'tarifs.structureTarifTypeInfos',
-            'plannings',
-        ])->where('discipline_id', $discipline->id)
-        ->where('categorie_id', $category->id)
-        ->get();
+        $produitsFromCity = $city->produits()->withRelations()->where('discipline_id', $discipline->id)
+                ->where('categorie_id', $category->id)
+                ->get();
+
 
         $produits = $produitsFromCity->merge($citiesAroundProducts)->paginate(12);
 

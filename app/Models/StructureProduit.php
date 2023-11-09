@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -70,6 +71,24 @@ class StructureProduit extends Model
     public function plannings(): HasMany
     {
         return $this->hasMany(StructurePlanning::class, 'produit_id');
+    }
+
+    public function scopeWithRelations(Builder $query): void
+    {
+        $query->with([
+            'adresse',
+            'discipline:id,name,slug',
+            'categorie',
+            'activite:id,titre',
+            'structure:id,name,slug',
+            'criteres:id,activite_id,produit_id,critere_id,valeur_id,valeur',
+            'criteres.critere:id,nom',
+            'criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
+            'tarifs',
+            'tarifs.tarifType',
+            'tarifs.structureTarifTypeInfos',
+            'plannings',
+        ]);
     }
 
 }

@@ -37,15 +37,14 @@ class CityStructureController extends Controller
 
         if($departement !== null) {
             $departement = Departement::with([
-                        'structures',
-                        'cities' => function ($query) {
-                            $query->has('produits')->with(['produits', 'produits.adresse']);
-                        }])
-                                        ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count', 'latitude', 'longitude'])
-                                        ->where('slug', $departement)
-                                        ->withCount('structures')
-                                        ->first();
-
+                            'structures',
+                            'cities' => function ($query) {
+                                $query->has('produits')->with(['produits', 'produits.adresse']);
+                            }])
+                        ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count', 'latitude', 'longitude'])
+                        ->where('slug', $departement)
+                        ->withCount('structures')
+                        ->first();
         } else {
             $departement = null;
         }
@@ -62,19 +61,18 @@ class CityStructureController extends Controller
             ->first();
 
             $citiesAround = City::with('structures', 'produits', 'produits.adresse')
-                                ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
-                                ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
-                                ->whereNot('id', $city->id)
-                                ->havingRaw('distance <= ?', [$city->tolerance_rayon])
-                                ->orderBy('distance', 'ASC')
-                                ->limit(10)
-                                ->get();
+                            ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
+                            ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
+                            ->whereNot('id', $city->id)
+                            ->havingRaw('distance <= ?', [$city->tolerance_rayon])
+                            ->orderBy('distance', 'ASC')
+                            ->limit(10)
+                            ->get();
         } else {
             $citiesAround = null;
         }
 
         if($discipline !== null) {
-
             $requestDiscipline = ListDiscipline::where('slug', $discipline)
                                         ->select(['id', 'name', 'slug', 'view_count'])
                                         ->first();

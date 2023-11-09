@@ -82,20 +82,7 @@ class CategoryDisciplineController extends Controller
         })
         ->paginate(12);
 
-        $produits = $discipline->structureProduits()->with([
-            'structure:id,name',
-            'adresse',
-            'discipline:id,name,slug',
-            'activite:id,titre',
-            'criteres:id,activite_id,produit_id,critere_id,valeur_id,valeur',
-            'criteres.critere:id,nom',
-            'criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
-            'tarifs',
-            'tarifs.tarifType',
-            'tarifs.structureTarifTypeInfos',
-            'plannings',
-        ])->where('categorie_id', $category->id)
-        ->paginate(12);
+        $produits = $discipline->structureProduits()->withRelations()->where('categorie_id', $category->id)->paginate(12);
 
         $discipline->timestamp = false;
         $discipline->increment('view_count');

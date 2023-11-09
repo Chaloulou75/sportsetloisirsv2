@@ -1,15 +1,7 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
-import {
-    ref,
-    defineAsyncComponent,
-    provide,
-    watch,
-    onMounted,
-    nextTick,
-} from "vue";
-import SelectForm from "@/Components/Forms/SelectForm.vue";
+import { Head, Link } from "@inertiajs/vue3";
+import { ref, defineAsyncComponent, provide, watch, onMounted } from "vue";
 import CheckboxCritereForm from "@/Components/Forms/CheckboxCritereForm.vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
@@ -156,10 +148,15 @@ const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
             formCriteres.value.criteres[critereId].push(optionValue);
         }
     } else {
-        const index =
-            formCriteres.value.criteres[critereId].indexOf(optionValue);
-        if (index !== -1) {
-            formCriteres.value.criteres[critereId].splice(index, 1);
+        const selectedCritere = formCriteres.value.criteres[critereId];
+        if (selectedCritere) {
+            const index = selectedCritere.indexOf(optionValue);
+            if (index !== -1) {
+                selectedCritere.splice(index, 1);
+            }
+            if (selectedCritere.length === 0) {
+                delete formCriteres.value.criteres[critereId];
+            }
         }
     }
 };
@@ -179,14 +176,12 @@ const filterProducts = () => {
             return selectedCriteres.value.every((selectedCritere) => {
                 if (Array.isArray(selectedCritere)) {
                     return selectedCritere.some((critereInArray) => {
-                        console.log("critere array: ", critereInArray);
                         return produit.criteres.some(
                             (produitCritere) =>
                                 produitCritere.valeur_id === critereInArray.id
                         );
                     });
                 } else {
-                    console.log("critere object de base: ", selectedCritere);
                     return produit.criteres.some(
                         (produitCritere) =>
                             produitCritere.valeur_id === selectedCritere.id
@@ -332,7 +327,7 @@ onMounted(() => {
                 </div>
                 <div
                     v-if="criteres"
-                    class="mx-auto w-full flex-col items-start justify-center space-x-0 space-y-2 rounded bg-transparent px-2 py-2 backdrop-blur-md md:flex-row md:items-center md:space-x-6 md:space-y-0 md:px-6 md:py-4"
+                    class="mx-auto w-full flex-col items-start justify-center space-x-0 space-y-2 rounded bg-transparent px-2 py-2 backdrop-blur-md md:flex-row md:items-center md:space-x-6 md:space-y-0 md:px-6"
                     :class="{
                         flex: showCriteres,
                         hidden: !showCriteres,
@@ -458,7 +453,11 @@ onMounted(() => {
                             </div>
                         </div>
                     </div>
-                    <button type="button" @click="resetFormCriteres">
+                    <button
+                        class="flex w-full justify-center md:w-auto"
+                        type="button"
+                        @click="resetFormCriteres"
+                    >
                         <ArrowPathIcon
                             class="h-8 w-8 text-gray-400 transition duration-200 hover:-rotate-90 hover:text-gray-600"
                         />

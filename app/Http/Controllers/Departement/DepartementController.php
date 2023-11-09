@@ -57,26 +57,10 @@ class DepartementController extends Controller
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
-        $departement = Departement::with(['cities' => function ($query) {
-            $query->whereHas('produits');
-        }])
+        $departement = Departement::withCitiesAndRelations()
         ->where('slug', $departement->slug)
         ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count'])
         ->first();
-
-        $departement->load([
-            'cities.produits.structure:id,name',
-            'cities.produits.adresse',
-            'cities.produits.discipline:id,name,slug',
-            'cities.produits.activite:id,titre',
-            'cities.produits.criteres:id,activite_id,produit_id,critere_id,valeur_id,valeur',
-            'cities.produits.criteres.critere:id,nom',
-            'cities.produits.criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
-            'cities.produits.tarifs',
-            'cities.produits.tarifs.tarifType',
-            'cities.produits.tarifs.structureTarifTypeInfos',
-            'cities.produits.plannings',
-        ]);
 
         $collectionProduits = $departement->cities->flatMap(function ($city) {
             return $city->produits;

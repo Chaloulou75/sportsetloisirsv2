@@ -18,24 +18,14 @@ class FavoritesController extends Controller
      */
     public function index(Request $request)
     {
+        $familles = Famille::withProducts()->get();
+        $listDisciplines = ListDiscipline::withProducts()->get();
+        $allCities = City::withProducts()->get();
+
         $favoriteProduitsCookies = $request->cookie('favoriteProduits');
         $favoriteProduitsIds = json_decode($favoriteProduitsCookies);
         if($favoriteProduitsIds !== null) {
-            $produits = StructureProduit::with([
-            'structure:id,name,slug,structuretype_id,address,address_lat,address_lng,zip_code,city_id,city,departement_id,website,view_count',
-            'adresse',
-            'discipline:id,name,slug,view_count',
-            'categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
-            'activite:id,discipline_id,categorie_id,structure_id,titre,description,image,actif',
-            'activite.discipline:id,name,slug',
-            'activite.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
-            'criteres:id,activite_id,produit_id,critere_id,valeur',
-            'criteres.critere:id,nom',
-            'tarifs',
-            'tarifs.tarifType',
-            'tarifs.structureTarifTypeInfos',
-            'plannings',
-            ])
+            $produits = StructureProduit::withRelations()
             ->whereIn('id', $favoriteProduitsIds)
             ->get();
         }
@@ -43,19 +33,7 @@ class FavoritesController extends Controller
         $favoriteActivitiesCookies = $request->cookie('favoriteActivities');
         $favoriteActivitiesIds = json_decode($favoriteActivitiesCookies);
         if($favoriteActivitiesIds !== null) {
-            $activites = StructureActivite::with([
-            'structure',
-            'discipline:id,name',
-            'categorie:id,categorie_id,discipline_id,nom_categorie_client',
-            'produits',
-            'produits.adresse',
-            'produits.criteres',
-            'produits.criteres.critere',
-            'produits.tarifs',
-            'produits.tarifs.tarifType',
-            'produits.tarifs.structureTarifTypeInfos',
-            'produits.plannings',
-            ])
+            $activites = StructureActivite::withRelations()
             ->whereIn('id', $favoriteActivitiesIds)
             ->get();
         }
@@ -63,35 +41,11 @@ class FavoritesController extends Controller
         $favoriteStructuresCookies = $request->cookie('favoriteStructures');
         $favoriteStructuresIds = json_decode($favoriteStructuresCookies);
         if($favoriteStructuresIds !== null) {
-            $structures = Structure::with([
-                    'creator:id,name',
-                    'users:id,name',
-                    'adresses'  => function ($query) {
-                        $query->latest();
-                    },
-                    'city:id,ville,ville_formatee,code_postal',
-                    'departement:id,departement,numero',
-                    'structuretype:id,name,slug',
-                    'disciplines',
-                    'disciplines.discipline:id,name,slug',
-                    'categories',
-                    'activites',
-                    'activites.discipline',
-                    'activites.categorie',
-                    'produits',
-                    'produits.criteres',
-                    'tarifs',
-                    'tarifs.tarifType',
-                    'tarifs.structureTarifTypeInfos',
-                    'plannings',
-                    ])->whereIn('id', $favoriteStructuresIds)
+            $structures = Structure::withRelations()->whereIn('id', $favoriteStructuresIds)
                     ->get();
         }
 
 
-        $familles = Famille::withProducts()->get();
-        $listDisciplines = ListDiscipline::withProducts()->get();
-        $allCities = City::withProducts()->get();
 
 
         return Inertia::render('Favorites/Index', [

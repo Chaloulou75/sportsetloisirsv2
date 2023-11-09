@@ -22,7 +22,6 @@ class DepartementStructureController extends Controller
      */
     public function show(Departement $departement, $structure)
     {
-
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
