@@ -10,7 +10,7 @@ import {
     nextTick,
 } from "vue";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
-import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
+import CheckboxCritereForm from "@/Components/Forms/CheckboxCritereForm.vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
@@ -171,33 +171,37 @@ const isCheckboxSelected = (critereId, optionValue) => {
     );
 };
 
-const filterProducts = async () => {
+const filterProducts = () => {
     if (selectedCriteres.value.length === 0) {
         filteredProduits.value = props.produits.data;
     } else {
         filteredProduits.value = props.produits.data.filter((produit) => {
             return selectedCriteres.value.every((selectedCritere) => {
-                return produit.criteres.some((produitCritere) => {
-                    return produitCritere.valeur_id === selectedCritere.id;
-                });
+                if (Array.isArray(selectedCritere)) {
+                    return selectedCritere.some((critereInArray) => {
+                        console.log("critere array: ", critereInArray);
+                        return produit.criteres.some(
+                            (produitCritere) =>
+                                produitCritere.valeur_id === critereInArray.id
+                        );
+                    });
+                } else {
+                    console.log("critere object de base: ", selectedCritere);
+                    return produit.criteres.some(
+                        (produitCritere) =>
+                            produitCritere.valeur_id === selectedCritere.id
+                    );
+                }
             });
         });
     }
-    await nextTick();
 };
 
 watch(
     () => formCriteres.value.criteres,
     (newCriteres) => {
-        // Here Tomorrow
-        // if (Array.isArray(newCriteres)) {
-        //     newCriteres.forEach(() => {
-        //         console.log("yo");
-        //     });
-        // }
         selectedCriteres.value = Object.values(newCriteres).filter(Boolean);
         filterProducts();
-        console.log(selectedCriteres.value);
     },
     { deep: true }
 );
@@ -378,7 +382,7 @@ onMounted(() => {
                         </div>
 
                         <!-- checkbox -->
-                        <CheckboxForm
+                        <CheckboxCritereForm
                             class="max-w-sm"
                             v-if="critere.type_champ_form === 'checkbox'"
                             :critere="critere"
