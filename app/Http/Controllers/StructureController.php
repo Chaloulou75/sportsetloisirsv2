@@ -13,6 +13,7 @@ use App\Models\Structuretype;
 use App\Models\StructureUser;
 use App\Mail\StructureCreated;
 use App\Models\ListDiscipline;
+use App\Models\StructureTarif;
 use Illuminate\Validation\Rule;
 use App\Models\StructureAddress;
 use App\Models\StructureHoraire;
@@ -27,11 +28,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\RedirectResponse;
+use App\Models\StructureTarifTypeInfo;
 use App\Models\LienDisciplineCategorie;
 use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Database\Eloquent\Builder;
+use App\Models\StructureProduitSousCritere;
 use App\Models\LienDisciplineCategorieCritere;
 
 class StructureController extends Controller
@@ -563,17 +566,38 @@ class StructureController extends Controller
 
         $criteres = StructureProduitCritere::where('structure_id', $structure->id)->get();
 
+        $souscriteres = StructureProduitSousCritere::where('structure_id', $structure->id)->get();
+
         $plannings = StructurePlanning::where('structure_id', $structure->id)->get();
 
+        $tarifs = StructureTarif::with('structureTarifTypeInfos')->where('structure_id', $structure->id)->get();
 
         if (!Gate::allows('destroy-structure', $structure)) {
             return Redirect::route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de supprimer cette fiche, vous devez être le créateur de la structure ou un administrateur.');
         }
 
+        if($tarifs->isNotEmpty()) {
+            foreach($tarifs as $tarif) {
+                $infos = StructureTarifTypeInfo::where('tarif_id', $tarif->id)->get();
+                if($infos->isNotEmpty()) {
+                    foreach($infos as $info) {
+                        $info->delete();
+                    }
+                }
+                $tarif->produits()->detach();
+                $tarif->delete();
+            }
+        }
 
         if($plannings->isNotEmpty()) {
             foreach($plannings as $planning) {
                 $planning->delete();
+            }
+        }
+
+        if($souscriteres->isNotEmpty()) {
+            foreach($souscriteres as $souscritere) {
+                $souscritere->delete();
             }
         }
 

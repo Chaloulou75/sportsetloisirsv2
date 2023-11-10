@@ -8,6 +8,7 @@ const props = defineProps({
     },
     options: Array,
     name: String,
+    classes: String,
     critere: Object,
     isCheckboxSelected: Function,
 });
@@ -41,7 +42,7 @@ const updateSelectedCheckboxes = (id, valeur, checked) => {
         leave-from="opacity-100"
         leave-to="opacity-0"
     >
-        <div class="block">
+        <div :class="classes">
             <span class="text-sm font-medium text-gray-700">{{ name }}</span>
             <div class="mt-2">
                 <div v-for="(option, index) in options" :key="option.id">

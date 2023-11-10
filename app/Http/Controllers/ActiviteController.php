@@ -216,10 +216,11 @@ class ActiviteController extends Controller
         $activite = StructureActivite::findOrFail($activite);
 
         $discipline = $activite->discipline;
+        $categorieId = $activite->categorie->id;
 
         $produits = StructureProduit::where('activite_id', $activite->id)->get();
 
-        $criteres = StructureProduitCritere::where('activite_id', $activite->id)->get();
+        $criteres = StructureProduitCritere::with('sousCriteres')->where('activite_id', $activite->id)->get();
 
         $souscriteres = StructureProduitSousCritere::where('activite_id', $activite->id)->get();
 
@@ -256,6 +257,30 @@ class ActiviteController extends Controller
         if($activite) {
             $activite->delete();
         }
+
+        $structureCategories = StructureCategorie::doesntHave('activites')
+        ->where('structure_id', $structure->id)
+        ->where('discipline_id', $discipline->id)
+        ->where('categorie_id', $categorieId)
+        ->get();
+
+        if($structureCategories->isNotEmpty()) {
+            foreach($structureCategories as $structureCategorie) {
+                $structureCategorie->delete();
+            }
+        };
+
+        $structureDisciplines = StructureDiscipline::doesntHave('categories')
+        ->where('structure_id', $structure->id)
+        ->where('discipline_id', $discipline->id)
+        ->get();
+
+        if($structureDisciplines->isNotEmpty()) {
+            foreach($structureDisciplines as $structureDiscipline) {
+                $structureDiscipline->delete();
+            }
+        };
+
 
         return to_route('structures.disciplines.show', ['structure' => $structure->slug, 'discipline' => $discipline ])->with('success', 'l\'activité a été supprimée.');
 

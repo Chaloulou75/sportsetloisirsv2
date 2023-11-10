@@ -197,7 +197,7 @@ class StructureCategorieController extends Controller
     {
 
         $structure = Structure::where('slug', $structure->slug)->firstOrFail();
-        $categorie = LienDisciplineCategorie::where('id', $categorie)->firstOrFail();
+        $categorie = LienDisciplineCategorie::findOrFail($categorie);
 
         $structureCategorie = StructureCategorie::where('structure_id', $structure->id)->where('categorie_id', $categorie->id)->first();
 

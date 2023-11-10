@@ -77,13 +77,6 @@ const selectedCriteres = computed(() => {
             initialSelectedCriteres[critere.id] = "";
         }
     }
-
-    // for (const produit of props.produits) {
-    //     for (const critere of produit.criteres) {
-    //         console.log("produit critere:", critere.critere_valeur);
-    //         initialSelectedCriteres[critere.id] = critere.critere_valeur;
-    //     }
-    // }
     return reactive(initialSelectedCriteres);
 });
 
@@ -637,6 +630,7 @@ const submitReservation = () => {
                                     >
                                         <!-- select -->
                                         <SelectForm
+                                            :classes="'block'"
                                             class="max-w-sm"
                                             v-if="
                                                 critere.type_champ_form ===
@@ -695,6 +689,7 @@ const submitReservation = () => {
                                                 class=""
                                             >
                                                 <SelectForm
+                                                    :classes="'block'"
                                                     class="max-w-sm py-2"
                                                     v-if="
                                                         selectedCriteres[

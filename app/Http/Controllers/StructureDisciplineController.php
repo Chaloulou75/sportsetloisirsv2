@@ -21,6 +21,7 @@ use App\Models\LienDisciplineCategorie;
 use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
+use App\Models\StructureProduitSousCritere;
 use App\Models\LienDisciplineCategorieCritere;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
@@ -378,7 +379,7 @@ class StructureDisciplineController extends Controller
     public function destroy(Structure $structure, $discipline): RedirectResponse
     {
         $structure = Structure::where('slug', $structure->slug)->firstOrFail();
-        $discipline = ListDiscipline::where('id', $discipline)->firstOrFail();
+        $discipline = ListDiscipline::findOrFail($discipline);
 
         $structureDiscipline = StructureDiscipline::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->first();
 
@@ -388,9 +389,18 @@ class StructureDisciplineController extends Controller
 
         $produits = StructureProduit::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->get();
 
-        $criteres = StructureProduitCritere::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->get();
+        $criteres = StructureProduitCritere::with('sousCriteres')->where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->get();
 
         $plannings = StructurePlanning::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->get();
+
+        if($produits->isNotEmpty()) {
+            foreach($produits as $produit) {
+                if($produit->tarifs()->count() > 0) {
+                    $produit->tarifs()->detach();
+                }
+                $produit->delete();
+            }
+        }
 
         if($plannings->isNotEmpty()) {
             foreach($plannings as $planning) {
@@ -400,13 +410,12 @@ class StructureDisciplineController extends Controller
 
         if($criteres->isNotEmpty()) {
             foreach($criteres as $critere) {
+                if($critere->sousCriteres()->isNotEmpty()) {
+                    foreach($critere->sousCriteres() as $souscritere) {
+                        $souscritere->delete();
+                    }
+                }
                 $critere->delete();
-            }
-        }
-
-        if($produits->isNotEmpty()) {
-            foreach($produits as $produit) {
-                $produit->delete();
             }
         }
 

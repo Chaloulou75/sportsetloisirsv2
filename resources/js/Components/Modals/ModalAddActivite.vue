@@ -336,7 +336,6 @@ onMounted(() => {
                                             </div>
                                         </div>
 
-                                        <!-- Criteres flex w-full flex-col flex-wrap items-start justify-start gap-4 space-y-2 md:flex-row md:space-y-0-->
                                         <div
                                             v-if="filteredCriteres.length > 0"
                                             class="mx-auto grid w-full grid-cols-1 gap-4 md:grid-cols-3"
@@ -348,6 +347,7 @@ onMounted(() => {
                                             >
                                                 <!-- select -->
                                                 <SelectForm
+                                                    :classes="'block'"
                                                     class="max-w-sm"
                                                     v-if="
                                                         critere.type_champ_form ===
@@ -773,6 +773,7 @@ onMounted(() => {
                                                         class=""
                                                     >
                                                         <SelectForm
+                                                            :classes="'block'"
                                                             class="max-w-sm py-2"
                                                             v-if="
                                                                 form.criteres[

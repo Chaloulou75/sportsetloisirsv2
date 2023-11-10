@@ -8,6 +8,7 @@ const props = defineProps({
     },
     options: Array,
     name: String,
+    classes: String,
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -36,11 +37,11 @@ const model = computed({
         leave-from="opacity-100"
         leave-to="opacity-0"
     >
-        <div>
+        <div :class="classes">
             <label :for="name" class="block text-sm font-medium text-gray-700">
                 {{ name }}
             </label>
-            <div class="mt-1 flex rounded-md">
+            <div class="mt-1 flex flex-1 rounded-md md:flex-auto">
                 <select
                     ref="select"
                     :name="name"

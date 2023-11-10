@@ -2,7 +2,7 @@
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { ref, defineAsyncComponent, provide, watch, onMounted } from "vue";
-import CheckboxCritereForm from "@/Components/Forms/CheckboxCritereForm.vue";
+import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
@@ -411,7 +411,8 @@ onMounted(() => {
                             </div>
                         </div>
                         <!-- checkbox -->
-                        <CheckboxCritereForm
+                        <CheckboxForm
+                            :classes="'flex items-center space-x-4'"
                             class="max-w-sm"
                             v-if="critere.type_champ_form === 'checkbox'"
                             :critere="critere"
