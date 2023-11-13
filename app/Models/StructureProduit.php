@@ -78,6 +78,7 @@ class StructureProduit extends Model
         $query->with([
             'adresse',
             'discipline:id,name,slug',
+            'horaire',
             'categorie',
             'activite:id,titre',
             'structure:id,name,slug',

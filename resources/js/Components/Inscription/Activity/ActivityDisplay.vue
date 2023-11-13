@@ -1,6 +1,12 @@
 <script setup>
 import { classMapping } from "@/Utils/classMapping.js";
-import { ref, computed, nextTick, defineAsyncComponent } from "vue";
+import {
+    ref,
+    computed,
+    nextTick,
+    defineAsyncComponent,
+    watchEffect,
+} from "vue";
 import { useForm, router, Link } from "@inertiajs/vue3";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
@@ -23,6 +29,8 @@ import {
 } from "@heroicons/vue/24/outline";
 import {
     Switch,
+    SwitchGroup,
+    SwitchLabel,
     Disclosure,
     DisclosureButton,
     DisclosurePanel,
@@ -173,17 +181,20 @@ const submitForm = (id) => {
     );
 };
 
+const convertedActif = ref(!!props.structureActivite.actif);
+
+watchEffect(() => {
+    convertedActif.value = !!props.structureActivite.actif;
+});
 async function toggleActif(structureActivite) {
     await nextTick();
-    router.post(
-        `/structures/${props.structure.slug}/activites/${structureActivite.id}/toggleactif`,
-        {
-            _method: "put",
-            actif: structureActivite.actif,
-        },
-        {
+    router.patch(
+        route("structures.activites.toggleactif", {
             structure: props.structure.slug,
-            activite: structureActivite.id,
+            activite: props.structureActivite.id,
+        }),
+        {
+            actif: convertedActif.value,
         },
         {
             preserveScroll: true,
@@ -515,37 +526,42 @@ const destroyTarif = (tarif, produit) => {
                 <div
                     class="flex flex-1 flex-col items-start space-y-3 px-2 py-2 md:space-y-6 md:px-4"
                 >
-                    <div class="flex items-center space-x-2">
-                        <Switch
-                            v-model="structureActivite.actif"
-                            @click="toggleActif(structureActivite)"
-                            :class="
-                                structureActivite.actif
-                                    ? 'bg-green-600'
-                                    : 'bg-gray-200'
-                            "
-                            class="relative inline-flex h-6 w-11 items-center rounded-full"
-                        >
-                            <span
+                    <SwitchGroup>
+                        <div class="flex items-center space-x-2">
+                            <Switch
+                                v-model="convertedActif"
+                                @click="toggleActif(structureActivite)"
+                                :class="
+                                    convertedActif
+                                        ? 'bg-green-600'
+                                        : 'bg-gray-200'
+                                "
+                                class="relative inline-flex h-6 w-11 items-center rounded-full"
+                            >
+                                <span
+                                    :class="
+                                        convertedActif
+                                            ? 'translate-x-6'
+                                            : 'translate-x-1'
+                                    "
+                                    class="inline-block h-4 w-4 transform rounded-full bg-white transition"
+                                />
+                            </Switch>
+                            <SwitchLabel
+                                class="text-lg font-semibold"
                                 :class="
                                     structureActivite.actif
-                                        ? 'translate-x-6'
-                                        : 'translate-x-1'
+                                        ? 'text-green-600'
+                                        : 'text-gray-600'
                                 "
-                                class="inline-block h-4 w-4 transform rounded-full bg-white transition"
-                            />
-                        </Switch>
-                        <p
-                            class="text-lg font-semibold"
-                            :class="
-                                structureActivite.actif
-                                    ? 'text-green-600'
-                                    : 'text-gray-600'
-                            "
-                        >
-                            {{ structureActivite.actif ? "Actif" : "Inactif" }}
-                        </p>
-                    </div>
+                                >{{
+                                    structureActivite.actif
+                                        ? "Actif"
+                                        : "Inactif"
+                                }}</SwitchLabel
+                            >
+                        </div>
+                    </SwitchGroup>
                     <div class="text-lg">
                         <h4 class="font-semibold">Description:</h4>
                         <p
