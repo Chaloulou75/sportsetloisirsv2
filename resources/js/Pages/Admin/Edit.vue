@@ -1,5 +1,5 @@
 <script setup>
-import AppLayout from "@/Layouts/AppLayout.vue";
+import AdminLayout from "@/Layouts/AdminLayout.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import { ref, watch, onMounted, defineAsyncComponent } from "vue";
 import Checkbox from "@/Components/Forms/Checkbox.vue";
@@ -9,6 +9,7 @@ import {
     ArrowPathIcon,
     TrashIcon,
     ChevronUpDownIcon,
+    ChevronLeftIcon,
     CheckCircleIcon,
     ArrowUturnLeftIcon,
 } from "@heroicons/vue/24/outline";
@@ -215,10 +216,8 @@ const deleteCritere = (disciplineCategorieCritere) => {
             lienDisciplineCategorieCritere: disciplineCategorieCritere,
         }),
         {
-            lienDisciplineCategorieCritere: disciplineCategorieCritere,
-        },
-        {
             preserveScroll: true,
+            lienDisciplineCategorieCritere: disciplineCategorieCritere,
         }
     );
 };
@@ -508,81 +507,24 @@ const addSousCritere = (valeur) => {
         :title="`Administration de la discipline ${discipline.name}`"
         :description="`Administration de la discipline ${discipline.name}`"
     />
-    <AppLayout>
+    <AdminLayout>
         <template #header>
-            <div
-                class="my-4 flex w-full flex-col items-center justify-center space-y-2"
-            >
-                <h2
-                    class="text-center text-xl font-semibold leading-tight tracking-widest text-gray-800"
+            <div class="flex h-full items-center justify-start">
+                <Link
+                    :href="route('admin.index')"
+                    class="h-full bg-blue-600 py-2.5 md:px-4 md:py-4"
+                >
+                    <ChevronLeftIcon class="h-10 w-10 text-white" />
+                </Link>
+                <h1
+                    class="shrink-0 px-3 py-2.5 text-center text-lg font-semibold text-gray-600 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
                     Administration de la discipline
                     <span class="text-indigo-600">{{ discipline.name }}</span>
-                </h2>
-                <nav aria-label="Breadcrumb" class="flex">
-                    <ol
-                        class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600"
-                    >
-                        <li class="flex items-center">
-                            <Link
-                                preserve-scroll
-                                :href="route('welcome')"
-                                class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-4 w-4"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                                    />
-                                </svg>
-
-                                <span class="ms-1.5 text-xs font-medium">
-                                    Accueil
-                                </span>
-                            </Link>
-                        </li>
-
-                        <li class="relative flex items-center">
-                            <span
-                                class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
-                            >
-                            </span>
-
-                            <Link
-                                preserve-scroll
-                                :href="route('admin.index')"
-                                class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
-                            >
-                                Gestion du site
-                            </Link>
-                        </li>
-                    </ol>
-                </nav>
+                </h1>
             </div>
-            <p class="py-2 text-base font-medium leading-relaxed text-gray-600">
-                Page d'administration de la discipline
-                {{ discipline.name }} sur sports-et-loisirs.fr. Disciplines
-                similaires et catégories associées.
-            </p>
         </template>
-        <div class="px-2 py-6 md:px-6">
-            <Link
-                :href="route('admin.index')"
-                class="hidden w-1/5 items-center justify-center rounded border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-600 shadow-sm hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring-2 md:flex"
-            >
-                <ArrowUturnLeftIcon class="mr-3 h-5 w-5 self-end" />
-                Retour administration
-            </Link>
-        </div>
-        <div class="px-2 md:px-6">
+        <div class="px-2 py-2 md:px-6">
             <h1
                 class="text-center text-2xl font-bold uppercase tracking-wide text-indigo-600 md:text-4xl"
             >
@@ -921,7 +863,7 @@ const addSousCritere = (valeur) => {
             </h2>
             <template v-if="categories.length > 0" class="w-full">
                 <ul
-                    class="grid grid-cols-1 place-items-start justify-items-stretch gap-2 md:grid-cols-2 md:gap-4 lg:grid-cols-3 lg:gap-8"
+                    class="grid grid-cols-1 place-items-start justify-items-stretch gap-2 md:grid-cols-2 md:gap-4 lg:grid-cols-2 lg:gap-8"
                 >
                     <li
                         v-for="categorie in categories"
@@ -1825,5 +1767,5 @@ const addSousCritere = (valeur) => {
                 </ul>
             </template>
         </div>
-    </AppLayout>
+    </AdminLayout>
 </template>

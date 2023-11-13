@@ -1054,7 +1054,6 @@ const submit = () => {
                             </form>
                         </div>
                     </template>
-                    <!-- <PathsInscriptionNavigation /> -->
 
                     <template v-if="displayPartenaire">
                         <div

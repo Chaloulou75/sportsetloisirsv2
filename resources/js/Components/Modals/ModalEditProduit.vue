@@ -122,7 +122,7 @@ const formEditProduit = useForm({
     actif: null,
     criteres: {},
     souscriteres: {},
-    adresse: ref(latestAdresseId.value),
+    adresse: props.latestAdresseId,
     address: null,
     city: null,
     zip_code: null,
@@ -151,6 +151,7 @@ const onSubmitEditProduitForm = () => {
         {
             _method: "put",
             criteres: formEditProduit.criteres,
+            souscriteres: formEditProduit.souscriteres,
             adresse: formEditProduit.adresse,
             address: formEditProduit.address,
             city: formEditProduit.city,

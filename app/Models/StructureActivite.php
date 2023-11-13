@@ -75,6 +75,7 @@ class StructureActivite extends Model
             'instructeurs',
             'discipline:id,name',
             'categorie:id,categorie_id,discipline_id,nom_categorie_client',
+            'plannings',
             'produits' => function ($query) {
                 $query->latest();
             },
