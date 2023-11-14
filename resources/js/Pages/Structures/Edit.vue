@@ -2,6 +2,7 @@
 import ProLayout from "@/Layouts/ProLayout.vue";
 import { Head, router, Link, useForm } from "@inertiajs/vue3";
 import { ref, watch, onMounted, computed, defineAsyncComponent } from "vue";
+import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import {
     ArrowPathIcon,
     PlusIcon,
@@ -922,6 +923,9 @@ const submit = () => {
                                                     type="submit"
                                                     class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                                 >
+                                                    <LoadingSVG
+                                                        v-if="form.processing"
+                                                    />
                                                     Editer votre structure
                                                 </button>
                                             </div>
@@ -1022,6 +1026,9 @@ const submit = () => {
                                     :disabled="updateAddressForm.processing"
                                     class="my-4 flex items-center self-end rounded-md border border-gray-200 bg-white px-4 py-2.5 text-sm hover:bg-blue-500 hover:text-white"
                                 >
+                                    <LoadingSVG
+                                        v-if="updateAddressForm.processing"
+                                    />
                                     Mettre à jour
                                 </button>
                             </form>
@@ -1049,6 +1056,7 @@ const submit = () => {
                                     type="submit"
                                     class="my-4 flex items-center self-end rounded-md border border-gray-200 bg-white px-4 py-2.5 text-sm hover:bg-blue-500 hover:text-white"
                                 >
+                                    <LoadingSVG v-if="addressForm.processing" />
                                     Enregistrer
                                 </button>
                             </form>

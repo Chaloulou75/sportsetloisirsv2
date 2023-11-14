@@ -80,26 +80,25 @@ class StructureTarifController extends Controller
     public function update(Request $request, Structure $structure, $tarif)
     {
         $request->validate([
-                    'structure_id' => ['nullable', Rule::exists('structures', 'id')],
-                    'titre' => ['nullable'],
-                    'description' => ['nullable'],
-                    'tarifType' => ['nullable', Rule::exists('liste_tarifs_types', 'id')],
-                    'attributs' => ['nullable'],
-                    'amount' => ['required', 'numeric'],
-                    'disciplines' => ['nullable'],
-                    'categories' => ['nullable'],
-                    'activites' => ['nullable'],
-                    'produits' => ['required'],
-                    'uniteDuree' => ['nullable'],
-                ]);
+            'titre' => ['nullable'],
+            'description' => ['nullable'],
+            'tarifType[id]' => ['nullable', 'exists:liste_tarifs_types'],
+            'attributs' => ['nullable', 'array'],
+            'amount' => ['required', 'numeric'],
+            'disciplines' => ['nullable'],
+            'categories' => ['nullable'],
+            'activites' => ['nullable'],
+            'produits' => ['required'],
+            'uniteDuree' => ['nullable'],
+        ]);
 
-        $structure = Structure::with(['disciplines', 'categories', 'activites', 'produits'])->where('id', $structure->id)->firstOrFail();
+        $structure = Structure::with(['disciplines', 'categories', 'activites', 'produits'])->findOrFail($structure->id);
 
-        $tarif = StructureTarif::with('structureTarifTypeInfos')->where('id', $tarif)->firstOrFail();
+        $tarif = StructureTarif::with('structureTarifTypeInfos')->findOrFail($tarif);
 
         $structureTarif = $tarif->updateOrCreate(
             ['structure_id' => $structure->id,],
-            ['type_id' => $request->tarifType,
+            ['type_id' => $request->tarifType['id'],
             'titre' => $request->titre ?? "",
             'description' => $request->description ?? "",
             'amount' => $request->amount]
@@ -108,13 +107,13 @@ class StructureTarifController extends Controller
         $structureTarif->produits()->detach();
 
         foreach($request->produits as $key => $value) {
-            $structureProduit = StructureProduit::where('id', $key)->first();
+            $structureProduit = StructureProduit::find($key);
             if($value === true) {
                 $structureTarif->produits()->attach($structureProduit->id);
             }
         }
 
-        $tarifType = ListeTarifType::with('tariftypeattributs')->where('id', $structureTarif->type_id)->first();
+        $tarifType = ListeTarifType::with('tariftypeattributs')->find($structureTarif->type_id);
 
         foreach($structureTarif->structureTarifTypeInfos as $info) {
             $info->delete();

@@ -410,7 +410,7 @@ class StructureDisciplineController extends Controller
 
         if($criteres->isNotEmpty()) {
             foreach($criteres as $critere) {
-                if($critere->sousCriteres()->isNotEmpty()) {
+                if($critere->sousCriteres()) {
                     foreach($critere->sousCriteres() as $souscritere) {
                         $souscritere->delete();
                     }

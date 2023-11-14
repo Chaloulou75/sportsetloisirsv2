@@ -31,6 +31,7 @@ import {
     ChevronRightIcon,
 } from "@heroicons/vue/24/outline";
 import { StarIcon } from "@heroicons/vue/24/solid";
+import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 dayjs.locale("fr");
 
@@ -1203,6 +1204,11 @@ const submitReservation = () => {
                                                             reservationForm.processing
                                                         "
                                                     >
+                                                        <LoadingSVG
+                                                            v-if="
+                                                                reservationForm.processing
+                                                            "
+                                                        />
                                                         Envoyer une demande
                                                     </button>
                                                 </div>

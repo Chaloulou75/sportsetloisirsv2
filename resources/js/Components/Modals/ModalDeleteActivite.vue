@@ -20,18 +20,21 @@ const props = defineProps({
     show: Boolean,
 });
 
-function destroyActivite(structureActivite) {
-    const url = `/structures/${props.structure.slug}/activites/${structureActivite.id}`;
-    router.delete(url, {
-        preserveScroll: true,
-        remember: false,
-        onSuccess: () => {
-            emit("close");
-        },
-        structure: props.structure,
-        activite: structureActivite,
-    });
-}
+const destroyActivite = (structureActivite) => {
+    router.delete(
+        route("structures.activites.destroy", {
+            structure: props.structure,
+            activite: structureActivite.id,
+        }),
+        {
+            preserveScroll: true,
+            remember: false,
+            onSuccess: () => {
+                emit("close");
+            },
+        }
+    );
+};
 </script>
 
 <template>

@@ -7,6 +7,7 @@ import ActiviteCard from "@/Components/Structures/ActiviteCard.vue";
 import CitiesAround from "@/Components/Cities/CitiesAround.vue";
 import DisciplinesSimilaires from "@/Components/Disciplines/DisciplinesSimilaires.vue";
 import LeafletMap from "@/Components/Maps/LeafletMap.vue";
+import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 import dayjs from "dayjs";
@@ -1055,6 +1056,11 @@ const submitReservation = () => {
                                                         reservationForm.processing
                                                     "
                                                 >
+                                                    <LoadingSVG
+                                                        v-if="
+                                                            reservationForm.processing
+                                                        "
+                                                    />
                                                     Envoyer une demande
                                                 </button>
                                             </div>

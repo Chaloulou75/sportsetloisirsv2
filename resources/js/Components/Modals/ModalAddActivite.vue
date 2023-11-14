@@ -14,6 +14,7 @@ import SingleTimeForm from "@/Components/Forms/DayTime/SingleTimeForm.vue";
 import OpenTimesForm from "@/Components/Forms/DayTime/OpenTimesForm.vue";
 import OpenMonthsForm from "@/Components/Forms/DayTime/OpenMonthsForm.vue";
 import InstructeurForm from "@/Components/Forms/InstructeurForm.vue";
+import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import {
     TransitionRoot,
     TransitionChild,
@@ -52,13 +53,13 @@ const latestAdresseId = computed(() => {
 });
 
 // const showNewSelect = ref(false);
-const addInstructeur = ref(false);
-const addDatesOpened = ref(false);
-const addHoursOpened = ref(false);
-const addDateOpen = ref(false);
-const addHourOpen = ref(false);
-const addMonthsOpen = ref(false);
-const addRayon = ref(false);
+const addInstructeur = ref(true);
+const addDatesOpened = ref(true);
+const addHoursOpened = ref(true);
+const addDateOpen = ref(true);
+const addHourOpen = ref(true);
+const addMonthsOpen = ref(true);
+const addRayon = ref(true);
 
 const form = useForm({
     structure_id: props.structure.id,
@@ -134,7 +135,6 @@ const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
     }
 };
 
-// Check if a checkbox is selected
 const isCheckboxSelected = (critereId, optionValue) => {
     return (
         form.criteres[critereId] &&
@@ -335,6 +335,10 @@ onMounted(() => {
                                                 {{ errors.description }}
                                             </div>
                                         </div>
+
+                                        <h3 class="py-2 text-sm font-semibold">
+                                            Déclinaisons:
+                                        </h3>
 
                                         <div
                                             v-if="filteredCriteres.length > 0"
@@ -912,8 +916,9 @@ onMounted(() => {
                                     <button
                                         :disabled="form.processing"
                                         type="submit"
-                                        class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-normal text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                                        class="inline-flex justify-between rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-normal text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                     >
+                                        <LoadingSVG v-if="form.processing" />
                                         Enregistrer
                                     </button>
                                 </div>

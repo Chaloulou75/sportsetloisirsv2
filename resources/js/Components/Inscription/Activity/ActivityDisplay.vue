@@ -1,13 +1,8 @@
 <script setup>
 import { classMapping } from "@/Utils/classMapping.js";
-import {
-    ref,
-    computed,
-    nextTick,
-    defineAsyncComponent,
-    watchEffect,
-} from "vue";
+import { ref, computed, nextTick, defineAsyncComponent } from "vue";
 import { useForm, router, Link } from "@inertiajs/vue3";
+import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import localeData from "dayjs/plugin/localeData";
@@ -183,9 +178,6 @@ const submitForm = (id) => {
 
 const convertedActif = ref(!!props.structureActivite.actif);
 
-watchEffect(() => {
-    convertedActif.value = !!props.structureActivite.actif;
-});
 async function toggleActif(structureActivite) {
     await nextTick();
     router.patch(
@@ -494,6 +486,11 @@ const destroyTarif = (tarif, produit) => {
                                                     type="submit"
                                                     class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                                 >
+                                                    <LoadingSVG
+                                                        v-if="
+                                                            formEdit.processing
+                                                        "
+                                                    />
                                                     Enregistrer
                                                 </button>
                                             </div>
@@ -550,14 +547,12 @@ const destroyTarif = (tarif, produit) => {
                             <SwitchLabel
                                 class="text-lg font-semibold"
                                 :class="
-                                    structureActivite.actif
+                                    convertedActif
                                         ? 'text-green-600'
                                         : 'text-gray-600'
                                 "
                                 >{{
-                                    structureActivite.actif
-                                        ? "Actif"
-                                        : "Inactif"
+                                    convertedActif ? "Actif" : "Inactif"
                                 }}</SwitchLabel
                             >
                         </div>
@@ -614,202 +609,209 @@ const destroyTarif = (tarif, produit) => {
                     leave-to-class="transform opacity-0"
                 >
                     <DisclosurePanel as="div">
+                        <table class="w-full table-auto">
+                            <tbody>
+                                <tr
+                                    v-for="produit in structureActivite.produits"
+                                    :key="produit.id"
+                                    class="focus-within:bg-gray-100 hover:bg-gray-100"
+                                >
+                                    <td
+                                        class="border-t"
+                                        v-for="critere in produit.criteres"
+                                        :key="critere.id"
+                                    >
+                                        <div
+                                            class="flex flex-col items-center p-2"
+                                        >
+                                            <span
+                                                v-if="critere.critere.nom"
+                                                class="text-center text-xs text-gray-600"
+                                            >
+                                                {{ critere.critere.nom }}:
+                                            </span>
+                                            <span
+                                                v-if="critere.valeur"
+                                                class="text-center text-sm font-semibold text-gray-600"
+                                                >{{ critere.valeur }}
+                                                <span
+                                                    v-if="
+                                                        critere.critere_valeur &&
+                                                        critere.critere_valeur
+                                                            .sous_criteres &&
+                                                        critere.critere_valeur
+                                                            .sous_criteres
+                                                            .length > 0
+                                                    "
+                                                    class="text-xs font-medium text-gray-600"
+                                                >
+                                                    <span
+                                                        v-for="sousCriteres in critere
+                                                            .critere_valeur
+                                                            .sous_criteres"
+                                                        :key="sousCriteres.id"
+                                                    >
+                                                        <span
+                                                            v-for="sousCritValeur in sousCriteres.prod_sous_crit_valeurs"
+                                                            :key="
+                                                                sousCritValeur.id
+                                                            "
+                                                            class="text-xs font-semibold text-gray-600"
+                                                        >
+                                                            <span
+                                                                v-if="
+                                                                    sousCritValeur.produit_id ===
+                                                                    produit.id
+                                                                "
+                                                                >({{
+                                                                    sousCritValeur.valeur
+                                                                }})</span
+                                                            ></span
+                                                        >
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="border-t">
+                                        <div
+                                            class="flex h-full items-center p-2"
+                                        >
+                                            <MapPinIcon
+                                                class="mr-1 h-6 w-6 text-gray-600"
+                                            />
+                                            <div
+                                                class="flex flex-col items-center text-xs text-gray-600"
+                                            >
+                                                {{ produit.adresse.address }},
+                                                {{ produit.adresse.zip_code }}
+                                                {{ produit.adresse.city }}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="border-t">
+                                        <div class="flex items-center p-2">
+                                            <ClockIcon
+                                                class="mr-1 h-6 w-6 text-gray-600"
+                                            />
+                                            <div
+                                                v-if="produit.horaire_id"
+                                                class="flex flex-col"
+                                            >
+                                                <span
+                                                    class="text-xs text-gray-600"
+                                                    >Ouvert du
+                                                    {{
+                                                        formatDate(
+                                                            produit.horaire
+                                                                .dayopen
+                                                        )
+                                                    }}
+                                                    au
+                                                    {{
+                                                        formatDate(
+                                                            produit.horaire
+                                                                .dayclose
+                                                        )
+                                                    }}</span
+                                                >
+                                                <span
+                                                    class="text-xs text-gray-600"
+                                                    >De
+                                                    {{
+                                                        formatTime(
+                                                            produit.horaire
+                                                                .houropen
+                                                        )
+                                                    }}
+                                                    à
+                                                    {{
+                                                        formatTime(
+                                                            produit.horaire
+                                                                .hourclose
+                                                        )
+                                                    }}</span
+                                                >
+                                            </div>
+                                            <span
+                                                v-else
+                                                class="text-sm text-gray-600"
+                                                >Planning</span
+                                            >
+                                        </div>
+                                    </td>
+                                    <td class="border-t">
+                                        <button
+                                            @click="
+                                                () => openTarifToggle(produit)
+                                            "
+                                            type="button"
+                                            class="flex h-full w-full items-center justify-center bg-green-600 p-4 hover:bg-green-500"
+                                        >
+                                            <CurrencyEuroIcon
+                                                class="mr-1 h-6 w-6 text-gray-50 hover:text-white"
+                                            />
+                                        </button>
+                                    </td>
+                                    <td class="border-t">
+                                        <button
+                                            type="button"
+                                            @click="
+                                                openEditProduitModal(
+                                                    structureActivite,
+                                                    produit
+                                                )
+                                            "
+                                            class="flex h-full w-full items-center justify-center bg-blue-500 p-4 hover:bg-blue-600"
+                                        >
+                                            <ArrowPathIcon
+                                                class="mr-1 h-6 w-6 text-gray-50 transition-all duration-200 hover:-rotate-90 hover:text-white"
+                                            />
+                                        </button>
+                                    </td>
+                                    <td class="border-t">
+                                        <button
+                                            type="button"
+                                            @click="
+                                                () =>
+                                                    duplicate(
+                                                        structureActivite,
+                                                        produit
+                                                    )
+                                            "
+                                            class="flex h-full w-full items-center justify-center bg-blue-500 p-4 hover:bg-blue-600"
+                                        >
+                                            <DocumentDuplicateIcon
+                                                class="mr-1 h-6 w-6 text-gray-50 hover:text-white"
+                                            />
+                                        </button>
+                                    </td>
+                                    <td class="border-t">
+                                        <button
+                                            type="button"
+                                            @click="
+                                                () =>
+                                                    destroy(
+                                                        structureActivite,
+                                                        produit
+                                                    )
+                                            "
+                                            class="flex h-full items-center justify-center bg-red-500 p-4 hover:bg-red-600"
+                                        >
+                                            <TrashIcon
+                                                class="mr-1 h-6 w-6 text-gray-100 hover:text-white"
+                                            />
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
                         <div
                             v-for="produit in structureActivite.produits"
                             :key="produit.id"
                             class="grid grid-flow-row grid-cols-2 place-items-center divide-y divide-gray-100 odd:bg-white even:bg-slate-50 md:grid-cols-6"
                         >
-                            <!-- criteres -->
-                            <div
-                                v-if="produit.criteres.length > 0"
-                                class="col-span-2 grid h-full w-full grid-cols-2 place-items-center gap-2 p-1"
-                            >
-                                <div
-                                    v-for="critere in produit.criteres"
-                                    :key="critere.id"
-                                    class="col-span-1 flex items-center"
-                                >
-                                    <InformationCircleIcon
-                                        class="mr-1 h-5 w-5 text-gray-600"
-                                    />
-                                    <div class="flex flex-col items-center">
-                                        <span
-                                            v-if="critere.critere.nom"
-                                            class="text-sm text-gray-600"
-                                        >
-                                            {{ critere.critere.nom }}:
-                                        </span>
-                                        <span
-                                            v-if="critere.valeur"
-                                            class="text-sm font-semibold text-gray-600"
-                                            >{{ critere.valeur }}
-                                            <span
-                                                v-if="
-                                                    critere.critere_valeur &&
-                                                    critere.critere_valeur
-                                                        .sous_criteres &&
-                                                    critere.critere_valeur
-                                                        .sous_criteres.length >
-                                                        0
-                                                "
-                                                class="text-xs font-medium text-gray-600"
-                                            >
-                                                <span
-                                                    v-for="sousCriteres in critere
-                                                        .critere_valeur
-                                                        .sous_criteres"
-                                                    :key="sousCriteres.id"
-                                                >
-                                                    <span
-                                                        v-for="sousCritValeur in sousCriteres.prod_sous_crit_valeurs"
-                                                        :key="sousCritValeur.id"
-                                                        class="text-xs font-semibold text-gray-600"
-                                                    >
-                                                        <span
-                                                            v-if="
-                                                                sousCritValeur.produit_id ===
-                                                                produit.id
-                                                            "
-                                                            >({{
-                                                                sousCritValeur.valeur
-                                                            }})</span
-                                                        ></span
-                                                    >
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- pas de criteres -->
-                            <div
-                                v-else
-                                class="col-span-2 grid h-full w-full grid-cols-2 place-items-center gap-2"
-                            >
-                                <div class="col-span-1 flex items-start">
-                                    <UsersIcon
-                                        class="mr-1 h-6 w-6 text-gray-600"
-                                    />
-                                    <span class="text-sm text-gray-600"
-                                        >Tous Public</span
-                                    >
-                                </div>
-                                <div class="col-span-1 flex items-start">
-                                    <AcademicCapIcon
-                                        class="mr-1 h-6 w-6 text-gray-600"
-                                    />
-                                    <span class="text-sm text-gray-600"
-                                        >Tous Niveaux</span
-                                    >
-                                </div>
-                            </div>
-                            <!-- adresse -->
-                            <div class="col-span-1 flex h-full items-center">
-                                <MapPinIcon
-                                    class="mr-1 h-6 w-6 text-gray-600"
-                                />
-                                <div
-                                    class="flex flex-col items-center text-sm text-gray-600"
-                                >
-                                    {{ produit.adresse.address }},
-                                    {{ produit.adresse.zip_code }}
-                                    {{ produit.adresse.city }}
-                                </div>
-                            </div>
-                            <!-- horaire -->
-                            <div class="col-span-1 flex items-center">
-                                <ClockIcon class="mr-1 h-6 w-6 text-gray-600" />
-                                <div
-                                    v-if="produit.horaire_id"
-                                    class="flex flex-col"
-                                >
-                                    <span class="text-sm text-gray-600"
-                                        >Ouvert du
-                                        {{
-                                            formatDate(produit.horaire.dayopen)
-                                        }}
-                                        au
-                                        {{
-                                            formatDate(produit.horaire.dayclose)
-                                        }}</span
-                                    >
-                                    <span class="text-sm text-gray-600"
-                                        >De
-                                        {{
-                                            formatTime(produit.horaire.houropen)
-                                        }}
-                                        à
-                                        {{
-                                            formatTime(
-                                                produit.horaire.hourclose
-                                            )
-                                        }}</span
-                                    >
-                                </div>
-                                <span v-else class="text-sm text-gray-600"
-                                    >Planning</span
-                                >
-                            </div>
-                            <!-- tarif block -->
-                            <div
-                                class="col-span-1 flex h-full w-full items-center justify-center"
-                            >
-                                <button
-                                    @click="() => openTarifToggle(produit)"
-                                    type="button"
-                                    class="flex h-full w-1/2 items-center justify-center bg-green-600 hover:bg-green-500"
-                                >
-                                    <CurrencyEuroIcon
-                                        class="mr-1 h-6 w-6 text-gray-50 hover:text-white"
-                                    />
-                                </button>
-                                <button
-                                    type="button"
-                                    @click="
-                                        openEditProduitModal(
-                                            structureActivite,
-                                            produit
-                                        )
-                                    "
-                                    class="flex h-full w-1/2 items-center justify-center bg-blue-500 p-4 hover:bg-blue-600"
-                                >
-                                    <ArrowPathIcon
-                                        class="mr-1 h-6 w-6 text-gray-50 transition-all duration-200 hover:-rotate-90 hover:text-white"
-                                    />
-                                </button>
-                            </div>
-                            <!-- gestion -->
-                            <div
-                                class="col-span-1 flex h-full w-full items-center justify-between"
-                            >
-                                <button
-                                    type="button"
-                                    @click="
-                                        () =>
-                                            duplicate(
-                                                structureActivite,
-                                                produit
-                                            )
-                                    "
-                                    class="flex h-full w-1/2 items-center justify-center bg-blue-500 p-4 hover:bg-blue-600"
-                                >
-                                    <DocumentDuplicateIcon
-                                        class="mr-1 h-6 w-6 text-gray-50 hover:text-white"
-                                    />
-                                </button>
-                                <button
-                                    type="button"
-                                    @click="
-                                        () =>
-                                            destroy(structureActivite, produit)
-                                    "
-                                    class="flex h-full w-1/2 items-center justify-center bg-red-500 p-4 hover:bg-red-600"
-                                >
-                                    <TrashIcon
-                                        class="mr-1 h-6 w-6 text-gray-100 hover:text-white"
-                                    />
-                                </button>
-                            </div>
                             <div
                                 v-show="isOpenTarif(produit)"
                                 class="col-span-3 h-full w-full py-2 md:col-span-6"

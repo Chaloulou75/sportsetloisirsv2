@@ -1,9 +1,9 @@
 <script setup>
-import { ref, reactive } from "vue";
-import { router } from "@inertiajs/vue3";
+import { ref } from "vue";
+import { router, useForm } from "@inertiajs/vue3";
+import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
-
 import { XCircleIcon } from "@heroicons/vue/24/outline";
 import {
     TransitionRoot,
@@ -82,9 +82,10 @@ const onEventCreate = (event, deleteEventFunction) => {
 };
 
 const onSubmitEventForm = () => {
-    const url = `/structures/${props.structure.slug}/plannings`;
     router.post(
-        url,
+        route("structures.plannings.store", {
+            structure: props.structure.slug,
+        }),
         {
             structure_id: formPlanning.structure_id,
             discipline_id: formPlanning.discipline_id,
@@ -95,15 +96,14 @@ const onSubmitEventForm = () => {
             onSuccess: () => {
                 emit("close");
             },
-            structure: props.structure.slug,
         }
     );
 };
 
-const formPlanning = reactive({
-    structure_id: ref(props.structure.id),
-    discipline_id: ref(props.structureActivites[0].discipline_id),
-    events: ref(events),
+const formPlanning = useForm({
+    structure_id: props.structure.id,
+    discipline_id: props.structureActivites[0].discipline_id,
+    events: events,
 });
 
 const onSubmitPlanningForm = () => {
@@ -209,6 +209,9 @@ const onSubmitPlanningForm = () => {
                                             type="submit"
                                             class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                         >
+                                            <LoadingSVG
+                                                v-if="formPlanning.processing"
+                                            />
                                             Enregistrer
                                         </button>
                                     </div>

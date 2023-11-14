@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { useForm } from "@inertiajs/vue3";
+import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 
 const props = defineProps({
     errors: Object,
@@ -61,6 +62,7 @@ const onCodeSubmit = () => {
             :disabled="codeForm.processing"
             class="w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-indigo-500 shadow hover:bg-gray-100 hover:text-indigo-800"
         >
+            <LoadingSVG v-if="codeForm.processing" />
             Verifier le code
         </button>
     </form>

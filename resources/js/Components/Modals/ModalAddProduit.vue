@@ -1,6 +1,7 @@
 <script setup>
 import { useForm, router } from "@inertiajs/vue3";
 import { ref, onMounted, defineAsyncComponent } from "vue";
+import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { XCircleIcon } from "@heroicons/vue/24/outline";
@@ -609,6 +610,9 @@ const onSubmitAddProduitForm = () => {
                                             type="submit"
                                             class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                         >
+                                            <LoadingSVG
+                                                v-if="formAddProduit.processing"
+                                            />
                                             Enregistrer
                                         </button>
                                     </div>

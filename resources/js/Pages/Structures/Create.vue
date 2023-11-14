@@ -4,6 +4,7 @@ import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, onMounted, watch, defineAsyncComponent } from "vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
+import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import { HomeIcon } from "@heroicons/vue/24/outline";
 
 const AddressForm = defineAsyncComponent(() =>
@@ -22,29 +23,29 @@ const props = defineProps({
 });
 
 const form = useForm({
-    name: ref(null),
-    structuretype_id: ref(null),
-    attributs: ref([]),
-    address: ref(null),
-    city: ref(null),
-    zip_code: ref(null),
-    country: ref(null),
-    address_lat: ref(null),
-    address_lng: ref(null),
-    email: ref(null),
-    date_creation: ref(null),
-    website: ref(null),
-    phone1: ref(null),
-    phone2: ref(null),
-    facebook: ref(null),
-    instagram: ref(null),
-    youtube: ref(null),
-    tiktok: ref(null),
-    presentation_courte: ref(null),
-    presentation_longue: ref(null),
-    abo_news: ref(true),
-    abo_promo: ref(true),
-    logo: ref(null),
+    name: null,
+    structuretype_id: null,
+    attributs: [],
+    address: null,
+    city: null,
+    zip_code: null,
+    country: null,
+    address_lat: null,
+    address_lng: null,
+    email: null,
+    date_creation: null,
+    website: null,
+    phone1: null,
+    phone2: null,
+    facebook: null,
+    instagram: null,
+    youtube: null,
+    tiktok: null,
+    presentation_courte: null,
+    presentation_longue: null,
+    abo_news: true,
+    abo_promo: true,
+    logo: null,
 });
 
 const addItem = (id) => {
@@ -58,32 +59,10 @@ function resetFields() {
 }
 
 const name = ref(null);
-// const familles = ref([]);
-// const disciplinesList = ref([]);
-
-// const getFamilles = async () => {
-//     let response = await axios.get("/api/familles");
-//     familles.value = response.data.data;
-// };
 
 onMounted(() => {
     name.value.focus();
-    // getFamilles();
 });
-
-// watch(
-//     () => form.famille_id,
-//     async (newFamilleID) => {
-//         axios
-//             .get("/api/disciplines?famille_id=" + newFamilleID)
-//             .then((response) => {
-//                 disciplinesList.value = response.data.data;
-//             })
-//             .catch((e) => {
-//                 console.log(e);
-//             });
-//     }
-// );
 
 function submit() {
     form.post("/structures");
@@ -707,6 +686,9 @@ function submit() {
                                                 type="submit"
                                                 class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                             >
+                                                <LoadingSVG
+                                                    v-if="form.processing"
+                                                />
                                                 Enregistrer et ajouter une
                                                 activité
                                             </button>

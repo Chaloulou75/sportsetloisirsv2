@@ -3,6 +3,7 @@ import AdminLayout from "@/Layouts/AdminLayout.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import { ref, watch, onMounted, defineAsyncComponent } from "vue";
 import Checkbox from "@/Components/Forms/Checkbox.vue";
+import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import {
     XCircleIcon,
     PlusCircleIcon,
@@ -551,6 +552,7 @@ const addSousCritere = (valeur) => {
                         type="submit"
                         class="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:w-auto"
                     >
+                        <LoadingSVG v-if="updateInfoBaseForm.processing" />
                         Editer la discipline
                     </button>
                 </form>

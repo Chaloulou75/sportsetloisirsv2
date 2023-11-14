@@ -27,6 +27,7 @@ import {
     ChevronRightIcon,
     HomeIcon,
 } from "@heroicons/vue/24/outline";
+import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import { StarIcon } from "@heroicons/vue/24/solid";
 import {
     Listbox,
@@ -1075,6 +1076,11 @@ const submitReservation = () => {
                                                             reservationForm.processing
                                                         "
                                                     >
+                                                        <LoadingSVG
+                                                            v-if="
+                                                                reservationForm.processing
+                                                            "
+                                                        />
                                                         Envoyer une demande
                                                     </button>
                                                 </div>

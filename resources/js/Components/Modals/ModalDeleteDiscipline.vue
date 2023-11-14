@@ -20,18 +20,21 @@ const props = defineProps({
     show: Boolean,
 });
 
-function destroyDiscipline(discipline) {
-    const url = `/structures/${props.structure.slug}/disciplines/${discipline}`;
-    router.delete(url, {
-        preserveScroll: true,
-        onSuccess: () => {
-            emit("close");
-            emit("deleteDiscipline", discipline);
-        },
-        structure: props.structure.slug,
-        discipline: discipline,
-    });
-}
+const destroyDiscipline = (discipline) => {
+    router.delete(
+        route("structures.disciplines.destroy", {
+            structure: props.structure.slug,
+            discipline: discipline,
+        }),
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                emit("close");
+                emit("deleteDiscipline", discipline);
+            },
+        }
+    );
+};
 </script>
 
 <template>

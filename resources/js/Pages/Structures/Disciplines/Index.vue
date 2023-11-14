@@ -3,6 +3,7 @@ import ProLayout from "@/Layouts/ProLayout.vue";
 import { Head, Link, useForm, router } from "@inertiajs/vue3";
 import { ref, watch, defineAsyncComponent } from "vue";
 import { ChevronLeftIcon, PlusIcon } from "@heroicons/vue/24/outline";
+import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 
 const AutocompleteActiviteFormSmall = defineAsyncComponent(() =>
     import("@/Components/Inscription/AutocompleteActiviteFormSmall.vue")
@@ -297,6 +298,7 @@ const openAddTarifModal = (structure) => {
                                         type="submit"
                                         class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                     >
+                                        <LoadingSVG v-if="form.processing" />
                                         Enregistrer
                                     </button>
                                 </div>

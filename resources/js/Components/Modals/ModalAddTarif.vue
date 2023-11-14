@@ -18,6 +18,7 @@ import {
     ListboxOptions,
     ListboxOption,
 } from "@headlessui/vue";
+import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 
 const emit = defineEmits(["close"]);
 
@@ -811,6 +812,9 @@ const onSubmitAddTarifForm = () => {
                                             type="submit"
                                             class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                         >
+                                            <LoadingSVG
+                                                v-if="formAddTarif.processing"
+                                            />
                                             Enregistrer
                                         </button>
                                     </div>

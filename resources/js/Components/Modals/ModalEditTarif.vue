@@ -1,6 +1,7 @@
 <script setup>
-import { ref, reactive, nextTick, watch } from "vue";
-import { useForm, router } from "@inertiajs/vue3";
+import { ref, reactive, watch } from "vue";
+import { useForm } from "@inertiajs/vue3";
+import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import {
     XCircleIcon,
     ChevronUpDownIcon,
@@ -37,18 +38,17 @@ const uniteDurees = reactive([
     { id: 4, name: "Années" },
 ]);
 
-const formEditTarif = reactive({
-    structure_id: ref(props.structure.id),
-    titre: ref(null),
-    description: ref(null),
-    tarifType: ref(null),
-    attributs: ref([]),
-    amount: ref(null),
-    disciplines: ref({}),
-    categories: ref({}),
-    activites: ref({}),
-    produits: ref({}),
-    uniteDuree: ref(null),
+const formEditTarif = useForm({
+    titre: null,
+    description: null,
+    tarifType: null,
+    attributs: [],
+    amount: null,
+    disciplines: {},
+    categories: {},
+    activites: {},
+    produits: {},
+    uniteDuree: null,
 });
 
 const checkAll = ref(false);
@@ -223,30 +223,17 @@ watch(
 );
 
 const onSubmitAddTarifForm = () => {
-    router.put(
-        `/structures/${props.structure.slug}/tarifs/${props.tarif.id}`,
-        {
-            _method: "put",
-            structure_id: formEditTarif.structure_id,
-            titre: formEditTarif.titre,
-            description: formEditTarif.description,
-            tarifType: formEditTarif.tarifType.id,
-            attributs: formEditTarif.attributs,
-            amount: formEditTarif.amount,
-            disciplines: formEditTarif.disciplines,
-            categories: formEditTarif.categories,
-            activites: formEditTarif.activites,
-            produits: formEditTarif.produits,
-            uniteDuree: formEditTarif.uniteDuree,
-        },
+    formEditTarif.put(
+        route("structures.tarifs.update", {
+            structure: props.structure.slug,
+            tarif: props.tarif.id,
+        }),
         {
             preserveScroll: true,
             remember: false,
             onSuccess: () => {
                 emit("close");
             },
-            structure: props.structure.slug,
-            structure: props.tarif.id,
         }
     );
 };
@@ -838,6 +825,9 @@ const onSubmitAddTarifForm = () => {
                                             type="submit"
                                             class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                         >
+                                            <LoadingSVG
+                                                v-if="formEditTarif.processing"
+                                            />
                                             Enregistrer
                                         </button>
                                     </div>

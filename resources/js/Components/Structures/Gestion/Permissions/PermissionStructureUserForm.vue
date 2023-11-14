@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { useForm, Link } from "@inertiajs/vue3";
 import MazPhoneNumberInput from "maz-ui/components/MazPhoneNumberInput";
+import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import { TransitionRoot } from "@headlessui/vue";
 
 const props = defineProps({
@@ -9,19 +10,19 @@ const props = defineProps({
     structure: Object,
 });
 const isShowing = ref(true);
-const niveaux = [
+const niveaux = ref([
     { id: 1, fonction: "Super administrateur" },
     { id: 2, fonction: "Administrateur" },
     { id: 3, fonction: "Sans permission" },
-];
+]);
 
 const addPermissionForm = useForm({
-    structure_id: ref(props.structure.id),
-    email: ref(null),
-    contact: ref(null),
-    phone: ref(null),
-    niveau: ref(niveaux[1].id),
-    activites: ref({}),
+    structure_id: props.structure.id,
+    email: null,
+    contact: null,
+    phone: null,
+    niveau: niveaux.value[1].id,
+    activites: {},
     remember: true,
 });
 
@@ -241,6 +242,7 @@ const onPermissionSubmit = () => {
                     :disabled="addPermissionForm.processing"
                     class="w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-indigo-500 shadow hover:bg-gray-100 hover:text-indigo-800"
                 >
+                    <LoadingSVG v-if="addPermissionForm.processing" />
                     Enregistrer
                 </button>
             </div>

@@ -3,6 +3,7 @@ import AdminLayout from "@/Layouts/AdminLayout.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import { ref, defineAsyncComponent } from "vue";
 import AutocompleteDiscipline from "@/Components/Home/AutocompleteDiscipline.vue";
+import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import {
     ChevronLeftIcon,
     MagnifyingGlassIcon,
@@ -133,6 +134,9 @@ const submitCreateInfoBase = () => {
                                 type="submit"
                                 class="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                             >
+                                <LoadingSVG
+                                    v-if="createInfoBaseForm.processing"
+                                />
                                 Créer la discipline
                             </button>
                         </form>
