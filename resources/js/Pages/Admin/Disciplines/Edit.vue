@@ -12,7 +12,7 @@ import {
     ChevronUpDownIcon,
     ChevronLeftIcon,
     CheckCircleIcon,
-    ArrowUturnLeftIcon,
+    MagnifyingGlassIcon,
 } from "@heroicons/vue/24/outline";
 import {
     Listbox,
@@ -44,55 +44,55 @@ const props = defineProps({
 
 const isShowing = ref(true);
 
-const updateInfoBaseForm = useForm({
-    name: ref(props.discipline.name),
-    description: ref(props.discipline.description),
-    remember: true,
-});
+// const updateInfoBaseForm = useForm({
+//     name: ref(props.discipline.name),
+//     description: ref(props.discipline.description),
+//     remember: true,
+// });
 
-const submitUpdateInfoBase = () => {
-    router.put(
-        route("disciplines.update", {
-            discipline: props.discipline,
-        }),
-        {
-            name: updateInfoBaseForm.name,
-            description: updateInfoBaseForm.description,
-        },
-        {
-            preserveScroll: true,
-        }
-    );
-};
+// const submitUpdateInfoBase = () => {
+//     router.put(
+//         route("disciplines.update", {
+//             discipline: props.discipline,
+//         }),
+//         {
+//             name: updateInfoBaseForm.name,
+//             description: updateInfoBaseForm.description,
+//         },
+//         {
+//             preserveScroll: true,
+//         }
+//     );
+// };
 
-const attachFamille = (familleNotIn) => {
-    router.post(
-        route("familles-disciplines.store", {
-            discipline: props.discipline,
-        }),
-        {
-            familleNotIn: familleNotIn.id,
-        },
-        {
-            preserveScroll: true,
-        }
-    );
-};
+// const attachFamille = (familleNotIn) => {
+//     router.post(
+//         route("familles-disciplines.store", {
+//             discipline: props.discipline,
+//         }),
+//         {
+//             familleNotIn: familleNotIn.id,
+//         },
+//         {
+//             preserveScroll: true,
+//         }
+//     );
+// };
 
-const detachFamille = (familleIn) => {
-    router.put(
-        route("familles-disciplines.detach", {
-            discipline: props.discipline,
-        }),
-        {
-            _method: "PUT",
-            familleIn: familleIn.id,
-        },
-        {
-            preserveScroll: true,
-        }
-    );
-};
+// const detachFamille = (familleIn) => {
+//     router.put(
+//         route("familles-disciplines.detach", {
+//             discipline: props.discipline,
+//         }),
+//         {
+//             _method: "PUT",
+//             familleIn: familleIn.id,
+//         },
+//         {
+//             preserveScroll: true,
+//         }
+//     );
+// };
 
 const attachDiscipline = (disciplineNotIn) => {
     router.post(
@@ -525,17 +525,17 @@ const addSousCritere = (valeur) => {
                 </h1>
             </div>
         </template>
-        <div class="px-2 py-2 md:px-6">
+        <!-- <div class="px-2 py-2 md:px-6">
             <h1
                 class="text-center text-2xl font-bold uppercase tracking-wide text-indigo-600 md:text-4xl"
             >
                 {{ discipline.name }}
             </h1>
-        </div>
+        </div> -->
 
-        <div class="space-y-16 px-2 py-6 md:px-6">
+        <div class="flex flex-col space-y-16 px-2 py-6 md:px-6">
             <!-- édition infos de base -->
-            <h2
+            <!-- <h2
                 class="text-center text-xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4 md:text-2xl"
             >
                 Informations de base
@@ -556,10 +556,19 @@ const addSousCritere = (valeur) => {
                         Editer la discipline
                     </button>
                 </form>
-            </div>
+            </div> -->
+            <Link
+                :href="route('admin.disciplines.informations.edit', discipline)"
+                class="group inline-flex w-full max-w-sm justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:w-auto"
+            >
+                <span class="mr-4 inline-block text-white"
+                    >Editer les informations de {{ discipline.name }}</span
+                >
+                <MagnifyingGlassIcon class="h-5 w-5 text-white" />
+            </Link>
 
             <!-- les familles -->
-            <h2
+            <!-- <h2
                 class="text-center text-xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4 md:text-2xl"
             >
                 Les familles associées à
@@ -620,7 +629,17 @@ const addSousCritere = (valeur) => {
                         </li>
                     </ul>
                 </div>
-            </div>
+            </div> -->
+
+            <Link
+                :href="route('admin.disciplines.familles.edit', discipline)"
+                class="group inline-flex w-full max-w-sm justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:w-auto"
+            >
+                <span class="mr-4 inline-block text-white"
+                    >Editer les familles associées à {{ discipline.name }}</span
+                >
+                <MagnifyingGlassIcon class="h-5 w-5 text-white" />
+            </Link>
 
             <!-- les disciplines similaires -->
             <h2

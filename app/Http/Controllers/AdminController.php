@@ -90,8 +90,6 @@ class AdminController extends Controller
             ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
             ->get();
 
-        // dd($categories);
-
         $categoriesIds = $categories->pluck('categorie_id');
 
         $otherCategories = Categorie::select('id', 'nom')->whereNotIn('id', $categoriesIds)->get();
@@ -110,7 +108,7 @@ class AdminController extends Controller
 
         $listeCriteres = Critere::select(['id', 'nom'])->get();
 
-        return Inertia::render('Admin/Edit', [
+        return Inertia::render('Admin/Disciplines/Edit', [
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],

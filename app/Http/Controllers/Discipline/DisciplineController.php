@@ -147,6 +147,24 @@ class DisciplineController extends Controller
 
         return to_route('admin.index')->with('success', 'Discipline ' . $discipline->name . ' créée.');
     }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(ListDiscipline $discipline)
+    {
+        $user = auth()->user();
+        $this->authorize('viewAdmin', $user);
+
+        $discipline = ListDiscipline::with('familles')->findOrFail($discipline->id);
+
+        return Inertia::render('Admin/Disciplines/Informations/Edit', [
+            'user_can' => [
+                'view_admin' => $user->can('viewAdmin', User::class),
+            ],
+            'discipline' => $discipline,
+        ]);
+    }
     /**
     * Update the specified resource in storage.
     */
@@ -170,7 +188,7 @@ class DisciplineController extends Controller
         $slug = Str::slug($discipline->name, '-');
         $discipline->update(['slug' => $slug]);
 
-        return to_route('admin.edit', $discipline)->with('success', 'Discipline mise à jour.');
+        return to_route('admin.disciplines.informations.edit', $discipline)->with('success', 'Discipline mise à jour.');
     }
 
     public function loadDisciplines()
