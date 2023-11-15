@@ -136,7 +136,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/disciplines/dis-{discipline:slug}', [AdminController::class, 'edit'])->name('admin.disciplines.edit');
         Route::get('/disciplines/dis-{discipline:slug}/informations', [DisciplineController::class, 'edit'])->name('admin.disciplines.informations.edit');
         Route::get('/disciplines/dis-{discipline:slug}/familles', [FamilleDisciplineController::class, 'edit'])->name('admin.disciplines.familles.edit');
-
+        Route::get('/disciplines/dis-{discipline:slug}/similaires', [DisciplineSimilaireController::class, 'edit'])->name('admin.disciplines.similaires.edit');
+        Route::get('/disciplines/dis-{discipline:slug}/categories', [CategoryDisciplineController::class, 'edit'])->name('admin.disciplines.categories.edit');
+        Route::get('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/criteres', [CategoryDisciplineCritereController::class, 'edit'])->name('admin.disciplines.categories.criteres.edit');
 
         Route::post('/discipline-similaire/{discipline}', [DisciplineSimilaireController::class, 'store'])->name('discipline-similaire.store');
         Route::put('/discipline-similaire/{discipline}', [DisciplineSimilaireController::class, 'detach'])->name('discipline-similaire.detach');

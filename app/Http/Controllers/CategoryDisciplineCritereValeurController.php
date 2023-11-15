@@ -15,7 +15,7 @@ class CategoryDisciplineCritereValeurController extends Controller
      */
     public function store(Request $request, LienDisciplineCategorieCritere $critere)
     {
-        $critere = LienDisciplineCategorieCritere::with('discipline')->findOrFail($critere->id);
+        $critere = LienDisciplineCategorieCritere::with(['discipline', 'categorie'])->findOrFail($critere->id);
 
         $request->validate([
             'valeur' => ['required', 'string', 'max:255'],
@@ -28,7 +28,7 @@ class CategoryDisciplineCritereValeurController extends Controller
             'defaut' => 0,
         ]);
 
-        return to_route('admin.edit', $critere->discipline)->with('success', 'Valeur du critère ajoutée');
+        return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $critere->discipline, 'categorie' => $critere->categorie])->with('success', 'Valeur du critère ajoutée');
 
     }
 
@@ -45,10 +45,11 @@ class CategoryDisciplineCritereValeurController extends Controller
         $lienDisCatCritValeur = LienDisciplineCategorieCritereValeur::with(['critere.discipline'])->findOrFail($lienDisCatCritValeur->id);
 
         $discipline = $lienDisCatCritValeur->critere->discipline->slug;
+        $categorie = $lienDisCatCritValeur->critere->categorie;
 
         $lienDisCatCritValeur->update(['valeur' => $request->valeur]);
 
-        return to_route('admin.edit', $discipline)->with('success', 'Valeur du critère modifiée');
+        return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Valeur du critère modifiée');
 
     }
 
@@ -60,10 +61,11 @@ class CategoryDisciplineCritereValeurController extends Controller
         $valeur = LienDisciplineCategorieCritereValeur::with(['critere', 'critere.discipline'])->findOrFail($lienDisCatCritValeur->id);
 
         $discipline = $valeur->critere->discipline->slug;
+        $categorie = $valeur->critere->categorie;
 
         $valeur->delete();
 
-        return to_route('admin.edit', $discipline)->with('success', 'Valeur supprimée');
+        return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Valeur supprimée');
 
     }
 }

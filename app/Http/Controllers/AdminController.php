@@ -102,7 +102,7 @@ class AdminController extends Controller
             ->select('discipline_similaire_id')
             ->pluck('discipline_similaire_id');
 
-        $listDisciplines = ListDiscipline::select(['id', 'slug', 'name'])->whereNotIn('id', $disciplinesSimilairesIds)->whereNot('id', $discipline->id)->paginate(12);
+        $listDisciplines = ListDiscipline::select(['id', 'slug', 'name', 'theme'])->whereNotIn('id', $disciplinesSimilairesIds)->whereNot('id', $discipline->id)->paginate(12);
 
         $familles = Famille::select('id', 'name', 'slug', 'nom_long')->whereNotIn('id', $disciplineFamillesIds)->get();
 

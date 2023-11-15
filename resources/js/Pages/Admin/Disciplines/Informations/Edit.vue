@@ -1,7 +1,7 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
-import { ref, defineAsyncComponent } from "vue";
+import { defineAsyncComponent } from "vue";
 import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import { ChevronLeftIcon } from "@heroicons/vue/24/outline";
 
@@ -18,6 +18,7 @@ const props = defineProps({
 const updateInfoBaseForm = useForm({
     name: props.discipline.name,
     description: props.discipline.description,
+    theme: props.discipline.theme,
     remember: true,
 });
 
@@ -29,6 +30,7 @@ const submitUpdateInfoBase = () => {
         {
             name: updateInfoBaseForm.name,
             description: updateInfoBaseForm.description,
+            theme: updateInfoBaseForm.theme,
         },
         {
             preserveScroll: true,
@@ -51,7 +53,7 @@ const submitUpdateInfoBase = () => {
                     <ChevronLeftIcon class="h-10 w-10 text-white" />
                 </Link>
                 <h1
-                    class="shrink-0 px-3 py-2.5 text-center text-lg font-semibold text-gray-600 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
+                    class="px-3 text-center text-base font-semibold text-gray-600 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
                     Informations de la discipline
                     <span class="text-indigo-600">{{ discipline.name }}</span>
@@ -65,6 +67,7 @@ const submitUpdateInfoBase = () => {
                     :errors="errors"
                     v-model:name="updateInfoBaseForm.name"
                     v-model:description="updateInfoBaseForm.description"
+                    v-model:theme="updateInfoBaseForm.theme"
                 />
                 <button
                     :disabled="updateInfoBaseForm.processing"

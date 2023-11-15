@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
+use App\Models\Critere;
 use Illuminate\Http\Request;
+use App\Models\ListDiscipline;
 use Illuminate\Validation\Rule;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
@@ -21,7 +24,7 @@ class CategoryDisciplineCritereController extends Controller
             'type_champ.type' => ['required', 'string', 'max:255'],
         ]);
 
-        $discCat = LienDisciplineCategorie::with('discipline:id,name,slug')->findOrFail($request->categorie['id']);
+        $discCat = LienDisciplineCategorie::with(['discipline:id,name,slug'])->findOrFail($request->categorie['id']);
 
         LienDisciplineCategorieCritere::create([
             "discipline_id" => $discCat->discipline_id,
@@ -33,7 +36,58 @@ class CategoryDisciplineCritereController extends Controller
             "visible_front" => true,
         ]);
 
-        return to_route('admin.edit', $discCat->discipline->slug)->with('success', 'Critère ajouté avec succès');
+        return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $discCat->discipline->slug, 'categorie' => $discCat])->with('success', 'Critère ajouté avec succès');
+
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(ListDiscipline $discipline, LienDisciplineCategorie $categorie)
+    {
+        $user = auth()->user();
+        $this->authorize('viewAdmin', $user);
+
+        $discipline = ListDiscipline::with('familles')->findOrFail($discipline->id);
+
+        $categorie = LienDisciplineCategorie::with([
+                        'discipline',
+                        'categorie',
+                        'criteres',
+                        'criteres.critere',
+                        'criteres.valeurs',
+                        'criteres.valeurs.sous_criteres',
+                        'criteres.valeurs.sous_criteres.sous_criteres_valeurs'
+                    ])
+
+                    ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+                    ->findOrFail($categorie->id);
+
+
+        $categories = LienDisciplineCategorie::with([
+                'discipline',
+                'categorie',
+                'criteres',
+                'criteres.critere',
+                'criteres.valeurs',
+                'criteres.valeurs.sous_criteres',
+                'criteres.valeurs.sous_criteres.sous_criteres_valeurs'
+            ])
+            ->where('discipline_id', $discipline->id)
+            ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+            ->get();
+
+        $listeCriteres = Critere::select(['id', 'nom'])->get();
+
+        return Inertia::render('Admin/Disciplines/Categories/Criteres/Edit', [
+            'user_can' => [
+                'view_admin' => $user->can('viewAdmin', User::class),
+            ],
+            'categorie' => $categorie,
+            'categories' => $categories,
+            'discipline' => $discipline,
+            'listeCriteres' => $listeCriteres,
+        ]);
 
     }
 
@@ -49,13 +103,13 @@ class CategoryDisciplineCritereController extends Controller
             'visible_front' => 'required|boolean:0,1,true,false'
         ]);
 
-        $discCatCritere = LienDisciplineCategorieCritere::with(['discipline', 'valeurs'])->findOrFail($critere->id);
+        $discCatCritere = LienDisciplineCategorieCritere::with(['discipline', 'categorie', 'valeurs'])->findOrFail($critere->id);
 
         $discCatCritere->update([
             'visible_front' => $request->visible_front
         ]);
 
-        return to_route('admin.edit', $discCatCritere->discipline->slug)->with('success', 'Visibilité du critère mise à jour');
+        return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $discCatCritere->discipline->slug, 'categorie' => $discCatCritere->categorie])->with('success', 'Visibilité du critère mise à jour');
     }
     /**
      * Remove the specified resource from storage.
@@ -65,7 +119,7 @@ class CategoryDisciplineCritereController extends Controller
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 
-        $discCatCritere = LienDisciplineCategorieCritere::with(['discipline', 'valeurs'])->findOrFail($lienDisciplineCategorieCritere->id);
+        $discCatCritere = LienDisciplineCategorieCritere::with(['discipline', 'categorie', 'valeurs'])->findOrFail($lienDisciplineCategorieCritere->id);
 
         if($discCatCritere->valeurs->isNotEmpty()) {
             foreach ($discCatCritere->valeurs as $valeur) {
@@ -74,7 +128,7 @@ class CategoryDisciplineCritereController extends Controller
         }
 
         $discCatCritere->delete();
-        return to_route('admin.edit', $discCatCritere->discipline)->with('success', 'Critère et valeurs associés supprimés');
+        return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $discCatCritere->discipline->slug, 'categorie' => $discCatCritere->categorie])->with('success', 'Critère et valeurs associés supprimés');
 
     }
 }

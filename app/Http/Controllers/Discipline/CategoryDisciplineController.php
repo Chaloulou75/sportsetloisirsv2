@@ -87,8 +87,6 @@ class CategoryDisciplineController extends Controller
         $discipline->timestamp = false;
         $discipline->increment('view_count');
 
-        // dd($produits);
-
         return Inertia::render('Disciplines/Categories/Show', [
             'familles' => $familles,
             'category' => $category,
@@ -124,7 +122,45 @@ class CategoryDisciplineController extends Controller
 
         $attached->update(['slug' => $attached->slug . '-' . $attached->id]);
 
-        return to_route('admin.edit', $discipline)->with('success', 'Catégorie ajoutée');
+        return to_route('admin.disciplines.categories.edit', $discipline)->with('success', 'Catégorie ajoutée');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(ListDiscipline $discipline)
+    {
+        $user = auth()->user();
+        $this->authorize('viewAdmin', $user);
+
+        $discipline = ListDiscipline::with('familles')->findOrFail($discipline->id);
+
+        $categories = LienDisciplineCategorie::with([
+                'discipline',
+                'categorie',
+                'criteres',
+                'criteres.critere',
+                'criteres.valeurs',
+                'criteres.valeurs.sous_criteres',
+                'criteres.valeurs.sous_criteres.sous_criteres_valeurs'
+            ])
+            ->where('discipline_id', $discipline->id)
+            ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+            ->get();
+
+        $categoriesIds = $categories->pluck('categorie_id');
+
+        $otherCategories = Categorie::select('id', 'nom')->whereNotIn('id', $categoriesIds)->get();
+
+        return Inertia::render('Admin/Disciplines/Categories/Edit', [
+            'user_can' => [
+                'view_admin' => $user->can('viewAdmin', User::class),
+            ],
+            'categories' => $categories,
+            'otherCategories' => $otherCategories,
+            'discipline' => $discipline,
+        ]);
+
     }
 
     /**
@@ -159,7 +195,7 @@ class CategoryDisciplineController extends Controller
 
         $discipline->categories()->detach($categorieIn);
 
-        return to_route('admin.edit', $discipline)->with('success', 'Catégorie supprimée, ainsi que les critères et valeurs associées à cette catégorie.');
+        return to_route('admin.disciplines.categories.edit', $discipline)->with('success', 'Catégorie supprimée, ainsi que les critères et valeurs associées à cette catégorie.');
     }
     /**
      * Update the specified resource in storage.
@@ -180,6 +216,6 @@ class CategoryDisciplineController extends Controller
             'nom_categorie_pro' => $request->nom_categorie_pro,
         ]);
 
-        return to_route('admin.edit', $discipline)->with('success', 'Catégorie mise à jour');
+        return to_route('admin.disciplines.categories.edit', $discipline)->with('success', 'Catégorie mise à jour');
     }
 }

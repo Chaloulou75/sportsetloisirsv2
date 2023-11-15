@@ -59,7 +59,7 @@ watchEffect(() => {
 <template>
     <div
         ref="target"
-        class="flex w-full flex-col items-start justify-start md:w-full"
+        class="flex w-full flex-col items-start justify-start md:w-auto"
     >
         <label for="search" class="text-lg font-medium text-gray-700">
             Rechercher une discipline:

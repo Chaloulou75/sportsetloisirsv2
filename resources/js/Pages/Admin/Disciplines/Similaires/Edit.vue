@@ -1,26 +1,32 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
+import { defineAsyncComponent } from "vue";
 import {
-    ChevronLeftIcon,
     XCircleIcon,
     PlusCircleIcon,
+    ChevronLeftIcon,
 } from "@heroicons/vue/24/outline";
+
+const Pagination = defineAsyncComponent(() =>
+    import("@/Components/Pagination.vue")
+);
 
 const props = defineProps({
     errors: Object,
     discipline: Object,
-    familles: Object,
+    disciplinesSimilaires: Object,
+    listDisciplines: Object,
     user_can: Object,
 });
 
-const attachFamille = (familleNotIn) => {
+const attachDiscipline = (disciplineNotIn) => {
     router.post(
-        route("familles-disciplines.store", {
+        route("discipline-similaire.store", {
             discipline: props.discipline,
         }),
         {
-            familleNotIn: familleNotIn.id,
+            disciplineNotIn: disciplineNotIn.id,
         },
         {
             preserveScroll: true,
@@ -28,14 +34,14 @@ const attachFamille = (familleNotIn) => {
     );
 };
 
-const detachFamille = (familleIn) => {
+const detachDiscipline = (disciplineIn) => {
     router.put(
-        route("familles-disciplines.detach", {
+        route("discipline-similaire.detach", {
             discipline: props.discipline,
         }),
         {
             _method: "PUT",
-            familleIn: familleIn.id,
+            disciplineIn: disciplineIn.discipline_similaire_id,
         },
         {
             preserveScroll: true,
@@ -60,7 +66,7 @@ const detachFamille = (familleIn) => {
                 <h1
                     class="px-3 text-center text-base font-semibold text-gray-600 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
-                    Familles associées à la discipline
+                    Disciplines similaires associées à la discipline
                     <span class="text-indigo-600">{{ discipline.name }}</span>
                 </h1>
             </div>
@@ -72,26 +78,26 @@ const detachFamille = (familleIn) => {
             >
                 <div class="w-full md:w-1/3">
                     <h3 class="mb-4 text-center text-lg text-slate-700">
-                        Les familles associées à
+                        Les disciplines similaires à
                         <span class="text-indigo-700">{{
                             discipline.name
                         }}</span>
                         <span class="text-sm italic">
-                            (retirer en cliquant sur la famille)</span
+                            (retirer en cliquant sur la discipline)</span
                         >
                     </h3>
                     <ul class="flex flex-wrap justify-center gap-2">
                         <li
-                            v-for="familleIn in discipline.familles"
-                            :key="familleIn.id"
+                            v-for="disciplineIn in disciplinesSimilaires"
+                            :key="disciplineIn.id"
                             class="group inline-flex self-stretch"
                         >
                             <button
                                 type="button"
-                                @click="detachFamille(familleIn)"
+                                @click="detachDiscipline(disciplineIn)"
                                 class="inline-flex w-40 items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm focus:outline-none focus:ring active:bg-indigo-500 group-hover:border-gray-100 group-hover:bg-indigo-500 group-hover:text-white group-hover:shadow-lg"
                             >
-                                {{ familleIn.name }}
+                                {{ disciplineIn.name }}
                                 <XCircleIcon
                                     class="ml-2 h-5 w-5 text-red-500 group-hover:text-white"
                                 />
@@ -99,27 +105,33 @@ const detachFamille = (familleIn) => {
                         </li>
                     </ul>
                 </div>
-                <div class="w-full md:w-1/3">
+                <div class="w-full md:w-2/3">
                     <h3 class="mb-4 text-center text-lg text-slate-700">
-                        Ajouter des familles de disciplines
+                        Ajouter une discipline similaire à
+                        <span class="text-indigo-700">{{
+                            discipline.name
+                        }}</span>
                     </h3>
-                    <ul class="flex flex-wrap justify-center gap-2">
+                    <ul
+                        class="flex flex-wrap items-stretch justify-center gap-2"
+                    >
                         <li
-                            v-for="familleNotIn in familles"
-                            :key="familleNotIn.id"
+                            v-for="disciplineNotIn in listDisciplines.data"
+                            :key="disciplineNotIn.discipline_similaire_id"
                             class="group inline-flex self-stretch"
                         >
                             <button
                                 type="button"
-                                @click="attachFamille(familleNotIn)"
+                                @click="attachDiscipline(disciplineNotIn)"
                                 class="inline-flex w-40 items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm focus:outline-none focus:ring active:bg-indigo-500 group-hover:border-gray-100 group-hover:bg-indigo-500 group-hover:text-white group-hover:shadow-lg"
                             >
-                                {{ familleNotIn.name }}
+                                {{ disciplineNotIn.name }}
                                 <PlusCircleIcon
                                     class="ml-2 h-5 w-5 text-blue-500 group-hover:text-white"
                                 />
                             </button>
                         </li>
+                        <Pagination :links="listDisciplines.links" />
                     </ul>
                 </div>
             </div>

@@ -176,14 +176,16 @@ class DisciplineController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['required', 'min:8'],
-        ]);
-
-        $updatedDiscipline = ListDiscipline::where('id', $discipline->id)->update([
-            'name' => $request->name,
-            'description' => $request->description,
+            'theme' => ['required'],
         ]);
 
         $discipline = ListDiscipline::find($discipline->id);
+
+        $discipline->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'theme' => $request->theme,
+        ]);
 
         $slug = Str::slug($discipline->name, '-');
         $discipline->update(['slug' => $slug]);

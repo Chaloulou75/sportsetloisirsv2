@@ -21,7 +21,7 @@ class FamilleDisciplineController extends Controller
         $familleNotIn = Famille::findOrFail($familleNotInId);
         $discipline->familles()->attach($familleNotIn);
 
-        return to_route('admin.edit', $discipline)->with('success', 'Famille ajoutée');
+        return to_route('admin.disciplines.familles.edit', $discipline)->with('success', 'Famille ajoutée');
     }
 
     /**
@@ -58,7 +58,7 @@ class FamilleDisciplineController extends Controller
         $familleIn = Famille::findOrFail($familleInId);
         $discipline->familles()->detach($familleIn);
 
-        return to_route('admin.edit', $discipline)->with('success', 'Famille supprimée');
+        return to_route('admin.disciplines.familles.edit', $discipline)->with('success', 'Famille supprimée');
     }
 
     /**

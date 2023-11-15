@@ -17,6 +17,7 @@ class LienDisCatCritValSsCritValeurController extends Controller
         $sousCritere = LiensDisCatCritValSsCrit::with('critere_valeur.critere.discipline')->findOrFail($souscritere->id);
 
         $discipline = $sousCritere->critere_valeur->critere->discipline->slug;
+        $categorie = $sousCritere->critere_valeur->critere->categorie;
 
         $request->validate([
             'valeur' => ['required', 'string', 'max:255'],
@@ -29,7 +30,7 @@ class LienDisCatCritValSsCritValeurController extends Controller
             'defaut' => 0,
         ]);
 
-        return to_route('admin.edit', $discipline)->with('success', 'Valeur du sous critère ajoutée');
+        return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Valeur du sous critère ajoutée');
     }
 
     /**
@@ -45,10 +46,11 @@ class LienDisCatCritValSsCritValeurController extends Controller
         $dccSsCritValeur = LiensDisCatCritValSsCritValeur::with(['sous_critere.critere_valeur.critere.discipline'])->findOrFail($sousvaleur->id);
 
         $discipline = $dccSsCritValeur->sous_critere->critere_valeur->critere->discipline->slug;
+        $categorie = $dccSsCritValeur->sous_critere->critere_valeur->critere->categorie;
 
         $dccSsCritValeur->update(['valeur' => $request->valeur]);
 
-        return to_route('admin.edit', $discipline)->with('success', 'Valeur du sous critère modifiée');
+        return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Valeur du sous critère modifiée');
     }
 
     /**
@@ -59,9 +61,10 @@ class LienDisCatCritValSsCritValeurController extends Controller
         $dccSsCritValeur = LiensDisCatCritValSsCritValeur::with(['sous_critere.critere_valeur.critere.discipline'])->findOrFail($sousvaleur->id);
 
         $discipline = $dccSsCritValeur->sous_critere->critere_valeur->critere->discipline->slug;
+        $categorie = $dccSsCritValeur->sous_critere->critere_valeur->critere->categorie;
 
         $dccSsCritValeur->delete();
 
-        return to_route('admin.edit', $discipline)->with('success', 'Valeur supprimée');
+        return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Valeur supprimée');
     }
 }

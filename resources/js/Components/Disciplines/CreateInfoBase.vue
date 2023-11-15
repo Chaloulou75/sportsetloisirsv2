@@ -5,12 +5,14 @@ const props = defineProps({
     errors: Object,
     name: String,
     description: String,
+    theme: String,
 });
 
-const emit = defineEmits(["update:name", "update:description"]);
+const emit = defineEmits(["update:name", "update:description", "update:theme"]);
 
 const name = ref(null);
 const description = ref(null);
+const theme = ref(null);
 
 watch(name, (value) => {
     emit("update:name", value);
@@ -18,6 +20,10 @@ watch(name, (value) => {
 
 watch(description, (value) => {
     emit("update:description", value);
+});
+
+watch(theme, (value) => {
+    emit("update:theme", value);
 });
 </script>
 <template>
@@ -64,6 +70,39 @@ watch(description, (value) => {
             </div>
             <div v-if="errors.description" class="mt-2 text-xs text-red-500">
                 {{ errors.description }}
+            </div>
+        </div>
+
+        <!-- thème -->
+        <div class="col-span-1 md:col-span-3">
+            <label for="theme" class="block text-sm font-medium text-gray-700">
+                Thème
+            </label>
+
+            <div class="mt-1 flex space-x-4 rounded-md text-sm">
+                <label for="light" class="inline-flex items-center">
+                    <input
+                        v-model="theme"
+                        type="radio"
+                        class="form-radio"
+                        id="light"
+                        name="light"
+                        value="light"
+                    />
+                    <span class="ml-2">Light</span>
+                </label>
+
+                <label for="dark" class="inline-flex items-center">
+                    <input
+                        v-model="theme"
+                        type="radio"
+                        class="form-radio"
+                        id="dark"
+                        name="dark"
+                        value="dark"
+                    />
+                    <span class="ml-2">Dark</span>
+                </label>
             </div>
         </div>
     </div>

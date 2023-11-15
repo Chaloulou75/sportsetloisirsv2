@@ -17,6 +17,7 @@ class LienDisCatCritValSsCritController extends Controller
         $valeur = LienDisciplineCategorieCritereValeur::with('critere.discipline')->findOrFail($valeur->id);
 
         $discipline = $valeur->critere->discipline->slug;
+        $categorie = $valeur->critere->categorie;
 
         $request->validate([
             'nom' => ['required', 'string', 'max:255'],
@@ -29,7 +30,7 @@ class LienDisCatCritValSsCritController extends Controller
             'type_champ_form' => $request->type_champ,
         ]);
 
-        return to_route('admin.edit', $discipline)->with('success', 'Valeur du sous critère ajoutée');
+        return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Valeur du sous critère ajoutée');
 
     }
 
@@ -50,10 +51,11 @@ class LienDisCatCritValSsCritController extends Controller
         $sousCritere = LiensDisCatCritValSsCrit::with('critere_valeur.critere.discipline')->findOrFail($souscritere->id);
 
         $discipline = $sousCritere->critere_valeur->critere->discipline->slug;
+        $categorie = $sousCritere->critere_valeur->critere->categorie;
 
         $sousCritere->delete();
 
-        return to_route('admin.edit', $discipline)->with('success', 'Sous critère supprimé');
+        return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Sous critère supprimé');
 
 
     }
