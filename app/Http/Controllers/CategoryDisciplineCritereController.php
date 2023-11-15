@@ -22,6 +22,7 @@ class CategoryDisciplineCritereController extends Controller
             'critere.id' => ['required', Rule::exists('liste_criteres', 'id')],
             'categorie.id' => ['required', Rule::exists('liens_disciplines_categories', 'id')],
             'type_champ.type' => ['required', 'string', 'max:255'],
+            'nom' => ['nullable', 'string'],
         ]);
 
         $discCat = LienDisciplineCategorie::with(['discipline:id,name,slug'])->findOrFail($request->categorie['id']);
@@ -30,7 +31,7 @@ class CategoryDisciplineCritereController extends Controller
             "discipline_id" => $discCat->discipline_id,
             "categorie_id" => $request->categorie['id'],
             "critere_id" => $request->critere['id'],
-            "nom" => $request->critere['nom'],
+            "nom" => $request->nom ?? $request->critere['nom'],
             "type_champ_form" => $request->type_champ['type'],
             "visible_back" => true,
             "visible_front" => true,

@@ -1,7 +1,7 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
-import { ref, watch, onMounted, defineAsyncComponent } from "vue";
+import { ref, watch } from "vue";
 import Checkbox from "@/Components/Forms/Checkbox.vue";
 import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import {
@@ -275,10 +275,18 @@ const type_champs = [
 ];
 
 const addCritereForm = useForm({
-    critere: ref(props.listeCriteres[0]),
-    type_champ: ref(type_champs[0]),
+    critere: props.listeCriteres[0],
+    type_champ: type_champs[0],
+    nom: null,
     remember: true,
 });
+
+watch(
+    () => addCritereForm.critere,
+    (newValue) => {
+        addCritereForm.nom = newValue.nom;
+    }
+);
 
 const addCritere = (categorie) => {
     router.post(
@@ -287,6 +295,7 @@ const addCritere = (categorie) => {
             critere: addCritereForm.critere,
             categorie: categorie,
             type_champ: addCritereForm.type_champ,
+            nom: addCritereForm.nom,
         },
         {
             errorBag: "addCritereForm",
@@ -1025,7 +1034,7 @@ const addSousCritere = (valeur) => {
                     </button>
                     <form
                         v-if="showAddCritereForm(categorie)"
-                        class="inline-flex flex-grow items-center justify-between"
+                        class="inline-flex max-w-md flex-grow items-center justify-between"
                         @submit.prevent="addCritere(categorie)"
                     >
                         <div class="flex w-full flex-grow flex-col space-y-3">
@@ -1171,6 +1180,31 @@ const addSousCritere = (valeur) => {
                                     </transition>
                                 </div>
                             </Listbox>
+                            <div
+                                v-if="addCritereForm.critere"
+                                class="mt-1 flex flex-col rounded-md"
+                            >
+                                <label
+                                    for="nom critere"
+                                    class="block text-sm font-medium text-gray-700"
+                                    >Modifier le nom du critère?</label
+                                >
+                                <input
+                                    v-model="addCritereForm.nom"
+                                    type="text"
+                                    name="nom critere"
+                                    id="nom critere"
+                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                    placeholder=""
+                                    autocomplete="none"
+                                />
+                                <div
+                                    v-if="addCritereForm.errors.nom"
+                                    class="text-xs text-red-500"
+                                >
+                                    {{ addCritereForm.errors.nom[0] }}
+                                </div>
+                            </div>
                         </div>
                         <button
                             type="submit"

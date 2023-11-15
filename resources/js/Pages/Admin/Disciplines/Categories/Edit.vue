@@ -268,13 +268,13 @@ const updateCategorie = (index) => {
                     </ul>
                 </div>
             </div>
-            <div>
-                <h3
-                    class="py-2 text-xl font-semibold text-slate-700 md:text-2xl"
-                >
-                    Voir et éditer les criteres liés aux catégories:
+            <div
+                class="mx-auto w-full rounded-md border border-indigo-300 bg-gray-50 px-1 py-4 shadow-lg md:px-3"
+            >
+                <h3 class="text-lg font-semibold text-slate-700 md:text-xl">
+                    Gestion des criteres liés aux catégories:
                 </h3>
-                <ul class="list-inside list-disc">
+                <ul class="mt-4 list-inside list-disc space-y-3">
                     <li v-for="categorie in categories" :key="categorie.id">
                         <Link
                             :href="
