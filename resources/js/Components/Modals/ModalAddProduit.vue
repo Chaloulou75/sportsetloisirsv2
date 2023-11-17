@@ -58,14 +58,11 @@ const addProduitAddress = ref(false);
 const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
     if (checked) {
         if (!formAddProduit.criteres[critereId]) {
-            // If the critereId doesn't exist in the form object, create a new array with the optionValue
             formAddProduit.criteres[critereId] = [optionValue];
         } else {
-            // If the critereId exists, push the optionValue to the existing array
             formAddProduit.criteres[critereId].push(optionValue);
         }
     } else {
-        // Remove the optionValue from the array
         const index = formAddProduit.criteres[critereId].indexOf(optionValue);
         if (index !== -1) {
             formAddProduit.criteres[critereId].splice(index, 1);
@@ -73,7 +70,6 @@ const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
     }
 };
 
-// Check if a checkbox is selected
 const isCheckboxSelected = (critereId, optionValue) => {
     return (
         formAddProduit.criteres[critereId] &&

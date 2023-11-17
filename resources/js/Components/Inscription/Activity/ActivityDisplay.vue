@@ -609,204 +609,214 @@ const destroyTarif = (tarif, produit) => {
                     leave-to-class="transform opacity-0"
                 >
                     <DisclosurePanel as="div">
-                        <table class="w-full table-auto">
-                            <tbody>
-                                <tr
-                                    v-for="produit in structureActivite.produits"
-                                    :key="produit.id"
-                                    class="focus-within:bg-gray-100 hover:bg-gray-100"
-                                >
-                                    <td
-                                        class="border-t"
-                                        v-for="critere in produit.criteres"
-                                        :key="critere.id"
+                        <div class="overflow-x-scroll">
+                            <table class="w-full min-w-full table-auto">
+                                <tbody>
+                                    <tr
+                                        v-for="produit in structureActivite.produits"
+                                        :key="produit.id"
+                                        class="focus-within:bg-gray-100 hover:bg-gray-100"
                                     >
-                                        <div
-                                            class="flex flex-col items-center p-2"
+                                        <td
+                                            class="border-t"
+                                            v-for="critere in produit.criteres"
+                                            :key="critere.id"
                                         >
-                                            <span
-                                                v-if="critere.critere.nom"
-                                                class="text-center text-xs text-gray-600"
+                                            <div
+                                                class="flex flex-col items-center p-2"
                                             >
-                                                {{ critere.critere.nom }}:
-                                            </span>
-                                            <span
-                                                v-if="critere.valeur"
-                                                class="text-center text-sm font-semibold text-gray-600"
-                                                >{{ critere.valeur }}
                                                 <span
-                                                    v-if="
-                                                        critere.critere_valeur &&
-                                                        critere.critere_valeur
-                                                            .sous_criteres &&
-                                                        critere.critere_valeur
-                                                            .sous_criteres
-                                                            .length > 0
-                                                    "
-                                                    class="text-xs font-medium text-gray-600"
+                                                    v-if="critere.critere.nom"
+                                                    class="text-center text-xs text-gray-600"
                                                 >
+                                                    {{ critere.critere.nom }}:
+                                                </span>
+                                                <span
+                                                    v-if="critere.valeur"
+                                                    class="text-center text-sm font-semibold text-gray-600"
+                                                    >{{ critere.valeur }}
                                                     <span
-                                                        v-for="sousCriteres in critere
-                                                            .critere_valeur
-                                                            .sous_criteres"
-                                                        :key="sousCriteres.id"
+                                                        v-if="
+                                                            critere.critere_valeur &&
+                                                            critere
+                                                                .critere_valeur
+                                                                .sous_criteres &&
+                                                            critere
+                                                                .critere_valeur
+                                                                .sous_criteres
+                                                                .length > 0
+                                                        "
+                                                        class="text-xs font-medium text-gray-600"
                                                     >
                                                         <span
-                                                            v-for="sousCritValeur in sousCriteres.prod_sous_crit_valeurs"
+                                                            v-for="sousCriteres in critere
+                                                                .critere_valeur
+                                                                .sous_criteres"
                                                             :key="
-                                                                sousCritValeur.id
+                                                                sousCriteres.id
                                                             "
-                                                            class="text-xs font-semibold text-gray-600"
                                                         >
                                                             <span
-                                                                v-if="
-                                                                    sousCritValeur.produit_id ===
-                                                                    produit.id
+                                                                v-for="sousCritValeur in sousCriteres.prod_sous_crit_valeurs"
+                                                                :key="
+                                                                    sousCritValeur.id
                                                                 "
-                                                                >({{
-                                                                    sousCritValeur.valeur
-                                                                }})</span
-                                                            ></span
-                                                        >
+                                                                class="text-xs font-semibold text-gray-600"
+                                                            >
+                                                                <span
+                                                                    v-if="
+                                                                        sousCritValeur.produit_id ===
+                                                                        produit.id
+                                                                    "
+                                                                    >({{
+                                                                        sousCritValeur.valeur
+                                                                    }})</span
+                                                                ></span
+                                                            >
+                                                        </span>
                                                     </span>
                                                 </span>
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td class="border-t">
-                                        <div
-                                            class="flex h-full items-center p-2"
-                                        >
-                                            <MapPinIcon
-                                                class="mr-1 h-6 w-6 text-gray-600"
-                                            />
-                                            <div
-                                                class="flex flex-col items-center text-xs text-gray-600"
-                                            >
-                                                {{ produit.adresse.address }},
-                                                {{ produit.adresse.zip_code }}
-                                                {{ produit.adresse.city }}
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td class="border-t">
-                                        <div class="flex items-center p-2">
-                                            <ClockIcon
-                                                class="mr-1 h-6 w-6 text-gray-600"
-                                            />
+                                        </td>
+                                        <td class="border-t">
                                             <div
-                                                v-if="produit.horaire_id"
-                                                class="flex flex-col"
+                                                class="flex h-full items-center p-2"
                                             >
-                                                <span
-                                                    class="text-xs text-gray-600"
-                                                    >Ouvert du
-                                                    {{
-                                                        formatDate(
-                                                            produit.horaire
-                                                                .dayopen
-                                                        )
-                                                    }}
-                                                    au
-                                                    {{
-                                                        formatDate(
-                                                            produit.horaire
-                                                                .dayclose
-                                                        )
-                                                    }}</span
+                                                <MapPinIcon
+                                                    class="mr-1 h-6 w-6 text-gray-600"
+                                                />
+                                                <div
+                                                    class="flex flex-col items-center text-xs text-gray-600"
                                                 >
-                                                <span
-                                                    class="text-xs text-gray-600"
-                                                    >De
                                                     {{
-                                                        formatTime(
-                                                            produit.horaire
-                                                                .houropen
-                                                        )
+                                                        produit.adresse.address
+                                                    }},
+                                                    {{
+                                                        produit.adresse.zip_code
                                                     }}
-                                                    à
-                                                    {{
-                                                        formatTime(
-                                                            produit.horaire
-                                                                .hourclose
-                                                        )
-                                                    }}</span
+                                                    {{ produit.adresse.city }}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="border-t">
+                                            <div class="flex items-center p-2">
+                                                <ClockIcon
+                                                    class="mr-1 h-6 w-6 text-gray-600"
+                                                />
+                                                <div
+                                                    v-if="produit.horaire_id"
+                                                    class="flex flex-col"
+                                                >
+                                                    <span
+                                                        class="text-xs text-gray-600"
+                                                        >Ouvert du
+                                                        {{
+                                                            formatDate(
+                                                                produit.horaire
+                                                                    .dayopen
+                                                            )
+                                                        }}
+                                                        au
+                                                        {{
+                                                            formatDate(
+                                                                produit.horaire
+                                                                    .dayclose
+                                                            )
+                                                        }}</span
+                                                    >
+                                                    <span
+                                                        class="text-xs text-gray-600"
+                                                        >De
+                                                        {{
+                                                            formatTime(
+                                                                produit.horaire
+                                                                    .houropen
+                                                            )
+                                                        }}
+                                                        à
+                                                        {{
+                                                            formatTime(
+                                                                produit.horaire
+                                                                    .hourclose
+                                                            )
+                                                        }}</span
+                                                    >
+                                                </div>
+                                                <span
+                                                    v-else
+                                                    class="text-sm text-gray-600"
+                                                    >Planning</span
                                                 >
                                             </div>
-                                            <span
-                                                v-else
-                                                class="text-sm text-gray-600"
-                                                >Planning</span
+                                        </td>
+                                        <td class="border-t">
+                                            <button
+                                                @click="
+                                                    () =>
+                                                        openTarifToggle(produit)
+                                                "
+                                                type="button"
+                                                class="flex h-full w-full items-center justify-center bg-green-600 p-4 hover:bg-green-500"
                                             >
-                                        </div>
-                                    </td>
-                                    <td class="border-t">
-                                        <button
-                                            @click="
-                                                () => openTarifToggle(produit)
-                                            "
-                                            type="button"
-                                            class="flex h-full w-full items-center justify-center bg-green-600 p-4 hover:bg-green-500"
-                                        >
-                                            <CurrencyEuroIcon
-                                                class="mr-1 h-6 w-6 text-gray-50 hover:text-white"
-                                            />
-                                        </button>
-                                    </td>
-                                    <td class="border-t">
-                                        <button
-                                            type="button"
-                                            @click="
-                                                openEditProduitModal(
-                                                    structureActivite,
-                                                    produit
-                                                )
-                                            "
-                                            class="flex h-full w-full items-center justify-center bg-blue-500 p-4 hover:bg-blue-600"
-                                        >
-                                            <ArrowPathIcon
-                                                class="mr-1 h-6 w-6 text-gray-50 transition-all duration-200 hover:-rotate-90 hover:text-white"
-                                            />
-                                        </button>
-                                    </td>
-                                    <td class="border-t">
-                                        <button
-                                            type="button"
-                                            @click="
-                                                () =>
-                                                    duplicate(
+                                                <CurrencyEuroIcon
+                                                    class="mr-1 h-6 w-6 text-gray-50 hover:text-white"
+                                                />
+                                            </button>
+                                        </td>
+                                        <td class="border-t">
+                                            <button
+                                                type="button"
+                                                @click="
+                                                    openEditProduitModal(
                                                         structureActivite,
                                                         produit
                                                     )
-                                            "
-                                            class="flex h-full w-full items-center justify-center bg-blue-500 p-4 hover:bg-blue-600"
-                                        >
-                                            <DocumentDuplicateIcon
-                                                class="mr-1 h-6 w-6 text-gray-50 hover:text-white"
-                                            />
-                                        </button>
-                                    </td>
-                                    <td class="border-t">
-                                        <button
-                                            type="button"
-                                            @click="
-                                                () =>
-                                                    destroy(
-                                                        structureActivite,
-                                                        produit
-                                                    )
-                                            "
-                                            class="flex h-full items-center justify-center bg-red-500 p-4 hover:bg-red-600"
-                                        >
-                                            <TrashIcon
-                                                class="mr-1 h-6 w-6 text-gray-100 hover:text-white"
-                                            />
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
+                                                "
+                                                class="flex h-full w-full items-center justify-center bg-blue-500 p-4 hover:bg-blue-600"
+                                            >
+                                                <ArrowPathIcon
+                                                    class="mr-1 h-6 w-6 text-gray-50 transition-all duration-200 hover:-rotate-90 hover:text-white"
+                                                />
+                                            </button>
+                                        </td>
+                                        <td class="border-t">
+                                            <button
+                                                type="button"
+                                                @click="
+                                                    () =>
+                                                        duplicate(
+                                                            structureActivite,
+                                                            produit
+                                                        )
+                                                "
+                                                class="flex h-full w-full items-center justify-center bg-blue-500 p-4 hover:bg-blue-600"
+                                            >
+                                                <DocumentDuplicateIcon
+                                                    class="mr-1 h-6 w-6 text-gray-50 hover:text-white"
+                                                />
+                                            </button>
+                                        </td>
+                                        <td class="border-t">
+                                            <button
+                                                type="button"
+                                                @click="
+                                                    () =>
+                                                        destroy(
+                                                            structureActivite,
+                                                            produit
+                                                        )
+                                                "
+                                                class="flex h-full w-full items-center justify-center bg-red-500 p-4 hover:bg-red-600"
+                                            >
+                                                <TrashIcon
+                                                    class="mr-1 h-6 w-6 text-gray-100 hover:text-white"
+                                                />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                         <div
                             v-for="produit in structureActivite.produits"
                             :key="produit.id"

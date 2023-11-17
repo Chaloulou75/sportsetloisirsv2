@@ -458,7 +458,7 @@ const addSousCritere = (valeur) => {
                             </div>
 
                             <div
-                                class="flex flex-col items-center space-x-2 md:flex-row md:justify-around"
+                                class="flex flex-col items-start space-y-2 md:flex-row md:items-center md:justify-between md:space-x-2 md:space-y-0"
                             >
                                 <div
                                     class="flex max-w-sm items-center space-x-2"
@@ -534,10 +534,12 @@ const addSousCritere = (valeur) => {
 
                                 <button
                                     type="button"
-                                    class="inline-flex items-center"
+                                    class="inline-flex items-center self-end"
                                     @click="deleteCritere(critere)"
                                 >
-                                    <TrashIcon class="h-5 w-5 text-red-500" />
+                                    <TrashIcon
+                                        class="h-6 w-6 text-red-500 hover:text-red-700"
+                                    />
                                 </button>
                             </div>
                         </div>
@@ -547,17 +549,15 @@ const addSousCritere = (valeur) => {
                             <li
                                 v-for="valeur in critere.valeurs"
                                 :key="valeur.id"
-                                class="space-y-1 text-sm text-slate-600"
+                                class="space-y-2 text-sm text-slate-600"
                             >
                                 <template v-if="valeurForm[valeur.id]">
                                     <form
                                         v-if="valeur"
-                                        class="inline-flex space-x-2"
+                                        class="inline-flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0"
                                         @submit.prevent="updateValeur(valeur)"
                                     >
-                                        <div
-                                            class="mt-1 flex flex-col rounded-md"
-                                        >
+                                        <div class="flex flex-col">
                                             <input
                                                 v-model="
                                                     valeurForm[valeur.id].valeur
@@ -574,7 +574,7 @@ const addSousCritere = (valeur) => {
                                                     valeurForm[valeur.id].errors
                                                         .valeur
                                                 "
-                                                class="text-xs text-red-500"
+                                                class="mt-1 text-xs text-red-500"
                                             >
                                                 {{
                                                     valeurForm[valeur.id].errors
@@ -620,7 +620,9 @@ const addSousCritere = (valeur) => {
                                             </div>
                                         </div>
 
-                                        <div class="flex items-center">
+                                        <div
+                                            class="flex items-center space-x-3"
+                                        >
                                             <button type="submit">
                                                 <ArrowPathIcon
                                                     class="mr-1 h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
@@ -630,37 +632,42 @@ const addSousCritere = (valeur) => {
                                                     valeur</span
                                                 >
                                             </button>
+                                            <button
+                                                type="button"
+                                                class="inline-flex items-center"
+                                                @click="removeValeur(valeur)"
+                                            >
+                                                <TrashIcon
+                                                    class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                />
+                                            </button>
+                                            <button
+                                                class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white p-2 text-center text-xs font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                                v-if="
+                                                    !showAddSousCritereForm(
+                                                        valeur
+                                                    ) &&
+                                                    valeur.sous_criteres
+                                                        .length === 0
+                                                "
+                                                type="button"
+                                                @click="
+                                                    toggleAddSousCritereForm(
+                                                        valeur
+                                                    )
+                                                "
+                                            >
+                                                <div class="">
+                                                    Ajouter un sous critère à
+                                                    <span
+                                                        class="font-semibold"
+                                                        >{{
+                                                            valeur.valeur
+                                                        }}</span
+                                                    >
+                                                </div>
+                                            </button>
                                         </div>
-                                        <button
-                                            type="button"
-                                            class="inline-flex items-center"
-                                            @click="removeValeur(valeur)"
-                                        >
-                                            <TrashIcon
-                                                class="h-5 w-5 text-red-500 hover:text-red-700"
-                                            />
-                                        </button>
-                                        <button
-                                            class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white p-2 text-center text-xs font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
-                                            v-if="
-                                                !showAddSousCritereForm(
-                                                    valeur
-                                                ) &&
-                                                valeur.sous_criteres.length ===
-                                                    0
-                                            "
-                                            type="button"
-                                            @click="
-                                                toggleAddSousCritereForm(valeur)
-                                            "
-                                        >
-                                            <div class="">
-                                                Ajouter un sous critère à
-                                                <span class="font-semibold">{{
-                                                    valeur.valeur
-                                                }}</span>
-                                            </div>
-                                        </button>
                                     </form>
                                     <div v-if="valeur.sous_criteres">
                                         <div
@@ -701,7 +708,7 @@ const addSousCritere = (valeur) => {
                                                         "
                                                     >
                                                         <TrashIcon
-                                                            class="h-5 w-5 text-red-500 hover:text-red-700"
+                                                            class="h-6 w-6 text-red-500 hover:text-red-700"
                                                         />
                                                     </button>
                                                 </div>
@@ -709,7 +716,7 @@ const addSousCritere = (valeur) => {
                                                     v-if="
                                                         souscritere.sous_criteres_valeurs
                                                     "
-                                                    class="ml-4 list-inside list-disc marker:text-indigo-600"
+                                                    class="ml-4 mt-2 list-inside list-disc space-y-3 marker:text-indigo-600"
                                                 >
                                                     <li
                                                         v-for="sousvaleur in souscritere.sous_criteres_valeurs"
@@ -718,7 +725,7 @@ const addSousCritere = (valeur) => {
                                                     >
                                                         <form
                                                             v-if="sousvaleur"
-                                                            class="inline-flex space-x-4"
+                                                            class="inline-flex flex-col space-y-2 md:flex-row md:space-x-4 md:space-y-0"
                                                             @submit.prevent="
                                                                 updateSousValeur(
                                                                     sousvaleur
@@ -843,7 +850,7 @@ const addSousCritere = (valeur) => {
                                                                 </div>
                                                             </div>
                                                             <div
-                                                                class="flex items-center"
+                                                                class="flex items-center space-x-3"
                                                             >
                                                                 <button
                                                                     type="submit"
@@ -857,22 +864,21 @@ const addSousCritere = (valeur) => {
                                                                         à jour
                                                                         la
                                                                         valeur</span
-                                                                    >
+                                                                    ></button
+                                                                ><button
+                                                                    type="button"
+                                                                    class="inline-flex items-center"
+                                                                    @click="
+                                                                        removeSousValeur(
+                                                                            sousvaleur
+                                                                        )
+                                                                    "
+                                                                >
+                                                                    <TrashIcon
+                                                                        class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                                    />
                                                                 </button>
                                                             </div>
-                                                            <button
-                                                                type="button"
-                                                                class="inline-flex items-center"
-                                                                @click="
-                                                                    removeSousValeur(
-                                                                        sousvaleur
-                                                                    )
-                                                                "
-                                                            >
-                                                                <TrashIcon
-                                                                    class="h-5 w-5 text-red-500 hover:text-red-700"
-                                                                />
-                                                            </button>
                                                         </form>
                                                     </li>
                                                 </ul>
