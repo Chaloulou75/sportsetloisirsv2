@@ -511,7 +511,7 @@ const addSousCritere = (valeur) => {
                                         "
                                     />
                                     <span class="ml-2 text-sm text-gray-600"
-                                        >Visible Front (pages de
+                                        >Visible Front (Critère pour pages de
                                         résultats)</span
                                     ></label
                                 >
@@ -527,7 +527,7 @@ const addSousCritere = (valeur) => {
                                         "
                                     />
                                     <span class="ml-2 text-sm text-gray-600"
-                                        >Visible Back (pour l'ajout
+                                        >Visible Back (Obligatoire à l'ajout
                                         d'activité)</span
                                     ></label
                                 >

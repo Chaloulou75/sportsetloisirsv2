@@ -56,13 +56,18 @@ class CategoryDisciplineController extends Controller
                         ->get();
 
         $criteres = LienDisciplineCategorieCritere::with([
-            'valeurs',
+            'valeurs' => function ($query) {
+                $query->orderBy('ordre');
+            },
             'valeurs.sous_criteres',
-            'valeurs.sous_criteres.sous_criteres_valeurs',
+            'valeurs.sous_criteres.sous_criteres_valeurs' => function ($query) {
+                $query->orderBy('ordre');
+            },
         ])
         ->where('discipline_id', $discipline->id)
         ->where('categorie_id', $category->id)
         ->where('visible_front', true)
+        ->orderBy('ordre')
         ->get();
 
         $structures = Structure::with([
@@ -142,7 +147,7 @@ class CategoryDisciplineController extends Controller
                 'criteres.critere',
                 'criteres.valeurs',
                 'criteres.valeurs.sous_criteres',
-                'criteres.valeurs.sous_criteres.sous_criteres_valeurs'
+                'criteres.valeurs.sous_criteres.sous_criteres_valeurs',
             ])
             ->where('discipline_id', $discipline->id)
             ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])

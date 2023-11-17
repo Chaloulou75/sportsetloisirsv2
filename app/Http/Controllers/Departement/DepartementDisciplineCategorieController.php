@@ -35,7 +35,21 @@ class DepartementDisciplineCategorieController extends Controller
 
         $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('slug', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
 
-        $criteres = LienDisciplineCategorieCritere::with('valeurs')->where('discipline_id', $discipline->id)->where('categorie_id', $category->id)->get();
+        $criteres = LienDisciplineCategorieCritere::with([
+                    'valeurs' => function ($query) {
+                        $query->orderBy('ordre');
+                    },
+                    'valeurs.sous_criteres',
+                    'valeurs.sous_criteres.sous_criteres_valeurs' => function ($query) {
+                        $query->orderBy('ordre');
+                    },
+                ])
+                ->where('discipline_id', $discipline->id)
+                ->where('categorie_id', $category->id)
+                ->where('visible_front', true)
+                ->orderBy('ordre')
+                ->get();
+
 
         $departement = Departement::withCitiesAndRelations()
                         ->where('slug', $departement->slug)

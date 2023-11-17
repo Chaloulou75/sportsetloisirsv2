@@ -264,12 +264,16 @@ class StructureDisciplineController extends Controller
 
         $criteres = LienDisciplineCategorieCritere::with([
                 'valeurs' => function ($query) {
-                    $query->orderBy('defaut', 'desc');
+                    $query->orderBy('ordre');
                 },
                 'valeurs.sous_criteres',
-                'valeurs.sous_criteres.sous_criteres_valeurs'
+                'valeurs.sous_criteres.sous_criteres_valeurs' => function ($query) {
+                    $query->orderBy('ordre');
+                },
             ])
             ->where('discipline_id', $discipline->id)
+            ->where('visible_back', true)
+            ->orderBy('ordre')
             ->get();
 
         $tarifTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();

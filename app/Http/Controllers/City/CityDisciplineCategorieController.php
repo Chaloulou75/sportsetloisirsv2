@@ -76,7 +76,21 @@ class CityDisciplineCategorieController extends Controller
                 ->select(['id', 'name', 'slug'])
                 ->get();
 
-        $criteres = LienDisciplineCategorieCritere::with('valeurs')->where('discipline_id', $discipline->id)->where('categorie_id', $category->id)->get();
+        $criteres = LienDisciplineCategorieCritere::with([
+                    'valeurs' => function ($query) {
+                        $query->orderBy('ordre');
+                    },
+                    'valeurs.sous_criteres',
+                    'valeurs.sous_criteres.sous_criteres_valeurs' => function ($query) {
+                        $query->orderBy('ordre');
+                    },
+                ])
+                ->where('discipline_id', $discipline->id)
+                ->where('categorie_id', $category->id)
+                ->where('visible_front', true)
+                ->orderBy('ordre')
+                ->get();
+
 
         $citiesAroundProducts = $citiesAround->flatMap(function ($city) use ($discipline, $category) {
             return $city->produits()->withRelations()->where('discipline_id', $discipline->id)->where('categorie_id', $category->id)->get();
