@@ -1,8 +1,9 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import Checkbox from "@/Components/Forms/Checkbox.vue";
+import SelectForm from "@/Components/Forms/SelectForm.vue";
 import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import {
     XCircleIcon,
@@ -31,14 +32,21 @@ const props = defineProps({
     user_can: Object,
 });
 
-const updateCritereFrontVisibility = (critere) => {
+const ordreCriteres = computed(() => {
+    const count = props.categorie.criteres.length;
+    return Array.from({ length: count }, (_, index) => index + 1);
+});
+
+const updateCritereVisibility = (critere) => {
     router.patch(
         route("categories-disciplines-criteres.update", {
             critere: critere,
         }),
         {
             visible_front:
-                critereFrontVisibilityForm.value[critere.id].visible_front,
+                critereVisibilityForm.value[critere.id].visible_front,
+            visible_back: critereVisibilityForm.value[critere.id].visible_back,
+            ordre: critereVisibilityForm.value[critere.id].ordre,
         },
         {
             preserveScroll: true,
@@ -69,7 +77,7 @@ const deleteSousCritere = (souscritere) => {
     );
 };
 
-const critereFrontVisibilityForm = ref({});
+const critereVisibilityForm = ref({});
 const valeurForm = ref({});
 const sousvaleurForm = ref({});
 const initializeValeurForm = () => {
@@ -78,8 +86,10 @@ const initializeValeurForm = () => {
 
         for (const critereId in category.criteres) {
             const critere = category.criteres[critereId];
-            critereFrontVisibilityForm.value[critere.id] = useForm({
+            critereVisibilityForm.value[critere.id] = useForm({
                 visible_front: ref(!!critere.visible_front),
+                visible_back: ref(!!critere.visible_back),
+                ordre: ref(critere.ordre),
                 remember: true,
             });
 
@@ -226,8 +236,8 @@ const addSousValeur = (souscritere) => {
             errorBag: "addSousValeurForm",
             preserveScroll: true,
             onSuccess: () => {
-                initializeValeurForm();
                 addSousValeurForm.reset();
+                initializeValeurForm();
                 toggleAddSousValeurForm(souscritere);
             },
         }
@@ -400,37 +410,93 @@ const addSousCritere = (valeur) => {
                         class="flex flex-col text-base text-slate-600"
                     >
                         <div
-                            class="inline-flex w-full items-center justify-between"
+                            class="w-full flex-col items-start justify-between"
                         >
                             <div
-                                class="flex-grow pb-2 underline decoration-blue-500 decoration-2 underline-offset-2"
+                                class="pb-2 underline decoration-blue-500 decoration-2 underline-offset-2"
                             >
                                 Critère:
-                                <span class="font-semibold">
+                                <span class="text-lg font-semibold">
                                     {{ critere.nom }}
-                                    <span class="text-xs font-medium"
+                                    <span class="text-sm font-medium"
                                         >(Type de champ:
                                         {{ critere.type_champ_form }})</span
                                     >
                                 </span>
                             </div>
 
-                            <div class="flex space-x-2">
+                            <div
+                                class="flex flex-col items-center space-x-2 md:flex-row md:justify-around"
+                            >
+                                <div
+                                    class="flex max-w-sm items-center space-x-2"
+                                >
+                                    <label
+                                        for="ordre"
+                                        class="block text-sm font-medium text-gray-700"
+                                    >
+                                        ordre: {{ critere.ordre }}
+                                    </label>
+                                    <div
+                                        class="mt-1 flex flex-1 rounded-md md:flex-auto"
+                                    >
+                                        <select
+                                            ref="select"
+                                            name="ordre"
+                                            id="ordre"
+                                            v-model="
+                                                critereVisibilityForm[
+                                                    critere.id
+                                                ].ordre
+                                            "
+                                            @change="
+                                                updateCritereVisibility(critere)
+                                            "
+                                            class="block w-full rounded-md border-gray-300 text-sm text-gray-800 shadow-sm"
+                                        >
+                                            <option disabled value="">
+                                                Selectionner un ordre
+                                            </option>
+                                            <option
+                                                v-for="numero in ordreCriteres"
+                                                :key="numero"
+                                                :value="numero"
+                                            >
+                                                {{ numero }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <label class="flex items-center">
                                     <Checkbox
                                         v-model:checked="
-                                            critereFrontVisibilityForm[
-                                                critere.id
-                                            ].visible_front
+                                            critereVisibilityForm[critere.id]
+                                                .visible_front
                                         "
                                         @change="
-                                            updateCritereFrontVisibility(
-                                                critere
-                                            )
+                                            updateCritereVisibility(critere)
                                         "
                                     />
                                     <span class="ml-2 text-sm text-gray-600"
-                                        >Visible Front</span
+                                        >Visible Front (pages de
+                                        résultats)</span
+                                    ></label
+                                >
+
+                                <label class="flex items-center">
+                                    <Checkbox
+                                        v-model:checked="
+                                            critereVisibilityForm[critere.id]
+                                                .visible_back
+                                        "
+                                        @change="
+                                            updateCritereVisibility(critere)
+                                        "
+                                    />
+                                    <span class="ml-2 text-sm text-gray-600"
+                                        >Visible Back (pour l'ajout
+                                        d'activité)</span
                                     ></label
                                 >
 
@@ -444,7 +510,7 @@ const addSousCritere = (valeur) => {
                             </div>
                         </div>
                         <ul
-                            class="list-inside list-disc marker:text-indigo-600"
+                            class="list-inside list-disc py-2 marker:text-indigo-600"
                         >
                             <li
                                 v-for="valeur in critere.valeurs"
@@ -806,7 +872,7 @@ const addSousCritere = (valeur) => {
                                             showAddSousCritereForm(valeur) &&
                                             valeur.sous_criteres.length === 0
                                         "
-                                        class="inline-flex w-full flex-grow items-end justify-between py-2"
+                                        class="inline-flex w-full max-w-sm flex-grow items-end justify-between py-2"
                                         @submit.prevent="addSousCritere(valeur)"
                                     >
                                         <div

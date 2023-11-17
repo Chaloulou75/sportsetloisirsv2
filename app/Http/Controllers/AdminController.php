@@ -30,6 +30,8 @@ class AdminController extends Controller
 
         $users = User::select(['id', 'name', 'email'])->paginate(12);
 
+        $criteres = Critere::select(['id', 'nom'])->get();
+
         return Inertia::render('Admin/Index', [
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
@@ -38,6 +40,7 @@ class AdminController extends Controller
             'listDisciplines' => $listDisciplines,
             'structures' => $structures,
             'users' => $users,
+            'criteres' => $criteres,
         ]);
     }
 

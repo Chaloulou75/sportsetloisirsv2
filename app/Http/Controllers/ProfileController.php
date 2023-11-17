@@ -21,11 +21,9 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
-
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
-
 
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,

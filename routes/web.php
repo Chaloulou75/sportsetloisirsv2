@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CritereController;
 use App\Http\Controllers\MentionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActiviteController;
@@ -139,6 +140,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/disciplines/dis-{discipline:slug}/similaires', [DisciplineSimilaireController::class, 'edit'])->name('admin.disciplines.similaires.edit');
         Route::get('/disciplines/dis-{discipline:slug}/categories', [CategoryDisciplineController::class, 'edit'])->name('admin.disciplines.categories.edit');
         Route::get('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/criteres', [CategoryDisciplineCritereController::class, 'edit'])->name('admin.disciplines.categories.criteres.edit');
+
+        Route::post('/criteres', [CritereController::class, 'store'])->name('admin.criteres.store');
+        Route::patch('/criteres/{critere}', [CritereController::class, 'update'])->name('admin.criteres.update');
+        Route::delete('/criteres/{critere}', [CritereController::class, 'destroy'])->name('admin.criteres.destroy');
 
         Route::post('/discipline-similaire/{discipline}', [DisciplineSimilaireController::class, 'store'])->name('discipline-similaire.store');
         Route::put('/discipline-similaire/{discipline}', [DisciplineSimilaireController::class, 'detach'])->name('discipline-similaire.detach');

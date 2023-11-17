@@ -183,47 +183,51 @@ const formatCityName = (ville) => {
                     <div v-if="produit.criteres.length > 0">
                         <p class="mt-2 text-base font-semibold">Critères:</p>
                         <ul class="list-inside list-disc text-base">
-                            <li
+                            <template
                                 v-for="critere in produit.criteres"
                                 :key="critere.id"
                             >
-                                {{ critere.critere.nom }}:
-                                <span class="font-semibold"
-                                    >{{ critere.valeur }}
-                                    <span
-                                        v-if="
-                                            critere.critere_valeur &&
-                                            critere.critere_valeur
-                                                .sous_criteres &&
-                                            critere.critere_valeur.sous_criteres
-                                                .length > 0
-                                        "
-                                        class="text-xs font-medium text-gray-600"
-                                    >
+                                <li v-if="critere.valeur.length > 0">
+                                    {{ critere.critere.nom }}:
+
+                                    <span class="font-semibold"
+                                        >{{ critere.valeur }}
                                         <span
-                                            v-for="sousCriteres in critere
-                                                .critere_valeur.sous_criteres"
-                                            :key="sousCriteres.id"
+                                            v-if="
+                                                critere.critere_valeur &&
+                                                critere.critere_valeur
+                                                    .sous_criteres &&
+                                                critere.critere_valeur
+                                                    .sous_criteres.length > 0
+                                            "
+                                            class="text-xs font-medium text-gray-600"
                                         >
                                             <span
-                                                v-for="sousCritValeur in sousCriteres.prod_sous_crit_valeurs"
-                                                :key="sousCritValeur.id"
-                                                class="text-xs font-semibold text-gray-600"
+                                                v-for="sousCriteres in critere
+                                                    .critere_valeur
+                                                    .sous_criteres"
+                                                :key="sousCriteres.id"
                                             >
                                                 <span
-                                                    v-if="
-                                                        sousCritValeur.produit_id ===
-                                                        produit.id
-                                                    "
-                                                    >({{
-                                                        sousCritValeur.valeur
-                                                    }})</span
-                                                ></span
-                                            >
+                                                    v-for="sousCritValeur in sousCriteres.prod_sous_crit_valeurs"
+                                                    :key="sousCritValeur.id"
+                                                    class="text-xs font-semibold text-gray-600"
+                                                >
+                                                    <span
+                                                        v-if="
+                                                            sousCritValeur.produit_id ===
+                                                            produit.id
+                                                        "
+                                                        >({{
+                                                            sousCritValeur.valeur
+                                                        }})</span
+                                                    ></span
+                                                >
+                                            </span>
                                         </span>
                                     </span>
-                                </span>
-                            </li>
+                                </li>
+                            </template>
                         </ul>
                     </div>
                     <div v-if="produit.tarifs.length > 0">

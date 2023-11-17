@@ -67,7 +67,19 @@ const user = computed(() => page.props.auth.user);
                 class="hidden h-full w-full space-y-6 md:flex md:flex-col md:items-start"
             >
                 <!--  -->
-                <li class="w-full"></li>
+                <li class="w-full">
+                    <Link
+                        :href="route('admin.index')"
+                        :active="route().current('admin.index')"
+                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        :class="{
+                            'bg-blue-600 text-white':
+                                route().current('admin.index'),
+                        }"
+                    >
+                        Accueil Admin
+                    </Link>
+                </li>
 
                 <li class="w-full">
                     <details
@@ -153,7 +165,6 @@ const user = computed(() => page.props.auth.user);
                             </span>
                         </summary>
                         <ul class="space-y-2">
-                            <!--  -->
                             <li class="mt-2">
                                 <!-- <Link
                                     class="flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
@@ -161,7 +172,6 @@ const user = computed(() => page.props.auth.user);
                                 </Link> -->
                             </li>
 
-                            <!--  -->
                             <li>
                                 <!-- <Link
                                     class="group relative flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
@@ -171,7 +181,7 @@ const user = computed(() => page.props.auth.user);
                                     ></div>
                                 </Link> -->
                             </li>
-                            <!--  -->
+
                             <li>
                                 <!-- <Link
                                     class="relative flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
@@ -184,7 +194,7 @@ const user = computed(() => page.props.auth.user);
                         </ul>
                     </details>
                 </li>
-                <!-- stats -->
+
                 <li class="w-full">
                     <!-- <Link
                         class="flex items-center justify-between rounded-sm border-2 border-dotted border-sky-500 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
