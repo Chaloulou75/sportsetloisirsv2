@@ -32,11 +32,6 @@ const props = defineProps({
     user_can: Object,
 });
 
-const ordreCriteres = computed(() => {
-    const count = props.categorie.criteres.length;
-    return Array.from({ length: count }, (_, index) => index + 1);
-});
-
 const updateCritereVisibility = (critere) => {
     router.patch(
         route("categories-disciplines-criteres.update", {
@@ -99,6 +94,7 @@ const initializeValeurForm = () => {
                 valeurForm.value[valeur.id] = useForm({
                     id: ref(valeur.id),
                     valeur: ref(valeur.valeur),
+                    ordre: ref(valeur.ordre),
                     remember: true,
                 });
 
@@ -112,6 +108,7 @@ const initializeValeurForm = () => {
                         sousvaleurForm.value[sousvaleur.id] = useForm({
                             id: ref(sousvaleur.id),
                             valeur: ref(sousvaleur.valeur),
+                            ordre: ref(sousvaleur.ordre),
                             remember: true,
                         });
                     }
@@ -123,6 +120,39 @@ const initializeValeurForm = () => {
 
 initializeValeurForm();
 
+const ordreCriteres = computed(() => {
+    return props.categorie.criteres.map((critere, index) => index + 1);
+});
+
+const ordreValeurs = computed(() => {
+    const ordres = {};
+    props.categorie.criteres.forEach((critere) => {
+        const countValeurs = critere.valeurs.length;
+        ordres[critere.id] = Array.from(
+            { length: countValeurs },
+            (_, index) => index + 1
+        );
+    });
+    return ordres;
+});
+
+const ordreSousValeurs = computed(() => {
+    const ordres = {};
+    props.categorie.criteres.forEach((critere) => {
+        critere.valeurs.forEach((valeur) => {
+            valeur.sous_criteres.forEach((souscritere) => {
+                const countSousValeurs =
+                    souscritere.sous_criteres_valeurs.length;
+                ordres[souscritere.id] = Array.from(
+                    { length: countSousValeurs },
+                    (_, index) => index + 1
+                );
+            });
+        });
+    });
+    return ordres;
+});
+
 const updateValeur = (valeur) => {
     router.patch(
         route("categories-disciplines-criteres-valeurs.update", {
@@ -130,6 +160,7 @@ const updateValeur = (valeur) => {
         }),
         {
             valeur: valeurForm.value[valeur.id].valeur,
+            ordre: valeurForm.value[valeur.id].ordre,
             id: valeurForm.value[valeur.id].id,
         },
         {
@@ -198,6 +229,7 @@ const updateSousValeur = (sousvaleur) => {
         }),
         {
             valeur: sousvaleurForm.value[sousvaleur.id].valeur,
+            ordre: sousvaleurForm.value[sousvaleur.id].ordre,
             id: sousvaleurForm.value[sousvaleur.id].id,
         },
         {
@@ -435,7 +467,7 @@ const addSousCritere = (valeur) => {
                                         for="ordre"
                                         class="block text-sm font-medium text-gray-700"
                                     >
-                                        ordre: {{ critere.ordre }}
+                                        Ordre: {{ critere.ordre }}
                                     </label>
                                     <div
                                         class="mt-1 flex flex-1 rounded-md md:flex-auto"
@@ -548,6 +580,43 @@ const addSousCritere = (valeur) => {
                                                     valeurForm[valeur.id].errors
                                                         .valeur[0]
                                                 }}
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="flex max-w-sm items-center space-x-2"
+                                        >
+                                            <label
+                                                for="ordre"
+                                                class="block text-sm font-medium text-gray-700"
+                                            >
+                                                Ordre: {{ valeur.ordre }}
+                                            </label>
+                                            <div
+                                                class="mt-1 flex flex-1 rounded-md md:flex-auto"
+                                            >
+                                                <select
+                                                    ref="select"
+                                                    name="ordre"
+                                                    id="ordre"
+                                                    v-model="
+                                                        valeurForm[valeur.id]
+                                                            .ordre
+                                                    "
+                                                    class="block w-full rounded-md border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                >
+                                                    <option disabled value="">
+                                                        Selectionner un ordre
+                                                    </option>
+                                                    <option
+                                                        v-for="numero in ordreValeurs[
+                                                            critere.id
+                                                        ]"
+                                                        :key="numero"
+                                                        :value="numero"
+                                                    >
+                                                        {{ numero }}
+                                                    </option>
+                                                </select>
                                             </div>
                                         </div>
 
@@ -716,6 +785,61 @@ const addSousCritere = (valeur) => {
                                                                         ].errors
                                                                             .valeur
                                                                     }}
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="flex max-w-sm items-center space-x-2"
+                                                            >
+                                                                <label
+                                                                    for="ordre"
+                                                                    class="block text-sm font-medium text-gray-700"
+                                                                >
+                                                                    Ordre:
+                                                                    {{
+                                                                        sousvaleur.ordre
+                                                                    }}
+                                                                </label>
+                                                                <div
+                                                                    class="mt-1 flex flex-1 rounded-md md:flex-auto"
+                                                                >
+                                                                    <select
+                                                                        ref="select"
+                                                                        name="ordre"
+                                                                        id="ordre"
+                                                                        v-model="
+                                                                            sousvaleurForm[
+                                                                                sousvaleur
+                                                                                    .id
+                                                                            ]
+                                                                                .ordre
+                                                                        "
+                                                                        class="block w-full rounded-md border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                                    >
+                                                                        <option
+                                                                            disabled
+                                                                            value=""
+                                                                        >
+                                                                            Selectionner
+                                                                            un
+                                                                            ordre
+                                                                        </option>
+                                                                        <option
+                                                                            v-for="numero in ordreSousValeurs[
+                                                                                souscritere
+                                                                                    .id
+                                                                            ]"
+                                                                            :key="
+                                                                                numero
+                                                                            "
+                                                                            :value="
+                                                                                numero
+                                                                            "
+                                                                        >
+                                                                            {{
+                                                                                numero
+                                                                            }}
+                                                                        </option>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                             <div

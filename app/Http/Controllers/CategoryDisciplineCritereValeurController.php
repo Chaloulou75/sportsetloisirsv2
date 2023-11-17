@@ -39,6 +39,7 @@ class CategoryDisciplineCritereValeurController extends Controller
     {
         $request->validate([
             'valeur' => ['required', 'string', 'max:255'],
+            'ordre' => ['nullable', 'numeric'],
             'id' => ['required', Rule::exists('liens_disciplines_categories_criteres_valeurs', 'id')],
         ]);
 
@@ -47,7 +48,10 @@ class CategoryDisciplineCritereValeurController extends Controller
         $discipline = $lienDisCatCritValeur->critere->discipline->slug;
         $categorie = $lienDisCatCritValeur->critere->categorie;
 
-        $lienDisCatCritValeur->update(['valeur' => $request->valeur]);
+        $lienDisCatCritValeur->update([
+            'valeur' => $request->valeur,
+            'ordre' => $request->ordre
+        ]);
 
         return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Valeur du critère modifiée');
 

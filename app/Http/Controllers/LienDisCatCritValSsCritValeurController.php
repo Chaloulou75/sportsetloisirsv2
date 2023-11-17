@@ -40,6 +40,7 @@ class LienDisCatCritValSsCritValeurController extends Controller
     {
         $request->validate([
             'valeur' => ['required', 'string', 'max:255'],
+            'ordre' => ['nullable', 'numeric'],
             'id' => ['required', Rule::exists('liens_dis_cat_crit_val_ss_crit_valeur', 'id')],
         ]);
 
@@ -48,7 +49,10 @@ class LienDisCatCritValSsCritValeurController extends Controller
         $discipline = $dccSsCritValeur->sous_critere->critere_valeur->critere->discipline->slug;
         $categorie = $dccSsCritValeur->sous_critere->critere_valeur->critere->categorie;
 
-        $dccSsCritValeur->update(['valeur' => $request->valeur]);
+        $dccSsCritValeur->update([
+            'valeur' => $request->valeur,
+            'ordre' => $request->ordre
+        ]);
 
         return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Valeur du sous critère modifiée');
     }

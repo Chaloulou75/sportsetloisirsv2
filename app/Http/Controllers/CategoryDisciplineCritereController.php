@@ -58,9 +58,13 @@ class CategoryDisciplineCritereController extends Controller
                             $query->orderBy('ordre');
                         },
                         'criteres.critere',
-                        'criteres.valeurs',
+                        'criteres.valeurs' => function ($query) {
+                            $query->orderBy('ordre');
+                        },
                         'criteres.valeurs.sous_criteres',
-                        'criteres.valeurs.sous_criteres.sous_criteres_valeurs'
+                        'criteres.valeurs.sous_criteres.sous_criteres_valeurs' => function ($query) {
+                            $query->orderBy('ordre');
+                        },
                     ])
 
                     ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
