@@ -49,17 +49,10 @@ const latestAdresseId = computed(() => {
         const latestAdresse = props.structure.adresses[0];
         return latestAdresse.id;
     }
-    return null; // Return a default value if there are no adresses
+    return null;
 });
 
-// const showNewSelect = ref(false);
 const addInstructeur = ref(true);
-const addDatesOpened = ref(true);
-const addHoursOpened = ref(true);
-const addDateOpen = ref(true);
-const addHourOpen = ref(true);
-const addMonthsOpen = ref(true);
-const addRayon = ref(true);
 
 const form = useForm({
     structure_id: props.structure.id,
@@ -78,10 +71,10 @@ const form = useForm({
     country: null,
     address_lat: null,
     address_lng: null,
-    date: null,
-    time: null,
-    date_debut: null,
-    time_debut: null,
+    date_seule: null,
+    dates: null,
+    time_seule: null,
+    times: null,
     months: null,
     instructeurId: null,
     instructeur_email: null,
@@ -93,7 +86,6 @@ const form = useForm({
 watch(
     () => form.categorie_id,
     (newCategorieId) => {
-        // showNewSelect.value = false;
         filteredCriteres.value = props.criteres.filter(
             (critere) => critere.categorie_id === newCategorieId
         );
@@ -177,7 +169,7 @@ onMounted(() => {
                 <div class="fixed inset-0 bg-black bg-opacity-50" />
             </TransitionChild>
 
-            <div class="fixed inset-0 overflow-y-auto">
+            <div class="fixed inset-0 overflow-auto">
                 <div
                     class="flex min-h-full items-center justify-center p-4 text-center"
                 >
@@ -307,7 +299,9 @@ onMounted(() => {
                                             </div>
                                         </div>
                                         <!-- description -->
-                                        <div>
+                                        <div
+                                            class="border border-b-2 border-gray-100"
+                                        >
                                             <label
                                                 for="description"
                                                 class="block text-sm font-medium text-gray-700"
@@ -336,8 +330,10 @@ onMounted(() => {
                                             </div>
                                         </div>
 
-                                        <h3 class="py-2 text-sm font-semibold">
-                                            Déclinaisons:
+                                        <h3
+                                            class="py-2 text-sm font-semibold text-gray-700"
+                                        >
+                                            Déclinaison de cette activité:
                                         </h3>
 
                                         <div
@@ -473,41 +469,24 @@ onMounted(() => {
                                                     </div>
                                                 </div>
 
-                                                <!-- Dates x 2 -->
+                                                <!-- Heure seule -->
                                                 <div
                                                     v-if="
                                                         critere.type_champ_form ===
-                                                        'dates'
+                                                        'time'
                                                     "
                                                     class="flex max-w-sm flex-col items-start space-y-3"
                                                 >
-                                                    <div
-                                                        class="flex items-center"
-                                                    >
-                                                        <input
-                                                            v-model="
-                                                                addDatesOpened
-                                                            "
-                                                            id="addDatesOpened"
-                                                            type="checkbox"
-                                                            class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                                        />
-                                                        <label
-                                                            for="addDatesOpened"
-                                                            class="ml-2 text-sm font-medium text-gray-700"
-                                                            >Ajouter vos dates
-                                                            d'ouvertures
-                                                        </label>
-                                                    </div>
-                                                    <OpenDaysForm
-                                                        v-if="addDatesOpened"
+                                                    <SingleTimeForm
                                                         class="w-full"
-                                                        v-model="form.date"
-                                                        :name="`Dates d'ouvertures`"
+                                                        v-model="
+                                                            form.time_seule
+                                                        "
+                                                        :name="critere.nom"
                                                     />
                                                 </div>
 
-                                                <!-- Heures ouverture / fermeture -->
+                                                <!-- Heures x2 ouverture / fermeture -->
                                                 <div
                                                     v-if="
                                                         critere.type_champ_form ===
@@ -515,31 +494,10 @@ onMounted(() => {
                                                     "
                                                     class="flex max-w-sm flex-col items-start space-y-3"
                                                 >
-                                                    <div
-                                                        class="flex items-center"
-                                                    >
-                                                        <input
-                                                            v-model="
-                                                                addHoursOpened
-                                                            "
-                                                            id="addHoursOpened"
-                                                            type="checkbox"
-                                                            class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                                        />
-                                                        <label
-                                                            for="addHoursOpened"
-                                                            class="ml-2 text-sm font-medium text-gray-700"
-                                                            >Ajouter vos
-                                                            horaires
-                                                            d'ouvertures
-                                                        </label>
-                                                    </div>
                                                     <OpenTimesForm
-                                                        v-if="addHoursOpened"
                                                         class="w-full"
-                                                        v-model="form.time"
-                                                        :name="`Horaires (ouverture /
-                                                    fermeture)`"
+                                                        v-model="form.times"
+                                                        :name="critere.nom"
                                                     />
                                                 </div>
 
@@ -551,67 +509,27 @@ onMounted(() => {
                                                     "
                                                     class="flex max-w-sm flex-col items-start space-y-3"
                                                 >
-                                                    <div
-                                                        class="flex items-center"
-                                                    >
-                                                        <input
-                                                            v-model="
-                                                                addDateOpen
-                                                            "
-                                                            id="addDateOpen"
-                                                            type="checkbox"
-                                                            class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                                        />
-                                                        <label
-                                                            for="addDateOpen"
-                                                            class="ml-2 text-sm font-medium text-gray-700"
-                                                            >Ajouter une date de
-                                                            début
-                                                        </label>
-                                                    </div>
                                                     <SingleDateForm
-                                                        v-if="addDateOpen"
                                                         class="w-full"
                                                         v-model="
-                                                            form.date_debut
+                                                            form.date_seule
                                                         "
-                                                        :name="`Date de début`"
+                                                        :name="critere.nom"
                                                     />
                                                 </div>
 
-                                                <!-- Heure seule -->
+                                                <!-- Dates x 2 -->
                                                 <div
                                                     v-if="
                                                         critere.type_champ_form ===
-                                                        'time'
+                                                        'dates'
                                                     "
                                                     class="flex max-w-sm flex-col items-start space-y-3"
                                                 >
-                                                    <div
-                                                        class="flex items-center"
-                                                    >
-                                                        <input
-                                                            v-model="
-                                                                addHourOpen
-                                                            "
-                                                            id="addHourOpen"
-                                                            type="checkbox"
-                                                            class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                                        />
-                                                        <label
-                                                            for="addHourOpen"
-                                                            class="ml-2 text-sm font-medium text-gray-700"
-                                                            >Ajouter une heure
-                                                            d'ouverture
-                                                        </label>
-                                                    </div>
-                                                    <SingleTimeForm
-                                                        v-if="addHourOpen"
+                                                    <OpenDaysForm
                                                         class="w-full"
-                                                        v-model="
-                                                            form.time_debut
-                                                        "
-                                                        :name="`Horaire de début`"
+                                                        v-model="form.dates"
+                                                        :name="critere.nom"
                                                     />
                                                 </div>
 
@@ -625,33 +543,19 @@ onMounted(() => {
                                                     <div
                                                         class="flex max-w-sm flex-col items-start space-y-3"
                                                     >
-                                                        <div
-                                                            class="flex items-center"
-                                                        >
-                                                            <input
-                                                                v-model="
-                                                                    addMonthsOpen
-                                                                "
-                                                                id="addMonthsOpen"
-                                                                type="checkbox"
-                                                                class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                                            />
-                                                            <label
-                                                                for="addMonthsOpen"
-                                                                class="ml-2 text-sm font-medium text-gray-700"
-                                                                >Ajouter vos
-                                                                mois
-                                                                d'ouvertures
-                                                            </label>
-                                                        </div>
                                                         <OpenMonthsForm
-                                                            v-if="addMonthsOpen"
                                                             class="w-full"
                                                             v-model="
                                                                 form.months
                                                             "
-                                                            :name="`Mois d'ouverture`"
+                                                            :name="critere.nom"
                                                         />
+                                                        <div
+                                                            v-if="errors.months"
+                                                            class="mt-2 text-xs text-red-500"
+                                                        >
+                                                            {{ errors.months }}
+                                                        </div>
                                                     </div>
                                                 </div>
 
@@ -739,25 +643,8 @@ onMounted(() => {
                                                     "
                                                     class="flex w-full max-w-sm flex-col items-start space-y-3"
                                                 >
-                                                    <div
-                                                        class="flex items-center"
-                                                    >
-                                                        <input
-                                                            v-model="addRayon"
-                                                            id="addRayon"
-                                                            type="checkbox"
-                                                            class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                                        />
-                                                        <label
-                                                            for="addRayon"
-                                                            class="ml-2 text-sm font-medium text-gray-700"
-                                                            >Ajouter un rayon
-                                                            d'action
-                                                        </label>
-                                                    </div>
                                                     <RangeInputForm
                                                         class="w-full max-w-sm"
-                                                        v-if="addRayon"
                                                         v-model="form.rayon_km"
                                                         :min="0"
                                                         :max="200"

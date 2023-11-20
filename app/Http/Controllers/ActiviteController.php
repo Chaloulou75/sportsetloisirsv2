@@ -8,11 +8,10 @@ use App\Models\City;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Famille;
-use App\Models\Categorie;
 use App\Models\Structure;
+use App\Rules\NestedArrays;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
-use App\Models\ListeTarifType;
 use Illuminate\Validation\Rule;
 use App\Models\StructureAddress;
 use App\Models\StructureHoraire;
@@ -28,11 +27,12 @@ use Illuminate\Http\RedirectResponse;
 use App\Models\LienDisciplineCategorie;
 use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Storage;
+use App\Models\LiensDisCatCritValSsCrit;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 use App\Models\StructureProduitSousCritere;
 use App\Models\LienDisciplineCategorieCritere;
 use App\Models\LienDisciplineCategorieCritereValeur;
-use App\Models\LiensDisCatCritValSsCrit;
 
 class ActiviteController extends Controller
 {
@@ -42,8 +42,8 @@ class ActiviteController extends Controller
     public function store(Request $request, $structure)
     {
         $validated = request()->validate([
-            'structure_id' => ['required', Rule::exists('structures', 'id')],
-            'discipline_id' => ['required', Rule::exists('liste_disciplines', 'id')],
+            'structure_id' => ['required', Rule::exists(Structure::class, 'id')],
+            'discipline_id' => ['required', Rule::exists(ListDiscipline::class, 'id')],
         ]);
 
         $structure = Structure::findOrFail($validated['structure_id']);
@@ -154,14 +154,14 @@ class ActiviteController extends Controller
             ->get();
 
         return Inertia::render('Structures/Activites/Show', [
-                    'familles' => $familles,
-                    'listDisciplines' => $listDisciplines,
-                    'allCities' => $allCities,
-                    'logoUrl' => $logoUrl,
-                    'activite' => $activite,
-                    'produits' => $produits,
-                    'criteres' => $criteres,
-                    'activiteSimilaires' => $activiteSimilaires
+            'familles' => $familles,
+            'listDisciplines' => $listDisciplines,
+            'allCities' => $allCities,
+            'logoUrl' => $logoUrl,
+            'activite' => $activite,
+            'produits' => $produits,
+            'criteres' => $criteres,
+            'activiteSimilaires' => $activiteSimilaires
         ]);
     }
 
@@ -308,38 +308,114 @@ class ActiviteController extends Controller
     public function newactivitystore(Request $request, Structure $structure, $discipline): RedirectResponse
     {
         $request->validate([
-            'structure_id' => ['required', Rule::exists('structures', 'id')],
-            'discipline_id' => ['required', Rule::exists('liste_disciplines', 'id')],
-            'categorie_id' => ['required', Rule::exists('liens_disciplines_categories', 'id')],
+            'structure_id' => ['required', Rule::exists(Structure::class, 'id')],
+            'discipline_id' => ['required', Rule::exists(ListDiscipline::class, 'id')],
+            'categorie_id' => ['required', Rule::exists(LienDisciplineCategorie::class, 'id')],
             'titre' => 'nullable|string|min:3',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|min:5',
             'image' => 'nullable|image|max:2048',
             'actif' => 'required|boolean',
             'criteres' => ['nullable'],
             'souscriteres' => ['nullable'],
-            'adresse' => ['nullable', Rule::exists('structure_adresse', 'id')],
+            'adresse' => ['nullable', Rule::exists(StructureAddress::class, 'id')],
             'address' => ['nullable'],
             'city' => ['nullable'],
             'zip_code' => ['nullable'],
             'country' => ['nullable'],
             'address_lat' => ['nullable'],
             'address_lng' => ['nullable'],
-            'date' => ['nullable'],
-            'time' => ['nullable'],
-            'date_debut' => ['nullable'],
-            'time_debut' => ['nullable'],
-            'months' => ['nullable'],
+            'time_seule' => ['nullable', 'array'],
+            'times' => ['nullable', new NestedArrays()],
+            'date_seule' => ['nullable', 'date'],
+            'dates' => ['nullable', 'array'],
+            'months' => ['nullable', new NestedArrays()],
             'instructeur_email' => ['nullable', 'email:filter', 'exists:users,email'],
             'instructeur_contact' => ['nullable'],
             'instructeur_phone' => ['nullable'],
-            'rayon_km' => ['nullable'],
+            'rayon_km' => ['nullable', 'string'],
         ]);
-
-        // dd($request->criteres, $request->souscriteres);
 
         $structure = Structure::with('adresses')->findOrFail($structure->id);
 
-        $categorieDiscName = LienDisciplineCategorie::with('discipline')->where('id', $request->categorie_id)->first();
+        $categorie = LienDisciplineCategorie::with('discipline')->find($request->categorie_id);
+
+        $structureActivite = $structure->activites()->create([
+            'discipline_id' => $request->discipline_id,
+            'categorie_id' => $request->categorie_id,
+            'titre' => $request->titre ?? $categorie->nom_categorie_pro . ' de ' . $categorie->discipline->name,
+            'description' => $request->description,
+            'image' => "",
+            "actif" => true,
+        ]);
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('public/structures/' . $structure->id . '/activites/' . $structureActivite->id);
+            $url = Storage::url($path);
+            $structureActivite->update(['image' => $url]);
+        }
+
+        // Dates et horaires
+        if($request->time_seule) {
+            $time_seule = Carbon::createFromTime($request->time_seule['hours'], $request->time_seule['minutes'])->format('H:i');
+        }
+
+        if($request->times) {
+            $times = $request->times;
+            $horaires = array_map(function ($time) {
+                return Carbon::createFromTime($time['hours'], $time['minutes'])->format('H:i');
+            }, $times);
+            $houropen = $horaires[0];
+            $hourclose = $horaires[1];
+        }
+
+        if($request->date_seule) {
+            $date_seule = Carbon::parse($request->date_seule)->format('Y-m-d');
+        }
+
+        if($request->dates) {
+            $dayopen = Carbon::parse($request->dates[0])->format('Y-m-d');
+            $dayclose = Carbon::parse($request->dates[1])->format('Y-m-d');
+        }
+
+        if ($request->months) {
+            $startMonth = Carbon::create(
+                $request->months[0]['year'],
+                $request->months[0]['month'] + 1,
+                1
+            )->startOfMonth();
+
+            $endMonth = Carbon::create(
+                $request->months[1]['year'],
+                $request->months[1]['month'] + 1,
+                1
+            )->endOfMonth();
+        }
+
+
+        if (
+            (isset($time_seule) && !empty($time_seule)) ||
+            (isset($houropen) && !empty($houropen)) ||
+            (isset($hourclose) && !empty($hourclose)) ||
+            (isset($date_seule) && !empty($date_seule)) ||
+            (isset($dayopen) && !empty($dayopen)) ||
+            (isset($dayclose) && !empty($dayclose)) ||
+            (isset($startMonth) && !empty($startMonth)) ||
+            (isset($endMonth) && !empty($endMonth))
+        ) {
+            $data = [
+                'structure_activite_id' => $structureActivite->id,
+                'dayopen' => $dayopen ?? null,
+                'dayclose' => $dayclose ?? null,
+                'houropen' => $houropen ?? null,
+                'hourclose' => $hourclose ?? null,
+                'date_debut' => $date_seule ?? null,
+                'time_debut' => $time_seule ?? null,
+                'start_month' => $startMonth ?? null,
+                'end_month' => $endMonth ?? null,
+            ];
+
+            $activiteDatesTimes = $structureActivite->dates()->create($data);
+        }
 
         if($request->address) {
             //check if address exist
@@ -375,101 +451,15 @@ class ActiviteController extends Controller
             $structureAddressId = $structure->adresses->first()->id;
         }
 
-        // Dates et horaires
-        if($request->date_debut) {
-            $date_debut = Carbon::parse($request->date_debut)->format('Y-m-d');
-        }
-
-        if($request->time_debut) {
-            $hour_debut = $request->time_debut['hours'];
-            $minute_debut = $request->time_debut['minutes'];
-            $time_debut = sprintf('%02d:%02d', $hour_debut, $minute_debut);
-        }
-
-        if (is_array($request->months) && count($request->months) === 2) {
-            $startMonth = Carbon::create($request->months[0]['year'], $request->months[0]['month'] + 1, 1)->startOfMonth();
-            $endMonth = Carbon::create($request->months[1]['year'], $request->months[1]['month'] + 1, 1)->endOfMonth();
-        }
-        if($request->date || $request->time) {
-
-            $dayopen = Carbon::parse($request->date[0])->format('Y-m-d');
-            $dayclose = Carbon::parse($request->date[1])->format('Y-m-d');
-
-            $heureopen = $request->time[0]['hours'];
-            $minuteopen = $request->time[0]['minutes'];
-            // Construct the time string in HH:ii:ss format
-            $houropen = sprintf('%02d:%02d', $heureopen, $minuteopen);
-
-            $heureclose = $request->time[1]['hours'];
-            $minuteclose = $request->time[1]['minutes'];
-            // Construct the time string in HH:ii:ss format
-            $hourclose = sprintf('%02d:%02d', $heureclose, $minuteclose);
-
-            $dayTime = StructureHoraire::firstOrCreate([
-                'structure_id' => $structure->id,
-                'dayopen' => $dayopen ?? null,
-                'dayclose' => $dayclose ?? null,
-                'houropen' => $houropen ?? null,
-                'hourclose' => $hourclose ?? null,
-            ]);
-        }
-
-        $structureActivite = $structure->activites()->create([
-            'discipline_id' => $request->discipline_id,
-            'categorie_id' => $request->categorie_id,
-            'titre' => $request->titre ?? $categorieDiscName->nom_categorie_pro . ' de ' . $categorieDiscName->discipline->name,
-            'description' => $request->description,
-            'image' => "",
-            "actif" => true,
-        ]);
-
-
-        if (
-            (isset($dayopen) && !empty($dayopen)) ||
-            (isset($dayclose) && !empty($dayclose)) ||
-            (isset($houropen) && !empty($houropen)) ||
-            (isset($hourclose) && !empty($hourclose)) ||
-            (isset($date_debut) && !empty($date_debut)) ||
-            (isset($time_debut) && !empty($time_debut)) ||
-            (isset($startMonth) && !empty($startMonth)) ||
-            (isset($endMonth) && !empty($endMonth))
-        ) {
-            $data = [
-                'structure_activite_id' => $structureActivite->id,
-                'dayopen' => $dayopen ?? null,
-                'dayclose' => $dayclose ?? null,
-                'houropen' => $houropen ?? null,
-                'hourclose' => $hourclose ?? null,
-                'date_debut' => $date_debut ?? null,
-                'time_debut' => $time_debut ?? null,
-                'start_month' => $startMonth ?? null,
-                'end_month' => $endMonth ?? null,
-            ];
-
-            $structureActivite->dates()->create($data);
-        }
-
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('public/structures/' . $structure->id . '/activites/' . $structureActivite->id);
-            $url = Storage::url($path);
-            $structureActivite->update(['image' => $url]);
-        }
-
         $structureProduit = $structure->produits()->create([
             'discipline_id' => $request->discipline_id,
             'categorie_id' => $request->categorie_id,
             'activite_id' => $structureActivite->id,
             "actif" => true,
             'lieu_id' => $structureAddressId,
-            'horaire_id' => $dayTime->id ?? null,
+            'horaire_id' => null,
             'reservable' => 0,
         ]);
-
-        // $criteres = LienDisciplineCategorieCritere::with('valeurs')
-        // ->where('discipline_id', $request->discipline_id)
-        // ->where('categorie_id', $request->categorie_id)
-        // ->get();
-        // $critereIds = $criteres->pluck('id');
 
         $criteresValuesSets = $request->criteres;
 
