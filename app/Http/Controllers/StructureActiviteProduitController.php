@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\City;
+use App\Models\User;
 use App\Models\Structure;
+use App\Rules\NestedArrays;
 use Illuminate\Http\Request;
 use App\Models\StructureTarif;
 use Illuminate\Validation\Rule;
@@ -15,7 +17,9 @@ use App\Models\StructureActivite;
 use App\Models\StructurePlanning;
 use App\Models\StructureTarifTypeInfo;
 use App\Models\StructureProduitCritere;
+use App\Models\LiensDisCatCritValSsCrit;
 use Illuminate\Support\Facades\Redirect;
+use App\Models\StructureProduitSousCritere;
 use App\Models\LienDisciplineCategorieCritere;
 use App\Models\LienDisciplineCategorieCritereValeur;
 
@@ -27,19 +31,24 @@ class StructureActiviteProduitController extends Controller
     public function store(Request $request, Structure $structure, StructureActivite $activite)
     {
         $request->validate([
-            'structure_id' => ['required', Rule::exists('structures', 'id')],
-            'discipline_id' => ['required', Rule::exists('liste_disciplines', 'id')],
-            'categorie_id' => ['required', Rule::exists('liens_disciplines_categories', 'id')],
-            'criteres' => 'nullable',
-            'adresse' => ['nullable', Rule::exists('structure_adresse', 'id')],
+            'criteres' => ['nullable'],
+            'souscriteres' => ['nullable'],
+            'adresse' => ['nullable', Rule::exists(StructureAddress::class, 'id')],
             'address' => ['nullable'],
             'city' => ['nullable'],
             'zip_code' => ['nullable'],
             'country' => ['nullable'],
             'address_lat' => ['nullable'],
             'address_lng' => ['nullable'],
-            'date' => ['nullable'],
-            'time' => ['nullable'],
+            'time_seule' => ['nullable', 'array'],
+            'times' => ['nullable', new NestedArrays()],
+            'date_seule' => ['nullable', 'date'],
+            'dates' => ['nullable', 'array'],
+            'months' => ['nullable', new NestedArrays()],
+            'instructeur_email' => ['nullable', 'email:filter', 'exists:users,email'],
+            'instructeur_contact' => ['nullable'],
+            'instructeur_phone' => ['nullable'],
+            'rayon_km' => ['nullable'],
         ]);
 
         $activite = StructureActivite::with([
@@ -47,84 +56,79 @@ class StructureActiviteProduitController extends Controller
                     'categorie',
                     'discipline'
                 ])->where('structure_id', $structure->id)
-                    ->where('id', $activite->id)
-                    ->first();
+                    ->findOrFail($activite->id);
 
-        if($request->date || $request->time) {
 
-            $dayopen = Carbon::parse($request->date[0])->format('Y-m-d');
-            $dayclose = Carbon::parse($request->date[1])->format('Y-m-d');
-
-            $heureopen = $request->time[0]['hours'];
-            $minuteopen = $request->time[0]['minutes'];
-            // Construct the time string in HH:ii:ss format
-            $houropen = sprintf('%02d:%02d', $heureopen, $minuteopen);
-
-            $heureclose = $request->time[1]['hours'];
-            $minuteclose = $request->time[1]['minutes'];
-            // Construct the time string in HH:ii:ss format
-            $hourclose = sprintf('%02d:%02d', $heureclose, $minuteclose);
-
-            $dayTime = StructureHoraire::firstOrCreate([
-                'structure_id' => $structure->id,
-                'dayopen' => $dayopen,
-                'dayclose' => $dayclose,
-                'houropen' => $houropen,
-                'hourclose' => $hourclose,
-            ]);
+        // Dates et horaires
+        if($request->time_seule) {
+            $time_seule = Carbon::createFromTime($request->time_seule['hours'], $request->time_seule['minutes'])->format('H:i');
         }
 
-        $structureProduit = StructureProduit::create([
-                    'structure_id' => $structure->id,
-                    'discipline_id' => $activite->discipline_id,
-                    'categorie_id' => $activite->categorie_id,
-                    'activite_id' => $activite->id,
-                    "actif" => 1,
-                    'lieu_id' => $request->adresse ?? $structure->adresses->first()->id,
-                    'horaire_id' => $dayTime->id,
-                    // 'tarif_id' => $structureTarif->id,
-                    'reservable' => 0,
-                ]);
+        if($request->times) {
+            $times = $request->times;
+            $horaires = array_map(function ($time) {
+                return Carbon::createFromTime($time['hours'], $time['minutes'])->format('H:i');
+            }, $times);
+            $houropen = $horaires[0];
+            $hourclose = $horaires[1];
+        }
 
-        $criteres = LienDisciplineCategorieCritere::where('discipline_id', $request->discipline_id)->where('categorie_id', $request->categorie_id)->get();
+        if($request->date_seule) {
+            $date_seule = Carbon::parse($request->date_seule)->format('Y-m-d');
+        }
 
-        $criteresValues = $request->criteres;
+        if($request->dates) {
+            $dayopen = Carbon::parse($request->dates[0])->format('Y-m-d');
+            $dayclose = Carbon::parse($request->dates[1])->format('Y-m-d');
+        }
 
-        if(isset($criteresValues)) {
-            foreach ($criteresValues as $key => $critereValue) {
-                $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $key)->first();
+        if ($request->months) {
+            $startMonth = Carbon::create(
+                $request->months[0]['year'],
+                $request->months[0]['month'] + 1,
+                1
+            )->startOfMonth();
 
-                if (isset($critereValue)) {
-                    if (is_array($critereValue)) {
-                        foreach ($critereValue as $value) {
-                            $structureProduitCriteres = StructureProduitCritere::create([
-                                'structure_id' => $structure->id,
-                                'discipline_id' => $structureProduit->discipline_id,
-                                'categorie_id' => $structureProduit->categorie_id,
-                                'activite_id' => $structureProduit->activite_id,
-                                'produit_id' => $structureProduit->id,
-                                'critere_id' => $key,
-                                'valeur' => $value,
-                            ]);
-                        }
-                    } else {
-                        $structureProduitCriteres = StructureProduitCritere::create([
-                            'structure_id' => $structure->id,
-                            'discipline_id' => $structureProduit->discipline_id,
-                            'categorie_id' => $structureProduit->categorie_id,
-                            'activite_id' => $structureProduit->activite_id,
-                            'produit_id' => $structureProduit->id,
-                            'critere_id' => $key,
-                            'valeur' => $critereValue ?? $defaut->valeur,
-                        ]);
-                    }
+            $endMonth = Carbon::create(
+                $request->months[1]['year'],
+                $request->months[1]['month'] + 1,
+                1
+            )->endOfMonth();
+        }
+
+        if (
+            (isset($time_seule) && !empty($time_seule)) ||
+            (isset($houropen) && !empty($houropen)) ||
+            (isset($hourclose) && !empty($hourclose)) ||
+            (isset($date_seule) && !empty($date_seule)) ||
+            (isset($dayopen) && !empty($dayopen)) ||
+            (isset($dayclose) && !empty($dayclose)) ||
+            (isset($startMonth) && !empty($startMonth)) ||
+            (isset($endMonth) && !empty($endMonth))
+        ) {
+            $data = [
+                'structure_activite_id' => $activite->id,
+                'dayopen' => $dayopen ?? null,
+                'dayclose' => $dayclose ?? null,
+                'houropen' => $houropen ?? null,
+                'hourclose' => $hourclose ?? null,
+                'date_debut' => $date_seule ?? null,
+                'time_debut' => $time_seule ?? null,
+                'start_month' => $startMonth ?? null,
+                'end_month' => $endMonth ?? null,
+            ];
+
+            $activiteDatesTimes = $activite->dates()->create($data);
+        }
+
+
+        if($request->address) {
+            //check if address exist
+            foreach($structure->adresses as $address) {
+                if (($address->address_lat === $request->address_lat) && ($address->address_lng === $request->address_lng)) {
+                    return to_route('structures.disciplines.show', ['structure' => $structure->slug, 'discipline' => $activite->discipline->slug])->with('error', 'Cette adresse existe déjà dans votre liste d\'adresses');
                 }
             }
-        }
-
-        // newAdresse
-        if($request->address) {
-
             $city = City::where('code_postal', $request->zip_code)->firstOrFail();
             $cityId = $city->id;
 
@@ -143,12 +147,61 @@ class StructureActiviteProduitController extends Controller
                 'email' => $structure->email,
             ];
 
-            $structureAddress = StructureAddress::create($validatedAddress);
+            $newStructureAddress = StructureAddress::create($validatedAddress);
+            $structureAddressId = $newStructureAddress->id;
 
-            $structureProduit->update(['lieu_id' => $structureAddress->id]);
-
+        } elseif ($request->adresse) {
+            $structureAddressId = $request->adresse;
+        } else {
+            $structureAddressId = $structure->adresses->first()->id;
         }
 
+        $structureProduit = StructureProduit::create([
+            'structure_id' => $structure->id,
+            'discipline_id' => $activite->discipline_id,
+            'categorie_id' => $activite->categorie_id,
+            'activite_id' => $activite->id,
+            "actif" => true,
+            'lieu_id' => $structureAddressId,
+            'horaire_id' => null,
+            'reservable' => 0,
+        ]);
+
+        $criteresValuesSets = $request->criteres;
+
+        if (isset($criteresValuesSets)) {
+            foreach ($criteresValuesSets as $critereId => $criteresValues) {
+                $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $critereId)->first();
+
+                $this->insertCriteresRecursively($structure, $activite, $structureProduit, $critereId, $criteresValues, $defaut);
+            }
+        }
+
+        $souscriteresValues = $request->souscriteres;
+        if(isset($souscriteresValues)) {
+            foreach ($souscriteresValues as $souscritereId => $souscritereValue) {
+
+                $sousCritere = LiensDisCatCritValSsCrit::with([
+                    'critere_valeur',
+                    'sous_criteres_valeurs'
+                ])->find($souscritereId);
+
+                $critereId = $sousCritere->critere_valeur->discipline_categorie_critere_id;
+                $critereValeurId = $sousCritere->critere_valeur->id;
+                $sousCritereId = $sousCritere->id;
+
+                $this->insertSousCriteresRecursively($activite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $souscritereValue);
+            }
+        }
+
+        if($request->instructeur_email) {
+            $user = User::where('email', $request->instructeur_email)->firstOrFail();
+            $instructeur = $activite->instructeurs()->attach($user, [
+                'contact' => $request->instructeur_contact,
+                'email' => $request->instructeur_email,
+                'phone' => $request->instructeur_phone,
+            ]);
+        }
 
         return to_route('structures.categories.show', ['structure' => $structure->slug, 'discipline' => $activite->discipline->slug, 'categorie' => $activite->categorie->id ])->with('success', 'Produit ajouté.');
 
@@ -162,16 +215,23 @@ class StructureActiviteProduitController extends Controller
     {
         $request->validate([
             'criteres' => ['nullable'],
-            'adresse' => ['nullable', Rule::exists('structure_adresse', 'id')],
+            'souscriteres' => ['nullable'],
+            'adresse' => ['nullable', Rule::exists(StructureAddress::class, 'id')],
             'address' => ['nullable'],
             'city' => ['nullable'],
             'zip_code' => ['nullable'],
             'country' => ['nullable'],
             'address_lat' => ['nullable'],
             'address_lng' => ['nullable'],
-            'date' => ['nullable'],
-            'time' => ['nullable'],
-            'actif' => ['nullable'],
+            'time_seule' => ['nullable', 'array'],
+            'times' => ['nullable', new NestedArrays()],
+            'date_seule' => ['nullable', 'date'],
+            'dates' => ['nullable', 'array'],
+            'months' => ['nullable', new NestedArrays()],
+            'instructeur_email' => ['nullable', 'email:filter', 'exists:users,email'],
+            'instructeur_contact' => ['nullable'],
+            'instructeur_phone' => ['nullable'],
+            'rayon_km' => ['nullable'],
         ]);
 
         $activite = StructureActivite::with([
@@ -295,14 +355,12 @@ class StructureActiviteProduitController extends Controller
     public function destroy(Structure $structure, StructureActivite $activite, StructureProduit $produit)
     {
         $activite = StructureActivite::with([
-                            'structure',
-                            'categorie',
-                            'discipline'
-                        ])->where('structure_id', $structure->id)
-                            ->where('id', $activite->id)
-                            ->first();
+            'structure',
+            'categorie',
+            'discipline'
+        ])->find($activite->id);
 
-        $produit = StructureProduit::where('id', $produit->id)->firstOrFail();
+        $produit = StructureProduit::findOrFail($produit->id);
 
         $produitCriteres = StructureProduitCritere::where('produit_id', $produit->id)->get();
 
@@ -329,16 +387,13 @@ class StructureActiviteProduitController extends Controller
 
     public function duplicate(Structure $structure, StructureActivite $activite, StructureProduit $produit)
     {
-
         $activite = StructureActivite::with([
-                            'structure',
-                            'categorie',
-                            'discipline'
-                        ])->where('structure_id', $structure->id)
-                            ->where('id', $activite->id)
-                            ->first();
+                    'structure',
+                    'categorie',
+                    'discipline'
+                ])->find($activite->id);
 
-        $originalProduit = StructureProduit::with('criteres')->where('id', $produit->id)->firstOrFail();
+        $originalProduit = StructureProduit::with('criteres')->findOrFail($produit->id);
 
         $originalProduitCriteres = StructureProduitCritere::where('produit_id', $originalProduit->id)->get();
 
@@ -376,5 +431,61 @@ class StructureActiviteProduitController extends Controller
         }
 
         return to_route('structures.categories.show', ['structure' => $structure->slug, 'discipline' => $activite->discipline->slug, 'categorie' => $activite->categorie->id])->with('success', "Le produit a bien été dupliqué");
+    }
+
+    private function insertCriteresRecursively($structure, $activite, $structureProduit, $critereId, $criteresValues, $defaut)
+    {
+        if (isset($criteresValues['valeur'])) {
+            $critereValueId = $criteresValues['id'];
+            $critereValue = $criteresValues['valeur'];
+            $valeurId = isset($critereValueId) ? $critereValueId : ($defaut ? $defaut->id : null);
+            $valeur = isset($critereValue) ? $critereValue : ($defaut ? $defaut->valeur : null);
+
+            $this->createStructureProduitCritere($structure, $activite, $structureProduit, $critereId, $valeurId, $valeur);
+        } else {
+            foreach ($criteresValues as $critereValue) {
+                $this->insertCriteresRecursively($structure, $activite, $structureProduit, $critereId, $critereValue, $defaut);
+            }
+        }
+    }
+
+    private function createStructureProduitCritere($structure, $activite, $structureProduit, $critereId, $valeurId = null, $valeur = null)
+    {
+        StructureProduitCritere::create([
+            'structure_id' => $structure->id,
+            'discipline_id' => $activite->discipline_id,
+            'categorie_id' => $activite->categorie_id,
+            'activite_id' => $activite->id,
+            'produit_id' => $structureProduit->id,
+            'critere_id' => $critereId,
+            'valeur_id' => $valeurId,
+            'valeur' => $valeur ?? "",
+        ]);
+    }
+
+    private function insertSousCriteresRecursively($activite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $souscritereValue)
+    {
+        if (isset($souscritereValue['id'])) {
+            $this->createProduitSousCritere($activite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $souscritereValue);
+        } elseif(is_array($souscritereValue)) {
+            foreach ($souscritereValue as $subSouscriteresValue) {
+                $this->insertSousCriteresRecursively($activite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $subSouscriteresValue);
+            }
+        } else {
+            $this->createProduitSousCritere($activite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $souscritereValue);
+        }
+    }
+
+    private function createProduitSousCritere($activite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $souscriteresValues)
+    {
+        StructureProduitSousCritere::create([
+            'activite_id' => $activite->id,
+            'produit_id' => $structureProduit->id,
+            'critere_id' => $critereId,
+            'critere_valeur_id' => $critereValeurId,
+            'sous_critere_id' => $sousCritereId,
+            'sous_critere_valeur_id' => $souscriteresValues['id'] ?? null,
+            'valeur' => $souscriteresValues['valeur'] ?? $souscriteresValues,
+        ]);
     }
 }

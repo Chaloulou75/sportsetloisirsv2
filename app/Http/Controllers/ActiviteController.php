@@ -332,7 +332,7 @@ class ActiviteController extends Controller
             'instructeur_email' => ['nullable', 'email:filter', 'exists:users,email'],
             'instructeur_contact' => ['nullable'],
             'instructeur_phone' => ['nullable'],
-            'rayon_km' => ['nullable', 'string'],
+            'rayon_km' => ['nullable'],
         ]);
 
         $structure = Structure::with('adresses')->findOrFail($structure->id);
@@ -390,7 +390,6 @@ class ActiviteController extends Controller
                 1
             )->endOfMonth();
         }
-
 
         if (
             (isset($time_seule) && !empty($time_seule)) ||

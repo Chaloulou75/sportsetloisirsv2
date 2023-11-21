@@ -245,7 +245,7 @@ const latestAdresseId = computed(() => {
                             :errors="errors"
                             :structure="structure"
                             :structureActivite="structureActivite"
-                            :filteredCriteres="filteredCriteres"
+                            :criteres="criteres"
                             :latestAdresseId="latestAdresseId"
                             :tarif-types="tarifTypes"
                             :activiteForTarifs="activiteForTarifs"

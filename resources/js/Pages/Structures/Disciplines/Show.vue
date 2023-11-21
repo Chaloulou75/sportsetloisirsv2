@@ -71,9 +71,6 @@ const handleButtonEvent = (message) => {
     }
 };
 
-const selectedCategoryId = ref(null);
-
-const currentCategorie = ref(props.categoriesListByDiscipline[0]);
 const showAddActiviteModal = ref(false);
 const openAddActiviteModal = () => {
     showAddActiviteModal.value = true;
@@ -83,12 +80,6 @@ const showAddTarifModal = ref(false);
 const openAddTarifModal = (structure) => {
     showAddTarifModal.value = true;
 };
-
-const filteredCriteres = computed(() => {
-    return props.criteres.filter(
-        (critere) => critere.categorie_id === selectedCategoryId.value
-    );
-});
 
 const latestAdresseId = computed(() => {
     if (props.structure.adresses.length > 0) {
@@ -233,7 +224,7 @@ const latestAdresseId = computed(() => {
                             :errors="errors"
                             :structure="structure"
                             :structureActivite="structureActivite"
-                            :filteredCriteres="filteredCriteres"
+                            :criteres="criteres"
                             :latestAdresseId="latestAdresseId"
                             :tarif-types="tarifTypes"
                             :activiteForTarifs="activiteForTarifs"

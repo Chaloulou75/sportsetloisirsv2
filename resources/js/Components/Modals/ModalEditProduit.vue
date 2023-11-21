@@ -22,7 +22,7 @@ const props = defineProps({
     structureActivite: Object,
     produit: Object,
     show: Boolean,
-    filteredCriteres: Object,
+    criteres: Object,
     latestAdresseId: Number,
 });
 
