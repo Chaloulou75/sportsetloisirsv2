@@ -7,7 +7,6 @@ import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import localeData from "dayjs/plugin/localeData";
 import {
-    AcademicCapIcon,
     ArrowPathIcon,
     MapPinIcon,
     ChevronUpIcon,
@@ -18,7 +17,6 @@ import {
     UsersIcon,
     UserGroupIcon,
     ClockIcon,
-    InformationCircleIcon,
     PencilSquareIcon,
     CurrencyEuroIcon,
 } from "@heroicons/vue/24/outline";
@@ -611,7 +609,7 @@ const destroyTarif = (tarif, produit) => {
                     <DisclosurePanel as="div">
                         <div class="overflow-x-scroll">
                             <table
-                                class="w-full min-w-full table-fixed border-collapse"
+                                class="w-full min-w-full table-auto border-collapse md:table-fixed"
                             >
                                 <tbody>
                                     <template
@@ -619,7 +617,7 @@ const destroyTarif = (tarif, produit) => {
                                         :key="produit.id"
                                     >
                                         <tr
-                                            class="w-full overflow-x-scroll border-t odd:bg-white even:bg-gray-50 focus-within:bg-gray-100 hover:bg-gray-100"
+                                            class="w-full border-t odd:bg-white even:bg-gray-50 focus-within:bg-gray-100 hover:bg-gray-100"
                                         >
                                             <td
                                                 class="flex w-full items-start justify-between"

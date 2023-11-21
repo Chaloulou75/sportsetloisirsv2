@@ -10,7 +10,6 @@ import {
     LControlScale,
     LPopup,
     LTooltip,
-    LIcon,
 } from "@vue-leaflet/vue-leaflet";
 
 const emit = defineEmits([

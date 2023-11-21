@@ -1,9 +1,6 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
-import { ref, nextTick, watch, onMounted } from "vue";
-import { useCookies } from "@vueuse/integrations/useCookies";
-import { BookmarkIcon, MapPinIcon } from "@heroicons/vue/24/outline";
-import { HeartIcon } from "@heroicons/vue/24/solid";
+import { ref } from "vue";
 import { TransitionRoot } from "@headlessui/vue";
 
 const props = defineProps({
@@ -74,7 +71,7 @@ const formatCityName = (ville) => {
                 <ul>
                     <li
                         class="list-inside list-disc text-xs font-semibold"
-                        v-for="(activite, index) in getUniqueActivitesTitre(
+                        v-for="activite in getUniqueActivitesTitre(
                             structure.activites
                         )"
                         :key="activite.id"
