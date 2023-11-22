@@ -16,6 +16,7 @@ const props = defineProps({
     categorie: Object,
     discipline: Object,
     structureActivites: Object,
+    uniqueCriteresInProducts: Object,
     criteres: Object,
     allCategories: Object,
     categoriesListByDiscipline: Object,
@@ -245,6 +246,7 @@ const latestAdresseId = computed(() => {
                             :errors="errors"
                             :structure="structure"
                             :structureActivite="structureActivite"
+                            :uniqueCriteresInProducts="uniqueCriteresInProducts"
                             :criteres="criteres"
                             :latestAdresseId="latestAdresseId"
                             :tarif-types="tarifTypes"

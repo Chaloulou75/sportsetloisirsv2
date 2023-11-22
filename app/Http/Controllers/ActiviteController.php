@@ -183,12 +183,9 @@ class ActiviteController extends Controller
                 'titre' => 'required|string|min:3',
                 'description' => 'nullable|string',
                 'image' => 'nullable|image|max:2048',
-                // 'actif' => 'nullable|boolean',
             ]);
 
-        $structureActivite = StructureActivite::with(['structure','categorie', 'discipline'])->where('structure_id', $structure->id)
-                    ->where('id', $activite)
-                    ->first();
+        $structureActivite = StructureActivite::with(['structure','categorie', 'discipline'])->where('structure_id', $structure->id)->findOrFail($activite);
 
 
         if ($request->hasFile('image')) {

@@ -78,6 +78,16 @@ class StructureCategorieController extends Controller
             ->latest()
             ->get();
 
+
+        $uniqueCriteresInProducts = $structureActivites->flatMap(function ($activite) {
+            return $activite->produits->flatMap(function ($produit) {
+                return $produit->criteres->map(function ($structureProduitCritere) {
+                    return $structureProduitCritere->critere;
+                });
+            });
+        })->keyBy('id')->values();
+
+
         $criteres = LienDisciplineCategorieCritere::with([
             'valeurs' => function ($query) {
                 $query->orderBy('ordre');
@@ -159,6 +169,7 @@ class StructureCategorieController extends Controller
         return Inertia::render('Structures/Categories/Show', [
             'structure' => $structure,
             'structureActivites' => $structureActivites,
+            'uniqueCriteresInProducts' => $uniqueCriteresInProducts,
             'criteres' => $criteres,
             'discipline' => $discipline,
             'categorie' => $categorie,

@@ -112,14 +112,11 @@ watch(
 const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
     if (checked) {
         if (!form.criteres[critereId]) {
-            // If the critereId doesn't exist in the form object, create a new array with the optionValue
             form.criteres[critereId] = [optionValue];
         } else {
-            // If the critereId exists, push the optionValue to the existing array
             form.criteres[critereId].push(optionValue);
         }
     } else {
-        // Remove the optionValue from the array
         const index = form.criteres[critereId].indexOf(optionValue);
         if (index !== -1) {
             form.criteres[critereId].splice(index, 1);

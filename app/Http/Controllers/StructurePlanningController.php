@@ -52,8 +52,7 @@ class StructurePlanningController extends Controller
             'end' => $endDate ?? "",
         ]);
 
-        return to_route('structures.disciplines.index', $structure)->with('success', "L'évènement a bien été ajouté au planning");
-
+        return to_route('structures.disciplines.show', ['structure' => $structure, 'discipline' => $activite->discipline])->with('success', "L'évènement a bien été ajouté au planning");
     }
 
     /**
