@@ -39,8 +39,6 @@ const props = defineProps({
     show: Boolean,
 });
 
-const categorieId = ref(null);
-
 const filteredCriteres = ref([]);
 
 const addAddress = ref(false);

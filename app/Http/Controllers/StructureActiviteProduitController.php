@@ -213,6 +213,7 @@ class StructureActiviteProduitController extends Controller
      */
     public function update(Request $request, Structure $structure, StructureActivite $activite, StructureProduit $produit)
     {
+
         $request->validate([
             'criteres' => ['nullable'],
             'souscriteres' => ['nullable'],
@@ -234,15 +235,17 @@ class StructureActiviteProduitController extends Controller
             'rayon_km' => ['nullable'],
         ]);
 
+
         $activite = StructureActivite::with([
                     'structure',
                     'categorie',
                     'discipline'
-                ])->where('structure_id', $structure->id)
-                    ->where('id', $activite->id)
-                    ->first();
+                ])
+                    ->findOrFail($activite->id);
 
-        $structureProduit = StructureProduit::where('id', $produit->id)->firstOrFail();
+        $structureProduit = StructureProduit::findOrFail($produit->id);
+
+        dd($request->all(), $produit);
 
         if(isset($request->date) || isset($request->time)) {
 
