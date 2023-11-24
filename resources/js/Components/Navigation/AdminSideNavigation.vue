@@ -64,9 +64,8 @@ const user = computed(() => page.props.auth.user);
             </div>
 
             <ul
-                class="hidden h-full w-full space-y-6 md:flex md:flex-col md:items-start"
+                class="hidden h-full w-full space-y-3 md:flex md:flex-col md:items-start"
             >
-                <!--  -->
                 <li class="w-full">
                     <Link
                         :href="route('admin.index')"
@@ -136,7 +135,46 @@ const user = computed(() => page.props.auth.user);
                             ),
                         }"
                     >
-                        Gestion des disciplines, catégories, critères
+                        Gestion du contenu (disciplines, catégories, critères)
+                    </Link>
+                </li>
+                <li class="w-full">
+                    <Link
+                        :href="route('admin.index')"
+                        :active="route().current('admin.index')"
+                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        :class="{
+                            'bg-blue-600 text-white':
+                                route().current('admin.index'),
+                        }"
+                    >
+                        Statistiques
+                    </Link>
+                </li>
+                <li class="w-full">
+                    <Link
+                        :href="route('admin.index')"
+                        :active="route().current('admin.index')"
+                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        :class="{
+                            'bg-blue-600 text-white':
+                                route().current('admin.index'),
+                        }"
+                    >
+                        Communication
+                    </Link>
+                </li>
+                <li class="w-full">
+                    <Link
+                        :href="route('admin.index')"
+                        :active="route().current('admin.index')"
+                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        :class="{
+                            'bg-blue-600 text-white':
+                                route().current('admin.index'),
+                        }"
+                    >
+                        Gestion du Blog
                     </Link>
                 </li>
 
@@ -293,6 +331,15 @@ const user = computed(() => page.props.auth.user);
                     :href="route('admin.disciplines.index')"
                 >
                     Gestion du contenu
+                </BreezeResponsiveNavLink>
+                <BreezeResponsiveNavLink :href="route('admin.index')">
+                    Statistiques
+                </BreezeResponsiveNavLink>
+                <BreezeResponsiveNavLink :href="route('admin.index')">
+                    Communication
+                </BreezeResponsiveNavLink>
+                <BreezeResponsiveNavLink :href="route('admin.index')">
+                    Gestion du blog
                 </BreezeResponsiveNavLink>
             </div>
 

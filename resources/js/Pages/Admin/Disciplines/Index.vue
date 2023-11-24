@@ -67,7 +67,7 @@ const submitCreateInfoBase = () => {
                 <h1
                     class="px-3 text-center text-base font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
-                    Gestion des disciplines, catégories, critères
+                    Gestion du contenu (disciplines, catégories, critères)
                 </h1>
             </div>
         </template>

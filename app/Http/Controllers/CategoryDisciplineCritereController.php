@@ -35,6 +35,7 @@ class CategoryDisciplineCritereController extends Controller
             "type_champ_form" => $request->type_champ['type'],
             "visible_back" => true,
             "visible_front" => true,
+            "indexable" => false,
         ]);
 
         return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $discCat->discipline->slug, 'categorie' => $discCat])->with('success', 'Critère ajouté avec succès');
@@ -52,23 +53,22 @@ class CategoryDisciplineCritereController extends Controller
         $discipline = ListDiscipline::with('familles')->findOrFail($discipline->id);
 
         $categorie = LienDisciplineCategorie::with([
-                        'discipline',
-                        'categorie',
-                        'criteres' => function ($query) {
-                            $query->orderBy('ordre');
-                        },
-                        'criteres.critere',
-                        'criteres.valeurs' => function ($query) {
-                            $query->orderBy('ordre');
-                        },
-                        'criteres.valeurs.sous_criteres',
-                        'criteres.valeurs.sous_criteres.sous_criteres_valeurs' => function ($query) {
-                            $query->orderBy('ordre');
-                        },
-                    ])
-
-                    ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
-                    ->findOrFail($categorie->id);
+            'discipline',
+            'categorie',
+            'criteres' => function ($query) {
+                $query->orderBy('ordre');
+            },
+            'criteres.critere',
+            'criteres.valeurs' => function ($query) {
+                $query->orderBy('ordre');
+            },
+            'criteres.valeurs.sous_criteres',
+            'criteres.valeurs.sous_criteres.sous_criteres_valeurs' => function ($query) {
+                $query->orderBy('ordre');
+            },
+        ])
+        ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+        ->findOrFail($categorie->id);
 
         $categories = LienDisciplineCategorie::with([
                 'discipline',
@@ -108,7 +108,8 @@ class CategoryDisciplineCritereController extends Controller
         $request->validate([
             'visible_front' => 'required|boolean:0,1,true,false',
             'visible_back' => 'required|boolean:0,1,true,false',
-            'ordre' => 'nullable|numeric'
+            'ordre' => 'nullable|numeric',
+            'indexable' => 'nullable|boolean:0,1,true,false',
         ]);
 
         $discCatCritere = LienDisciplineCategorieCritere::with(['discipline', 'categorie', 'valeurs'])->findOrFail($critere->id);
@@ -117,6 +118,7 @@ class CategoryDisciplineCritereController extends Controller
             'visible_front' => $request->visible_front,
             'visible_back' => $request->visible_back,
             'ordre' => $request->ordre,
+            'indexable' => $request->indexable,
         ]);
 
         return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $discCatCritere->discipline->slug, 'categorie' => $discCatCritere->categorie])->with('success', 'Visibilité du critère mise à jour');

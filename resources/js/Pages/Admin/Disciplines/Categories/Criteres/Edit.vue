@@ -44,6 +44,7 @@ const updateCritereVisibility = (critere) => {
                 critereVisibilityForm.value[critere.id].visible_front,
             visible_back: critereVisibilityForm.value[critere.id].visible_back,
             ordre: critereVisibilityForm.value[critere.id].ordre,
+            indexable: critereVisibilityForm.value[critere.id].indexable,
         },
         {
             preserveScroll: true,
@@ -87,6 +88,7 @@ const initializeValeurForm = () => {
                 visible_front: ref(!!critere.visible_front),
                 visible_back: ref(!!critere.visible_back),
                 ordre: ref(critere.ordre),
+                indexable: ref(critere.indexable),
                 remember: true,
             });
 
@@ -97,6 +99,7 @@ const initializeValeurForm = () => {
                     id: ref(valeur.id),
                     valeur: ref(valeur.valeur),
                     ordre: ref(valeur.ordre),
+                    inclus_all: ref(valeur.inclus_all),
                     remember: true,
                 });
 
@@ -163,6 +166,7 @@ const updateValeur = (valeur) => {
         {
             valeur: valeurForm.value[valeur.id].valeur,
             ordre: valeurForm.value[valeur.id].ordre,
+            inclus_all: valeurForm.value[valeur.id].inclus_all,
             id: valeurForm.value[valeur.id].id,
         },
         {
@@ -534,8 +538,23 @@ const addSousCritere = (valeur) => {
                                         "
                                     />
                                     <span class="ml-2 text-sm text-gray-600"
-                                        >Visible Back (Obligatoire à l'ajout
+                                        >Visible Back (Visible à l'ajout
                                         d'activité)</span
+                                    ></label
+                                >
+
+                                <label class="flex items-center">
+                                    <Checkbox
+                                        v-model:checked="
+                                            critereVisibilityForm[critere.id]
+                                                .indexable
+                                        "
+                                        @change="
+                                            updateCritereVisibility(critere)
+                                        "
+                                    />
+                                    <span class="ml-2 text-sm text-gray-600"
+                                        >Indexable</span
                                     ></label
                                 >
 
@@ -626,6 +645,19 @@ const addSousCritere = (valeur) => {
                                                 </select>
                                             </div>
                                         </div>
+
+                                        <label class="flex items-center">
+                                            <Checkbox
+                                                v-model:checked="
+                                                    valeurForm[valeur.id]
+                                                        .inclus_all
+                                                "
+                                            />
+                                            <span
+                                                class="ml-2 text-sm text-gray-600"
+                                                >Inclus toutes les valeurs</span
+                                            ></label
+                                        >
 
                                         <div
                                             class="flex items-center space-x-3"

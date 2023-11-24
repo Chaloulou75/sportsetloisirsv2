@@ -262,6 +262,7 @@ class StructureDisciplineController extends Controller
             ->latest()
             ->get();
 
+
         $uniqueCriteresInProducts = $structureActivites->flatMap(function ($activite) {
             return $activite->produits->flatMap(function ($produit) {
                 return $produit->criteres->map(function ($structureProduitCritere) {
