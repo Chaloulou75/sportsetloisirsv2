@@ -1,5 +1,7 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
+import NavAdminDiscipline from "@/Components/Admin/NavAdminDiscipline.vue";
+import NavAdminDisciplineCatCrit from "@/Components/Admin/NavAdminDisciplineCatCrit.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import { ref, watch, onMounted } from "vue";
 import {
@@ -110,6 +112,11 @@ const updateCategorie = (index) => {
                 </h1>
             </div>
         </template>
+        <NavAdminDiscipline :discipline="discipline" />
+        <NavAdminDisciplineCatCrit
+            :discipline="discipline"
+            :categories="categories"
+        />
 
         <div class="space-y-16 px-2 py-6 md:px-6">
             <div
@@ -267,34 +274,6 @@ const updateCategorie = (index) => {
                         </li>
                     </ul>
                 </div>
-            </div>
-            <div
-                class="mx-auto w-full rounded-md border border-indigo-300 bg-gray-50 px-1 py-4 shadow-lg md:px-3"
-            >
-                <h3 class="text-lg font-semibold text-slate-700 md:text-xl">
-                    Gestion des criteres liés aux catégories:
-                </h3>
-                <ul class="mt-4 list-inside list-disc space-y-3">
-                    <li v-for="categorie in categories" :key="categorie.id">
-                        <Link
-                            :href="
-                                route(
-                                    'admin.disciplines.categories.criteres.edit',
-                                    {
-                                        discipline: props.discipline,
-                                        categorie: categorie,
-                                    }
-                                )
-                            "
-                            class="font-semibold text-indigo-600 hover:underline"
-                        >
-                            <span class=""
-                                >{{ categorie.categorie.nom }} /
-                                {{ categorie.nom_categorie_client }}</span
-                            >
-                        </Link>
-                    </li>
-                </ul>
             </div>
         </div>
     </AdminLayout>

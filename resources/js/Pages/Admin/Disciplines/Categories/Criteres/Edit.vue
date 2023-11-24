@@ -1,5 +1,7 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
+import NavAdminDiscipline from "@/Components/Admin/NavAdminDiscipline.vue";
+import NavAdminDisciplineCatCrit from "@/Components/Admin/NavAdminDisciplineCatCrit.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import { ref, watch, computed } from "vue";
 import Checkbox from "@/Components/Forms/Checkbox.vue";
@@ -415,6 +417,11 @@ const addSousCritere = (valeur) => {
                 </h1>
             </div>
         </template>
+        <NavAdminDiscipline :discipline="discipline" />
+        <NavAdminDisciplineCatCrit
+            :discipline="discipline"
+            :categories="categories"
+        />
 
         <div class="space-y-16 px-2 py-6 md:px-6">
             <div

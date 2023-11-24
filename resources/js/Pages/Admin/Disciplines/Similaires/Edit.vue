@@ -1,5 +1,6 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
+import NavAdminDiscipline from "@/Components/Admin/NavAdminDiscipline.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import { defineAsyncComponent } from "vue";
 import {
@@ -71,6 +72,7 @@ const detachDiscipline = (disciplineIn) => {
                 </h1>
             </div>
         </template>
+        <NavAdminDiscipline :discipline="discipline" />
 
         <div class="space-y-16 px-2 py-6 md:px-6">
             <div

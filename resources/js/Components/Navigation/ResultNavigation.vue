@@ -6,17 +6,15 @@ import BreezeDropdownLink from "@/Components/DropdownLink.vue";
 import AutocompleteDisciplineNav from "@/Components/Navigation/AutocompleteDisciplineNav.vue";
 import AutocompleteCityNav from "@/Components/Navigation/AutocompleteCityNav.vue";
 import { Link, usePage, router } from "@inertiajs/vue3";
-import { TransitionRoot } from "@headlessui/vue";
 import {
     HeartIcon,
     MagnifyingGlassIcon,
     ShoppingCartIcon,
     UserIcon,
-    AdjustmentsHorizontalIcon,
 } from "@heroicons/vue/24/solid";
 
-const scrollToCriteres = inject("scrollToCriteres", null);
-const scrollToCategories = inject("scrollToCategories", null);
+// const scrollToCriteres = inject("scrollToCriteres", null);
+// const scrollToCategories = inject("scrollToCategories", null);
 const props = defineProps({
     canLogin: Boolean,
     canRegister: Boolean,
@@ -166,84 +164,6 @@ const submitForm = async () => {
                             </template>
                         </BreezeDropdown>
                     </div>
-                    <!-- <div v-if="currentCategory && !isCriteresVisible">
-                        <TransitionRoot
-                            :show="!isCriteresVisible"
-                            enter="transition-opacity duration-150"
-                            enter-from="opacity-0"
-                            enter-to="opacity-100"
-                            leave="transition-opacity duration-150"
-                            leave-from="opacity-100"
-                            leave-to="opacity-0"
-                        >
-                            <BreezeDropdown align="right">
-                                <template #trigger>
-                                    <span class="inline-flex rounded-md">
-                                        <button
-                                            type="button"
-                                            class="inline-flex items-center px-1 py-2 text-white transition duration-150 ease-in-out hover:text-red-500 focus:text-red-500"
-                                        >
-                                            <AdjustmentsHorizontalIcon
-                                                class="h-8 w-8 text-white hover:text-indigo-500 focus:text-indigo-500"
-                                            />
-                                        </button>
-                                    </span>
-                                </template>
-
-                                <template #content>
-                                    <button
-                                        type="button"
-                                        @click="scrollToCriteres"
-                                        class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700"
-                                    >
-                                        Catégories et criteres
-                                    </button>
-                                </template>
-                            </BreezeDropdown>
-                        </TransitionRoot>
-                    </div>
-                    <div
-                        v-if="
-                            categories &&
-                            !isCategoriesVisible &&
-                            !currentCategory
-                        "
-                    >
-                        <TransitionRoot
-                            :show="!isCategoriesVisible"
-                            enter="transition-opacity duration-150"
-                            enter-from="opacity-0"
-                            enter-to="opacity-100"
-                            leave="transition-opacity duration-150"
-                            leave-from="opacity-100"
-                            leave-to="opacity-0"
-                        >
-                            <BreezeDropdown align="right">
-                                <template #trigger>
-                                    <span class="inline-flex rounded-md">
-                                        <button
-                                            type="button"
-                                            class="inline-flex items-center px-1 py-2 text-white transition duration-150 ease-in-out hover:text-red-500 focus:text-red-500"
-                                        >
-                                            <AdjustmentsHorizontalIcon
-                                                class="h-8 w-8 text-white hover:text-indigo-500 focus:text-indigo-500"
-                                            />
-                                        </button>
-                                    </span>
-                                </template>
-
-                                <template #content>
-                                    <button
-                                        type="button"
-                                        @click="scrollToCategories"
-                                        class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700"
-                                    >
-                                        Choix des categories
-                                    </button>
-                                </template>
-                            </BreezeDropdown>
-                        </TransitionRoot>
-                    </div> -->
                     <Link
                         preserve-scroll
                         :href="route('welcome')"
@@ -365,54 +285,6 @@ const submitForm = async () => {
                         <MagnifyingGlassIcon class="h-6 w-6" />
                         <span class="sr-only">Rechercher</span>
                     </button>
-                    <!-- <div v-if="currentCategory && !isCriteresVisible">
-                        <TransitionRoot
-                            :show="!isCriteresVisible"
-                            enter="transition-opacity duration-150"
-                            enter-from="opacity-0"
-                            enter-to="opacity-100"
-                            leave="transition-opacity duration-150"
-                            leave-from="opacity-100"
-                            leave-to="opacity-0"
-                        >
-                            <button
-                                type="button"
-                                @click="scrollToCriteres"
-                                class="inline-flex items-center px-1 py-2 text-white transition duration-150 ease-in-out hover:text-red-500 focus:text-red-500"
-                            >
-                                <AdjustmentsHorizontalIcon
-                                    class="h-8 w-8 text-white hover:text-indigo-500 focus:text-indigo-500"
-                                />
-                            </button>
-                        </TransitionRoot>
-                    </div>
-                    <div
-                        v-if="
-                            categories &&
-                            !isCategoriesVisible &&
-                            !currentCategory
-                        "
-                    >
-                        <TransitionRoot
-                            :show="!isCategoriesVisible"
-                            enter="transition-opacity duration-150"
-                            enter-from="opacity-0"
-                            enter-to="opacity-100"
-                            leave="transition-opacity duration-150"
-                            leave-from="opacity-100"
-                            leave-to="opacity-0"
-                        >
-                            <button
-                                type="button"
-                                @click="scrollToCategories"
-                                class="inline-flex items-center px-1 py-2 text-white transition duration-150 ease-in-out hover:text-red-500 focus:text-red-500"
-                            >
-                                <AdjustmentsHorizontalIcon
-                                    class="h-8 w-8 text-white hover:text-indigo-500 focus:text-indigo-500"
-                                />
-                            </button>
-                        </TransitionRoot>
-                    </div> -->
                     <button
                         type="button"
                         class="items-center justify-center rounded bg-transparent px-2 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -427,33 +299,6 @@ const submitForm = async () => {
                         class="items-center justify-center rounded bg-transparent px-2 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                         <UserIcon class="h-6 w-6" />
-                        <!-- <svg
-                            class="h-6 w-6"
-                            stroke="currentColor"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                :class="{
-                                    hidden: showingNavigationDropdown,
-                                    'inline-flex': !showingNavigationDropdown,
-                                }"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16"
-                            />
-                            <path
-                                :class="{
-                                    hidden: !showingNavigationDropdown,
-                                    'inline-flex': showingNavigationDropdown,
-                                }"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12"
-                            />
-                        </svg> -->
                     </button>
                 </div>
             </div>

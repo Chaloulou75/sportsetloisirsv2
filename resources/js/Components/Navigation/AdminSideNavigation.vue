@@ -82,6 +82,65 @@ const user = computed(() => page.props.auth.user);
                 </li>
 
                 <li class="w-full">
+                    <Link
+                        :href="route('admin.users.index')"
+                        :active="route().current('admin.users.index')"
+                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        :class="{
+                            'bg-blue-600 text-white':
+                                route().current('admin.users.index'),
+                        }"
+                    >
+                        Gestion des utilisateurs
+                    </Link>
+                </li>
+
+                <li class="w-full">
+                    <Link
+                        :href="route('admin.criteres.index')"
+                        :active="route().current('admin.criteres.index')"
+                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        :class="{
+                            'bg-blue-600 text-white': route().current(
+                                'admin.criteres.index'
+                            ),
+                        }"
+                    >
+                        Gestion des criteres
+                    </Link>
+                </li>
+
+                <li class="w-full">
+                    <Link
+                        :href="route('admin.structures.index')"
+                        :active="route().current('admin.criteres.index')"
+                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        :class="{
+                            'bg-blue-600 text-white': route().current(
+                                'admin.structures.index'
+                            ),
+                        }"
+                    >
+                        Gestion des structures et activités
+                    </Link>
+                </li>
+
+                <li class="w-full">
+                    <Link
+                        :href="route('admin.disciplines.index')"
+                        :active="route().current('admin.criteres.index')"
+                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        :class="{
+                            'bg-blue-600 text-white': route().current(
+                                'admin.disciplines.index'
+                            ),
+                        }"
+                    >
+                        Gestion des disciplines, catégories, critères
+                    </Link>
+                </li>
+
+                <!-- <li class="w-full">
                     <details
                         class="group [&_summary::-webkit-details-marker]:hidden"
                         open
@@ -110,33 +169,33 @@ const user = computed(() => page.props.auth.user);
                         </summary>
                         <ul class="space-y-2">
                             <li class="mt-2">
-                                <!-- <Link
+                                 <Link
                                     class="flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
                                 >
-                                </Link> -->
+                                </Link>
                             </li>
                             <li>
-                                <!-- <Link
+                                 <Link
                                     class="flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
                                 >
-                                </Link> -->
+                                </Link>
                             </li>
                             <li>
-                                <!-- <Link
+                                 <Link
                                     class="flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
                                 >
-                                </Link> -->
+                                </Link>
                             </li>
                             <li>
-                                <!-- <Link
+                                <Link
                                     class="flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
                                 >
-                                </Link> -->
+                                </Link>
                             </li>
                         </ul>
                     </details>
                 </li>
-                <!--  -->
+
                 <li class="w-full">
                     <details
                         class="group [&_summary::-webkit-details-marker]:hidden"
@@ -166,41 +225,42 @@ const user = computed(() => page.props.auth.user);
                         </summary>
                         <ul class="space-y-2">
                             <li class="mt-2">
-                                <!-- <Link
+                                 <Link
                                     class="flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
                                 >
-                                </Link> -->
+                                </Link>
                             </li>
 
                             <li>
-                                <!-- <Link
+                                 <Link
                                     class="group relative flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
                                 >
                                     <div
                                         class="absolute inset-y-2 -right-2.5 h-5 w-5 rotate-45 bg-green-500"
                                     ></div>
-                                </Link> -->
+                                </Link>
                             </li>
 
                             <li>
-                                <!-- <Link
+                                 <Link
                                     class="relative flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
                                 >
                                     <div
                                         class="absolute inset-y-2 -right-2.5 h-5 w-5 rotate-45 bg-green-500"
                                     ></div>
-                                </Link> -->
+                                </Link>
                             </li>
                         </ul>
                     </details>
                 </li>
 
                 <li class="w-full">
-                    <!-- <Link
+                     <Link
                         class="flex items-center justify-between rounded-sm border-2 border-dotted border-sky-500 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
                     >
-                    </Link> -->
-                </li>
+
+                    </Link>
+                </li> -->
             </ul>
         </div>
         <!-- Responsive Navigation Menu -->
@@ -214,6 +274,25 @@ const user = computed(() => page.props.auth.user);
             <div class="space-y-1 pb-3 pt-2">
                 <BreezeResponsiveNavLink :href="route('welcome')">
                     Accueil Site
+                </BreezeResponsiveNavLink>
+                <BreezeResponsiveNavLink :href="route('admin.index')">
+                    Accueil Admin
+                </BreezeResponsiveNavLink>
+                <BreezeResponsiveNavLink :href="route('admin.users.index')">
+                    Gestion utilisateurs
+                </BreezeResponsiveNavLink>
+                <BreezeResponsiveNavLink
+                    :href="route('admin.structures.index')"
+                >
+                    Gestion des structures
+                </BreezeResponsiveNavLink>
+                <BreezeResponsiveNavLink :href="route('admin.criteres.index')">
+                    Gestion des critères
+                </BreezeResponsiveNavLink>
+                <BreezeResponsiveNavLink
+                    :href="route('admin.disciplines.index')"
+                >
+                    Gestion du contenu
                 </BreezeResponsiveNavLink>
             </div>
 

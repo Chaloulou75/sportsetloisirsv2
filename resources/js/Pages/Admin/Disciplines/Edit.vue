@@ -1,5 +1,6 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
+import NavAdminDiscipline from "@/Components/Admin/NavAdminDiscipline.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import {
     ChevronLeftIcon,
@@ -35,92 +36,16 @@ const props = defineProps({
                 <h1
                     class="px-3 text-center text-base font-semibold text-gray-600 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
-                    Administration de la discipline
                     <span class="text-indigo-600">{{ discipline.name }}</span>
                 </h1>
             </div>
         </template>
+        <NavAdminDiscipline :discipline="discipline" />
 
         <div class="flex flex-col space-y-8 px-2 py-6 md:px-6">
-            <ul class="list-inside list-disc space-y-3">
-                <li>
-                    <Link
-                        :href="
-                            route(
-                                'admin.disciplines.informations.edit',
-                                discipline
-                            )
-                        "
-                        class="font-semibold text-slate-600 hover:text-indigo-600 hover:underline"
-                    >
-                        <span
-                            >Gérer les
-                            <span class="uppercase text-indigo-700">
-                                informations
-                            </span>
-                            liées au
-                            {{ discipline.name }}</span
-                        >
-                    </Link>
-                </li>
-                <li>
-                    <Link
-                        :href="
-                            route('admin.disciplines.familles.edit', discipline)
-                        "
-                        class="font-semibold text-slate-600 hover:text-indigo-600 hover:underline"
-                    >
-                        <span
-                            >Gérer les
-                            <span class="uppercase text-indigo-700">
-                                familles
-                            </span>
-                            associées au
-                            {{ discipline.name }}</span
-                        >
-                    </Link>
-                </li>
-                <li>
-                    <Link
-                        :href="
-                            route(
-                                'admin.disciplines.similaires.edit',
-                                discipline
-                            )
-                        "
-                        class="font-semibold text-slate-600 hover:text-indigo-600 hover:underline"
-                    >
-                        <span
-                            >Gérer les
-                            <span class="uppercase text-indigo-700">
-                                disciplines similaires
-                            </span>
-                            au
-                            {{ discipline.name }}</span
-                        >
-                    </Link>
-                </li>
-                <li>
-                    <Link
-                        :href="
-                            route(
-                                'admin.disciplines.categories.edit',
-                                discipline
-                            )
-                        "
-                        class="font-semibold text-slate-600 hover:text-indigo-600 hover:underline"
-                    >
-                        <span
-                            >Gérer les
-                            <span class="uppercase text-indigo-700">
-                                catégories et critères
-                            </span>
-                            associés au
-                            {{ discipline.name }}</span
-                        >
-                    </Link>
-                </li>
-            </ul>
+            <h2 class="text-lg font-semibold text-gray-600">
+                Gestion de la discipline {{ discipline.name }}
+            </h2>
         </div>
     </AdminLayout>
 </template>

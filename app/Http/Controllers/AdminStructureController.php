@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use App\Models\Critere;
+use App\Models\Structure;
 use Illuminate\Http\Request;
 
-class CritereController extends Controller
+class AdminStructureController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,13 +17,13 @@ class CritereController extends Controller
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 
-        $criteres = Critere::select(['id', 'nom'])->get();
+        $structures = Structure::select(['id', 'name', 'slug'])->get();
 
-        return Inertia::render('Admin/Criteres/Index', [
+        return Inertia::render('Admin/Structures/Index', [
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'criteres' => $criteres,
+            'structures' => $structures,
         ]);
 
     }
@@ -63,26 +63,16 @@ class CritereController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Critere $critere)
+    public function update(Request $request, string $id)
     {
-        $user = auth()->user();
-        $this->authorize('viewAdmin', $user);
-
-        $request->validate([
-            'nom' => ['string'],
-        ]);
-        $critere->update(['nom' => $request->nom]);
-
-        return to_route('admin.criteres.index')->with('success', 'Critère mis à jour');
-
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Critere $critere)
+    public function destroy(string $id)
     {
-        $critere->delete();
-        return to_route('admin.criteres.index')->with('success', 'Critère supprimé');
+        //
     }
 }

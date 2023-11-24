@@ -3,29 +3,27 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use App\Models\Critere;
 use Illuminate\Http\Request;
+use App\Models\ListDiscipline;
 
-class CritereController extends Controller
+class AdminDisciplineController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 
-        $criteres = Critere::select(['id', 'nom'])->get();
+        $listDisciplines = ListDiscipline::select(['id', 'slug', 'name'])->get();
 
-        return Inertia::render('Admin/Criteres/Index', [
+        return Inertia::render('Admin/Disciplines/Index', [
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'criteres' => $criteres,
+            'listDisciplines' => $listDisciplines,
         ]);
-
     }
 
     /**
@@ -55,34 +53,35 @@ class CritereController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(ListDiscipline $discipline)
     {
-        //
+        $user = auth()->user();
+        $this->authorize('viewAdmin', $user);
+
+        $discipline = ListDiscipline::findOrFail($discipline->id);
+
+        return Inertia::render('Admin/Disciplines/Edit', [
+            'user_can' => [
+                'view_admin' => $user->can('viewAdmin', User::class),
+            ],
+            'discipline' => $discipline,
+        ]);
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Critere $critere)
+    public function update(Request $request, string $id)
     {
-        $user = auth()->user();
-        $this->authorize('viewAdmin', $user);
-
-        $request->validate([
-            'nom' => ['string'],
-        ]);
-        $critere->update(['nom' => $request->nom]);
-
-        return to_route('admin.criteres.index')->with('success', 'Critère mis à jour');
-
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Critere $critere)
+    public function destroy(string $id)
     {
-        $critere->delete();
-        return to_route('admin.criteres.index')->with('success', 'Critère supprimé');
+        //
     }
 }

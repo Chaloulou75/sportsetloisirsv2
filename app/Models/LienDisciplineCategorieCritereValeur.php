@@ -30,4 +30,9 @@ class LienDisciplineCategorieCritereValeur extends Model
     {
         return $this->hasMany(LiensDisCatCritValSsCrit::class, 'dis_cat_crit_val_id');
     }
+
+    public function produit_sous_criteres(): HasMany
+    {
+        return $this->hasMany(StructureProduitSousCritere::class, 'critere_valeur_id');
+    }
 }

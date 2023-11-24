@@ -51,6 +51,7 @@ class StructureActiviteProduitController extends Controller
             'rayon_km' => ['nullable'],
         ]);
 
+
         $activite = StructureActivite::with([
                     'structure',
                     'categorie',
@@ -234,14 +235,11 @@ class StructureActiviteProduitController extends Controller
             'instructeur_phone' => ['nullable'],
             'rayon_km' => ['nullable'],
         ]);
-
-
         $activite = StructureActivite::with([
                     'structure',
                     'categorie',
                     'discipline'
-                ])
-                    ->findOrFail($activite->id);
+                ])->findOrFail($activite->id);
 
         $structureProduit = StructureProduit::findOrFail($produit->id);
 

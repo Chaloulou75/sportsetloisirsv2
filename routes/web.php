@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CritereController;
 use App\Http\Controllers\MentionController;
@@ -13,7 +14,9 @@ use App\Http\Controllers\ActiviteController;
 use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\StructureUserController;
+use App\Http\Controllers\AdminStructureController;
 use App\Http\Controllers\StructureTarifController;
+use App\Http\Controllers\AdminDisciplineController;
 use App\Http\Controllers\StructureGestionController;
 use App\Http\Controllers\FamilleDisciplineController;
 use App\Http\Controllers\StructureAddresseController;
@@ -134,13 +137,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Admin routes
     Route::prefix('admin')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('admin.index');
-        Route::get('/disciplines/dis-{discipline:slug}', [AdminController::class, 'edit'])->name('admin.disciplines.edit');
+
+        Route::get('/utilisateurs', [UserController::class, 'index'])->name('admin.users.index');
+        Route::get('/structures', [AdminStructureController::class, 'index'])->name('admin.structures.index');
+        Route::get('/disciplines', [AdminDisciplineController::class, 'index'])->name('admin.disciplines.index');
+
+        Route::get('/disciplines/dis-{discipline:slug}', [AdminDisciplineController::class, 'edit'])->name('admin.disciplines.edit');
         Route::get('/disciplines/dis-{discipline:slug}/informations', [DisciplineController::class, 'edit'])->name('admin.disciplines.informations.edit');
         Route::get('/disciplines/dis-{discipline:slug}/familles', [FamilleDisciplineController::class, 'edit'])->name('admin.disciplines.familles.edit');
         Route::get('/disciplines/dis-{discipline:slug}/similaires', [DisciplineSimilaireController::class, 'edit'])->name('admin.disciplines.similaires.edit');
         Route::get('/disciplines/dis-{discipline:slug}/categories', [CategoryDisciplineController::class, 'edit'])->name('admin.disciplines.categories.edit');
         Route::get('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/criteres', [CategoryDisciplineCritereController::class, 'edit'])->name('admin.disciplines.categories.criteres.edit');
 
+        Route::get('/criteres', [CritereController::class, 'index'])->name('admin.criteres.index');
         Route::post('/criteres', [CritereController::class, 'store'])->name('admin.criteres.store');
         Route::patch('/criteres/{critere}', [CritereController::class, 'update'])->name('admin.criteres.update');
         Route::delete('/criteres/{critere}', [CritereController::class, 'destroy'])->name('admin.criteres.destroy');

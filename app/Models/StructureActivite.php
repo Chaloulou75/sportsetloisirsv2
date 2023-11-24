@@ -84,6 +84,7 @@ class StructureActivite extends Model
             'produits.criteres',
             'produits.criteres.critere',
             'produits.criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
+            'produits.criteres.critere_valeur.sous_criteres.prodSousCritValeurs.sous_critere_valeur',
             'produits.tarifs',
             'produits.tarifs.tarifType',
             'produits.tarifs.structureTarifTypeInfos',

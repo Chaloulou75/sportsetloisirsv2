@@ -1,6 +1,6 @@
 <script setup>
 import { useForm, router } from "@inertiajs/vue3";
-import { ref, watch, onMounted, computed, defineAsyncComponent } from "vue";
+import { ref, watch, computed, defineAsyncComponent } from "vue";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
 import RadioForm from "@/Components/Forms/RadioForm.vue";
@@ -44,23 +44,26 @@ const addAddress = ref(false);
 const addInstructeur = ref(true);
 const filteredCriteres = computed(() => {
     return props.criteres.filter(
-        (critere) => critere.categorie_id === props.produit.categorie_id
+        (critere) =>
+            critere.categorie_id === props.structureActivite.categorie_id
     );
 });
 
 watch(
     () => props.produit,
     (newValue) => {
+        console.log(newValue);
         if (newValue) {
             formEditProduit.adresse = newValue.lieu_id;
             formEditProduit.actif = !!newValue.actif;
             formEditProduit.criteres = {};
+            formEditProduit.souscriteres = {};
             newValue.criteres.forEach((critere) => {
                 const critereId = critere.critere_id;
-                const critereValue = critere.valeur;
+                const critereValue = critere.critere_valeur;
+                const critereValueId = critere.valeur_id;
 
                 if (Array.isArray(critereValue)) {
-                    // For checkboxes with multiple values
                     if (!Array.isArray(formEditProduit.criteres[critereId])) {
                         // If the critereId doesn't exist in the form object, create a new array with the critereValue
                         formEditProduit.criteres[critereId] =
@@ -87,6 +90,19 @@ watch(
                         }
                         formEditProduit.criteres[critereId].push(critereValue);
                     }
+                }
+
+                if (critereValue.sous_criteres) {
+                    critereValue.sous_criteres.forEach((sous_criteres) => {
+                        const sousCritereId = sous_criteres.id;
+                        sous_criteres.prod_sous_crit_valeurs.forEach(
+                            (sousCritereValue) => {
+                                const sousValeurId = sousCritereValue.id;
+                                formEditProduit.souscriteres[sousCritereId] =
+                                    sousCritereValue;
+                            }
+                        );
+                    });
                 }
             });
         }
@@ -119,11 +135,13 @@ const isCheckboxSelected = (critereId, optionValue) => {
     );
 };
 
+// const convertedActif = ref(!!props.produit.actif ?? null);
+
 const formEditProduit = useForm({
-    actif: !!props.produit.actif,
-    criteres: props.produit.criteres,
+    actif: null,
+    criteres: {},
     souscriteres: {},
-    adresse: props.produit.lieu_id,
+    adresse: null,
     address: null,
     city: null,
     zip_code: null,

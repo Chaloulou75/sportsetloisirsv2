@@ -53,7 +53,7 @@ const formAddProduit = useForm({
     categorie_id: props.structureActivite.categorie_id,
     criteres: {},
     souscriteres: {},
-    adresse: ref(props.latestAdresseId),
+    adresse: props.latestAdresseId,
     address: null,
     city: null,
     zip_code: null,
