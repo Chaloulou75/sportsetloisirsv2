@@ -179,7 +179,7 @@ const filterProducts = () => {
     } else {
         filteredProduits.value = props.produits.data.filter((produit) => {
             return selectedCriteres.value.every((selectedCritere) => {
-                if (selectedCritere.inclus_all === true) {
+                if (!!selectedCritere.inclus_all === true) {
                     return true; // Do not apply the filter
                 } else if (Array.isArray(selectedCritere)) {
                     return selectedCritere.some((critereInArray) => {
