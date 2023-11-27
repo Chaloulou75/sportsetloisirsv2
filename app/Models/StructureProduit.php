@@ -53,7 +53,7 @@ class StructureProduit extends Model
         return $this->hasMany(StructureProduitCritere::class, 'produit_id');
     }
 
-    public function sousCriteres(): HasMany
+    public function sous_criteres(): HasMany
     {
         return $this->hasMany(StructureProduitSousCritere::class, 'produit_id');
     }
@@ -84,7 +84,9 @@ class StructureProduit extends Model
             'structure:id,name,slug',
             'criteres:id,activite_id,produit_id,critere_id,valeur_id,valeur',
             'criteres.critere:id,nom',
-            'criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
+            'criteres.critere_valeur.sous_criteres',
+            'criteres.critere_valeur.sous_criteres.prodSousCritValeurs.sous_critere_valeur',
+            'criteres.sous_criteres',
             'tarifs',
             'tarifs.tarifType',
             'tarifs.structureTarifTypeInfos',

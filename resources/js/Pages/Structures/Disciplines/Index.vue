@@ -140,15 +140,10 @@ const refreshPage = () => {
 };
 
 const submit = () => {
-    const url = `/structures/${props.structure.slug}/activites`;
-    form.post(
-        url,
-        {
-            preserveScroll: true,
-            onSuccess: () => form.reset(),
-        },
-        props.structure
-    );
+    form.post(route("structures.activites.store", props.structure.slug), {
+        preserveScroll: true,
+        onSuccess: () => form.reset(),
+    });
 };
 
 const showAddTarifModal = ref(false);

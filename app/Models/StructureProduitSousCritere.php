@@ -29,6 +29,11 @@ class StructureProduitSousCritere extends Model
         return $this->belongsTo(StructureProduit::class, 'produit_id');
     }
 
+    public function produit_critere(): BelongsTo
+    {
+        return $this->belongsTo(StructureProduitCritere::class, 'prod_crit_id');
+    }
+
     public function critere(): BelongsTo
     {
         return $this->belongsTo(LienDisciplineCategorieCritere::class, 'critere_id');

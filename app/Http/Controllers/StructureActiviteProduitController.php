@@ -479,10 +479,13 @@ class StructureActiviteProduitController extends Controller
 
     private function createProduitSousCritere($activite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $souscriteresValues)
     {
+        $prodCrit = StructureProduitCritere::where('produit_id', $structureProduit->id)->where('critere_id', $critereId)->where('valeur_id', $critereValeurId)->first();
+
         StructureProduitSousCritere::create([
             'activite_id' => $activite->id,
             'produit_id' => $structureProduit->id,
             'critere_id' => $critereId,
+            'prod_crit_id' => $prodCrit->id,
             'critere_valeur_id' => $critereValeurId,
             'sous_critere_id' => $sousCritereId,
             'sous_critere_valeur_id' => $souscriteresValues['id'] ?? null,

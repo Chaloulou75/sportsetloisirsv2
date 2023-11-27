@@ -208,12 +208,11 @@ async function toggleActif(structureActivite) {
 
 const duplicate = (structureActivite, produit) => {
     router.post(
-        `/structures/${props.structure.slug}/activites/${structureActivite.id}/produits/${produit.id}/duplicate`,
-        {
+        route("produits.duplicate", {
             structure: props.structure.slug,
             activite: structureActivite.id,
             produit: produit.id,
-        },
+        }),
         {
             preserveScroll: true,
         }
@@ -221,14 +220,12 @@ const duplicate = (structureActivite, produit) => {
 };
 
 const destroy = (structureActivite, produit) => {
-    const url = `/structures/${props.structure.slug}/activites/${structureActivite.id}/produits/${produit.id}`;
     router.delete(
-        url,
-        {
+        route("structures.activites.produits.destroy", {
             structure: props.structure.slug,
             activite: structureActivite.id,
             produit: produit.id,
-        },
+        }),
         {
             preserveScroll: true,
         }
@@ -246,12 +243,11 @@ const isOpenTarif = (produit) => {
 
 const duplicateTarif = (tarif, produit) => {
     router.post(
-        `/structures/${props.structure.slug}/tarifs/${tarif.id}/produits/${produit.id}/duplicate`,
-        {
+        route("tarifs.duplicate", {
             structure: props.structure.slug,
             tarif: tarif.id,
             produit: produit.id,
-        },
+        }),
         {
             preserveScroll: true,
         }
@@ -259,14 +255,12 @@ const duplicateTarif = (tarif, produit) => {
 };
 
 const destroyTarif = (tarif, produit) => {
-    const url = `/structures/${props.structure.slug}/tarifs/${tarif.id}/produits/${produit.id}`;
     router.delete(
-        url,
-        {
+        route("tarifs.destroy", {
             structure: props.structure.slug,
             tarif: tarif.id,
             produit: produit.id,
-        },
+        }),
         {
             preserveScroll: true,
         }
@@ -730,12 +724,8 @@ const destroyTarif = (tarif, produit) => {
                                                                     }}
                                                                     <span
                                                                         v-if="
-                                                                            critere.critere_valeur &&
+                                                                            critere.sous_criteres &&
                                                                             critere
-                                                                                .critere_valeur
-                                                                                .sous_criteres &&
-                                                                            critere
-                                                                                .critere_valeur
                                                                                 .sous_criteres
                                                                                 .length >
                                                                                 0
@@ -743,30 +733,15 @@ const destroyTarif = (tarif, produit) => {
                                                                         class="text-xs text-gray-600"
                                                                     >
                                                                         <span
-                                                                            v-for="sousCriteres in critere
-                                                                                .critere_valeur
-                                                                                .sous_criteres"
+                                                                            v-for="sousCritere in critere.sous_criteres"
                                                                             :key="
-                                                                                sousCriteres.id
+                                                                                sousCritere.id
                                                                             "
+                                                                            class="text-xs text-gray-600"
                                                                         >
-                                                                            <span
-                                                                                v-for="sousCritValeur in sousCriteres.prod_sous_crit_valeurs"
-                                                                                :key="
-                                                                                    sousCritValeur.id
-                                                                                "
-                                                                                class="text-xs text-gray-600"
-                                                                            >
-                                                                                <span
-                                                                                    v-if="
-                                                                                        sousCritValeur.produit_id ===
-                                                                                        produit.id
-                                                                                    "
-                                                                                    >({{
-                                                                                        sousCritValeur.valeur
-                                                                                    }})</span
-                                                                                ></span
-                                                                            >
+                                                                            ({{
+                                                                                sousCritere.valeur
+                                                                            }})
                                                                         </span>
                                                                     </span>
                                                                 </span>

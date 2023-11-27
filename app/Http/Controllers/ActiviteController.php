@@ -102,10 +102,8 @@ class ActiviteController extends Controller
 
             foreach($criteres as $critere) {
                 $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $critere->id)->first();
-                if ($defaut) {
+                if ($defaut !== null) {
                     $this->createStructureProduitCritere($structure, $activite, $produit, $critere->id, $defaut->id, $defaut->valeur);
-                } else {
-                    $this->createStructureProduitCritere($structure, $activite, $produit, $critere->id, null, null);
                 }
             }
         }
@@ -217,7 +215,7 @@ class ActiviteController extends Controller
 
         $produits = StructureProduit::where('activite_id', $activite->id)->get();
 
-        $criteres = StructureProduitCritere::with('sousCriteres')->where('activite_id', $activite->id)->get();
+        $criteres = StructureProduitCritere::with('sous_criteres')->where('activite_id', $activite->id)->get();
 
         $souscriteres = StructureProduitSousCritere::where('activite_id', $activite->id)->get();
 
@@ -541,10 +539,13 @@ class ActiviteController extends Controller
 
     private function createProduitSousCritere($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $souscriteresValues)
     {
+        $prodCrit = StructureProduitCritere::where('produit_id', $structureProduit->id)->where('critere_id', $critereId)->where('valeur_id', $critereValeurId)->first();
+
         StructureProduitSousCritere::create([
             'activite_id' => $structureActivite->id,
             'produit_id' => $structureProduit->id,
             'critere_id' => $critereId,
+            'prod_crit_id' => $prodCrit->id,
             'critere_valeur_id' => $critereValeurId,
             'sous_critere_id' => $sousCritereId,
             'sous_critere_valeur_id' => $souscriteresValues['id'] ?? null,

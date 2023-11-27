@@ -258,11 +258,14 @@ class StructureDisciplineController extends Controller
         $allCategories = $categoriesListByDiscipline->merge($categoriesWithoutStructures);
 
         $structureActivites = $structure->activites()->withRelations()
+            ->with(
+                ['produits.criteres.critere_valeur.sous_criteres.sous_criteres_valeurs', 'produits.criteres.sous_criteres.sous_critere_valeur']
+            )
             ->where('discipline_id', $discipline->id)
             ->latest()
             ->get();
 
-
+        // dd($structureActivites[0]->produits[0]->criteres());
         $uniqueCriteresInProducts = $structureActivites->flatMap(function ($activite) {
             return $activite->produits->flatMap(function ($produit) {
                 return $produit->criteres->map(function ($structureProduitCritere) {
@@ -402,7 +405,7 @@ class StructureDisciplineController extends Controller
 
         $produits = StructureProduit::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->get();
 
-        $criteres = StructureProduitCritere::with('sousCriteres')->where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->get();
+        $criteres = StructureProduitCritere::with('sous_criteres')->where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->get();
 
         $plannings = StructurePlanning::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->get();
 
@@ -423,8 +426,8 @@ class StructureDisciplineController extends Controller
 
         if($criteres->isNotEmpty()) {
             foreach($criteres as $critere) {
-                if($critere->sousCriteres()) {
-                    foreach($critere->sousCriteres() as $souscritere) {
+                if($critere->sous_criteres()) {
+                    foreach($critere->sous_criteres() as $souscritere) {
                         $souscritere->delete();
                     }
                 }

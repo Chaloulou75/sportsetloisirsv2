@@ -52,35 +52,26 @@ const filteredCriteres = computed(() => {
 watch(
     () => props.produit,
     (newValue) => {
-        console.log(newValue);
         if (newValue) {
             formEditProduit.adresse = newValue.lieu_id;
             formEditProduit.actif = !!newValue.actif;
             formEditProduit.criteres = {};
             formEditProduit.souscriteres = {};
+
             newValue.criteres.forEach((critere) => {
                 const critereId = critere.critere_id;
                 const critereValue = critere.critere_valeur;
-                const critereValueId = critere.valeur_id;
+                const sousCriteres = critere.sous_criteres;
 
                 if (Array.isArray(critereValue)) {
                     if (!Array.isArray(formEditProduit.criteres[critereId])) {
-                        // If the critereId doesn't exist in the form object, create a new array with the critereValue
-                        formEditProduit.criteres[critereId] =
-                            critereValue.slice();
-                    } else {
-                        // If the critereId exists, append the critereValue to the existing array
-                        formEditProduit.criteres[critereId].push(
-                            ...critereValue
-                        );
+                        formEditProduit.criteres[critereId] = [];
                     }
+                    formEditProduit.criteres[critereId].push(...critereValue);
                 } else {
-                    // For other types of fields
                     if (!formEditProduit.criteres[critereId]) {
-                        // If the critereId doesn't exist in the form object, assign the critereValue as a single value
                         formEditProduit.criteres[critereId] = critereValue;
                     } else {
-                        // If the critereId exists, convert the existing value to an array and push the new critereValue
                         const existingValue =
                             formEditProduit.criteres[critereId];
                         if (!Array.isArray(existingValue)) {
@@ -92,19 +83,20 @@ watch(
                     }
                 }
 
-                if (critereValue.sous_criteres) {
-                    critereValue.sous_criteres.forEach((sous_criteres) => {
-                        const sousCritereId = sous_criteres.id;
-                        sous_criteres.prod_sous_crit_valeurs.forEach(
-                            (sousCritereValue) => {
-                                const sousValeurId = sousCritereValue.id;
-                                formEditProduit.souscriteres[sousCritereId] =
-                                    sousCritereValue;
-                            }
-                        );
+                if (sousCriteres) {
+                    sousCriteres.forEach((sousCritere) => {
+                        const souscritereId = sousCritere.id;
+                        if (sousCritere.sous_critere_valeur) {
+                            formEditProduit.souscriteres[souscritereId] =
+                                sousCritere.sous_critere_valeur;
+                        } else {
+                            formEditProduit.souscriteres[souscritereId] =
+                                sousCritere.valeur;
+                        }
                     });
                 }
             });
+            console.log(formEditProduit.souscriteres);
         }
     }
 );
@@ -134,8 +126,6 @@ const isCheckboxSelected = (critereId, optionValue) => {
         formEditProduit.criteres[critereId].includes(optionValue)
     );
 };
-
-// const convertedActif = ref(!!props.produit.actif ?? null);
 
 const formEditProduit = useForm({
     actif: null,
@@ -664,8 +654,17 @@ const onSubmitEditProduitForm = () => {
                                                             :key="
                                                                 souscritere.id
                                                             "
-                                                            class=""
                                                         >
+                                                            {{
+                                                                formEditProduit
+                                                                    .souscriteres[
+                                                                    souscritere
+                                                                        .id
+                                                                ]
+                                                            }}
+                                                            <!-- {{
+                                                                souscritere.dis_cat_crit_val_id
+                                                            }} -->
                                                             <SelectForm
                                                                 :classes="'block'"
                                                                 class="max-w-sm py-2"
@@ -674,8 +673,8 @@ const onSubmitEditProduitForm = () => {
                                                                         .criteres[
                                                                         critere
                                                                             .id
-                                                                    ] ===
-                                                                        valeur &&
+                                                                    ].id ===
+                                                                        valeur.id &&
                                                                     souscritere.type_champ_form ===
                                                                         'select' &&
                                                                     souscritere.dis_cat_crit_val_id ===

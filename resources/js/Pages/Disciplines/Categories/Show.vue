@@ -19,7 +19,7 @@ import {
     MapIcon,
     XMarkIcon,
 } from "@heroicons/vue/24/outline";
-import { useElementVisibility } from "@vueuse/core";
+import { useElementVisibility, useTimeoutFn } from "@vueuse/core";
 
 const props = defineProps({
     familles: Object,
@@ -131,9 +131,10 @@ const toggleCriteresLg = () => {
 
 const formCriteres = ref({
     criteres: {},
-    souscriteres: {},
+    sousCriteres: {},
 });
 const selectedCriteres = ref([]);
+const selectedSousCriteres = ref([]);
 const filteredProduits = ref(props.produits.data);
 const filteredStructures = ref(props.structures.data);
 
@@ -208,8 +209,19 @@ watch(
     { deep: true }
 );
 
+watch(
+    () => formCriteres.value.sousCriteres,
+    (newSousCriteres) => {
+        selectedSousCriteres.value =
+            Object.values(newSousCriteres).filter(Boolean);
+        filterProducts();
+    },
+    { deep: true }
+);
+
 const resetFormCriteres = () => {
     formCriteres.value.criteres = {};
+    formCriteres.value.sousCriteres = {};
     selectedCriteres.value = [];
     filterProducts();
 };
@@ -680,7 +692,7 @@ onMounted(() => {
                                     "
                                     :name="souscritere.nom"
                                     v-model="
-                                        formCriteres.souscriteres[
+                                        formCriteres.sousCriteres[
                                             souscritere.id
                                         ]
                                     "
@@ -709,7 +721,7 @@ onMounted(() => {
                                         id="Nombre"
                                         name="Nombre"
                                         v-model="
-                                            formCriteres.souscriteres[
+                                            formCriteres.sousCriteres[
                                                 souscritere.id
                                             ]
                                         "

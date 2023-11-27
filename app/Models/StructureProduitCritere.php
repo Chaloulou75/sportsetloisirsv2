@@ -61,9 +61,9 @@ class StructureProduitCritere extends Model
         return $this->hasMany(LienDisciplineCategorieCritereValeur::class, 'discipline_categorie_critere_id');
     }
 
-    public function sousCriteres(): HasMany
+    public function sous_criteres(): HasMany
     {
-        return $this->hasMany(StructureProduitSousCritere::class, 'critere_id');
+        return $this->hasMany(StructureProduitSousCritere::class, 'prod_crit_id');
     }
 
 }

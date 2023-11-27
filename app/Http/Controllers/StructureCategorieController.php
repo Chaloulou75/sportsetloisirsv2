@@ -72,6 +72,7 @@ class StructureCategorieController extends Controller
         })->where('discipline_id', $discipline->id)->get();
 
         $structureActivites = StructureActivite::withRelations()
+            ->with('produits.criteres.critere_valeur.sous_criteres.sous_criteres_valeurs')
             ->where('structure_id', $structure->id)
             ->where('discipline_id', $discipline->id)
             ->where('categorie_id', $categorie->id)
