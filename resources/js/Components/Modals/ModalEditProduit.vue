@@ -49,6 +49,29 @@ const filteredCriteres = computed(() => {
     );
 });
 
+const formEditProduit = useForm({
+    actif: null,
+    criteres: {},
+    souscriteres: {},
+    adresse: null,
+    address: null,
+    city: null,
+    zip_code: null,
+    country: null,
+    address_lat: null,
+    address_lng: null,
+    date_seule: null,
+    dates: null,
+    time_seule: null,
+    times: null,
+    months: null,
+    instructeurId: null,
+    instructeur_email: null,
+    instructeur_contact: null,
+    instructeur_phone: null,
+    rayon_km: 0,
+});
+
 watch(
     () => props.produit,
     (newValue) => {
@@ -68,6 +91,7 @@ watch(
                         formEditProduit.criteres[critereId] = [];
                     }
                     formEditProduit.criteres[critereId].push(...critereValue);
+                    isCheckboxSelected();
                 } else {
                     if (!formEditProduit.criteres[critereId]) {
                         formEditProduit.criteres[critereId] = critereValue;
@@ -86,9 +110,14 @@ watch(
                 if (sousCriteres) {
                     sousCriteres.forEach((sousCritere) => {
                         const souscritereId = sousCritere.id;
-                        if (sousCritere.sous_critere_valeur) {
-                            formEditProduit.souscriteres[souscritereId] =
+
+                        if (sousCritere.sous_critere_valeur !== null) {
+                            const souscritereValue =
                                 sousCritere.sous_critere_valeur;
+                            if (!formEditProduit.criteres[critereId]) {
+                                formEditProduit.souscriteres[souscritereId] =
+                                    souscritereValue;
+                            }
                         } else {
                             formEditProduit.souscriteres[souscritereId] =
                                 sousCritere.valeur;
@@ -126,29 +155,6 @@ const isCheckboxSelected = (critereId, optionValue) => {
         formEditProduit.criteres[critereId].includes(optionValue)
     );
 };
-
-const formEditProduit = useForm({
-    actif: null,
-    criteres: {},
-    souscriteres: {},
-    adresse: null,
-    address: null,
-    city: null,
-    zip_code: null,
-    country: null,
-    address_lat: null,
-    address_lng: null,
-    date_seule: null,
-    dates: null,
-    time_seule: null,
-    times: null,
-    months: null,
-    instructeurId: null,
-    instructeur_email: null,
-    instructeur_contact: null,
-    instructeur_phone: null,
-    rayon_km: 0,
-});
 
 const onSubmitEditProduitForm = () => {
     router.put(
@@ -655,16 +661,6 @@ const onSubmitEditProduitForm = () => {
                                                                 souscritere.id
                                                             "
                                                         >
-                                                            {{
-                                                                formEditProduit
-                                                                    .souscriteres[
-                                                                    souscritere
-                                                                        .id
-                                                                ]
-                                                            }}
-                                                            <!-- {{
-                                                                souscritere.dis_cat_crit_val_id
-                                                            }} -->
                                                             <SelectForm
                                                                 :classes="'block'"
                                                                 class="max-w-sm py-2"
@@ -708,8 +704,8 @@ const onSubmitEditProduitForm = () => {
                                                                         .criteres[
                                                                         critere
                                                                             .id
-                                                                    ] ===
-                                                                        valeur &&
+                                                                    ].id ===
+                                                                        valeur.id &&
                                                                     souscritere.type_champ_form ===
                                                                         'number' &&
                                                                     souscritere.dis_cat_crit_val_id ===
@@ -730,8 +726,8 @@ const onSubmitEditProduitForm = () => {
                                                                         .criteres[
                                                                         critere
                                                                             .id
-                                                                    ] ===
-                                                                        valeur &&
+                                                                    ].id ===
+                                                                        valeur.id &&
                                                                     souscritere.type_champ_form ===
                                                                         'number' &&
                                                                     souscritere.dis_cat_crit_val_id ===
@@ -825,6 +821,7 @@ const onSubmitEditProduitForm = () => {
                                         Annuler
                                     </button>
                                     <button
+                                        disabled
                                         :disabled="formEditProduit.processing"
                                         type="submit"
                                         class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"

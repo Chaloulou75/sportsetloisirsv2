@@ -39,7 +39,7 @@ const model = computed({
     >
         <div :class="classes">
             <label :for="name" class="block text-sm font-medium text-gray-700">
-                {{ name }}
+                {{ name }}:
             </label>
             <div class="mt-1 flex flex-1 rounded-md md:flex-auto">
                 <select
