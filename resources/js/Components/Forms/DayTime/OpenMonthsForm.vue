@@ -25,12 +25,17 @@ const model = computed({
 });
 
 onMounted(() => {
-    const currentDate = new Date();
-    const startMonth = currentDate.getMonth();
-    const endMonthDate = new Date(currentDate);
-    endMonthDate.setMonth(startMonth + 2);
-    const endMonth = endMonthDate.getMonth();
-    model.value = [startMonth, endMonth];
+    if (!props.modelValue) {
+        const currentDate = {
+            month: new Date().getMonth(),
+            year: new Date().getFullYear(),
+        };
+        const endMonth = {
+            month: currentDate.month,
+            year: currentDate.year,
+        };
+        model.value = [currentDate, endMonth];
+    }
 });
 </script>
 <template>

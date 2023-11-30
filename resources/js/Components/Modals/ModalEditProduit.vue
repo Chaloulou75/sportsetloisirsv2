@@ -169,6 +169,48 @@ watch(
                     });
                 });
             });
+
+            newValue.dates.forEach((dateProduit) => {
+                if (dateProduit.time_debut) {
+                    const [hours, minutes] = dateProduit.time_debut
+                        .split(":")
+                        .map(Number);
+                    formEditProduit.time_seule = { hours, minutes };
+                }
+                if (dateProduit.houropen && dateProduit.hourclose) {
+                    const [hoursopen, minutesopen] = dateProduit.houropen
+                        .split(":")
+                        .map(Number);
+                    const [hoursclose, minutesclose] = dateProduit.hourclose
+                        .split(":")
+                        .map(Number);
+                    formEditProduit.times = [
+                        { hours: hoursopen, minutes: minutesopen },
+                        { hours: hoursclose, minutes: minutesclose },
+                    ];
+                }
+                if (dateProduit.date_debut) {
+                    formEditProduit.date_seule = new Date(
+                        dateProduit.date_debut
+                    );
+                }
+                if (dateProduit.dayopen && dateProduit.dayclose) {
+                    const dateOpen = new Date(dateProduit.dayopen);
+                    const dateClose = new Date(dateProduit.dayclose);
+                    formEditProduit.dates = [dateOpen, dateClose];
+                }
+                if (dateProduit.start_month && dateProduit.end_month) {
+                    const start = {
+                        month: new Date(dateProduit.start_month).getMonth(),
+                        year: new Date(dateProduit.start_month).getFullYear(),
+                    };
+                    const end = {
+                        month: new Date(dateProduit.end_month).getMonth(),
+                        year: new Date(dateProduit.end_month).getFullYear(),
+                    };
+                    formEditProduit.months = [start, end];
+                }
+            });
         }
     }
 );
@@ -271,7 +313,7 @@ const onSubmitEditProduitForm = () => {
                         leave-to="opacity-0 scale-95"
                     >
                         <DialogPanel
-                            class="w-full max-w-6xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                            class="w-full max-w-6xl transform rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
                         >
                             <form
                                 @submit.prevent="onSubmitEditProduitForm()"
@@ -866,7 +908,10 @@ const onSubmitEditProduitForm = () => {
                                         Annuler
                                     </button>
                                     <button
-                                        disabled
+                                        :class="{
+                                            'opacity-25':
+                                                formEditProduit.processing,
+                                        }"
                                         :disabled="formEditProduit.processing"
                                         type="submit"
                                         class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"

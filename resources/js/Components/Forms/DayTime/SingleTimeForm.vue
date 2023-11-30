@@ -25,11 +25,13 @@ const model = computed({
 });
 
 onMounted(() => {
-    const startTime = {
-        hours: 10,
-        minutes: 0,
-    };
-    model.value = startTime;
+    if (!props.modelValue) {
+        const time = {
+            hours: 9,
+            minutes: 0,
+        };
+        model.value = time;
+    }
 });
 </script>
 <template>

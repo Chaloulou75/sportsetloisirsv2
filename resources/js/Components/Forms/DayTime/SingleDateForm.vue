@@ -25,8 +25,10 @@ const model = computed({
 });
 
 onMounted(() => {
-    const date_debut = new Date();
-    model.value = date_debut;
+    if (!props.modelValue) {
+        const date_debut = new Date();
+        model.value = date_debut;
+    }
 });
 </script>
 <template>

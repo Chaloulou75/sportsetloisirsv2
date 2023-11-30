@@ -6,7 +6,7 @@ import { TransitionRoot } from "@headlessui/vue";
 
 const props = defineProps({
     modelValue: {
-        type: [Date, Object, String],
+        type: [Date, Object, Array, String],
     },
     name: String,
 });
@@ -25,15 +25,17 @@ const model = computed({
 });
 
 onMounted(() => {
-    const startTime = {
-        hours: 10,
-        minutes: 0,
-    };
-    const endTime = {
-        hours: 20,
-        minutes: 0,
-    };
-    model.value = [startTime, endTime];
+    if (!props.modelValue) {
+        const startTime = {
+            hours: 10,
+            minutes: 0,
+        };
+        const endTime = {
+            hours: 19,
+            minutes: 0,
+        };
+        model.value = [startTime, endTime];
+    }
 });
 </script>
 <template>

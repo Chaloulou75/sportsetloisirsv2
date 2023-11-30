@@ -6,7 +6,7 @@ import { TransitionRoot } from "@headlessui/vue";
 
 const props = defineProps({
     modelValue: {
-        type: [Date, Object, String],
+        type: [Date, Array, Object, String],
     },
     name: String,
 });
@@ -25,9 +25,11 @@ const model = computed({
 });
 
 onMounted(() => {
-    const startDate = new Date();
-    const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
-    model.value = [startDate, endDate];
+    if (!props.modelValue) {
+        const startDate = new Date();
+        const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
+        model.value = [startDate, endDate];
+    }
 });
 </script>
 <template>

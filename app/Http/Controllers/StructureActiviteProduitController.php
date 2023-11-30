@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Models\StructureProduitSousCritere;
 use App\Models\LienDisciplineCategorieCritere;
 use App\Models\LienDisciplineCategorieCritereValeur;
+use App\Models\StructureActiviteDate;
 
 class StructureActiviteProduitController extends Controller
 {
@@ -232,8 +233,6 @@ class StructureActiviteProduitController extends Controller
         $activite = StructureActivite::findOrFail($activite->id);
         $structureProduit = StructureProduit::findOrFail($produit->id);
 
-        dd($request->all(), $structureProduit);
-
         // Dates et horaires
         if($request->time_seule) {
             $time_seule = Carbon::createFromTime($request->time_seule['hours'], $request->time_seule['minutes'])->format('H:i');
@@ -271,6 +270,9 @@ class StructureActiviteProduitController extends Controller
             )->endOfMonth();
         }
 
+        $activiteProdDate =
+            StructureActiviteDate::where('structure_activite_id', $activite->id)->where('structure_produit_id', $structureProduit->id)->first();
+
         if (
             (isset($time_seule) && !empty($time_seule)) ||
             (isset($houropen) && !empty($houropen)) ||
@@ -282,71 +284,51 @@ class StructureActiviteProduitController extends Controller
             (isset($endMonth) && !empty($endMonth))
         ) {
             $data = [
-                'structure_activite_id' => $activite->id,
-                'structure_produit_id' => $structureProduit->id,
-                'dayopen' => $dayopen ?? null,
-                'dayclose' => $dayclose ?? null,
-                'houropen' => $houropen ?? null,
-                'hourclose' => $hourclose ?? null,
-                'date_debut' => $date_seule ?? null,
-                'time_debut' => $time_seule ?? null,
-                'start_month' => $startMonth ?? null,
-                'end_month' => $endMonth ?? null,
+                'dayopen' => $dayopen ?? $activiteProdDate->dayopen,
+                'dayclose' => $dayclose ?? $activiteProdDate->dayclose,
+                'houropen' => $houropen ?? $activiteProdDate->houropen,
+                'hourclose' => $hourclose ?? $activiteProdDate->hourclose,
+                'date_debut' => $date_seule ?? $activiteProdDate->date_debut,
+                'time_debut' => $time_seule ?? $activiteProdDate->time_debut,
+                'start_month' => $startMonth ?? $activiteProdDate->start_month,
+                'end_month' => $endMonth ?? $activiteProdDate->end_month,
             ];
-
-            $activiteDatesTimes = $structureProduit->dates()->update($data);
+            $activiteProdDate->update($data);
         }
 
-
-        $actifValue = $request->actif ? "1" : "0";
+        $actifValue = $request->actif ? true : false;
 
         $structureProduit->update([
                 "actif" => $actifValue,
                 'lieu_id' => $request->adresse ?? $structureProduit->lieu_id,
         ]);
 
-        $criteresValues = $request->criteres;
+        $criteresValuesSets = $request->criteres;
 
-        if(isset($criteresValues)) {
-            StructureProduitCritere::where('structure_id', $structure->id)
-            ->where('discipline_id', $structureProduit->discipline_id)
-            ->where('categorie_id', $structureProduit->categorie_id)
-            ->where('activite_id', $structureProduit->activite_id)
-            ->where('produit_id', $structureProduit->id)
-            ->delete();
+        if (isset($criteresValuesSets)) {
+            foreach ($criteresValuesSets as $critereId => $criteresValues) {
+                $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $critereId)->first();
 
-            foreach ($criteresValues as $key => $critereValue) {
-                $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $key)->first();
-
-                if (isset($critereValue)) {
-                    if (is_array($critereValue)) {
-                        foreach ($critereValue as $value) {
-                            $structureProduitCriteres = StructureProduitCritere::create([
-                                'structure_id' => $structure->id,
-                                'discipline_id' => $structureProduit->discipline_id,
-                                'categorie_id' => $structureProduit->categorie_id,
-                                'activite_id' => $structureProduit->activite_id,
-                                'produit_id' => $structureProduit->id,
-                                'critere_id' => $key,
-                                'valeur' => $value,
-                            ]);
-                        }
-                    } else {
-                        $structureProduitCriteres = StructureProduitCritere::create([
-                            'structure_id' => $structure->id,
-                            'discipline_id' => $structureProduit->discipline_id,
-                            'categorie_id' => $structureProduit->categorie_id,
-                            'activite_id' => $structureProduit->activite_id,
-                            'produit_id' => $structureProduit->id,
-                            'critere_id' => $key,
-                            'valeur' => $critereValue ?? $defaut->valeur,
-                        ]);
-                    }
-                }
+                $this->insertCriteresRecursively($structure, $activite, $structureProduit, $critereId, $criteresValues, $defaut);
             }
         }
 
+        $souscriteresValues = $request->souscriteres;
+        if(isset($souscriteresValues)) {
+            foreach ($souscriteresValues as $souscritereId => $souscritereValue) {
 
+                $sousCritere = LiensDisCatCritValSsCrit::with([
+                    'critere_valeur',
+                    'sous_criteres_valeurs'
+                ])->find($souscritereId);
+
+                $critereId = $sousCritere->critere_valeur->discipline_categorie_critere_id;
+                $critereValeurId = $sousCritere->critere_valeur->id;
+                $sousCritereId = $sousCritere->id;
+
+                $this->insertSousCriteresRecursively($activite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $souscritereValue);
+            }
+        }
         // newAdresse
         if($request->address) {
 
@@ -422,41 +404,29 @@ class StructureActiviteProduitController extends Controller
                     'discipline'
                 ])->find($activite->id);
 
-        $originalProduit = StructureProduit::with('criteres')->findOrFail($produit->id);
+        $originalProduit = StructureProduit::withRelations()->findOrFail($produit->id);
 
-        $originalProduitCriteres = StructureProduitCritere::where('produit_id', $originalProduit->id)->get();
-
-        $newProduit = new StructureProduit();
-        $newProduit->structure_id = $originalProduit->structure_id;
-        $newProduit->discipline_id = $originalProduit->discipline_id;
-        $newProduit->categorie_id = $originalProduit->categorie_id;
-        $newProduit->activite_id = $originalProduit->activite_id;
-        $newProduit->lieu_id = $originalProduit->lieu_id;
-        $newProduit->actif = $originalProduit->actif;
-        $newProduit->horaire_id = $originalProduit->horaire_id;
-        // $newProduit->tarif_id = $originalProduit->tarif_id;
-        $newProduit->reservable = $originalProduit->reservable;
-        $newProduit->id = null;
+        $newProduit = $originalProduit->replicate();
         $newProduit->save();
 
-        if($originalProduit->tarifs->isNotEmpty()) {
-            foreach($originalProduit->tarifs as $tarif) {
-                $newProduit->tarifs()->attach($tarif->id);
+        foreach ($originalProduit->criteres as $critere) {
+            $newRelated = $critere->replicate();
+            $newRelated->structure_id = $newProduit->structure_id;
+            $newRelated->discipline_id = $newProduit->discipline_id;
+            $newRelated->categorie_id = $newProduit->categorie_id;
+            $newCrit = $newProduit->criteres()->save($newRelated);
+
+            foreach ($newCrit->sous_criteres as $sous_critere) {
+                $newSousCrit = $sous_critere->replicate();
+                $newCrit->sous_criteres()->save($newSousCrit);
             }
         }
-
-        foreach($originalProduitCriteres as $produitCritere) {
-            $newProduitCritere = new StructureProduitCritere();
-            $newProduitCritere->structure_id = $produitCritere->structure_id;
-            $newProduitCritere->discipline_id = $produitCritere->discipline_id;
-            $newProduitCritere->categorie_id = $produitCritere->categorie_id;
-            $newProduitCritere->activite_id = $produitCritere->activite_id;
-            $newProduitCritere->produit_id = $newProduit->id;
-            $newProduitCritere->critere_id = $produitCritere->critere_id;
-            $newProduitCritere->valeur = $produitCritere->valeur;
-            $newProduitCritere->defaut = $produitCritere->defaut;
-            $newProduitCritere->id = null;
-            $newProduitCritere->save();
+        foreach ($originalProduit->plannings as $planning) {
+            $newRelated = $planning->replicate();
+            $newProduit->plannings()->save($newRelated);
+        }
+        foreach ($originalProduit->tarifs as $tarif) {
+            $newProduit->tarifs()->attach($tarif);
         }
 
         return to_route('structures.categories.show', ['structure' => $structure->slug, 'discipline' => $activite->discipline->slug, 'categorie' => $activite->categorie->id])->with('success', "Le produit a bien été dupliqué");
@@ -480,16 +450,18 @@ class StructureActiviteProduitController extends Controller
 
     private function createStructureProduitCritere($structure, $activite, $structureProduit, $critereId, $valeurId = null, $valeur = null)
     {
-        StructureProduitCritere::create([
+        StructureProduitCritere::updateOrCreate(
+            [
             'structure_id' => $structure->id,
             'discipline_id' => $activite->discipline_id,
             'categorie_id' => $activite->categorie_id,
             'activite_id' => $activite->id,
             'produit_id' => $structureProduit->id,
-            'critere_id' => $critereId,
-            'valeur_id' => $valeurId,
+            'critere_id' => $critereId],
+            ['valeur_id' => $valeurId,
             'valeur' => $valeur ?? "",
-        ]);
+        ]
+        );
     }
 
     private function insertSousCriteresRecursively($activite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $souscritereValue)
@@ -509,15 +481,17 @@ class StructureActiviteProduitController extends Controller
     {
         $prodCrit = StructureProduitCritere::where('produit_id', $structureProduit->id)->where('critere_id', $critereId)->where('valeur_id', $critereValeurId)->first();
 
-        StructureProduitSousCritere::create([
+        StructureProduitSousCritere::updateOrCreate(
+            [
             'activite_id' => $activite->id,
             'produit_id' => $structureProduit->id,
             'critere_id' => $critereId,
             'prod_crit_id' => $prodCrit->id,
             'critere_valeur_id' => $critereValeurId,
-            'sous_critere_id' => $sousCritereId,
-            'sous_critere_valeur_id' => $souscriteresValues['id'] ?? null,
+            'sous_critere_id' => $sousCritereId],
+            ['sous_critere_valeur_id' => $souscriteresValues['id'] ?? null,
             'valeur' => $souscriteresValues['valeur'] ?? $souscriteresValues,
-        ]);
+        ]
+        );
     }
 }
