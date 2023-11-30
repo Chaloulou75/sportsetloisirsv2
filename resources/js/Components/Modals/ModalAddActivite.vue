@@ -108,26 +108,33 @@ watch(
 );
 
 const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
+    const selectedCriteria = form.criteres[critereId];
+
     if (checked) {
-        if (!form.criteres[critereId]) {
-            form.criteres[critereId] = [optionValue];
+        if (!Array.isArray(selectedCriteria)) {
+            // Use ref() to ensure reactivity when modifying arrays
+            form.criteres[critereId] = ref([optionValue]);
         } else {
-            form.criteres[critereId].push(optionValue);
+            selectedCriteria.push(optionValue);
         }
     } else {
-        const index = form.criteres[critereId].indexOf(optionValue);
-        if (index !== -1) {
-            form.criteres[critereId].splice(index, 1);
+        if (Array.isArray(selectedCriteria)) {
+            const index = selectedCriteria.indexOf(optionValue);
+            if (index !== -1) {
+                selectedCriteria.splice(index, 1);
+            }
         }
     }
 };
 
-const isCheckboxSelected = (critereId, optionValue) => {
-    return (
-        form.criteres[critereId] &&
-        form.criteres[critereId].includes(optionValue)
-    );
-};
+const isCheckboxSelected = computed(() => {
+    return (critereId, optionValue) => {
+        return (
+            form.criteres[critereId] &&
+            form.criteres[critereId].includes(optionValue)
+        );
+    };
+});
 
 const onSubmit = () => {
     form.post(
@@ -797,6 +804,9 @@ onMounted(() => {
                                     </button>
                                     <button
                                         :disabled="form.processing"
+                                        :class="{
+                                            'opacity-25': form.processing,
+                                        }"
                                         type="submit"
                                         class="inline-flex justify-between rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-normal text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                     >

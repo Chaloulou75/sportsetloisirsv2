@@ -258,10 +258,10 @@ class StructureDisciplineController extends Controller
         $allCategories = $categoriesListByDiscipline->merge($categoriesWithoutStructures);
 
         $structureActivites = $structure->activites()->withRelations()
-            ->with(
-                ['produits.criteres.critere_valeur.sous_criteres.sous_criteres_valeurs',
-                'produits.criteres.sous_criteres.sous_critere_valeur']
-            )
+            ->with([
+                'produits.criteres.critere_valeur.sous_criteres.sous_criteres_valeurs',
+                'produits.criteres.sous_criteres.sous_critere_valeur'
+            ])
             ->where('discipline_id', $discipline->id)
             ->latest()
             ->get();

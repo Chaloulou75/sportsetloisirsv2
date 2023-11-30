@@ -1,7 +1,7 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import { ref, defineAsyncComponent, provide, watch, onMounted } from "vue";
+import { ref, computed, defineAsyncComponent, provide, watch, onMounted } from "vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
@@ -167,12 +167,14 @@ const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
     }
 };
 
-const isCheckboxSelected = (critereId, optionValue) => {
-    return (
-        formCriteres.value.criteres[critereId] &&
-        formCriteres.value.criteres[critereId].includes(optionValue)
-    );
-};
+const isCheckboxSelected = computed(() => {
+    return (critereId, optionValue) => {
+        return (
+            formCriteres.value.criteres[critereId] &&
+            formCriteres.value.criteres[critereId].includes(optionValue)
+        );
+    };
+});
 
 const filterProducts = () => {
     if (selectedCriteres.value.length === 0) {

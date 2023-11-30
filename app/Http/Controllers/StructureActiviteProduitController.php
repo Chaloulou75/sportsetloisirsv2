@@ -52,12 +52,52 @@ class StructureActiviteProduitController extends Controller
         ]);
 
 
-        $activite = StructureActivite::with([
-                    'structure',
-                    'categorie',
-                    'discipline'
-                ])->where('structure_id', $structure->id)
-                    ->findOrFail($activite->id);
+        $activite = StructureActivite::findOrFail($activite->id);
+
+        if($request->address) {
+            //check if address exist
+            foreach($structure->adresses as $address) {
+                if (($address->address_lat === $request->address_lat) && ($address->address_lng === $request->address_lng)) {
+                    return to_route('structures.disciplines.show', ['structure' => $structure->slug, 'discipline' => $activite->discipline->slug])->with('error', 'Cette adresse existe déjà dans votre liste d\'adresses');
+                }
+            }
+            $city = City::where('code_postal', $request->zip_code)->firstOrFail();
+            $cityId = $city->id;
+
+            $validatedAddress = [
+                'structure_id' => $structure->id,
+                'name' => $structure->name,
+                'address' => $request->address,
+                'zip_code' => $request->zip_code,
+                'city' => $request->city,
+                'country' => $request->country,
+                'city_id' => $cityId,
+                'country_id' => $structure->country_id,
+                'address_lat' => $request->address_lat,
+                'address_lng' => $request->address_lng,
+                'phone' => $structure->phone1,
+                'email' => $structure->email,
+            ];
+
+            $newStructureAddress = StructureAddress::create($validatedAddress);
+            $structureAddressId = $newStructureAddress->id;
+
+        } elseif ($request->adresse) {
+            $structureAddressId = $request->adresse;
+        } else {
+            $structureAddressId = $structure->adresses->first()->id;
+        }
+
+        $structureProduit = StructureProduit::create([
+            'structure_id' => $structure->id,
+            'discipline_id' => $activite->discipline_id,
+            'categorie_id' => $activite->categorie_id,
+            'activite_id' => $activite->id,
+            "actif" => true,
+            'lieu_id' => $structureAddressId,
+            'horaire_id' => null,
+            'reservable' => 0,
+        ]);
 
 
         // Dates et horaires
@@ -109,6 +149,7 @@ class StructureActiviteProduitController extends Controller
         ) {
             $data = [
                 'structure_activite_id' => $activite->id,
+                'structure_produit_id' => $structureProduit->id,
                 'dayopen' => $dayopen ?? null,
                 'dayclose' => $dayclose ?? null,
                 'houropen' => $houropen ?? null,
@@ -121,52 +162,6 @@ class StructureActiviteProduitController extends Controller
 
             $activiteDatesTimes = $activite->dates()->create($data);
         }
-
-
-        if($request->address) {
-            //check if address exist
-            foreach($structure->adresses as $address) {
-                if (($address->address_lat === $request->address_lat) && ($address->address_lng === $request->address_lng)) {
-                    return to_route('structures.disciplines.show', ['structure' => $structure->slug, 'discipline' => $activite->discipline->slug])->with('error', 'Cette adresse existe déjà dans votre liste d\'adresses');
-                }
-            }
-            $city = City::where('code_postal', $request->zip_code)->firstOrFail();
-            $cityId = $city->id;
-
-            $validatedAddress = [
-                'structure_id' => $structure->id,
-                'name' => $structure->name,
-                'address' => $request->address,
-                'zip_code' => $request->zip_code,
-                'city' => $request->city,
-                'country' => $request->country,
-                'city_id' => $cityId,
-                'country_id' => $structure->country_id,
-                'address_lat' => $request->address_lat,
-                'address_lng' => $request->address_lng,
-                'phone' => $structure->phone1,
-                'email' => $structure->email,
-            ];
-
-            $newStructureAddress = StructureAddress::create($validatedAddress);
-            $structureAddressId = $newStructureAddress->id;
-
-        } elseif ($request->adresse) {
-            $structureAddressId = $request->adresse;
-        } else {
-            $structureAddressId = $structure->adresses->first()->id;
-        }
-
-        $structureProduit = StructureProduit::create([
-            'structure_id' => $structure->id,
-            'discipline_id' => $activite->discipline_id,
-            'categorie_id' => $activite->categorie_id,
-            'activite_id' => $activite->id,
-            "actif" => true,
-            'lieu_id' => $structureAddressId,
-            'horaire_id' => null,
-            'reservable' => 0,
-        ]);
 
         $criteresValuesSets = $request->criteres;
 
@@ -214,7 +209,6 @@ class StructureActiviteProduitController extends Controller
      */
     public function update(Request $request, Structure $structure, StructureActivite $activite, StructureProduit $produit)
     {
-
         $request->validate([
             'criteres' => ['nullable'],
             'souscriteres' => ['nullable'],
@@ -235,46 +229,80 @@ class StructureActiviteProduitController extends Controller
             'instructeur_phone' => ['nullable'],
             'rayon_km' => ['nullable'],
         ]);
-        $activite = StructureActivite::with([
-                    'structure',
-                    'categorie',
-                    'discipline'
-                ])->findOrFail($activite->id);
-
+        $activite = StructureActivite::findOrFail($activite->id);
         $structureProduit = StructureProduit::findOrFail($produit->id);
 
-        dd($request->all(), $produit);
+        dd($request->all(), $structureProduit);
 
-        if(isset($request->date) || isset($request->time)) {
-
-            $dayopen = Carbon::parse($request->date[0])->format('Y-m-d');
-            $dayclose = Carbon::parse($request->date[1])->format('Y-m-d');
-
-            $heureopen = $request->time[0]['hours'];
-            $minuteopen = $request->time[0]['minutes'];
-            // Construct the time string in HH:ii:ss format
-            $houropen = sprintf('%02d:%02d', $heureopen, $minuteopen);
-
-            $heureclose = $request->time[1]['hours'];
-            $minuteclose = $request->time[1]['minutes'];
-            // Construct the time string in HH:ii:ss format
-            $hourclose = sprintf('%02d:%02d', $heureclose, $minuteclose);
-
-            $dayTime = StructureHoraire::firstOrCreate([
-                'structure_id' => $structure->id,
-                'dayopen' => $dayopen,
-                'dayclose' => $dayclose,
-                'houropen' => $houropen,
-                'hourclose' => $hourclose,
-            ]);
+        // Dates et horaires
+        if($request->time_seule) {
+            $time_seule = Carbon::createFromTime($request->time_seule['hours'], $request->time_seule['minutes'])->format('H:i');
         }
+
+        if($request->times) {
+            $times = $request->times;
+            $horaires = array_map(function ($time) {
+                return Carbon::createFromTime($time['hours'], $time['minutes'])->format('H:i');
+            }, $times);
+            $houropen = $horaires[0];
+            $hourclose = $horaires[1];
+        }
+
+        if($request->date_seule) {
+            $date_seule = Carbon::parse($request->date_seule)->format('Y-m-d');
+        }
+
+        if($request->dates) {
+            $dayopen = Carbon::parse($request->dates[0])->format('Y-m-d');
+            $dayclose = Carbon::parse($request->dates[1])->format('Y-m-d');
+        }
+
+        if ($request->months) {
+            $startMonth = Carbon::create(
+                $request->months[0]['year'],
+                $request->months[0]['month'] + 1,
+                1
+            )->startOfMonth();
+
+            $endMonth = Carbon::create(
+                $request->months[1]['year'],
+                $request->months[1]['month'] + 1,
+                1
+            )->endOfMonth();
+        }
+
+        if (
+            (isset($time_seule) && !empty($time_seule)) ||
+            (isset($houropen) && !empty($houropen)) ||
+            (isset($hourclose) && !empty($hourclose)) ||
+            (isset($date_seule) && !empty($date_seule)) ||
+            (isset($dayopen) && !empty($dayopen)) ||
+            (isset($dayclose) && !empty($dayclose)) ||
+            (isset($startMonth) && !empty($startMonth)) ||
+            (isset($endMonth) && !empty($endMonth))
+        ) {
+            $data = [
+                'structure_activite_id' => $activite->id,
+                'structure_produit_id' => $structureProduit->id,
+                'dayopen' => $dayopen ?? null,
+                'dayclose' => $dayclose ?? null,
+                'houropen' => $houropen ?? null,
+                'hourclose' => $hourclose ?? null,
+                'date_debut' => $date_seule ?? null,
+                'time_debut' => $time_seule ?? null,
+                'start_month' => $startMonth ?? null,
+                'end_month' => $endMonth ?? null,
+            ];
+
+            $activiteDatesTimes = $structureProduit->dates()->update($data);
+        }
+
 
         $actifValue = $request->actif ? "1" : "0";
 
         $structureProduit->update([
                 "actif" => $actifValue,
                 'lieu_id' => $request->adresse ?? $structureProduit->lieu_id,
-                'horaire_id' => $dayTime->id ?? $structureProduit->horaire_id,
         ]);
 
         $criteresValues = $request->criteres;

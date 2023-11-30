@@ -349,68 +349,6 @@ class ActiviteController extends Controller
             $structureActivite->update(['image' => $url]);
         }
 
-        // Dates et horaires
-        if($request->time_seule) {
-            $time_seule = Carbon::createFromTime($request->time_seule['hours'], $request->time_seule['minutes'])->format('H:i');
-        }
-
-        if($request->times) {
-            $times = $request->times;
-            $horaires = array_map(function ($time) {
-                return Carbon::createFromTime($time['hours'], $time['minutes'])->format('H:i');
-            }, $times);
-            $houropen = $horaires[0];
-            $hourclose = $horaires[1];
-        }
-
-        if($request->date_seule) {
-            $date_seule = Carbon::parse($request->date_seule)->format('Y-m-d');
-        }
-
-        if($request->dates) {
-            $dayopen = Carbon::parse($request->dates[0])->format('Y-m-d');
-            $dayclose = Carbon::parse($request->dates[1])->format('Y-m-d');
-        }
-
-        if ($request->months) {
-            $startMonth = Carbon::create(
-                $request->months[0]['year'],
-                $request->months[0]['month'] + 1,
-                1
-            )->startOfMonth();
-
-            $endMonth = Carbon::create(
-                $request->months[1]['year'],
-                $request->months[1]['month'] + 1,
-                1
-            )->endOfMonth();
-        }
-
-        if (
-            (isset($time_seule) && !empty($time_seule)) ||
-            (isset($houropen) && !empty($houropen)) ||
-            (isset($hourclose) && !empty($hourclose)) ||
-            (isset($date_seule) && !empty($date_seule)) ||
-            (isset($dayopen) && !empty($dayopen)) ||
-            (isset($dayclose) && !empty($dayclose)) ||
-            (isset($startMonth) && !empty($startMonth)) ||
-            (isset($endMonth) && !empty($endMonth))
-        ) {
-            $data = [
-                'structure_activite_id' => $structureActivite->id,
-                'dayopen' => $dayopen ?? null,
-                'dayclose' => $dayclose ?? null,
-                'houropen' => $houropen ?? null,
-                'hourclose' => $hourclose ?? null,
-                'date_debut' => $date_seule ?? null,
-                'time_debut' => $time_seule ?? null,
-                'start_month' => $startMonth ?? null,
-                'end_month' => $endMonth ?? null,
-            ];
-
-            $activiteDatesTimes = $structureActivite->dates()->create($data);
-        }
-
         if($request->address) {
             //check if address exist
             foreach($structure->adresses as $address) {
@@ -490,6 +428,71 @@ class ActiviteController extends Controller
                 'phone' => $request->instructeur_phone,
             ]);
         }
+
+
+        // Dates et horaires
+        if($request->time_seule) {
+            $time_seule = Carbon::createFromTime($request->time_seule['hours'], $request->time_seule['minutes'])->format('H:i');
+        }
+
+        if($request->times) {
+            $times = $request->times;
+            $horaires = array_map(function ($time) {
+                return Carbon::createFromTime($time['hours'], $time['minutes'])->format('H:i');
+            }, $times);
+            $houropen = $horaires[0];
+            $hourclose = $horaires[1];
+        }
+
+        if($request->date_seule) {
+            $date_seule = Carbon::parse($request->date_seule)->format('Y-m-d');
+        }
+
+        if($request->dates) {
+            $dayopen = Carbon::parse($request->dates[0])->format('Y-m-d');
+            $dayclose = Carbon::parse($request->dates[1])->format('Y-m-d');
+        }
+
+        if ($request->months) {
+            $startMonth = Carbon::create(
+                $request->months[0]['year'],
+                $request->months[0]['month'] + 1,
+                1
+            )->startOfMonth();
+
+            $endMonth = Carbon::create(
+                $request->months[1]['year'],
+                $request->months[1]['month'] + 1,
+                1
+            )->endOfMonth();
+        }
+
+        if (
+            (isset($time_seule) && !empty($time_seule)) ||
+            (isset($houropen) && !empty($houropen)) ||
+            (isset($hourclose) && !empty($hourclose)) ||
+            (isset($date_seule) && !empty($date_seule)) ||
+            (isset($dayopen) && !empty($dayopen)) ||
+            (isset($dayclose) && !empty($dayclose)) ||
+            (isset($startMonth) && !empty($startMonth)) ||
+            (isset($endMonth) && !empty($endMonth))
+        ) {
+            $data = [
+                'structure_activite_id' => $structureActivite->id,
+                'structure_produit_id' => $structureProduit->id,
+                'dayopen' => $dayopen ?? null,
+                'dayclose' => $dayclose ?? null,
+                'houropen' => $houropen ?? null,
+                'hourclose' => $hourclose ?? null,
+                'date_debut' => $date_seule ?? null,
+                'time_debut' => $time_seule ?? null,
+                'start_month' => $startMonth ?? null,
+                'end_month' => $endMonth ?? null,
+            ];
+
+            $activiteDatesTimes = $structureActivite->dates()->create($data);
+        }
+
 
         return to_route('structures.disciplines.show', ['structure' => $structure->slug, 'discipline' => $discipline])->with('success', 'Activité ajoutée avec succès, ajoutez d\'autres activités à votre structure.');
     }

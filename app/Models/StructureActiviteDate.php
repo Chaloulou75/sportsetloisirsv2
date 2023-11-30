@@ -23,4 +23,9 @@ class StructureActiviteDate extends Model
     {
         return $this->belongsTo(StructureActivite::class);
     }
+
+    public function structure_produit(): BelongsTo
+    {
+        return $this->belongsTo(StructureProduit::class);
+    }
 }

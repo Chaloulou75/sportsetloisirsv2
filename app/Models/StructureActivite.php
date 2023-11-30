@@ -71,7 +71,6 @@ class StructureActivite extends Model
             'structure.city:id,ville,ville_formatee,code_postal',
             'structure.departement:id,departement,numero',
             'structure.structuretype:id,name,slug',
-            'dates',
             'instructeurs',
             'discipline:id,name',
             'categorie:id,categorie_id,discipline_id,nom_categorie_client',
@@ -80,6 +79,7 @@ class StructureActivite extends Model
                 $query->latest();
             },
             'produits.adresse',
+            'produits.dates',
             'produits.horaire',
             'produits.criteres',
             'produits.criteres.critere',

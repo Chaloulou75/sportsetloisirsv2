@@ -127,13 +127,14 @@ const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
     }
 };
 
-// Check if a checkbox is selected
-const isCheckboxSelected = (critereId, optionValue) => {
-    return (
-        selectedCriteres[critereId] &&
-        selectedCriteres[critereId].includes(optionValue)
-    );
-};
+const isCheckboxSelected = computed(() => {
+    return (critereId, optionValue) => {
+        return (
+            formCriteres.value.criteres[critereId] &&
+            formCriteres.value.criteres[critereId].includes(optionValue)
+        );
+    };
+});
 
 const formatCurrency = (value) => {
     // Remove the non-numeric characters from the currency value
@@ -176,7 +177,6 @@ const formatCityName = (ville) => {
 const displayPlanning = ref(false);
 
 const getEvents = () => {
-    // console.log(filteredProductsWithCriteres.value);
     const events = [];
 
     for (const produit of filteredProductsWithCriteres.value) {

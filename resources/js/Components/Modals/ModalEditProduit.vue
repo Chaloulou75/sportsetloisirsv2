@@ -1,6 +1,6 @@
 <script setup>
 import { useForm, router } from "@inertiajs/vue3";
-import { ref, watch, computed, defineAsyncComponent } from "vue";
+import { ref, reactive, watch, computed, defineAsyncComponent } from "vue";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
 import RadioForm from "@/Components/Forms/RadioForm.vue";
@@ -85,76 +85,121 @@ watch(
                 const critereId = critere.critere_id;
                 const critereValue = critere.critere_valeur;
                 const sousCriteres = critere.sous_criteres;
-
-                if (Array.isArray(critereValue)) {
-                    if (!Array.isArray(formEditProduit.criteres[critereId])) {
-                        formEditProduit.criteres[critereId] = [];
-                    }
-                    formEditProduit.criteres[critereId].push(...critereValue);
-                    isCheckboxSelected();
-                } else {
-                    if (!formEditProduit.criteres[critereId]) {
-                        formEditProduit.criteres[critereId] = critereValue;
-                    } else {
-                        const existingValue =
-                            formEditProduit.criteres[critereId];
-                        if (!Array.isArray(existingValue)) {
-                            formEditProduit.criteres[critereId] = [
-                                existingValue,
-                            ];
-                        }
-                        formEditProduit.criteres[critereId].push(critereValue);
-                    }
-                }
-
-                if (sousCriteres) {
-                    sousCriteres.forEach((sousCritere) => {
-                        const souscritereId = sousCritere.id;
-
-                        if (sousCritere.sous_critere_valeur !== null) {
-                            const souscritereValue =
-                                sousCritere.sous_critere_valeur;
+                filteredCriteres.value.forEach((officialCritere) => {
+                    officialCritere.valeurs.forEach((officialCritereValeur) => {
+                        if (officialCritereValeur.id === critereValue.id) {
                             if (!formEditProduit.criteres[critereId]) {
-                                formEditProduit.souscriteres[souscritereId] =
-                                    souscritereValue;
+                                formEditProduit.criteres[critereId] =
+                                    officialCritereValeur;
+                            } else {
+                                const existingValue =
+                                    formEditProduit.criteres[critereId];
+                                if (!Array.isArray(existingValue)) {
+                                    formEditProduit.criteres[critereId] = [
+                                        existingValue,
+                                    ];
+                                    if (
+                                        !formEditProduit.criteres[
+                                            critereId
+                                        ].includes(officialCritereValeur)
+                                    ) {
+                                        formEditProduit.criteres[
+                                            critereId
+                                        ].push(officialCritereValeur);
+                                    }
+                                } else {
+                                    if (
+                                        !formEditProduit.criteres[
+                                            critereId
+                                        ].includes(officialCritereValeur)
+                                    ) {
+                                        formEditProduit.criteres[
+                                            critereId
+                                        ].push(officialCritereValeur);
+                                    }
+                                }
                             }
-                        } else {
-                            formEditProduit.souscriteres[souscritereId] =
-                                sousCritere.valeur;
+                            if (officialCritereValeur.sous_criteres) {
+                                officialCritereValeur.sous_criteres.forEach(
+                                    (officialSousCritere) => {
+                                        const souscritereId =
+                                            officialSousCritere.id;
+                                        if (
+                                            officialSousCritere
+                                                .sous_criteres_valeurs.length >
+                                            0
+                                        ) {
+                                            officialSousCritere.sous_criteres_valeurs.forEach(
+                                                (officialSousCritereValeur) => {
+                                                    const officialSousCritereValeurId =
+                                                        officialSousCritereValeur.id;
+                                                    sousCriteres.forEach(
+                                                        (sousCritere) => {
+                                                            const prodSousCritValeur =
+                                                                sousCritere.sous_critere_valeur;
+                                                            if (
+                                                                prodSousCritValeur &&
+                                                                prodSousCritValeur.id ===
+                                                                    officialSousCritereValeurId
+                                                            ) {
+                                                                formEditProduit.souscriteres[
+                                                                    souscritereId
+                                                                ] =
+                                                                    officialSousCritereValeur;
+                                                            }
+                                                        }
+                                                    );
+                                                }
+                                            );
+                                        } else {
+                                            sousCriteres.forEach(
+                                                (sousCritere) => {
+                                                    const prodSousCritValeur =
+                                                        sousCritere.valeur;
+                                                    formEditProduit.souscriteres[
+                                                        souscritereId
+                                                    ] = prodSousCritValeur;
+                                                }
+                                            );
+                                        }
+                                    }
+                                );
+                            }
                         }
                     });
-                }
+                });
             });
-            console.log(formEditProduit.souscriteres);
         }
     }
 );
 
 const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
+    const selectedCriteria = formEditProduit.criteres[critereId];
+
     if (checked) {
-        if (!Array.isArray(formEditProduit.criteres[critereId])) {
-            formEditProduit.criteres[critereId] = [
-                formEditProduit.criteres[critereId],
-            ];
+        if (!Array.isArray(selectedCriteria)) {
+            formEditProduit.criteres[critereId] = ref([optionValue]);
+        } else {
+            selectedCriteria.push(optionValue);
         }
-        formEditProduit.criteres[critereId].push(optionValue);
     } else {
-        if (Array.isArray(formEditProduit.criteres[critereId])) {
-            const index =
-                formEditProduit.criteres[critereId].indexOf(optionValue);
+        if (Array.isArray(selectedCriteria)) {
+            const index = selectedCriteria.indexOf(optionValue);
             if (index !== -1) {
-                formEditProduit.criteres[critereId].splice(index, 1);
+                selectedCriteria.splice(index, 1);
             }
         }
     }
 };
 
-const isCheckboxSelected = (critereId, optionValue) => {
-    return (
-        formEditProduit.criteres[critereId] &&
-        formEditProduit.criteres[critereId].includes(optionValue)
-    );
-};
+const isCheckboxSelected = computed(() => {
+    return (critereId, optionValue) => {
+        const isSelected =
+            formEditProduit.criteres[critereId] &&
+            formEditProduit.criteres[critereId].includes(optionValue);
+        return isSelected;
+    };
+});
 
 const onSubmitEditProduitForm = () => {
     router.put(
@@ -669,8 +714,8 @@ const onSubmitEditProduitForm = () => {
                                                                         .criteres[
                                                                         critere
                                                                             .id
-                                                                    ].id ===
-                                                                        valeur.id &&
+                                                                    ] ===
+                                                                        valeur &&
                                                                     souscritere.type_champ_form ===
                                                                         'select' &&
                                                                     souscritere.dis_cat_crit_val_id ===
@@ -704,8 +749,8 @@ const onSubmitEditProduitForm = () => {
                                                                         .criteres[
                                                                         critere
                                                                             .id
-                                                                    ].id ===
-                                                                        valeur.id &&
+                                                                    ] ===
+                                                                        valeur &&
                                                                     souscritere.type_champ_form ===
                                                                         'number' &&
                                                                     souscritere.dis_cat_crit_val_id ===
@@ -726,8 +771,8 @@ const onSubmitEditProduitForm = () => {
                                                                         .criteres[
                                                                         critere
                                                                             .id
-                                                                    ].id ===
-                                                                        valeur.id &&
+                                                                    ] ===
+                                                                        valeur &&
                                                                     souscritere.type_champ_form ===
                                                                         'number' &&
                                                                     souscritere.dis_cat_crit_val_id ===

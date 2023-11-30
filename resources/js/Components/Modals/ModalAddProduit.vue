@@ -88,26 +88,32 @@ watch(
 );
 
 const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
+    const selectedCriteria = formAddProduit.criteres[critereId];
+
     if (checked) {
-        if (!formAddProduit.criteres[critereId]) {
-            formAddProduit.criteres[critereId] = [optionValue];
+        if (!Array.isArray(selectedCriteria)) {
+            formAddProduit.criteres[critereId] = ref([optionValue]);
         } else {
-            formAddProduit.criteres[critereId].push(optionValue);
+            selectedCriteria.push(optionValue);
         }
     } else {
-        const index = formAddProduit.criteres[critereId].indexOf(optionValue);
-        if (index !== -1) {
-            formAddProduit.criteres[critereId].splice(index, 1);
+        if (Array.isArray(selectedCriteria)) {
+            const index = selectedCriteria.indexOf(optionValue);
+            if (index !== -1) {
+                selectedCriteria.splice(index, 1);
+            }
         }
     }
 };
 
-const isCheckboxSelected = (critereId, optionValue) => {
-    return (
-        formAddProduit.criteres[critereId] &&
-        formAddProduit.criteres[critereId].includes(optionValue)
-    );
-};
+const isCheckboxSelected = computed(() => {
+    return (critereId, optionValue) => {
+        return (
+            formAddProduit.criteres[critereId] &&
+            formAddProduit.criteres[critereId].includes(optionValue)
+        );
+    };
+});
 
 const onSubmitAddProduitForm = () => {
     formAddProduit.post(
@@ -713,6 +719,10 @@ const onSubmitAddProduitForm = () => {
                                     </button>
                                     <button
                                         :disabled="formAddProduit.processing"
+                                        :class="{
+                                            'opacity-25':
+                                                formAddProduit.processing,
+                                        }"
                                         type="submit"
                                         class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                     >
