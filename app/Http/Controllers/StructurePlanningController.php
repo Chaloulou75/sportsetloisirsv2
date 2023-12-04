@@ -3,18 +3,12 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use Inertia\Inertia;
 use App\Models\Structure;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Models\StructureHoraire;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Models\StructurePlanning;
-use App\Models\StructureProduitCritere;
-use Illuminate\Support\Facades\Redirect;
-use App\Models\LienDisciplineCategorieCritere;
-use App\Models\LienDisciplineCategorieCritereValeur;
 
 class StructurePlanningController extends Controller
 {

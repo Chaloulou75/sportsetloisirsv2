@@ -203,7 +203,7 @@ const onSubmitAddProduitForm = () => {
                                                     :key="critere.id"
                                                     class="col-span-1"
                                                 >
-                                                    <!-- select -->
+                                                    <!-- select  -->
                                                     <SelectForm
                                                         :classes="'block'"
                                                         class="max-w-sm"

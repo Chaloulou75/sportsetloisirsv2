@@ -49,7 +49,6 @@ class StructureController extends Controller
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
-
         return Inertia::render('Structures/Index', [
             'structures' => Structure::with([
                     'adresses'  => function ($query) {

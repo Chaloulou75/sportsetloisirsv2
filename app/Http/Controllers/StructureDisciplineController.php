@@ -19,9 +19,6 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\RedirectResponse;
 use App\Models\LienDisciplineCategorie;
 use App\Models\StructureProduitCritere;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Redirect;
-use App\Models\StructureProduitSousCritere;
 use App\Models\LienDisciplineCategorieCritere;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
@@ -33,21 +30,19 @@ class StructureDisciplineController extends Controller
     public function index(Structure $structure)
     {
         $structure = Structure::with([
-                                'disciplines',
-                                'activites',
-                                'adresses' => function ($query) {
-                                    $query->latest();
-                                },
-                                'produits',
-                                'tarifs',
-                                'tarifs.tarifType',
-                                'tarifs.structureTarifTypeInfos',
-                                'tarifs.structureTarifTypeInfos.tarifTypeAttribut'
-                            ])->select(['id', 'name', 'slug'])
-                            ->where('id', $structure->id)
-                            ->first();
-
-
+            'disciplines',
+            'activites',
+            'adresses' => function ($query) {
+                $query->latest();
+            },
+            'produits',
+            'tarifs',
+            'tarifs.tarifType',
+            'tarifs.structureTarifTypeInfos',
+            'tarifs.structureTarifTypeInfos.tarifTypeAttribut'
+        ])->select(['id', 'name', 'slug'])
+        ->where('id', $structure->id)
+        ->first();
 
         $tarifTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();
 

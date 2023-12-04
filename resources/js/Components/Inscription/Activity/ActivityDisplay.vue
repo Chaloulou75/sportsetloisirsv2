@@ -625,7 +625,7 @@ const destroyTarif = (tarif, produit) => {
                                             class="border border-slate-600 px-2 py-2 text-sm font-medium text-white"
                                             colspan="1"
                                         >
-                                            Numero
+                                            N°
                                         </th>
                                         <th
                                             class="border border-slate-600 px-2 py-2 text-sm font-medium text-white"

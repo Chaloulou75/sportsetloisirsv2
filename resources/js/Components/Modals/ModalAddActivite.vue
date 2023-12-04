@@ -403,7 +403,7 @@ onMounted(() => {
                                                     :options="critere.valeurs"
                                                 />
 
-                                                <!-- input text -->
+                                                <!-- input text  -->
                                                 <div
                                                     class="max-w-sm"
                                                     v-if="

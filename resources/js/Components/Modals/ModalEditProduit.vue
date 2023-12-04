@@ -1,6 +1,13 @@
 <script setup>
-import { useForm, router } from "@inertiajs/vue3";
-import { ref, reactive, watch, computed, defineAsyncComponent } from "vue";
+import { useForm } from "@inertiajs/vue3";
+import {
+    ref,
+    reactive,
+    onMounted,
+    watch,
+    computed,
+    defineAsyncComponent,
+} from "vue";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
 import RadioForm from "@/Components/Forms/RadioForm.vue";
@@ -72,6 +79,34 @@ const formEditProduit = useForm({
     rayon_km: 0,
 });
 
+const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
+    const selectedCriteria = formEditProduit.criteres[critereId];
+
+    if (checked) {
+        if (!Array.isArray(selectedCriteria)) {
+            formEditProduit.criteres[critereId] = ref([optionValue]);
+        } else {
+            selectedCriteria.push(optionValue);
+        }
+    } else {
+        if (Array.isArray(selectedCriteria)) {
+            const index = selectedCriteria.indexOf(optionValue);
+            if (index !== -1) {
+                selectedCriteria.splice(index, 1);
+            }
+        }
+    }
+};
+
+const isCheckboxSelected = computed(() => {
+    return (critereId, optionValue) => {
+        const isSelected =
+            formEditProduit.criteres[critereId] &&
+            formEditProduit.criteres[critereId].includes(optionValue);
+        return isSelected;
+    };
+});
+
 watch(
     () => props.produit,
     (newValue) => {
@@ -89,11 +124,21 @@ watch(
                     officialCritere.valeurs.forEach((officialCritereValeur) => {
                         if (officialCritereValeur.id === critereValue.id) {
                             if (!formEditProduit.criteres[critereId]) {
-                                formEditProduit.criteres[critereId] =
-                                    officialCritereValeur;
+                                if (
+                                    officialCritere.type_champ_form ===
+                                    "checkbox"
+                                ) {
+                                    formEditProduit.criteres[critereId] = [
+                                        officialCritereValeur,
+                                    ];
+                                } else {
+                                    formEditProduit.criteres[critereId] =
+                                        officialCritereValeur;
+                                }
                             } else {
                                 const existingValue =
                                     formEditProduit.criteres[critereId];
+
                                 if (!Array.isArray(existingValue)) {
                                     formEditProduit.criteres[critereId] = [
                                         existingValue,
@@ -170,109 +215,62 @@ watch(
                 });
             });
 
-            newValue.dates.forEach((dateProduit) => {
-                if (dateProduit.time_debut) {
-                    const [hours, minutes] = dateProduit.time_debut
-                        .split(":")
-                        .map(Number);
-                    formEditProduit.time_seule = { hours, minutes };
-                }
-                if (dateProduit.houropen && dateProduit.hourclose) {
-                    const [hoursopen, minutesopen] = dateProduit.houropen
-                        .split(":")
-                        .map(Number);
-                    const [hoursclose, minutesclose] = dateProduit.hourclose
-                        .split(":")
-                        .map(Number);
-                    formEditProduit.times = [
-                        { hours: hoursopen, minutes: minutesopen },
-                        { hours: hoursclose, minutes: minutesclose },
-                    ];
-                }
-                if (dateProduit.date_debut) {
-                    formEditProduit.date_seule = new Date(
-                        dateProduit.date_debut
-                    );
-                }
-                if (dateProduit.dayopen && dateProduit.dayclose) {
-                    const dateOpen = new Date(dateProduit.dayopen);
-                    const dateClose = new Date(dateProduit.dayclose);
-                    formEditProduit.dates = [dateOpen, dateClose];
-                }
-                if (dateProduit.start_month && dateProduit.end_month) {
-                    const start = {
-                        month: new Date(dateProduit.start_month).getMonth(),
-                        year: new Date(dateProduit.start_month).getFullYear(),
-                    };
-                    const end = {
-                        month: new Date(dateProduit.end_month).getMonth(),
-                        year: new Date(dateProduit.end_month).getFullYear(),
-                    };
-                    formEditProduit.months = [start, end];
-                }
-            });
+            if (newValue.dates) {
+                newValue.dates.forEach((dateProduit) => {
+                    if (dateProduit.time_debut) {
+                        const [hours, minutes] = dateProduit.time_debut
+                            .split(":")
+                            .map(Number);
+                        formEditProduit.time_seule = { hours, minutes };
+                    }
+                    if (dateProduit.houropen && dateProduit.hourclose) {
+                        const [hoursopen, minutesopen] = dateProduit.houropen
+                            .split(":")
+                            .map(Number);
+                        const [hoursclose, minutesclose] = dateProduit.hourclose
+                            .split(":")
+                            .map(Number);
+                        formEditProduit.times = [
+                            { hours: hoursopen, minutes: minutesopen },
+                            { hours: hoursclose, minutes: minutesclose },
+                        ];
+                    }
+                    if (dateProduit.date_debut) {
+                        formEditProduit.date_seule = new Date(
+                            dateProduit.date_debut
+                        );
+                    }
+                    if (dateProduit.dayopen && dateProduit.dayclose) {
+                        const dateOpen = new Date(dateProduit.dayopen);
+                        const dateClose = new Date(dateProduit.dayclose);
+                        formEditProduit.dates = [dateOpen, dateClose];
+                    }
+                    if (dateProduit.start_month && dateProduit.end_month) {
+                        const start = {
+                            month: new Date(dateProduit.start_month).getMonth(),
+                            year: new Date(
+                                dateProduit.start_month
+                            ).getFullYear(),
+                        };
+                        const end = {
+                            month: new Date(dateProduit.end_month).getMonth(),
+                            year: new Date(dateProduit.end_month).getFullYear(),
+                        };
+                        formEditProduit.months = [start, end];
+                    }
+                });
+            }
         }
     }
 );
 
-const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
-    const selectedCriteria = formEditProduit.criteres[critereId];
-
-    if (checked) {
-        if (!Array.isArray(selectedCriteria)) {
-            formEditProduit.criteres[critereId] = ref([optionValue]);
-        } else {
-            selectedCriteria.push(optionValue);
-        }
-    } else {
-        if (Array.isArray(selectedCriteria)) {
-            const index = selectedCriteria.indexOf(optionValue);
-            if (index !== -1) {
-                selectedCriteria.splice(index, 1);
-            }
-        }
-    }
-};
-
-const isCheckboxSelected = computed(() => {
-    return (critereId, optionValue) => {
-        const isSelected =
-            formEditProduit.criteres[critereId] &&
-            formEditProduit.criteres[critereId].includes(optionValue);
-        return isSelected;
-    };
-});
-
 const onSubmitEditProduitForm = () => {
-    router.put(
+    formEditProduit.put(
         route("structures.activites.produits.update", {
             structure: props.structure.slug,
             activite: props.structureActivite.id,
             produit: props.produit.id,
         }),
-        {
-            _method: "put",
-            criteres: formEditProduit.criteres,
-            souscriteres: formEditProduit.souscriteres,
-            adresse: formEditProduit.adresse,
-            address: formEditProduit.address,
-            city: formEditProduit.city,
-            zip_code: formEditProduit.zip_code,
-            country: formEditProduit.country,
-            address_lat: formEditProduit.address_lat,
-            address_lng: formEditProduit.address_lng,
-            date_seule: formEditProduit.date_seule,
-            dates: formEditProduit.dates,
-            time_seule: formEditProduit.time_seule,
-            times: formEditProduit.times,
-            months: formEditProduit.months,
-            instructeurId: formEditProduit.instructeurId,
-            instructeur_email: formEditProduit.instructeur_email,
-            instructeur_contact: formEditProduit.instructeur_contact,
-            instructeur_phone: formEditProduit.instructeur_phone,
-            rayon_km: formEditProduit.rayon_km,
-            actif: formEditProduit.actif,
-        },
         {
             preserveScroll: true,
             remember: false,
@@ -326,8 +324,8 @@ const onSubmitEditProduitForm = () => {
                                     <h3
                                         class="text-lg font-medium leading-6 text-gray-800"
                                     >
-                                        Modifier un produit / déclinaison pour
-                                        l'activité
+                                        Modifier le produit / déclinaison
+                                        {{ produit.id }} pour l'activité
                                         <span class="text-blue-700">
                                             {{ structureActivite.titre }}</span
                                         >
@@ -394,7 +392,7 @@ const onSubmitEditProduitForm = () => {
                                                     :key="critere.id"
                                                     class="col-span-1"
                                                 >
-                                                    <!-- select -->
+                                                    <!-- select  -->
                                                     <SelectForm
                                                         :classes="'block'"
                                                         class="max-w-sm"

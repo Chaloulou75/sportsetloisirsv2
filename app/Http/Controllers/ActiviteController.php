@@ -544,7 +544,8 @@ class ActiviteController extends Controller
     {
         $prodCrit = StructureProduitCritere::where('produit_id', $structureProduit->id)->where('critere_id', $critereId)->where('valeur_id', $critereValeurId)->first();
 
-        StructureProduitSousCritere::create([
+        if(isset($prodCrit)) {
+            StructureProduitSousCritere::create([
             'activite_id' => $structureActivite->id,
             'produit_id' => $structureProduit->id,
             'critere_id' => $critereId,
@@ -554,6 +555,8 @@ class ActiviteController extends Controller
             'sous_critere_valeur_id' => $souscriteresValues['id'] ?? null,
             'valeur' => $souscriteresValues['valeur'] ?? $souscriteresValues,
         ]);
+        }
+
     }
 
 }
