@@ -1,7 +1,14 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import { ref, computed, defineAsyncComponent, provide, watch, onMounted } from "vue";
+import {
+    ref,
+    computed,
+    defineAsyncComponent,
+    provide,
+    watch,
+    onMounted,
+} from "vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
@@ -181,23 +188,38 @@ const filterProducts = () => {
         filteredProduits.value = props.produits.data;
     } else {
         filteredProduits.value = props.produits.data.filter((produit) => {
-            return selectedCriteres.value.every((selectedCritere) => {
-                if (!!selectedCritere.inclus_all === true) {
-                    return true; // Do not apply the filter
-                } else if (Array.isArray(selectedCritere)) {
-                    return selectedCritere.some((critereInArray) => {
+            return (
+                selectedCriteres.value.every((selectedCritere) => {
+                    if (!!selectedCritere.inclus_all === true) {
+                        return true; // Do not apply the filter
+                    } else if (Array.isArray(selectedCritere)) {
+                        return selectedCritere.some((critereInArray) => {
+                            return produit.criteres.some(
+                                (produitCritere) =>
+                                    produitCritere.valeur_id ===
+                                    critereInArray.id
+                            );
+                        });
+                    } else {
                         return produit.criteres.some(
                             (produitCritere) =>
-                                produitCritere.valeur_id === critereInArray.id
+                                produitCritere.valeur_id === selectedCritere.id
+                        );
+                    }
+                }) &&
+                selectedSousCriteres.value.every((selectedSousCritere) => {
+                    return produit.criteres.some((produitCritere) => {
+                        return (
+                            produitCritere.sous_criteres &&
+                            produitCritere.sous_criteres.some(
+                                (sousCritere) =>
+                                    sousCritere.sous_critere_valeur_id ===
+                                    selectedSousCritere.id
+                            )
                         );
                     });
-                } else {
-                    return produit.criteres.some(
-                        (produitCritere) =>
-                            produitCritere.valeur_id === selectedCritere.id
-                    );
-                }
-            });
+                })
+            );
         });
     }
 };
