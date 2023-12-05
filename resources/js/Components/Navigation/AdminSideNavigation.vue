@@ -96,6 +96,21 @@ const user = computed(() => page.props.auth.user);
 
                 <li class="w-full">
                     <Link
+                        :href="route('admin.categories.index')"
+                        :active="route().current('admin.categories.index')"
+                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        :class="{
+                            'bg-blue-600 text-white': route().current(
+                                'admin.categories.index'
+                            ),
+                        }"
+                    >
+                        Gestion des catégories
+                    </Link>
+                </li>
+
+                <li class="w-full">
+                    <Link
                         :href="route('admin.criteres.index')"
                         :active="route().current('admin.criteres.index')"
                         class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
@@ -323,6 +338,11 @@ const user = computed(() => page.props.auth.user);
                     :href="route('admin.structures.index')"
                 >
                     Gestion des structures
+                </BreezeResponsiveNavLink>
+                <BreezeResponsiveNavLink
+                    :href="route('admin.categories.index')"
+                >
+                    Gestion des catégories
                 </BreezeResponsiveNavLink>
                 <BreezeResponsiveNavLink :href="route('admin.criteres.index')">
                     Gestion des critères

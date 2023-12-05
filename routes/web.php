@@ -11,6 +11,7 @@ use App\Http\Controllers\CritereController;
 use App\Http\Controllers\MentionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActiviteController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\StructureUserController;
@@ -137,6 +138,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Admin routes
     Route::prefix('admin')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('admin.index');
+
+        Route::get('/categories', [CategoryController::class, 'index'])->name('admin.categories.index');
+        Route::post('/categories', [CategoryController::class, 'store'])->name('admin.categories.store');
+        Route::patch('/categories/{categorie}', [CategoryController::class, 'update'])->name('admin.categories.update');
+        Route::delete('/categories/{categorie}', [CategoryController::class, 'destroy'])->name('admin.categories.destroy');
 
         Route::get('/utilisateurs', [UserController::class, 'index'])->name('admin.users.index');
         Route::get('/structures', [AdminStructureController::class, 'index'])->name('admin.structures.index');
