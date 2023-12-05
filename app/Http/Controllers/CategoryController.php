@@ -59,6 +59,9 @@ class CategoryController extends Controller
      */
     public function destroy(Categorie $categorie)
     {
+        $user = auth()->user();
+        $this->authorize('viewAdmin', $user);
+
         $categorie->delete();
         return to_route('admin.categories.index')->with('success', 'Catégorie supprimé');
     }

@@ -80,7 +80,7 @@ class StructurePlanningController extends Controller
             'end' => $endDate,
         ]);
 
-        return to_route('structures.disciplines.index', $structure)->with('success', "Planning mis à jour");
+        return to_route('structures.disciplines.show', ['structure' => $structure, 'discipline' => $activite->discipline])->with('success', "Planning mis à jour");
 
     }
 

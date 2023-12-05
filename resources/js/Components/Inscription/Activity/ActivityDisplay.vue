@@ -113,7 +113,9 @@ const formatDate = (dateTime) => {
 };
 
 const formatTime = (time) => {
-    const formattedTime = time.substring(0, 5); // Extract the first 5 characters (HH:mm)
+    const hours = time.substring(0, 2);
+    const minutes = time.substring(3, 5);
+    let formattedTime = `${hours}h${minutes}`;
     return formattedTime;
 };
 
@@ -782,49 +784,44 @@ const destroyTarif = (tarif, produit) => {
                                                         class="mr-1 h-6 w-6 text-gray-600"
                                                     />
                                                     <div
-                                                        v-if="
-                                                            produit.horaire_id
-                                                        "
+                                                        v-if="produit.dates"
                                                         class="flex flex-col"
                                                     >
-                                                        <span
-                                                            class="text-xs text-gray-600"
-                                                            >Ouvert du
-                                                            {{
-                                                                formatDate(
-                                                                    produit
-                                                                        .horaire
-                                                                        .dayopen
-                                                                )
-                                                            }}
-                                                            au
-                                                            {{
-                                                                formatDate(
-                                                                    produit
-                                                                        .horaire
-                                                                        .dayclose
-                                                                )
-                                                            }}</span
+                                                        <template
+                                                            v-for="date in produit.dates"
+                                                            :key="date.id"
                                                         >
-                                                        <span
-                                                            class="text-xs text-gray-600"
-                                                            >De
-                                                            {{
-                                                                formatTime(
-                                                                    produit
-                                                                        .horaire
-                                                                        .houropen
-                                                                )
-                                                            }}
-                                                            à
-                                                            {{
-                                                                formatTime(
-                                                                    produit
-                                                                        .horaire
-                                                                        .hourclose
-                                                                )
-                                                            }}</span
-                                                        >
+                                                            <span
+                                                                class="text-xs text-gray-600"
+                                                                >Ouvert du
+                                                                {{
+                                                                    formatDate(
+                                                                        date.dayopen
+                                                                    )
+                                                                }}
+                                                                au
+                                                                {{
+                                                                    formatDate(
+                                                                        date.dayclose
+                                                                    )
+                                                                }}</span
+                                                            >
+                                                            <span
+                                                                class="text-xs text-gray-600"
+                                                                >De
+                                                                {{
+                                                                    formatTime(
+                                                                        date.houropen
+                                                                    )
+                                                                }}
+                                                                à
+                                                                {{
+                                                                    formatTime(
+                                                                        date.hourclose
+                                                                    )
+                                                                }}</span
+                                                            >
+                                                        </template>
                                                     </div>
                                                     <span
                                                         v-else

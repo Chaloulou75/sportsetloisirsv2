@@ -92,7 +92,20 @@ const formatCurrency = (value) => {
                 >
                     <li v-for="critere in produit.criteres" :key="critere.id">
                         {{ critere.critere.nom }}:
-                        <span class="font-semibold">{{ critere.valeur }}</span>
+                        <span class="font-semibold"
+                            >{{ critere.valeur }}
+                            <span
+                                v-if="critere.sous_criteres.length > 0"
+                                class="text-xs font-medium text-gray-600"
+                            >
+                                <span
+                                    v-for="sousCriteres in critere.sous_criteres"
+                                    :key="sousCriteres.id"
+                                >
+                                    ({{ sousCriteres.valeur }})
+                                </span>
+                            </span>
+                        </span>
                     </li>
                 </ul>
 

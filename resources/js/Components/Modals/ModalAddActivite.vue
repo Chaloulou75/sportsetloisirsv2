@@ -336,11 +336,18 @@ onMounted(() => {
                                             class="py-2 text-sm font-semibold text-gray-700"
                                         >
                                             Déclinaison de cette activité:
+                                            <span class="text-xs italic"
+                                                >(Ceci est la première
+                                                déclinaison de votre activité,
+                                                vous pourrez en ajouter dans
+                                                votre panel
+                                                d'administration)</span
+                                            >
                                         </h3>
 
                                         <div
                                             v-if="filteredCriteres.length > 0"
-                                            class="mx-auto grid w-full grid-cols-1 gap-4 md:grid-cols-3"
+                                            class="mx-auto grid w-full grid-cols-1 gap-4 bg-gray-100 p-2 shadow md:grid-cols-3"
                                         >
                                             <div
                                                 v-for="critere in filteredCriteres"

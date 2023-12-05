@@ -3,9 +3,14 @@ import { Link } from "@inertiajs/vue3";
 import { ref, nextTick, watch, onMounted, computed } from "vue";
 import { useCookies } from "@vueuse/integrations/useCookies";
 import { classMapping } from "@/Utils/classMapping.js";
-import { MapPinIcon } from "@heroicons/vue/24/outline";
+import { MapPinIcon, ClockIcon } from "@heroicons/vue/24/outline";
 import { HeartIcon } from "@heroicons/vue/24/solid";
 import { TransitionRoot } from "@headlessui/vue";
+import dayjs from "dayjs";
+import "dayjs/locale/fr";
+import localeData from "dayjs/plugin/localeData";
+dayjs.locale("fr");
+dayjs.extend(localeData);
 
 const emit = defineEmits(["card-hover", "card-out"]);
 
@@ -99,6 +104,17 @@ const updateIsFavorite = async () => {
 onMounted(() => {
     updateIsFavorite();
 });
+
+const formatDate = (dateTime) => {
+    return dayjs(dateTime).locale("fr").format("DD MMMM YYYY");
+};
+
+const formatTime = (time) => {
+    const hours = time.substring(0, 2);
+    const minutes = time.substring(3, 5);
+    let formattedTime = `${hours}h${minutes}`;
+    return formattedTime;
+};
 
 const formatCurrency = (value) => {
     const numericValue = Number(value.replace(/[^0-9.-]+/g, ""));
@@ -194,35 +210,16 @@ const formatCityName = (ville) => {
                                         >{{ critere.valeur }}
                                         <span
                                             v-if="
-                                                critere.critere_valeur &&
-                                                critere.critere_valeur
-                                                    .sous_criteres &&
-                                                critere.critere_valeur
-                                                    .sous_criteres.length > 0
+                                                critere.sous_criteres.length > 0
                                             "
                                             class="text-xs font-medium text-gray-600"
                                         >
                                             <span
-                                                v-for="sousCriteres in critere
-                                                    .critere_valeur
-                                                    .sous_criteres"
+                                                v-for="sousCriteres in critere.sous_criteres"
                                                 :key="sousCriteres.id"
+                                                class="text-xs font-semibold text-gray-600"
                                             >
-                                                <span
-                                                    v-for="sousCritValeur in sousCriteres.prod_sous_crit_valeurs"
-                                                    :key="sousCritValeur.id"
-                                                    class="text-xs font-semibold text-gray-600"
-                                                >
-                                                    <span
-                                                        v-if="
-                                                            sousCritValeur.produit_id ===
-                                                            produit.id
-                                                        "
-                                                        >({{
-                                                            sousCritValeur.valeur
-                                                        }})</span
-                                                    ></span
-                                                >
+                                                ({{ sousCriteres.valeur }})
                                             </span>
                                         </span>
                                     </span>
@@ -230,6 +227,44 @@ const formatCityName = (ville) => {
                             </template>
                         </ul>
                     </div>
+                    <div v-if="produit.dates.length > 0">
+                        <p class="mt-2 text-base font-semibold">
+                            Dates et horaires:
+                        </p>
+                        <ul class="list-inside list-disc text-base">
+                            <template
+                                v-for="date in produit.dates"
+                                :key="date.id"
+                            >
+                                <li
+                                    v-if="date.dayopen"
+                                    class="text-base font-medium text-gray-600"
+                                >
+                                    Ouvert du
+                                    {{ formatDate(date.dayopen) }}
+                                    au
+                                    {{ formatDate(date.dayclose) }}
+                                </li>
+                                <li
+                                    v-if="date.houropen"
+                                    class="text-base font-medium text-gray-600"
+                                >
+                                    De
+                                    {{ formatTime(date.houropen) }}
+                                    à
+                                    {{ formatTime(date.hourclose) }}
+                                </li>
+                                <li
+                                    v-if="date.time_debut"
+                                    class="text-base font-medium text-gray-600"
+                                >
+                                    A partir de
+                                    {{ formatTime(date.time_debut) }}
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+
                     <div v-if="produit.tarifs.length > 0">
                         <p class="mt-2 text-base font-semibold">Tarifs:</p>
                         <ul class="list-inside list-disc text-base">
