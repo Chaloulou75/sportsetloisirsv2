@@ -110,8 +110,8 @@ class CityStructureController extends Controller
 
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
-                        ->whereIn('discipline_id', $structure->disciplines->pluck('discipline_id'))
-                        ->whereIn('categorie_id', $structure->categories->pluck('categorie_id'))
+                        ->whereIn('discipline_id', $structure->activites->pluck('discipline_id'))
+                        ->whereIn('categorie_id', $structure->activites->pluck('categorie_id'))
                         ->get();
 
 

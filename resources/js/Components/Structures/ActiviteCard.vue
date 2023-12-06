@@ -173,9 +173,21 @@ const formatCityName = (ville) => {
                                 :key="critere.id"
                             >
                                 {{ critere.critere.nom }}:
-                                <span class="font-semibold">{{
-                                    critere.valeur
-                                }}</span>
+                                <span class="font-semibold"
+                                    >{{ critere.valeur
+                                    }}<span
+                                        v-if="critere.sous_criteres.length > 0"
+                                        class="text-xs font-medium text-gray-600"
+                                    >
+                                        <span
+                                            v-for="sousCriteres in critere.sous_criteres"
+                                            :key="sousCriteres.id"
+                                            class="text-xs font-semibold text-gray-600"
+                                        >
+                                            ({{ sousCriteres.valeur }})
+                                        </span>
+                                    </span></span
+                                >
                             </p>
                             <p
                                 v-if="produit.tarifs.length > 0"

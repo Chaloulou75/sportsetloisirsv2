@@ -61,7 +61,7 @@ class DisciplineCategorieStructureController extends Controller
         $requestCategory = LienDisciplineCategorie::where('discipline_id', $requestDiscipline->id)->where('slug', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
-        ->whereIn('discipline_id', $structure->disciplines->pluck('discipline_id'))->whereIn('categorie_id', $structure->categories->pluck('categorie_id'))
+        ->whereIn('discipline_id', $structure->activites->pluck('discipline_id'))->whereIn('categorie_id', $structure->activites->pluck('categorie_id'))
         ->get();
 
         $structure->timestamps = false;
