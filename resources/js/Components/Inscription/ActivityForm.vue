@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from "vue";
 const props = defineProps({
     "activite.activite_name": "",
     activitesType: Object,

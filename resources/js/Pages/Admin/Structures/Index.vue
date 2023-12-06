@@ -1,13 +1,8 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import { Head, Link, router, useForm } from "@inertiajs/vue3";
-import { ref, defineAsyncComponent } from "vue";
-import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
+import { Head, Link } from "@inertiajs/vue3";
 import { ChevronLeftIcon } from "@heroicons/vue/24/outline";
 
-const Pagination = defineAsyncComponent(() =>
-    import("@/Components/Pagination.vue")
-);
 const props = defineProps({
     structures: Object,
     errors: Object,

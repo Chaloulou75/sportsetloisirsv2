@@ -1,7 +1,7 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
-import { ref, watch, reactive, computed } from "vue";
+import { Head, Link } from "@inertiajs/vue3";
+import { ref, watch, computed } from "vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
@@ -44,8 +44,6 @@ const props = defineProps({
     can: Object,
 });
 
-const showModal = ref(false);
-
 const uniqueDisciplines = computed(() => {
     const disciplinesMap = new Map();
     props.structure.activites.forEach((activity) => {
@@ -63,7 +61,6 @@ const selectedDiscipline = ref(
 const selectedCategory = ref(
     props.requestCategory ? props.requestCategory : null
 );
-// const selectedCriteres = ref({});
 
 const handleDisciplineClick = (discipline) => {
     selectedDiscipline.value = discipline;

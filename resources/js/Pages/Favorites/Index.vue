@@ -1,7 +1,6 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import { ref } from "vue";
 import StructureCard from "@/Components/Structures/StructureCard.vue";
 import ActiviteCard from "@/Components/Structures/ActiviteCard.vue";
 import ProduitCard from "@/Components/Produits/ProduitCard.vue";

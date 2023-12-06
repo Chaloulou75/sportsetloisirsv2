@@ -6,10 +6,6 @@ import BreezeResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 
 const emit = defineEmits(["eventFromChild"]);
 
-const emitEvent = (message) => {
-    emit("eventFromChild", message);
-};
-
 const props = defineProps({
     structure: Object,
     categorie: Object,
@@ -358,24 +354,6 @@ const user = computed(() => page.props.auth.user);
             </ul>
         </div>
 
-        <!-- <div class="inset-x-0 bottom-0 border-t border-gray-100">
-            <Link
-                :href="route('profile.edit')"
-                class="hidden items-center gap-2 bg-white p-4 hover:bg-gray-50 md:flex"
-            >
-                <UserCircleIcon class="mr-2 h-8 w-8" />
-
-                <div>
-                    <p class="text-xs">
-                        <strong class="block font-medium">{{
-                            user.name
-                        }}</strong>
-
-                        <span> {{ user.email }}</span>
-                    </p>
-                </div>
-            </Link>
-        </div> -->
         <!-- Responsive Navigation Menu -->
         <div
             :class="{

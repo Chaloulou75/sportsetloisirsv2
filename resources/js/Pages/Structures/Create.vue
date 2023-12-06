@@ -1,7 +1,7 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
-import { ref, onMounted, watch, defineAsyncComponent } from "vue";
+import { ref, onMounted, defineAsyncComponent } from "vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";

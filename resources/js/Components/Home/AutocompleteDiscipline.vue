@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watchEffect, onMounted } from "vue";
+import { ref, computed, watchEffect } from "vue";
 import { onClickOutside } from "@vueuse/core";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";

@@ -1,7 +1,7 @@
 <script setup>
 import ProLayout from "@/Layouts/ProLayout.vue";
 import { Head, usePage, Link } from "@inertiajs/vue3";
-import { ref, computed, defineAsyncComponent } from "vue";
+import { ref, computed } from "vue";
 import { ChevronLeftIcon } from "@heroicons/vue/24/outline";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";

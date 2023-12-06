@@ -1,6 +1,5 @@
 <script setup>
 import { ref, watch } from "vue";
-import RadioForm from "../Forms/RadioForm.vue";
 
 const props = defineProps({
     errors: Object,

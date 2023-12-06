@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, inject } from "vue";
+import { ref, computed } from "vue";
 import BreezeApplicationLogo from "@/Components/ApplicationLogo.vue";
 import BreezeDropdown from "@/Components/Dropdown.vue";
 import BreezeDropdownLink from "@/Components/DropdownLink.vue";
@@ -13,8 +13,6 @@ import {
     UserIcon,
 } from "@heroicons/vue/24/solid";
 
-// const scrollToCriteres = inject("scrollToCriteres", null);
-// const scrollToCategories = inject("scrollToCategories", null);
 const props = defineProps({
     canLogin: Boolean,
     canRegister: Boolean,

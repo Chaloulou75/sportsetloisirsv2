@@ -6,13 +6,7 @@ import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigati
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
 import { TransitionRoot } from "@headlessui/vue";
-import {
-    AdjustmentsHorizontalIcon,
-    HomeIcon,
-    ListBulletIcon,
-    MapIcon,
-    XMarkIcon,
-} from "@heroicons/vue/24/outline";
+import { HomeIcon, ListBulletIcon, MapIcon } from "@heroicons/vue/24/outline";
 import { useElementVisibility } from "@vueuse/core";
 
 const props = defineProps({

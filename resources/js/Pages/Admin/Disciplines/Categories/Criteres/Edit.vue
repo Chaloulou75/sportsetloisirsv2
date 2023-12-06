@@ -5,8 +5,6 @@ import NavAdminDisciplineCatCrit from "@/Components/Admin/NavAdminDisciplineCatC
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import { ref, watch, computed } from "vue";
 import Checkbox from "@/Components/Forms/Checkbox.vue";
-import SelectForm from "@/Components/Forms/SelectForm.vue";
-import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import {
     XCircleIcon,
     PlusCircleIcon,
@@ -15,7 +13,6 @@ import {
     ChevronUpDownIcon,
     ChevronLeftIcon,
     CheckCircleIcon,
-    MagnifyingGlassIcon,
 } from "@heroicons/vue/24/outline";
 import {
     Listbox,

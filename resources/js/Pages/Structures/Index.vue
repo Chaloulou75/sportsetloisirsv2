@@ -8,12 +8,7 @@ import LeafletMapMultiple from "@/Components/Maps/LeafletMapMultiple.vue";
 import StructureCard from "@/Components/Structures/StructureCard.vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
-import {
-    HomeIcon,
-    ListBulletIcon,
-    MapIcon,
-    MapPinIcon,
-} from "@heroicons/vue/24/outline";
+import { HomeIcon, ListBulletIcon, MapIcon } from "@heroicons/vue/24/outline";
 import { useElementVisibility } from "@vueuse/core";
 
 const props = defineProps({

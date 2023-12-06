@@ -26,7 +26,7 @@ import {
     MapIcon,
     XMarkIcon,
 } from "@heroicons/vue/24/outline";
-import { useElementVisibility, useTimeoutFn } from "@vueuse/core";
+import { useElementVisibility } from "@vueuse/core";
 
 const props = defineProps({
     familles: Object,

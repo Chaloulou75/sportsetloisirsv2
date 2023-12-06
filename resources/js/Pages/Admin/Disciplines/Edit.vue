@@ -2,10 +2,7 @@
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import NavAdminDiscipline from "@/Components/Admin/NavAdminDiscipline.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import {
-    ChevronLeftIcon,
-    MagnifyingGlassIcon,
-} from "@heroicons/vue/24/outline";
+import { ChevronLeftIcon } from "@heroicons/vue/24/outline";
 
 const props = defineProps({
     errors: Object,

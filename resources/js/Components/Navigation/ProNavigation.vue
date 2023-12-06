@@ -3,7 +3,6 @@ import { ref } from "vue";
 import BreezeDropdown from "@/Components/Dropdown.vue";
 import BreezeDropdownLink from "@/Components/DropdownLink.vue";
 import BreezeResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
-import { Link } from "@inertiajs/vue3";
 import { UserIcon } from "@heroicons/vue/24/outline";
 
 const showingNavigationDropdown = ref(false);
