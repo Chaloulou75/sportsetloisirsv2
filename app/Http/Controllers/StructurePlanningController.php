@@ -28,6 +28,7 @@ class StructurePlanningController extends Controller
         $activite = StructureActivite::findOrFail($request->activite_id);
 
         $dateStart = $request->event['start'];
+
         $startDate = Carbon::parse($dateStart)->setTimezone('Europe/Paris')->toDateTimeString();
 
         $dateEnd = $request->event['end'];

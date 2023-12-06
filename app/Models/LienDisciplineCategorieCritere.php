@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -38,5 +39,22 @@ class LienDisciplineCategorieCritere extends Model
     public function valeurs(): HasMany
     {
         return $this->hasMany(LienDisciplineCategorieCritereValeur::class, 'discipline_categorie_critere_id');
+    }
+
+    /**
+     * Scope a query to only include disciplines with products.
+     */
+    public function scopeWithValeurs(Builder $query): void
+    {
+        $query->with([
+            'valeurs' => function ($query) {
+                $query->orderBy('ordre');
+            },
+            'valeurs.sous_criteres',
+            'valeurs.sous_criteres.sous_criteres_valeurs' => function ($query) {
+                $query->orderBy('ordre');
+            },
+        ])->where('visible_front', true)
+        ->orderBy('ordre');
     }
 }

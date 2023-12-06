@@ -52,7 +52,6 @@ class StructureActiviteProduitController extends Controller
             'rayon_km' => ['nullable'],
         ]);
 
-
         $activite = StructureActivite::findOrFail($activite->id);
 
         if($request->address) {
@@ -99,7 +98,6 @@ class StructureActiviteProduitController extends Controller
             'horaire_id' => null,
             'reservable' => 0,
         ]);
-
 
         // Dates et horaires
         if($request->time_seule) {
@@ -163,6 +161,47 @@ class StructureActiviteProduitController extends Controller
 
             $activiteDatesTimes = $activite->dates()->create($data);
         }
+
+        //insertion ds le planning
+        if($request->dates && $request->times) {
+            $allDates = [];
+            $combinedDatePairs = [];
+            $start = Carbon::parse($request->dates[0])->startOfDay();
+            $end = Carbon::parse($request->dates[1])->startOfDay();
+
+            // Create an array of all dates between the start and end dates
+            while ($start->lte($end)) {
+                $allDates[] = $start->copy();
+                $start->addDay();
+            }
+
+            $startTime = $request->times[0];
+            $endTime = $request->times[1];
+
+            foreach ($allDates as $date) {
+                $startDateTime = $date->copy()->setTime($startTime['hours'], $startTime['minutes'], $startTime['seconds']);
+                $endDateTime = $date->copy()->setTime($endTime['hours'], $endTime['minutes'], $endTime['seconds']);
+
+                $combinedDatePairs[] = [
+                    'start' => $startDateTime->toDateTimeString(),
+                    'end' => $endDateTime->toDateTimeString()
+                ];
+            }
+
+            foreach($combinedDatePairs as $combinedDatePair) {
+                StructurePlanning::create([
+                    'structure_id' => $request->structure_id,
+                    'discipline_id' => $activite->discipline_id,
+                    'categorie_id' => $activite->categorie_id,
+                    'activite_id' => $activite->id,
+                    'produit_id' => $structureProduit->id,
+                    'title' => $activite->titre,
+                    'start' => $combinedDatePair['start'] ?? "",
+                    'end' => $combinedDatePair['end'] ?? "",
+                ]);
+            }
+        }
+
 
         $criteresValuesSets = $request->criteres;
 
@@ -301,6 +340,58 @@ class StructureActiviteProduitController extends Controller
                 $activite->dates()->create($data);
             }
 
+        }
+
+        //insertion ds le planning
+        if($request->dates && $request->times) {
+            $allDates = [];
+            $combinedDatePairs = [];
+            $start = Carbon::parse($request->dates[0])->startOfDay();
+            $end = Carbon::parse($request->dates[1])->startOfDay();
+
+            // Create an array of all dates between the start and end dates
+            while ($start->lte($end)) {
+                $allDates[] = $start->copy();
+                $start->addDay();
+            }
+
+            $startTime = $request->times[0];
+            $endTime = $request->times[1];
+
+            foreach ($allDates as $date) {
+                $startDateTime = $date->copy()->setTime($startTime['hours'], $startTime['minutes'], $startTime['seconds']);
+                $endDateTime = $date->copy()->setTime($endTime['hours'], $endTime['minutes'], $endTime['seconds']);
+
+                $combinedDatePairs[] = [
+                    'start' => $startDateTime->toDateTimeString(),
+                    'end' => $endDateTime->toDateTimeString()
+                ];
+            }
+
+            $previousDates = StructurePlanning::where('structure_id', $structure->id)->where('discipline_id', $activite->discipline_id)
+            ->where('categorie_id', $activite->categorie_id)
+            ->where('activite_id', $activite->id)
+            ->where('produit_id', $structureProduit->id)
+            ->where('title', $activite->titre)
+            ->get();
+            if(isset($previousDates)) {
+                foreach($previousDates as $exDate) {
+                    $exDate->delete();
+                }
+            }
+
+            foreach($combinedDatePairs as $combinedDatePair) {
+                StructurePlanning::create([
+                    'structure_id' => $structure->id,
+                    'discipline_id' => $activite->discipline_id,
+                    'categorie_id' => $activite->categorie_id,
+                    'activite_id' => $activite->id,
+                    'produit_id' => $structureProduit->id,
+                    'title' => $activite->titre,
+                    'start' => $combinedDatePair['start'] ?? "",
+                    'end' => $combinedDatePair['end'] ?? "",
+                ]);
+            }
         }
 
         $actifValue = $request->actif ? true : false;

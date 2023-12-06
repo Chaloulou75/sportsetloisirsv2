@@ -493,6 +493,46 @@ class ActiviteController extends Controller
             $activiteDatesTimes = $structureActivite->dates()->create($data);
         }
 
+        //insertion ds le planning
+        if($request->dates && $request->times) {
+            $allDates = [];
+            $combinedDatePairs = [];
+            $start = Carbon::parse($request->dates[0])->startOfDay();
+            $end = Carbon::parse($request->dates[1])->startOfDay();
+
+            // Create an array of all dates between the start and end dates
+            while ($start->lte($end)) {
+                $allDates[] = $start->copy();
+                $start->addDay();
+            }
+
+            $startTime = $request->times[0];
+            $endTime = $request->times[1];
+
+            foreach ($allDates as $date) {
+                $startDateTime = $date->copy()->setTime($startTime['hours'], $startTime['minutes'], $startTime['seconds']);
+                $endDateTime = $date->copy()->setTime($endTime['hours'], $endTime['minutes'], $endTime['seconds']);
+
+                $combinedDatePairs[] = [
+                    'start' => $startDateTime->toDateTimeString(),
+                    'end' => $endDateTime->toDateTimeString()
+                ];
+            }
+
+            foreach($combinedDatePairs as $combinedDatePair) {
+                StructurePlanning::create([
+                    'structure_id' => $request->structure_id,
+                    'discipline_id' => $structureActivite->discipline_id,
+                    'categorie_id' => $structureActivite->categorie_id,
+                    'activite_id' => $structureActivite->id,
+                    'produit_id' => $structureProduit->id,
+                    'title' => $structureActivite->titre,
+                    'start' => $combinedDatePair['start'] ?? "",
+                    'end' => $combinedDatePair['end'] ?? "",
+                ]);
+            }
+        }
+
 
         return to_route('structures.disciplines.show', ['structure' => $structure->slug, 'discipline' => $discipline])->with('success', 'Activité ajoutée avec succès, ajoutez d\'autres activités à votre structure.');
     }
