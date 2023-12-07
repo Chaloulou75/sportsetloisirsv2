@@ -17,6 +17,7 @@ import RangeInputForm from "@/Components/Forms/RangeInputForm.vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
+import autoAnimate from "@formkit/auto-animate";
 import { TransitionRoot } from "@headlessui/vue";
 import {
     AdjustmentsHorizontalIcon,
@@ -63,6 +64,8 @@ const DisciplinesSimilaires = defineAsyncComponent(() =>
 const Pagination = defineAsyncComponent(() =>
     import("@/Components/Pagination.vue")
 );
+
+const listToAnimate = ref();
 
 const mapStructure = ref(null);
 const mapIsVisible = useElementVisibility(mapStructure);
@@ -255,6 +258,7 @@ const resetFormCriteres = () => {
 };
 
 onMounted(() => {
+    autoAnimate(listToAnimate.value);
     filterProducts();
 });
 </script>
@@ -795,6 +799,7 @@ onMounted(() => {
                                 class="w-full px-2 md:w-1/2"
                             >
                                 <div
+                                    ref="listToAnimate"
                                     class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
                                 >
                                     <ProduitCard

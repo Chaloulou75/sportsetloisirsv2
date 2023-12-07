@@ -3,7 +3,8 @@ import AdminLayout from "@/Layouts/AdminLayout.vue";
 import NavAdminDiscipline from "@/Components/Admin/NavAdminDiscipline.vue";
 import NavAdminDisciplineCatCrit from "@/Components/Admin/NavAdminDisciplineCatCrit.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, onMounted } from "vue";
+import autoAnimate from "@formkit/auto-animate";
 import Checkbox from "@/Components/Forms/Checkbox.vue";
 import {
     XCircleIcon,
@@ -38,10 +39,11 @@ const updateCritereVisibility = (critere) => {
         }),
         {
             visible_front:
-                critereVisibilityForm.value[critere.id].visible_front,
-            visible_back: critereVisibilityForm.value[critere.id].visible_back,
+                !!critereVisibilityForm.value[critere.id].visible_front,
+            visible_back:
+                !!critereVisibilityForm.value[critere.id].visible_back,
             ordre: critereVisibilityForm.value[critere.id].ordre,
-            indexable: critereVisibilityForm.value[critere.id].indexable,
+            indexable: !!critereVisibilityForm.value[critere.id].indexable,
         },
         {
             preserveScroll: true,
@@ -85,7 +87,7 @@ const initializeValeurForm = () => {
                 visible_front: ref(!!critere.visible_front),
                 visible_back: ref(!!critere.visible_back),
                 ordre: ref(critere.ordre),
-                indexable: ref(critere.indexable),
+                indexable: ref(!!critere.indexable),
                 remember: true,
             });
 
@@ -96,7 +98,7 @@ const initializeValeurForm = () => {
                     id: ref(valeur.id),
                     valeur: ref(valeur.valeur),
                     ordre: ref(valeur.ordre),
-                    inclus_all: ref(valeur.inclus_all),
+                    inclus_all: ref(!!valeur.inclus_all),
                     remember: true,
                 });
 
@@ -163,7 +165,7 @@ const updateValeur = (valeur) => {
         {
             valeur: valeurForm.value[valeur.id].valeur,
             ordre: valeurForm.value[valeur.id].ordre,
-            inclus_all: valeurForm.value[valeur.id].inclus_all,
+            inclus_all: !!valeurForm.value[valeur.id].inclus_all,
             id: valeurForm.value[valeur.id].id,
         },
         {
@@ -391,6 +393,11 @@ const addSousCritere = (valeur) => {
         }
     );
 };
+
+const toAnimateOne = ref();
+onMounted(() => {
+    autoAnimate(toAnimateOne.value);
+});
 </script>
 <template>
     <Head
@@ -442,6 +449,7 @@ const addSousCritere = (valeur) => {
                 </p>
 
                 <ul
+                    ref="toAnimateOne"
                     class="list-inside list-disc space-y-4 py-4 text-sm text-slate-600 marker:text-indigo-600"
                 >
                     <li

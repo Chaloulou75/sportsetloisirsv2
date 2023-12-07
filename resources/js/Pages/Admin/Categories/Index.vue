@@ -1,7 +1,8 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import autoAnimate from "@formkit/auto-animate";
 import {
     ChevronLeftIcon,
     TrashIcon,
@@ -54,6 +55,10 @@ const deleteCategorie = (categorie) => {
         }
     );
 };
+const toAnimateOne = ref();
+onMounted(() => {
+    autoAnimate(toAnimateOne.value);
+});
 </script>
 <template>
     <Head title="Gestion du site" :description="'Administration du site.'" />
@@ -86,6 +91,7 @@ const deleteCategorie = (categorie) => {
                             Gérer les catégories existantes:
                         </h3>
                         <ul
+                            ref="toAnimateOne"
                             class="max-w-sm list-inside list-disc space-y-2 py-4 text-sm text-slate-600 marker:text-indigo-600"
                         >
                             <li
