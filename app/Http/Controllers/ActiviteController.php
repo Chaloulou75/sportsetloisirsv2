@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-
 use App\Models\City;
 use App\Models\User;
 use Inertia\Inertia;
@@ -14,11 +13,9 @@ use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use Illuminate\Validation\Rule;
 use App\Models\StructureAddress;
-use App\Models\StructureHoraire;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Models\StructurePlanning;
-use App\Models\ProductReservation;
 use App\Models\StructureCategorie;
 use App\Models\StructureDiscipline;
 use Illuminate\Support\Facades\Auth;
@@ -98,10 +95,17 @@ class ActiviteController extends Controller
                 'reservable' => 0,
             ]);
 
-            $criteres = LienDisciplineCategorieCritere::where('discipline_id', $discipline->id)->where('categorie_id', $disCat->id)->get();
+            $criteres = LienDisciplineCategorieCritere::withValeurs()
+            ->where('discipline_id', $discipline->id)
+            ->where('categorie_id', $disCat->id)
+            ->where('visible_back', true)
+            ->where('visible_front', true)
+            ->get();
 
             foreach($criteres as $critere) {
-                $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $critere->id)->first();
+                $defaut = $critere->valeurs->where('defaut', 1)
+                ->where('discipline_categorie_critere_id', $critere->id)
+                ->first();
                 if ($defaut !== null) {
                     $this->createStructureProduitCritere($structure, $activite, $produit, $critere->id, $defaut->id, $defaut->valeur);
                 }

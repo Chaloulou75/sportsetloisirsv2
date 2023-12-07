@@ -54,7 +54,7 @@ class LienDisciplineCategorieCritere extends Model
             'valeurs.sous_criteres.sous_criteres_valeurs' => function ($query) {
                 $query->orderBy('ordre');
             },
-        ])->where('visible_front', true)
+        ])
         ->orderBy('ordre');
     }
 }

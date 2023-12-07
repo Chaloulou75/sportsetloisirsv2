@@ -93,6 +93,12 @@ const headerClass = computed(() => {
     }
 });
 
+const uniqueCriteresByCategorie = computed(() => {
+    return props.uniqueCriteresInProducts.filter((critere) => {
+        return critere.categorie_id === props.structureActivite.categorie_id;
+    });
+});
+
 const groupCriteres = (criteres) => {
     return criteres.reduce((grouped, critere) => {
         const critereId = critere.critere_id;
@@ -632,7 +638,7 @@ const destroyTarif = (tarif, produit) => {
                                         <th
                                             class="border border-slate-600 px-2 py-2 text-sm font-medium text-white"
                                             colspan="1"
-                                            v-for="crit in uniqueCriteresInProducts"
+                                            v-for="crit in uniqueCriteresByCategorie"
                                             :key="crit.id"
                                         >
                                             {{ crit.nom }}
@@ -690,7 +696,7 @@ const destroyTarif = (tarif, produit) => {
                                                 {{ produit.id }}
                                             </td>
                                             <td
-                                                v-for="crit in uniqueCriteresInProducts"
+                                                v-for="crit in uniqueCriteresByCategorie"
                                                 :key="crit.id"
                                                 class="border border-slate-600 text-center"
                                             >
@@ -784,7 +790,10 @@ const destroyTarif = (tarif, produit) => {
                                                         class="mr-1 h-6 w-6 text-gray-600"
                                                     />
                                                     <div
-                                                        v-if="produit.dates"
+                                                        v-if="
+                                                            produit.dates
+                                                                .length > 0
+                                                        "
                                                         class="flex flex-col"
                                                     >
                                                         <template

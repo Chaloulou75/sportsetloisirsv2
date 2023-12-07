@@ -91,19 +91,9 @@ class StructureCategorieController extends Controller
             });
         })->keyBy('id')->values();
 
-
-        $criteres = LienDisciplineCategorieCritere::with([
-            'valeurs' => function ($query) {
-                $query->orderBy('ordre');
-            },
-            'valeurs.sous_criteres',
-            'valeurs.sous_criteres.sous_criteres_valeurs' => function ($query) {
-                $query->orderBy('ordre');
-            },
-        ])
+        $criteres = LienDisciplineCategorieCritere::withValeurs()
         ->where('discipline_id', $discipline->id)
         ->where('visible_back', true)
-        ->orderBy('ordre')
         ->get();
 
         $tarifTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();

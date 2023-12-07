@@ -58,10 +58,10 @@ class DisciplineStructureController extends Controller
         ->select(['id', 'name', 'slug'])
         ->get();
 
-
         $criteres = LienDisciplineCategorieCritere::withValeurs()
                 ->whereIn('discipline_id', $structure->activites->pluck('discipline_id'))
                 ->whereIn('categorie_id', $structure->activites->pluck('categorie_id'))
+                ->where('visible_front', true)
                 ->get();
 
         $structure->timestamps = false;
