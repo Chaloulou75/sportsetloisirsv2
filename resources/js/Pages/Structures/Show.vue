@@ -62,6 +62,14 @@ const selectedCategory = ref(
     props.requestCategory ? props.requestCategory : null
 );
 
+const formCriteres = ref({
+    criteres: {},
+    sousCriteres: {},
+});
+const selectedCriteres = ref([]);
+const selectedSousCriteres = ref([]);
+const filteredActivitesWithCriteres = ref(props.structure.activites);
+
 const handleDisciplineClick = (discipline) => {
     selectedDiscipline.value = discipline;
     selectedCategory.value = null;
@@ -79,6 +87,7 @@ const filteredCategories = computed(() => {
 
 const handleCategoryClick = (category) => {
     selectedCategory.value = category;
+    filterActivities();
 };
 
 const filteredCriteres = computed(() => {
@@ -90,14 +99,6 @@ const filteredCriteres = computed(() => {
             critere.categorie_id === selectedCategory.value.id
     );
 });
-
-const formCriteres = ref({
-    criteres: {},
-    sousCriteres: {},
-});
-const selectedCriteres = ref([]);
-const selectedSousCriteres = ref([]);
-const filteredActivitesWithCriteres = ref(props.structure.activites);
 
 const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
     if (checked) {
@@ -130,17 +131,32 @@ const isCheckboxSelected = computed(() => {
 });
 
 const filterActivities = () => {
-    if (selectedCriteres.value.length === 0) {
-        filteredActivitesWithCriteres.value = props.structure.activites;
-    } else {
+    if (!selectedDiscipline.value || !selectedCategory.value) return [];
+    if (
+        selectedDiscipline.value &&
+        selectedCategory.value &&
+        selectedCriteres.value.length === 0
+    ) {
         filteredActivitesWithCriteres.value = props.structure.activites.filter(
-            (activite) => {
+            (activite) =>
+                activite.discipline_id === selectedDiscipline.value.id &&
+                activite.categorie_id === selectedCategory.value.id
+        );
+    } else {
+        filteredActivitesWithCriteres.value = props.structure.activites
+            .filter(
+                (activite) =>
+                    activite.discipline_id === selectedDiscipline.value.id &&
+                    activite.categorie_id === selectedCategory.value.id
+            )
+            .filter((activite) => {
                 return activite.produits.some((produit) => {
                     return (
                         selectedCriteres.value.every((selectedCritere) => {
                             if (!!selectedCritere.inclus_all === true) {
-                                return true; // Do not apply the filter
-                            } else if (Array.isArray(selectedCritere)) {
+                                return true;
+                            }
+                            if (Array.isArray(selectedCritere)) {
                                 return selectedCritere.some(
                                     (critereInArray) => {
                                         return produit.criteres.some(
@@ -152,9 +168,14 @@ const filterActivities = () => {
                                 );
                             } else {
                                 return produit.criteres.some(
-                                    (produitCritere) =>
-                                        produitCritere.valeur_id ===
-                                        selectedCritere.id
+                                    (produitCritere) => {
+                                        return (
+                                            produitCritere.valeur_id ===
+                                                selectedCritere.id ||
+                                            !!produitCritere.critere_valeur
+                                                .inclus_all === true
+                                        );
+                                    }
                                 );
                             }
                         }) &&
@@ -176,10 +197,19 @@ const filterActivities = () => {
                         )
                     );
                 });
-            }
-        );
+            });
     }
 };
+
+watch(
+    () => [selectedDiscipline.value, selectedCategory.value],
+    ([newDiscipline, newCategory]) => {
+        if (newDiscipline || newCategory) {
+            filterActivities();
+        }
+    },
+    { deep: true }
+);
 
 watch(
     () => formCriteres.value.criteres,

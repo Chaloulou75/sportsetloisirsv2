@@ -203,10 +203,14 @@ const filterProducts = () => {
                             );
                         });
                     } else {
-                        return produit.criteres.some(
-                            (produitCritere) =>
-                                produitCritere.valeur_id === selectedCritere.id
-                        );
+                        return produit.criteres.some((produitCritere) => {
+                            return (
+                                produitCritere.valeur_id ===
+                                    selectedCritere.id ||
+                                !!produitCritere.critere_valeur.inclus_all ===
+                                    true
+                            );
+                        });
                     }
                 }) &&
                 selectedSousCriteres.value.every((selectedSousCritere) => {

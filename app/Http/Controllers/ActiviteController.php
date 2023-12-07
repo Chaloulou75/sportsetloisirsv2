@@ -514,8 +514,8 @@ class ActiviteController extends Controller
             $endTime = $request->times[1];
 
             foreach ($allDates as $date) {
-                $startDateTime = $date->copy()->setTime($startTime['hours'], $startTime['minutes'], $startTime['seconds']);
-                $endDateTime = $date->copy()->setTime($endTime['hours'], $endTime['minutes'], $endTime['seconds']);
+                $startDateTime = $date->copy()->setTime($startTime['hours'], $startTime['minutes']);
+                $endDateTime = $date->copy()->setTime($endTime['hours'], $endTime['minutes']);
 
                 $combinedDatePairs[] = [
                     'start' => $startDateTime->toDateTimeString(),
@@ -590,15 +590,15 @@ class ActiviteController extends Controller
 
         if(isset($prodCrit)) {
             StructureProduitSousCritere::create([
-            'activite_id' => $structureActivite->id,
-            'produit_id' => $structureProduit->id,
-            'critere_id' => $critereId,
-            'prod_crit_id' => $prodCrit->id,
-            'critere_valeur_id' => $critereValeurId,
-            'sous_critere_id' => $sousCritereId,
-            'sous_critere_valeur_id' => $souscriteresValues['id'] ?? null,
-            'valeur' => $souscriteresValues['valeur'] ?? $souscriteresValues,
-        ]);
+                'activite_id' => $structureActivite->id,
+                'produit_id' => $structureProduit->id,
+                'critere_id' => $critereId,
+                'prod_crit_id' => $prodCrit->id,
+                'critere_valeur_id' => $critereValeurId,
+                'sous_critere_id' => $sousCritereId,
+                'sous_critere_valeur_id' => $souscriteresValues['id'] ?? null,
+                'valeur' => $souscriteresValues['valeur'] ?? $souscriteresValues,
+            ]);
         }
 
     }

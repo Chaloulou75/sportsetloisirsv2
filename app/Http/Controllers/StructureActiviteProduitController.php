@@ -359,8 +359,8 @@ class StructureActiviteProduitController extends Controller
             $endTime = $request->times[1];
 
             foreach ($allDates as $date) {
-                $startDateTime = $date->copy()->setTime($startTime['hours'], $startTime['minutes'], $startTime['seconds']);
-                $endDateTime = $date->copy()->setTime($endTime['hours'], $endTime['minutes'], $endTime['seconds']);
+                $startDateTime = $date->copy()->setTime($startTime['hours'], $startTime['minutes']);
+                $endDateTime = $date->copy()->setTime($endTime['hours'], $endTime['minutes']);
 
                 $combinedDatePairs[] = [
                     'start' => $startDateTime->toDateTimeString(),
@@ -583,16 +583,18 @@ class StructureActiviteProduitController extends Controller
     {
         $prodCrit = StructureProduitCritere::where('produit_id', $structureProduit->id)->where('critere_id', $critereId)->where('valeur_id', $critereValeurId)->first();
 
-        StructureProduitSousCritere::create([
-            'activite_id' => $activite->id,
-            'produit_id' => $structureProduit->id,
-            'critere_id' => $critereId,
-            'prod_crit_id' => $prodCrit->id,
-            'critere_valeur_id' => $critereValeurId,
-            'sous_critere_id' => $sousCritereId,
-            'sous_critere_valeur_id' => $souscriteresValues['id'] ?? null,
-            'valeur' => $souscriteresValues['valeur'] ?? $souscriteresValues,
-        ]);
+        if(isset($prodCrit)) {
+            StructureProduitSousCritere::create([
+                'activite_id' => $activite->id,
+                'produit_id' => $structureProduit->id,
+                'critere_id' => $critereId,
+                'prod_crit_id' => $prodCrit->id,
+                'critere_valeur_id' => $critereValeurId,
+                'sous_critere_id' => $sousCritereId,
+                'sous_critere_valeur_id' => $souscriteresValues['id'] ?? null,
+                'valeur' => $souscriteresValues['valeur'] ?? $souscriteresValues,
+            ]);
+        }
 
     }
 }
