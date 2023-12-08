@@ -179,8 +179,8 @@ class StructureActiviteProduitController extends Controller
             $endTime = $request->times[1];
 
             foreach ($allDates as $date) {
-                $startDateTime = $date->copy()->setTime($startTime['hours'], $startTime['minutes'], $startTime['seconds']);
-                $endDateTime = $date->copy()->setTime($endTime['hours'], $endTime['minutes'], $endTime['seconds']);
+                $startDateTime = $date->copy()->setTime($startTime['hours'], $startTime['minutes']);
+                $endDateTime = $date->copy()->setTime($endTime['hours'], $endTime['minutes']);
 
                 $combinedDatePairs[] = [
                     'start' => $startDateTime->toDateTimeString(),

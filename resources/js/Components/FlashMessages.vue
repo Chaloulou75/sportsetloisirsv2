@@ -1,8 +1,14 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { usePage } from "@inertiajs/vue3";
 
 const show = ref(true);
+
+const flashChangeHandler = () => {
+    setTimeout(() => {
+        show.value = false;
+    }, 3000);
+};
 
 watch(
     usePage().props.flash,
@@ -11,6 +17,10 @@ watch(
     },
     { deep: true }
 );
+
+onMounted(() => {
+    flashChangeHandler();
+});
 </script>
 
 <template>
