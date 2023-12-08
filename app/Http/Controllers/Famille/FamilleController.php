@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Famille;
 
 use App\Models\City;
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Famille;
 use App\Models\Structure;
 use App\Models\Discipline;
@@ -19,7 +20,7 @@ class FamilleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();
@@ -43,7 +44,7 @@ class FamilleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Famille $famille)
+    public function show(Famille $famille): Response
     {
 
         $familles = Famille::withWhereHas('disciplines', function ($query) {

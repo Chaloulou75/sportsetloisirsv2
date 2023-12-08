@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Discipline;
 
 use App\Models\City;
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Famille;
 use App\Models\Categorie;
 use App\Models\Structure;
@@ -21,7 +22,7 @@ class CategoryDisciplineController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ListDiscipline $discipline, $category)
+    public function show(ListDiscipline $discipline, $category): Response
     {
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();

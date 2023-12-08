@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Inertia\Inertia;
+use Inertia\Response;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -11,7 +12,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
 
         $user = auth()->user();

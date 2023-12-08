@@ -3,15 +3,17 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Critere;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 
 class CritereController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
 
         $user = auth()->user();
@@ -39,7 +41,7 @@ class CritereController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
 
         $user = auth()->user();
@@ -75,7 +77,7 @@ class CritereController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Critere $critere)
+    public function update(Request $request, Critere $critere): RedirectResponse
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
@@ -92,7 +94,7 @@ class CritereController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Critere $critere)
+    public function destroy(Critere $critere): RedirectResponse
     {
         $critere->delete();
         return to_route('admin.criteres.index')->with('success', 'Critère supprimé');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Famille;
 use App\Models\Structure;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class FavoritesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();
@@ -44,9 +45,6 @@ class FavoritesController extends Controller
             $structures = Structure::withRelations()->whereIn('id', $favoriteStructuresIds)
                     ->get();
         }
-
-
-
 
         return Inertia::render('Favorites/Index', [
                     'familles' => $familles,

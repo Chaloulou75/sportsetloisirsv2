@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LienDisciplineCategorieCritere;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use App\Models\LienDisciplineCategorieCritereValeur;
 use App\Models\ListDiscipline;
+use Illuminate\Validation\Rule;
+use Illuminate\Http\RedirectResponse;
+use App\Models\LienDisciplineCategorieCritere;
+use App\Models\LienDisciplineCategorieCritereValeur;
 
 class CategoryDisciplineCritereValeurController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, LienDisciplineCategorieCritere $critere)
+    public function store(Request $request, LienDisciplineCategorieCritere $critere): RedirectResponse
     {
         $critere = LienDisciplineCategorieCritere::with(['discipline', 'categorie'])->findOrFail($critere->id);
 
@@ -36,7 +37,7 @@ class CategoryDisciplineCritereValeurController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, LienDisciplineCategorieCritereValeur $lienDisCatCritValeur)
+    public function update(Request $request, LienDisciplineCategorieCritereValeur $lienDisCatCritValeur): RedirectResponse
     {
         $request->validate([
             'valeur' => ['required', 'string', 'max:255'],
@@ -63,7 +64,7 @@ class CategoryDisciplineCritereValeurController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(LienDisciplineCategorieCritereValeur $lienDisCatCritValeur)
+    public function destroy(LienDisciplineCategorieCritereValeur $lienDisCatCritValeur): RedirectResponse
     {
         $valeur = LienDisciplineCategorieCritereValeur::with(['critere', 'critere.discipline'])->findOrFail($lienDisCatCritValeur->id);
 

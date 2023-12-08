@@ -4,19 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Famille;
 use App\Models\Structure;
-use App\Models\Discipline;
 use App\Models\Departement;
-use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use App\Models\StructureProduit;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
         $familleCount = Famille::count();
         $disciplinesCount = ListDiscipline::count();

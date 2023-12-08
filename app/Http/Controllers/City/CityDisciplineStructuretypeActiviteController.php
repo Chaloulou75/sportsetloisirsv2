@@ -4,6 +4,7 @@ namespace App\Http\Controllers\City;
 
 use App\Models\City;
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Famille;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
@@ -17,7 +18,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class CityDisciplineStructuretypeActiviteController extends Controller
 {
-    public function show(City $city, $discipline, $structuretype, $activite, ?string $produit = null)
+    public function show(City $city, $discipline, $structuretype, $activite, ?string $produit = null): Response
     {
         $selectedProduit = StructureProduit::where('id', request()->produit)->first();
 

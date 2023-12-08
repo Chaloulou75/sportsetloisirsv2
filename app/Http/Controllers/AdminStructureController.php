@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Structure;
 use Illuminate\Http\Request;
 
@@ -11,7 +12,7 @@ class AdminStructureController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
 
         $user = auth()->user();

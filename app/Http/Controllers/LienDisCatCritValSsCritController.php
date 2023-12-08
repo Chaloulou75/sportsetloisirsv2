@@ -6,13 +6,14 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\LiensDisCatCritValSsCrit;
 use App\Models\LienDisciplineCategorieCritereValeur;
+use Illuminate\Http\RedirectResponse;
 
 class LienDisCatCritValSsCritController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, LienDisciplineCategorieCritereValeur $valeur)
+    public function store(Request $request, LienDisciplineCategorieCritereValeur $valeur): RedirectResponse
     {
         $valeur = LienDisciplineCategorieCritereValeur::with('critere.discipline')->findOrFail($valeur->id);
 
@@ -46,7 +47,7 @@ class LienDisCatCritValSsCritController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(LiensDisCatCritValSsCrit $souscritere)
+    public function destroy(LiensDisCatCritValSsCrit $souscritere): RedirectResponse
     {
         $sousCritere = LiensDisCatCritValSsCrit::with('critere_valeur.critere.discipline')->findOrFail($souscritere->id);
 

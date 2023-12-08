@@ -4,24 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Structure;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Mail\ReservationAsked;
-use App\Mail\ReservationConfirmed;
 use App\Models\StructureTarif;
 use Illuminate\Validation\Rule;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Models\StructurePlanning;
+use App\Mail\ReservationConfirmed;
 use App\Models\ProductReservation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 
 class ProductReservationController extends Controller
 {
-    public function index(Structure $structure)
+    public function index(Structure $structure): Response
     {
 
         $allReservations = ProductReservation::with([
@@ -174,7 +176,7 @@ class ProductReservationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         request()->validate([
             'produit' => ['required', Rule::exists('structures_produits', 'id')],
@@ -231,7 +233,7 @@ class ProductReservationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Structure $structure, ProductReservation $reservation)
+    public function update(Request $request, Structure $structure, ProductReservation $reservation): RedirectResponse
     {
         $user = User::where('id', $reservation->user_id)->first();
         $userEmail = $user->email;
@@ -267,7 +269,7 @@ class ProductReservationController extends Controller
             ]);
             return to_route('structures.gestion.reservations.index', $structure)->with('success', 'Réservation refusée.');
 
-            // email refusée
+        // email refusée
         } elseif($request->status === "finished") {
             $code = $reservation->code;
 

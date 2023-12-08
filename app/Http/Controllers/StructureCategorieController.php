@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Structure;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
@@ -27,7 +28,7 @@ class StructureCategorieController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Structure $structure, $discipline, $categorie)
+    public function show(Structure $structure, $discipline, $categorie): Response
     {
         if (!Gate::allows('update-structure', $structure)) {
             return to_route('structures.disciplines.index', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');

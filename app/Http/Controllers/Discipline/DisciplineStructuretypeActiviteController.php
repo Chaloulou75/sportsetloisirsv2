@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Discipline;
 
 use App\Models\City;
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Famille;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
@@ -16,7 +17,7 @@ use App\Models\LienDisciplineCategorieCritere;
 
 class DisciplineStructuretypeActiviteController extends Controller
 {
-    public function show(ListDiscipline $discipline, $structuretype, $activite, ?string $produit = null)
+    public function show(ListDiscipline $discipline, $structuretype, $activite, ?string $produit = null): Response
     {
         $selectedProduit = StructureProduit::where('id', request()->produit)->first();
 

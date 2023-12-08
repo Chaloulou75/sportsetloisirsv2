@@ -9,13 +9,14 @@ use App\Models\StructureTarif;
 use Illuminate\Validation\Rule;
 use App\Models\StructureProduit;
 use App\Models\StructureTarifTypeInfo;
+use Illuminate\Http\RedirectResponse;
 
 class StructureTarifController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Structure $structure)
+    public function store(Request $request, Structure $structure): RedirectResponse
     {
         $request->validate([
             'structure_id' => ['nullable', Rule::exists('structures', 'id')],
@@ -74,7 +75,7 @@ class StructureTarifController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Structure $structure, $tarif)
+    public function update(Request $request, Structure $structure, $tarif): RedirectResponse
     {
         $request->validate([
             'titre' => ['nullable'],
@@ -140,7 +141,7 @@ class StructureTarifController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Structure $structure, $tarif, $produit)
+    public function destroy(Structure $structure, $tarif, $produit): RedirectResponse
     {
         $produit = StructureProduit::findOrFail($produit);
         $tarif = StructureTarif::with('structureTarifTypeInfos')->findOrFail($tarif);
@@ -153,7 +154,7 @@ class StructureTarifController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroyTarif(Structure $structure, $tarif)
+    public function destroyTarif(Structure $structure, $tarif): RedirectResponse
     {
         $tarif = StructureTarif::with('structureTarifTypeInfos')->findOrFail($tarif);
 
@@ -170,7 +171,7 @@ class StructureTarifController extends Controller
         return to_route('structures.disciplines.index', $structure)->with('success', 'Le tarif a bien été supprimé');
     }
 
-    public function duplicate(Structure $structure, $tarif, $produit)
+    public function duplicate(Structure $structure, $tarif, $produit): RedirectResponse
     {
         $produit = StructureProduit::findOrFail($produit);
 

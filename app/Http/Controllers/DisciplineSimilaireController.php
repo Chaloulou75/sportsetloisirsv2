@@ -3,15 +3,17 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use Inertia\Response;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
+use Illuminate\Http\RedirectResponse;
 
 class DisciplineSimilaireController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, ListDiscipline $discipline)
+    public function store(Request $request, ListDiscipline $discipline): RedirectResponse
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
@@ -26,7 +28,7 @@ class DisciplineSimilaireController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ListDiscipline $discipline)
+    public function edit(ListDiscipline $discipline): Response
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
@@ -56,7 +58,7 @@ class DisciplineSimilaireController extends Controller
     /**
      * detach a resource in storage.
      */
-    public function detach(Request $request, ListDiscipline $discipline)
+    public function detach(Request $request, ListDiscipline $discipline): RedirectResponse
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Structure;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class StructureUserController extends Controller
@@ -27,7 +28,7 @@ class StructureUserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Structure $structure)
+    public function store(Request $request, Structure $structure): RedirectResponse
     {
         request()->validate([
             'email' => ['required', 'max:50', 'email:filter', 'exists:users,email'],
@@ -83,7 +84,7 @@ class StructureUserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Structure $structure, string $partenaire)
+    public function destroy(Structure $structure, string $partenaire): RedirectResponse
     {
         //verifier que le partenaire n'est pas le dernier à être Super Admin
         $partenaireASupprimer = $structure->partenaires()->wherePivot('user_id', $partenaire)->first();

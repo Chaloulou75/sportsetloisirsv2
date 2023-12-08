@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Critere;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use Illuminate\Validation\Rule;
+use Illuminate\Http\RedirectResponse;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
 use App\Models\LienDisciplineCategorieCritereValeur;
@@ -16,7 +18,7 @@ class CategoryDisciplineCritereController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'critere.id' => ['required', Rule::exists('liste_criteres', 'id')],
@@ -45,7 +47,7 @@ class CategoryDisciplineCritereController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ListDiscipline $discipline, LienDisciplineCategorie $categorie)
+    public function edit(ListDiscipline $discipline, LienDisciplineCategorie $categorie): Response
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
@@ -100,7 +102,7 @@ class CategoryDisciplineCritereController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, LienDisciplineCategorieCritere $critere)
+    public function update(Request $request, LienDisciplineCategorieCritere $critere): RedirectResponse
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
@@ -126,7 +128,7 @@ class CategoryDisciplineCritereController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(LienDisciplineCategorieCritere $lienDisciplineCategorieCritere)
+    public function destroy(LienDisciplineCategorieCritere $lienDisciplineCategorieCritere): RedirectResponse
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);

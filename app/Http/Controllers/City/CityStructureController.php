@@ -4,6 +4,7 @@ namespace App\Http\Controllers\City;
 
 use App\Models\City;
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Famille;
 use App\Models\Structure;
 use App\Models\Departement;
@@ -17,7 +18,7 @@ use App\Models\LienDisciplineCategorieCritere;
 
 class CityStructureController extends Controller
 {
-    public function show(City $city, $structure)
+    public function show(City $city, $structure): Response
     {
         $discipline = request()->discipline;
         $departement = request()->departement;

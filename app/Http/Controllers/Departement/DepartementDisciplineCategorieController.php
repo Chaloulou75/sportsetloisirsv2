@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Departement;
 
 use App\Models\City;
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Famille;
 use App\Models\Departement;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class DepartementDisciplineCategorieController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Departement $departement, $discipline, $category)
+    public function show(Departement $departement, $discipline, $category): Response
     {
 
         $familles = Famille::withProducts()->get();

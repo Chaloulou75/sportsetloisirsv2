@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Departement;
 
 use App\Models\City;
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Famille;
 use App\Models\Structure;
 use App\Models\Departement;
@@ -17,7 +18,7 @@ class DepartementController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         $structuresCount = Structure::count();
 
@@ -51,7 +52,7 @@ class DepartementController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Departement $departement)
+    public function show(Departement $departement): Response
     {
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();

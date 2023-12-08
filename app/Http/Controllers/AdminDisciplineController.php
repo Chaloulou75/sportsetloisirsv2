@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use Inertia\Response;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 
@@ -11,7 +12,7 @@ class AdminDisciplineController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
@@ -53,7 +54,7 @@ class AdminDisciplineController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ListDiscipline $discipline)
+    public function edit(ListDiscipline $discipline): Response
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);

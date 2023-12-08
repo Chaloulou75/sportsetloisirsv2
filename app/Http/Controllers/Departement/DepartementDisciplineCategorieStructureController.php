@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Departement;
 
 use App\Models\City;
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Famille;
 use App\Models\Structure;
 use App\Models\Departement;
@@ -17,7 +18,7 @@ use App\Models\LienDisciplineCategorieCritere;
 
 class DepartementDisciplineCategorieStructureController extends Controller
 {
-    public function show(Departement $departement, $discipline, $category, $structure)
+    public function show(Departement $departement, $discipline, $category, $structure): Response
     {
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();

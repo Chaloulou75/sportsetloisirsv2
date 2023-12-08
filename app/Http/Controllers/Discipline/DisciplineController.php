@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Discipline;
 
 use App\Models\City;
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Famille;
 use App\Models\Categorie;
 use App\Models\Structure;
@@ -17,13 +18,14 @@ use App\Models\LienDisciplineSimilaire;
 use App\Http\Resources\CategorieResource;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Resources\ListDisciplineResource;
+use Illuminate\Http\RedirectResponse;
 
 class DisciplineController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         $structuresCount = Structure::count();
 
@@ -53,7 +55,7 @@ class DisciplineController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ListDiscipline $discipline)
+    public function show(ListDiscipline $discipline): Response
     {
 
         $familles = Famille::withProducts()->get();
@@ -126,7 +128,7 @@ class DisciplineController extends Controller
     /**
     * Update the specified resource in storage.
     */
-    public function create(Request $request)
+    public function create(Request $request): RedirectResponse
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
@@ -151,7 +153,7 @@ class DisciplineController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ListDiscipline $discipline)
+    public function edit(ListDiscipline $discipline): Response
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
@@ -168,7 +170,7 @@ class DisciplineController extends Controller
     /**
     * Update the specified resource in storage.
     */
-    public function update(Request $request, ListDiscipline $discipline)
+    public function update(Request $request, ListDiscipline $discipline): RedirectResponse
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Structure;
 use Illuminate\Http\Request;
 use App\Models\ProductReservation;
@@ -13,7 +14,7 @@ class StructureStatistiqueController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Structure $structure)
+    public function index(Structure $structure): Response
     {
 
         $allReservations = ProductReservation::withRelations()

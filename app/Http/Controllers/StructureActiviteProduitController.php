@@ -23,13 +23,14 @@ use App\Models\StructureProduitSousCritere;
 use App\Models\LienDisciplineCategorieCritere;
 use App\Models\LienDisciplineCategorieCritereValeur;
 use App\Models\StructureActiviteDate;
+use Illuminate\Http\RedirectResponse;
 
 class StructureActiviteProduitController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Structure $structure, StructureActivite $activite)
+    public function store(Request $request, Structure $structure, StructureActivite $activite): RedirectResponse
     {
         $request->validate([
             'criteres' => ['nullable'],
@@ -247,7 +248,7 @@ class StructureActiviteProduitController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Structure $structure, StructureActivite $activite, StructureProduit $produit)
+    public function update(Request $request, Structure $structure, StructureActivite $activite, StructureProduit $produit): RedirectResponse
     {
         $request->validate([
             'criteres' => ['nullable'],
@@ -467,7 +468,7 @@ class StructureActiviteProduitController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Structure $structure, StructureActivite $activite, StructureProduit $produit)
+    public function destroy(Structure $structure, StructureActivite $activite, StructureProduit $produit): RedirectResponse
     {
         $activite = StructureActivite::with([
             'structure',
@@ -500,7 +501,7 @@ class StructureActiviteProduitController extends Controller
         return to_route('structures.categories.show', ['structure' => $structure->slug, 'discipline' => $activite->discipline->slug, 'categorie' => $activite->categorie->id])->with('success', "Le produit a bien été supprimé");
     }
 
-    public function duplicate(Structure $structure, StructureActivite $activite, StructureProduit $produit)
+    public function duplicate(Structure $structure, StructureActivite $activite, StructureProduit $produit): RedirectResponse
     {
         $activite = StructureActivite::with([
                     'structure',

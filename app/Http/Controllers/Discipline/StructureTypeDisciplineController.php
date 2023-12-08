@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Discipline;
 
 use App\Models\City;
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Famille;
 use App\Models\Structure;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class StructureTypeDisciplineController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ListDiscipline $discipline, $structuretype)
+    public function show(ListDiscipline $discipline, $structuretype): Response
     {
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();

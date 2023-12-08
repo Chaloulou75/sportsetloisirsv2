@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Departement;
 
 use App\Models\City;
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Famille;
 use App\Models\Departement;
-use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
@@ -15,7 +15,7 @@ use App\Models\LienDisciplineCategorieCritere;
 
 class DepartementActiviteController extends Controller
 {
-    public function show(Departement $departement, $activite, ?string $produit = null)
+    public function show(Departement $departement, $activite, ?string $produit = null): Response
     {
         $selectedProduit = StructureProduit::where('id', request()->produit)->first();
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Famille;
 use App\Models\Structure;
 use App\Models\Departement;
@@ -42,7 +43,7 @@ class StructureController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
 
         $familles = Famille::withProducts()->get();
@@ -126,7 +127,7 @@ class StructureController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): Response
     {
 
         $familles = Famille::withProducts()->get();
@@ -148,7 +149,7 @@ class StructureController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $validated = request()->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -253,7 +254,7 @@ class StructureController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Structure $structure)
+    public function show(Structure $structure): Response
     {
         $discipline = request()->discipline;
         $city = request()->city;
@@ -382,7 +383,7 @@ class StructureController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Structure $structure)
+    public function edit(Structure $structure): Response
     {
         if (!Gate::allows('update-structure', $structure)) {
             return Redirect::route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette fiche, vous devez être le créateur de la structure ou un administrateur.');
@@ -444,7 +445,7 @@ class StructureController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Structure $structure)
+    public function update(Request $request, Structure $structure): RedirectResponse
     {
         $structure = Structure::where('id', $structure->id)->firstOrFail();
 

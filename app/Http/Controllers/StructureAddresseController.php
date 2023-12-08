@@ -7,13 +7,14 @@ use App\Models\Structure;
 use App\Models\Departement;
 use Illuminate\Http\Request;
 use App\Models\StructureAddress;
+use Illuminate\Http\RedirectResponse;
 
 class StructureAddresseController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Structure $structure)
+    public function store(Request $request, Structure $structure): RedirectResponse
     {
         request()->validate([
             'address' => ['required', 'string'],
@@ -50,7 +51,7 @@ class StructureAddresseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Structure $structure, StructureAddress $adress)
+    public function update(Request $request, Structure $structure, StructureAddress $adress): RedirectResponse
     {
         request()->validate([
             'address' => ['required', 'string'],
@@ -85,7 +86,7 @@ class StructureAddresseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Structure $structure, StructureAddress $adress)
+    public function destroy(Structure $structure, StructureAddress $adress): RedirectResponse
     {
         $adress->delete();
 

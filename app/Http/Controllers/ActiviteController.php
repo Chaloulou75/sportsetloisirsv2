@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\City;
 use App\Models\User;
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Famille;
 use App\Models\Structure;
 use App\Rules\NestedArrays;
@@ -36,7 +37,7 @@ class ActiviteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, $structure)
+    public function store(Request $request, $structure): RedirectResponse
     {
         $validated = request()->validate([
             'structure_id' => ['required', Rule::exists(Structure::class, 'id')],
@@ -115,7 +116,7 @@ class ActiviteController extends Controller
         return to_route('structures.disciplines.index', $structure)->with('success', 'Activité créée, vous pouvez ajouter d\'autres activités à votre structure.');
     }
 
-    public function show($activite)
+    public function show($activite): Response
     {
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();
@@ -158,7 +159,7 @@ class ActiviteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function update(Request $request, Structure $structure, $activite)
+    public function update(Request $request, Structure $structure, $activite): RedirectResponse
     {
         if (!Gate::allows('update-structure', $structure)) {
             return to_route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de modifier cette activité, vous devez être le créateur de l\'activité ou un administrateur.');

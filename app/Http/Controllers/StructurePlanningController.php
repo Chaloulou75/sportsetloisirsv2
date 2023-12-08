@@ -9,13 +9,14 @@ use Illuminate\Validation\Rule;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Models\StructurePlanning;
+use Illuminate\Http\RedirectResponse;
 
 class StructurePlanningController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Structure $structure, Request $request)
+    public function store(Structure $structure, Request $request): RedirectResponse
     {
         $request->validate([
             'structure_id' => ['required', Rule::exists('structures', 'id')],
@@ -53,7 +54,7 @@ class StructurePlanningController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Structure $structure, $event)
+    public function update(Request $request, Structure $structure, $event): RedirectResponse
     {
         $request->validate([
             'event' => 'required',
@@ -88,7 +89,7 @@ class StructurePlanningController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Structure $structure, $event)
+    public function destroy(Structure $structure, $event): RedirectResponse
     {
         $planning = StructurePlanning::findOrFail($event);
 

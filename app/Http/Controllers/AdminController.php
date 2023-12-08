@@ -4,21 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Critere;
-use App\Models\Famille;
 use App\Models\Categorie;
 use App\Models\Structure;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
-use App\Models\LienDisciplineCategorie;
-use App\Models\LienDisciplineCategorieCritere;
 
 class AdminController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);

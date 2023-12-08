@@ -4,6 +4,7 @@ namespace App\Http\Controllers\City;
 
 use App\Models\City;
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Famille;
 use App\Models\Structure;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class CityController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         $structuresCount = Structure::count();
         $produitsCount = StructureProduit::count();
@@ -49,7 +50,7 @@ class CityController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(City $city)
+    public function show(City $city): Response
     {
 
         $familles = Famille::withProducts()->get();

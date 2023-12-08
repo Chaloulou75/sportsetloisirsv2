@@ -4,6 +4,7 @@ namespace App\Http\Controllers\City;
 
 use App\Models\City;
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Famille;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
@@ -17,7 +18,7 @@ class CityDisciplineController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(City $city, $discipline)
+    public function show(City $city, $discipline): Response
     {
 
         $familles = Famille::withProducts()->get();

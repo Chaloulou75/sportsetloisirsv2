@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Famille;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 
 class FaqController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();
