@@ -46,7 +46,7 @@ class CritereController extends Controller
         $this->authorize('viewAdmin', $user);
 
         $request->validate([
-            'nom' => ['string'],
+            'nom' => ['required', 'string', 'min:3'],
         ]);
         Critere::create([
             'nom' => $request->nom
