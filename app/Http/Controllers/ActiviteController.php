@@ -127,29 +127,12 @@ class ActiviteController extends Controller
 
         $logoUrl = asset($activite->structure->logo);
 
-        $criteres = LienDisciplineCategorieCritere::with([
-                'valeurs' => function ($query) {
-                    $query->orderBy('defaut', 'desc');
-                },
-                'valeurs.sous_criteres',
-                'valeurs.sous_criteres.sous_criteres_valeurs'
-            ])
+        $criteres = LienDisciplineCategorieCritere::withValeurs()
                 ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))->whereIn('categorie_id', $activite->structure->categories->pluck('categorie_id'))
                 ->get();
 
-        $activiteSimilaires = StructureActivite::with([
-                'discipline:id,name',
-                'categorie:id,categorie_id,discipline_id,nom_categorie_client',
-                'produits',
-                'produits.adresse',
-                'produits.criteres',
-                'produits.criteres.critere',
-                'produits.criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
-                'produits.tarifs',
-                'produits.tarifs.tarifType',
-                'produits.tarifs.structureTarifTypeInfos',
-                'produits.plannings'
-            ])->whereNot('id', $activite->id)
+        $activiteSimilaires = StructureActivite::withRelations()
+            ->whereNot('id', $activite->id)
             ->where('discipline_id', $activite->discipline_id)
             ->inRandomOrder()
             ->take(3)

@@ -19,7 +19,7 @@ class CategoryController extends Controller
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 
-        $categories = Categorie::select(['id', 'nom', 'derivés'])->get();
+        $categories = Categorie::select(['id', 'nom'])->get();
 
         return Inertia::render('Admin/Categories/Index', [
             'user_can' => [
@@ -34,7 +34,17 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = auth()->user();
+        $this->authorize('viewAdmin', $user);
+
+        $request->validate([
+            'nom' => ['string'],
+        ]);
+        Categorie::create([
+            'nom' => $request->nom
+        ]);
+
+        return to_route('admin.categories.index')->with('success', 'Catégorie créée');
     }
 
     /**

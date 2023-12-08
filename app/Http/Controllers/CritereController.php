@@ -41,7 +41,19 @@ class CritereController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $user = auth()->user();
+        $this->authorize('viewAdmin', $user);
+
+        $request->validate([
+            'nom' => ['string'],
+        ]);
+        Critere::create([
+            'nom' => $request->nom
+        ]);
+
+        return to_route('admin.criteres.index')->with('success', 'Critere créé');
+
     }
 
     /**

@@ -16,6 +16,10 @@ const props = defineProps({
 });
 
 const critereForm = ref({});
+const showCreateCritereForm = ref(false);
+const toggleCreateCritereForm = () => {
+    showCreateCritereForm.value = !showCreateCritereForm.value;
+};
 
 const initializeCritereForm = () => {
     for (const critereId in props.criteres) {
@@ -28,6 +32,22 @@ const initializeCritereForm = () => {
 };
 
 initializeCritereForm();
+
+const createCritereForm = useForm({
+    nom: null,
+});
+
+const createCritere = () => {
+    createCritereForm.post(route("admin.criteres.store"), {
+        errorBag: "createCritereForm",
+        preserveScroll: true,
+        onSuccess: () => {
+            initializeCritereForm();
+            createCritereForm.reset();
+            toggleCreateCritereForm();
+        },
+    });
+};
 
 const updateCritere = (critere) => {
     router.patch(
@@ -162,11 +182,56 @@ onMounted(() => {
                         >
                             Créer un critère:
                         </h3>
-                        <Link
+                        <button
+                            type="button"
+                            v-if="!showCreateCritereForm"
+                            @click="toggleCreateCritereForm"
                             class="inline-flex w-auto items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
-                            :href="route('admin.criteres.index')"
-                            >Créer une nouveau critère (To do!)</Link
                         >
+                            Créer un nouveau critère
+                        </button>
+                        <form
+                            v-if="showCreateCritereForm"
+                            class="flex flex-col items-start space-y-4"
+                            @submit.prevent="createCritere"
+                        >
+                            <div class="mt-1 flex flex-col rounded-md">
+                                <input
+                                    v-model="createCritereForm.nom"
+                                    type="text"
+                                    name="critere_nom"
+                                    id="critere_nom"
+                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                    placeholder=""
+                                    autocomplete="none"
+                                />
+                                <div
+                                    v-if="createCritereForm.errors.nom"
+                                    class="text-xs text-red-500"
+                                >
+                                    {{ createCritereForm.errors.nom }}
+                                </div>
+                            </div>
+
+                            <div
+                                class="flex w-full items-center justify-between"
+                            >
+                                <button
+                                    :disabled="createCritereForm.processing"
+                                    class="rounded border border-gray-300 bg-blue-600 px-2 py-2 text-center text-sm font-medium text-white shadow-sm"
+                                    type="submit"
+                                >
+                                    Enregistrer
+                                </button>
+                                <button
+                                    class="rounded border border-gray-300 bg-white px-2 py-2 text-center text-sm font-medium text-gray-600 shadow-sm"
+                                    type="button"
+                                    @click="toggleCreateCritereForm"
+                                >
+                                    Annuler
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

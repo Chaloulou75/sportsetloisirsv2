@@ -16,6 +16,10 @@ const props = defineProps({
 });
 
 const categorieForm = ref({});
+const showCreateCategoryForm = ref(false);
+const toggleCreateCategoryForm = () => {
+    showCreateCategoryForm.value = !showCreateCategoryForm.value;
+};
 
 const initializecategorieForm = () => {
     for (const categorieId in props.categories) {
@@ -28,6 +32,22 @@ const initializecategorieForm = () => {
 };
 
 initializecategorieForm();
+
+const createCategorieForm = useForm({
+    nom: null,
+});
+
+const createCategorie = () => {
+    createCategorieForm.post(route("admin.categories.store"), {
+        errorBag: "createCategorieForm",
+        preserveScroll: true,
+        onSuccess: () => {
+            initializecategorieForm();
+            createCategorieForm.reset();
+            toggleCreateCategoryForm();
+        },
+    });
+};
 
 const updateCategorie = (categorie) => {
     router.patch(
@@ -55,6 +75,7 @@ const deleteCategorie = (categorie) => {
         }
     );
 };
+
 const toAnimateOne = ref();
 onMounted(() => {
     autoAnimate(toAnimateOne.value);
@@ -162,11 +183,56 @@ onMounted(() => {
                         >
                             Créer une catégorie:
                         </h3>
-                        <Link
+                        <button
+                            type="button"
+                            v-if="!showCreateCategoryForm"
+                            @click="toggleCreateCategoryForm"
                             class="inline-flex w-auto items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
-                            :href="route('admin.categories.index')"
-                            >Créer une nouvel catégorie (To do!)</Link
                         >
+                            Créer une nouvelle catégorie
+                        </button>
+                        <form
+                            v-if="showCreateCategoryForm"
+                            class="flex flex-col items-start space-y-4"
+                            @submit.prevent="createCategorie"
+                        >
+                            <div class="mt-1 flex flex-col rounded-md">
+                                <input
+                                    v-model="createCategorieForm.nom"
+                                    type="text"
+                                    name="categorie_nom"
+                                    id="categorie_nom"
+                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                    placeholder=""
+                                    autocomplete="none"
+                                />
+                                <div
+                                    v-if="createCategorieForm.errors.nom"
+                                    class="text-xs text-red-500"
+                                >
+                                    {{ createCategorieForm.errors.nom }}
+                                </div>
+                            </div>
+
+                            <div
+                                class="flex w-full items-center justify-between"
+                            >
+                                <button
+                                    :disabled="createCategorieForm.processing"
+                                    class="rounded border border-gray-300 bg-blue-600 px-2 py-2 text-center text-sm font-medium text-white shadow-sm"
+                                    type="submit"
+                                >
+                                    Enregistrer
+                                </button>
+                                <button
+                                    class="rounded border border-gray-300 bg-white px-2 py-2 text-center text-sm font-medium text-gray-600 shadow-sm"
+                                    type="button"
+                                    @click="toggleCreateCategoryForm"
+                                >
+                                    Annuler
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
