@@ -590,12 +590,12 @@ const onSubmitAddProduitForm = () => {
 
                                                             <InputLabel
                                                                 class="py-2"
-                                                                for="
-                                                                Quantité
-                                                            "
-                                                                value="
-                                                                Quantité
-                                                            "
+                                                                :for="
+                                                                    souscritere.nom
+                                                                "
+                                                                :value="
+                                                                    souscritere.nom
+                                                                "
                                                                 v-if="
                                                                     formAddProduit
                                                                         .criteres[
@@ -612,12 +612,12 @@ const onSubmitAddProduitForm = () => {
                                                             <TextInput
                                                                 class="w-full"
                                                                 type="number"
-                                                                id="
-                                                                Nombre
-                                                            "
-                                                                name="
-                                                                Nombre
-                                                            "
+                                                                :id="
+                                                                    souscritere.nom
+                                                                "
+                                                                :name="
+                                                                    souscritere.nom
+                                                                "
                                                                 v-if="
                                                                     formAddProduit
                                                                         .criteres[

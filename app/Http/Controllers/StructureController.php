@@ -346,11 +346,11 @@ class StructureController extends Controller
 
         $allStructureTypes = Structuretype::whereHas('structures')->select(['id', 'name', 'slug'])->get();
 
-        $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
-            $query->orderBy('defaut', 'desc');
-        }])
-        ->whereIn('discipline_id', $structure->disciplines->pluck('discipline_id'))->whereIn('categorie_id', $structure->categories->pluck('categorie_id'))
-        ->get();
+        $criteres = LienDisciplineCategorieCritere::withValeurs()
+                ->whereIn('discipline_id', $structure->activites->pluck('discipline_id'))
+                ->whereIn('categorie_id', $structure->activites->pluck('categorie_id'))
+                ->where('visible_front', true)
+                ->get();
 
         $structure->timestamps = false;
         $structure->increment('view_count');

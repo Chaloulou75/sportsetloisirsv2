@@ -1,15 +1,21 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { Head, Link } from "@inertiajs/vue3";
+import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, watch, computed } from "vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
+import RadioForm from "@/Components/Forms/RadioForm.vue";
+import RangeInputForm from "@/Components/Forms/RangeInputForm.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
 import InputLabel from "@/Components/Forms/InputLabel.vue";
-import RangeInputForm from "@/Components/Forms/RangeInputForm.vue";
+import OpenDaysForm from "@/Components/Forms/DayTime/OpenDaysForm.vue";
+import SingleDateForm from "@/Components/Forms/DayTime/SingleDateForm.vue";
+import SingleTimeForm from "@/Components/Forms/DayTime/SingleTimeForm.vue";
+import OpenTimesForm from "@/Components/Forms/DayTime/OpenTimesForm.vue";
+import OpenMonthsForm from "@/Components/Forms/DayTime/OpenMonthsForm.vue";
 import LeafletMap from "@/Components/Maps/LeafletMap.vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
@@ -66,6 +72,16 @@ const formCriteres = ref({
     criteres: {},
     sousCriteres: {},
 });
+
+const formOtherCriteres = useForm({
+    date_seule: null,
+    dates: null,
+    time_seule: null,
+    times: null,
+    months: null,
+    rayon_km: 0,
+});
+
 const selectedCriteres = ref([]);
 const selectedSousCriteres = ref([]);
 const filteredActivitesWithCriteres = ref(props.structure.activites);
@@ -708,13 +724,15 @@ const events = getEvents();
                             </h3>
 
                             <div
-                                v-if="selectedCategory"
-                                class="my-6 grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3"
+                                v-if="
+                                    selectedCategory &&
+                                    filteredCriteres.length > 0
+                                "
+                                class="mx-auto my-6 grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3"
                             >
                                 <div
                                     v-for="critere in filteredCriteres"
                                     :key="critere.id"
-                                    class="w-full max-w-full md:w-auto"
                                 >
                                     <!-- select -->
                                     <SelectForm
@@ -752,84 +770,49 @@ const events = getEvents();
                                         "
                                     />
                                     <!-- radio -->
-                                    <div
+                                    <RadioForm
+                                        class="max-w-sm"
                                         v-if="
                                             critere.type_champ_form === 'radio'
                                         "
-                                    >
-                                        <div class="block">
-                                            <label
-                                                :for="critere.nom"
-                                                class="block text-sm font-medium text-gray-700"
-                                            >
-                                                {{ critere.nom }}
-                                            </label>
+                                        :name="critere.nom"
+                                        v-model="
+                                            formCriteres.criteres[critere.id]
+                                        "
+                                        :options="critere.valeurs"
+                                    />
 
-                                            <div class="flex rounded-md">
-                                                <div>
-                                                    <label
-                                                        class="inline-flex items-center"
-                                                        v-for="(
-                                                            option, index
-                                                        ) in critere.valeurs"
-                                                        :key="option.id"
-                                                    >
-                                                        <input
-                                                            v-model="
-                                                                formCriteres
-                                                                    .criteres[
-                                                                    critere.id
-                                                                ]
-                                                            "
-                                                            type="radio"
-                                                            class="form-radio"
-                                                            :name="
-                                                                option.valeur
-                                                            "
-                                                            :value="
-                                                                option.valeur
-                                                            "
-                                                            checked
-                                                        />
-                                                        <span class="ml-2">{{
-                                                            option.valeur
-                                                        }}</span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <!-- input text -->
                                     <div
+                                        class="max-w-sm"
                                         v-if="
                                             critere.type_champ_form === 'text'
                                         "
                                     >
-                                        <div class="block">
-                                            <label
-                                                :for="critere.nom"
-                                                class="block text-sm font-medium text-gray-700"
-                                            >
-                                                {{ critere.nom }}
-                                            </label>
-                                            <div class="flex rounded-md">
-                                                <input
-                                                    type="text"
-                                                    v-model="
-                                                        formCriteres.criteres[
-                                                            critere.id
-                                                        ]
-                                                    "
-                                                    :name="critere.nom"
-                                                    :id="critere.nom"
-                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                    placeholder=""
-                                                    autocomplete="none"
-                                                />
-                                            </div>
+                                        <label
+                                            :for="critere.nom"
+                                            class="block text-sm font-medium text-gray-700"
+                                        >
+                                            {{ critere.nom }}
+                                        </label>
+                                        <div class="mt-1 flex rounded-md">
+                                            <TextInput
+                                                type="text"
+                                                v-model="
+                                                    formCriteres.criteres[
+                                                        critere.id
+                                                    ]
+                                                "
+                                                :name="critere.nom"
+                                                :id="critere.nom"
+                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                placeholder=""
+                                                autocomplete="none"
+                                            />
                                         </div>
                                     </div>
 
+                                    <!-- number text -->
                                     <div
                                         class="max-w-sm"
                                         v-if="
@@ -861,211 +844,166 @@ const events = getEvents();
                                         </div>
                                     </div>
 
-                                    <!-- Dates x 2 -->
-                                    <!-- <div
-                            v-if="critere.type_champ_form === 'dates'"
-                            class="flex max-w-sm flex-col items-start space-y-3"
-                        >
-                            <div class="flex items-center">
-                                <input
-                                    v-model="addDatesOpened"
-                                    id="addDatesOpened"
-                                    type="checkbox"
-                                    class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                />
-                                <label
-                                    for="addDatesOpened"
-                                    class="ml-2 text-sm font-medium text-gray-700"
-                                    >Ajouter vos dates d'ouvertures
-                                </label>
-                            </div>
-                            <OpenDaysForm
-                                v-if="addDatesOpened"
-                                class="w-full"
-                                v-model="form.date"
-                                :name="`Dates d'ouvertures`"
-                            />
-                        </div> -->
+                                    <!-- Heure seule -->
+                                    <div
+                                        v-if="
+                                            critere.type_champ_form === 'time'
+                                        "
+                                        class="flex max-w-sm flex-col items-start space-y-3"
+                                    >
+                                        <SingleTimeForm
+                                            class="w-full"
+                                            v-model="
+                                                formOtherCriteres.time_seule
+                                            "
+                                            :name="critere.nom"
+                                        />
+                                    </div>
 
-                                    <!-- Heures ouverture / fermeture -->
-                                    <!-- <div
-                            v-if="critere.type_champ_form === 'times'"
-                            class="flex max-w-sm flex-col items-start space-y-3"
-                        >
-                            <div class="flex items-center">
-                                <input
-                                    v-model="addHoursOpened"
-                                    id="addHoursOpened"
-                                    type="checkbox"
-                                    class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                />
-                                <label
-                                    for="addHoursOpened"
-                                    class="ml-2 text-sm font-medium text-gray-700"
-                                    >Ajouter vos horaires d'ouvertures
-                                </label>
-                            </div>
-                            <OpenTimesForm
-                                v-if="addHoursOpened"
-                                class="w-full"
-                                v-model="form.time"
-                                :name="`Horaires (ouverture /
-                                                    fermeture)`"
-                            />
-                        </div> -->
+                                    <!-- Heures x2 ouverture / fermeture -->
+                                    <div
+                                        v-if="
+                                            critere.type_champ_form === 'times'
+                                        "
+                                        class="flex max-w-sm flex-col items-start space-y-3"
+                                    >
+                                        <OpenTimesForm
+                                            class="w-full"
+                                            v-model="formOtherCriteres.times"
+                                            :name="critere.nom"
+                                        />
+                                    </div>
 
                                     <!-- Date seule -->
-                                    <!-- <div
-                            v-if="critere.type_champ_form === 'date'"
-                            class="flex max-w-sm flex-col items-start space-y-3"
-                        >
-                            <div class="flex items-center">
-                                <input
-                                    v-model="addDateOpen"
-                                    id="addDateOpen"
-                                    type="checkbox"
-                                    class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                />
-                                <label
-                                    for="addDateOpen"
-                                    class="ml-2 text-sm font-medium text-gray-700"
-                                    >Ajouter une date de début
-                                </label>
-                            </div>
-                            <SingleDateForm
-                                v-if="addDateOpen"
-                                class="w-full"
-                                v-model="form.date_debut"
-                                :name="`Date de début`"
-                            />
-                        </div> -->
+                                    <div
+                                        v-if="
+                                            critere.type_champ_form === 'date'
+                                        "
+                                        class="flex max-w-sm flex-col items-start space-y-3"
+                                    >
+                                        <SingleDateForm
+                                            class="w-full"
+                                            v-model="
+                                                formOtherCriteres.date_seule
+                                            "
+                                            :name="critere.nom"
+                                        />
+                                    </div>
 
-                                    <!-- Heure seule -->
-                                    <!-- <div
-                            v-if="critere.type_champ_form === 'time'"
-                            class="flex max-w-sm flex-col items-start space-y-3"
-                        >
-                            <div class="flex items-center">
-                                <input
-                                    v-model="addHourOpen"
-                                    id="addHourOpen"
-                                    type="checkbox"
-                                    class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                />
-                                <label
-                                    for="addHourOpen"
-                                    class="ml-2 text-sm font-medium text-gray-700"
-                                    >Ajouter une heure d'ouverture
-                                </label>
-                            </div>
-                            <SingleTimeForm
-                                v-if="addHourOpen"
-                                class="w-full"
-                                v-model="form.time_debut"
-                                :name="`Horaire de début`"
-                            />
-                        </div> -->
+                                    <!-- Dates x 2 -->
+                                    <div
+                                        v-if="
+                                            critere.type_champ_form === 'dates'
+                                        "
+                                        class="flex max-w-sm flex-col items-start space-y-3"
+                                    >
+                                        <OpenDaysForm
+                                            class="w-full"
+                                            v-model="formOtherCriteres.dates"
+                                            :name="critere.nom"
+                                        />
+                                    </div>
 
                                     <!-- Mois -->
-                                    <!-- <div v-if="critere.type_champ_form === 'mois'">
-                            <div
-                                class="flex max-w-sm flex-col items-start space-y-3"
-                            >
-                                <div class="flex items-center">
-                                    <input
-                                        v-model="addMonthsOpen"
-                                        id="addMonthsOpen"
-                                        type="checkbox"
-                                        class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                    />
-                                    <label
-                                        for="addMonthsOpen"
-                                        class="ml-2 text-sm font-medium text-gray-700"
-                                        >Ajouter vos mois d'ouvertures
-                                    </label>
-                                </div>
-                                <OpenMonthsForm
-                                    v-if="addMonthsOpen"
-                                    class="w-full"
-                                    v-model="form.months"
-                                    :name="`Mois d'ouverture`"
-                                />
-                            </div>
-                        </div> -->
+                                    <div
+                                        v-if="
+                                            critere.type_champ_form === 'mois'
+                                        "
+                                    >
+                                        <div
+                                            class="flex max-w-sm flex-col items-start space-y-3"
+                                        >
+                                            <OpenMonthsForm
+                                                class="w-full"
+                                                v-model="
+                                                    formOtherCriteres.months
+                                                "
+                                                :name="critere.nom"
+                                            />
+                                            <div
+                                                v-if="
+                                                    formOtherCriteres.errors
+                                                        .months
+                                                "
+                                                class="mt-2 text-xs text-red-500"
+                                            >
+                                                {{
+                                                    formOtherCriteres.errors
+                                                        .months
+                                                }}
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     <!-- Adresse -->
                                     <!-- <div
-                            v-if="critere.type_champ_form === 'adresse'"
-                            class="flex w-full max-w-sm flex-col space-y-2"
-                        >
-                            <div v-if="!addAddress" class="flex-1">
-                                <label
-                                    for="
-                                                            adresse
-                                                        "
-                                    class="block text-sm font-medium text-gray-700"
-                                >
-                                    Adresse
-                                </label>
-                                <div class="mt-1 flex rounded-md">
-                                    <select
-                                        name="
-                                                                adresse
-                                                            "
-                                        id="
-                                                                adresse
-                                                            "
-                                        v-model="form.adresse"
-                                        class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                        v-if="
+                                            critere.type_champ_form ===
+                                            'adresse'
+                                        "
+                                        class="flex w-full max-w-sm flex-col space-y-2"
                                     >
-                                        <option
-                                            v-for="adresse in structure.adresses"
-                                            :key="adresse.id"
-                                            :value="adresse.id"
-                                        >
-                                            {{ adresse.address }}
-                                            -
-                                            {{ adresse.zip_code }},
-                                            {{ adresse.city }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="flex items-center">
-                                <input
-                                    v-model="addAddress"
-                                    id="addAddress"
-                                    type="checkbox"
-                                    class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                />
-                                <label
-                                    for="addAddress"
-                                    class="ml-2 text-sm font-medium text-gray-700"
-                                    >Ajouter une adresse</label
-                                >
-                            </div>
-                        </div> -->
+                                        <div v-if="!addAddress" class="flex-1">
+                                            <label
+                                                for="adresse"
+                                                class="block text-sm font-medium text-gray-700"
+                                            >
+                                                Adresse
+                                            </label>
+                                            <div class="mt-1 flex rounded-md">
+                                                <select
+                                                    name="
+                                                                adresse
+                                                            "
+                                                    id="
+                                                                adresse
+                                                            "
+                                                    v-model="
+                                                        formCriteres.adresse
+                                                    "
+                                                    class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                >
+                                                    <option
+                                                        v-for="adresse in structure.adresses"
+                                                        :key="adresse.id"
+                                                        :value="adresse.id"
+                                                    >
+                                                        {{ adresse.address }}
+                                                        -
+                                                        {{ adresse.zip_code }},
+                                                        {{ adresse.city }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input
+                                                v-model="addAddress"
+                                                id="addAddress"
+                                                type="checkbox"
+                                                class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                            />
+                                            <label
+                                                for="addAddress"
+                                                class="ml-2 text-sm font-medium text-gray-700"
+                                                >Ajouter une adresse</label
+                                            >
+                                        </div>
+                                    </div> -->
 
                                     <!-- Range km  -->
-                                    <div
+                                    <RangeInputForm
                                         v-if="
                                             critere.type_champ_form === 'rayon'
                                         "
-                                        class="flex w-full max-w-sm flex-col items-start space-y-3"
-                                    >
-                                        <RangeInputForm
-                                            class="w-full max-w-sm"
-                                            v-model="
-                                                formCriteres.criteres[
-                                                    critere.id
-                                                ]
-                                            "
-                                            :min="0"
-                                            :max="200"
-                                            :name="`Rayon de déplacement (en km)`"
-                                            :metric="`Km`"
-                                        />
-                                    </div>
+                                        class="max-w-sm"
+                                        v-model="formOtherCriteres.rayon_km"
+                                        :min="0"
+                                        :max="200"
+                                        :name="critere.nom"
+                                        :metric="`Km`"
+                                    />
+
                                     <!-- sous criteres -->
                                     <div
                                         v-for="valeur in critere.valeurs"
@@ -1109,18 +1047,18 @@ const events = getEvents();
                                                     souscritere.dis_cat_crit_val_id ===
                                                         valeur.id
                                                 "
-                                                class="mt-2 flex items-center space-x-4"
+                                                class="mt-2 block"
                                             >
                                                 <InputLabel
                                                     class="py-2"
-                                                    for="Quantité"
-                                                    value="Quantité"
+                                                    :for="souscritere.nom"
+                                                    :value="souscritere.nom"
                                                 />
                                                 <TextInput
                                                     class="w-full"
                                                     type="number"
-                                                    id="Nombre"
-                                                    name="Nombre"
+                                                    :id="souscritere.nom"
+                                                    :name="souscritere.nom"
                                                     v-model="
                                                         formCriteres
                                                             .sousCriteres[

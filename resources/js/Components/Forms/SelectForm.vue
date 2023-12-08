@@ -11,7 +11,7 @@ const props = defineProps({
     classes: String,
 });
 
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:model-value"]);
 
 const select = ref(null);
 const isShowing = ref(true);
@@ -21,7 +21,7 @@ const model = computed({
         return props.modelValue;
     },
     set(value) {
-        emit("update:modelValue", value);
+        emit("update:model-value", value);
     },
 });
 </script>

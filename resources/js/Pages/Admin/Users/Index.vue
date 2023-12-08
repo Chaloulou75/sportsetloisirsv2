@@ -30,7 +30,7 @@ const props = defineProps({
                 <h1
                     class="px-3 text-center text-base font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
-                    Gestion des utilisateurs
+                    Gestion des utilisateurs (To Do!)
                 </h1>
             </div>
         </template>
