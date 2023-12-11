@@ -625,18 +625,18 @@ const destroyTarif = (tarif, produit) => {
                     <DisclosurePanel as="div">
                         <div class="overflow-x-scroll">
                             <table
-                                class="table:auto w-full min-w-full border-collapse border border-slate-500 md:table-fixed"
+                                class="table:auto w-full min-w-full border-collapse border border-slate-300 md:table-fixed"
                             >
                                 <thead class="bg-gray-700">
                                     <tr>
                                         <th
-                                            class="border border-slate-600 px-2 py-2 text-sm font-medium text-white"
+                                            class="border border-slate-300 px-2 py-2 text-sm font-medium text-white"
                                             colspan="1"
                                         >
                                             N°
                                         </th>
                                         <th
-                                            class="border border-slate-600 px-2 py-2 text-sm font-medium text-white"
+                                            class="border border-slate-300 px-2 py-2 text-sm font-medium text-white"
                                             colspan="1"
                                             v-for="crit in uniqueCriteresByCategorie"
                                             :key="crit.id"
@@ -645,37 +645,37 @@ const destroyTarif = (tarif, produit) => {
                                         </th>
 
                                         <th
-                                            class="border border-slate-600 px-2 py-2 text-sm font-medium text-white"
+                                            class="border border-slate-300 px-2 py-2 text-sm font-medium text-white"
                                             colspan="1"
                                         >
                                             Adresse
                                         </th>
                                         <th
-                                            class="border border-slate-600 px-2 py-2 text-sm font-medium text-white"
+                                            class="border border-slate-300 px-2 py-2 text-sm font-medium text-white"
                                             colspan="1"
                                         >
                                             Planning
                                         </th>
                                         <th
-                                            class="border border-slate-600 px-2 py-2 text-sm font-medium text-white"
+                                            class="border border-slate-300 px-2 py-2 text-sm font-medium text-white"
                                             colspan="1"
                                         >
                                             Tarifs
                                         </th>
                                         <th
-                                            class="border border-slate-600 px-2 py-2 text-sm font-medium text-white"
+                                            class="border border-slate-300 px-2 py-2 text-sm font-medium text-white"
                                             colspan="1"
                                         >
                                             Modifier
                                         </th>
                                         <th
-                                            class="border border-slate-600 px-2 py-2 text-sm font-medium text-white"
+                                            class="border border-slate-300 px-2 py-2 text-sm font-medium text-white"
                                             colspan="1"
                                         >
                                             Dupliquer
                                         </th>
                                         <th
-                                            class="border border-slate-600 px-2 py-2 text-sm font-medium text-white"
+                                            class="border border-slate-300 px-2 py-2 text-sm font-medium text-white"
                                             colspan="1"
                                         >
                                             Supprimer
@@ -691,14 +691,14 @@ const destroyTarif = (tarif, produit) => {
                                             class="w-full border-t odd:bg-white even:bg-gray-50 focus-within:bg-gray-100 hover:bg-gray-100"
                                         >
                                             <td
-                                                class="border border-slate-600 text-center text-sm text-gray-600"
+                                                class="border border-slate-300 text-center text-sm text-gray-600"
                                             >
                                                 {{ produit.id }}
                                             </td>
                                             <td
                                                 v-for="crit in uniqueCriteresByCategorie"
                                                 :key="crit.id"
-                                                class="border border-slate-600 text-center"
+                                                class="border border-slate-300 text-center"
                                             >
                                                 <div
                                                     v-for="(
@@ -758,7 +758,7 @@ const destroyTarif = (tarif, produit) => {
                                                     </template>
                                                 </div>
                                             </td>
-                                            <td class="border border-slate-600">
+                                            <td class="border border-slate-300">
                                                 <div
                                                     class="flex h-full w-full items-center p-2"
                                                 >
@@ -782,7 +782,7 @@ const destroyTarif = (tarif, produit) => {
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td class="border border-slate-600">
+                                            <td class="border border-slate-300">
                                                 <div
                                                     class="flex w-full items-center p-2"
                                                 >
@@ -840,7 +840,7 @@ const destroyTarif = (tarif, produit) => {
                                                 </div>
                                             </td>
                                             <td
-                                                class="border border-slate-600 bg-green-600 hover:bg-green-500"
+                                                class="border border-slate-300 bg-green-600 hover:bg-green-500"
                                             >
                                                 <button
                                                     @click="
@@ -853,12 +853,12 @@ const destroyTarif = (tarif, produit) => {
                                                     class="flex h-full w-full items-center justify-center p-4"
                                                 >
                                                     <CurrencyEuroIcon
-                                                        class="mr-1 h-6 w-6 text-gray-50 hover:text-white"
+                                                        class="h-6 w-6 text-gray-50 hover:text-white"
                                                     />
                                                 </button>
                                             </td>
                                             <td
-                                                class="border border-slate-600 bg-blue-600 hover:bg-blue-500"
+                                                class="border border-slate-300 bg-blue-600 hover:bg-blue-500"
                                             >
                                                 <button
                                                     type="button"
@@ -870,13 +870,13 @@ const destroyTarif = (tarif, produit) => {
                                                     "
                                                     class="flex h-full w-full items-center justify-center p-4"
                                                 >
-                                                    <ArrowPathIcon
-                                                        class="mr-1 h-6 w-6 text-gray-50 transition-all duration-200 hover:-rotate-90 hover:text-white"
+                                                    <PencilSquareIcon
+                                                        class="h-6 w-6 text-gray-100 hover:text-white"
                                                     />
                                                 </button>
                                             </td>
                                             <td
-                                                class="border border-slate-600 bg-blue-500 hover:bg-blue-600"
+                                                class="border border-slate-300 bg-blue-500 hover:bg-blue-600"
                                             >
                                                 <button
                                                     type="button"
@@ -890,12 +890,12 @@ const destroyTarif = (tarif, produit) => {
                                                     class="flex h-full w-full items-center justify-center p-4"
                                                 >
                                                     <DocumentDuplicateIcon
-                                                        class="mr-1 h-6 w-6 text-gray-50 hover:text-white"
+                                                        class="h-6 w-6 text-gray-50 hover:text-white"
                                                     />
                                                 </button>
                                             </td>
                                             <td
-                                                class="border border-slate-600 bg-red-500 hover:bg-red-600"
+                                                class="border border-slate-300 bg-red-500 hover:bg-red-600"
                                             >
                                                 <button
                                                     type="button"
@@ -909,7 +909,7 @@ const destroyTarif = (tarif, produit) => {
                                                     class="flex h-full w-full items-center justify-center p-4"
                                                 >
                                                     <TrashIcon
-                                                        class="mr-1 h-6 w-6 text-gray-100 hover:text-white"
+                                                        class="h-6 w-6 text-gray-100 hover:text-white"
                                                     />
                                                 </button>
                                             </td>
@@ -943,7 +943,7 @@ const destroyTarif = (tarif, produit) => {
                                             </td>
                                             <td
                                                 colspan="1"
-                                                class="border border-slate-600 bg-green-600 hover:bg-green-500"
+                                                class="border border-slate-300 bg-green-600 hover:bg-green-500"
                                             >
                                                 <button
                                                     type="button"
@@ -970,13 +970,13 @@ const destroyTarif = (tarif, produit) => {
                                                 class="w-full border-t"
                                             >
                                                 <td
-                                                    class="border border-slate-600 text-center text-sm text-gray-600"
+                                                    class="border border-slate-300 text-center text-sm text-gray-600"
                                                 >
                                                     {{ tarif.titre }}
                                                 </td>
                                                 <td
                                                     colspan="5"
-                                                    class="border border-slate-600 text-center text-sm text-gray-600"
+                                                    class="border border-slate-300 text-center text-sm text-gray-600"
                                                 >
                                                     <div
                                                         class="flex w-full items-center justify-around space-x-2"
@@ -1061,12 +1061,12 @@ const destroyTarif = (tarif, produit) => {
                                                     </div>
                                                 </td>
                                                 <td
-                                                    class="border border-slate-600 text-center text-sm text-gray-600"
+                                                    class="border border-slate-300 text-center text-sm text-gray-600"
                                                 >
                                                     {{ tarif.tarif_type.type }}
                                                 </td>
                                                 <td
-                                                    class="border border-slate-600 text-center text-sm text-gray-600"
+                                                    class="border border-slate-300 text-center text-sm text-gray-600"
                                                 >
                                                     {{
                                                         formatCurrency(
@@ -1075,7 +1075,7 @@ const destroyTarif = (tarif, produit) => {
                                                     }}
                                                 </td>
                                                 <td
-                                                    class="border border-slate-600 bg-blue-600 hover:bg-blue-500"
+                                                    class="border border-slate-300 bg-blue-600 hover:bg-blue-500"
                                                 >
                                                     <button
                                                         type="button"
@@ -1092,7 +1092,7 @@ const destroyTarif = (tarif, produit) => {
                                                     </button>
                                                 </td>
                                                 <td
-                                                    class="border border-slate-600 bg-blue-500 hover:bg-blue-600"
+                                                    class="border border-slate-300 bg-blue-500 hover:bg-blue-600"
                                                 >
                                                     <button
                                                         type="button"
@@ -1111,7 +1111,7 @@ const destroyTarif = (tarif, produit) => {
                                                     </button>
                                                 </td>
                                                 <td
-                                                    class="border border-slate-600 bg-red-500 hover:bg-red-600"
+                                                    class="border border-slate-300 bg-red-500 hover:bg-red-600"
                                                 >
                                                     <button
                                                         type="button"
