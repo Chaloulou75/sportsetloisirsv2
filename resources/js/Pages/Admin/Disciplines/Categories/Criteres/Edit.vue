@@ -20,7 +20,6 @@ import {
     ListboxButton,
     ListboxOptions,
     ListboxOption,
-    TransitionRoot,
 } from "@headlessui/vue";
 
 const props = defineProps({
@@ -809,13 +808,6 @@ onMounted(() => {
                                             </button>
                                             <button
                                                 class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white p-2 text-center text-xs font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
-                                                v-if="
-                                                    !showAddSousCritereForm(
-                                                        valeur
-                                                    ) &&
-                                                    valeur.sous_criteres
-                                                        .length === 0
-                                                "
                                                 type="button"
                                                 @click="
                                                     toggleAddSousCritereForm(
@@ -1164,10 +1156,7 @@ onMounted(() => {
                                     </div>
 
                                     <form
-                                        v-if="
-                                            showAddSousCritereForm(valeur) &&
-                                            valeur.sous_criteres.length === 0
-                                        "
+                                        v-if="showAddSousCritereForm(valeur)"
                                         class="inline-flex w-full max-w-sm flex-grow items-end justify-between py-2"
                                         @submit.prevent="addSousCritere(valeur)"
                                     >
@@ -1220,14 +1209,10 @@ onMounted(() => {
                                                         </span>
                                                     </ListboxButton>
 
-                                                    <TransitionRoot
-                                                        :show="isShowing"
-                                                        enter="transition-opacity duration-75"
-                                                        enter-from="opacity-0"
-                                                        enter-to="opacity-100"
-                                                        leave="transition-opacity duration-150"
-                                                        leave-from="opacity-100"
-                                                        leave-to="opacity-0"
+                                                    <transition
+                                                        leave-active-class="transition duration-100 ease-in"
+                                                        leave-from-class="opacity-100"
+                                                        leave-to-class="opacity-0"
                                                     >
                                                         <ListboxOptions
                                                             class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
@@ -1280,7 +1265,7 @@ onMounted(() => {
                                                                 </li>
                                                             </ListboxOption>
                                                         </ListboxOptions>
-                                                    </TransitionRoot>
+                                                    </transition>
                                                 </div>
                                             </Listbox>
                                         </div>

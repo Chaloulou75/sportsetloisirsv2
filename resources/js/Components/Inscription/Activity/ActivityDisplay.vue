@@ -625,12 +625,12 @@ const destroyTarif = (tarif, produit) => {
                     <DisclosurePanel as="div">
                         <div class="overflow-x-scroll">
                             <table
-                                class="table:auto w-full min-w-full border-collapse border border-slate-300 md:table-fixed"
+                                class="w-full min-w-full table-auto border-collapse border border-slate-300 md:table-auto"
                             >
                                 <thead class="bg-gray-700">
                                     <tr>
                                         <th
-                                            class="border border-slate-300 px-2 py-2 text-sm font-medium text-white"
+                                            class="w-16 border border-slate-300 px-2 py-2 text-sm font-medium text-white"
                                             colspan="1"
                                         >
                                             N°
@@ -657,29 +657,29 @@ const destroyTarif = (tarif, produit) => {
                                             Planning
                                         </th>
                                         <th
-                                            class="border border-slate-300 px-2 py-2 text-sm font-medium text-white"
-                                            colspan="1"
+                                            class="w-80 border border-slate-300 px-2 py-2 text-sm font-medium text-white"
+                                            colspan="4"
                                         >
-                                            Tarifs
+                                            Actions
                                         </th>
-                                        <th
-                                            class="border border-slate-300 px-2 py-2 text-sm font-medium text-white"
+                                        <!-- <th
+                                            class="border border-slate-300 px-2  py-2 text-sm font-medium text-white"
                                             colspan="1"
                                         >
                                             Modifier
                                         </th>
                                         <th
-                                            class="border border-slate-300 px-2 py-2 text-sm font-medium text-white"
+                                            class="border border-slate-300 px-2  py-2 text-sm font-medium text-white"
                                             colspan="1"
                                         >
                                             Dupliquer
                                         </th>
                                         <th
-                                            class="border border-slate-300 px-2 py-2 text-sm font-medium text-white"
+                                            class="border border-slate-300 px-4 w-16 py-2 text-sm font-medium text-white"
                                             colspan="1"
                                         >
                                             Supprimer
-                                        </th>
+                                        </th> -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -688,17 +688,17 @@ const destroyTarif = (tarif, produit) => {
                                         :key="produit.id"
                                     >
                                         <tr
-                                            class="w-full border-t odd:bg-white even:bg-gray-50 focus-within:bg-gray-100 hover:bg-gray-100"
+                                            class="w-full min-w-full border-t odd:bg-white even:bg-gray-50 focus-within:bg-gray-100 hover:bg-gray-100"
                                         >
                                             <td
-                                                class="border border-slate-300 text-center text-sm text-gray-600"
+                                                class="w-16 border border-slate-300 px-2 py-2 text-center text-sm text-gray-600"
                                             >
                                                 {{ produit.id }}
                                             </td>
                                             <td
                                                 v-for="crit in uniqueCriteresByCategorie"
                                                 :key="crit.id"
-                                                class="border border-slate-300 text-center"
+                                                class="border border-slate-300 px-2 py-2 text-center"
                                             >
                                                 <div
                                                     v-for="(
@@ -730,7 +730,7 @@ const destroyTarif = (tarif, produit) => {
                                                                     {{
                                                                         critere.valeur
                                                                     }}
-                                                                    <span
+                                                                    <ul
                                                                         v-if="
                                                                             critere.sous_criteres &&
                                                                             critere
@@ -740,25 +740,27 @@ const destroyTarif = (tarif, produit) => {
                                                                         "
                                                                         class="text-xs text-gray-600"
                                                                     >
-                                                                        <span
+                                                                        <li
                                                                             v-for="sousCritere in critere.sous_criteres"
                                                                             :key="
                                                                                 sousCritere.id
                                                                             "
                                                                             class="text-xs text-gray-600"
                                                                         >
-                                                                            ({{
+                                                                            &bull;{{
                                                                                 sousCritere.valeur
-                                                                            }})
-                                                                        </span>
-                                                                    </span>
+                                                                            }}
+                                                                        </li>
+                                                                    </ul>
                                                                 </span>
                                                             </li>
                                                         </ul>
                                                     </template>
                                                 </div>
                                             </td>
-                                            <td class="border border-slate-300">
+                                            <td
+                                                class="border border-slate-300 px-2 py-2"
+                                            >
                                                 <div
                                                     class="flex h-full w-full items-center p-2"
                                                 >
@@ -782,7 +784,9 @@ const destroyTarif = (tarif, produit) => {
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td class="border border-slate-300">
+                                            <td
+                                                class="border border-slate-300 px-2 py-2"
+                                            >
                                                 <div
                                                     class="flex w-full items-center p-2"
                                                 >
@@ -840,7 +844,7 @@ const destroyTarif = (tarif, produit) => {
                                                 </div>
                                             </td>
                                             <td
-                                                class="border border-slate-300 bg-green-600 hover:bg-green-500"
+                                                class="w-20 border border-slate-300 bg-green-600 hover:bg-green-500"
                                             >
                                                 <button
                                                     @click="
@@ -858,7 +862,7 @@ const destroyTarif = (tarif, produit) => {
                                                 </button>
                                             </td>
                                             <td
-                                                class="border border-slate-300 bg-blue-600 hover:bg-blue-500"
+                                                class="w-20 border border-slate-300 bg-blue-600 hover:bg-blue-500"
                                             >
                                                 <button
                                                     type="button"
@@ -876,7 +880,7 @@ const destroyTarif = (tarif, produit) => {
                                                 </button>
                                             </td>
                                             <td
-                                                class="border border-slate-300 bg-blue-500 hover:bg-blue-600"
+                                                class="w-20 border border-slate-300 bg-blue-500 hover:bg-blue-600"
                                             >
                                                 <button
                                                     type="button"
@@ -895,7 +899,7 @@ const destroyTarif = (tarif, produit) => {
                                                 </button>
                                             </td>
                                             <td
-                                                class="border border-slate-300 bg-red-500 hover:bg-red-600"
+                                                class="w-20 border border-slate-300 bg-red-500 hover:bg-red-600"
                                             >
                                                 <button
                                                     type="button"
@@ -916,9 +920,9 @@ const destroyTarif = (tarif, produit) => {
                                         </tr>
                                         <tr
                                             v-if="isOpenTarif(produit)"
-                                            class="w-full border-t"
+                                            class="w-full min-w-full border-t"
                                         >
-                                            <td colspan="10" class="w-full">
+                                            <td colspan="10" class="min-w-full">
                                                 <div
                                                     class="flex w-full items-center justify-between px-2 py-2 md:px-4"
                                                 >
@@ -943,7 +947,7 @@ const destroyTarif = (tarif, produit) => {
                                             </td>
                                             <td
                                                 colspan="1"
-                                                class="border border-slate-300 bg-green-600 hover:bg-green-500"
+                                                class="w-20 border border-slate-300 bg-green-600 hover:bg-green-500"
                                             >
                                                 <button
                                                     type="button"
