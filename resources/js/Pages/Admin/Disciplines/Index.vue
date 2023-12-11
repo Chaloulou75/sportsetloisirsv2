@@ -83,7 +83,12 @@ const submitCreateInfoBase = () => {
                 />
                 <template v-if="discipline" class="w-full md:w-auto">
                     <Link
-                        :href="route('admin.disciplines.edit', discipline)"
+                        :href="
+                            route(
+                                'admin.disciplines.informations.edit',
+                                discipline
+                            )
+                        "
                         class="group inline-flex w-full max-w-md items-center justify-center rounded border border-gray-300 bg-white px-4 py-2.5 text-base font-medium text-gray-600 shadow-sm hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring-2"
                     >
                         <span class="mr-4 inline-flex group-hover:text-white"

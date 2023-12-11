@@ -125,6 +125,27 @@ class CategoryDisciplineCritereController extends Controller
 
         return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $discCatCritere->discipline->slug, 'categorie' => $discCatCritere->categorie])->with('success', 'Visibilité du critère mise à jour');
     }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function updatename(Request $request, LienDisciplineCategorieCritere $critere): RedirectResponse
+    {
+        $user = auth()->user();
+        $this->authorize('viewAdmin', $user);
+
+        $request->validate([
+            'nom' => 'required|string|min:3',
+        ]);
+
+        $discCatCritere = LienDisciplineCategorieCritere::with(['discipline', 'categorie', 'valeurs'])->findOrFail($critere->id);
+
+        $discCatCritere->update([
+            'nom' => $request->nom,
+        ]);
+
+        return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $discCatCritere->discipline->slug, 'categorie' => $discCatCritere->categorie])->with('success', 'Nom du critère mis à jour');
+    }
     /**
      * Remove the specified resource from storage.
      */

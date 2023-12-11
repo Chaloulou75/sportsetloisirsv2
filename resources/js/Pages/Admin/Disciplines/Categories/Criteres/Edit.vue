@@ -32,6 +32,92 @@ const props = defineProps({
     user_can: Object,
 });
 
+const visibleUpdateNomCritereForms = ref([]);
+const critereNameForm = ref({});
+const critereVisibilityForm = ref({});
+const valeurForm = ref({});
+const sousvaleurForm = ref({});
+const initializeValeurForm = () => {
+    for (const categoryId in props.categories) {
+        const category = props.categories[categoryId];
+
+        for (const critereId in category.criteres) {
+            const critere = category.criteres[critereId];
+            critereVisibilityForm.value[critere.id] = useForm({
+                visible_front: ref(!!critere.visible_front),
+                visible_back: ref(!!critere.visible_back),
+                ordre: ref(critere.ordre),
+                indexable: ref(!!critere.indexable),
+                remember: true,
+            });
+            critereNameForm.value[critere.id] = useForm({
+                nom: ref(critere.nom),
+            });
+
+            for (const valeurId in critere.valeurs) {
+                const valeur = critere.valeurs[valeurId];
+
+                valeurForm.value[valeur.id] = useForm({
+                    id: ref(valeur.id),
+                    valeur: ref(valeur.valeur),
+                    ordre: ref(valeur.ordre),
+                    inclus_all: ref(!!valeur.inclus_all),
+                    remember: true,
+                });
+
+                for (const souscritereId in valeur.sous_criteres) {
+                    const souscritere = valeur.sous_criteres[souscritereId];
+
+                    for (const sousvaleurId in souscritere.sous_criteres_valeurs) {
+                        const sousvaleur =
+                            souscritere.sous_criteres_valeurs[sousvaleurId];
+
+                        sousvaleurForm.value[sousvaleur.id] = useForm({
+                            id: ref(sousvaleur.id),
+                            valeur: ref(sousvaleur.valeur),
+                            ordre: ref(sousvaleur.ordre),
+                            remember: true,
+                        });
+                    }
+                }
+            }
+        }
+    }
+};
+
+initializeValeurForm();
+
+const toggleUpdateNomCritereForm = (critereId) => {
+    const index = visibleUpdateNomCritereForms.value.indexOf(critereId);
+    if (index === -1) {
+        visibleUpdateNomCritereForms.value.push(critereId);
+    } else {
+        visibleUpdateNomCritereForms.value.splice(index, 1);
+    }
+};
+
+const isUpdateFormVisible = (critereId) => {
+    return visibleUpdateNomCritereForms.value.includes(critereId);
+};
+
+const updateNameCritere = (critere) => {
+    router.patch(
+        route("categories-disciplines-criteres-nom.updatename", {
+            critere: critere,
+        }),
+        {
+            nom: critereNameForm.value[critere.id].nom,
+        },
+        {
+            errorBag: "critereNameForm",
+            preserveScroll: true,
+            onSuccess: () => {
+                toggleUpdateNomCritereForm(critere.id);
+            },
+        }
+    );
+};
+
 const updateCritereVisibility = (critere) => {
     router.patch(
         route("categories-disciplines-criteres.update", {
@@ -73,56 +159,6 @@ const deleteSousCritere = (souscritere) => {
         }
     );
 };
-
-const critereVisibilityForm = ref({});
-const valeurForm = ref({});
-const sousvaleurForm = ref({});
-const initializeValeurForm = () => {
-    for (const categoryId in props.categories) {
-        const category = props.categories[categoryId];
-
-        for (const critereId in category.criteres) {
-            const critere = category.criteres[critereId];
-            critereVisibilityForm.value[critere.id] = useForm({
-                visible_front: ref(!!critere.visible_front),
-                visible_back: ref(!!critere.visible_back),
-                ordre: ref(critere.ordre),
-                indexable: ref(!!critere.indexable),
-                remember: true,
-            });
-
-            for (const valeurId in critere.valeurs) {
-                const valeur = critere.valeurs[valeurId];
-
-                valeurForm.value[valeur.id] = useForm({
-                    id: ref(valeur.id),
-                    valeur: ref(valeur.valeur),
-                    ordre: ref(valeur.ordre),
-                    inclus_all: ref(!!valeur.inclus_all),
-                    remember: true,
-                });
-
-                for (const souscritereId in valeur.sous_criteres) {
-                    const souscritere = valeur.sous_criteres[souscritereId];
-
-                    for (const sousvaleurId in souscritere.sous_criteres_valeurs) {
-                        const sousvaleur =
-                            souscritere.sous_criteres_valeurs[sousvaleurId];
-
-                        sousvaleurForm.value[sousvaleur.id] = useForm({
-                            id: ref(sousvaleur.id),
-                            valeur: ref(sousvaleur.valeur),
-                            ordre: ref(sousvaleur.ordre),
-                            remember: true,
-                        });
-                    }
-                }
-            }
-        }
-    }
-};
-
-initializeValeurForm();
 
 const ordreCriteres = computed(() => {
     return props.categorie.criteres.map((critere, index) => index + 1);
@@ -461,16 +497,102 @@ onMounted(() => {
                             class="w-full flex-col items-start justify-between"
                         >
                             <div
-                                class="pb-2 underline decoration-blue-500 decoration-2 underline-offset-2"
+                                class="flex w-full items-start justify-between space-x-6 pb-2"
                             >
-                                Critère:
-                                <span class="text-lg font-semibold">
-                                    {{ critere.nom }}
-                                    <span class="text-sm font-medium"
-                                        >(Type de champ:
-                                        {{ critere.type_champ_form }})</span
+                                <div
+                                    class="underline decoration-blue-500 decoration-2 underline-offset-2"
+                                >
+                                    Critère:
+                                    <span class="text-lg font-semibold">
+                                        {{ critere.nom }}
+                                        <span class="text-sm font-medium"
+                                            >(Type de champ:
+                                            {{ critere.type_champ_form }})</span
+                                        >
+                                    </span>
+                                </div>
+                                <div>
+                                    <button
+                                        class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                        v-if="!isUpdateFormVisible(critere.id)"
+                                        type="button"
+                                        @click="
+                                            toggleUpdateNomCritereForm(
+                                                critere.id
+                                            )
+                                        "
                                     >
-                                </span>
+                                        <div>
+                                            Modifier le nom du critère
+                                            <span class="font-semibold">{{
+                                                critere.nom
+                                            }}</span>
+                                        </div>
+                                    </button>
+                                    <form
+                                        @submit.prevent="
+                                            updateNameCritere(critere)
+                                        "
+                                        v-if="isUpdateFormVisible(critere.id)"
+                                        class="mt-1 flex flex-col rounded-md"
+                                    >
+                                        <label
+                                            for="nom critere"
+                                            class="block text-sm font-medium text-gray-700"
+                                            >Modifier le nom du critère
+                                            <span class="font-semibold">{{
+                                                critere.nom
+                                            }}</span>
+                                            ?</label
+                                        >
+                                        <div class="flex">
+                                            <input
+                                                v-model="
+                                                    critereNameForm[critere.id]
+                                                        .nom
+                                                "
+                                                type="text"
+                                                name="nom critere"
+                                                id="nom critere"
+                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                placeholder=""
+                                                autocomplete="none"
+                                            />
+
+                                            <button
+                                                :disabled="
+                                                    critereNameForm[critere.id]
+                                                        .processing
+                                                "
+                                                type="submit"
+                                                class="ml-4 inline-flex items-center"
+                                            >
+                                                <ArrowPathIcon
+                                                    class="h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
+                                                />
+                                            </button>
+                                            <button
+                                                @click="
+                                                    toggleUpdateNomCritereForm(
+                                                        critere.id
+                                                    )
+                                                "
+                                                type="button"
+                                                class="ml-4 inline-flex items-center"
+                                            >
+                                                <XCircleIcon
+                                                    class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                />
+                                            </button>
+                                        </div>
+                                        <div
+                                            v-if="errors.critereNameForm"
+                                            class="text-xs text-red-500"
+                                        >
+                                            {{ errors.critereNameForm.nom }}
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
 
                             <div
