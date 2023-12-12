@@ -627,17 +627,19 @@ const destroyTarif = (tarif, produit) => {
                             <table
                                 class="w-full min-w-full table-auto border-collapse border border-slate-300 md:table-auto"
                             >
-                                <thead class="bg-gray-700">
+                                <thead
+                                    class="bg-gray-700 text-xs font-medium uppercase text-gray-50"
+                                >
                                     <tr>
                                         <th
-                                            class="w-16 border border-slate-300 px-2 py-2 text-sm font-medium text-white"
-                                            colspan="1"
+                                            class="w-16 border border-slate-300 px-2 py-2"
+                                            scope="col"
                                         >
                                             N°
                                         </th>
                                         <th
-                                            class="border border-slate-300 px-2 py-2 text-sm font-medium text-white"
-                                            colspan="1"
+                                            class="border border-slate-300 px-2 py-2"
+                                            scope="col"
                                             v-for="crit in uniqueCriteresByCategorie"
                                             :key="crit.id"
                                         >
@@ -645,41 +647,23 @@ const destroyTarif = (tarif, produit) => {
                                         </th>
 
                                         <th
-                                            class="border border-slate-300 px-2 py-2 text-sm font-medium text-white"
-                                            colspan="1"
+                                            class="border border-slate-300 px-2 py-2"
+                                            scope="col"
                                         >
                                             Adresse
                                         </th>
                                         <th
-                                            class="border border-slate-300 px-2 py-2 text-sm font-medium text-white"
-                                            colspan="1"
+                                            class="border border-slate-300 px-2 py-2"
+                                            scope="col"
                                         >
                                             Planning
                                         </th>
                                         <th
-                                            class="w-80 border border-slate-300 px-2 py-2 text-sm font-medium text-white"
+                                            class="w-80 border border-slate-300 px-2 py-2"
                                             colspan="4"
                                         >
                                             Actions
                                         </th>
-                                        <!-- <th
-                                            class="border border-slate-300 px-2  py-2 text-sm font-medium text-white"
-                                            colspan="1"
-                                        >
-                                            Modifier
-                                        </th>
-                                        <th
-                                            class="border border-slate-300 px-2  py-2 text-sm font-medium text-white"
-                                            colspan="1"
-                                        >
-                                            Dupliquer
-                                        </th>
-                                        <th
-                                            class="border border-slate-300 px-4 w-16 py-2 text-sm font-medium text-white"
-                                            colspan="1"
-                                        >
-                                            Supprimer
-                                        </th> -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -725,7 +709,7 @@ const destroyTarif = (tarif, produit) => {
                                                                     v-if="
                                                                         critere.valeur
                                                                     "
-                                                                    class="text-center text-sm text-gray-600"
+                                                                    class="text-left text-sm text-gray-600"
                                                                 >
                                                                     {{
                                                                         critere.valeur
@@ -920,34 +904,34 @@ const destroyTarif = (tarif, produit) => {
                                         </tr>
                                         <tr
                                             v-if="isOpenTarif(produit)"
-                                            class="w-full min-w-full border-t"
+                                            class="border-b border-gray-200"
                                         >
-                                            <td colspan="10" class="min-w-full">
+                                            <td
+                                                :colspan="
+                                                    uniqueCriteresByCategorie.length +
+                                                    6
+                                                "
+                                            >
                                                 <div
-                                                    class="flex w-full items-center justify-between px-2 py-2 md:px-4"
+                                                    class="flex w-full items-center justify-between whitespace-nowrap px-2 py-2 text-sm font-semibold text-gray-700 md:px-4"
                                                 >
-                                                    <h3
+                                                    <p
                                                         v-if="
                                                             produit.tarifs
                                                                 .length > 0
                                                         "
-                                                        class="w-full flex-1 px-2 py-2 text-sm font-semibold text-gray-700 md:px-4"
                                                     >
                                                         Liste des tarifs pour ce
                                                         produit:
-                                                    </h3>
-                                                    <h3
-                                                        v-else
-                                                        class="w-full px-2 py-2 text-sm font-semibold text-gray-700 md:px-4"
-                                                    >
+                                                    </p>
+                                                    <p v-else>
                                                         Pas encore de tarif pour
                                                         ce produit.
-                                                    </h3>
+                                                    </p>
                                                 </div>
                                             </td>
                                             <td
-                                                colspan="1"
-                                                class="w-20 border border-slate-300 bg-green-600 hover:bg-green-500"
+                                                class="border border-slate-300 bg-green-600 hover:bg-green-500"
                                             >
                                                 <button
                                                     type="button"
@@ -956,7 +940,7 @@ const destroyTarif = (tarif, produit) => {
                                                             structure
                                                         )
                                                     "
-                                                    class="flex h-full w-full items-center justify-center p-4 text-sm text-white"
+                                                    class="flex h-full w-full items-center justify-center p-4 text-xs text-white"
                                                 >
                                                     Ajouter un tarif
                                                 </button>
@@ -976,10 +960,18 @@ const destroyTarif = (tarif, produit) => {
                                                 <td
                                                     class="border border-slate-300 text-center text-sm text-gray-600"
                                                 >
+                                                    {{ tarif.id }}
+                                                </td>
+
+                                                <td
+                                                    class="border border-slate-300 text-center text-sm text-gray-600"
+                                                >
                                                     {{ tarif.titre }}
                                                 </td>
                                                 <td
-                                                    colspan="5"
+                                                    :colspan="
+                                                        uniqueCriteresByCategorie.length
+                                                    "
                                                     class="border border-slate-300 text-center text-sm text-gray-600"
                                                 >
                                                     <div
