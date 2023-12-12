@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Discipline;
 
 use App\Models\City;
+use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Famille;
@@ -13,12 +14,12 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineSimilaire;
 use App\Http\Resources\CategorieResource;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Resources\ListDisciplineResource;
-use Illuminate\Http\RedirectResponse;
 
 class DisciplineController extends Controller
 {

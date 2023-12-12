@@ -12,7 +12,7 @@ import {
 const props = defineProps({
     errors: Object,
     criteres: Object,
-    can: Object,
+    user_can: Object,
 });
 
 const critereForm = ref({});
@@ -113,7 +113,7 @@ onMounted(() => {
                         </h3>
                         <ul
                             ref="toAnimateOne"
-                            class="max-w-sm list-inside list-disc space-y-2 py-4 text-sm text-slate-600 marker:text-indigo-600"
+                            class="max-w-3xl list-inside list-disc space-y-2 py-4 text-sm text-slate-600 marker:text-indigo-600"
                         >
                             <li
                                 v-for="critere in criteres"

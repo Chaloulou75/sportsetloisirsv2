@@ -10,7 +10,7 @@ const Pagination = defineAsyncComponent(() =>
 const props = defineProps({
     errors: Object,
     users: Object,
-    can: Object,
+    user_can: Object,
 });
 </script>
 <template>

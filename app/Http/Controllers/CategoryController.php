@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Models\Categorie;
 
+use App\Models\Categorie;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Resources\CategorieResource;
@@ -58,7 +59,7 @@ class CategoryController extends Controller
         $this->authorize('viewAdmin', $user);
 
         $request->validate([
-            'nom' => ['string'],
+            'nom' => ['required', 'string', 'min:3'],
         ]);
         $categorie->update(['nom' => $request->nom]);
 

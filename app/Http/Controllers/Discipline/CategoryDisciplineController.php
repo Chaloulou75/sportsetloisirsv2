@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Discipline;
 
 use App\Models\City;
+use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Famille;

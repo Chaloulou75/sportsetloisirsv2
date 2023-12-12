@@ -16,7 +16,7 @@ const CreateInfoBase = defineAsyncComponent(() =>
 const props = defineProps({
     listDisciplines: Object,
     errors: Object,
-    can: Object,
+    user_can: Object,
 });
 
 const discipline = ref(null);

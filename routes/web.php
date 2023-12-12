@@ -16,6 +16,7 @@ use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\StructureUserController;
 use App\Http\Controllers\AdminStructureController;
+use App\Http\Controllers\AdminTarifTypeController;
 use App\Http\Controllers\StructureTarifController;
 use App\Http\Controllers\AdminDisciplineController;
 use App\Http\Controllers\StructureGestionController;
@@ -28,6 +29,7 @@ use App\Http\Controllers\DisciplineSimilaireController;
 use App\Http\Controllers\StructureDisciplineController;
 use App\Http\Controllers\StructureStatistiqueController;
 use App\Http\Controllers\Discipline\DisciplineController;
+use App\Http\Controllers\AdminTarifTypeAttributController;
 use App\Http\Controllers\LienDisCatCritValSsCritController;
 use App\Http\Controllers\StructureActiviteProduitController;
 use App\Http\Controllers\CategoryDisciplineCritereController;
@@ -147,6 +149,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/utilisateurs', [UserController::class, 'index'])->name('admin.users.index');
         Route::get('/structures', [AdminStructureController::class, 'index'])->name('admin.structures.index');
         Route::get('/disciplines', [AdminDisciplineController::class, 'index'])->name('admin.disciplines.index');
+        Route::get('/tarifs', [AdminTarifTypeController::class, 'index'])->name('admin.tarifs.index');
+
 
         Route::get('/disciplines/dis-{discipline:slug}', [AdminDisciplineController::class, 'edit'])->name('admin.disciplines.edit');
         Route::get('/disciplines/dis-{discipline:slug}/informations', [DisciplineController::class, 'edit'])->name('admin.disciplines.informations.edit');
@@ -159,6 +163,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/criteres', [CritereController::class, 'store'])->name('admin.criteres.store');
         Route::patch('/criteres/{critere}', [CritereController::class, 'update'])->name('admin.criteres.update');
         Route::delete('/criteres/{critere}', [CritereController::class, 'destroy'])->name('admin.criteres.destroy');
+
+        Route::post('/tarifs', [AdminTarifTypeController::class, 'store'])->name('admin.tarifs.store');
+        Route::patch('/tarifs/{tarif}', [AdminTarifTypeController::class, 'update'])->name('admin.tarifs.update');
+        Route::delete('/tarifs/{tarif}', [AdminTarifTypeController::class, 'destroy'])->name('admin.tarifs.destroy');
+
+        Route::post('/tarifs/{tarif}/attributs', [AdminTarifTypeAttributController::class, 'store'])->name('admin.tarifs.attributs.store');
+        Route::patch('/tarifs/{tarif}/attributs/{attribut}', [AdminTarifTypeAttributController::class, 'update'])->name('admin.tarifs.attributs.update');
+        Route::delete('/tarifs/{tarif}/attributs/{attribut}', [AdminTarifTypeAttributController::class, 'destroy'])->name('admin.tarifs.attributs.destroy');
 
         Route::post('/discipline-similaire/{discipline}', [DisciplineSimilaireController::class, 'store'])->name('discipline-similaire.store');
         Route::put('/discipline-similaire/{discipline}', [DisciplineSimilaireController::class, 'detach'])->name('discipline-similaire.detach');

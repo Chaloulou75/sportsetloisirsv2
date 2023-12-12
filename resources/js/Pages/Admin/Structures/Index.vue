@@ -6,7 +6,7 @@ import { ChevronLeftIcon } from "@heroicons/vue/24/outline";
 const props = defineProps({
     structures: Object,
     errors: Object,
-    can: Object,
+    user_can: Object,
 });
 </script>
 <template>
