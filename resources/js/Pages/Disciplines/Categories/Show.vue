@@ -691,19 +691,15 @@ onMounted(() => {
                         </div> -->
 
                         <!-- Range km  -->
-                        <div
+                        <RangeInputForm
                             v-if="critere.type_champ_form === 'rayon'"
-                            class="flex w-full max-w-sm flex-col items-start space-y-3"
-                        >
-                            <RangeInputForm
-                                class="w-full max-w-sm"
-                                v-model="formCriteres.criteres[critere.id]"
-                                :min="0"
-                                :max="200"
-                                :name="`Rayon de déplacement (en km)`"
-                                :metric="`Km`"
-                            />
-                        </div>
+                            class="w-full max-w-sm"
+                            v-model="formCriteres.criteres[critere.id]"
+                            :min="0"
+                            :max="200"
+                            :name="critere.nom"
+                            :metric="`Km`"
+                        />
                         <!-- sous criteres -->
                         <div v-for="valeur in critere.valeurs" :key="valeur.id">
                             <div

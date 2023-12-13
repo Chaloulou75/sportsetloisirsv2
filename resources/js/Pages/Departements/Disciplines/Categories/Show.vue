@@ -509,24 +509,28 @@ onMounted(() => {
                             class="max-w-sm"
                             v-if="critere.type_champ_form === 'number'"
                         >
-                            <label
-                                :for="critere.nom"
-                                class="block text-sm font-medium text-gray-700"
-                            >
-                                {{ critere.nom }}
-                            </label>
-                            <div class="mt-1 flex rounded-md">
-                                <TextInput
-                                    type="number"
-                                    min="1"
-                                    max="59"
-                                    v-model="formCriteres.criteres[critere.id]"
-                                    :name="critere.nom"
-                                    :id="critere.nom"
-                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                    placeholder=""
-                                    autocomplete="none"
-                                />
+                            <div class="flex items-center space-x-4">
+                                <label
+                                    :for="critere.nom"
+                                    class="block text-sm font-medium text-gray-700"
+                                >
+                                    {{ critere.nom }}
+                                </label>
+                                <div class="mt-1 flex rounded-md">
+                                    <TextInput
+                                        type="number"
+                                        min="1"
+                                        max="59"
+                                        v-model="
+                                            formCriteres.criteres[critere.id]
+                                        "
+                                        :name="critere.nom"
+                                        :id="critere.nom"
+                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                        placeholder=""
+                                        autocomplete="none"
+                                    />
+                                </div>
                             </div>
                         </div>
 
@@ -716,19 +720,16 @@ onMounted(() => {
                         </div> -->
 
                         <!-- Range km  -->
-                        <div
+                        <RangeInputForm
                             v-if="critere.type_champ_form === 'rayon'"
-                            class="flex w-full max-w-sm flex-col items-start space-y-3"
-                        >
-                            <RangeInputForm
-                                class="w-full max-w-sm"
-                                v-model="formCriteres.criteres[critere.id]"
-                                :min="0"
-                                :max="200"
-                                :name="`Rayon de déplacement (en km)`"
-                                :metric="`Km`"
-                            />
-                        </div>
+                            class="w-full max-w-sm"
+                            v-model="formCriteres.criteres[critere.id]"
+                            :min="0"
+                            :max="200"
+                            :name="critere.nom"
+                            :metric="`Km`"
+                        />
+
                         <!-- sous criteres -->
                         <div v-for="valeur in critere.valeurs" :key="valeur.id">
                             <div
