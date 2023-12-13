@@ -22,13 +22,21 @@ const props = defineProps({
                     })
                 "
                 :class="{
-                    'bg-indigo-500 text-white': route().current(
-                        'admin.disciplines.categories.criteres.edit',
-                        {
-                            discipline: props.discipline,
-                            categorie: categorie,
-                        }
-                    ),
+                    'bg-indigo-500 text-white':
+                        route().current(
+                            'admin.disciplines.categories.criteres.edit',
+                            {
+                                discipline: props.discipline,
+                                categorie: categorie,
+                            }
+                        ) ||
+                        route().current(
+                            'admin.disciplines.categories.tarifs.edit',
+                            {
+                                discipline: props.discipline,
+                                categorie: categorie,
+                            }
+                        ),
                 }"
                 class="group relative w-full px-4 py-2 text-left text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 md:w-auto md:px-6 md:py-2.5 md:text-base md:font-semibold"
             >
@@ -37,6 +45,13 @@ const props = defineProps({
                     v-if="
                         route().current(
                             'admin.disciplines.categories.criteres.edit',
+                            {
+                                discipline: props.discipline,
+                                categorie: categorie,
+                            }
+                        ) ||
+                        route().current(
+                            'admin.disciplines.categories.tarifs.edit',
                             {
                                 discipline: props.discipline,
                                 categorie: categorie,

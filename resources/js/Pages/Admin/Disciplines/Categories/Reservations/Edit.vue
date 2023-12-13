@@ -2,7 +2,6 @@
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import NavAdminDiscipline from "@/Components/Admin/NavAdminDiscipline.vue";
 import NavAdminDisciplineCategorie from "@/Components/Admin/NavAdminDisciplineCategorie.vue";
-import NavAdminDisCatParametres from "@/Components/Admin/NavAdminDisCatParametres.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import { ref, watch, computed, onMounted } from "vue";
 import autoAnimate from "@formkit/auto-animate";
@@ -454,7 +453,7 @@ onMounted(() => {
                 <h1
                     class="px-3 text-center text-base font-semibold text-gray-600 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
-                    Critères associés à la catégorie
+                    Criteres associées à la catégorie
                     <span class="text-indigo-600">{{
                         categorie.nom_categorie_client
                     }}</span>
@@ -466,10 +465,6 @@ onMounted(() => {
             :discipline="discipline"
             :categories="categories"
         />
-        <NavAdminDisCatParametres
-            :discipline="discipline"
-            :categorie="categorie"
-        />
 
         <div class="space-y-16 px-2 py-6 md:px-6">
             <div
@@ -478,8 +473,7 @@ onMounted(() => {
                 <p
                     class="text-center text-lg text-slate-600 underline decoration-yellow-400 decoration-4 underline-offset-4"
                 >
-                    <span class="font-semibold">Critères associés</span> à la
-                    catégorie
+                    Catégorie:
                     <span
                         v-if="categorie.nom_categorie_client"
                         class="font-semibold"
@@ -496,7 +490,7 @@ onMounted(() => {
                     <li
                         v-for="critere in categorie.criteres"
                         :key="critere.id"
-                        class="flex flex-col space-y-4 border-b-8 border-white text-base text-slate-600"
+                        class="flex flex-col text-base text-slate-600"
                     >
                         <div
                             class="w-full flex-col items-start justify-between"
@@ -507,13 +501,12 @@ onMounted(() => {
                                 <div
                                     class="underline decoration-blue-500 decoration-2 underline-offset-2"
                                 >
-                                    <span class="text-xl font-semibold">
+                                    Critère:
+                                    <span class="text-lg font-semibold">
                                         {{ critere.nom }}
-                                        <span
-                                            class="text-sm font-medium italic"
-                                        >
-                                            Type de champ:
-                                            {{ critere.type_champ_form }}</span
+                                        <span class="text-sm font-medium"
+                                            >(Type de champ:
+                                            {{ critere.type_champ_form }})</span
                                         >
                                     </span>
                                 </div>

@@ -85,7 +85,7 @@ const props = defineProps({
                     ),
                 }"
             >
-                Catégories et critères
+                Catégories
                 <div
                     v-if="
                         route().current(

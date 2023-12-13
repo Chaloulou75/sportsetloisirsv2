@@ -1,7 +1,7 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import NavAdminDiscipline from "@/Components/Admin/NavAdminDiscipline.vue";
-import NavAdminDisciplineCatCrit from "@/Components/Admin/NavAdminDisciplineCatCrit.vue";
+import NavAdminDisciplineCategorie from "@/Components/Admin/NavAdminDisciplineCategorie.vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import { ref, watch, onMounted } from "vue";
 import {
@@ -113,7 +113,7 @@ const updateCategorie = (index) => {
             </div>
         </template>
         <NavAdminDiscipline :discipline="discipline" />
-        <NavAdminDisciplineCatCrit
+        <NavAdminDisciplineCategorie
             :discipline="discipline"
             :categories="categories"
         />

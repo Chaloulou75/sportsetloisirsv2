@@ -25,4 +25,9 @@ class ListeTarifType extends Model
         return $this->hasMany(StructureTarif::class, 'type_id');
 
     }
+
+    public function categories(): HasMany
+    {
+        return $this->hasMany(LienDisCatTariftype::class, 'tarif_type_id');
+    }
 }

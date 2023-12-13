@@ -44,4 +44,9 @@ class LienDisciplineCategorie extends Model
     {
         return $this->hasMany(LienDisciplineCategorieCritere::class, 'categorie_id');
     }
+
+    public function tarif_types(): HasMany
+    {
+        return $this->hasMany(LienDisCatTariftype::class, 'categorie_id');
+    }
 }

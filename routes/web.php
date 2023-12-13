@@ -26,6 +26,7 @@ use App\Http\Controllers\StructurePlanningController;
 use App\Http\Controllers\ProductReservationController;
 use App\Http\Controllers\StructureCategorieController;
 use App\Http\Controllers\DisciplineSimilaireController;
+use App\Http\Controllers\LienDisCatTariftypeController;
 use App\Http\Controllers\StructureDisciplineController;
 use App\Http\Controllers\StructureStatistiqueController;
 use App\Http\Controllers\Discipline\DisciplineController;
@@ -159,6 +160,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/disciplines/dis-{discipline:slug}/categories', [CategoryDisciplineController::class, 'edit'])->name('admin.disciplines.categories.edit');
         Route::get('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/criteres', [CategoryDisciplineCritereController::class, 'edit'])->name('admin.disciplines.categories.criteres.edit');
 
+        Route::get('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs', [LienDisCatTariftypeController::class, 'edit'])->name('admin.disciplines.categories.tarifs.edit');
+
         Route::get('/criteres', [CritereController::class, 'index'])->name('admin.criteres.index');
         Route::post('/criteres', [CritereController::class, 'store'])->name('admin.criteres.store');
         Route::patch('/criteres/{critere}', [CritereController::class, 'update'])->name('admin.criteres.update');
@@ -202,6 +205,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/dcc-sous-criteres-valeurs/{souscritere}', [LienDisCatCritValSsCritValeurController::class, 'store'])->name('dcc-sous-criteres-valeurs.store');
         Route::patch('/dcc-sous-criteres-valeurs/{sousvaleur}', [LienDisCatCritValSsCritValeurController::class, 'update'])->name('dcc-sous-criteres-valeurs.update');
         Route::delete('/dcc-sous-criteres-valeurs/{sousvaleur}', [LienDisCatCritValSsCritValeurController::class, 'destroy'])->name('dcc-sous-criteres-valeurs.destroy');
+
+        Route::post('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs', [LienDisCatTariftypeController::class, 'store'])->name('admin.disciplines.categories.tarifs.store');
+        Route::patch('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}', [LienDisCatTariftypeController::class, 'update'])->name('admin.disciplines.categories.tarifs.update');
+        Route::delete('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}', [LienDisCatTariftypeController::class, 'destroy'])->name('admin.disciplines.categories.tarifs.destroy');
+
     });
 });
 
