@@ -140,17 +140,39 @@ const toggleAddAttributForm = (tarifType) => {
 const showAddAttributForm = (tarifType) => {
     return addAttributFormVisibility.value[tarifType.id] || false;
 };
+
 const type_champs = [
     { type: "select" },
     { type: "checkbox" },
     { type: "text" },
     { type: "number" },
 ];
+
 const addAttributForm = useForm({
     nom: null,
     type_champ: type_champs[0],
     remember: true,
 });
+
+const updateAttributForm = ref({});
+const initializeAttributForm = () => {
+    for (const categorieId in props.categories) {
+        const categorie = props.categories[categorieId];
+
+        for (const tarifTypeId in categorie.tarif_types) {
+            const tarifType = categorie.tarif_types[tarifTypeId];
+            for (const attributId in tarifType.tarif_attributs) {
+                const attribut = tarifType.tarif_attributs[attributId];
+                updateAttributForm.value[attribut.id] = useForm({
+                    nom: ref(attribut.nom),
+                    remember: true,
+                });
+            }
+        }
+    }
+};
+
+initializeAttributForm();
 
 const addTarifAttribut = (tarifType) => {
     addAttributForm.post(
@@ -163,6 +185,7 @@ const addTarifAttribut = (tarifType) => {
             errorBag: "addAttributForm",
             preserveScroll: true,
             onSuccess: () => {
+                initializeAttributForm();
                 addAttributForm.reset();
                 toggleAddAttributForm(tarifType);
             },
@@ -170,36 +193,43 @@ const addTarifAttribut = (tarifType) => {
     );
 };
 
-// const updateAttribut = (tarifType, attribut) => {
-//     router.patch(
-//         route("admin.disciplines.categories.tarifs.attributs.update", {
-//             tarifType: tarifType,
-//             attribut: attribut,
-//         }),
-//         {
-//             attribut: updateAttributForm.value[attribut.id].attribut,
-//         },
-//         {
-//             errorBag: "updateAttributForm",
-//             preserveScroll: true,
-//         }
-//     );
-// };
+const deleteTarifTypeAttribut = (tarifType, attribut) => {
+    router.delete(
+        route("admin.disciplines.categories.tarifs.attributs.destroy", {
+            discipline: props.discipline,
+            categorie: props.categorie,
+            tarifType: tarifType,
+            attribut: attribut,
+        }),
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                initializeAttributForm();
+            },
+        }
+    );
+};
 
-// const removeAttribut = (tarif, attribut) => {
-//     router.delete(
-//         route("admin.disciplines.categories.tarifs.attributs.destroy", {
-//             tarif: tarif,
-//             attribut: attribut,
-//         }),
-//         {
-//             preserveScroll: true,
-//             onSuccess: () => {
-//                 initializeAttributForm();
-//             },
-//         }
-//     );
-// };
+const updateAttribut = (tarifType, attribut) => {
+    router.patch(
+        route("admin.disciplines.categories.tarifs.attributs.update", {
+            discipline: props.discipline,
+            categorie: props.categorie,
+            tarifType: tarifType,
+            attribut: attribut,
+        }),
+        {
+            nom: updateAttributForm.value[attribut.id].nom,
+        },
+        {
+            errorBag: "updateAttributForm",
+            preserveScroll: true,
+            onSuccess: () => {
+                initializeAttributForm();
+            },
+        }
+    );
+};
 
 const toAnimateOne = ref();
 onMounted(() => {
@@ -405,10 +435,84 @@ onMounted(() => {
                                     <li
                                         v-for="attribut in tarifType.tarif_attributs"
                                         :key="attribut.id"
-                                        class="space-y-2 text-sm text-slate-600"
+                                        class="space-y-3 text-sm text-slate-600"
                                     >
-                                        {{ attribut.nom }},
-                                        {{ attribut.type_champ_form }}
+                                        <form
+                                            v-if="attribut"
+                                            class="inline-flex flex-col items-center space-y-2 md:flex-row md:space-x-3 md:space-y-0"
+                                            @submit.prevent="
+                                                updateAttribut(
+                                                    tarifType,
+                                                    attribut
+                                                )
+                                            "
+                                        >
+                                            <div class="flex flex-col">
+                                                <input
+                                                    v-if="
+                                                        updateAttributForm[
+                                                            attribut.id
+                                                        ]
+                                                    "
+                                                    v-model="
+                                                        updateAttributForm[
+                                                            attribut.id
+                                                        ].nom
+                                                    "
+                                                    type="text"
+                                                    :name="attribut.nom"
+                                                    :id="attribut.nom"
+                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                    placeholder=""
+                                                    autocomplete="none"
+                                                />
+                                                <div
+                                                    v-if="
+                                                        errors.updateAttributForm
+                                                    "
+                                                    class="mt-1 text-xs text-red-500"
+                                                >
+                                                    {{
+                                                        errors
+                                                            .updateAttributForm
+                                                            .nom
+                                                    }}
+                                                </div>
+                                            </div>
+                                            <div class="text-base">
+                                                Type de champ:
+                                                <span class="font-semibold">{{
+                                                    attribut.type_champ_form
+                                                }}</span>
+                                            </div>
+                                            <div
+                                                class="flex items-center space-x-3"
+                                            >
+                                                <button type="submit">
+                                                    <ArrowPathIcon
+                                                        class="mr-1 h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
+                                                    />
+                                                    <span class="sr-only"
+                                                        >Mettre à jour l'
+                                                        attribut</span
+                                                    >
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="inline-flex items-center"
+                                                    @click="
+                                                        deleteTarifTypeAttribut(
+                                                            tarifType,
+                                                            attribut
+                                                        )
+                                                    "
+                                                >
+                                                    <TrashIcon
+                                                        class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                    />
+                                                </button>
+                                            </div>
+                                        </form>
                                     </li>
                                 </ul>
                             </div>
@@ -567,6 +671,7 @@ onMounted(() => {
                         </li>
                     </ul>
                 </template>
+                <!-- Ajout Tarif type -->
                 <div class="flex w-full items-center justify-start">
                     <button
                         class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"

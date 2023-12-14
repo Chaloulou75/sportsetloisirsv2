@@ -69,16 +69,32 @@ class LienDisCatTariftypeAttributController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, LienDisCatTartypAttribut $lienDisCatTartypAttribut)
+    public function update(Request $request, ListDiscipline $discipline, LienDisciplineCategorie $categorie, LienDisCatTariftype $tarifType, LienDisCatTartypAttribut $attribut): RedirectResponse
     {
-        //
+        $user = auth()->user();
+        $this->authorize('viewAdmin', $user);
+
+        $request->validate([
+            'nom' => ['required', 'string', 'min:3', 'max:255'],
+        ]);
+
+        $attribut->update([
+            'nom' => $request->nom,
+        ]);
+
+        return to_route('admin.disciplines.categories.tarifs.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Attribut modifié');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(LienDisCatTartypAttribut $lienDisCatTartypAttribut)
+    public function destroy(ListDiscipline $discipline, LienDisciplineCategorie $categorie, LienDisCatTariftype $tarifType, LienDisCatTartypAttribut $attribut): RedirectResponse
     {
-        //
+        $user = auth()->user();
+        $this->authorize('viewAdmin', $user);
+
+        $attribut->delete();
+
+        return to_route('admin.disciplines.categories.tarifs.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Attribut de type de tarif supprimé');
     }
 }
