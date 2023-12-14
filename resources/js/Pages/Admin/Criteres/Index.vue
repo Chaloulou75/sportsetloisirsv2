@@ -78,7 +78,9 @@ const deleteCritere = (critere) => {
 
 const toAnimateOne = ref();
 onMounted(() => {
-    autoAnimate(toAnimateOne.value);
+    if (toAnimateOne.value) {
+        autoAnimate(toAnimateOne.value);
+    }
 });
 </script>
 <template>

@@ -34,6 +34,7 @@ use App\Http\Controllers\AdminTarifTypeAttributController;
 use App\Http\Controllers\LienDisCatCritValSsCritController;
 use App\Http\Controllers\StructureActiviteProduitController;
 use App\Http\Controllers\CategoryDisciplineCritereController;
+use App\Http\Controllers\LienDisCatTariftypeAttributController;
 use App\Http\Controllers\Discipline\CategoryDisciplineController;
 use App\Http\Controllers\LienDisCatCritValSsCritValeurController;
 use App\Http\Controllers\CategoryDisciplineCritereValeurController;
@@ -209,6 +210,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs', [LienDisCatTariftypeController::class, 'store'])->name('admin.disciplines.categories.tarifs.store');
         Route::patch('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}', [LienDisCatTariftypeController::class, 'update'])->name('admin.disciplines.categories.tarifs.update');
         Route::delete('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}', [LienDisCatTariftypeController::class, 'destroy'])->name('admin.disciplines.categories.tarifs.destroy');
+
+        Route::post('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/attributs', [LienDisCatTariftypeAttributController::class, 'store'])->name('admin.disciplines.categories.tarifs.attributs.store');
+        Route::patch('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/attributs/{attribut}', [LienDisCatTariftypeAttributController::class, 'update'])->name('admin.disciplines.categories.tarifs.attributs.update');
+        Route::delete('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/attributs/{attribut}', [LienDisCatTariftypeAttributController::class, 'destroy'])->name('admin.disciplines.categories.tarifs.attributs.destroy');
 
     });
 });

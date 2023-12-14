@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LienDisCatTariftype extends Model
 {
@@ -32,5 +33,10 @@ class LienDisCatTariftype extends Model
     public function tarif_type(): BelongsTo
     {
         return $this->belongsTo(ListeTarifType::class, 'tarif_type_id');
+    }
+
+    public function tarif_attributs(): HasMany
+    {
+        return $this->hasMany(LienDisCatTartypAttribut::class, 'cat_tarif_id');
     }
 }
