@@ -203,11 +203,11 @@ class StructureActiviteProduitController extends Controller
             }
         }
 
-
         $criteresValuesSets = $request->criteres;
 
         if (isset($criteresValuesSets)) {
             foreach ($criteresValuesSets as $critereId => $criteresValues) {
+
                 $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $critereId)->first();
 
                 $this->insertCriteresRecursively($structure, $activite, $structureProduit, $critereId, $criteresValues, $defaut);
@@ -539,7 +539,10 @@ class StructureActiviteProduitController extends Controller
 
     private function insertCriteresRecursively($structure, $activite, $structureProduit, $critereId, $criteresValues, $defaut)
     {
-        if (isset($criteresValues['valeur'])) {
+        if(is_string($criteresValues)) {
+            $valeur = $criteresValues;
+            $this->createStructureProduitCritere($structure, $activite, $structureProduit, $critereId, null, $valeur);
+        } elseif (isset($criteresValues['valeur'])) {
             $critereValueId = $criteresValues['id'];
             $critereValue = $criteresValues['valeur'];
             $valeurId = isset($critereValueId) ? $critereValueId : ($defaut ? $defaut->id : null);
@@ -562,7 +565,7 @@ class StructureActiviteProduitController extends Controller
             'activite_id' => $activite->id,
             'produit_id' => $structureProduit->id,
             'critere_id' => $critereId,
-            'valeur_id' => $valeurId,
+            'valeur_id' => $valeurId ?? null,
             'valeur' => $valeur ?? "",
         ]);
     }

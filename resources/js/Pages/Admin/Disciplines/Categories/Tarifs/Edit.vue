@@ -279,7 +279,7 @@ onMounted(() => {
                 class="rounded-md border border-indigo-300 bg-gray-50 px-1 py-6 shadow-lg md:px-3"
             >
                 <p
-                    class="text-center text-lg text-slate-600 underline decoration-yellow-400 decoration-4 underline-offset-4"
+                    class="px-2 text-center text-lg text-slate-600 underline decoration-yellow-400 decoration-4 underline-offset-4"
                 >
                     <span class="font-semibold">Types de tarifs </span>pour la
                     catégorie:
@@ -305,7 +305,7 @@ onMounted(() => {
                                 class="w-full flex-col items-start justify-between"
                             >
                                 <div
-                                    class="flex w-full items-start justify-between space-x-6 pb-2"
+                                    class="flex w-full flex-col items-start justify-between space-y-3 pb-2 md:flex-row md:space-x-6 md:space-y-0"
                                 >
                                     <div
                                         class="underline decoration-blue-500 decoration-2 underline-offset-2"
@@ -439,7 +439,7 @@ onMounted(() => {
                                     >
                                         <form
                                             v-if="attribut"
-                                            class="inline-flex flex-col items-center space-y-2 md:flex-row md:space-x-3 md:space-y-0"
+                                            class="inline-flex flex-col items-start space-y-2 md:flex-row md:items-center md:space-x-3 md:space-y-0"
                                             @submit.prevent="
                                                 updateAttribut(
                                                     tarifType,
@@ -510,6 +510,21 @@ onMounted(() => {
                                                     <TrashIcon
                                                         class="h-6 w-6 text-red-500 hover:text-red-700"
                                                     />
+                                                </button>
+                                                <button
+                                                    class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                                    type="button"
+                                                >
+                                                    <div>
+                                                        Ajouter un sous attribut
+                                                        à
+                                                        <span
+                                                            class="font-semibold"
+                                                            >{{
+                                                                attribut.nom
+                                                            }}</span
+                                                        >
+                                                    </div>
                                                 </button>
                                             </div>
                                         </form>

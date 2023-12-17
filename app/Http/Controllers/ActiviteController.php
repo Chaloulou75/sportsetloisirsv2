@@ -524,7 +524,10 @@ class ActiviteController extends Controller
 
     private function insertCriteresRecursively($structure, $structureActivite, $structureProduit, $critereId, $criteresValues, $defaut)
     {
-        if (isset($criteresValues['valeur'])) {
+        if(is_string($criteresValues)) {
+            $valeur = $criteresValues;
+            $this->createStructureProduitCritere($structure, $structureActivite, $structureProduit, $critereId, null, $valeur);
+        } elseif (isset($criteresValues['valeur'])) {
             $critereValueId = $criteresValues['id'];
             $critereValue = $criteresValues['valeur'];
             $valeurId = isset($critereValueId) ? $critereValueId : ($defaut ? $defaut->id : null);
