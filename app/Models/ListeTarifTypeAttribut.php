@@ -18,4 +18,5 @@ class ListeTarifTypeAttribut extends Model
     {
         return $this->belongsTo(ListeTarifType::class, 'type_id');
     }
+
 }

@@ -752,7 +752,7 @@ const destroyTarif = (tarif, produit) => {
                                                         class="mr-1 h-6 w-6 text-gray-600"
                                                     />
                                                     <div
-                                                        class="flex flex-col items-center text-xs text-gray-600"
+                                                        class="text-xs text-gray-600"
                                                     >
                                                         {{
                                                             produit.adresse
@@ -790,7 +790,7 @@ const destroyTarif = (tarif, produit) => {
                                                         >
                                                             <span
                                                                 class="text-xs text-gray-600"
-                                                                >Ouvert du
+                                                                >Du
                                                                 {{
                                                                     formatDate(
                                                                         date.dayopen

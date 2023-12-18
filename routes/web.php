@@ -34,10 +34,12 @@ use App\Http\Controllers\AdminTarifTypeAttributController;
 use App\Http\Controllers\LienDisCatCritValSsCritController;
 use App\Http\Controllers\StructureActiviteProduitController;
 use App\Http\Controllers\CategoryDisciplineCritereController;
+use App\Http\Controllers\LienDisCatTarAttrSousAttrController;
 use App\Http\Controllers\LienDisCatTariftypeAttributController;
 use App\Http\Controllers\Discipline\CategoryDisciplineController;
 use App\Http\Controllers\LienDisCatCritValSsCritValeurController;
 use App\Http\Controllers\CategoryDisciplineCritereValeurController;
+use App\Http\Controllers\LienDisCatTarAttrSousAttrValeurController;
 
 /*
 |--------------------------------------------------------------------------
@@ -207,13 +209,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('/dcc-sous-criteres-valeurs/{sousvaleur}', [LienDisCatCritValSsCritValeurController::class, 'update'])->name('dcc-sous-criteres-valeurs.update');
         Route::delete('/dcc-sous-criteres-valeurs/{sousvaleur}', [LienDisCatCritValSsCritValeurController::class, 'destroy'])->name('dcc-sous-criteres-valeurs.destroy');
 
+        //Tarifs
         Route::post('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs', [LienDisCatTariftypeController::class, 'store'])->name('admin.disciplines.categories.tarifs.store');
         Route::patch('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}', [LienDisCatTariftypeController::class, 'update'])->name('admin.disciplines.categories.tarifs.update');
         Route::delete('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}', [LienDisCatTariftypeController::class, 'destroy'])->name('admin.disciplines.categories.tarifs.destroy');
-
+        // Tarifs attributs
         Route::post('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/attributs', [LienDisCatTariftypeAttributController::class, 'store'])->name('admin.disciplines.categories.tarifs.attributs.store');
         Route::patch('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/attributs/{attribut}', [LienDisCatTariftypeAttributController::class, 'update'])->name('admin.disciplines.categories.tarifs.attributs.update');
         Route::delete('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/attributs/{attribut}', [LienDisCatTariftypeAttributController::class, 'destroy'])->name('admin.disciplines.categories.tarifs.attributs.destroy');
+
+        //Tarifs attributs - sous attributs
+        Route::post('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/attributs/{attribut}/sous_attributs', [LienDisCatTarAttrSousAttrController::class, 'store'])->name('admin.disciplines.categories.tarifs.attributs.sous_attributs.store');
+        Route::patch('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/attributs/{attribut}/sous_attributs/{sousAttribut}', [LienDisCatTarAttrSousAttrController::class, 'update'])->name('admin.disciplines.categories.tarifs.attributs.sous_attributs.update');
+        Route::delete('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/attributs/{attribut}/sous_attributs/{sousAttribut}', [LienDisCatTarAttrSousAttrController::class, 'destroy'])->name('admin.disciplines.categories.tarifs.attributs.sous_attributs.destroy');
+
+        //Tarifs attributs - sous attributs - valeurs
+        Route::post('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/attributs/{attribut}/sous_attributs/{sousAttribut}/valeurs', [LienDisCatTarAttrSousAttrValeurController::class, 'store'])->name('admin.disciplines.categories.tarifs.attributs.sous_attributs.valeurs.store');
+        Route::patch('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/attributs/{attribut}/sous_attributs/{sousAttribut}/valeurs/{valeur}', [LienDisCatTarAttrSousAttrValeurController::class, 'update'])->name('admin.disciplines.categories.tarifs.attributs.sous_attributs.valeurs.update');
+        Route::delete('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/attributs/{attribut}/sous_attributs/{sousAttribut}/valeurs/{valeur}', [LienDisCatTarAttrSousAttrValeurController::class, 'destroy'])->name('admin.disciplines.categories.tarifs.attributs.sous_attributs.valeurs.destroy');
 
     });
 });
