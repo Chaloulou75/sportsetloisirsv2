@@ -25,6 +25,11 @@ class LienDisCatTarAttrSousAttr extends Model
         return $this->belongsTo(LienDisCatTartypAttribut::class, 'cat_tar_att_id');
     }
 
+    public function attribut_valeur(): BelongsTo
+    {
+        return $this->belongsTo(LienDisCatTarAttrValeur::class, 'att_valeur_id');
+    }
+
     public function valeurs(): HasMany
     {
         return $this->hasMany(LienDisCatTarAttrSousAttrValeur::class, 'sousattribut_id');

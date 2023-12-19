@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class LienDisCatTartypAttribut extends Model
+class LienDisCatTarAttrValeur extends Model
 {
     use HasFactory;
 
-    protected $table = 'liens_dis_cat_tartyp_attributs';
+    protected $table = 'liens_dis_cat_tar_att_valeurs';
 
     /**
      * The attributes that are mass assignable.
@@ -20,18 +20,13 @@ class LienDisCatTartypAttribut extends Model
      */
     protected $guarded = [];
 
-    public function cat_tarif_type(): BelongsTo
+    public function attribut(): BelongsTo
     {
-        return $this->belongsTo(LienDisCatTarifType::class, 'cat_tarif_id');
-    }
-
-    public function valeurs(): HasMany
-    {
-        return $this->hasMany(LienDisCatTarAttrValeur::class, 'cat_tar_att_id');
+        return $this->belongsTo(LienDisCatTartypAttribut::class, 'cat_tar_att_id');
     }
 
     public function sous_attributs(): HasMany
     {
-        return $this->hasMany(LienDisCatTarAttrSousAttr::class, 'cat_tar_att_id');
+        return $this->hasMany(LienDisCatTarAttrSousAttr::class, 'att_valeur_id');
     }
 }

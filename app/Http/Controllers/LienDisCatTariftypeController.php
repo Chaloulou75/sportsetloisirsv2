@@ -16,22 +16,6 @@ use App\Models\LienDisciplineCategorie;
 class LienDisCatTariftypeController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request, ListDiscipline $discipline, LienDisciplineCategorie $categorie): RedirectResponse
@@ -54,14 +38,6 @@ class LienDisCatTariftypeController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(LienDisCatTariftype $lienDisCatTariftype)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(ListDiscipline $discipline, LienDisciplineCategorie $categorie): Response
@@ -76,6 +52,7 @@ class LienDisCatTariftypeController extends Controller
             'categorie',
             'tarif_types',
             'tarif_types.tarif_attributs.sous_attributs.valeurs',
+            'tarif_types.tarif_attributs.valeurs.sous_attributs.valeurs',
         ])
         ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
         ->findOrFail($categorie->id);
@@ -85,6 +62,7 @@ class LienDisCatTariftypeController extends Controller
             'categorie',
             'tarif_types',
             'tarif_types.tarif_attributs.sous_attributs.valeurs',
+            'tarif_types.tarif_attributs.valeurs.sous_attributs.valeurs',
         ])->where('discipline_id', $discipline->id)
             ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
             ->get();

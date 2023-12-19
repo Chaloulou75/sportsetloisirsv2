@@ -32,6 +32,7 @@ use App\Http\Controllers\StructureStatistiqueController;
 use App\Http\Controllers\Discipline\DisciplineController;
 use App\Http\Controllers\AdminTarifTypeAttributController;
 use App\Http\Controllers\LienDisCatCritValSsCritController;
+use App\Http\Controllers\LienDisCatTarAttrValeurController;
 use App\Http\Controllers\StructureActiviteProduitController;
 use App\Http\Controllers\CategoryDisciplineCritereController;
 use App\Http\Controllers\LienDisCatTarAttrSousAttrController;
@@ -217,6 +218,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/attributs', [LienDisCatTariftypeAttributController::class, 'store'])->name('admin.disciplines.categories.tarifs.attributs.store');
         Route::patch('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/attributs/{attribut}', [LienDisCatTariftypeAttributController::class, 'update'])->name('admin.disciplines.categories.tarifs.attributs.update');
         Route::delete('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/attributs/{attribut}', [LienDisCatTariftypeAttributController::class, 'destroy'])->name('admin.disciplines.categories.tarifs.attributs.destroy');
+
+        // attribut - valeurs
+        Route::post('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/attributs/{attribut}/valeurs', [LienDisCatTarAttrValeurController::class, 'store'])->name('admin.disciplines.categories.tarifs.attributs.valeurs.store');
+        Route::patch('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/attributs/{attribut}/valeurs/{valeur}', [LienDisCatTarAttrValeurController::class, 'update'])->name('admin.disciplines.categories.tarifs.attributs.valeurs.update');
+        Route::delete('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/attributs/{attribut}/valeurs/{valeur}', [LienDisCatTarAttrValeurController::class, 'destroy'])->name('admin.disciplines.categories.tarifs.attributs.valeurs.destroy');
 
         //Tarifs attributs - sous attributs
         Route::post('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/attributs/{attribut}/sous_attributs', [LienDisCatTarAttrSousAttrController::class, 'store'])->name('admin.disciplines.categories.tarifs.attributs.sous_attributs.store');
