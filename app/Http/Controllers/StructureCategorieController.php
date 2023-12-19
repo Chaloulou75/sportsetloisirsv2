@@ -60,9 +60,19 @@ class StructureCategorieController extends Controller
         ->first();
 
         $discipline = ListDiscipline::where('slug', $discipline)->first();
-        $categorie = LienDisciplineCategorie::where('id', $categorie)->first();
+        $categorie = LienDisciplineCategorie::with([
+            'tarif_types',
+            'tarif_types.tarif_attributs.sous_attributs.valeurs',
+            'tarif_types.tarif_attributs.valeurs'
+        ])->findOrFail($categorie);
 
-        $allCategories = LienDisciplineCategorie::where('discipline_id', $discipline->id)->get();
+        $allCategories = LienDisciplineCategorie::with([
+            'tarif_types',
+            'tarif_types.tarif_attributs.sous_attributs.valeurs',
+            'tarif_types.tarif_attributs.valeurs'
+        ])
+        ->where('discipline_id', $discipline->id)
+        ->get();
 
         $categoriesListByDiscipline = LienDisciplineCategorie::whereHas('structures_activites', function (Builder $query) use ($structure) {
             $query->where('structure_id', $structure->id);

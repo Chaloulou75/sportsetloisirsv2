@@ -52,7 +52,7 @@ class LienDisCatTariftypeController extends Controller
             'categorie',
             'tarif_types',
             'tarif_types.tarif_attributs.sous_attributs.valeurs',
-            'tarif_types.tarif_attributs.valeurs.sous_attributs.valeurs',
+            'tarif_types.tarif_attributs.valeurs',
         ])
         ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
         ->findOrFail($categorie->id);
@@ -62,7 +62,7 @@ class LienDisCatTariftypeController extends Controller
             'categorie',
             'tarif_types',
             'tarif_types.tarif_attributs.sous_attributs.valeurs',
-            'tarif_types.tarif_attributs.valeurs.sous_attributs.valeurs',
+            'tarif_types.tarif_attributs.valeurs',
         ])->where('discipline_id', $discipline->id)
             ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
             ->get();

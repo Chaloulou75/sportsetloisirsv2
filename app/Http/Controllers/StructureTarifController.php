@@ -18,6 +18,7 @@ class StructureTarifController extends Controller
      */
     public function store(Request $request, Structure $structure): RedirectResponse
     {
+        dd($request->all(), $structure);
         $request->validate([
             'structure_id' => ['nullable', Rule::exists('structures', 'id')],
             'titre' => ['nullable'],
@@ -90,7 +91,7 @@ class StructureTarifController extends Controller
             'uniteDuree' => ['nullable'],
         ]);
 
-        $structure = Structure::with(['disciplines', 'categories', 'activites', 'produits'])->findOrFail($structure->id);
+        // $structure = Structure::findOrFail($structure->id);
 
         $tarif = StructureTarif::with('structureTarifTypeInfos')->findOrFail($tarif);
 

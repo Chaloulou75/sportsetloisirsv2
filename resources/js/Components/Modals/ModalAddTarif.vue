@@ -1,6 +1,9 @@
 <script setup>
 import { ref, reactive, watch } from "vue";
-import { router } from "@inertiajs/vue3";
+import { router, useForm } from "@inertiajs/vue3";
+import SelectForm from "@/Components/Forms/SelectForm.vue";
+import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
+import TextInput from "@/Components/Forms/TextInput.vue";
 import {
     XCircleIcon,
     ChevronUpDownIcon,
@@ -29,6 +32,7 @@ const props = defineProps({
     tarifTypes: Object,
     activiteForTarifs: Object,
     structureActivites: Object,
+    categorie: Object,
 });
 
 const uniteDurees = reactive([
@@ -55,6 +59,33 @@ const formAddTarif = reactive({
     produits: ref({}),
     uniteDuree: ref(selectedUniteeDuree.value),
 });
+
+const newSelectedTarifType = ref(props.categorie.tarif_types[0] ?? null);
+const addTarifForm = useForm({
+    structure_id: props.structure.id,
+    titre: null,
+    description: null,
+    tarifType: ref(newSelectedTarifType.value),
+    attributs: {},
+    sousattributs: {},
+    amount: null,
+});
+
+const onSubmit = () => {
+    addTarifForm.post(
+        route("structures.tarifs.store", {
+            structure: props.structure,
+        }),
+        {
+            errorBag: "addTarifForm",
+            preserveScroll: true,
+            onSuccess: () => {
+                addTarifForm.reset();
+                emit("close");
+            },
+        }
+    );
+};
 
 watch(
     () => props.structureActivites,
@@ -198,7 +229,9 @@ watch(
 
 const onSubmitAddTarifForm = () => {
     router.post(
-        `/structures/${props.structure.slug}/tarifs`,
+        route("structures.tarifs.store", {
+            structure: props.structure,
+        }),
         {
             structure_id: formAddTarif.structure_id,
             titre: formAddTarif.titre,
@@ -229,122 +262,289 @@ const onSubmitAddTarifForm = () => {
                 checkAll.value = false;
                 emit("close");
             },
-
-            structure: props.structure.slug,
         }
     );
 };
 </script>
 <template>
-    <div>
-        <TransitionRoot appear :show="show" as="template">
-            <Dialog as="div" @close="open = false" class="relative z-10">
-                <TransitionChild
-                    as="template"
-                    enter="duration-300 ease-out"
-                    enter-from="opacity-0"
-                    enter-to="opacity-100"
-                    leave="duration-200 ease-in"
-                    leave-from="opacity-100"
-                    leave-to="opacity-0"
-                >
-                    <div class="fixed inset-0 bg-gray-800 bg-opacity-50" />
-                </TransitionChild>
+    <TransitionRoot appear :show="show" as="template">
+        <Dialog as="div" @close="open = false" class="relative z-10">
+            <TransitionChild
+                as="template"
+                enter="duration-300 ease-out"
+                enter-from="opacity-0"
+                enter-to="opacity-100"
+                leave="duration-200 ease-in"
+                leave-from="opacity-100"
+                leave-to="opacity-0"
+            >
+                <div class="fixed inset-0 bg-gray-800 bg-opacity-50" />
+            </TransitionChild>
 
-                <div class="fixed inset-0 overflow-y-auto">
-                    <div
-                        class="flex min-h-full items-center justify-center p-4 text-center"
+            <div class="fixed inset-0 overflow-y-auto">
+                <div
+                    class="flex min-h-full items-center justify-center p-4 text-center"
+                >
+                    <TransitionChild
+                        as="template"
+                        enter="duration-300 ease-out"
+                        enter-from="opacity-0 scale-95"
+                        enter-to="opacity-100 scale-100"
+                        leave="duration-200 ease-in"
+                        leave-from="opacity-100 scale-100"
+                        leave-to="opacity-0 scale-95"
                     >
-                        <TransitionChild
-                            as="template"
-                            enter="duration-300 ease-out"
-                            enter-from="opacity-0 scale-95"
-                            enter-to="opacity-100 scale-100"
-                            leave="duration-200 ease-in"
-                            leave-from="opacity-100 scale-100"
-                            leave-to="opacity-0 scale-95"
+                        <DialogPanel
+                            class="min-h-full w-full max-w-6xl transform space-y-10 overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
                         >
-                            <DialogPanel
-                                class="min-h-full w-full max-w-6xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                            <form
+                                @submit.prevent="onSubmitAddTarifForm()"
+                                autocomplete="off"
                             >
-                                <form
-                                    @submit.prevent="onSubmitAddTarifForm()"
-                                    autocomplete="off"
+                                <DialogTitle
+                                    as="div"
+                                    class="flex w-full items-center justify-between"
                                 >
-                                    <DialogTitle
-                                        as="div"
-                                        class="flex w-full items-center justify-between"
+                                    <h3
+                                        class="text-lg font-medium leading-6 text-gray-800"
                                     >
-                                        <h3
-                                            class="text-lg font-medium leading-6 text-gray-800"
+                                        Ajouter un tarif au produits de la
+                                        catégorie
+                                        <span class="text-indigo-700">
+                                            {{
+                                                categorie.nom_categorie_client
+                                            }}</span
                                         >
-                                            Ajouter un tarif à
-                                            <span class="text-blue-700">
-                                                {{ structure.name }}</span
+                                    </h3>
+                                    <button type="button">
+                                        <XCircleIcon
+                                            @click="emit('close')"
+                                            class="h-6 w-6 text-gray-600 hover:text-red-600"
+                                        />
+                                    </button>
+                                </DialogTitle>
+                                <div class="mt-2 w-full">
+                                    <div class="flex flex-col space-y-3">
+                                        <div
+                                            class="flex w-full flex-col items-center justify-start space-x-0 space-y-2 md:flex-row md:space-x-2 md:space-y-0"
+                                        >
+                                            <!-- titre -->
+                                            <div class="w-full md:w-1/2">
+                                                <label
+                                                    for="titre"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                >
+                                                    Titre
+                                                </label>
+                                                <div
+                                                    class="mt-1 flex rounded-md"
+                                                >
+                                                    <input
+                                                        v-model="
+                                                            formAddTarif.titre
+                                                        "
+                                                        type="text"
+                                                        name="titre"
+                                                        id="titre"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                        placeholder=""
+                                                        autocomplete="none"
+                                                    />
+                                                </div>
+                                                <div
+                                                    v-if="errors.titre"
+                                                    class="mt-2 text-xs text-red-500"
+                                                >
+                                                    {{ errors.titre }}
+                                                </div>
+                                            </div>
+                                            <Listbox
+                                                class="w-full md:w-1/2"
+                                                v-model="selectedTarifType"
                                             >
-                                        </h3>
-                                        <button type="button">
-                                            <XCircleIcon
-                                                @click="emit('close')"
-                                                class="h-6 w-6 text-gray-600 hover:text-red-600"
-                                            />
-                                        </button>
-                                    </DialogTitle>
-                                    <div class="mt-2 w-full">
-                                        <div class="flex flex-col space-y-3">
-                                            <div
-                                                class="flex w-full flex-col items-center justify-start space-x-0 space-y-2 md:flex-row md:space-x-2 md:space-y-0"
-                                            >
-                                                <!-- titre -->
-                                                <div class="w-full md:w-1/2">
+                                                <div class="relative mt-1">
                                                     <label
-                                                        for="titre"
+                                                        for="tarifType"
                                                         class="block text-sm font-medium text-gray-700"
                                                     >
-                                                        Titre
+                                                        Type de tarif
+                                                    </label>
+                                                    <ListboxButton
+                                                        class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                                                    >
+                                                        <span
+                                                            class="block truncate"
+                                                            >{{
+                                                                selectedTarifType.type
+                                                            }}</span
+                                                        >
+                                                        <span
+                                                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+                                                        >
+                                                            <ChevronUpDownIcon
+                                                                class="h-5 w-5 text-gray-400"
+                                                                aria-hidden="true"
+                                                            />
+                                                        </span>
+                                                    </ListboxButton>
+
+                                                    <transition
+                                                        leave-active-class="transition duration-100 ease-in"
+                                                        leave-from-class="opacity-100"
+                                                        leave-to-class="opacity-0"
+                                                    >
+                                                        <ListboxOptions
+                                                            class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                                                        >
+                                                            <ListboxOption
+                                                                v-slot="{
+                                                                    active,
+                                                                    selected,
+                                                                }"
+                                                                v-for="tarifType in props.tarifTypes"
+                                                                :key="
+                                                                    tarifType.id
+                                                                "
+                                                                :value="
+                                                                    tarifType
+                                                                "
+                                                                as="template"
+                                                            >
+                                                                <li
+                                                                    :class="[
+                                                                        active
+                                                                            ? 'bg-amber-100 text-amber-900'
+                                                                            : 'text-gray-900',
+                                                                        'relative cursor-default select-none py-2 pl-10 pr-4',
+                                                                    ]"
+                                                                >
+                                                                    <span
+                                                                        :class="[
+                                                                            selected
+                                                                                ? 'font-medium'
+                                                                                : 'font-normal',
+                                                                            'block truncate',
+                                                                        ]"
+                                                                        >{{
+                                                                            tarifType.type
+                                                                        }}</span
+                                                                    >
+                                                                    <span
+                                                                        v-if="
+                                                                            selected
+                                                                        "
+                                                                        class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
+                                                                    >
+                                                                        <CheckCircleIcon
+                                                                            class="h-5 w-5"
+                                                                            aria-hidden="true"
+                                                                        />
+                                                                    </span>
+                                                                </li>
+                                                            </ListboxOption>
+                                                        </ListboxOptions>
+                                                    </transition>
+                                                </div>
+                                            </Listbox>
+                                        </div>
+                                        <!-- description -->
+                                        <div>
+                                            <label
+                                                for="description"
+                                                class="block text-sm font-medium text-gray-700"
+                                            >
+                                                Description
+                                            </label>
+                                            <div class="mt-1">
+                                                <textarea
+                                                    v-model="
+                                                        formAddTarif.description
+                                                    "
+                                                    id="description"
+                                                    name="description"
+                                                    rows="2"
+                                                    class="mt-1 block h-32 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                    :class="{
+                                                        errors: 'border-red-500 focus:ring focus:ring-red-200',
+                                                    }"
+                                                    placeholder=""
+                                                    autocomplete="none"
+                                                />
+                                            </div>
+                                            <div
+                                                v-if="errors.description"
+                                                class="mt-2 text-xs text-red-500"
+                                            >
+                                                {{ errors.description }}
+                                            </div>
+                                        </div>
+                                        <div
+                                            v-if="selectedTarifType"
+                                            class="flex w-full flex-col items-center justify-start space-x-0 space-y-2 md:flex-row md:space-x-2 md:space-y-0"
+                                        >
+                                            <div
+                                                v-for="attribut in selectedTarifType.tariftypeattributs"
+                                                :key="attribut.id"
+                                                class="flex w-1/2 items-center space-x-2 md:w-auto"
+                                            >
+                                                <div>
+                                                    <label
+                                                        :for="attribut.attribut"
+                                                        class="block text-sm font-medium text-gray-700"
+                                                    >
+                                                        {{ attribut.attribut }}
                                                     </label>
                                                     <div
                                                         class="mt-1 flex rounded-md"
                                                     >
                                                         <input
                                                             v-model="
-                                                                formAddTarif.titre
+                                                                formAddTarif
+                                                                    .attributs[
+                                                                    attribut.id
+                                                                ]
                                                             "
                                                             type="text"
-                                                            name="titre"
-                                                            id="titre"
+                                                            :name="
+                                                                attribut.attribut
+                                                            "
+                                                            :id="
+                                                                attribut.attribut
+                                                            "
                                                             class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                             placeholder=""
                                                             autocomplete="none"
                                                         />
                                                     </div>
-                                                    <div
-                                                        v-if="errors.titre"
-                                                        class="mt-2 text-xs text-red-500"
-                                                    >
-                                                        {{ errors.titre }}
-                                                    </div>
                                                 </div>
+
                                                 <Listbox
-                                                    class="w-full md:w-1/2"
-                                                    v-model="selectedTarifType"
+                                                    v-if="
+                                                        attribut.attribut ===
+                                                        'Duree'
+                                                    "
+                                                    v-model="
+                                                        selectedUniteeDuree
+                                                    "
+                                                    class="w-56"
                                                 >
-                                                    <div class="relative mt-1">
+                                                    <div class="relative">
                                                         <label
-                                                            for="tarifType"
+                                                            for="unite de duree"
                                                             class="block text-sm font-medium text-gray-700"
                                                         >
-                                                            Type de tarif
+                                                            Unité de durée
                                                         </label>
                                                         <ListboxButton
                                                             class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
                                                         >
                                                             <span
                                                                 class="block truncate"
-                                                                >{{
-                                                                    selectedTarifType.type
-                                                                }}</span
                                                             >
+                                                                {{
+                                                                    selectedUniteeDuree.name
+                                                                }}
+                                                            </span>
                                                             <span
                                                                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
                                                             >
@@ -368,12 +568,12 @@ const onSubmitAddTarifForm = () => {
                                                                         active,
                                                                         selected,
                                                                     }"
-                                                                    v-for="tarifType in props.tarifTypes"
+                                                                    v-for="unite in uniteDurees"
                                                                     :key="
-                                                                        tarifType.id
+                                                                        unite.id
                                                                     "
                                                                     :value="
-                                                                        tarifType
+                                                                        unite
                                                                     "
                                                                     as="template"
                                                                 >
@@ -393,7 +593,7 @@ const onSubmitAddTarifForm = () => {
                                                                                 'block truncate',
                                                                             ]"
                                                                             >{{
-                                                                                tarifType.type
+                                                                                unite.name
                                                                             }}</span
                                                                         >
                                                                         <span
@@ -414,274 +614,127 @@ const onSubmitAddTarifForm = () => {
                                                     </div>
                                                 </Listbox>
                                             </div>
-                                            <!-- description -->
-                                            <div>
-                                                <label
-                                                    for="description"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Description
-                                                </label>
-                                                <div class="mt-1">
-                                                    <textarea
-                                                        v-model="
-                                                            formAddTarif.description
-                                                        "
-                                                        id="description"
-                                                        name="description"
-                                                        rows="2"
-                                                        class="mt-1 block h-32 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                        :class="{
-                                                            errors: 'border-red-500 focus:ring focus:ring-red-200',
-                                                        }"
-                                                        placeholder=""
-                                                        autocomplete="none"
-                                                    />
-                                                </div>
-                                                <div
-                                                    v-if="errors.description"
-                                                    class="mt-2 text-xs text-red-500"
-                                                >
-                                                    {{ errors.description }}
-                                                </div>
+                                        </div>
+                                        <!-- Amount -->
+                                        <div class="w-full md:w-1/2">
+                                            <label
+                                                for="amount"
+                                                class="block text-sm font-medium text-gray-700"
+                                            >
+                                                Montant
+                                            </label>
+                                            <div
+                                                class="mt-1 flex items-center rounded-md"
+                                            >
+                                                <input
+                                                    v-model="
+                                                        formAddTarif.amount
+                                                    "
+                                                    type="number"
+                                                    name="amount"
+                                                    id="amount"
+                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                    placeholder=""
+                                                    autocomplete="none"
+                                                />
+                                                <CurrencyEuroIcon
+                                                    class="ml-2 h-6 w-6"
+                                                />
                                             </div>
                                             <div
-                                                v-if="selectedTarifType"
-                                                class="flex w-full flex-col items-center justify-start space-x-0 space-y-2 md:flex-row md:space-x-2 md:space-y-0"
+                                                v-if="errors.amount"
+                                                class="mt-2 text-xs text-red-500"
                                             >
-                                                <div
-                                                    v-for="attribut in selectedTarifType.tariftypeattributs"
-                                                    :key="attribut.id"
-                                                    class="flex w-1/2 items-center space-x-2 md:w-auto"
-                                                >
-                                                    <div>
-                                                        <label
-                                                            :for="
-                                                                attribut.attribut
-                                                            "
-                                                            class="block text-sm font-medium text-gray-700"
-                                                        >
-                                                            {{
-                                                                attribut.attribut
-                                                            }}
-                                                        </label>
-                                                        <div
-                                                            class="mt-1 flex rounded-md"
-                                                        >
-                                                            <input
-                                                                v-model="
-                                                                    formAddTarif
-                                                                        .attributs[
-                                                                        attribut
-                                                                            .id
-                                                                    ]
-                                                                "
-                                                                type="text"
-                                                                :name="
-                                                                    attribut.attribut
-                                                                "
-                                                                :id="
-                                                                    attribut.attribut
-                                                                "
-                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                                placeholder=""
-                                                                autocomplete="none"
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <Listbox
-                                                        v-if="
-                                                            attribut.attribut ===
-                                                            'Duree'
-                                                        "
-                                                        v-model="
-                                                            selectedUniteeDuree
-                                                        "
-                                                        class="w-56"
-                                                    >
-                                                        <div class="relative">
-                                                            <label
-                                                                for="unite de duree"
-                                                                class="block text-sm font-medium text-gray-700"
-                                                            >
-                                                                Unité de durée
-                                                            </label>
-                                                            <ListboxButton
-                                                                class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
-                                                            >
-                                                                <span
-                                                                    class="block truncate"
-                                                                >
-                                                                    {{
-                                                                        selectedUniteeDuree.name
-                                                                    }}
-                                                                </span>
-                                                                <span
-                                                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
-                                                                >
-                                                                    <ChevronUpDownIcon
-                                                                        class="h-5 w-5 text-gray-400"
-                                                                        aria-hidden="true"
-                                                                    />
-                                                                </span>
-                                                            </ListboxButton>
-
-                                                            <transition
-                                                                leave-active-class="transition duration-100 ease-in"
-                                                                leave-from-class="opacity-100"
-                                                                leave-to-class="opacity-0"
-                                                            >
-                                                                <ListboxOptions
-                                                                    class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-                                                                >
-                                                                    <ListboxOption
-                                                                        v-slot="{
-                                                                            active,
-                                                                            selected,
-                                                                        }"
-                                                                        v-for="unite in uniteDurees"
-                                                                        :key="
-                                                                            unite.id
-                                                                        "
-                                                                        :value="
-                                                                            unite
-                                                                        "
-                                                                        as="template"
-                                                                    >
-                                                                        <li
-                                                                            :class="[
-                                                                                active
-                                                                                    ? 'bg-amber-100 text-amber-900'
-                                                                                    : 'text-gray-900',
-                                                                                'relative cursor-default select-none py-2 pl-10 pr-4',
-                                                                            ]"
-                                                                        >
-                                                                            <span
-                                                                                :class="[
-                                                                                    selected
-                                                                                        ? 'font-medium'
-                                                                                        : 'font-normal',
-                                                                                    'block truncate',
-                                                                                ]"
-                                                                                >{{
-                                                                                    unite.name
-                                                                                }}</span
-                                                                            >
-                                                                            <span
-                                                                                v-if="
-                                                                                    selected
-                                                                                "
-                                                                                class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
-                                                                            >
-                                                                                <CheckCircleIcon
-                                                                                    class="h-5 w-5"
-                                                                                    aria-hidden="true"
-                                                                                />
-                                                                            </span>
-                                                                        </li>
-                                                                    </ListboxOption>
-                                                                </ListboxOptions>
-                                                            </transition>
-                                                        </div>
-                                                    </Listbox>
-                                                </div>
+                                                {{ errors.amount }}
                                             </div>
-                                            <!-- Amount -->
-                                            <div class="w-full md:w-1/2">
-                                                <label
-                                                    for="amount"
-                                                    class="block text-sm font-medium text-gray-700"
+                                        </div>
+                                        <!-- liste des produits -->
+                                        <div class="flex flex-col space-y-2">
+                                            <p
+                                                class="text-sm font-medium text-gray-700"
+                                            >
+                                                Ce tarif est valable pour:
+                                            </p>
+
+                                            <label class="flex items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    name="Tout"
+                                                    v-model="checkAll"
+                                                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                                />
+                                                <span
+                                                    class="ml-2 text-sm text-gray-600"
+                                                    >Tout sélectionner</span
                                                 >
-                                                    Montant
-                                                </label>
-                                                <div
-                                                    class="mt-1 flex items-center rounded-md"
-                                                >
-                                                    <input
-                                                        v-model="
-                                                            formAddTarif.amount
-                                                        "
-                                                        type="number"
-                                                        name="amount"
-                                                        id="amount"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                        placeholder=""
-                                                        autocomplete="none"
-                                                    />
-                                                    <CurrencyEuroIcon
-                                                        class="ml-2 h-6 w-6"
-                                                    />
-                                                </div>
-                                                <div
-                                                    v-if="errors.amount"
-                                                    class="mt-2 text-xs text-red-500"
-                                                >
-                                                    {{ errors.amount }}
-                                                </div>
-                                            </div>
+                                            </label>
+
                                             <div
-                                                class="flex flex-col space-y-2"
+                                                v-for="discipline in props.activiteForTarifs"
+                                                :key="discipline.id"
+                                                class="ml-2 md:ml-4"
                                             >
-                                                <p
-                                                    class="text-sm font-medium text-gray-700"
-                                                >
-                                                    Ce tarif est valable pour:
-                                                </p>
-
                                                 <label
                                                     class="flex items-center"
                                                 >
                                                     <input
                                                         type="checkbox"
-                                                        name="Tout"
-                                                        v-model="checkAll"
+                                                        :id="discipline.id"
+                                                        :value="discipline.id"
+                                                        :name="
+                                                            discipline.disciplineName
+                                                        "
+                                                        v-model="
+                                                            formAddTarif
+                                                                .disciplines[
+                                                                discipline.id
+                                                            ]
+                                                        "
                                                         class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                                                     />
+
                                                     <span
                                                         class="ml-2 text-sm text-gray-600"
-                                                        >Tout sélectionner</span
+                                                        >{{
+                                                            discipline.disciplineName
+                                                        }}</span
                                                     >
                                                 </label>
-
                                                 <div
-                                                    v-for="discipline in props.activiteForTarifs"
-                                                    :key="discipline.id"
-                                                    class="ml-2 md:ml-4"
+                                                    v-for="category in discipline.categories"
+                                                    :key="category.id"
+                                                    class="ml-4 md:ml-8"
                                                 >
                                                     <label
                                                         class="flex items-center"
                                                     >
                                                         <input
                                                             type="checkbox"
-                                                            :id="discipline.id"
-                                                            :value="
-                                                                discipline.id
-                                                            "
+                                                            :id="category.id"
+                                                            :value="category.id"
                                                             :name="
-                                                                discipline.disciplineName
+                                                                category.name
                                                             "
                                                             v-model="
                                                                 formAddTarif
-                                                                    .disciplines[
-                                                                    discipline
-                                                                        .id
+                                                                    .categories[
+                                                                    category.id
                                                                 ]
                                                             "
                                                             class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                                                         />
-
                                                         <span
                                                             class="ml-2 text-sm text-gray-600"
                                                             >{{
-                                                                discipline.disciplineName
+                                                                category.name
                                                             }}</span
                                                         >
                                                     </label>
+
                                                     <div
-                                                        v-for="category in discipline.categories"
-                                                        :key="category.id"
-                                                        class="ml-4 md:ml-8"
+                                                        v-for="activite in category.activites"
+                                                        :key="activite.id"
+                                                        class="ml-6 md:ml-12"
                                                     >
                                                         <label
                                                             class="flex items-center"
@@ -689,18 +742,18 @@ const onSubmitAddTarifForm = () => {
                                                             <input
                                                                 type="checkbox"
                                                                 :id="
-                                                                    category.id
+                                                                    activite.id
                                                                 "
                                                                 :value="
-                                                                    category.id
+                                                                    activite.id
                                                                 "
                                                                 :name="
-                                                                    category.name
+                                                                    activite.titre
                                                                 "
                                                                 v-model="
                                                                     formAddTarif
-                                                                        .categories[
-                                                                        category
+                                                                        .activites[
+                                                                        activite
                                                                             .id
                                                                     ]
                                                                 "
@@ -709,34 +762,36 @@ const onSubmitAddTarifForm = () => {
                                                             <span
                                                                 class="ml-2 text-sm text-gray-600"
                                                                 >{{
-                                                                    category.name
+                                                                    activite.titre
                                                                 }}</span
                                                             >
                                                         </label>
 
                                                         <div
-                                                            v-for="activite in category.activites"
-                                                            :key="activite.id"
-                                                            class="ml-6 md:ml-12"
+                                                            class="ml-8 flex flex-col items-center space-x-0 space-y-3 md:ml-16 md:flex-row md:space-x-8 md:space-y-0"
                                                         >
                                                             <label
+                                                                v-for="produit in activite.produits"
+                                                                :key="
+                                                                    produit.id
+                                                                "
                                                                 class="flex items-center"
                                                             >
                                                                 <input
                                                                     type="checkbox"
                                                                     :id="
-                                                                        activite.id
+                                                                        produit.id
                                                                     "
                                                                     :value="
-                                                                        activite.id
+                                                                        produit.id
                                                                     "
                                                                     :name="
-                                                                        activite.titre
+                                                                        produit.id
                                                                     "
                                                                     v-model="
                                                                         formAddTarif
-                                                                            .activites[
-                                                                            activite
+                                                                            .produits[
+                                                                            produit
                                                                                 .id
                                                                         ]
                                                                     "
@@ -744,86 +799,385 @@ const onSubmitAddTarifForm = () => {
                                                                 />
                                                                 <span
                                                                     class="ml-2 text-sm text-gray-600"
-                                                                    >{{
-                                                                        activite.titre
+                                                                    >Produit n°
+                                                                    {{
+                                                                        produit.id
                                                                     }}</span
                                                                 >
                                                             </label>
-
-                                                            <div
-                                                                class="ml-8 flex flex-col items-center space-x-0 space-y-3 md:ml-16 md:flex-row md:space-x-8 md:space-y-0"
-                                                            >
-                                                                <label
-                                                                    v-for="produit in activite.produits"
-                                                                    :key="
-                                                                        produit.id
-                                                                    "
-                                                                    class="flex items-center"
-                                                                >
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        :id="
-                                                                            produit.id
-                                                                        "
-                                                                        :value="
-                                                                            produit.id
-                                                                        "
-                                                                        :name="
-                                                                            produit.id
-                                                                        "
-                                                                        v-model="
-                                                                            formAddTarif
-                                                                                .produits[
-                                                                                produit
-                                                                                    .id
-                                                                            ]
-                                                                        "
-                                                                        class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
-                                                                    />
-                                                                    <span
-                                                                        class="ml-2 text-sm text-gray-600"
-                                                                        >Produit
-                                                                        n°
-                                                                        {{
-                                                                            produit.id
-                                                                        }}</span
-                                                                    >
-                                                                </label>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div
-                                        class="mt-4 flex w-full items-center justify-between"
+                                <div
+                                    class="mt-4 flex w-full items-center justify-between"
+                                >
+                                    <button
+                                        type="button"
+                                        class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                                        @click="emit('close')"
                                     >
-                                        <button
-                                            type="button"
-                                            class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
-                                            @click="emit('close')"
+                                        Annuler
+                                    </button>
+                                    <button
+                                        :disabled="formAddTarif.processing"
+                                        type="submit"
+                                        class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                                    >
+                                        <LoadingSVG
+                                            v-if="formAddTarif.processing"
+                                        />
+                                        Enregistrer
+                                    </button>
+                                </div>
+                            </form>
+
+                            <!-- test tarif -->
+                            <form
+                                @submit.prevent="onSubmit()"
+                                autocomplete="off"
+                            >
+                                <div class="flex flex-col space-y-3">
+                                    <div
+                                        class="flex w-full flex-col items-center justify-start space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
+                                    >
+                                        <Listbox
+                                            class="w-full max-w-sm"
+                                            v-model="newSelectedTarifType"
                                         >
-                                            Annuler
-                                        </button>
-                                        <button
-                                            :disabled="formAddTarif.processing"
-                                            type="submit"
-                                            class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
-                                        >
-                                            <LoadingSVG
-                                                v-if="formAddTarif.processing"
-                                            />
-                                            Enregistrer
-                                        </button>
+                                            <div class="relative mt-1">
+                                                <label
+                                                    for="tarifType"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                >
+                                                    Type de tarif
+                                                </label>
+                                                <ListboxButton
+                                                    class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                                                >
+                                                    <span
+                                                        class="block truncate"
+                                                        >{{
+                                                            newSelectedTarifType.nom
+                                                        }}</span
+                                                    >
+                                                    <span
+                                                        class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+                                                    >
+                                                        <ChevronUpDownIcon
+                                                            class="h-5 w-5 text-gray-400"
+                                                            aria-hidden="true"
+                                                        />
+                                                    </span>
+                                                </ListboxButton>
+
+                                                <transition
+                                                    leave-active-class="transition duration-100 ease-in"
+                                                    leave-from-class="opacity-100"
+                                                    leave-to-class="opacity-0"
+                                                >
+                                                    <ListboxOptions
+                                                        class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                                                    >
+                                                        <ListboxOption
+                                                            v-slot="{
+                                                                active,
+                                                                selected,
+                                                            }"
+                                                            v-for="tarifType in categorie.tarif_types"
+                                                            :key="tarifType.id"
+                                                            :value="tarifType"
+                                                            as="template"
+                                                        >
+                                                            <li
+                                                                :class="[
+                                                                    active
+                                                                        ? 'bg-amber-100 text-amber-900'
+                                                                        : 'text-gray-900',
+                                                                    'relative cursor-default select-none py-2 pl-10 pr-4',
+                                                                ]"
+                                                            >
+                                                                <span
+                                                                    :class="[
+                                                                        selected
+                                                                            ? 'font-medium'
+                                                                            : 'font-normal',
+                                                                        'block truncate',
+                                                                    ]"
+                                                                    >{{
+                                                                        tarifType.nom
+                                                                    }}</span
+                                                                >
+                                                                <span
+                                                                    v-if="
+                                                                        selected
+                                                                    "
+                                                                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
+                                                                >
+                                                                    <CheckCircleIcon
+                                                                        class="h-5 w-5"
+                                                                        aria-hidden="true"
+                                                                    />
+                                                                </span>
+                                                            </li>
+                                                        </ListboxOption>
+                                                    </ListboxOptions>
+                                                </transition>
+                                            </div>
+                                        </Listbox>
+                                        <!-- titre -->
+                                        <div class="w-full max-w-sm">
+                                            <label
+                                                for="titre"
+                                                class="block text-sm font-medium text-gray-700"
+                                            >
+                                                Titre
+                                            </label>
+                                            <div class="mt-1 flex rounded-md">
+                                                <input
+                                                    v-model="addTarifForm.titre"
+                                                    type="text"
+                                                    name="titre"
+                                                    id="titre"
+                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                    placeholder=""
+                                                    autocomplete="none"
+                                                />
+                                            </div>
+                                            <div
+                                                v-if="errors.addTarifForm.titre"
+                                                class="mt-2 text-xs text-red-500"
+                                            >
+                                                {{ errors.addTarifForm.titre }}
+                                            </div>
+                                        </div>
                                     </div>
-                                </form>
-                            </DialogPanel>
-                        </TransitionChild>
-                    </div>
+                                    <!-- description -->
+                                    <div class="w-full max-w-lg">
+                                        <label
+                                            for="description"
+                                            class="block text-sm font-medium text-gray-700"
+                                        >
+                                            Description
+                                        </label>
+                                        <div class="mt-1">
+                                            <textarea
+                                                v-model="
+                                                    addTarifForm.description
+                                                "
+                                                id="description"
+                                                name="description"
+                                                rows="2"
+                                                class="mt-1 block h-32 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                :class="{
+                                                    errors: 'border-red-500 focus:ring focus:ring-red-200',
+                                                }"
+                                                placeholder=""
+                                                autocomplete="none"
+                                            />
+                                        </div>
+                                        <div
+                                            v-if="
+                                                errors.addTarifForm.description
+                                            "
+                                            class="mt-2 text-xs text-red-500"
+                                        >
+                                            {{
+                                                errors.addTarifForm.description
+                                            }}
+                                        </div>
+                                    </div>
+                                    <div
+                                        v-for="attribut in newSelectedTarifType.tarif_attributs"
+                                        :key="attribut"
+                                        class="flex w-full items-center space-x-2"
+                                    >
+                                        <!-- select  -->
+                                        <SelectForm
+                                            :classes="'block'"
+                                            class="max-w-sm"
+                                            v-if="
+                                                attribut.type_champ_form ===
+                                                'select'
+                                            "
+                                            :name="attribut.nom"
+                                            v-model="
+                                                addTarifForm.attributs[
+                                                    attribut.id
+                                                ]
+                                            "
+                                            :options="attribut.valeurs"
+                                        />
+
+                                        <!-- checkbox -->
+                                        <CheckboxForm
+                                            class="max-w-sm"
+                                            v-if="
+                                                attribut.type_champ_form ===
+                                                'checkbox'
+                                            "
+                                            :critere="attribut"
+                                            :name="attribut.nom"
+                                            v-model="
+                                                addTarifForm.attributs[
+                                                    attribut.id
+                                                ]
+                                            "
+                                            :options="attribut.valeurs"
+                                        />
+                                        <!-- :is-checkbox-selected="
+                                                            isCheckboxSelected
+                                                        "
+                                                        @update-selected-checkboxes="
+                                                            updateSelectedCheckboxes
+                                                        " -->
+
+                                        <!-- input text -->
+                                        <div
+                                            class="w-full max-w-sm"
+                                            v-if="
+                                                attribut.type_champ_form ===
+                                                'text'
+                                            "
+                                        >
+                                            <label
+                                                :for="attribut.nom"
+                                                class="block text-sm font-medium text-gray-700"
+                                            >
+                                                {{ attribut.nom }}
+                                            </label>
+                                            <div class="mt-1 flex rounded-md">
+                                                <TextInput
+                                                    type="text"
+                                                    v-model="
+                                                        addTarifForm.attributs[
+                                                            attribut.id
+                                                        ]
+                                                    "
+                                                    :name="attribut.nom"
+                                                    :id="attribut.nom"
+                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                    placeholder=""
+                                                    autocomplete="none"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <!-- number text -->
+                                        <div
+                                            class="w-full max-w-sm"
+                                            v-if="
+                                                attribut.type_champ_form ===
+                                                'number'
+                                            "
+                                        >
+                                            <label
+                                                :for="attribut.nom"
+                                                class="block text-sm font-medium text-gray-700"
+                                            >
+                                                {{ attribut.nom }}
+                                            </label>
+                                            <div class="mt-1 flex rounded-md">
+                                                <TextInput
+                                                    type="number"
+                                                    min="1"
+                                                    max="59"
+                                                    v-model="
+                                                        addTarifForm.attributs[
+                                                            attribut.id
+                                                        ]
+                                                    "
+                                                    :name="attribut.nom"
+                                                    :id="attribut.nom"
+                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                    placeholder=""
+                                                    autocomplete="none"
+                                                />
+                                            </div>
+                                        </div>
+                                        <!-- sous attributs -->
+                                        <div
+                                            v-for="sousattribut in attribut.sous_attributs"
+                                            :key="sousattribut.id"
+                                        >
+                                            <SelectForm
+                                                :classes="'block w-full '"
+                                                class="max-w-sm"
+                                                v-if="
+                                                    sousattribut.type_champ_form ===
+                                                    'select'
+                                                "
+                                                :name="sousattribut.nom"
+                                                v-model="
+                                                    addTarifForm.sousattributs[
+                                                        sousattribut.id
+                                                    ]
+                                                "
+                                                :options="sousattribut.valeurs"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="w-full max-w-sm">
+                                        <label
+                                            for="amount"
+                                            class="block text-sm font-medium text-gray-700"
+                                        >
+                                            Montant
+                                        </label>
+                                        <div
+                                            class="mt-1 flex items-center rounded-md"
+                                        >
+                                            <input
+                                                v-model="addTarifForm.amount"
+                                                type="number"
+                                                name="amount"
+                                                id="amount"
+                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                placeholder=""
+                                                autocomplete="none"
+                                            />
+                                            <CurrencyEuroIcon
+                                                class="ml-2 h-6 w-6"
+                                            />
+                                        </div>
+                                        <div
+                                            v-if="errors.addTarifForm.amount"
+                                            class="mt-2 text-xs text-red-500"
+                                        >
+                                            {{ errors.addTarifForm.amount }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="mt-4 flex w-full items-center justify-between"
+                                >
+                                    <button
+                                        type="button"
+                                        class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                                        @click.prevent="emit('close')"
+                                    >
+                                        Annuler
+                                    </button>
+                                    <button
+                                        :disabled="addTarifForm.processing"
+                                        type="submit"
+                                        class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                                    >
+                                        <LoadingSVG
+                                            v-if="addTarifForm.processing"
+                                        />
+                                        Enregistrer
+                                    </button>
+                                </div>
+                            </form>
+                        </DialogPanel>
+                    </TransitionChild>
                 </div>
-            </Dialog>
-        </TransitionRoot>
-    </div>
+            </div>
+        </Dialog>
+    </TransitionRoot>
 </template>
