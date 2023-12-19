@@ -990,6 +990,10 @@ onMounted(() => {
                                                 </form>
                                                 <!-- liste valeur de ss attributs -->
                                                 <ul
+                                                    v-if="
+                                                        sousAttribut.valeurs
+                                                            .length > 0
+                                                    "
                                                     class="ml-6 list-inside list-disc space-y-4 py-2 text-sm text-slate-600 marker:text-indigo-600"
                                                 >
                                                     <li
@@ -1088,21 +1092,24 @@ onMounted(() => {
                                                             </div>
                                                         </form>
                                                     </li>
-                                                    <!-- Ajout valeur de sous attribut -->
+                                                </ul>
+                                                <!-- Ajout valeur de sous attribut -->
+                                                <div
+                                                    v-if="
+                                                        !showAddSousAttributValeurForm(
+                                                            sousAttribut
+                                                        ) &&
+                                                        (sousAttribut.type_champ_form ===
+                                                            'select' ||
+                                                            sousAttribut.type_champ_form ===
+                                                                'checkbox')
+                                                    "
+                                                >
                                                     <button
                                                         @click="
                                                             toggleAddSousAttributValeurForm(
                                                                 sousAttribut
                                                             )
-                                                        "
-                                                        v-if="
-                                                            !showAddSousAttributValeurForm(
-                                                                sousAttribut
-                                                            ) &&
-                                                            (sousAttribut.type_champ_form ===
-                                                                'select' ||
-                                                                sousAttribut.type_champ_form ===
-                                                                    'checkbox')
                                                         "
                                                         class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                                                         type="button"
@@ -1118,89 +1125,90 @@ onMounted(() => {
                                                             >
                                                         </div>
                                                     </button>
-                                                    <div
-                                                        v-if="
-                                                            showAddSousAttributValeurForm(
+                                                </div>
+
+                                                <div
+                                                    v-if="
+                                                        showAddSousAttributValeurForm(
+                                                            sousAttribut
+                                                        )
+                                                    "
+                                                >
+                                                    <form
+                                                        class="inline-flex flex-grow items-end justify-between text-center text-xs font-medium text-gray-600"
+                                                        @submit.prevent="
+                                                            addTarifAttributSousAttributValeur(
+                                                                tarifType,
+                                                                attribut,
                                                                 sousAttribut
                                                             )
                                                         "
                                                     >
-                                                        <form
-                                                            class="inline-flex flex-grow items-end justify-between text-center text-xs font-medium text-gray-600"
-                                                            @submit.prevent="
-                                                                addTarifAttributSousAttributValeur(
-                                                                    tarifType,
-                                                                    attribut,
+                                                        <div
+                                                            class="flex flex-col items-start"
+                                                        >
+                                                            <label
+                                                                for="newSousAttributValeur"
+                                                                >Ajouter une
+                                                                valeur à
+                                                                <span
+                                                                    class="font-semibold"
+                                                                    >{{
+                                                                        sousAttribut.nom
+                                                                    }}</span
+                                                                >:</label
+                                                            >
+                                                            <div
+                                                                class="mt-1 flex rounded-md"
+                                                            >
+                                                                <input
+                                                                    v-model="
+                                                                        addSousAttributValeurForm.valeur
+                                                                    "
+                                                                    type="text"
+                                                                    name="newSousAttributValeur"
+                                                                    id="newSousAttributValeur"
+                                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                                    placeholder=""
+                                                                    autocomplete="none"
+                                                                />
+                                                            </div>
+                                                            <div
+                                                                v-if="
+                                                                    errors.addSousAttributValeurForm
+                                                                "
+                                                                class="text-xs text-red-500"
+                                                            >
+                                                                {{
+                                                                    errors
+                                                                        .addSousAttributValeurForm
+                                                                        .valeur
+                                                                }}
+                                                            </div>
+                                                        </div>
+                                                        <button
+                                                            type="submit"
+                                                            class="ml-4 inline-flex items-end"
+                                                        >
+                                                            <PlusCircleIcon
+                                                                class="h-6 w-6 text-indigo-500 hover:text-indigo-700"
+                                                            />
+                                                        </button>
+                                                        <button
+                                                            @click="
+                                                                toggleAddSousAttributValeurForm(
                                                                     sousAttribut
                                                                 )
                                                             "
+                                                            type="button"
+                                                            class="ml-4 inline-flex items-center"
                                                         >
-                                                            <div
-                                                                class="flex flex-col items-start"
-                                                            >
-                                                                <label
-                                                                    for="newSousAttributValeur"
-                                                                    >Ajouter une
-                                                                    valeur à
-                                                                    <span
-                                                                        class="font-semibold"
-                                                                        >{{
-                                                                            sousAttribut.nom
-                                                                        }}</span
-                                                                    >:</label
-                                                                >
-                                                                <div
-                                                                    class="mt-1 flex rounded-md"
-                                                                >
-                                                                    <input
-                                                                        v-model="
-                                                                            addSousAttributValeurForm.valeur
-                                                                        "
-                                                                        type="text"
-                                                                        name="newSousAttributValeur"
-                                                                        id="newSousAttributValeur"
-                                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                                        placeholder=""
-                                                                        autocomplete="none"
-                                                                    />
-                                                                </div>
-                                                                <div
-                                                                    v-if="
-                                                                        errors.addSousAttributValeurForm
-                                                                    "
-                                                                    class="text-xs text-red-500"
-                                                                >
-                                                                    {{
-                                                                        errors
-                                                                            .addSousAttributValeurForm
-                                                                            .valeur
-                                                                    }}
-                                                                </div>
-                                                            </div>
-                                                            <button
-                                                                type="submit"
-                                                                class="ml-4 inline-flex items-end"
-                                                            >
-                                                                <PlusCircleIcon
-                                                                    class="h-6 w-6 text-indigo-500 hover:text-indigo-700"
-                                                                />
-                                                            </button>
-                                                            <button
-                                                                @click="
-                                                                    toggleAddSousAttributValeurForm(
-                                                                        sousAttribut
-                                                                    )
-                                                                "
-                                                                type="button"
-                                                                class="ml-4 inline-flex items-center"
-                                                            >
-                                                                <XCircleIcon
-                                                                    class="h-6 w-6 text-red-500 hover:text-red-700"
-                                                                />
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </ul>
+                                                            <XCircleIcon
+                                                                class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                            />
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </li>
                                             <!-- Ajout valeur attr -->
                                             <button
@@ -1223,35 +1231,6 @@ onMounted(() => {
                                             >
                                                 <div>
                                                     Ajouter une valeur à
-                                                    <span
-                                                        class="font-semibold"
-                                                        >{{
-                                                            attribut.nom
-                                                        }}</span
-                                                    >
-                                                </div>
-                                            </button>
-                                            <!-- Ajout sous attribut -->
-                                            <button
-                                                v-if="
-                                                    !showAddSousAttributForm(
-                                                        attribut
-                                                    ) &&
-                                                    (attribut.type_champ_form ===
-                                                        'number' ||
-                                                        attribut.type_champ_form ===
-                                                            'text')
-                                                "
-                                                @click="
-                                                    toggleAddSousAttributForm(
-                                                        attribut
-                                                    )
-                                                "
-                                                class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
-                                                type="button"
-                                            >
-                                                <div>
-                                                    Ajouter un sous attribut à
                                                     <span
                                                         class="font-semibold"
                                                         >{{
@@ -1339,179 +1318,204 @@ onMounted(() => {
                                                     </button>
                                                 </form>
                                             </div>
-                                            <div
-                                                v-if="
-                                                    showAddSousAttributForm(
+                                        </ul>
+                                        <!-- Ajout sous attribut -->
+                                        <button
+                                            v-if="
+                                                !showAddSousAttributForm(
+                                                    attribut
+                                                ) &&
+                                                (attribut.type_champ_form ===
+                                                    'number' ||
+                                                    attribut.type_champ_form ===
+                                                        'text')
+                                            "
+                                            @click="
+                                                toggleAddSousAttributForm(
+                                                    attribut
+                                                )
+                                            "
+                                            class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                            type="button"
+                                        >
+                                            <div>
+                                                Ajouter un sous attribut à
+                                                <span class="font-semibold">{{
+                                                    attribut.nom
+                                                }}</span>
+                                            </div>
+                                        </button>
+                                        <div
+                                            v-if="
+                                                showAddSousAttributForm(
+                                                    attribut
+                                                )
+                                            "
+                                        >
+                                            <form
+                                                class="ml-6 inline-flex flex-grow items-end justify-between text-center text-xs font-medium text-gray-600"
+                                                @submit.prevent="
+                                                    addTarifAttributSousAttribut(
+                                                        tarifType,
                                                         attribut
                                                     )
                                                 "
                                             >
-                                                <form
-                                                    class="ml-6 inline-flex flex-grow items-end justify-between text-center text-xs font-medium text-gray-600"
-                                                    @submit.prevent="
-                                                        addTarifAttributSousAttribut(
-                                                            tarifType,
+                                                <div
+                                                    class="flex flex-col items-start"
+                                                >
+                                                    <label for="newSousAttribut"
+                                                        >Ajouter un sous
+                                                        attribut à
+                                                        <span
+                                                            class="font-semibold"
+                                                            >{{
+                                                                attribut.nom
+                                                            }}</span
+                                                        >:</label
+                                                    >
+                                                    <div
+                                                        class="mt-1 flex rounded-md"
+                                                    >
+                                                        <input
+                                                            v-model="
+                                                                addSousAttributForm.nom
+                                                            "
+                                                            type="text"
+                                                            name="newSousAttribut"
+                                                            id="newSousAttribut"
+                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                            placeholder=""
+                                                            autocomplete="none"
+                                                        />
+                                                    </div>
+                                                    <div
+                                                        v-if="
+                                                            errors.addSousAttributForm
+                                                        "
+                                                        class="text-xs text-red-500"
+                                                    >
+                                                        {{
+                                                            errors
+                                                                .addSousAttributForm
+                                                                .nom
+                                                        }}
+                                                    </div>
+                                                    <Listbox
+                                                        class="w-full flex-grow"
+                                                        v-model="
+                                                            addSousAttributForm.type_champ
+                                                        "
+                                                    >
+                                                        <div
+                                                            class="relative mt-1"
+                                                        >
+                                                            <ListboxButton
+                                                                class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                                                            >
+                                                                <span
+                                                                    class="block truncate"
+                                                                    >{{
+                                                                        addSousAttributForm
+                                                                            .type_champ
+                                                                            .type
+                                                                    }}</span
+                                                                >
+                                                                <span
+                                                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+                                                                >
+                                                                    <ChevronUpDownIcon
+                                                                        class="h-5 w-5 text-gray-400"
+                                                                        aria-hidden="true"
+                                                                    />
+                                                                </span>
+                                                            </ListboxButton>
+
+                                                            <transition
+                                                                leave-active-class="transition duration-100 ease-in"
+                                                                leave-from-class="opacity-100"
+                                                                leave-to-class="opacity-0"
+                                                            >
+                                                                <ListboxOptions
+                                                                    class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                                                                >
+                                                                    <ListboxOption
+                                                                        v-slot="{
+                                                                            active,
+                                                                            selected,
+                                                                        }"
+                                                                        v-for="(
+                                                                            type_champ,
+                                                                            index
+                                                                        ) in type_champs"
+                                                                        :key="
+                                                                            index
+                                                                        "
+                                                                        :value="
+                                                                            type_champ
+                                                                        "
+                                                                        as="template"
+                                                                    >
+                                                                        <li
+                                                                            :class="[
+                                                                                active
+                                                                                    ? 'bg-amber-100 text-amber-900'
+                                                                                    : 'text-gray-700',
+                                                                                'relative cursor-default select-none py-2 pl-10 pr-4',
+                                                                            ]"
+                                                                        >
+                                                                            <span
+                                                                                :class="[
+                                                                                    selected
+                                                                                        ? 'font-medium'
+                                                                                        : 'font-normal',
+                                                                                    'block truncate',
+                                                                                ]"
+                                                                                >{{
+                                                                                    type_champ.type
+                                                                                }}</span
+                                                                            >
+                                                                            <span
+                                                                                v-if="
+                                                                                    selected
+                                                                                "
+                                                                                class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
+                                                                            >
+                                                                                <CheckCircleIcon
+                                                                                    class="h-5 w-5"
+                                                                                    aria-hidden="true"
+                                                                                />
+                                                                            </span>
+                                                                        </li>
+                                                                    </ListboxOption>
+                                                                </ListboxOptions>
+                                                            </transition>
+                                                        </div>
+                                                    </Listbox>
+                                                </div>
+                                                <button
+                                                    type="submit"
+                                                    class="ml-4 inline-flex items-end"
+                                                >
+                                                    <PlusCircleIcon
+                                                        class="h-6 w-6 text-indigo-500 hover:text-indigo-700"
+                                                    />
+                                                </button>
+                                                <button
+                                                    @click="
+                                                        toggleAddSousAttributForm(
                                                             attribut
                                                         )
                                                     "
+                                                    type="button"
+                                                    class="ml-4 inline-flex items-center"
                                                 >
-                                                    <div
-                                                        class="flex flex-col items-start"
-                                                    >
-                                                        <label
-                                                            for="newSousAttribut"
-                                                            >Ajouter un sous
-                                                            attribut à
-                                                            <span
-                                                                class="font-semibold"
-                                                                >{{
-                                                                    attribut.nom
-                                                                }}</span
-                                                            >:</label
-                                                        >
-                                                        <div
-                                                            class="mt-1 flex rounded-md"
-                                                        >
-                                                            <input
-                                                                v-model="
-                                                                    addSousAttributForm.nom
-                                                                "
-                                                                type="text"
-                                                                name="newSousAttribut"
-                                                                id="newSousAttribut"
-                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                                placeholder=""
-                                                                autocomplete="none"
-                                                            />
-                                                        </div>
-                                                        <div
-                                                            v-if="
-                                                                errors.addSousAttributForm
-                                                            "
-                                                            class="text-xs text-red-500"
-                                                        >
-                                                            {{
-                                                                errors
-                                                                    .addSousAttributForm
-                                                                    .nom
-                                                            }}
-                                                        </div>
-                                                        <Listbox
-                                                            class="w-full flex-grow"
-                                                            v-model="
-                                                                addSousAttributForm.type_champ
-                                                            "
-                                                        >
-                                                            <div
-                                                                class="relative mt-1"
-                                                            >
-                                                                <ListboxButton
-                                                                    class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
-                                                                >
-                                                                    <span
-                                                                        class="block truncate"
-                                                                        >{{
-                                                                            addSousAttributForm
-                                                                                .type_champ
-                                                                                .type
-                                                                        }}</span
-                                                                    >
-                                                                    <span
-                                                                        class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
-                                                                    >
-                                                                        <ChevronUpDownIcon
-                                                                            class="h-5 w-5 text-gray-400"
-                                                                            aria-hidden="true"
-                                                                        />
-                                                                    </span>
-                                                                </ListboxButton>
-
-                                                                <transition
-                                                                    leave-active-class="transition duration-100 ease-in"
-                                                                    leave-from-class="opacity-100"
-                                                                    leave-to-class="opacity-0"
-                                                                >
-                                                                    <ListboxOptions
-                                                                        class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-                                                                    >
-                                                                        <ListboxOption
-                                                                            v-slot="{
-                                                                                active,
-                                                                                selected,
-                                                                            }"
-                                                                            v-for="(
-                                                                                type_champ,
-                                                                                index
-                                                                            ) in type_champs"
-                                                                            :key="
-                                                                                index
-                                                                            "
-                                                                            :value="
-                                                                                type_champ
-                                                                            "
-                                                                            as="template"
-                                                                        >
-                                                                            <li
-                                                                                :class="[
-                                                                                    active
-                                                                                        ? 'bg-amber-100 text-amber-900'
-                                                                                        : 'text-gray-700',
-                                                                                    'relative cursor-default select-none py-2 pl-10 pr-4',
-                                                                                ]"
-                                                                            >
-                                                                                <span
-                                                                                    :class="[
-                                                                                        selected
-                                                                                            ? 'font-medium'
-                                                                                            : 'font-normal',
-                                                                                        'block truncate',
-                                                                                    ]"
-                                                                                    >{{
-                                                                                        type_champ.type
-                                                                                    }}</span
-                                                                                >
-                                                                                <span
-                                                                                    v-if="
-                                                                                        selected
-                                                                                    "
-                                                                                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
-                                                                                >
-                                                                                    <CheckCircleIcon
-                                                                                        class="h-5 w-5"
-                                                                                        aria-hidden="true"
-                                                                                    />
-                                                                                </span>
-                                                                            </li>
-                                                                        </ListboxOption>
-                                                                    </ListboxOptions>
-                                                                </transition>
-                                                            </div>
-                                                        </Listbox>
-                                                    </div>
-                                                    <button
-                                                        type="submit"
-                                                        class="ml-4 inline-flex items-end"
-                                                    >
-                                                        <PlusCircleIcon
-                                                            class="h-6 w-6 text-indigo-500 hover:text-indigo-700"
-                                                        />
-                                                    </button>
-                                                    <button
-                                                        @click="
-                                                            toggleAddSousAttributForm(
-                                                                attribut
-                                                            )
-                                                        "
-                                                        type="button"
-                                                        class="ml-4 inline-flex items-center"
-                                                    >
-                                                        <XCircleIcon
-                                                            class="h-6 w-6 text-red-500 hover:text-red-700"
-                                                        />
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </ul>
+                                                    <XCircleIcon
+                                                        class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                    />
+                                                </button>
+                                            </form>
+                                        </div>
                                     </li>
                                 </ul>
                             </div>
