@@ -291,6 +291,7 @@ const latestAdresseId = computed(() => {
                 :structure="structure"
                 :tarif-types="tarifTypes"
                 :categorie="categorie"
+                :all-categories="allCategories"
                 :activiteForTarifs="activiteForTarifs"
                 :structureActivites="structureActivites"
                 :show="showAddTarifModal"

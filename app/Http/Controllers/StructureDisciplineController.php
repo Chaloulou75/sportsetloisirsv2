@@ -243,11 +243,19 @@ class StructureDisciplineController extends Controller
 
         $discipline = ListDiscipline::where('slug', $discipline)->first();
 
-        $categoriesListByDiscipline = LienDisciplineCategorie::whereHas('structures_activites', function (Builder $query) use ($structure) {
+        $categoriesListByDiscipline = LienDisciplineCategorie::with([
+            'tarif_types',
+            'tarif_types.tarif_attributs.sous_attributs.valeurs',
+            'tarif_types.tarif_attributs.valeurs'
+        ])->whereHas('structures_activites', function (Builder $query) use ($structure) {
             $query->where('structure_id', $structure->id);
         })->where('discipline_id', $discipline->id)->get();
 
-        $categoriesWithoutStructures = LienDisciplineCategorie::whereDoesntHave('structures_activites', function (Builder $query) use ($structure) {
+        $categoriesWithoutStructures = LienDisciplineCategorie::with([
+            'tarif_types',
+            'tarif_types.tarif_attributs.sous_attributs.valeurs',
+            'tarif_types.tarif_attributs.valeurs'
+        ])->whereDoesntHave('structures_activites', function (Builder $query) use ($structure) {
             $query->where('structure_id', $structure->id);
         })->where('discipline_id', $discipline->id)->get();
 
