@@ -230,6 +230,7 @@ const latestAdresseId = computed(() => {
                             :latestAdresseId="latestAdresseId"
                             :tarif-types="tarifTypes"
                             :activiteForTarifs="activiteForTarifs"
+                            :all-categories="allCategories"
                         />
                         <div v-if="structureActivites.length === 0">
                             <p class="font-semibold italic text-gray-600">

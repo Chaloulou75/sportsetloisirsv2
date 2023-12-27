@@ -65,6 +65,7 @@ const props = defineProps({
     latestAdresseId: Number,
     tarifTypes: Object,
     activiteForTarifs: Object,
+    allCategories: Object,
 });
 
 const isShowing = ref(true);
@@ -1166,6 +1167,7 @@ const destroyTarif = (tarif, produit) => {
         :errors="errors"
         :structure="structure"
         :tarif-types="tarifTypes"
+        :all-categories="allCategories"
         :activiteForTarifs="activiteForTarifs"
         :show="showAddTarifModal"
         @close="showAddTarifModal = false"

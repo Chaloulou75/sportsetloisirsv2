@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LienDisCatTariftype;
+use App\Models\LienDisciplineCategorie;
 use App\Models\Structure;
 use Illuminate\Http\Request;
 use App\Models\ListeTarifType;
@@ -18,12 +20,12 @@ class StructureTarifController extends Controller
      */
     public function store(Request $request, Structure $structure): RedirectResponse
     {
-        dd($request->all(), $structure);
+        // dd($request->all(), $structure);
         $request->validate([
-            'structure_id' => ['nullable', Rule::exists('structures', 'id')],
+            'structure_id' => ['nullable', Rule::exists(Structure::class, 'id')],
             'titre' => ['nullable'],
             'description' => ['nullable'],
-            'tarifType' => ['nullable', Rule::exists('liste_tarifs_types', 'id')],
+            'tarifType' => ['nullable', Rule::exists(ListeTarifType::class, 'id')],
             'attributs' => ['nullable'],
             'amount' => ['required', 'numeric'],
             'disciplines' => ['nullable'],
@@ -68,6 +70,28 @@ class StructureTarifController extends Controller
                 }
             }
         }
+
+        return to_route('structures.disciplines.index', $structure)->with('success', "Le tarif a bien été enregistré pour vos produits");
+
+    }
+
+    public function storewithattributs(Request $request, Structure $structure): RedirectResponse
+    {
+        // dd($request->all());
+
+
+        $request->validate([
+            'categorie.id' => ['required', Rule::exists(LienDisciplineCategorie::class, 'id')],
+            'tarif_type.id' => ['required', Rule::exists(LienDisCatTariftype::class, 'id')],
+            'titre' => ['nullable', 'string', 'min:3'],
+            'description' => ['nullable', 'string', 'min:3'],
+            'attributs' => ['nullable'],
+            'sousattributs' => ['nullable'],
+            'amount' => ['required', 'numeric'],
+            'produits' => ['nullable'],
+        ]);
+        dd($request->all());
+
 
         return to_route('structures.disciplines.index', $structure)->with('success', "Le tarif a bien été enregistré pour vos produits");
 

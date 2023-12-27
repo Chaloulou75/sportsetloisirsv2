@@ -61,35 +61,39 @@ const formAddTarif = reactive({
     uniteDuree: ref(selectedUniteeDuree.value),
 });
 
-const newSelectedCategorie = ref(props.categorie ? props.categorie.id : null);
+const newSelectedCategorie = ref(props.categorie ? props.categorie : null);
 const newSelectedTarifType = ref(
-    props.categorie ? props.categorie.tarif_types[0] : null
+    newSelectedCategorie.value
+        ? newSelectedCategorie.value.tarif_types[0]
+        : null
 );
 
 const addTarifForm = useForm({
-    structure_id: props.structure.id,
-    categorie_id: ref(newSelectedCategorie.value),
-    tarifType: ref(newSelectedTarifType.value),
+    categorie: ref(newSelectedCategorie.value),
+    tarif_type: ref(null),
     titre: null,
     description: null,
     attributs: {},
     sousattributs: {},
     amount: null,
+    disciplines: ref({}),
+    categories: ref({}),
+    activites: ref({}),
+    produits: ref({}),
 });
 
 watch(
-    () => addTarifForm.categorie_id,
-    (newCategorieId) => {
+    () => addTarifForm.categorie,
+    (newCategorie) => {
         newSelectedCategorie.value = props.allCategories.find(
-            (categorie) => categorie.id === newCategorieId
+            (categorie) => categorie === newCategorie
         );
 
         if (
             newSelectedCategorie.value &&
             newSelectedCategorie.value.tarif_types.length > 0
         ) {
-            newSelectedTarifType.value =
-                newSelectedCategorie.value.tarif_types[0];
+            addTarifForm.tarif_type = newSelectedCategorie.value.tarif_types[0];
         } else {
             newSelectedTarifType.value = null;
         }
@@ -101,7 +105,7 @@ watch(
 
 const onSubmit = () => {
     addTarifForm.post(
-        route("structures.tarifs.store", {
+        route("structures.tarifs.storewithattributs", {
             structure: props.structure,
         }),
         {
@@ -332,7 +336,8 @@ const onSubmitAddTarifForm = () => {
                                 <h3
                                     class="text-lg font-medium leading-6 text-gray-800"
                                 >
-                                    Ajouter un tarif au produits de la catégorie
+                                    Ajouter un tarif aux produits de la
+                                    catégorie
                                     <span
                                         v-if="newSelectedCategorie"
                                         class="text-indigo-700"
@@ -379,15 +384,13 @@ const onSubmitAddTarifForm = () => {
                                             <select
                                                 name="categorie"
                                                 id="categorie"
-                                                v-model="
-                                                    addTarifForm.categorie_id
-                                                "
+                                                v-model="addTarifForm.categorie"
                                                 class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                             >
                                                 <option
                                                     v-for="categorie in allCategories"
                                                     :key="categorie.id"
-                                                    :value="categorie.id"
+                                                    :value="categorie"
                                                 >
                                                     {{
                                                         categorie.nom_categorie_pro
@@ -399,19 +402,21 @@ const onSubmitAddTarifForm = () => {
                                             v-if="errors.addTarifForm"
                                             class="mt-2 text-xs text-red-500"
                                         >
-                                            {{
-                                                errors.addTarifForm.categorie_id
-                                            }}
+                                            {{ errors.addTarifForm.categorie }}
                                         </div>
                                     </div>
-
+                                    <!-- tarif_types -->
                                     <div
                                         class="flex w-full flex-col items-center justify-start space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
                                     >
                                         <Listbox
-                                            v-if="newSelectedTarifType"
+                                            v-if="
+                                                addTarifForm.categorie &&
+                                                addTarifForm.categorie
+                                                    .tarif_types
+                                            "
                                             class="w-full max-w-sm"
-                                            v-model="newSelectedTarifType"
+                                            v-model="addTarifForm.tarif_type"
                                         >
                                             <div class="relative mt-1">
                                                 <label
@@ -426,7 +431,8 @@ const onSubmitAddTarifForm = () => {
                                                     <span
                                                         class="block truncate"
                                                         >{{
-                                                            newSelectedTarifType.nom
+                                                            addTarifForm
+                                                                .tarif_type.nom
                                                         }}</span
                                                     >
                                                     <span
@@ -556,13 +562,14 @@ const onSubmitAddTarifForm = () => {
                                     </div>
                                     <template
                                         v-if="
-                                            newSelectedTarifType &&
-                                            newSelectedTarifType.tarif_attributs
-                                                .length > 0
+                                            addTarifForm.tarif_type &&
+                                            addTarifForm.tarif_type
+                                                .tarif_attributs.length > 0
                                         "
                                     >
                                         <div
-                                            v-for="attribut in newSelectedTarifType.tarif_attributs"
+                                            v-for="attribut in addTarifForm
+                                                .tarif_type.tarif_attributs"
                                             :key="attribut"
                                             class="flex w-full items-center space-x-2"
                                         >
@@ -701,6 +708,155 @@ const onSubmitAddTarifForm = () => {
                                             </div>
                                         </div>
                                     </template>
+                                    <!-- liste des produits -->
+                                    <div class="flex flex-col space-y-2">
+                                        <p
+                                            class="text-sm font-medium text-gray-700"
+                                        >
+                                            Ce tarif est valable pour:
+                                        </p>
+
+                                        <label class="flex items-center">
+                                            <input
+                                                type="checkbox"
+                                                name="Tout"
+                                                v-model="checkAll"
+                                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                            />
+                                            <span
+                                                class="ml-2 text-sm text-gray-600"
+                                                >Tout sélectionner</span
+                                            >
+                                        </label>
+
+                                        <div
+                                            v-for="discipline in props.activiteForTarifs"
+                                            :key="discipline.id"
+                                            class="ml-2 md:ml-4"
+                                        >
+                                            <label class="flex items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    :id="discipline.id"
+                                                    :value="discipline.id"
+                                                    :name="
+                                                        discipline.disciplineName
+                                                    "
+                                                    v-model="
+                                                        addTarifForm
+                                                            .disciplines[
+                                                            discipline.id
+                                                        ]
+                                                    "
+                                                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                                />
+
+                                                <span
+                                                    class="ml-2 text-sm text-gray-600"
+                                                    >{{
+                                                        discipline.disciplineName
+                                                    }}</span
+                                                >
+                                            </label>
+                                            <div
+                                                v-for="category in discipline.categories"
+                                                :key="category.id"
+                                                class="ml-4 md:ml-8"
+                                            >
+                                                <label
+                                                    class="flex items-center"
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        :id="category.id"
+                                                        :value="category.id"
+                                                        :name="category.name"
+                                                        v-model="
+                                                            addTarifForm
+                                                                .categories[
+                                                                category.id
+                                                            ]
+                                                        "
+                                                        class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                                    />
+                                                    <span
+                                                        class="ml-2 text-sm text-gray-600"
+                                                        >{{
+                                                            category.name
+                                                        }}</span
+                                                    >
+                                                </label>
+
+                                                <div
+                                                    v-for="activite in category.activites"
+                                                    :key="activite.id"
+                                                    class="ml-6 md:ml-12"
+                                                >
+                                                    <label
+                                                        class="flex items-center"
+                                                    >
+                                                        <input
+                                                            type="checkbox"
+                                                            :id="activite.id"
+                                                            :value="activite.id"
+                                                            :name="
+                                                                activite.titre
+                                                            "
+                                                            v-model="
+                                                                addTarifForm
+                                                                    .activites[
+                                                                    activite.id
+                                                                ]
+                                                            "
+                                                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                                        />
+                                                        <span
+                                                            class="ml-2 text-sm text-gray-600"
+                                                            >{{
+                                                                activite.titre
+                                                            }}</span
+                                                        >
+                                                    </label>
+
+                                                    <div
+                                                        class="ml-8 flex flex-col items-center space-x-0 space-y-3 md:ml-16 md:flex-row md:space-x-8 md:space-y-0"
+                                                    >
+                                                        <label
+                                                            v-for="produit in activite.produits"
+                                                            :key="produit.id"
+                                                            class="flex items-center"
+                                                        >
+                                                            <input
+                                                                type="checkbox"
+                                                                :id="produit.id"
+                                                                :value="
+                                                                    produit.id
+                                                                "
+                                                                :name="
+                                                                    produit.id
+                                                                "
+                                                                v-model="
+                                                                    addTarifForm
+                                                                        .produits[
+                                                                        produit
+                                                                            .id
+                                                                    ]
+                                                                "
+                                                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                                            />
+                                                            <span
+                                                                class="ml-2 text-sm text-gray-600"
+                                                                >Produit n°
+                                                                {{
+                                                                    produit.id
+                                                                }}</span
+                                                            >
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="w-full max-w-sm">
                                         <label
                                             for="amount"
