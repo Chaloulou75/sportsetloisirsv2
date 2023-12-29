@@ -571,7 +571,7 @@ const onSubmitAddTarifForm = () => {
                                             v-for="attribut in addTarifForm
                                                 .tarif_type.tarif_attributs"
                                             :key="attribut"
-                                            class="flex w-full items-center space-x-2"
+                                            class="flex w-full flex-col items-center space-y-2 md:flex-row md:space-x-2 md:space-y-0"
                                         >
                                             <!-- select  -->
                                             <SelectForm
@@ -686,6 +686,7 @@ const onSubmitAddTarifForm = () => {
                                             <div
                                                 v-for="sousattribut in attribut.sous_attributs"
                                                 :key="sousattribut.id"
+                                                class="flex w-full flex-col items-center space-y-2 md:flex-row md:space-x-2 md:space-y-0"
                                             >
                                                 <SelectForm
                                                     :classes="'block '"
@@ -705,6 +706,85 @@ const onSubmitAddTarifForm = () => {
                                                         sousattribut.valeurs
                                                     "
                                                 />
+                                                <!-- input text -->
+                                                <div
+                                                    class="w-full max-w-sm"
+                                                    v-if="
+                                                        sousattribut.type_champ_form ===
+                                                        'text'
+                                                    "
+                                                >
+                                                    <label
+                                                        :for="sousattribut.nom"
+                                                        class="block text-sm font-medium text-gray-700"
+                                                    >
+                                                        {{ sousattribut.nom }}
+                                                    </label>
+                                                    <div
+                                                        class="mt-1 flex rounded-md"
+                                                    >
+                                                        <TextInput
+                                                            type="text"
+                                                            v-model="
+                                                                addTarifForm
+                                                                    .sousattributs[
+                                                                    sousattribut
+                                                                        .id
+                                                                ]
+                                                            "
+                                                            :name="
+                                                                sousattribut.nom
+                                                            "
+                                                            :id="
+                                                                sousattribut.nom
+                                                            "
+                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                            placeholder=""
+                                                            autocomplete="none"
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <!-- number text -->
+                                                <div
+                                                    class="w-full min-w-max"
+                                                    v-if="
+                                                        sousattribut.type_champ_form ===
+                                                        'number'
+                                                    "
+                                                >
+                                                    <label
+                                                        :for="sousattribut.nom"
+                                                        class="block text-sm font-medium text-gray-700"
+                                                    >
+                                                        {{ sousattribut.nom }}
+                                                    </label>
+                                                    <div
+                                                        class="mt-1 flex rounded-md"
+                                                    >
+                                                        <TextInput
+                                                            type="number"
+                                                            min="1"
+                                                            max="59"
+                                                            v-model="
+                                                                addTarifForm
+                                                                    .sousattributs[
+                                                                    sousattribut
+                                                                        .id
+                                                                ]
+                                                            "
+                                                            :name="
+                                                                sousattribut.nom
+                                                            "
+                                                            :id="
+                                                                sousattribut.nom
+                                                            "
+                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                            placeholder=""
+                                                            autocomplete="none"
+                                                        />
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </template>

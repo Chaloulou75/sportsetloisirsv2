@@ -9,6 +9,7 @@ use App\Models\StructureCatTarif;
 use App\Models\LienDisCatTariftype;
 use Illuminate\Http\RedirectResponse;
 use App\Models\LienDisciplineCategorie;
+use App\Models\LienDisCatTartypAttribut;
 
 class StructureCatTarifController extends Controller
 {
@@ -44,9 +45,7 @@ class StructureCatTarifController extends Controller
             'produits' => ['nullable'],
         ]);
 
-        // dd($request->attributs, $request->sousattributs);
-
-        $catTarif = StructureCatTarif::create([
+        $strCatTarif = StructureCatTarif::create([
             'structure_id' => $structure->id,
             'categorie_id' => $request->categorie['id'],
             'dis_cat_tar_typ_id' => $request->tarif_type['id'],
@@ -56,26 +55,45 @@ class StructureCatTarifController extends Controller
         ]);
 
         foreach($request->attributs as $key => $valeur) {
-            //check if $valeur is string or Array
             if(is_string($valeur)) {
-                $attribut = $catTarif->attributs()->create([
+                $strCatTarifAttribut = $strCatTarif->attributs()->create([
                    'cat_tar_att_id' => $key,
                    'valeur' => $valeur
                 ]);
             } else {
-                $attribut = $catTarif->attributs()->create([
+                $strCatTarifAttribut = $strCatTarif->attributs()->create([
                     'cat_tar_att_id' => $key,
                     'dis_cat_tar_att_valeur_id' => $valeur['id'],
                     'valeur' => $valeur['valeur']
                 ]);
             }
-            // if($request->sousattributs) {
-            //     dd($request->sousattributs)
-            //     //$attribut->sousattributs()->create([]);
+            if($request->sousattributs) {
 
-            // }
+                $tarAttribut = LienDisCatTartypAttribut::withWhereHas('sous_attributs')->find($strCatTarifAttribut->cat_tar_att_id);
+
+                if($tarAttribut) {
+                    foreach($tarAttribut->sous_attributs as $sousAttribut) {
+                        foreach($request->sousattributs as $sousAttId => $sousAttributValeur) {
+                            if($sousAttribut->id === $sousAttId) {
+                                if(is_string($sousAttributValeur)) {
+                                    $strCatTarifAttribut->sous_attributs()->create([
+                                        'sousattribut_id' => $sousAttId,
+                                        'valeur' => $sousAttributValeur
+                                    ]);
+                                } else {
+                                    $strCatTarifAttribut->sous_attributs()->create([
+                                        'sousattribut_id' => $sousAttId,
+                                        'ss_att_valeur_id' => $sousAttributValeur['id'],
+                                        'valeur' => $sousAttributValeur['valeur']
+                                    ]);
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
         }
-
 
         return to_route('structures.disciplines.index', $structure)->with('success', "Le tarif a bien été enregistré pour vos produits");
 

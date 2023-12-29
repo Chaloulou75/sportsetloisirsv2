@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class StructureCatTarAttribut extends Model
 {
@@ -22,5 +23,10 @@ class StructureCatTarAttribut extends Model
     public function cat_tarif(): BelongsTo
     {
         return $this->belongsTo(StructureCatTarif::class, 'str_cat_tar_id');
+    }
+
+    public function sous_attributs(): HasMany
+    {
+        return $this->hasMany(StructureCatTarAttSousAttr::class, 'str_cat_tar_att_id');
     }
 }
