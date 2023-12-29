@@ -20,7 +20,6 @@ class StructureTarifController extends Controller
      */
     public function store(Request $request, Structure $structure): RedirectResponse
     {
-        // dd($request->all(), $structure);
         $request->validate([
             'structure_id' => ['nullable', Rule::exists(Structure::class, 'id')],
             'titre' => ['nullable'],
@@ -46,13 +45,13 @@ class StructureTarifController extends Controller
         ]);
 
         foreach($request->produits as $key => $value) {
-            $structureProduit = StructureProduit::where('id', $key)->first();
+            $structureProduit = StructureProduit::find($key);
             if($value === true) {
                 $structureTarif->produits()->attach($structureProduit->id);
             }
         }
 
-        $tarifType = ListeTarifType::with('tariftypeattributs')->where('id', $structureTarif->type_id)->first();
+        $tarifType = ListeTarifType::with('tariftypeattributs')->find($structureTarif->type_id);
 
         foreach($request->attributs as $key => $valeur) {
             foreach($tarifType->tariftypeattributs as $tariftypeattribut) {
@@ -70,28 +69,6 @@ class StructureTarifController extends Controller
                 }
             }
         }
-
-        return to_route('structures.disciplines.index', $structure)->with('success', "Le tarif a bien été enregistré pour vos produits");
-
-    }
-
-    public function storewithattributs(Request $request, Structure $structure): RedirectResponse
-    {
-        // dd($request->all());
-
-
-        $request->validate([
-            'categorie.id' => ['required', Rule::exists(LienDisciplineCategorie::class, 'id')],
-            'tarif_type.id' => ['required', Rule::exists(LienDisCatTariftype::class, 'id')],
-            'titre' => ['nullable', 'string', 'min:3'],
-            'description' => ['nullable', 'string', 'min:3'],
-            'attributs' => ['nullable'],
-            'sousattributs' => ['nullable'],
-            'amount' => ['required', 'numeric'],
-            'produits' => ['nullable'],
-        ]);
-        dd($request->all());
-
 
         return to_route('structures.disciplines.index', $structure)->with('success', "Le tarif a bien été enregistré pour vos produits");
 
@@ -200,7 +177,7 @@ class StructureTarifController extends Controller
     {
         $produit = StructureProduit::findOrFail($produit);
 
-        $originalTarif = StructureTarif::with('structureTarifTypeInfos')->where('id', $tarif)->where('structure_id', $structure->id)->firstOrFail();
+        $originalTarif = StructureTarif::with('structureTarifTypeInfos')->findOrFail($tarif);
 
         $originalInfos = StructureTarifTypeInfo::where('tarif_id', $originalTarif->id)->get();
 

@@ -708,6 +708,37 @@ const onSubmitAddTarifForm = () => {
                                             </div>
                                         </div>
                                     </template>
+
+                                    <div class="w-full max-w-sm">
+                                        <label
+                                            for="amount"
+                                            class="block text-sm font-medium text-gray-700"
+                                        >
+                                            Montant
+                                        </label>
+                                        <div
+                                            class="mt-1 flex items-center rounded-md"
+                                        >
+                                            <input
+                                                v-model="addTarifForm.amount"
+                                                type="number"
+                                                name="amount"
+                                                id="amount"
+                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                placeholder=""
+                                                autocomplete="none"
+                                            />
+                                            <CurrencyEuroIcon
+                                                class="ml-2 h-6 w-6"
+                                            />
+                                        </div>
+                                        <div
+                                            v-if="errors.addTarifForm"
+                                            class="mt-2 text-xs text-red-500"
+                                        >
+                                            {{ errors.addTarifForm.amount }}
+                                        </div>
+                                    </div>
                                     <!-- liste des produits -->
                                     <div class="flex flex-col space-y-2">
                                         <p
@@ -855,36 +886,6 @@ const onSubmitAddTarifForm = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="w-full max-w-sm">
-                                        <label
-                                            for="amount"
-                                            class="block text-sm font-medium text-gray-700"
-                                        >
-                                            Montant
-                                        </label>
-                                        <div
-                                            class="mt-1 flex items-center rounded-md"
-                                        >
-                                            <input
-                                                v-model="addTarifForm.amount"
-                                                type="number"
-                                                name="amount"
-                                                id="amount"
-                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                placeholder=""
-                                                autocomplete="none"
-                                            />
-                                            <CurrencyEuroIcon
-                                                class="ml-2 h-6 w-6"
-                                            />
-                                        </div>
-                                        <div
-                                            v-if="errors.addTarifForm"
-                                            class="mt-2 text-xs text-red-500"
-                                        >
-                                            {{ errors.addTarifForm.amount }}
                                         </div>
                                     </div>
                                 </div>
