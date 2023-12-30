@@ -287,13 +287,14 @@ class StructureDisciplineController extends Controller
         $tarifTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();
 
         $activiteForTarifs = StructureActivite::with([
-            'structure:id,name,slug',
-            'categorie:id,nom_categorie_pro',
-            'discipline:id,name',
-            'produits',
-            'produits.tarifs',
-            'produits.tarifs.structureTarifTypeInfos',
-            'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut'])
+                'structure:id,name,slug',
+                'categorie:id,nom_categorie_pro',
+                'discipline:id,name',
+                'produits',
+                'produits.tarifs',
+                'produits.tarifs.structureTarifTypeInfos',
+                'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut'
+            ])
             ->where('structure_id', $structure->id)
             ->latest()
             ->get()

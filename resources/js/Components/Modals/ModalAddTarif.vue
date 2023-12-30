@@ -70,7 +70,7 @@ const newSelectedTarifType = ref(
 
 const addTarifForm = useForm({
     categorie: ref(newSelectedCategorie.value),
-    tarif_type: ref(null),
+    tarif_type: null,
     titre: null,
     description: null,
     attributs: {},
@@ -666,8 +666,6 @@ const onSubmitAddTarifForm = () => {
                                                 >
                                                     <TextInput
                                                         type="number"
-                                                        min="1"
-                                                        max="59"
                                                         v-model="
                                                             addTarifForm
                                                                 .attributs[
@@ -764,8 +762,6 @@ const onSubmitAddTarifForm = () => {
                                                     >
                                                         <TextInput
                                                             type="number"
-                                                            min="1"
-                                                            max="59"
                                                             v-model="
                                                                 addTarifForm
                                                                     .sousattributs[
