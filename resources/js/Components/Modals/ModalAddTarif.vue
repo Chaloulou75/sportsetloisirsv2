@@ -818,7 +818,7 @@ const onSubmitAddTarifForm = () => {
                                     <!-- liste des produits -->
                                     <div class="flex flex-col space-y-2">
                                         <p
-                                            class="text-sm font-medium text-gray-700"
+                                            class="text-base font-medium text-gray-700"
                                         >
                                             Ce tarif est valable pour:
                                         </p>

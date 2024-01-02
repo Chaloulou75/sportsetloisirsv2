@@ -21,6 +21,7 @@ use Illuminate\Http\RedirectResponse;
 use App\Models\LienDisciplineCategorie;
 use App\Models\StructureProduitCritere;
 use App\Models\LienDisciplineCategorieCritere;
+use App\Models\StructureCatTarif;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class StructureDisciplineController extends Controller
@@ -270,6 +271,8 @@ class StructureDisciplineController extends Controller
             ->latest()
             ->get();
 
+        $strCatTarifs = StructureCatTarif::withRelations()->with('produits')->where('structure_id', $structure->id)->get();
+        // dd($strCatTarifs);
 
         $uniqueCriteresInProducts = $structureActivites->flatMap(function ($activite) {
             return $activite->produits->flatMap(function ($produit) {
@@ -333,6 +336,15 @@ class StructureDisciplineController extends Controller
                                                         'tarifTypeAttribut' => $infoItem->tarifTypeAttribut
                                                     ];
                                                 }),
+                                            ];
+                                        }),
+                                        'catTarifs' => $produitItem->catTarifs->map(function ($catTarifItem) {
+                                            return [
+                                                'id' => $catTarifItem->id,
+                                                'typeId' => $catTarifItem->dis_cat_tar_typ_id,
+                                                'titre' => $catTarifItem->titre,
+                                                'description' => $catTarifItem->description,
+                                                'amount' => $catTarifItem->amount,
                                             ];
                                         }),
                                     ];

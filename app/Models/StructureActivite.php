@@ -89,6 +89,10 @@ class StructureActivite extends Model
             'produits.tarifs.tarifType',
             'produits.tarifs.structureTarifTypeInfos',
             'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut',
+            'produits.catTarifs',
+            'produits.catTarifs.attributs',
+            'produits.catTarifs.attributs.sous_attributs',
+            'produits.catTarifs.attributs.sous_attributs.sous_attribut_valeur',
             'produits.plannings',
         ]);
     }

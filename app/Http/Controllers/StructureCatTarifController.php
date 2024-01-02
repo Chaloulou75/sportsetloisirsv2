@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Structure;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Models\StructureProduit;
 use App\Models\StructureCatTarif;
 use App\Models\LienDisCatTariftype;
 use Illuminate\Http\RedirectResponse;
@@ -92,6 +93,14 @@ class StructureCatTarifController extends Controller
                     }
                 }
 
+            }
+        }
+        if($request->produits) {
+            foreach($request->produits as $key => $value) {
+                $structureProduit = StructureProduit::find($key);
+                if($value === true) {
+                    $strCatTarif->produits()->attach($structureProduit->id);
+                }
             }
         }
 

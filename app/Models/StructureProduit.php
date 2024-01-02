@@ -68,6 +68,11 @@ class StructureProduit extends Model
         return $this->belongsToMany(StructureTarif::class, 'produit_tarif', 'produit_id', 'tarif_id');
     }
 
+    public function catTarifs(): BelongsToMany
+    {
+        return $this->belongsToMany(StructureCatTarif::class, 'produit_cat_tarif', 'produit_id', 'cat_tarif_id');
+    }
+
     public function plannings(): HasMany
     {
         return $this->hasMany(StructurePlanning::class, 'produit_id');
@@ -96,6 +101,10 @@ class StructureProduit extends Model
             'tarifs',
             'tarifs.tarifType',
             'tarifs.structureTarifTypeInfos',
+            'catTarifs',
+            'catTarifs.attributs',
+            'catTarifs.attributs.sous_attributs',
+            'catTarifs.attributs.sous_attributs.sous_attribut_valeur',
             'plannings',
         ]);
     }

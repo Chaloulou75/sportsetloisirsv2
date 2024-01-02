@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class StructureCatTarif extends Model
 {
@@ -38,5 +40,19 @@ class StructureCatTarif extends Model
     public function attributs(): HasMany
     {
         return $this->hasMany(StructureCatTarAttribut::class, 'str_cat_tar_id');
+    }
+
+    public function produits(): BelongsToMany
+    {
+        return $this->belongsToMany(StructureProduit::class, 'produit_cat_tarif', 'cat_tarif_id', 'produit_id');
+    }
+
+    public function scopeWithRelations(Builder $query): void
+    {
+        $query->with([
+            'attributs',
+            'attributs.sous_attributs',
+            'attributs.sous_attributs.sous_attribut_valeur',
+        ]);
     }
 }
