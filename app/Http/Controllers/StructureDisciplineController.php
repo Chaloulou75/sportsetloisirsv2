@@ -59,21 +59,7 @@ class StructureDisciplineController extends Controller
         })->where('confirmed', true)
             ->count();
 
-        $activites = StructureActivite::with([
-                    'structure:id,name,slug,presentation_courte',
-                    'categorie:id,nom_categorie_pro',
-                    'discipline:id,name,slug',
-                    'plannings',
-                    'produits',
-                    'produits.adresse',
-                    'produits.criteres',
-                    'produits.criteres.critere',
-                    'produits.horaire',
-                    'produits.tarifs',
-                    'produits.tarifs.structureTarifTypeInfos',
-                    'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut',
-                    'produits.tarifs.tarifType'
-                ])
+        $activites = StructureActivite::withRelations()
                     ->where('structure_id', $structure->id)
                     ->latest()
                     ->get();

@@ -13,8 +13,8 @@ import {
 const props = defineProps({
     errors: Object,
     structure: Object,
-    categorie: Object,
     discipline: Object,
+    categorie: Object,
     structureActivites: Object,
     uniqueCriteresInProducts: Object,
     criteres: Object,
@@ -80,7 +80,7 @@ const openAddActiviteModal = () => {
 };
 
 const showAddTarifModal = ref(false);
-const openAddTarifModal = (structure) => {
+const openAddTarifModal = () => {
     showAddTarifModal.value = true;
 };
 
@@ -232,7 +232,7 @@ const latestAdresseId = computed(() => {
                         <button
                             v-if="displayTarifs"
                             type="button"
-                            @click="openAddTarifModal(structure)"
+                            @click="openAddTarifModal()"
                             class="w-full items-center justify-between bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
                         >
                             <PlusIcon class="h-6 w-6" />
@@ -289,9 +289,10 @@ const latestAdresseId = computed(() => {
             <ModalAddTarif
                 :errors="errors"
                 :structure="structure"
+                :discipline="discipline"
                 :tarif-types="tarifTypes"
                 :categorie="categorie"
-                :all-categories="allCategories"
+                :all-categories="categoriesListByDiscipline"
                 :activiteForTarifs="activiteForTarifs"
                 :structureActivites="structureActivites"
                 :show="showAddTarifModal"

@@ -36,7 +36,7 @@ class StructureCatTarifController extends Controller
     public function store(Request $request, Structure $structure): RedirectResponse
     {
         $request->validate([
-            'categorie.id' => ['required', Rule::exists(LienDisciplineCategorie::class, 'id')],
+            'categorie_id' => ['required', Rule::exists(LienDisciplineCategorie::class, 'id')],
             'tarif_type.id' => ['required', Rule::exists(LienDisCatTariftype::class, 'id')],
             'titre' => ['nullable', 'string', 'min:3'],
             'description' => ['nullable', 'string', 'min:3'],
@@ -48,7 +48,7 @@ class StructureCatTarifController extends Controller
 
         $strCatTarif = StructureCatTarif::create([
             'structure_id' => $structure->id,
-            'categorie_id' => $request->categorie['id'],
+            'categorie_id' => $request->categorie_id,
             'dis_cat_tar_typ_id' => $request->tarif_type['id'],
             'titre' => $request->titre,
             'description' => $request->description,

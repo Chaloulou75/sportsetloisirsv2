@@ -60,34 +60,36 @@ class StructureCategorieController extends Controller
         ->first();
 
         $discipline = ListDiscipline::where('slug', $discipline)->first();
+
         $categorie = LienDisciplineCategorie::with([
             'tarif_types',
             'tarif_types.tarif_attributs.sous_attributs.valeurs',
             'tarif_types.tarif_attributs.valeurs'
         ])->findOrFail($categorie);
 
-        $allCategories = LienDisciplineCategorie::with([
+        $categoriesListByDiscipline = LienDisciplineCategorie::with([
             'tarif_types',
             'tarif_types.tarif_attributs.sous_attributs.valeurs',
             'tarif_types.tarif_attributs.valeurs'
-        ])
-        ->where('discipline_id', $discipline->id)
-        ->get();
-
-        $categoriesListByDiscipline = LienDisciplineCategorie::whereHas('structures_activites', function (Builder $query) use ($structure) {
+        ])->whereHas('structures_activites', function (Builder $query) use ($structure) {
             $query->where('structure_id', $structure->id);
         })->where('discipline_id', $discipline->id)->get();
 
-        $categoriesWithoutStructures = LienDisciplineCategorie::whereDoesntHave('structures_activites', function (Builder $query) use ($structure) {
+        $categoriesWithoutStructures = LienDisciplineCategorie::with([
+            'tarif_types',
+            'tarif_types.tarif_attributs.sous_attributs.valeurs',
+            'tarif_types.tarif_attributs.valeurs'
+        ])->whereDoesntHave('structures_activites', function (Builder $query) use ($structure) {
             $query->where('structure_id', $structure->id);
         })->where('discipline_id', $discipline->id)->get();
 
-        $structureActivites = StructureActivite::withRelations()
+        $allCategories = $categoriesListByDiscipline->merge($categoriesWithoutStructures);
+
+        $structureActivites = $structure->activites()->withRelations()
             ->with([
                 'produits.criteres.critere_valeur.sous_criteres.sous_criteres_valeurs',
                 'produits.criteres.sous_criteres.sous_critere_valeur'
             ])
-            ->where('structure_id', $structure->id)
             ->where('discipline_id', $discipline->id)
             ->where('categorie_id', $categorie->id)
             ->latest()

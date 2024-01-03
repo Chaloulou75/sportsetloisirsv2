@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, watch } from "vue";
+import { ref, reactive, watch, onMounted } from "vue";
 import { router, useForm } from "@inertiajs/vue3";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
@@ -28,12 +28,13 @@ const emit = defineEmits(["close"]);
 const props = defineProps({
     errors: Object,
     structure: Object,
-    show: Boolean,
+    discipline: Object,
+    categorie: Object,
+    allCategories: Object,
     tarifTypes: Object,
     activiteForTarifs: Object,
     structureActivites: Object,
-    allCategories: Object,
-    categorie: Object,
+    show: Boolean,
 });
 
 const uniteDurees = reactive([
@@ -61,41 +62,33 @@ const formAddTarif = reactive({
     uniteDuree: ref(selectedUniteeDuree.value),
 });
 
-const newSelectedCategorie = ref(props.categorie ? props.categorie : null);
-const newSelectedTarifType = ref(
-    newSelectedCategorie.value
-        ? newSelectedCategorie.value.tarif_types[0]
-        : null
-);
+const newSelectedCategorieId = ref(props.categorie ? props.categorie.id : null);
+const newCategorie = ref(null);
 
 const addTarifForm = useForm({
-    categorie: ref(newSelectedCategorie.value),
+    categorie_id: null,
     tarif_type: null,
     titre: null,
     description: null,
     attributs: {},
     sousattributs: {},
     amount: null,
-    disciplines: ref({}),
-    categories: ref({}),
-    activites: ref({}),
-    produits: ref({}),
+    disciplines: {},
+    categories: {},
+    activites: {},
+    produits: {},
 });
 
 watch(
-    () => addTarifForm.categorie,
-    (newCategorie) => {
-        newSelectedCategorie.value = props.allCategories.find(
-            (categorie) => categorie === newCategorie
+    () => addTarifForm.categorie_id,
+    (newCategorieId) => {
+        newCategorie.value = props.allCategories.find(
+            (categorie) => categorie.id === newCategorieId
         );
-
-        if (
-            newSelectedCategorie.value &&
-            newSelectedCategorie.value.tarif_types.length > 0
-        ) {
-            addTarifForm.tarif_type = newSelectedCategorie.value.tarif_types[0];
+        if (newCategorie.value) {
+            addTarifForm.tarif_type = newCategorie.value.tarif_types[0];
         } else {
-            newSelectedTarifType.value = null;
+            addTarifForm.tarif_type = null;
         }
 
         addTarifForm.attributs = {};
@@ -297,6 +290,10 @@ const onSubmitAddTarifForm = () => {
         }
     );
 };
+
+onMounted(() => {
+    addTarifForm.categorie_id = newSelectedCategorieId.value;
+});
 </script>
 <template>
     <TransitionRoot appear :show="show" as="template">
@@ -336,22 +333,35 @@ const onSubmitAddTarifForm = () => {
                                 <h3
                                     class="text-lg font-medium leading-6 text-gray-800"
                                 >
-                                    Ajouter un tarif aux produits de la
-                                    catégorie
+                                    Ajouter un tarif aux produits
                                     <span
-                                        v-if="newSelectedCategorie"
+                                        v-if="newCategorie"
                                         class="text-indigo-700"
                                     >
+                                        <span class="text-gray-800"
+                                            >de la catégorie</span
+                                        >
                                         {{
-                                            newSelectedCategorie.nom_categorie_client
+                                            newCategorie.nom_categorie_client
                                         }}</span
                                     ><span
                                         v-else-if="categorie"
                                         class="text-indigo-700"
                                     >
+                                        <span class="text-gray-800"
+                                            >de la catégorie</span
+                                        >
                                         {{
                                             categorie.nom_categorie_client
-                                        }}</span
+                                        }} </span
+                                    ><span
+                                        v-if="discipline"
+                                        class="text-indigo-700"
+                                    >
+                                        <span class="text-gray-800">
+                                            pour la discipline</span
+                                        >
+                                        {{ discipline.name }}</span
                                     >
                                 </h3>
                                 <button type="button">
@@ -384,13 +394,15 @@ const onSubmitAddTarifForm = () => {
                                             <select
                                                 name="categorie"
                                                 id="categorie"
-                                                v-model="addTarifForm.categorie"
+                                                v-model="
+                                                    addTarifForm.categorie_id
+                                                "
                                                 class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                             >
                                                 <option
                                                     v-for="categorie in allCategories"
                                                     :key="categorie.id"
-                                                    :value="categorie"
+                                                    :value="categorie.id"
                                                 >
                                                     {{
                                                         categorie.nom_categorie_pro
@@ -411,9 +423,9 @@ const onSubmitAddTarifForm = () => {
                                     >
                                         <Listbox
                                             v-if="
-                                                addTarifForm.categorie &&
-                                                addTarifForm.categorie
-                                                    .tarif_types
+                                                addTarifForm.categorie_id &&
+                                                newCategorie.tarif_types
+                                                    .length > 0
                                             "
                                             class="w-full max-w-sm"
                                             v-model="addTarifForm.tarif_type"
@@ -458,7 +470,7 @@ const onSubmitAddTarifForm = () => {
                                                                 active,
                                                                 selected,
                                                             }"
-                                                            v-for="tarifType in newSelectedCategorie.tarif_types"
+                                                            v-for="tarifType in newCategorie.tarif_types"
                                                             :key="tarifType.id"
                                                             :value="tarifType"
                                                             as="template"
@@ -1320,7 +1332,7 @@ const onSubmitAddTarifForm = () => {
                                         <!-- liste des produits -->
                                         <div class="flex flex-col space-y-2">
                                             <p
-                                                class="text-sm font-medium text-gray-700"
+                                                class="text-base font-medium text-gray-700"
                                             >
                                                 Ce tarif est valable pour:
                                             </p>
