@@ -62,10 +62,12 @@ const formAddTarif = reactive({
     uniteDuree: ref(selectedUniteeDuree.value),
 });
 
+const filteredCategories = ref(props.allCategories ?? null);
 const newSelectedCategorieId = ref(props.categorie ? props.categorie.id : null);
 const newCategorie = ref(null);
 
 const addTarifForm = useForm({
+    discipline_id: null,
     categorie_id: null,
     tarif_type: null,
     titre: null,
@@ -78,6 +80,20 @@ const addTarifForm = useForm({
     activites: {},
     produits: {},
 });
+
+watch(
+    () => addTarifForm.discipline_id,
+    (newDisciplineId) => {
+        filteredCategories.value = props.allCategories.filter(
+            (category) => category.discipline_id === newDisciplineId
+        );
+        if (filteredCategories.value.length > 0) {
+            addTarifForm.categorie_id = filteredCategories.value[0].id;
+        } else {
+            addTarifForm.categorie_id = null;
+        }
+    }
+);
 
 watch(
     () => addTarifForm.categorie_id,
@@ -377,6 +393,40 @@ onMounted(() => {
                                 autocomplete="off"
                             >
                                 <div class="flex flex-col space-y-3">
+                                    <!-- disciplines -->
+                                    <div
+                                        v-if="!discipline"
+                                        class="flex w-full flex-col items-start justify-start space-y-2"
+                                    >
+                                        <label
+                                            for="discipline"
+                                            class="block text-sm font-medium text-gray-700"
+                                        >
+                                            Discipline
+                                        </label>
+                                        <div
+                                            class="mt-1 flex w-full rounded-md md:w-1/2"
+                                        >
+                                            <select
+                                                name="discipline"
+                                                id="discipline"
+                                                v-model="
+                                                    addTarifForm.discipline_id
+                                                "
+                                                class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                            >
+                                                <option
+                                                    v-for="discipline in props.activiteForTarifs"
+                                                    :key="discipline.id"
+                                                    :value="discipline.id"
+                                                >
+                                                    {{
+                                                        discipline.disciplineName
+                                                    }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
                                     <!-- categories -->
                                     <div
                                         v-if="allCategories"
@@ -400,7 +450,7 @@ onMounted(() => {
                                                 class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                             >
                                                 <option
-                                                    v-for="categorie in allCategories"
+                                                    v-for="categorie in filteredCategories"
                                                     :key="categorie.id"
                                                     :value="categorie.id"
                                                 >

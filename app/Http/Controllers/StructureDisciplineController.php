@@ -91,6 +91,15 @@ class StructureDisciplineController extends Controller
             ];
         });
 
+        $categoriesListByDiscipline = LienDisciplineCategorie::with([
+                    'tarif_types',
+                    'tarif_types.tarif_attributs.sous_attributs.valeurs',
+                    'tarif_types.tarif_attributs.valeurs'
+                ])->whereHas('structures_activites', function (Builder $query) use ($structure) {
+                    $query->where('structure_id', $structure->id);
+                })->get();
+
+
         $activiteForTarifs = StructureActivite::with([
                     'structure:id,name,slug',
                     'categorie:id,nom_categorie_pro',
@@ -167,6 +176,7 @@ class StructureDisciplineController extends Controller
             'activites' => $activites,
             'tarifTypes' => $tarifTypes,
             'actByDiscAndCategorie' => $actByDiscAndCategorie,
+            'categoriesListByDiscipline' => $categoriesListByDiscipline,
             'activiteForTarifs' => $activiteForTarifs,
             'allReservationsCount' => $allReservationsCount,
             'confirmedReservationsCount' => $confirmedReservationsCount,

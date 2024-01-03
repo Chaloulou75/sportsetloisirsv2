@@ -41,6 +41,7 @@ const props = defineProps({
     errors: Object,
     activites: Object,
     tarifTypes: Object,
+    categoriesListByDiscipline: Object,
     activiteForTarifs: Object,
     actByDiscAndCategorie: Object,
     structure: Object,
@@ -374,7 +375,13 @@ const openAddTarifModal = (structure) => {
                             </section>
                         </div>
                     </template>
-
+                    <template v-if="displayPlanning">
+                        <PlanningDisplay
+                            :errors="errors"
+                            :structure="structure"
+                            :structureActivites="activites"
+                        />
+                    </template>
                     <template v-if="displayTarifs">
                         <TarifDisplay
                             :errors="errors"
@@ -382,14 +389,6 @@ const openAddTarifModal = (structure) => {
                             :tarif-types="tarifTypes"
                             :structureActivites="activites"
                             :activiteForTarifs="activiteForTarifs"
-                        />
-                    </template>
-
-                    <template v-if="displayPlanning">
-                        <PlanningDisplay
-                            :errors="errors"
-                            :structure="structure"
-                            :structureActivites="activites"
                         />
                     </template>
                 </div>
@@ -413,6 +412,7 @@ const openAddTarifModal = (structure) => {
                 :errors="errors"
                 :structure="structure"
                 :tarif-types="tarifTypes"
+                :all-categories="categoriesListByDiscipline"
                 :activiteForTarifs="activiteForTarifs"
                 :structureActivites="activites"
                 :show="showAddTarifModal"
