@@ -22,6 +22,7 @@ const props = defineProps({
     allCategories: Object,
     tarifTypes: Object,
     activiteForTarifs: Object,
+    strCatTarifs: Object,
     confirmedReservationsCount: Number,
     allReservationsCount: Number,
     pendingReservationsCount: Number,
@@ -249,6 +250,7 @@ const latestAdresseId = computed(() => {
                         <TarifDisplay
                             :errors="errors"
                             :structure="structure"
+                            :str-cat-tarifs="strCatTarifs"
                             :tarif-types="tarifTypes"
                             :structureActivites="structureActivites"
                             :activiteForTarifs="activiteForTarifs"

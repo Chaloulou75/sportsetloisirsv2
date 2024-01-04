@@ -50,8 +50,13 @@ class StructureCatTarif extends Model
     public function scopeWithRelations(Builder $query): void
     {
         $query->with([
+            'categorie',
+            'categorie.discipline:id,name,slug',
+            'cat_tarif_type',
             'attributs',
+            'attributs.tarif_attribut',
             'attributs.sous_attributs',
+            'attributs.sous_attributs.sous_attribut',
             'attributs.sous_attributs.sous_attribut_valeur',
         ]);
     }

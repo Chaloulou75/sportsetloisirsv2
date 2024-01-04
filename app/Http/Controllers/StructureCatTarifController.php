@@ -135,8 +135,9 @@ class StructureCatTarifController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(StructureCatTarif $structureCatTarif)
+    public function destroy(Structure $structure, StructureCatTarif $tarif)
     {
-        //
+        $tarif->delete();
+        return to_route('structures.disciplines.index', $structure)->with('success', "Le tarif a bien été supprimé");
     }
 }

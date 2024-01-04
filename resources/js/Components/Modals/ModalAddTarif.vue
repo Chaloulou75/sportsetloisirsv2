@@ -281,7 +281,7 @@ watch(
 
 const onSubmit = () => {
     addTarifForm.post(
-        route("structures.tarifs.storewithattributs", {
+        route("structures.cat.tarifs.store", {
             structure: props.structure,
         }),
         {
@@ -732,7 +732,10 @@ onMounted(() => {
                                             </div>
                                         </Listbox>
                                         <!-- titre -->
-                                        <div class="w-full max-w-sm">
+                                        <div
+                                            v-if="addTarifForm.tarif_type"
+                                            class="w-full max-w-sm"
+                                        >
                                             <label
                                                 for="titre"
                                                 class="block text-sm font-medium text-gray-700"
@@ -760,7 +763,10 @@ onMounted(() => {
                                     </div>
 
                                     <!-- description -->
-                                    <div class="w-full max-w-3xl">
+                                    <div
+                                        v-if="addTarifForm.tarif_type"
+                                        class="w-full max-w-3xl"
+                                    >
                                         <label
                                             for="description"
                                             class="block text-sm font-medium text-gray-700"
@@ -1017,7 +1023,10 @@ onMounted(() => {
                                         </div>
                                     </template>
 
-                                    <div class="w-full max-w-sm">
+                                    <div
+                                        v-if="addTarifForm.tarif_type"
+                                        class="w-full max-w-sm"
+                                    >
                                         <label
                                             for="amount"
                                             class="block text-sm font-medium text-gray-700"
@@ -1048,7 +1057,12 @@ onMounted(() => {
                                         </div>
                                     </div>
                                     <!-- liste des produits -->
-                                    <template v-if="addTarifForm.categorie_id">
+                                    <template
+                                        v-if="
+                                            addTarifForm.categorie_id &&
+                                            addTarifForm.tarif_type
+                                        "
+                                    >
                                         <div class="flex flex-col space-y-2">
                                             <p
                                                 class="text-base font-medium text-gray-700"
@@ -1253,6 +1267,7 @@ onMounted(() => {
                                         Annuler
                                     </button>
                                     <button
+                                        v-if="addTarifForm.tarif_type"
                                         :disabled="addTarifForm.processing"
                                         type="submit"
                                         class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"

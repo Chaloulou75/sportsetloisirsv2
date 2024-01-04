@@ -43,6 +43,7 @@ const props = defineProps({
     tarifTypes: Object,
     categoriesListByDiscipline: Object,
     activiteForTarifs: Object,
+    strCatTarifs: Object,
     actByDiscAndCategorie: Object,
     structure: Object,
     categories: Object,
@@ -386,6 +387,7 @@ const openAddTarifModal = (structure) => {
                         <TarifDisplay
                             :errors="errors"
                             :structure="structure"
+                            :str-cat-tarifs="strCatTarifs"
                             :tarif-types="tarifTypes"
                             :structureActivites="activites"
                             :activiteForTarifs="activiteForTarifs"

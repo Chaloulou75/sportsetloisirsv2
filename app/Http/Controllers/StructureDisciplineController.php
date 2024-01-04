@@ -162,6 +162,8 @@ class StructureDisciplineController extends Controller
                         ];
                     });
 
+        $strCatTarifs = StructureCatTarif::withRelations()->with('produits')->where('structure_id', $structure->id)->get();
+
         $categories = Categorie::with('disciplines')->select(['id', 'nom', 'ico'])->get();
 
         $dejaUsedDisciplines = $structure->disciplines->unique()->pluck('discipline_id');
@@ -178,6 +180,7 @@ class StructureDisciplineController extends Controller
             'actByDiscAndCategorie' => $actByDiscAndCategorie,
             'categoriesListByDiscipline' => $categoriesListByDiscipline,
             'activiteForTarifs' => $activiteForTarifs,
+            'strCatTarifs' => $strCatTarifs,
             'allReservationsCount' => $allReservationsCount,
             'confirmedReservationsCount' => $confirmedReservationsCount,
             'pendingReservationsCount' => $pendingReservationsCount,
@@ -267,8 +270,13 @@ class StructureDisciplineController extends Controller
             ->latest()
             ->get();
 
-        $strCatTarifs = StructureCatTarif::withRelations()->with('produits')->where('structure_id', $structure->id)->get();
-        // dd($strCatTarifs);
+        $strCatTarifs = StructureCatTarif::withRelations()
+        ->with('produits')
+        ->where('structure_id', $structure->id)
+        ->whereHas('categorie', function ($query) use ($discipline) {
+            $query->where('discipline_id', $discipline->id);
+        })
+        ->get();
 
         $uniqueCriteresInProducts = $structureActivites->flatMap(function ($activite) {
             return $activite->produits->flatMap(function ($produit) {
@@ -368,6 +376,7 @@ class StructureDisciplineController extends Controller
             'allCategories' => $allCategories,
             'tarifTypes' => $tarifTypes,
             'activiteForTarifs' => $activiteForTarifs,
+            'strCatTarifs' => $strCatTarifs,
             'allReservationsCount' => $allReservationsCount,
             'confirmedReservationsCount' => $confirmedReservationsCount,
             'pendingReservationsCount' => $pendingReservationsCount,

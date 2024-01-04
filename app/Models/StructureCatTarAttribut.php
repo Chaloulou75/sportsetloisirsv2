@@ -25,6 +25,11 @@ class StructureCatTarAttribut extends Model
         return $this->belongsTo(StructureCatTarif::class, 'str_cat_tar_id');
     }
 
+    public function tarif_attribut(): BelongsTo
+    {
+        return $this->belongsTo(LienDisCatTartypAttribut::class, 'cat_tar_att_id');
+    }
+
     public function sous_attributs(): HasMany
     {
         return $this->hasMany(StructureCatTarAttSousAttr::class, 'str_cat_tar_att_id');

@@ -114,12 +114,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/structures/{structure:slug}/tarifs/{tarif:id}/produits/{produit:id}/duplicate', [StructureTarifController::class, 'duplicate'])->name('tarifs.duplicate');
 
+    // First version for tarifs
     Route::post('structures/{structure:slug}/tarifs', [StructureTarifController::class, 'store'])->name('structures.tarifs.store');
-    Route::post('structures/{structure:slug}/tarifswithattributs', [StructureCatTarifController::class, 'store'])->name('structures.tarifs.storewithattributs');
-
     Route::put('structures/{structure:slug}/tarifs/{tarif}', [StructureTarifController::class, 'update'])->name('structures.tarifs.update');
     Route::delete('/structures/{structure:slug}/tarifs/{tarif:id}/produits/{produit:id}', [StructureTarifController::class, 'destroy'])->name('tarifs.destroy');
     Route::delete('/structures/{structure:slug}/tarifs/{tarif:id}', [StructureTarifController::class, 'destroyTarif'])->name('tarifs.destroyTarif');
+
+    // Second version for tarifs
+    Route::post('structures/{structure:slug}/tarifswithattributs', [StructureCatTarifController::class, 'store'])->name('structures.cat.tarifs.store');
+    Route::delete('/structures/{structure:slug}/tarifswithattributs/{tarif}', [StructureCatTarifController::class, 'destroy'])->name('structures.cat.tarifs.destroy');
+
 
 
     Route::post('structures/{structure:slug}/plannings', [StructurePlanningController::class, 'store'])->name('structures.plannings.store');

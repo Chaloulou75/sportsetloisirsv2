@@ -17,9 +17,22 @@ const props = defineProps({
     errors: Object,
     structure: Object,
     tarifTypes: Object,
+    strCatTarifs: Object,
     activiteForTarifs: Object,
     structureActivites: Object,
 });
+
+const destroyCatTarif = (tarif) => {
+    router.delete(
+        route("structures.cat.tarifs.destroy", {
+            structure: props.structure.slug,
+            tarif: tarif.id,
+        }),
+        {
+            preserveScroll: true,
+        }
+    );
+};
 
 const tarifsList = computed(() => {
     const tarifs = [];
@@ -68,6 +81,178 @@ const destroyTarif = (tarif) => {
 };
 </script>
 <template>
+    <div v-if="strCatTarifs">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th
+                        class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                    >
+                        Categorie
+                    </th>
+                    <th
+                        class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                    >
+                        Discipline
+                    </th>
+                    <th
+                        class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                    >
+                        Type de tarif
+                    </th>
+                    <th
+                        class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                    >
+                        Titre
+                    </th>
+                    <th
+                        class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                    >
+                        Description
+                    </th>
+                    <th
+                        class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                    >
+                        Montant
+                    </th>
+                    <th
+                        class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                    >
+                        Attributs
+                    </th>
+                    <th
+                        class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                    >
+                        Produits
+                    </th>
+                    <th
+                        class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                    >
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 bg-white text-slate-800">
+                <tr v-for="tarif in strCatTarifs" :key="tarif.id">
+                    <td
+                        class="max-w-0 truncate whitespace-nowrap px-4 py-2 font-semibold"
+                    >
+                        {{ tarif.categorie.nom_categorie_client }}
+                    </td>
+                    <td
+                        class="max-w-0 truncate whitespace-nowrap px-4 py-2 font-semibold"
+                    >
+                        {{ tarif.categorie.discipline.name }}
+                    </td>
+                    <td
+                        class="max-w-0 truncate whitespace-nowrap px-4 py-2 font-semibold"
+                    >
+                        {{ tarif.cat_tarif_type.nom }}
+                    </td>
+                    <td class="max-w-0 truncate whitespace-nowrap px-4 py-2">
+                        {{ tarif.titre }}
+                    </td>
+                    <td class="max-w-0 truncate whitespace-nowrap px-4 py-2">
+                        {{ tarif.description }}
+                    </td>
+                    <td class="whitespace-nowrap px-4 py-2 font-semibold">
+                        {{ formatCurrency(tarif.amount) }}
+                    </td>
+                    <td class="whitespace-normal px-4 py-2 text-sm">
+                        <template v-if="tarif.attributs">
+                            <ul class="list-inside list-disc">
+                                <li
+                                    v-for="attribut in tarif.attributs"
+                                    :key="attribut.id"
+                                    class="mb-2"
+                                >
+                                    <span
+                                        >{{ attribut.tarif_attribut.nom }}:
+                                        <span class="font-semibold">{{
+                                            attribut.valeur
+                                        }}</span></span
+                                    >
+                                    <template v-if="attribut.sous_attributs">
+                                        <ul class="list-inside list-disc">
+                                            <li
+                                                v-for="sousattr in attribut.sous_attributs"
+                                                :key="sousattr.id"
+                                                class="pl-4"
+                                            >
+                                                <span
+                                                    v-if="
+                                                        sousattr.sous_attribut_valeur
+                                                    "
+                                                >
+                                                    {{
+                                                        sousattr.sous_attribut
+                                                            .nom
+                                                    }}:
+                                                    <span
+                                                        class="font-semibold"
+                                                        >{{
+                                                            sousattr
+                                                                .sous_attribut_valeur
+                                                                .valeur
+                                                        }}</span
+                                                    >
+                                                </span>
+                                                <span v-else
+                                                    >{{
+                                                        sousattr.sous_attribut
+                                                            .nom
+                                                    }}:
+                                                    <span
+                                                        class="font-semibold"
+                                                        >{{
+                                                            sousattr.valeur
+                                                        }}</span
+                                                    >
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </template>
+                                </li>
+                            </ul>
+                        </template>
+                    </td>
+                    <td class="whitespace-nowrap px-4 py-2 font-semibold">
+                        <template v-if="tarif.produits">
+                            <ul class="list-inside list-disc">
+                                <li
+                                    v-for="produit in tarif.produits"
+                                    :key="produit.id"
+                                    class="mb-2"
+                                >
+                                    {{ produit.id }}
+                                </li>
+                            </ul>
+                        </template>
+                    </td>
+                    <td class="whitespace-nowrap px-4 py-2">
+                        <button
+                            type="button"
+                            @click="openEditTarifModal(tarif)"
+                        >
+                            <ArrowPathIcon
+                                class="mr-1 h-6 w-6 text-slate-400 transition-all duration-200 hover:-rotate-90 hover:text-slate-600"
+                            />
+                        </button>
+
+                        <button
+                            type="button"
+                            @click="() => destroyCatTarif(tarif)"
+                        >
+                            <TrashIcon
+                                class="mr-1 h-6 w-6 text-red-400 hover:text-red-600"
+                            />
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
     <div v-if="structure.tarifs.length === 0 && tarifsList.length === 0">
         <p class="font-semibold italic text-gray-600">
             Pas de tarif associé à cette structure

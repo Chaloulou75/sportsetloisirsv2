@@ -10,6 +10,7 @@ use App\Models\ListDiscipline;
 use App\Models\ListeTarifType;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
+use App\Models\StructureCatTarif;
 use App\Models\StructurePlanning;
 use App\Models\ProductReservation;
 use App\Models\StructureCategorie;
@@ -109,6 +110,12 @@ class StructureCategorieController extends Controller
         ->where('visible_back', true)
         ->get();
 
+        $strCatTarifs = StructureCatTarif::withRelations()
+                ->with('produits')
+                ->where('structure_id', $structure->id)
+                ->where('categorie_id', $categorie->id)
+                ->get();
+
         $tarifTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();
 
         $activiteForTarifs = StructureActivite::with([
@@ -183,6 +190,7 @@ class StructureCategorieController extends Controller
             'allCategories' => $allCategories,
             'categoriesListByDiscipline' => $categoriesListByDiscipline,
             'categoriesWithoutStructures' => $categoriesWithoutStructures,
+            'strCatTarifs' => $strCatTarifs,
             'tarifTypes' => $tarifTypes,
             'activiteForTarifs' => $activiteForTarifs,
             'allReservationsCount' => $allReservationsCount,
