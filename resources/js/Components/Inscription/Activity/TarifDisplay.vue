@@ -81,84 +81,84 @@ const destroyTarif = (tarif) => {
 };
 </script>
 <template>
-    <div v-if="strCatTarifs">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+    <div v-if="strCatTarifs" class="overflow-x-auto">
+        <table
+            class="min-w-full table-auto border-collapse divide-y divide-gray-200 border border-slate-300"
+        >
+            <thead
+                class="bg-gray-700 text-xs font-medium uppercase tracking-wider text-gray-50"
+            >
                 <tr>
-                    <th
-                        class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                    >
-                        Categorie
-                    </th>
-                    <th
-                        class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                    >
+                    <th class="hidden px-4 py-2 text-left lg:table-cell">
                         Discipline
                     </th>
-                    <th
-                        class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                    >
+                    <th class="px-4 py-2 text-left">Categorie</th>
+                    <th class="hidden px-4 py-2 text-left lg:table-cell">
                         Type de tarif
                     </th>
-                    <th
-                        class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                    >
-                        Titre
-                    </th>
-                    <th
-                        class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                    >
+                    <th class="px-4 py-2 text-left">Titre</th>
+                    <th class="hidden px-4 py-2 text-left lg:table-cell">
                         Description
                     </th>
-                    <th
-                        class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                    >
-                        Montant
-                    </th>
-                    <th
-                        class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                    >
-                        Attributs
-                    </th>
-                    <th
-                        class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                    >
-                        Produits
-                    </th>
-                    <th
-                        class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                    >
-                        Actions
-                    </th>
+                    <th class="px-4 py-2 text-left">Montant</th>
+                    <th class="px-4 py-2 text-left">Attributs</th>
+                    <th class="px-4 py-2 text-left">Produits</th>
+                    <th class="px-4 py-2 text-left">Actions</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200 bg-white text-slate-800">
-                <tr v-for="tarif in strCatTarifs" :key="tarif.id">
+            <tbody
+                class="divide-y divide-gray-200 bg-white text-xs text-slate-800"
+            >
+                <tr
+                    v-for="tarif in strCatTarifs"
+                    :key="tarif.id"
+                    class="odd:bg-white even:bg-gray-50"
+                >
                     <td
-                        class="max-w-0 truncate whitespace-nowrap px-4 py-2 font-semibold"
-                    >
-                        {{ tarif.categorie.nom_categorie_client }}
-                    </td>
-                    <td
-                        class="max-w-0 truncate whitespace-nowrap px-4 py-2 font-semibold"
+                        class="hidden max-w-0 truncate whitespace-nowrap border border-slate-300 px-4 py-2 font-semibold lg:table-cell"
                     >
                         {{ tarif.categorie.discipline.name }}
                     </td>
                     <td
-                        class="max-w-0 truncate whitespace-nowrap px-4 py-2 font-semibold"
+                        class="whitespace-nowrap border border-slate-300 px-4 py-2 font-semibold"
+                    >
+                        <dl class="lg:hidden">
+                            <dt class="sr-only">Discipline</dt>
+                            <dd class="text-slate-600">
+                                {{ tarif.categorie.discipline.name }}
+                            </dd>
+                        </dl>
+                        {{ tarif.categorie.nom_categorie_client }}
+                        <dl class="lg:hidden">
+                            <dt class="sr-only">Type de tarif</dt>
+                            <dd class="text-slate-700">
+                                {{ tarif.cat_tarif_type.nom }}
+                            </dd>
+                        </dl>
+                    </td>
+                    <td
+                        class="hidden max-w-0 truncate whitespace-nowrap border border-slate-300 px-4 py-2 font-semibold lg:table-cell"
                     >
                         {{ tarif.cat_tarif_type.nom }}
                     </td>
-                    <td class="max-w-0 truncate whitespace-nowrap px-4 py-2">
+                    <td
+                        class="max-w-0 truncate whitespace-nowrap border border-slate-300 px-4 py-2"
+                    >
                         {{ tarif.titre }}
                     </td>
-                    <td class="max-w-0 truncate whitespace-nowrap px-4 py-2">
+                    <td
+                        class="hidden max-w-0 truncate whitespace-nowrap border border-slate-300 px-4 py-2 lg:table-cell"
+                    >
                         {{ tarif.description }}
                     </td>
-                    <td class="whitespace-nowrap px-4 py-2 font-semibold">
+                    <td
+                        class="whitespace-nowrap border border-slate-300 px-4 py-2 font-semibold"
+                    >
                         {{ formatCurrency(tarif.amount) }}
                     </td>
-                    <td class="whitespace-normal px-4 py-2 text-sm">
+                    <td
+                        class="whitespace-normal border border-slate-300 px-4 py-2"
+                    >
                         <template v-if="tarif.attributs">
                             <ul class="list-inside list-disc">
                                 <li
@@ -216,7 +216,9 @@ const destroyTarif = (tarif) => {
                             </ul>
                         </template>
                     </td>
-                    <td class="whitespace-nowrap px-4 py-2 font-semibold">
+                    <td
+                        class="whitespace-nowrap border border-slate-300 px-4 py-2 font-semibold"
+                    >
                         <template v-if="tarif.produits">
                             <ul class="list-inside list-disc">
                                 <li
@@ -229,7 +231,9 @@ const destroyTarif = (tarif) => {
                             </ul>
                         </template>
                     </td>
-                    <td class="whitespace-nowrap px-4 py-2">
+                    <td
+                        class="whitespace-nowrap border border-slate-300 px-4 py-2"
+                    >
                         <button
                             type="button"
                             @click="openEditTarifModal(tarif)"
@@ -253,7 +257,13 @@ const destroyTarif = (tarif) => {
         </table>
     </div>
 
-    <div v-if="structure.tarifs.length === 0 && tarifsList.length === 0">
+    <div
+        v-if="
+            structure.tarifs.length === 0 &&
+            tarifsList.length === 0 &&
+            !strCatTarifs
+        "
+    >
         <p class="font-semibold italic text-gray-600">
             Pas de tarif associé à cette structure
         </p>

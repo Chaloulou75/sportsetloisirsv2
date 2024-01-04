@@ -289,10 +289,10 @@ const destroyTarif = (tarif, produit) => {
     >
         <div class="flex w-full flex-col rounded border border-gray-200">
             <div class="flex w-full items-center justify-between bg-gray-700">
-                <h2 class="px-2 font-semibold text-white">
+                <h2 class="px-2 font-semibold uppercase text-white">
                     {{ structureActivite.titre }}
                     <Link
-                        class="text-xs italic text-gray-300 hover:text-gray-100 md:text-sm"
+                        class="text-xs lowercase italic text-gray-300 hover:text-gray-100 md:text-sm"
                         :href="
                             route(
                                 'structures.activites.show',
@@ -629,7 +629,7 @@ const destroyTarif = (tarif, produit) => {
                                 class="w-full min-w-full table-auto border-collapse border border-slate-300 md:table-auto"
                             >
                                 <thead
-                                    class="bg-gray-700 text-xs font-medium uppercase text-gray-50"
+                                    class="bg-gray-700 text-xs font-medium uppercase tracking-wider text-gray-50"
                                 >
                                     <tr>
                                         <th
