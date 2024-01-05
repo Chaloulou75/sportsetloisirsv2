@@ -122,6 +122,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Second version for tarifs
     Route::post('structures/{structure:slug}/tarifswithattributs', [StructureCatTarifController::class, 'store'])->name('structures.cat.tarifs.store');
+    Route::put('structures/{structure:slug}/tarifswithattributs/{tarif}', [StructureCatTarifController::class, 'update'])->name('structures.cat.tarifs.update');
     Route::delete('/structures/{structure:slug}/tarifswithattributs/{tarif}', [StructureCatTarifController::class, 'destroy'])->name('structures.cat.tarifs.destroy');
 
 

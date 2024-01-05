@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, defineAsyncComponent } from "vue";
 import { router } from "@inertiajs/vue3";
+import ModalEditCatTarif from "@/Components/Modals/ModalEditCatTarif.vue";
 import {
     TrashIcon,
     UsersIcon,
@@ -16,17 +17,27 @@ const ModalEditTarif = defineAsyncComponent(() =>
 const props = defineProps({
     errors: Object,
     structure: Object,
+    allCategories: Object,
     tarifTypes: Object,
     strCatTarifs: Object,
     activiteForTarifs: Object,
     structureActivites: Object,
 });
 
-const destroyCatTarif = (tarif) => {
+//newest version
+const tarifToUpdate = ref(null);
+const showEditCatTarifModal = ref(false);
+
+const openEditCatTarifModal = (catTarif) => {
+    tarifToUpdate.value = catTarif;
+    showEditCatTarifModal.value = true;
+};
+
+const destroyCatTarif = (catTarif) => {
     router.delete(
         route("structures.cat.tarifs.destroy", {
             structure: props.structure.slug,
-            tarif: tarif.id,
+            tarif: catTarif.id,
         }),
         {
             preserveScroll: true,
@@ -34,6 +45,7 @@ const destroyCatTarif = (tarif) => {
     );
 };
 
+// Old version
 const tarifsList = computed(() => {
     const tarifs = [];
     for (const structureActivite of props.structureActivites) {
@@ -59,7 +71,6 @@ const formatCurrency = (value) => {
     }
     return value;
 };
-
 const currentTarif = ref(null);
 const showEditTarifModal = ref(false);
 
@@ -81,7 +92,7 @@ const destroyTarif = (tarif) => {
 };
 </script>
 <template>
-    <div v-if="strCatTarifs" class="overflow-x-auto">
+    <div v-if="strCatTarifs.length > 0" class="overflow-x-auto">
         <table
             class="min-w-full table-auto border-collapse divide-y divide-gray-200 border border-slate-300"
         >
@@ -110,14 +121,14 @@ const destroyTarif = (tarif) => {
                 class="divide-y divide-gray-200 bg-white text-xs text-slate-800"
             >
                 <tr
-                    v-for="tarif in strCatTarifs"
-                    :key="tarif.id"
+                    v-for="catTarif in strCatTarifs"
+                    :key="catTarif.id"
                     class="odd:bg-white even:bg-gray-50"
                 >
                     <td
                         class="hidden max-w-0 truncate whitespace-nowrap border border-slate-300 px-4 py-2 font-semibold lg:table-cell"
                     >
-                        {{ tarif.categorie.discipline.name }}
+                        {{ catTarif.categorie.discipline.name }}
                     </td>
                     <td
                         class="whitespace-nowrap border border-slate-300 px-4 py-2 font-semibold"
@@ -125,49 +136,49 @@ const destroyTarif = (tarif) => {
                         <dl class="lg:hidden">
                             <dt class="sr-only">Discipline</dt>
                             <dd class="text-slate-600">
-                                {{ tarif.categorie.discipline.name }}
+                                {{ catTarif.categorie.discipline.name }}
                             </dd>
                         </dl>
-                        {{ tarif.categorie.nom_categorie_client }}
+                        {{ catTarif.categorie.nom_categorie_client }}
                         <dl class="lg:hidden">
                             <dt class="sr-only">Type de tarif</dt>
                             <dd class="text-slate-700">
-                                {{ tarif.cat_tarif_type.nom }}
+                                {{ catTarif.cat_tarif_type.nom }}
                             </dd>
                         </dl>
                     </td>
                     <td
                         class="hidden max-w-0 truncate whitespace-nowrap border border-slate-300 px-4 py-2 font-semibold lg:table-cell"
                     >
-                        {{ tarif.cat_tarif_type.nom }}
+                        {{ catTarif.cat_tarif_type.nom }}
                     </td>
                     <td
                         class="max-w-0 truncate whitespace-nowrap border border-slate-300 px-4 py-2"
                     >
-                        {{ tarif.titre }}
+                        {{ catTarif.titre }}
                     </td>
                     <td
                         class="hidden max-w-0 truncate whitespace-nowrap border border-slate-300 px-4 py-2 lg:table-cell"
                     >
-                        {{ tarif.description }}
+                        {{ catTarif.description }}
                     </td>
                     <td
                         class="whitespace-nowrap border border-slate-300 px-4 py-2 font-semibold"
                     >
-                        {{ formatCurrency(tarif.amount) }}
+                        {{ formatCurrency(catTarif.amount) }}
                     </td>
                     <td
                         class="whitespace-normal border border-slate-300 px-4 py-2"
                     >
-                        <template v-if="tarif.attributs">
+                        <template v-if="catTarif.attributs">
                             <ul class="list-inside list-disc">
                                 <li
-                                    v-for="attribut in tarif.attributs"
+                                    v-for="attribut in catTarif.attributs"
                                     :key="attribut.id"
                                     class="mb-2"
                                 >
-                                    <span
-                                        >{{ attribut.tarif_attribut.nom }}:
+                                    <span>
+                                        {{ attribut.tarif_attribut.nom }}:
                                         <span class="font-semibold">{{
                                             attribut.valeur
                                         }}</span></span
@@ -219,10 +230,10 @@ const destroyTarif = (tarif) => {
                     <td
                         class="whitespace-nowrap border border-slate-300 px-4 py-2 font-semibold"
                     >
-                        <template v-if="tarif.produits">
+                        <template v-if="catTarif.produits">
                             <ul class="list-inside list-disc">
                                 <li
-                                    v-for="produit in tarif.produits"
+                                    v-for="produit in catTarif.produits"
                                     :key="produit.id"
                                     class="mb-2"
                                 >
@@ -236,7 +247,7 @@ const destroyTarif = (tarif) => {
                     >
                         <button
                             type="button"
-                            @click="openEditTarifModal(tarif)"
+                            @click="openEditCatTarifModal(catTarif)"
                         >
                             <ArrowPathIcon
                                 class="mr-1 h-6 w-6 text-slate-400 transition-all duration-200 hover:-rotate-90 hover:text-slate-600"
@@ -245,7 +256,7 @@ const destroyTarif = (tarif) => {
 
                         <button
                             type="button"
-                            @click="() => destroyCatTarif(tarif)"
+                            @click="() => destroyCatTarif(catTarif)"
                         >
                             <TrashIcon
                                 class="mr-1 h-6 w-6 text-red-400 hover:text-red-600"
@@ -261,7 +272,7 @@ const destroyTarif = (tarif) => {
         v-if="
             structure.tarifs.length === 0 &&
             tarifsList.length === 0 &&
-            !strCatTarifs
+            !strCatTarifs.length > 0
         "
     >
         <p class="font-semibold italic text-gray-600">
@@ -457,11 +468,20 @@ const destroyTarif = (tarif) => {
             </tbody>
         </table>
     </div>
-
+    <ModalEditCatTarif
+        :errors="errors"
+        :structure="structure"
+        :tarif-to-update="tarifToUpdate"
+        :all-categories="allCategories"
+        :activiteForTarifs="activiteForTarifs"
+        :show="showEditCatTarifModal"
+        @close="showEditCatTarifModal = false"
+    />
     <ModalEditTarif
         :errors="errors"
         :structure="structure"
         :tarif="currentTarif"
+        :all-categories="allCategories"
         :tarif-types="tarifTypes"
         :activiteForTarifs="activiteForTarifs"
         :show="showEditTarifModal"

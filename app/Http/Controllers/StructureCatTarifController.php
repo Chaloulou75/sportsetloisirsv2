@@ -127,15 +127,17 @@ class StructureCatTarifController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, StructureCatTarif $structureCatTarif)
+    public function update(Request $request, Structure $structure, StructureCatTarif $tarif): RedirectResponse
     {
-        //
+        dd($request->all(), $tarif);
+        return to_route('structures.disciplines.index', $structure)->with('success', "Le tarif a bien été modifié");
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Structure $structure, StructureCatTarif $tarif)
+    public function destroy(Structure $structure, StructureCatTarif $tarif): RedirectResponse
     {
         $tarif->delete();
         return to_route('structures.disciplines.index', $structure)->with('success', "Le tarif a bien été supprimé");

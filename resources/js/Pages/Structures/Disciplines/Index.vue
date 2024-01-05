@@ -387,6 +387,7 @@ const openAddTarifModal = (structure) => {
                         <TarifDisplay
                             :errors="errors"
                             :structure="structure"
+                            :all-categories="categoriesListByDiscipline"
                             :str-cat-tarifs="strCatTarifs"
                             :tarif-types="tarifTypes"
                             :structureActivites="activites"

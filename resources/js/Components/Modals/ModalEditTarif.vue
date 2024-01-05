@@ -25,10 +25,14 @@ const emit = defineEmits(["close"]);
 const props = defineProps({
     errors: Object,
     structure: Object,
+    discipline: Object,
+    categorie: Object,
     tarif: Object,
-    show: Boolean,
+    allCategories: Object,
     tarifTypes: Object,
     activiteForTarifs: Object,
+    structureActivites: Object,
+    show: Boolean,
 });
 
 const uniteDurees = reactive([
@@ -222,7 +226,7 @@ watch(
     { deep: true }
 );
 
-const onSubmitAddTarifForm = () => {
+const onSubmitEditTarifForm = () => {
     formEditTarif.put(
         route("structures.tarifs.update", {
             structure: props.structure.slug,
@@ -271,7 +275,7 @@ const onSubmitAddTarifForm = () => {
                                 class="min-h-full w-full max-w-6xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
                             >
                                 <form
-                                    @submit.prevent="onSubmitAddTarifForm()"
+                                    @submit.prevent="onSubmitEditTarifForm()"
                                     autocomplete="off"
                                 >
                                     <DialogTitle

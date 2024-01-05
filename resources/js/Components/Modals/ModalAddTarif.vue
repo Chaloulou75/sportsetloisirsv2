@@ -37,31 +37,6 @@ const props = defineProps({
     show: Boolean,
 });
 
-const uniteDurees = reactive([
-    { id: 1, name: "Heures" },
-    { id: 2, name: "Jours" },
-    { id: 3, name: "Mois" },
-    { id: 4, name: "Années" },
-]);
-
-const selectedUniteeDuree = ref(uniteDurees[0]);
-const selectedTarifType = ref(props.tarifTypes[0]);
-const checkAll = ref(false);
-
-const formAddTarif = reactive({
-    structure_id: ref(props.structure.id),
-    titre: ref(null),
-    description: ref(null),
-    tarifType: ref(selectedTarifType.value),
-    attributs: ref([]),
-    amount: ref(null),
-    disciplines: ref({}),
-    categories: ref({}),
-    activites: ref({}),
-    produits: ref({}),
-    uniteDuree: ref(selectedUniteeDuree.value),
-});
-
 const filteredCategories = ref(props.allCategories ?? null);
 const newSelectedCategorieId = ref(props.categorie ? props.categorie.id : null);
 const newCategorie = ref(null);
@@ -296,6 +271,30 @@ const onSubmit = () => {
 };
 
 // Old Form Part!
+const uniteDurees = reactive([
+    { id: 1, name: "Heures" },
+    { id: 2, name: "Jours" },
+    { id: 3, name: "Mois" },
+    { id: 4, name: "Années" },
+]);
+
+const selectedUniteeDuree = ref(uniteDurees[0]);
+const selectedTarifType = ref(props.tarifTypes[0]);
+const checkAll = ref(false);
+
+const formAddTarif = reactive({
+    structure_id: ref(props.structure.id),
+    titre: ref(null),
+    description: ref(null),
+    tarifType: ref(selectedTarifType.value),
+    attributs: ref([]),
+    amount: ref(null),
+    disciplines: ref({}),
+    categories: ref({}),
+    activites: ref({}),
+    produits: ref({}),
+    uniteDuree: ref(selectedUniteeDuree.value),
+});
 
 watch(
     () => props.structureActivites,
@@ -599,7 +598,11 @@ onMounted(() => {
                                     </div>
                                     <!-- categories -->
                                     <div
-                                        v-if="allCategories"
+                                        v-if="
+                                            (discipline ||
+                                                addTarifForm.discipline_id) &&
+                                            allCategories
+                                        "
                                         class="flex w-full flex-col items-start justify-start space-y-2"
                                     >
                                         <label
@@ -808,7 +811,7 @@ onMounted(() => {
                                         <div
                                             v-for="attribut in addTarifForm
                                                 .tarif_type.tarif_attributs"
-                                            :key="attribut"
+                                            :key="attribut.id"
                                             class="flex w-full flex-col items-center space-y-2 md:flex-row md:space-x-2 md:space-y-0"
                                         >
                                             <!-- select  -->
