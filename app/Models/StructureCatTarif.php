@@ -55,6 +55,8 @@ class StructureCatTarif extends Model
             'cat_tarif_type',
             'cat_tarif_type.tarif_attributs',
             'cat_tarif_type.tarif_attributs.valeurs',
+            'cat_tarif_type.tarif_attributs.sous_attributs',
+            'cat_tarif_type.tarif_attributs.sous_attributs.valeurs',
             'attributs',
             'attributs.tarif_attribut',
             'attributs.tarif_attribut.valeurs',

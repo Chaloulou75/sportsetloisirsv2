@@ -208,12 +208,14 @@ const openAddTarifModal = (structure) => {
                                     <AutocompleteActiviteFormSmall
                                         class="h-full w-full md:w-1/2"
                                         :disciplines="listDisciplines"
-                                        :dejaUsedDisciplines="
+                                        :deja-used-disciplines="
                                             dejaUsedDisciplinesRef
                                         "
                                         :errors="form.errors"
                                         v-model:discipline="form.discipline_id"
-                                        :selectedDiscipline="selectedDiscipline"
+                                        :selected-discipline="
+                                            selectedDiscipline
+                                        "
                                         @update:modelValue="
                                             (discipline) =>
                                                 (form.discipline_id =
@@ -380,7 +382,7 @@ const openAddTarifModal = (structure) => {
                         <PlanningDisplay
                             :errors="errors"
                             :structure="structure"
-                            :structureActivites="activites"
+                            :structure-activites="activites"
                         />
                     </template>
                     <template v-if="displayTarifs">
@@ -390,8 +392,8 @@ const openAddTarifModal = (structure) => {
                             :all-categories="categoriesListByDiscipline"
                             :str-cat-tarifs="strCatTarifs"
                             :tarif-types="tarifTypes"
-                            :structureActivites="activites"
-                            :activiteForTarifs="activiteForTarifs"
+                            :structure-activites="activites"
+                            :activite-for-tarifs="activiteForTarifs"
                         />
                     </template>
                 </div>
@@ -416,8 +418,8 @@ const openAddTarifModal = (structure) => {
                 :structure="structure"
                 :tarif-types="tarifTypes"
                 :all-categories="categoriesListByDiscipline"
-                :activiteForTarifs="activiteForTarifs"
-                :structureActivites="activites"
+                :activite-for-tarifs="activiteForTarifs"
+                :structure-activites="activites"
                 :show="showAddTarifModal"
                 @close="showAddTarifModal = false"
             />

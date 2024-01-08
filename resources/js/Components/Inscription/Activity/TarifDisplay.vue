@@ -1,15 +1,18 @@
 <script setup>
 import { ref, computed, defineAsyncComponent } from "vue";
 import { router } from "@inertiajs/vue3";
-import ModalEditCatTarif from "@/Components/Modals/ModalEditCatTarif.vue";
 import {
     TrashIcon,
     UsersIcon,
     UserGroupIcon,
     ClockIcon,
     ArrowPathIcon,
+    PencilSquareIcon,
 } from "@heroicons/vue/24/outline";
 
+const ModalEditCatTarif = defineAsyncComponent(() =>
+    import("@/Components/Modals/ModalEditCatTarif.vue")
+);
 const ModalEditTarif = defineAsyncComponent(() =>
     import("@/Components/Modals/ModalEditTarif.vue")
 );
@@ -249,8 +252,8 @@ const destroyTarif = (tarif) => {
                             type="button"
                             @click="openEditCatTarifModal(catTarif)"
                         >
-                            <ArrowPathIcon
-                                class="mr-1 h-6 w-6 text-slate-400 transition-all duration-200 hover:-rotate-90 hover:text-slate-600"
+                            <PencilSquareIcon
+                                class="mr-1 h-6 w-6 text-slate-500 hover:text-slate-700"
                             />
                         </button>
 
@@ -473,7 +476,7 @@ const destroyTarif = (tarif) => {
         :structure="structure"
         :tarif-to-update="tarifToUpdate"
         :all-categories="allCategories"
-        :activiteForTarifs="activiteForTarifs"
+        :activite-for-tarifs="activiteForTarifs"
         :show="showEditCatTarifModal"
         @close="showEditCatTarifModal = false"
     />
@@ -483,7 +486,7 @@ const destroyTarif = (tarif) => {
         :tarif="currentTarif"
         :all-categories="allCategories"
         :tarif-types="tarifTypes"
-        :activiteForTarifs="activiteForTarifs"
+        :activite-for-tarifs="activiteForTarifs"
         :show="showEditTarifModal"
         @close="showEditTarifModal = false"
     />

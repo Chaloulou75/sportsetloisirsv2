@@ -1,6 +1,6 @@
 <script setup>
-import { ref, watch, onMounted } from "vue";
 import { useForm } from "@inertiajs/vue3";
+import { ref, watch } from "vue";
 import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
@@ -32,19 +32,14 @@ const props = defineProps({
     categorie: Object,
     tarifToUpdate: Object,
     allCategories: Object,
-    tarifTypes: Object,
     activiteForTarifs: Object,
-    structureActivites: Object,
     show: Boolean,
 });
 
 const filteredCategories = ref(props.allCategories ?? null);
-const newSelectedCategorieId = ref(
-    props.tarifToUpdate ? props.tarifToUpdate.categorie_id : null
-);
 const newCategorie = ref(null);
 
-const editTarifForm = useForm({
+const editCatTarifForm = useForm({
     discipline_id: null,
     categorie_id: null,
     tarif_type: null,
@@ -62,22 +57,22 @@ const editTarifForm = useForm({
 
 watch(
     () => props.tarifToUpdate,
-    (newTarifToUpdate) => {
-        if (newTarifToUpdate) {
-            editTarifForm.discipline_id =
-                newTarifToUpdate.categorie.discipline_id;
-            editTarifForm.categorie_id = newTarifToUpdate.categorie_id;
-            editTarifForm.tarif_type = newTarifToUpdate.cat_tarif_type;
-            editTarifForm.titre = newTarifToUpdate.titre;
-            editTarifForm.description = newTarifToUpdate.description;
-            editTarifForm.amount = newTarifToUpdate.amount;
+    (newtarif) => {
+        if (newtarif) {
+            editCatTarifForm.discipline_id = newtarif.categorie.discipline_id;
+            editCatTarifForm.categorie_id = newtarif.categorie_id;
+            editCatTarifForm.tarif_type = newtarif.cat_tarif_type;
+            editCatTarifForm.titre = newtarif.titre;
+            editCatTarifForm.description = newtarif.description;
+            editCatTarifForm.amount = newtarif.amount;
+
             if (
-                editTarifForm.tarif_type &&
-                editTarifForm.tarif_type.tarif_attributs.length > 0
+                editCatTarifForm.tarif_type &&
+                editCatTarifForm.tarif_type.tarif_attributs.length > 0
             ) {
-                editTarifForm.tarif_type.tarif_attributs.forEach(
+                editCatTarifForm.tarif_type.tarif_attributs.forEach(
                     (tarifAttr) => {
-                        newTarifToUpdate.attributs.forEach((attribut) => {
+                        newtarif.attributs.forEach((attribut) => {
                             if (tarifAttr.id === attribut.cat_tar_att_id) {
                                 if (tarifAttr.valeurs.length > 0) {
                                     tarifAttr.valeurs.forEach((attrValeur) => {
@@ -89,20 +84,54 @@ watch(
                                                 attrValeur.id ===
                                                 attribut.dis_cat_tar_att_valeur_id
                                             ) {
-                                                editTarifForm.attributs[
+                                                editCatTarifForm.attributs[
                                                     tarifAttr.id
                                                 ] = attrValeur;
                                             }
                                         }
                                     });
                                 } else {
-                                    editTarifForm.attributs[tarifAttr.id] =
-                                        String(attribut.valeur);
+                                    editCatTarifForm.attributs[tarifAttr.id] =
+                                        attribut.valeur;
+                                }
+                                if (tarifAttr.sous_attributs.length > 0) {
+                                    tarifAttr.sous_attributs.forEach(
+                                        (sousAttributOff) => {
+                                            attribut.sous_attributs.forEach(
+                                                (sousAttrTarif) => {
+                                                    if (
+                                                        sousAttributOff.id ===
+                                                        sousAttrTarif.sousattribut_id
+                                                    ) {
+                                                        if (
+                                                            sousAttrTarif.sous_attribut_valeur !==
+                                                            null
+                                                        ) {
+                                                            editCatTarifForm.sousattributs[
+                                                                sousAttributOff.id
+                                                            ] =
+                                                                sousAttrTarif.sous_attribut_valeur;
+                                                        } else {
+                                                            editCatTarifForm.sousattributs[
+                                                                sousAttributOff.id
+                                                            ] =
+                                                                sousAttrTarif.valeur;
+                                                        }
+                                                    }
+                                                }
+                                            );
+                                        }
+                                    );
                                 }
                             }
                         });
                     }
                 );
+            }
+            if (newtarif.produits) {
+                newtarif.produits.forEach((produitTarot) => {
+                    editCatTarifForm.produits[produitTarot.id] = true;
+                });
             }
         }
     },
@@ -110,56 +139,56 @@ watch(
 );
 
 watch(
-    () => editTarifForm.discipline_id,
+    () => editCatTarifForm.discipline_id,
     (newDisciplineId) => {
         filteredCategories.value = props.allCategories.filter(
             (category) => category.discipline_id === newDisciplineId
         );
         if (filteredCategories.value.length > 0) {
-            editTarifForm.categorie_id = filteredCategories.value[0].id;
+            editCatTarifForm.categorie_id = props.tarifToUpdate
+                ? props.tarifToUpdate.categorie_id
+                : filteredCategories.value[0].id;
         } else {
-            editTarifForm.categorie_id = null;
+            editCatTarifForm.categorie_id = null;
         }
-        editTarifForm.checkAll = false;
-        editTarifForm.disciplines = {};
-        editTarifForm.categories = {};
-        editTarifForm.activites = {};
-        editTarifForm.produits = {};
+        editCatTarifForm.checkAll = false;
+        editCatTarifForm.disciplines = {};
+        editCatTarifForm.categories = {};
+        editCatTarifForm.activites = {};
+        // editCatTarifForm.produits = {};
     }
 );
 
 watch(
-    () => editTarifForm.categorie_id,
+    () => editCatTarifForm.categorie_id,
     (newCategorieId) => {
         newCategorie.value = props.allCategories.find(
             (categorie) => categorie.id === newCategorieId
         );
         if (newCategorie.value) {
-            editTarifForm.tarif_type = newCategorie.value.tarif_types[0];
+            editCatTarifForm.tarif_type = props.tarifToUpdate
+                ? props.tarifToUpdate.cat_tarif_type
+                : newCategorie.value.tarif_types[0];
         } else {
-            editTarifForm.tarif_type = null;
+            editCatTarifForm.tarif_type = null;
         }
-
-        editTarifForm.attributs = {};
-        editTarifForm.sousattributs = {};
-        editTarifForm.checkAll = false;
-        editTarifForm.disciplines = {};
-        editTarifForm.categories = {};
-        editTarifForm.activites = {};
-        editTarifForm.produits = {};
+        editCatTarifForm.checkAll = false;
+        editCatTarifForm.disciplines = {};
+        editCatTarifForm.categories = {};
+        editCatTarifForm.activites = {};
+        // editCatTarifForm.produits = {};
     }
 );
 
 watch(
-    () => editTarifForm.disciplines,
-    (newValue) => {
-        if (newValue) {
-            editTarifForm.categories = {};
-            editTarifForm.activites = {};
-            editTarifForm.produits = {};
-
-            for (const disciplineId in newValue) {
-                const discipline = newValue[disciplineId];
+    () => editCatTarifForm.disciplines,
+    (newDisciplines) => {
+        if (newDisciplines) {
+            editCatTarifForm.categories = {};
+            editCatTarifForm.activites = {};
+            editCatTarifForm.produits = {};
+            for (const disciplineId in newDisciplines) {
+                const discipline = newDisciplines[disciplineId];
                 if (discipline) {
                     const disciplineData =
                         props.activiteForTarifs[disciplineId];
@@ -168,16 +197,17 @@ watch(
                         for (const categoryId in categories) {
                             const catId = String(categoryId);
                             const formCatId = String(
-                                editTarifForm.categorie_id
+                                editCatTarifForm.categorie_id
                             );
-
                             if (catId === formCatId) {
-                                editTarifForm.categories[categoryId] = true;
+                                editCatTarifForm.categories[categoryId] = true;
                                 const category = categories[categoryId];
                                 for (const activity of category.activites) {
-                                    editTarifForm.activites[activity.id] = true;
+                                    editCatTarifForm.activites[
+                                        activity.id
+                                    ] = true;
                                     for (const product of activity.produits) {
-                                        editTarifForm.produits[
+                                        editCatTarifForm.produits[
                                             product.id
                                         ] = true;
                                     }
@@ -193,11 +223,11 @@ watch(
 );
 
 watch(
-    () => editTarifForm.categories,
+    () => editCatTarifForm.categories,
     (newValue) => {
         if (newValue) {
-            editTarifForm.activites = {};
-            editTarifForm.produits = {};
+            editCatTarifForm.activites = {};
+            editCatTarifForm.produits = {};
             for (const categoryId in newValue) {
                 const category = newValue[categoryId];
                 if (category) {
@@ -210,10 +240,12 @@ watch(
                             const activites = categoryData.activites;
 
                             for (const activity of activites) {
-                                editTarifForm.activites[activity.id] = true;
+                                editCatTarifForm.activites[activity.id] = true;
 
                                 for (const product of activity.produits) {
-                                    editTarifForm.produits[product.id] = true;
+                                    editCatTarifForm.produits[
+                                        product.id
+                                    ] = true;
                                 }
                             }
                         }
@@ -226,19 +258,19 @@ watch(
 );
 
 watch(
-    () => editTarifForm.activites,
+    () => editCatTarifForm.activites,
     (newValue) => {
         if (newValue) {
-            editTarifForm.produits = {};
+            editCatTarifForm.produits = {};
             for (const disciplineId in props.activiteForTarifs) {
                 const disciplineData = props.activiteForTarifs[disciplineId];
                 for (const categoryId in disciplineData.categories) {
                     const categoryData = disciplineData.categories[categoryId];
                     for (const activity of categoryData.activites) {
                         if (newValue[activity.id]) {
-                            editTarifForm.activites[activity.id] = true;
+                            editCatTarifForm.activites[activity.id] = true;
                             for (const product of activity.produits) {
-                                editTarifForm.produits[product.id] = true;
+                                editCatTarifForm.produits[product.id] = true;
                             }
                         }
                     }
@@ -251,13 +283,13 @@ watch(
 
 // checkAll
 watch(
-    () => editTarifForm.checkAll,
+    () => editCatTarifForm.checkAll,
     (newValue) => {
         if (newValue && newValue === true) {
             for (const disciplineId in props.activiteForTarifs) {
                 if (props.activiteForTarifs.hasOwnProperty(disciplineId)) {
                     const disId = String(disciplineId);
-                    const formDiscId = String(editTarifForm.discipline_id);
+                    const formDiscId = String(editCatTarifForm.discipline_id);
                     const propsDisId = String(
                         props.discipline ? props.discipline.id : null
                     );
@@ -266,7 +298,7 @@ watch(
                         disId === formDiscId ||
                         (props.discipline && disId === propsDisId)
                     ) {
-                        editTarifForm.disciplines[disciplineId] = newValue;
+                        editCatTarifForm.disciplines[disciplineId] = newValue;
                         const categories =
                             props.activiteForTarifs[disciplineId].categories;
 
@@ -274,22 +306,24 @@ watch(
                             if (categories.hasOwnProperty(categoryId)) {
                                 const catId = String(categoryId);
                                 const formCatId = String(
-                                    editTarifForm.categorie_id
+                                    editCatTarifForm.categorie_id
                                 );
 
                                 if (catId === formCatId) {
-                                    editTarifForm.categories[categoryId] =
+                                    editCatTarifForm.categories[categoryId] =
                                         newValue;
                                     const activites =
                                         categories[categoryId].activites;
 
                                     activites.forEach((activity) => {
-                                        editTarifForm.activites[activity.id] =
-                                            newValue;
+                                        editCatTarifForm.activites[
+                                            activity.id
+                                        ] = newValue;
 
                                         activity.produits.forEach((product) => {
-                                            editTarifForm.produits[product.id] =
-                                                newValue;
+                                            editCatTarifForm.produits[
+                                                product.id
+                                            ] = newValue;
                                         });
                                     });
                                 }
@@ -299,33 +333,31 @@ watch(
                 }
             }
         } else {
-            editTarifForm.disciplines = {};
-            editTarifForm.categories = {};
-            editTarifForm.activites = {};
-            editTarifForm.produits = {};
+            editCatTarifForm.disciplines = {};
+            editCatTarifForm.categories = {};
+            editCatTarifForm.activites = {};
+            editCatTarifForm.produits = {};
         }
     },
     { deep: true }
 );
 
 const onSubmit = () => {
-    editTarifForm.put(
+    editCatTarifForm.put(
         route("structures.cat.tarifs.update", {
             structure: props.structure,
             tarif: props.tarifToUpdate,
         }),
         {
-            errorBag: "editTarifForm",
+            errorBag: "editCatTarifForm",
             preserveScroll: true,
             onSuccess: () => {
-                editTarifForm.reset();
+                editCatTarifForm.reset();
                 emit("close");
             },
         }
     );
 };
-
-onMounted(() => {});
 </script>
 <template>
     <div>
@@ -428,7 +460,7 @@ onMounted(() => {});
                                                     name="discipline"
                                                     id="discipline"
                                                     v-model="
-                                                        editTarifForm.discipline_id
+                                                        editCatTarifForm.discipline_id
                                                     "
                                                     class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                                 >
@@ -462,7 +494,7 @@ onMounted(() => {});
                                                     name="categorie"
                                                     id="categorie"
                                                     v-model="
-                                                        editTarifForm.categorie_id
+                                                        editCatTarifForm.categorie_id
                                                     "
                                                     class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                                 >
@@ -478,11 +510,11 @@ onMounted(() => {});
                                                 </select>
                                             </div>
                                             <div
-                                                v-if="errors.editTarifForm"
+                                                v-if="errors.editCatTarifForm"
                                                 class="mt-2 text-xs text-red-500"
                                             >
                                                 {{
-                                                    errors.editTarifForm
+                                                    errors.editCatTarifForm
                                                         .categorie
                                                 }}
                                             </div>
@@ -493,13 +525,13 @@ onMounted(() => {});
                                         >
                                             <Listbox
                                                 v-if="
-                                                    editTarifForm.categorie_id &&
+                                                    editCatTarifForm.categorie_id &&
                                                     newCategorie.tarif_types
                                                         .length > 0
                                                 "
                                                 class="w-full max-w-sm"
                                                 v-model="
-                                                    editTarifForm.tarif_type
+                                                    editCatTarifForm.tarif_type
                                                 "
                                             >
                                                 <div class="relative mt-1">
@@ -515,7 +547,7 @@ onMounted(() => {});
                                                         <span
                                                             class="block truncate"
                                                             >{{
-                                                                editTarifForm
+                                                                editCatTarifForm
                                                                     .tarif_type
                                                                     .nom
                                                             }}</span
@@ -590,7 +622,9 @@ onMounted(() => {});
                                             </Listbox>
                                             <!-- titre -->
                                             <div
-                                                v-if="editTarifForm.tarif_type"
+                                                v-if="
+                                                    editCatTarifForm.tarif_type
+                                                "
                                                 class="w-full max-w-sm"
                                             >
                                                 <label
@@ -604,7 +638,7 @@ onMounted(() => {});
                                                 >
                                                     <input
                                                         v-model="
-                                                            editTarifForm.titre
+                                                            editCatTarifForm.titre
                                                         "
                                                         type="text"
                                                         name="titre"
@@ -615,11 +649,13 @@ onMounted(() => {});
                                                     />
                                                 </div>
                                                 <div
-                                                    v-if="errors.editTarifForm"
+                                                    v-if="
+                                                        errors.editCatTarifForm
+                                                    "
                                                     class="mt-2 text-xs text-red-500"
                                                 >
                                                     {{
-                                                        errors.editTarifForm
+                                                        errors.editCatTarifForm
                                                             .titre
                                                     }}
                                                 </div>
@@ -627,7 +663,7 @@ onMounted(() => {});
                                         </div>
                                         <!-- description -->
                                         <div
-                                            v-if="editTarifForm.tarif_type"
+                                            v-if="editCatTarifForm.tarif_type"
                                             class="w-full max-w-3xl"
                                         >
                                             <label
@@ -639,7 +675,7 @@ onMounted(() => {});
                                             <div class="mt-1">
                                                 <textarea
                                                     v-model="
-                                                        editTarifForm.description
+                                                        editCatTarifForm.description
                                                     "
                                                     id="description"
                                                     name="description"
@@ -653,24 +689,25 @@ onMounted(() => {});
                                                 />
                                             </div>
                                             <div
-                                                v-if="errors.editTarifForm"
+                                                v-if="errors.editCatTarifForm"
                                                 class="mt-2 text-xs text-red-500"
                                             >
                                                 {{
-                                                    errors.editTarifForm
+                                                    errors.editCatTarifForm
                                                         .description
                                                 }}
                                             </div>
                                         </div>
+                                        <!-- attributs && sous attributs -->
                                         <template
                                             v-if="
-                                                editTarifForm.tarif_type &&
-                                                editTarifForm.tarif_type
+                                                editCatTarifForm.tarif_type &&
+                                                editCatTarifForm.tarif_type
                                                     .tarif_attributs.length > 0
                                             "
                                         >
                                             <div
-                                                v-for="attribut in editTarifForm
+                                                v-for="attribut in editCatTarifForm
                                                     .tarif_type.tarif_attributs"
                                                 :key="attribut.id"
                                                 class="flex w-full flex-col items-center space-y-2 md:flex-row md:space-x-2 md:space-y-0"
@@ -685,7 +722,8 @@ onMounted(() => {});
                                                     "
                                                     :name="attribut.nom"
                                                     v-model="
-                                                        editTarifForm.attributs[
+                                                        editCatTarifForm
+                                                            .attributs[
                                                             attribut.id
                                                         ]
                                                     "
@@ -702,7 +740,8 @@ onMounted(() => {});
                                                     :critere="attribut"
                                                     :name="attribut.nom"
                                                     v-model="
-                                                        editTarifForm.attributs[
+                                                        editCatTarifForm
+                                                            .attributs[
                                                             attribut.id
                                                         ]
                                                     "
@@ -735,7 +774,7 @@ onMounted(() => {});
                                                         <TextInput
                                                             type="text"
                                                             v-model="
-                                                                editTarifForm
+                                                                editCatTarifForm
                                                                     .attributs[
                                                                     attribut.id
                                                                 ]
@@ -769,7 +808,7 @@ onMounted(() => {});
                                                         <TextInput
                                                             type="number"
                                                             v-model="
-                                                                editTarifForm
+                                                                editCatTarifForm
                                                                     .attributs[
                                                                     attribut.id
                                                                 ]
@@ -797,7 +836,7 @@ onMounted(() => {});
                                                         "
                                                         :name="sousattribut.nom"
                                                         v-model="
-                                                            editTarifForm
+                                                            editCatTarifForm
                                                                 .sousattributs[
                                                                 sousattribut.id
                                                             ]
@@ -830,7 +869,7 @@ onMounted(() => {});
                                                             <TextInput
                                                                 type="text"
                                                                 v-model="
-                                                                    editTarifForm
+                                                                    editCatTarifForm
                                                                         .sousattributs[
                                                                         sousattribut
                                                                             .id
@@ -873,7 +912,7 @@ onMounted(() => {});
                                                             <TextInput
                                                                 type="number"
                                                                 v-model="
-                                                                    editTarifForm
+                                                                    editCatTarifForm
                                                                         .sousattributs[
                                                                         sousattribut
                                                                             .id
@@ -896,7 +935,7 @@ onMounted(() => {});
                                         </template>
 
                                         <div
-                                            v-if="editTarifForm.tarif_type"
+                                            v-if="editCatTarifForm.tarif_type"
                                             class="w-full max-w-sm"
                                         >
                                             <label
@@ -910,7 +949,7 @@ onMounted(() => {});
                                             >
                                                 <input
                                                     v-model="
-                                                        editTarifForm.amount
+                                                        editCatTarifForm.amount
                                                     "
                                                     type="number"
                                                     name="amount"
@@ -924,19 +963,20 @@ onMounted(() => {});
                                                 />
                                             </div>
                                             <div
-                                                v-if="errors.editTarifForm"
+                                                v-if="errors.editCatTarifForm"
                                                 class="mt-2 text-xs text-red-500"
                                             >
                                                 {{
-                                                    errors.editTarifForm.amount
+                                                    errors.editCatTarifForm
+                                                        .amount
                                                 }}
                                             </div>
                                         </div>
                                         <!-- liste des produits -->
                                         <template
                                             v-if="
-                                                editTarifForm.categorie_id &&
-                                                editTarifForm.tarif_type
+                                                editCatTarifForm.categorie_id &&
+                                                editCatTarifForm.tarif_type
                                             "
                                         >
                                             <div
@@ -955,7 +995,7 @@ onMounted(() => {});
                                                         type="checkbox"
                                                         name="Tout"
                                                         v-model="
-                                                            editTarifForm.checkAll
+                                                            editCatTarifForm.checkAll
                                                         "
                                                         class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                                                     />
@@ -973,7 +1013,7 @@ onMounted(() => {});
                                                     <template
                                                         v-if="
                                                             discipline.id ===
-                                                            (editTarifForm.discipline_id ||
+                                                            (editCatTarifForm.discipline_id ||
                                                                 (props.discipline &&
                                                                     props
                                                                         .discipline
@@ -995,7 +1035,7 @@ onMounted(() => {});
                                                                     discipline.disciplineName
                                                                 "
                                                                 v-model="
-                                                                    editTarifForm
+                                                                    editCatTarifForm
                                                                         .disciplines[
                                                                         discipline
                                                                             .id
@@ -1019,7 +1059,7 @@ onMounted(() => {});
                                                             <template
                                                                 v-if="
                                                                     category.id ===
-                                                                    editTarifForm.categorie_id
+                                                                    editCatTarifForm.categorie_id
                                                                 "
                                                             >
                                                                 <label
@@ -1037,7 +1077,7 @@ onMounted(() => {});
                                                                             category.name
                                                                         "
                                                                         v-model="
-                                                                            editTarifForm
+                                                                            editCatTarifForm
                                                                                 .categories[
                                                                                 category
                                                                                     .id
@@ -1075,7 +1115,7 @@ onMounted(() => {});
                                                                                 activite.titre
                                                                             "
                                                                             v-model="
-                                                                                editTarifForm
+                                                                                editCatTarifForm
                                                                                     .activites[
                                                                                     activite
                                                                                         .id
@@ -1113,7 +1153,7 @@ onMounted(() => {});
                                                                                     produit.id
                                                                                 "
                                                                                 v-model="
-                                                                                    editTarifForm
+                                                                                    editCatTarifForm
                                                                                         .produits[
                                                                                         produit
                                                                                             .id
@@ -1150,13 +1190,17 @@ onMounted(() => {});
                                             Annuler
                                         </button>
                                         <button
-                                            v-if="editTarifForm.tarif_type"
-                                            :disabled="editTarifForm.processing"
+                                            v-if="editCatTarifForm.tarif_type"
+                                            :disabled="
+                                                editCatTarifForm.processing
+                                            "
                                             type="submit"
                                             class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                         >
                                             <LoadingSVG
-                                                v-if="editTarifForm.processing"
+                                                v-if="
+                                                    editCatTarifForm.processing
+                                                "
                                             />
                                             Enregistrer
                                         </button>
