@@ -1140,35 +1140,35 @@ const destroyTarif = (tarif, produit) => {
 
     <ModalDeleteActivite
         :structure="structure"
-        :structureActivite="structureActivite"
+        :structure-activite="structureActivite"
         :show="showDeleteActiviteModal"
         @close="showDeleteActiviteModal = false"
     />
     <ModalAddProduit
         :errors="errors"
         :structure="structure"
-        :structureActivite="structureActivite"
+        :structure-activite="structureActivite"
         :show="showAddProduitModal"
         @close="showAddProduitModal = false"
         :criteres="criteres"
-        :latestAdresseId="latestAdresseId"
+        :latest-adresse-id="latestAdresseId"
     />
     <ModalEditProduit
         :errors="errors"
         :structure="structure"
-        :structureActivite="structureActivite"
+        :structure-activite="structureActivite"
         :produit="currentProduit"
         :show="showEditProduitModal"
         @close="showEditProduitModal = false"
         :criteres="criteres"
-        :latestAdresseId="latestAdresseId"
+        :latest-adresse-id="latestAdresseId"
     />
     <ModalAddTarif
         :errors="errors"
         :structure="structure"
         :tarif-types="tarifTypes"
         :all-categories="allCategories"
-        :activiteForTarifs="activiteForTarifs"
+        :activite-for-tarifs="activiteForTarifs"
         :show="showAddTarifModal"
         @close="showAddTarifModal = false"
     />
