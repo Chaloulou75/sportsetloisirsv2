@@ -225,12 +225,14 @@ const latestAdresseId = computed(() => {
                             :key="structureActivite.id"
                             :errors="errors"
                             :structure="structure"
-                            :structureActivite="structureActivite"
-                            :uniqueCriteresInProducts="uniqueCriteresInProducts"
+                            :structure-activite="structureActivite"
+                            :unique-criteres-in-products="
+                                uniqueCriteresInProducts
+                            "
                             :criteres="criteres"
-                            :latestAdresseId="latestAdresseId"
+                            :latest-adresse-id="latestAdresseId"
                             :tarif-types="tarifTypes"
-                            :activiteForTarifs="activiteForTarifs"
+                            :activite-for-tarifs="activiteForTarifs"
                             :all-categories="allCategories"
                         />
                         <div v-if="structureActivites.length === 0">
@@ -243,7 +245,7 @@ const latestAdresseId = computed(() => {
                         <PlanningDisplay
                             :errors="errors"
                             :structure="structure"
-                            :structureActivites="structureActivites"
+                            :structure-activites="structureActivites"
                         />
                     </template>
                     <template v-if="displayTarifs">
@@ -252,8 +254,9 @@ const latestAdresseId = computed(() => {
                             :structure="structure"
                             :str-cat-tarifs="strCatTarifs"
                             :tarif-types="tarifTypes"
-                            :structureActivites="structureActivites"
-                            :activiteForTarifs="activiteForTarifs"
+                            :all-categories="categoriesListByDiscipline"
+                            :structure-activites="structureActivites"
+                            :activite-for-tarifs="activiteForTarifs"
                         />
                     </template>
                 </div>

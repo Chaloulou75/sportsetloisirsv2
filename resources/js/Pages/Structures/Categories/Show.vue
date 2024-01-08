@@ -106,9 +106,9 @@ const latestAdresseId = computed(() => {
     <ProLayout
         :structure="structure"
         :can="can"
-        :allReservationsCount="allReservationsCount"
-        :pendingReservationsCount="pendingReservationsCount"
-        :confirmedReservationsCount="confirmedReservationsCount"
+        :all-reservations-count="allReservationsCount"
+        :pending-reservations-count="pendingReservationsCount"
+        :confirmed-reservations-count="confirmedReservationsCount"
     >
         <template #header>
             <div class="flex h-full items-center justify-start">
@@ -246,12 +246,14 @@ const latestAdresseId = computed(() => {
                             :key="structureActivite.id"
                             :errors="errors"
                             :structure="structure"
-                            :structureActivite="structureActivite"
-                            :uniqueCriteresInProducts="uniqueCriteresInProducts"
+                            :structure-activite="structureActivite"
+                            :unique-criteres-in-products="
+                                uniqueCriteresInProducts
+                            "
                             :criteres="criteres"
-                            :latestAdresseId="latestAdresseId"
+                            :latest-adresse-id="latestAdresseId"
                             :tarif-types="tarifTypes"
-                            :activiteForTarifs="activiteForTarifs"
+                            :activite-for-tarifs="activiteForTarifs"
                         />
                         <div v-if="structureActivites.length === 0">
                             <p class="font-semibold italic text-gray-600">
@@ -263,7 +265,7 @@ const latestAdresseId = computed(() => {
                         <PlanningDisplay
                             :errors="errors"
                             :structure="structure"
-                            :structureActivites="structureActivites"
+                            :structure-activites="structureActivites"
                         />
                     </template>
                     <template v-if="displayTarifs">
@@ -271,9 +273,10 @@ const latestAdresseId = computed(() => {
                             :errors="errors"
                             :structure="structure"
                             :str-cat-tarifs="strCatTarifs"
+                            :all-categories="categoriesListByDiscipline"
                             :tarif-types="tarifTypes"
-                            :structureActivites="structureActivites"
-                            :activiteForTarifs="activiteForTarifs"
+                            :structure-activites="structureActivites"
+                            :activite-for-tarifs="activiteForTarifs"
                         />
                     </template>
                 </div>
@@ -295,8 +298,8 @@ const latestAdresseId = computed(() => {
                 :tarif-types="tarifTypes"
                 :categorie="categorie"
                 :all-categories="categoriesListByDiscipline"
-                :activiteForTarifs="activiteForTarifs"
-                :structureActivites="structureActivites"
+                :activite-for-tarifs="activiteForTarifs"
+                :structure-activites="structureActivites"
                 :show="showAddTarifModal"
                 @close="showAddTarifModal = false"
             />
