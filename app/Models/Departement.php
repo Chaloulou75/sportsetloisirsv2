@@ -61,6 +61,8 @@ class Departement extends Model
             'cities' => function ($q) {
                 $q->whereHas('produits');
             },
+            'cities.produits',
+            'cities.produits.dates',
             'cities.produits.structure:id,name',
             'cities.produits.adresse',
             'cities.produits.activite:id,titre',
@@ -71,6 +73,12 @@ class Departement extends Model
             'cities.produits.tarifs',
             'cities.produits.tarifs.tarifType',
             'cities.produits.tarifs.structureTarifTypeInfos',
+            'cities.produits.catTarifs',
+            'cities.produits.catTarifs.attributs',
+            'cities.produits.catTarifs.attributs.tarif_attribut',
+            'cities.produits.catTarifs.attributs.sous_attributs',
+            'cities.produits.catTarifs.attributs.sous_attributs.sous_attribut',
+            'cities.produits.catTarifs.attributs.sous_attributs.sous_attribut_valeur',
             'cities.produits.plannings',
         ]);
     }

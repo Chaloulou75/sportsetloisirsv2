@@ -128,6 +128,19 @@ const hideStructureTooltip = () => {
 
 const showCriteres = ref(false);
 
+const filteredCriteresByChamp = computed(() => {
+    return props.criteres.filter((critere) => {
+        return [
+            "select",
+            "checkbox",
+            "radio",
+            "text",
+            "number",
+            "rayon",
+        ].includes(critere.type_champ_form);
+    });
+});
+
 const toggleCriteres = () => {
     showCriteres.value = !showCriteres.value;
 };
@@ -267,8 +280,8 @@ onMounted(() => {
     />
 
     <ResultLayout
-        :listDisciplines="listDisciplines"
-        :allCities="allCities"
+        :list-disciplines="listDisciplines"
+        :all-cities="allCities"
         :discipline="discipline"
         :categories="categories"
         :current-category="category"
@@ -383,11 +396,11 @@ onMounted(() => {
                     :category="category"
                     :departement="departement"
                     :discipline="discipline"
-                    :allStructureTypes="allStructureTypes"
+                    :all-structure-types="allStructureTypes"
                     :categories="categories"
-                    :firstCategories="firstCategories"
-                    :categoriesNotInFirst="categoriesNotInFirst"
-                    :showCriteres="showCriteresLg"
+                    :first-categories="firstCategories"
+                    :categories-not-in-first="categoriesNotInFirst"
+                    :show-criteres="showCriteresLg"
                     @call-toggle-criteres="toggleCriteresLg"
                 />
                 <div
@@ -413,7 +426,7 @@ onMounted(() => {
                     }"
                 >
                     <div
-                        v-for="critere in criteres"
+                        v-for="critere in filteredCriteresByChamp"
                         :key="critere.id"
                         class="w-full max-w-full md:w-auto"
                     >
@@ -505,10 +518,8 @@ onMounted(() => {
                             </div>
                         </div>
 
-                        <div
-                            class="max-w-sm"
-                            v-if="critere.type_champ_form === 'number'"
-                        >
+                        <!-- input Number -->
+                        <div v-if="critere.type_champ_form === 'number'">
                             <div class="flex items-center space-x-4">
                                 <label
                                     :for="critere.nom"
@@ -516,11 +527,9 @@ onMounted(() => {
                                 >
                                     {{ critere.nom }}
                                 </label>
-                                <div class="mt-1 flex rounded-md">
+                                <div class="flex rounded-md">
                                     <TextInput
                                         type="number"
-                                        min="1"
-                                        max="59"
                                         v-model="
                                             formCriteres.criteres[critere.id]
                                         "

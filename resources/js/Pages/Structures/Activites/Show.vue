@@ -130,8 +130,8 @@ const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
 const isCheckboxSelected = computed(() => {
     return (critereId, optionValue) => {
         return (
-            formCriteres.value.criteres[critereId] &&
-            formCriteres.value.criteres[critereId].includes(optionValue)
+            selectedCriteres[critereId] &&
+            selectedCriteres[critereId].includes(optionValue)
         );
     };
 });
@@ -645,7 +645,7 @@ const submitReservation = () => {
                                         />
 
                                         <!-- checkbox -->
-                                        <!-- <CheckboxForm
+                                        <CheckboxForm
                                             class="max-w-sm"
                                             v-if="
                                                 critere.type_champ_form ===
@@ -663,7 +663,7 @@ const submitReservation = () => {
                                             @update-selected-checkboxes="
                                                 updateSelectedCheckboxes
                                             "
-                                        /> -->
+                                        />
 
                                         <!-- radio -->
                                         <RadioForm

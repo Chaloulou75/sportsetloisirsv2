@@ -115,8 +115,8 @@ const onfilteredStructuresUpdate = (filteredStr) => {
     />
 
     <ResultLayout
-        :listDisciplines="listDisciplines"
-        :allCities="allCities"
+        :list-disciplines="listDisciplines"
+        :all-cities="allCities"
         :discipline="discipline"
         :categories="categories"
     >
@@ -205,10 +205,10 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                 <CategoriesResultNavigation
                     :structuretypeElected="structuretypeElected"
                     :discipline="discipline"
-                    :allStructureTypes="allStructureTypes"
+                    :all-structure-types="allStructureTypes"
                     :categories="categories"
-                    :firstCategories="firstCategories"
-                    :categoriesNotInFirst="categoriesNotInFirst"
+                    :first-categories="firstCategories"
+                    :categories-not-in-first="categoriesNotInFirst"
                 />
             </div>
             <template v-if="produits.data.length > 0">

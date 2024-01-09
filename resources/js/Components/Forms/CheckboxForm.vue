@@ -43,7 +43,7 @@ const updateSelectedCheckboxes = (id, valeur, checked) => {
         leave-to="opacity-0"
     >
         <div :class="classes">
-            <span class="text-sm font-medium text-gray-700">{{ name }}</span>
+            <span class="text-sm font-medium text-gray-700">{{ name }}:</span>
             <div class="mt-2">
                 <div v-for="(option, index) in options" :key="option.id">
                     <label

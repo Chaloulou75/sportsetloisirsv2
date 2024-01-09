@@ -105,6 +105,7 @@ class StructureProduit extends Model
             'catTarifs.attributs',
             'catTarifs.attributs.tarif_attribut',
             'catTarifs.attributs.sous_attributs',
+            'catTarifs.attributs.sous_attributs.sous_attribut',
             'catTarifs.attributs.sous_attributs.sous_attribut_valeur',
             'plannings',
         ]);

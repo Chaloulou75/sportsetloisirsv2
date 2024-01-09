@@ -277,6 +277,52 @@ const formatCityName = (ville) => {
                             </li>
                         </ul>
                     </div>
+                    <div
+                        v-if="
+                            produit.cat_tarifs && produit.cat_tarifs.length > 0
+                        "
+                    >
+                        <p class="mt-2 text-base font-semibold">Tarifs:</p>
+                        <ul class="list-inside list-disc space-y-2 text-sm">
+                            <li
+                                v-for="catTarif in produit.cat_tarifs"
+                                :key="catTarif.id"
+                            >
+                                {{ catTarif.titre }}:
+                                <span class="font-semibold"
+                                    >{{ formatCurrency(catTarif.amount) }}
+                                </span>
+
+                                <ul class="ml-3 list-inside list-disc text-xs">
+                                    <li
+                                        v-for="attribut in catTarif.attributs"
+                                        :key="attribut.id"
+                                    >
+                                        <span>
+                                            {{ attribut.tarif_attribut.nom }}:
+                                            <span class="mr-1 font-semibold">{{
+                                                attribut.valeur
+                                            }}</span>
+                                            <span
+                                                class="mr-1 font-semibold"
+                                                v-for="sousAttr in attribut.sous_attributs"
+                                                :key="sousAttr.id"
+                                            >
+                                                <span class="font-thin italic"
+                                                    >{{
+                                                        sousAttr.sous_attribut
+                                                            .nom
+                                                    }}:</span
+                                                >
+
+                                                {{ sousAttr.valeur }}
+                                            </span>
+                                        </span>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </Link>

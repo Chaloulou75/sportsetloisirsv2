@@ -21,8 +21,8 @@ defineProps({
     <Head title="Profil" />
 
     <ResultLayout
-        :listDisciplines="listDisciplines"
-        :allCities="allCities"
+        :list-disciplines="listDisciplines"
+        :all-cities="allCities"
         :discipline="discipline"
         :categories="categories"
     >
