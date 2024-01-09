@@ -105,8 +105,8 @@ const onfilteredStructuresUpdate = (filteredStr) => {
     />
 
     <ResultLayout
-        :listDisciplines="listDisciplines"
-        :allCities="allCities"
+        :list-disciplines="listDisciplines"
+        :all-cities="allCities"
         :city="city"
     >
         <template #header>
@@ -347,7 +347,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                         </h2>
                         <CitiesAround
                             v-if="citiesAround.length > 0"
-                            :citiesAround="props.citiesAround"
+                            :cities-around="props.citiesAround"
                         />
                     </TransitionRoot>
 
@@ -400,7 +400,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                         v-if="citiesAround.length > 0"
                         class="w-full px-4 md:w-1/3"
                     >
-                        <CitiesAround :citiesAround="props.citiesAround" />
+                        <CitiesAround :cities-around="props.citiesAround" />
                     </div>
                 </div>
             </template>

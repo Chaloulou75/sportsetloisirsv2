@@ -383,7 +383,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                         />
                         <CitiesAround
                             v-if="citiesAround.length > 0"
-                            :citiesAround="props.citiesAround"
+                            :cities-around="props.citiesAround"
                         />
                     </TransitionRoot>
 
@@ -444,7 +444,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                     </div>
                     <CitiesAround
                         v-if="citiesAround.length > 0"
-                        :citiesAround="props.citiesAround"
+                        :cities-around="props.citiesAround"
                     />
                 </div>
             </template>

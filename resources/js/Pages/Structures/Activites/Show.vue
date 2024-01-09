@@ -231,7 +231,7 @@ const submitReservation = () => {
         "
     />
 
-    <ResultLayout :listDisciplines="listDisciplines" :allCities="allCities">
+    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
         <template #header>
             <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
@@ -401,12 +401,12 @@ const submitReservation = () => {
                     :city="city"
                     :departement="departement"
                     :discipline="discipline"
-                    :allStructureTypes="allStructureTypes"
+                    :all-structure-types="allStructureTypes"
                     :categories="categories"
-                    :firstCategories="firstCategories"
-                    :categoriesNotInFirst="categoriesNotInFirst"
+                    :first-categories="firstCategories"
+                    :categories-not-in-first="categoriesNotInFirst"
                     :category="requestCategory"
-                    :structuretypeElected="structuretypeElected"
+                    :structuretype-elected="structuretypeElected"
                 />
             </div>
 

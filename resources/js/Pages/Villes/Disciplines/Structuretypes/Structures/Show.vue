@@ -780,7 +780,7 @@ const events = getEvents();
                         <div class="space-y-4">
                             <CitiesAround
                                 v-if="citiesAround.length > 0"
-                                :citiesAround="citiesAround"
+                                :cities-around="citiesAround"
                             />
                             <DisciplinesSimilaires
                                 v-if="disciplinesSimilaires.length > 0"

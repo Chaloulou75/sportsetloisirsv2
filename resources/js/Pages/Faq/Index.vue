@@ -16,7 +16,7 @@ const props = defineProps({
 <template>
     <Head title="Questions fréquentes" description="Questions fréquentes" />
 
-    <ResultLayout :listDisciplines="listDisciplines" :allCities="allCities">
+    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
         <template #header>
             <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>

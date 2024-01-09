@@ -1269,7 +1269,7 @@ const submitReservation = () => {
             >
                 <CitiesAround
                     v-if="citiesAround.length > 0"
-                    :citiesAround="citiesAround"
+                    :cities-around="citiesAround"
                 />
                 <DisciplinesSimilaires
                     v-if="disciplinesSimilaires.length > 0"

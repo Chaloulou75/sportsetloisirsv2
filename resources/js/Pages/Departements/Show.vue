@@ -100,7 +100,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
         "
     />
 
-    <ResultLayout :listDisciplines="listDisciplines" :allCities="allCities">
+    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
         <template #header>
             <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>

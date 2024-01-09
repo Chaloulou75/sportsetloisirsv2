@@ -306,8 +306,8 @@ const events = getEvents();
     />
 
     <ResultLayout
-        :listDisciplines="listDisciplines"
-        :allCities="allCities"
+        :list-disciplines="listDisciplines"
+        :all-cities="allCities"
         :discipline="requestDiscipline"
         :city="city"
     >
@@ -481,12 +481,12 @@ const events = getEvents();
                     :city="city"
                     :departement="departement"
                     :discipline="requestDiscipline"
-                    :allStructureTypes="allStructureTypes"
+                    :all-structure-types="allStructureTypes"
                     :categories="categories"
-                    :firstCategories="firstCategories"
-                    :categoriesNotInFirst="categoriesNotInFirst"
+                    :first-categories="firstCategories"
+                    :categories-not-in-first="categoriesNotInFirst"
                     :category="requestCategory"
-                    :structuretypeElected="structuretypeElected"
+                    :structuretype-elected="structuretypeElected"
                 />
             </div>
             <section

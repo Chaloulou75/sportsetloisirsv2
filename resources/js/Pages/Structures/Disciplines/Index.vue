@@ -160,9 +160,9 @@ const openAddTarifModal = (structure) => {
     <ProLayout
         :structure="structure"
         :can="can"
-        :allReservationsCount="allReservationsCount"
-        :pendingReservationsCount="pendingReservationsCount"
-        :confirmedReservationsCount="confirmedReservationsCount"
+        :all-reservations-count="allReservationsCount"
+        :pending-reservations-count="pendingReservationsCount"
+        :confirmed-reservations-count="confirmedReservationsCount"
     >
         <template #header>
             <div class="flex h-full items-center justify-start">

@@ -1022,7 +1022,7 @@ onMounted(() => {
                     </div>
                     <CitiesAround
                         v-if="citiesAround.length > 0"
-                        :citiesAround="props.citiesAround"
+                        :cities-around="props.citiesAround"
                     />
                 </div>
             </template>

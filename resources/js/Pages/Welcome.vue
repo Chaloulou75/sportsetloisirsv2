@@ -72,7 +72,7 @@ const formatCityName = (ville) => {
         description="Sports-et-loisirs.fr recense les structures proposant des activités de sport ou de loisirs en France - plus de 300 disciplines et 32000 structures référencées."
     />
 
-    <ResultLayout :listDisciplines="listDisciplines" :allCities="allCities">
+    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
         <template #header>
             <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>

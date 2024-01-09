@@ -72,7 +72,7 @@ function submit() {
 <template>
     <Head title="Inscription de votre structure" />
 
-    <ResultLayout :listDisciplines="listDisciplines" :allCities="allCities">
+    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
         <template #header>
             <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>

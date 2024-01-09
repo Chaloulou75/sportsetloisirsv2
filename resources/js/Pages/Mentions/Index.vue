@@ -13,7 +13,7 @@ const props = defineProps({
 <template>
     <Head title="Mentions Légales" description="Mentions Légales" />
 
-    <ResultLayout :listDisciplines="listDisciplines" :allCities="allCities">
+    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
         <template #header>
             <FamilleResultNavigation :familles="familles" />
             <div class="mx-auto my-6 max-w-full px-2 py-4 md:px-4 lg:px-6">
