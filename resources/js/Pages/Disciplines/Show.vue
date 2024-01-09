@@ -350,7 +350,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                         <!-- les disciplines similaires -->
                         <DisciplinesSimilaires
                             v-if="disciplinesSimilaires.length > 0"
-                            :disciplinesSimilaires="disciplinesSimilaires"
+                            :disciplines-similaires="disciplinesSimilaires"
                         />
                     </TransitionRoot>
 
@@ -399,7 +399,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                     </p>
                     <div v-if="disciplinesSimilaires.length > 0" class="w-full">
                         <DisciplinesSimilaires
-                            :disciplinesSimilaires="disciplinesSimilaires"
+                            :disciplines-similaires="disciplinesSimilaires"
                         />
                     </div>
                 </div>

@@ -203,7 +203,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                 class="sticky left-0 right-0 top-16 z-[999] bg-transparent backdrop-blur-md"
             >
                 <CategoriesResultNavigation
-                    :structuretypeElected="structuretypeElected"
+                    :structuretype-elected="structuretypeElected"
                     :discipline="discipline"
                     :all-structure-types="allStructureTypes"
                     :categories="categories"
@@ -371,7 +371,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                         <!-- les disciplines similaires -->
                         <DisciplinesSimilaires
                             v-if="disciplinesSimilaires.length > 0"
-                            :disciplinesSimilaires="disciplinesSimilaires"
+                            :disciplines-similaires="disciplinesSimilaires"
                         />
                     </TransitionRoot>
 
@@ -423,7 +423,9 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                         class="w-full px-4 md:w-1/3"
                     >
                         <DisciplinesSimilaires
-                            :disciplinesSimilaires="props.disciplinesSimilaires"
+                            :disciplines-similaires="
+                                props.disciplinesSimilaires
+                            "
                         />
                     </div>
                 </div>

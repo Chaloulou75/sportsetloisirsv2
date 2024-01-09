@@ -143,7 +143,7 @@ const onPermissionSubmit = () => {
                     </div>
                     <div
                         v-if="addPermissionForm.errors.contact"
-                        class="mt-2 text-sm text-red-500"
+                        class="mt-2 text-xs text-red-500"
                     >
                         {{ addPermissionForm.errors.contact }}
                     </div>
@@ -240,7 +240,7 @@ const onPermissionSubmit = () => {
                 <button
                     type="submit"
                     :disabled="addPermissionForm.processing"
-                    class="w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-indigo-500 shadow hover:bg-gray-100 hover:text-indigo-800"
+                    class="mt-4 inline-flex justify-center self-end rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:col-end-5"
                 >
                     <LoadingSVG v-if="addPermissionForm.processing" />
                     Enregistrer

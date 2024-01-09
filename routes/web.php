@@ -125,8 +125,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('structures/{structure:slug}/tarifswithattributs/{tarif}', [StructureCatTarifController::class, 'update'])->name('structures.cat.tarifs.update');
     Route::delete('/structures/{structure:slug}/tarifswithattributs/{tarif}', [StructureCatTarifController::class, 'destroy'])->name('structures.cat.tarifs.destroy');
 
-
-
     Route::post('structures/{structure:slug}/plannings', [StructurePlanningController::class, 'store'])->name('structures.plannings.store');
     Route::put('structures/{structure:slug}/plannings/{planning}', [StructurePlanningController::class, 'update'])->name('structures.plannings.update');
     Route::delete('structures/{structure:slug}/plannings/{planning}', [StructurePlanningController::class, 'destroy'])->name('structures.plannings.destroy');

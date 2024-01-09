@@ -50,7 +50,7 @@ const latestAdresseId = computed(() => {
     return null;
 });
 
-const addInstructeur = ref(true);
+const addInstructeur = ref(false);
 
 const form = useForm({
     structure_id: props.structure.id,
@@ -347,7 +347,7 @@ onMounted(() => {
 
                                         <div
                                             v-if="filteredCriteres.length > 0"
-                                            class="mx-auto grid w-full grid-cols-1 gap-4 bg-gray-100 p-2 shadow md:grid-cols-3"
+                                            class="mx-auto grid w-full grid-cols-1 gap-4 bg-gray-50 p-2 shadow md:grid-cols-3"
                                         >
                                             <div
                                                 v-for="critere in filteredCriteres"
@@ -662,6 +662,34 @@ onMounted(() => {
                                                     />
                                                 </div>
 
+                                                <!-- Instructeur -->
+                                                <div
+                                                    v-if="
+                                                        critere.type_champ_form ===
+                                                        'instructeur'
+                                                    "
+                                                    class="flex w-full items-start"
+                                                >
+                                                    <input
+                                                        v-model="addInstructeur"
+                                                        id="addInstructeur"
+                                                        type="checkbox"
+                                                        class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                    />
+                                                    <label
+                                                        for="addInstructeur"
+                                                        class="ml-2 text-sm font-medium text-gray-700"
+                                                        >Ajouter un instructeur
+                                                        <span
+                                                            class="text-xs italic text-gray-600"
+                                                            >(celui-ci doit
+                                                            préalablement être
+                                                            inscrit sur
+                                                            sports-et-loisirs)</span
+                                                        >
+                                                    </label>
+                                                </div>
+
                                                 <!-- sous criteres -->
                                                 <div
                                                     v-for="valeur in critere.valeurs"
@@ -747,7 +775,6 @@ onMounted(() => {
                                                 </div>
                                             </div>
                                         </div>
-
                                         <!-- newAddress -->
                                         <AddressForm
                                             v-if="addAddress"
@@ -764,26 +791,6 @@ onMounted(() => {
                                             "
                                         />
 
-                                        <!-- Instructeur -->
-                                        <div class="flex w-full items-start">
-                                            <input
-                                                v-model="addInstructeur"
-                                                id="addInstructeur"
-                                                type="checkbox"
-                                                class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                            />
-                                            <label
-                                                for="addInstructeur"
-                                                class="ml-2 text-sm font-medium text-gray-700"
-                                                >Ajouter un instructeur
-                                                <span
-                                                    class="text-xs italic text-gray-600"
-                                                    >(celui-ci doit
-                                                    préalablement être inscrit
-                                                    sur sports-et-loisirs)</span
-                                                >
-                                            </label>
-                                        </div>
                                         <InstructeurForm
                                             v-if="addInstructeur"
                                             v-model:instructeur_email="

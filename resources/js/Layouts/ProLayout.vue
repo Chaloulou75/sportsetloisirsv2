@@ -52,9 +52,9 @@ const props = defineProps({
                 <!-- Page Heading -->
                 <InscriptionNavigation
                     :structure="structure"
-                    :allReservationsCount="allReservationsCount"
-                    :pendingReservationsCount="pendingReservationsCount"
-                    :confirmedReservationsCount="confirmedReservationsCount"
+                    :all-reservations-count="allReservationsCount"
+                    :pending-reservations-count="pendingReservationsCount"
+                    :confirmed-reservations-count="confirmedReservationsCount"
                     :can="can"
                     @eventFromChild="handleButtonEvent"
                 />

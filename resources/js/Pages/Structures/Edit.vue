@@ -79,33 +79,22 @@ const displayAdresseForm = () => {
 };
 
 const addressForm = useForm({
-    address: ref(null),
-    city: ref(null),
-    zip_code: ref(null),
-    country: ref(null),
-    address_lat: ref(null),
-    address_lng: ref(null),
+    address: null,
+    city: null,
+    zip_code: null,
+    country: null,
+    address_lat: null,
+    address_lng: null,
 });
 
 const onSubmitAdress = () => {
-    router.post(
-        route("structures.adresses.store", props.structure.slug),
-        {
-            address: addressForm.address,
-            city: addressForm.city,
-            zip_code: addressForm.zip_code,
-            country: addressForm.country,
-            address_lat: addressForm.address_lat,
-            address_lng: addressForm.address_lng,
+    addressForm.post(route("structures.adresses.store", props.structure.slug), {
+        preserveScroll: true,
+        onSuccess: () => {
+            addressForm.reset();
+            displayAdresseForm();
         },
-        {
-            preserveScroll: true,
-            onSuccess: () => {
-                addressForm.reset();
-                displayAdresseForm();
-            },
-        }
-    );
+    });
 };
 
 const showUpdateAddressForm = ref(false);
@@ -142,19 +131,11 @@ const displayUpdateAdresseForm = (adresse) => {
 
 const onUpdateAdress = () => {
     const adresse = selectedAdresse.value;
-    router.put(
+    updateAddressForm.put(
         route("structures.adresses.update", {
-            structure: props.structure.slug,
-            adress: adresse.id,
+            structure: props.structure,
+            adress: adresse,
         }),
-        {
-            address: updateAddressForm.address,
-            city: updateAddressForm.city,
-            zip_code: updateAddressForm.zip_code,
-            country: updateAddressForm.country,
-            address_lat: updateAddressForm.address_lat,
-            address_lng: updateAddressForm.address_lng,
-        },
         {
             preserveScroll: true,
             onSuccess: () => {
@@ -190,39 +171,39 @@ const deletePartenaire = (partenaire) => {
 };
 
 const form = useForm({
-    name: ref(props.structure.name),
-    structuretype_id: ref(props.structure.structuretype_id),
+    name: props.structure.name,
+    structuretype_id: props.structure.structuretype_id,
     attributs: ref([props.structure.attributs]),
-    address: ref(props.structure.address),
-    city: ref(props.structure.city),
-    zip_code: ref(props.structure.zip_code),
-    country: ref(props.structure.country),
-    address_lat: ref(props.structure.address_lat),
-    address_lng: ref(props.structure.address_lng),
-    email: ref(props.structure.email),
-    date_creation: ref(props.structure.date_creation),
-    website: ref(props.structure.website),
-    phone1: ref(props.structure.phone1),
-    phone2: ref(props.structure.phone2),
-    facebook: ref(props.structure.facebook),
-    instagram: ref(props.structure.instagram),
-    youtube: ref(props.structure.youtube),
-    tiktok: ref(props.structure.tiktok),
-    presentation_courte: ref(props.structure.presentation_courte),
-    presentation_longue: ref(props.structure.presentation_longue),
-    abo_news: ref(props.structure.abo_news),
-    abo_promo: ref(props.structure.abo_promo),
-    logo: ref(null),
+    address: props.structure.address,
+    city: props.structure.city,
+    zip_code: props.structure.zip_code,
+    country: props.structure.country,
+    address_lat: props.structure.address_lat,
+    address_lng: props.structure.address_lng,
+    email: props.structure.email,
+    date_creation: props.structure.date_creation,
+    website: props.structure.website,
+    phone1: props.structure.phone1,
+    phone2: props.structure.phone2,
+    facebook: props.structure.facebook,
+    instagram: props.structure.instagram,
+    youtube: props.structure.youtube,
+    tiktok: props.structure.tiktok,
+    presentation_courte: props.structure.presentation_courte,
+    presentation_longue: props.structure.presentation_longue,
+    abo_news: props.structure.abo_news,
+    abo_promo: props.structure.abo_promo,
+    logo: null,
 });
 
 const name = ref(null);
-const aboNews = ref(props.structure.abo_news);
-const aboPromo = ref(props.structure.abo_promo);
+const aboNews = ref(!!props.structure.abo_news);
+const aboPromo = ref(!!props.structure.abo_promo);
 const isAboNewsChecked = computed(() => {
-    return aboNews.value === 1 ? true : false;
+    return aboNews.value;
 });
 const isAboPromoChecked = computed(() => {
-    return aboPromo.value === 1 ? true : false;
+    return aboPromo.value;
 });
 
 const addItem = (id) => {
@@ -231,46 +212,15 @@ const addItem = (id) => {
     });
 };
 
-function resetFields() {
-    form.reset("attributs");
-}
+const submit = () => {
+    form.put(route("structures.update", props.structure), {
+        preserveScroll: true,
+    });
+};
 
 onMounted(() => {
     name.value.focus();
 });
-
-const submit = () => {
-    router.post(
-        `/structures/${props.structure.id}`,
-        {
-            _method: "put",
-            name: form.name,
-            structuretype_id: form.structuretype_id,
-            attributs: form.attributs,
-            address: form.address,
-            city: form.city,
-            zip_code: form.zip_code,
-            country: form.country,
-            address_lat: form.address_lat,
-            address_lng: form.address_lng,
-            email: form.email,
-            date_creation: form.date_creation,
-            website: form.website,
-            phone1: form.phone1,
-            phone2: form.phone2,
-            facebook: form.facebook,
-            instagram: form.instagram,
-            youtube: form.youtube,
-            tiktok: form.tiktok,
-            presentation_courte: form.presentation_courte,
-            presentation_longue: form.presentation_longue,
-            abo_news: form.abo_news,
-            abo_promo: form.abo_promo,
-            logo: form.logo,
-        },
-        props.structure
-    );
-};
 </script>
 
 <template>
@@ -1108,10 +1058,10 @@ const submit = () => {
                                     </p>
 
                                     <div class="flex items-center gap-x-6">
-                                        <button
+                                        <!-- <button
                                             type="button"
                                             @click="
-                                                displayUpdatePartenaireForm(
+                                                displayPartenaireForm(
                                                     partenaire
                                                 )
                                             "
@@ -1119,7 +1069,7 @@ const submit = () => {
                                             <ArrowPathIcon
                                                 class="h-6 w-6 text-blue-500 transition-all duration-200 hover:-rotate-90 hover:text-indigo-500"
                                             />
-                                        </button>
+                                        </button> -->
                                         <button
                                             type="button"
                                             @click="

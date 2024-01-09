@@ -27,8 +27,8 @@ const isShowing = ref(true);
                 v-if="$slots.header"
             >
                 <ResultNavigation
-                    :listDisciplines="listDisciplines"
-                    :allCities="allCities"
+                    :list-disciplines="listDisciplines"
+                    :all-cities="allCities"
                     :categories="categories"
                     :current-discipline="discipline"
                     :current-city="city"

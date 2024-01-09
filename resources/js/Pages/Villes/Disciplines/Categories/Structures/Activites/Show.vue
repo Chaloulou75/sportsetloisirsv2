@@ -1273,7 +1273,7 @@ const submitReservation = () => {
                 />
                 <DisciplinesSimilaires
                     v-if="disciplinesSimilaires.length > 0"
-                    :disciplinesSimilaires="disciplinesSimilaires"
+                    :disciplines-similaires="disciplinesSimilaires"
                 />
             </section>
         </template>

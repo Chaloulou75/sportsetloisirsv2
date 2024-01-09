@@ -41,7 +41,7 @@ const AddressForm = defineAsyncComponent(() =>
 );
 
 const addAddress = ref(false);
-const addInstructeur = ref(true);
+const addInstructeur = ref(false);
 const filteredCriteres = computed(() => {
     return props.criteres.filter(
         (critere) =>
@@ -726,6 +726,38 @@ const onSubmitEditProduitForm = () => {
                                                             :name="`Rayon de déplacement (en km)`"
                                                             :metric="`Km`"
                                                         />
+                                                        <!-- Instructeur -->
+                                                        <div
+                                                            v-if="
+                                                                critere.type_champ_form ===
+                                                                'instructeur'
+                                                            "
+                                                            class="flex w-full items-start"
+                                                        >
+                                                            <input
+                                                                v-model="
+                                                                    addInstructeur
+                                                                "
+                                                                id="addInstructeur"
+                                                                type="checkbox"
+                                                                class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                            />
+                                                            <label
+                                                                for="addInstructeur"
+                                                                class="ml-2 text-sm font-medium text-gray-700"
+                                                                >Ajouter un
+                                                                instructeur
+                                                                <span
+                                                                    class="text-xs italic text-gray-600"
+                                                                    >(celui-ci
+                                                                    doit
+                                                                    préalablement
+                                                                    être inscrit
+                                                                    sur
+                                                                    sports-et-loisirs)</span
+                                                                >
+                                                            </label>
+                                                        </div>
                                                     </div>
 
                                                     <!-- sous criteres -->
@@ -848,29 +880,6 @@ const onSubmitEditProduitForm = () => {
                                                 "
                                             />
 
-                                            <!-- Instructeur -->
-                                            <div
-                                                class="flex w-full items-start"
-                                            >
-                                                <input
-                                                    v-model="addInstructeur"
-                                                    id="addInstructeur"
-                                                    type="checkbox"
-                                                    class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                                />
-                                                <label
-                                                    for="addInstructeur"
-                                                    class="ml-2 text-sm font-medium text-gray-700"
-                                                    >Ajouter un instructeur
-                                                    <span
-                                                        class="text-xs italic text-gray-600"
-                                                        >(celui-ci doit
-                                                        préalablement être
-                                                        inscrit sur
-                                                        sports-et-loisirs)</span
-                                                    >
-                                                </label>
-                                            </div>
                                             <InstructeurForm
                                                 v-if="addInstructeur"
                                                 v-model:instructeur_email="

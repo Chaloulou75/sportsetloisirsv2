@@ -22,29 +22,27 @@ class StructureAddresseController extends Controller
             'city' => ['required', 'string'],
         ]);
 
-        $structure = Structure::where('id', $structure->id)->firstOrFail();
-
         $city = City::where('code_postal', $request->zip_code)->firstOrFail();
         $cityId = $city->id;
 
         $validatedAddress = [
-                    'structure_id' => $structure->id,
-                    'address' => $request->address,
-                    'zip_code' => $request->zip_code,
-                    'city' => $request->city,
-                    'city_id' => $cityId,
-                    'country_id' => $structure->country_id,
-                    'country' => $request->country,
-                    'address_lat' => $request->address_lat,
-                    'address_lng' => $request->address_lng,
-                    'phone' => $structure->phone1,
-                    'email' => $structure->email,
-                    'name' => $structure->name,
-                ];
+            'structure_id' => $structure->id,
+            'address' => $request->address,
+            'zip_code' => $request->zip_code,
+            'city' => $request->city,
+            'city_id' => $cityId,
+            'country_id' => $structure->country_id,
+            'country' => $request->country,
+            'address_lat' => $request->address_lat,
+            'address_lng' => $request->address_lng,
+            'phone' => $structure->phone1,
+            'email' => $structure->email,
+            'name' => $structure->name,
+        ];
 
         $structureAddress = StructureAddress::create($validatedAddress);
 
-        return to_route('structures.gestion.index', $structure)->with('success', 'Adresse ajoutée.');
+        return to_route('structures.edit', $structure)->with('success', 'Adresse ajoutée.');
 
     }
 
@@ -79,7 +77,7 @@ class StructureAddresseController extends Controller
 
         $adress->update($validatedAddress);
 
-        return to_route('structures.gestion.index', $structure)->with('success', 'Adresse modifiée.');
+        return to_route('structures.edit', $structure)->with('success', 'Adresse modifiée.');
 
     }
 
@@ -90,7 +88,7 @@ class StructureAddresseController extends Controller
     {
         $adress->delete();
 
-        return to_route('structures.gestion.index', $structure)->with('success', 'Adresse supprimée.');
+        return to_route('structures.edit', $structure)->with('success', 'Adresse supprimée.');
 
     }
 }

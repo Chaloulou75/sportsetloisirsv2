@@ -784,7 +784,7 @@ const events = getEvents();
                             />
                             <DisciplinesSimilaires
                                 v-if="disciplinesSimilaires.length > 0"
-                                :disciplinesSimilaires="disciplinesSimilaires"
+                                :disciplines-similaires="disciplinesSimilaires"
                             />
                         </div>
                     </div>

@@ -447,7 +447,8 @@ class StructureController extends Controller
      */
     public function update(Request $request, Structure $structure): RedirectResponse
     {
-        $structure = Structure::where('id', $structure->id)->firstOrFail();
+        dd($request->all());
+        // $structure = Structure::where('id', $structure->id)->firstOrFail();
 
         $validated = request()->validate([
             'name' => ['required', 'string', 'max:255'],
