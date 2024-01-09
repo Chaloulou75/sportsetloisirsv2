@@ -151,7 +151,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Admin routes
-    Route::prefix('admin')->group(function () {
+    Route::prefix('admin')->middleware(['admin'])->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
         Route::get('/categories', [CategoryController::class, 'index'])->name('admin.categories.index');
