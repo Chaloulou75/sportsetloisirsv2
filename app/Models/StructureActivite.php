@@ -91,6 +91,7 @@ class StructureActivite extends Model
             'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut',
             'produits.catTarifs',
             'produits.catTarifs.attributs',
+            'produits.catTarifs.attributs.tarif_attribut',
             'produits.catTarifs.attributs.sous_attributs',
             'produits.catTarifs.attributs.sous_attributs.sous_attribut_valeur',
             'produits.plannings',

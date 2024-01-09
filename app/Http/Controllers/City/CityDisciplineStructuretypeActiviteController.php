@@ -87,18 +87,7 @@ class CityDisciplineStructuretypeActiviteController extends Controller
                 ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))->whereIn('categorie_id', $activite->structure->categories->pluck('categorie_id'))
                 ->get();
 
-        $activiteSimilaires = StructureActivite::with([
-            'discipline:id,name',
-            'categorie:id,categorie_id,discipline_id,nom_categorie_client',
-            'produits',
-            'produits.adresse',
-            'produits.criteres',
-            'produits.criteres.critere',
-            'produits.tarifs',
-            'produits.tarifs.tarifType',
-            'produits.tarifs.structureTarifTypeInfos',
-            'produits.plannings'
-            ])->whereNot('id', $activite->id)
+        $activiteSimilaires = StructureActivite::withRelations()->whereNot('id', $activite->id)
             ->where('discipline_id', $activite->discipline_id)
             ->inRandomOrder()
             ->take(3)

@@ -645,7 +645,7 @@ const submitReservation = () => {
                                         />
 
                                         <!-- checkbox -->
-                                        <CheckboxForm
+                                        <!-- <CheckboxForm
                                             class="max-w-sm"
                                             v-if="
                                                 critere.type_champ_form ===
@@ -663,7 +663,7 @@ const submitReservation = () => {
                                             @update-selected-checkboxes="
                                                 updateSelectedCheckboxes
                                             "
-                                        />
+                                        /> -->
 
                                         <!-- radio -->
                                         <RadioForm
