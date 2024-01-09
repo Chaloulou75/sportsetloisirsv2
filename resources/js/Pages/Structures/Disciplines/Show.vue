@@ -252,6 +252,7 @@ const latestAdresseId = computed(() => {
                         <TarifDisplay
                             :errors="errors"
                             :structure="structure"
+                            :discipline="discipline"
                             :str-cat-tarifs="strCatTarifs"
                             :tarif-types="tarifTypes"
                             :all-categories="categoriesListByDiscipline"

@@ -20,6 +20,8 @@ const ModalEditTarif = defineAsyncComponent(() =>
 const props = defineProps({
     errors: Object,
     structure: Object,
+    discipline: Object,
+    categorie: Object,
     allCategories: Object,
     tarifTypes: Object,
     strCatTarifs: Object,
@@ -474,6 +476,8 @@ const destroyTarif = (tarif) => {
     <ModalEditCatTarif
         :errors="errors"
         :structure="structure"
+        :discipline="discipline"
+        :categorie="categorie"
         :tarif-to-update="tarifToUpdate"
         :all-categories="allCategories"
         :activite-for-tarifs="activiteForTarifs"

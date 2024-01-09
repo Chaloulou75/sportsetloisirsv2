@@ -92,7 +92,6 @@ class StructureCatTarifController extends Controller
                         }
                     }
                 }
-
             }
         }
         if($request->produits) {
@@ -129,9 +128,82 @@ class StructureCatTarifController extends Controller
      */
     public function update(Request $request, Structure $structure, StructureCatTarif $tarif): RedirectResponse
     {
-        dd($request->all(), $tarif);
-        return to_route('structures.disciplines.index', $structure)->with('success', "Le tarif a bien été modifié");
+        $request->validate([
+            'categorie_id' => ['required', Rule::exists(LienDisciplineCategorie::class, 'id')],
+            'tarif_type.id' => ['required', Rule::exists(LienDisCatTariftype::class, 'id')],
+            'titre' => ['nullable', 'string', 'min:3'],
+            'description' => ['nullable', 'string', 'min:3'],
+            'attributs' => ['nullable'],
+            'sousattributs' => ['nullable'],
+            'amount' => ['required', 'numeric'],
+            'produits' => ['nullable'],
+        ]);
 
+        $tarif->update([
+            'structure_id' => $structure->id,
+            'categorie_id' => $request->categorie_id,
+            'dis_cat_tar_typ_id' => $request->tarif_type['id'],
+            'titre' => $request->titre,
+            'description' => $request->description,
+            'amount' => $request->amount
+        ]);
+
+        if($request->attributs) {
+            foreach($tarif->attributs as $attribut) {
+                $attribut->delete();
+            }
+
+            foreach($request->attributs as $key => $valeur) {
+                if(is_string($valeur)) {
+                    $strCatTarifAttribut = $tarif->attributs()->create([
+                       'cat_tar_att_id' => $key,
+                       'valeur' => $valeur
+                    ]);
+                } else {
+                    $strCatTarifAttribut = $tarif->attributs()->create([
+                        'cat_tar_att_id' => $key,
+                        'dis_cat_tar_att_valeur_id' => $valeur['id'],
+                        'valeur' => $valeur['valeur']
+                    ]);
+                }
+                if($request->sousattributs) {
+                    $tarAttribut = LienDisCatTartypAttribut::withWhereHas('sous_attributs')->find($strCatTarifAttribut->cat_tar_att_id);
+
+                    if($tarAttribut) {
+                        foreach($tarAttribut->sous_attributs as $sousAttribut) {
+                            foreach($request->sousattributs as $sousAttId => $sousAttributValeur) {
+                                if($sousAttribut->id === $sousAttId) {
+                                    if(is_string($sousAttributValeur)) {
+                                        $strCatTarifAttribut->sous_attributs()->create([
+                                            'sousattribut_id' => $sousAttId,
+                                            'valeur' => $sousAttributValeur
+                                        ]);
+                                    } else {
+                                        $strCatTarifAttribut->sous_attributs()->create([
+                                            'sousattribut_id' => $sousAttId,
+                                            'ss_att_valeur_id' => $sousAttributValeur['id'],
+                                            'valeur' => $sousAttributValeur['valeur']
+                                        ]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if($request->produits) {
+            $tarif->produits()->detach();
+            foreach($request->produits as $key => $value) {
+                $structureProduit = StructureProduit::find($key);
+                if($value === true) {
+                    $tarif->produits()->attach($structureProduit->id);
+                }
+            }
+        }
+
+        return to_route('structures.disciplines.index', $structure)->with('success', "Le tarif a bien été modifié");
     }
 
     /**

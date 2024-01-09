@@ -1,6 +1,6 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
-import { ref, watch } from "vue";
+import { ref, watch, nextTick } from "vue";
 import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
@@ -55,9 +55,11 @@ const editCatTarifForm = useForm({
     produits: {},
 });
 
+//tarif
 watch(
     () => props.tarifToUpdate,
     (newtarif) => {
+        editCatTarifForm.produits = {};
         if (newtarif) {
             editCatTarifForm.discipline_id = newtarif.categorie.discipline_id;
             editCatTarifForm.categorie_id = newtarif.categorie_id;
@@ -129,15 +131,16 @@ watch(
                 );
             }
             if (newtarif.produits) {
-                newtarif.produits.forEach((produitTarot) => {
-                    editCatTarifForm.produits[produitTarot.id] = true;
+                newtarif.produits.forEach((produit) => {
+                    editCatTarifForm.produits[produit.id] = true;
                 });
             }
         }
     },
-    { deep: true }
+    { deep: true, immediate: true }
 );
 
+//dis_id
 watch(
     () => editCatTarifForm.discipline_id,
     (newDisciplineId) => {
@@ -159,6 +162,7 @@ watch(
     }
 );
 
+//cat_id
 watch(
     () => editCatTarifForm.categorie_id,
     (newCategorieId) => {
@@ -180,13 +184,14 @@ watch(
     }
 );
 
+//disciplines
 watch(
     () => editCatTarifForm.disciplines,
     (newDisciplines) => {
         if (newDisciplines) {
             editCatTarifForm.categories = {};
             editCatTarifForm.activites = {};
-            editCatTarifForm.produits = {};
+            // editCatTarifForm.produits = {};
             for (const disciplineId in newDisciplines) {
                 const discipline = newDisciplines[disciplineId];
                 if (discipline) {
@@ -222,12 +227,13 @@ watch(
     { deep: true }
 );
 
+//categories
 watch(
     () => editCatTarifForm.categories,
     (newValue) => {
         if (newValue) {
             editCatTarifForm.activites = {};
-            editCatTarifForm.produits = {};
+            // editCatTarifForm.produits = {};
             for (const categoryId in newValue) {
                 const category = newValue[categoryId];
                 if (category) {
@@ -257,11 +263,12 @@ watch(
     { deep: true }
 );
 
+//activites
 watch(
     () => editCatTarifForm.activites,
     (newValue) => {
         if (newValue) {
-            editCatTarifForm.produits = {};
+            // editCatTarifForm.produits = {};
             for (const disciplineId in props.activiteForTarifs) {
                 const disciplineData = props.activiteForTarifs[disciplineId];
                 for (const categoryId in disciplineData.categories) {
@@ -424,7 +431,7 @@ const onSubmit = () => {
                                             class="text-indigo-700"
                                         >
                                             <span class="text-gray-800">
-                                                pour la discipline</span
+                                                de</span
                                             >
                                             {{ discipline.name }}</span
                                         >
