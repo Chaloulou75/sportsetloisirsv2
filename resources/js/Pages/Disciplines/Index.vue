@@ -1,9 +1,8 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { router, Head, Link } from "@inertiajs/vue3";
-import { ref, watch } from "vue";
+import { ref, watch, defineAsyncComponent } from "vue";
 import { debounce } from "lodash";
-import { defineAsyncComponent } from "vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
 import DisciplineSmallCard from "@/Components/Disciplines/DisciplineSmallCard.vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";

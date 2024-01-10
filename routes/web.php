@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CritereController;
@@ -32,6 +33,7 @@ use App\Http\Controllers\StructureDisciplineController;
 use App\Http\Controllers\StructureStatistiqueController;
 use App\Http\Controllers\Discipline\DisciplineController;
 use App\Http\Controllers\AdminTarifTypeAttributController;
+use App\Http\Controllers\Departement\DepartementController;
 use App\Http\Controllers\LienDisCatCritValSsCritController;
 use App\Http\Controllers\LienDisCatTarAttrValeurController;
 use App\Http\Controllers\StructureActiviteProduitController;
@@ -88,6 +90,10 @@ Route::get('/activites-{activite:id}', [ActiviteController::class, 'show'])->nam
 
 // Departements routes
 require __DIR__ . '/departement.php';
+
+//Blog
+Route::get('/blog', [PostController::class, 'index'])->name('posts.index');
+Route::get('/blog/{post:slug}', [PostController::class, 'show'])->name('posts.show');
 
 Route::resource('product_reservations', ProductReservationController::class)->only([
     'store'

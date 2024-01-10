@@ -247,7 +247,11 @@ const formatCityName = (ville) => {
                     class="mb-8 grid h-auto grid-cols-1 place-items-stretch gap-4 px-1.5 sm:grid-cols-2 md:grid-cols-3 md:px-0 lg:grid-cols-4"
                 >
                     <Link
-                        :href="route('departements.show', departement.slug)"
+                        :href="
+                            route('departements.show', {
+                                departement: departement,
+                            })
+                        "
                         :active="
                             route().current(
                                 'departements.show',

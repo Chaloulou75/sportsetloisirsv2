@@ -18,7 +18,7 @@ class AdminsOnly
         $allowedEmails = ['tonio20@hotmail.fr', 'c.jeandey@gmail.com'];
 
         if (!auth()->check() || !in_array(auth()->user()->email, $allowedEmails)) {
-            return redirect(route('welcome'));
+            return redirect(route('welcome'))->with('error', 'Requête non autorisée');
         }
         return $next($request);
     }

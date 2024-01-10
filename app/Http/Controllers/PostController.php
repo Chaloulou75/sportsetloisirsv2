@@ -2,16 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
+use App\Models\Post;
+use Inertia\Inertia;
+use Inertia\Response;
+use App\Models\Famille;
 use Illuminate\Http\Request;
+use App\Models\ListDiscipline;
 
 class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
-        //
+        $familles = Famille::withProducts()->get();
+        $listDisciplines = ListDiscipline::withProducts()->get();
+        $allCities = City::withProducts()->get();
+        $posts = Post::with('author', 'comments')
+                ->latest()
+                ->filter(
+                    request(['search', 'author'])
+                )
+                ->paginate(18)
+                ->withQueryString();
+
+        return Inertia::render('Posts/Index', [
+            'familles' => $familles,
+            'listDisciplines' => $listDisciplines,
+            'allCities' => $allCities,
+            'posts' => $posts,
+            'filters' => request()->all(['search', 'author']),
+        ]);
+
     }
 
     /**

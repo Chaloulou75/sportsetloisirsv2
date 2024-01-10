@@ -14,9 +14,32 @@ class Post extends Model
 
     protected $guarded = [];
 
-    public function user(): BelongsTo
+    public function scopeFilter($query, array $filters)
     {
-        return $this->belongsTo(User::class);
+        $query->when(
+            $filters['search'] ?? false,
+            fn($query, $search) =>
+            $query->where(
+                fn($query) =>
+                $query->where('title', 'like', '%' . $search . '%')
+                    ->orWhere('body', 'like', '%' . $search . '%')
+            )
+        );
+
+        $query->when(
+            $filters['author'] ?? false,
+            fn($query, $author) =>
+            $query->whereHas(
+                'author',
+                fn($query) =>
+                $query->where('name', 'like', '%' . $author . '%')
+            )
+        );
+    }
+
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function comments(): HasMany

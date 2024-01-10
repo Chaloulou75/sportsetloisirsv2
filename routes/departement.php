@@ -14,9 +14,9 @@ use App\Http\Controllers\Departement\DepartementDisciplineCategorieStructureCont
 use App\Http\Controllers\Departement\DepartementDisciplineStructuretypeActiviteController;
 use App\Http\Controllers\Departement\DepartementDisciplineStructuretypeStructureController;
 
-Route::resource('departements', DepartementController::class)->only([
-    'index'
-]);
+Route::get('/departements', [DepartementController::class, 'index'])->name(
+    'departements.index'
+);
 
 Route::get('/dept-{departement:slug}', [DepartementController::class, 'show'])->name('departements.show');
 

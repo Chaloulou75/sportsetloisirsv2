@@ -54,6 +54,7 @@ class DepartementController extends Controller
      */
     public function show(Departement $departement): Response
     {
+        dd($departement);
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();

@@ -142,7 +142,11 @@ watch(
                     class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                 >
                     <Link
-                        :href="route('departements.show', departement.slug)"
+                        :href="
+                            route('departements.show', {
+                                departement: departement,
+                            })
+                        "
                         :active="
                             route().current(
                                 'departements.show',
