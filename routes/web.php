@@ -68,6 +68,10 @@ Route::get('/favoris', [FavoritesController::class, 'index'])->name(
     'favoris.index'
 );
 
+//Blog
+Route::get('/blog', [PostController::class, 'index'])->name('posts.index');
+Route::get('/blog/{post:slug}', [PostController::class, 'show'])->name('posts.show');
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -90,10 +94,6 @@ Route::get('/activites-{activite:id}', [ActiviteController::class, 'show'])->nam
 
 // Departements routes
 require __DIR__ . '/departement.php';
-
-//Blog
-Route::get('/blog', [PostController::class, 'index'])->name('posts.index');
-Route::get('/blog/{post:slug}', [PostController::class, 'show'])->name('posts.show');
 
 Route::resource('product_reservations', ProductReservationController::class)->only([
     'store'

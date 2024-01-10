@@ -19,7 +19,7 @@ const props = defineProps({
 </script>
 <template>
     <article
-        class="rounded-xl border border-black border-opacity-0 transition-colors duration-300 hover:border-opacity-5 hover:bg-gray-100"
+        class="rounded-xl border border-black border-opacity-0 bg-gray-50 transition-colors duration-300 hover:border-opacity-5 hover:bg-gray-100"
     >
         <div class="px-5 py-6 lg:flex">
             <div v-if="post.thumbnail" class="flex-1 lg:mr-8">

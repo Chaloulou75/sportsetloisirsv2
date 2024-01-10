@@ -14,6 +14,14 @@ class Post extends Model
 
     protected $guarded = [];
 
+    /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName(): String
+    {
+        return 'slug';
+    }
+
     public function scopeFilter($query, array $filters)
     {
         $query->when(

@@ -57,9 +57,21 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Post $post): Response
     {
-        //
+        $familles = Famille::withProducts()->get();
+        $listDisciplines = ListDiscipline::withProducts()->get();
+        $allCities = City::withProducts()->get();
+
+        $post = Post::with('author', 'comments', 'comments.author', 'tags')->findOrFail($post->id);
+
+        return Inertia::render('Posts/Show', [
+            'familles' => $familles,
+            'listDisciplines' => $listDisciplines,
+            'allCities' => $allCities,
+            'post' => $post,
+        ]);
+
     }
 
     /**

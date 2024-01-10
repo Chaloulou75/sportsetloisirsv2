@@ -3,9 +3,10 @@ import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { ref, watch, defineAsyncComponent } from "vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import { debounce } from "lodash";
+import ResultsHeader from "@/Components/ResultsHeader.vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
-import PostFeaturedCard from "../../Components/Posts/PostFeaturedCard.vue";
+import PostFeaturedCard from "@/Components/Posts/PostFeaturedCard.vue";
 const Pagination = defineAsyncComponent(() =>
     import("@/Components/Pagination.vue")
 );
@@ -41,20 +42,9 @@ watch(
     <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
         <template #header>
             <FamilleResultNavigation :familles="familles" />
-
-            <div class="mx-auto my-6 max-w-full px-2 py-4 md:px-4 lg:px-6">
-                <div
-                    class="mx-auto my-2 flex w-full flex-col items-center justify-center space-y-2 bg-slate-100/60 px-2 py-2 md:w-1/3"
-                >
-                    <h1
-                        class="border-b-2 border-slate-400 pb-2 text-2xl font-black leading-tight tracking-widest text-gray-600 md:text-4xl"
-                    >
-                        Blog
-                    </h1>
-                </div>
-                <div
-                    class="mx-auto flex w-full flex-col items-center justify-center space-y-2 bg-gray-100/60 px-2 py-2 md:w-1/4"
-                >
+            <ResultsHeader>
+                <template v-slot:title> Blog </template>
+                <template v-slot:ariane>
                     <nav aria-label="Breadcrumb" class="flex">
                         <ol
                             class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600"
@@ -101,8 +91,8 @@ watch(
                             </li>
                         </ol>
                     </nav>
-                </div>
-            </div>
+                </template>
+            </ResultsHeader>
         </template>
 
         <div class="py-6 md:py-12">
