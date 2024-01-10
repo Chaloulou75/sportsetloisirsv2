@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -22,10 +23,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // if ($this->app->environment('production')) {
-        //     URL::forceScheme('https');
-        // }
-
+        $allowedEmails = ['tonio20@hotmail.fr', 'c.jeandey@gmail.com'];
+        Gate::define('admin', function ($user) use ($allowedEmails) {
+            return in_array($user->email, $allowedEmails);
+        });
 
         /**
          * Paginate a standard Laravel Collection.

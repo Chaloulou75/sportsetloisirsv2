@@ -123,7 +123,34 @@ const user = computed(() => page.props.auth.user);
                         Gestion des criteres
                     </Link>
                 </li>
-
+                <li class="w-full">
+                    <Link
+                        :href="route('admin.tarifs.index')"
+                        :active="route().current('admin.tarifs.index')"
+                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        :class="{
+                            'bg-blue-600 text-white':
+                                route().current('admin.tarifs.index'),
+                        }"
+                    >
+                        Gestion des types de tarifs
+                    </Link>
+                </li>
+                <li class="w-full">
+                    <Link
+                        :href="route('admin.disciplines.index')"
+                        :active="route().current('admin.disciplines.index')"
+                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        :class="{
+                            'bg-blue-600 text-white': route().current(
+                                'admin.disciplines.index'
+                            ),
+                        }"
+                    >
+                        Gestion du contenu (disciplines, catégories, critères,
+                        tarifs)
+                    </Link>
+                </li>
                 <li class="w-full">
                     <Link
                         :href="route('admin.structures.index')"
@@ -136,34 +163,6 @@ const user = computed(() => page.props.auth.user);
                         }"
                     >
                         Gestion des structures et activités
-                    </Link>
-                </li>
-
-                <li class="w-full">
-                    <Link
-                        :href="route('admin.disciplines.index')"
-                        :active="route().current('admin.disciplines.index')"
-                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-                        :class="{
-                            'bg-blue-600 text-white': route().current(
-                                'admin.disciplines.index'
-                            ),
-                        }"
-                    >
-                        Gestion du contenu (disciplines, catégories, critères)
-                    </Link>
-                </li>
-                <li class="w-full">
-                    <Link
-                        :href="route('admin.tarifs.index')"
-                        :active="route().current('admin.tarifs.index')"
-                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-                        :class="{
-                            'bg-blue-600 text-white':
-                                route().current('admin.tarifs.index'),
-                        }"
-                    >
-                        Gestion des tarifs (types, attributs)
                     </Link>
                 </li>
                 <li class="w-full">
@@ -238,13 +237,13 @@ const user = computed(() => page.props.auth.user);
                 <BreezeResponsiveNavLink :href="route('admin.criteres.index')">
                     Gestion des critères
                 </BreezeResponsiveNavLink>
+                <BreezeResponsiveNavLink :href="route('admin.tarifs.index')">
+                    Gestion des tarifs
+                </BreezeResponsiveNavLink>
                 <BreezeResponsiveNavLink
                     :href="route('admin.disciplines.index')"
                 >
                     Gestion du contenu
-                </BreezeResponsiveNavLink>
-                <BreezeResponsiveNavLink :href="route('admin.tarifs.index')">
-                    Gestion des tarifs
                 </BreezeResponsiveNavLink>
                 <BreezeResponsiveNavLink :href="route('admin.index')">
                     Statistiques

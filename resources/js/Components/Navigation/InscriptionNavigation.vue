@@ -91,7 +91,7 @@ const user = computed(() => page.props.auth.user);
                             ),
                         }"
                     >
-                        Accueil
+                        Accueil Gestion
                     </Link>
                 </li>
                 <!-- Réservations -->

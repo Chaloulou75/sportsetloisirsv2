@@ -447,7 +447,6 @@ class StructureController extends Controller
      */
     public function update(Request $request, Structure $structure): RedirectResponse
     {
-        dd($request->all());
         // $structure = Structure::where('id', $structure->id)->firstOrFail();
 
         $validated = request()->validate([
@@ -526,7 +525,6 @@ class StructureController extends Controller
         $structureAddress = StructureAddress::where('structure_id', $structure->id)->firstOrFail();
         $structureAddress->update($validatedAddress);
 
-
         $attributs = $request['attributs'];
 
         foreach ($attributs as $key => $attribut) {
@@ -547,8 +545,6 @@ class StructureController extends Controller
      */
     public function destroy(Structure $structure): RedirectResponse
     {
-        $structure = Structure::where('id', $structure->id)->first();
-
         $adresses = StructureAddress::where('structure_id', $structure->id)->get();
 
         $horaires = StructureHoraire::where('structure_id', $structure->id)->get();
