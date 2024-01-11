@@ -99,7 +99,7 @@ watch(
             <div class="mx-auto max-w-full px-2 sm:px-6 lg:px-8">
                 <!-- search box -->
                 <div
-                    class="mx-auto mb-8 mt-4 flex w-full max-w-3xl flex-col items-end justify-center px-2 md:flex-row"
+                    class="mx-auto mb-8 mt-4 flex w-full max-w-3xl flex-col items-center justify-center px-2 md:flex-row md:items-end"
                 >
                     <label
                         for="search"

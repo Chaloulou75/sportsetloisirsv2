@@ -53,7 +53,7 @@ const deleteComment = () => {
                 </p>
             </header>
 
-            <p v-html="comment.body"></p>
+            <p v-html="comment.body" class="text-justify"></p>
             <footer class="mt-2 flex w-full items-end justify-end">
                 <button
                     v-if="

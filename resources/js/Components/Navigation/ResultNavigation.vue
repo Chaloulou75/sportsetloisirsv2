@@ -326,6 +326,14 @@ const submitForm = async () => {
                 <Link
                     preserve-scroll
                     class="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
+                    :href="route('posts.index')"
+                    :active="route().current('posts.index')"
+                >
+                    Blog
+                </Link>
+                <Link
+                    preserve-scroll
+                    class="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
                     :href="route('favoris.index')"
                     :active="route().current('favoris.index')"
                 >

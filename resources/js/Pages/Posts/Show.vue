@@ -142,74 +142,164 @@ const incrementPostLike = () => {
                             class="rounded-xl"
                         />
 
-                        <p class="mt-4 block text-xs text-gray-400">
-                            Publié
-                            <time>{{ formatDate(post.created_at) }}</time>
-                        </p>
+                        <div class="hidden lg:block">
+                            <p class="mt-4 block text-xs text-gray-400">
+                                Publié
+                                <time>{{ formatDate(post.created_at) }}</time>
+                            </p>
 
-                        <div
-                            class="mt-4 flex items-center text-sm lg:justify-center"
-                        >
-                            <UserCircleIcon class="h-6 w-6 fill-gray-300" />
-                            <div class="ml-3 text-left">
-                                <h5 class="font-bold">
-                                    {{ post.author.name }}
-                                </h5>
-                            </div>
-                        </div>
-
-                        <div
-                            class="mt-4 flex items-center justify-center space-x-5"
-                        >
                             <div
-                                class="flex items-center space-x-2 text-base text-blue-600 lg:justify-center"
+                                class="mt-4 flex items-center text-sm lg:justify-center"
                             >
-                                <EyeIcon class="h-6 w-6 text-blue-600" />
-                                <span class="font-semibold">{{
-                                    post.views_count
-                                }}</span>
+                                <UserCircleIcon class="h-6 w-6 fill-gray-300" />
+                                <div class="ml-3 text-left">
+                                    <h5 class="font-bold">
+                                        {{ post.author.name }}
+                                    </h5>
+                                </div>
                             </div>
 
                             <div
-                                class="flex items-center space-x-2 text-base text-blue-600 lg:justify-center"
+                                class="mt-4 flex items-center justify-center space-x-5"
+                            >
+                                <div
+                                    class="flex items-center space-x-2 text-base text-blue-600 lg:justify-center"
+                                >
+                                    <EyeIcon class="h-6 w-6 text-blue-600" />
+                                    <span class="font-semibold">{{
+                                        post.views_count
+                                    }}</span>
+                                </div>
+
+                                <div
+                                    class="flex items-center space-x-2 text-base text-blue-600 lg:justify-center"
+                                >
+                                    <button
+                                        type="button"
+                                        @click="incrementPostLike()"
+                                    >
+                                        <HandThumbUpIcon
+                                            class="h-6 w-6 text-blue-600 duration-300 hover:-rotate-12 hover:scale-125 hover:text-blue-800"
+                                        />
+                                    </button>
+
+                                    <span class="font-semibold">
+                                        {{ post.likes }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div
+                                class="flex items-center text-sm lg:justify-center"
                             >
                                 <button
+                                    v-if="
+                                        (user && post.user_id === user.id) ||
+                                        (admin && admin === true)
+                                    "
+                                    class="mt-6 flex items-center space-x-3 rounded bg-red-500 p-2 hover:bg-red-600"
+                                    @click="deletePost()"
                                     type="button"
-                                    @click="incrementPostLike()"
                                 >
-                                    <HandThumbUpIcon
-                                        class="h-6 w-6 text-blue-600 duration-300 hover:-rotate-45 hover:scale-125 hover:text-blue-800"
-                                    />
+                                    <TrashIcon class="h-4 w-4 text-white" />
+                                    <span class="text-sm text-white"
+                                        >Supprimer l'article</span
+                                    >
                                 </button>
-
-                                <span class="font-semibold">
-                                    {{ post.likes }}
-                                </span>
                             </div>
                         </div>
-
-                        <div
-                            class="flex items-center text-sm lg:justify-center"
-                        >
-                            <button
-                                v-if="
-                                    (user && post.user_id === user.id) ||
-                                    (admin && admin === true)
-                                "
-                                class="mt-6 flex items-center space-x-3 rounded bg-red-500 p-2 hover:bg-red-600"
-                                @click="deletePost()"
-                                type="button"
-                            >
-                                <TrashIcon class="h-4 w-4 text-white" />
-                                <span class="text-sm text-white"
-                                    >Supprimer l'article</span
+                        <div class="block lg:hidden">
+                            <div class="mb-6 justify-between">
+                                <Link
+                                    :href="route('posts.index')"
+                                    class="relative inline-flex items-center text-lg transition-colors duration-200 hover:text-indigo-600"
                                 >
-                            </button>
+                                    <ChevronLeftIcon class="mr-4 h-4 w-4" />
+                                    Retour aux articles
+                                </Link>
+                            </div>
+                            <div
+                                class="mt-4 flex items-center justify-between text-xs text-gray-400"
+                            >
+                                <div>
+                                    Publié
+                                    <time>{{
+                                        formatDate(post.created_at)
+                                    }}</time>
+                                </div>
+
+                                <div>
+                                    <div
+                                        class="mt-4 flex items-center justify-center space-x-5"
+                                    >
+                                        <div
+                                            class="flex items-center space-x-2 text-base text-blue-600 lg:justify-center"
+                                        >
+                                            <EyeIcon
+                                                class="h-6 w-6 text-blue-600"
+                                            />
+                                            <span class="font-semibold">{{
+                                                post.views_count
+                                            }}</span>
+                                        </div>
+
+                                        <div
+                                            class="flex items-center space-x-2 text-base text-blue-600 lg:justify-center"
+                                        >
+                                            <button
+                                                type="button"
+                                                @click="incrementPostLike()"
+                                            >
+                                                <HandThumbUpIcon
+                                                    class="h-6 w-6 text-blue-600 duration-300 hover:-rotate-12 hover:scale-125 hover:text-blue-800"
+                                                />
+                                            </button>
+
+                                            <span class="font-semibold">
+                                                {{ post.likes }}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        class="hidden items-center text-sm lg:flex lg:justify-center"
+                                    >
+                                        <button
+                                            v-if="
+                                                (user &&
+                                                    post.user_id === user.id) ||
+                                                (admin && admin === true)
+                                            "
+                                            class="mt-6 flex items-center space-x-3 rounded bg-red-500 p-2 hover:bg-red-600"
+                                            @click="deletePost()"
+                                            type="button"
+                                        >
+                                            <TrashIcon
+                                                class="h-4 w-4 text-white"
+                                            />
+                                            <span class="text-sm text-white"
+                                                >Supprimer l'article</span
+                                            >
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div
+                                class="mt-4 flex items-center text-sm lg:justify-center"
+                            >
+                                <UserCircleIcon class="h-6 w-6 fill-gray-300" />
+                                <div class="ml-3 text-left">
+                                    <h5 class="font-bold">
+                                        {{ post.author.name }}
+                                    </h5>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="col-span-8">
-                        <div class="mb-6 justify-between lg:flex">
+                        <div class="mb-6 hidden justify-between lg:flex">
                             <Link
                                 :href="route('posts.index')"
                                 class="relative inline-flex items-center text-lg transition-colors duration-200 hover:text-indigo-600"
@@ -224,7 +314,7 @@ const incrementPostLike = () => {
                         </h1>
 
                         <div
-                            class="space-y-4 leading-loose lg:text-lg"
+                            class="space-y-4 text-justify leading-loose lg:text-lg"
                             v-html="post.body"
                         ></div>
                     </div>
@@ -249,6 +339,24 @@ const incrementPostLike = () => {
                             pour ajouter un commentaire.
                         </p>
                     </section>
+                    <div
+                        class="mt-6 flex items-center justify-end text-sm lg:hidden"
+                    >
+                        <button
+                            v-if="
+                                (user && post.user_id === user.id) ||
+                                (admin && admin === true)
+                            "
+                            class="mt-6 flex items-center space-x-3 rounded bg-red-500 p-2 hover:bg-red-600"
+                            @click="deletePost()"
+                            type="button"
+                        >
+                            <TrashIcon class="h-4 w-4 text-white" />
+                            <span class="text-sm text-white"
+                                >Supprimer l'article</span
+                            >
+                        </button>
+                    </div>
                 </article>
             </div>
         </template>
