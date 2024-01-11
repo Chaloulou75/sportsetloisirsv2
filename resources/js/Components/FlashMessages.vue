@@ -3,15 +3,16 @@ import { ref, watch, onMounted } from "vue";
 import { usePage } from "@inertiajs/vue3";
 
 const show = ref(true);
+const page = usePage();
 
 const flashChangeHandler = () => {
     setTimeout(() => {
         show.value = false;
-    }, 3000);
+    }, 4500);
 };
 
 watch(
-    usePage().props.flash,
+    page.props.flash,
     () => {
         show.value = true;
     },
@@ -27,15 +28,15 @@ onMounted(() => {
     <transition name="slide-fade">
         <div
             v-if="
-                (($page.props.flash.error ||
-                    Object.keys($page.props.errors).length > 0) &&
+                ((page.props.flash.error ||
+                    Object.keys(page.props.errors).length > 0) &&
                     show) ||
-                ($page.props.flash.success && show)
+                (page.props.flash.success && show)
             "
-            class="sticky bottom-0 right-0 z-50 px-4 py-6"
+            class="fixed bottom-3 right-3 z-50 px-4 py-6 text-sm"
         >
             <div
-                v-if="$page.props.flash.success && show"
+                v-if="page.props.flash.success && show"
                 class="mb-2 flex max-w-lg items-center justify-between rounded-lg bg-green-600 text-white"
             >
                 <div class="flex items-center">
@@ -46,7 +47,7 @@ onMounted(() => {
                         <polygon points="0 11 2 9 7 14 18 3 20 5 7 18" />
                     </svg>
                     <div class="py-4 text-sm font-medium text-white">
-                        {{ $page.props.flash.success }}
+                        {{ page.props.flash.success }}
                     </div>
                 </div>
                 <button
@@ -70,8 +71,8 @@ onMounted(() => {
 
             <div
                 v-if="
-                    ($page.props.flash.error ||
-                        Object.keys($page.props.errors).length > 0) &&
+                    (page.props.flash.error ||
+                        Object.keys(page.props.errors).length > 0) &&
                     show
                 "
                 class="mb-2 flex max-w-lg items-center justify-between rounded-lg bg-red-500 text-white"
@@ -87,19 +88,18 @@ onMounted(() => {
                         />
                     </svg>
                     <div
-                        v-if="$page.props.flash.error"
+                        v-if="page.props.flash.error"
                         class="py-4 text-sm font-medium text-white"
                     >
-                        {{ $page.props.flash.error }}
+                        {{ page.props.flash.error }}
                     </div>
                     <div v-else class="py-4 text-sm font-medium text-white">
-                        <span
-                            v-if="Object.keys($page.props.errors).length === 1"
+                        <span v-if="Object.keys(page.props.errors).length === 1"
                             >Il y a une erreur dans le formulaire.</span
                         >
                         <span v-else
                             >Il y a
-                            {{ Object.keys($page.props.errors).length }} erreurs
+                            {{ Object.keys(page.props.errors).length }} erreurs
                             dans le formulaire.</span
                         >
                     </div>
