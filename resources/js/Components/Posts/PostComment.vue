@@ -56,7 +56,10 @@ const deleteComment = () => {
             <p v-html="comment.body"></p>
             <footer class="mt-2 flex w-full items-end justify-end">
                 <button
-                    v-if="comment.user_id === user.id || admin === true"
+                    v-if="
+                        (user && comment.user_id === user.id) ||
+                        (admin && admin === true)
+                    "
                     class="rounded bg-red-400 p-2 hover:bg-red-600"
                     @click="deleteComment()"
                     type="button"

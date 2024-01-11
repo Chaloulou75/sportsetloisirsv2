@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Session;
 
 class PostLikeController extends Controller
 {
@@ -27,8 +27,8 @@ class PostLikeController extends Controller
      */
     public function store(Request $request, Post $post): RedirectResponse
     {
-        if (Auth::check()) {
-            $user = Auth::user();
+        if (auth()->check()) {
+            $user = auth()->user();
 
             if (!$user->likedPosts->contains($post)) {
                 $post->increment('likes');

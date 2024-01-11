@@ -73,6 +73,7 @@ Route::get('/favoris', [FavoritesController::class, 'index'])->name(
 //Blog
 Route::get('/blog', [PostController::class, 'index'])->name('posts.index');
 Route::get('/blog/{post:slug}', [PostController::class, 'show'])->name('posts.show');
+Route::post('/blog/{post:slug}/likes', [PostLikeController::class, 'store'])->name('posts.likes.store');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -104,8 +105,6 @@ Route::resource('product_reservations', ProductReservationController::class)->on
 Route::middleware(['auth', 'verified'])->group(function () {
     //blog
     Route::delete('/blog/{post:slug}', [PostController::class, 'destroy'])->name('posts.destroy');
-    Route::post('/blog/{post:slug}/likes', [PostLikeController::class, 'store'])->name('posts.likes.store');
-
     Route::post('/blog/{post:slug}/comments', [PostCommentController::class, 'store'])->name('posts.comments.store');
     Route::delete('/blog/{post:slug}/comments/{comment}', [PostCommentController::class, 'destroy'])->name('posts.comments.destroy');
 

@@ -193,7 +193,8 @@ const incrementPostLike = () => {
                         >
                             <button
                                 v-if="
-                                    post.user_id === user.id || admin === true
+                                    (user && post.user_id === user.id) ||
+                                    (admin && admin === true)
                                 "
                                 class="mt-6 flex items-center space-x-3 rounded bg-red-500 p-2 hover:bg-red-600"
                                 @click="deletePost()"
@@ -238,6 +239,15 @@ const incrementPostLike = () => {
                             :admin="admin"
                         />
                         <AddPostComment v-if="user" :post="post" :user="user" />
+                        <p v-else class="text-sm text-gray-600">
+                            <Link
+                                class="font-semibold text-blue-600"
+                                :href="route('login')"
+                            >
+                                Connectez vous
+                            </Link>
+                            pour ajouter un commentaire.
+                        </p>
                     </section>
                 </article>
             </div>
