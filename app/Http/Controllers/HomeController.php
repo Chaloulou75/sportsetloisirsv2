@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\City;
+use App\Models\Post;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Famille;
@@ -29,14 +30,14 @@ class HomeController extends Controller
         $disciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])
                         ->withCount('structureProduits')
                         ->orderByDesc('structure_produits_count')
-                        ->limit(12)
+                        ->take(12)
                         ->get();
 
         $topVilles = City::whereHas('produits')
                         ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'departement', 'nom_departement'])
                         ->withCount('produits')
                         ->orderByDesc('produits_count')
-                        ->limit(12)
+                        ->take(12)
                         ->get();
 
         $departementCounts = $topVilles->groupBy('departement')
@@ -47,7 +48,7 @@ class HomeController extends Controller
         $numeroDepts = $topVilles->pluck('departement')->unique();
         $theDepartements = Departement::whereIn('numero', $numeroDepts)
                                 ->select(['id', 'slug', 'departement', 'numero'])
-                                ->limit(12)
+                                ->take(12)
                                 ->get();
 
         $topDepartements = $theDepartements
@@ -65,7 +66,13 @@ class HomeController extends Controller
         $lastStructures = Structure::with('structuretype:id,name')
                 ->select(['id', 'name', 'structuretype_id', 'slug', 'city', 'zip_code'])
                 ->latest()
-                ->limit(12)
+                ->take(12)
+                ->get();
+
+        $posts = Post::with('author', 'comments', 'tags')
+                ->withCount('comments')
+                ->latest()
+                ->take(6)
                 ->get();
 
         return Inertia::render('Welcome', [
@@ -81,6 +88,7 @@ class HomeController extends Controller
             'allCities' => $allCities,
             'topVilles' => $topVilles,
             'topDepartements' => $topDepartements,
+            'posts' => $posts,
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             'filters' => request()->all(['search', 'localite']),

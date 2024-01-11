@@ -13,8 +13,10 @@ use App\Http\Controllers\MentionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActiviteController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PostLikeController;
 use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\StructureController;
+use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\StructureUserController;
 use App\Http\Controllers\AdminStructureController;
 use App\Http\Controllers\AdminTarifTypeController;
@@ -100,6 +102,14 @@ Route::resource('product_reservations', ProductReservationController::class)->on
 ]);
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    //blog
+    Route::delete('/blog/{post:slug}', [PostController::class, 'destroy'])->name('posts.destroy');
+    Route::post('/blog/{post:slug}/likes', [PostLikeController::class, 'store'])->name('posts.likes.store');
+
+    Route::post('/blog/{post:slug}/comments', [PostCommentController::class, 'store'])->name('posts.comments.store');
+    Route::delete('/blog/{post:slug}/comments/{comment}', [PostCommentController::class, 'destroy'])->name('posts.comments.destroy');
+
+    //structures
     Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
     Route::post('/structures', [StructureController::class, 'store'])->name('structures.store');
     Route::get('/structures/{structure:slug}/edit', [StructureController::class, 'edit'])->name('structures.edit');

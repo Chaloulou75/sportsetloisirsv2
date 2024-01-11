@@ -1,5 +1,9 @@
 <script setup>
-import { UserCircleIcon } from "@heroicons/vue/24/outline";
+import {
+    UserCircleIcon,
+    HandThumbUpIcon,
+    EyeIcon,
+} from "@heroicons/vue/24/outline";
 import { Link } from "@inertiajs/vue3";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
@@ -33,20 +37,43 @@ const props = defineProps({
             <div class="flex flex-1 flex-col justify-between">
                 <header class="mt-8 lg:mt-0">
                     <div class="mt-4">
-                        <h1 class="text-3xl">
+                        <h1 class="text-3xl text-gray-800 hover:text-gray-900">
                             <Link :href="route('posts.show', post.slug)">
                                 {{ post.title }}
                             </Link>
                         </h1>
 
-                        <span class="mt-2 block text-xs text-gray-400">
-                            Publié
-                            <time>{{ formatDate(post.created_at) }}</time>
-                        </span>
+                        <div
+                            class="mt-2 flex w-full items-center justify-between"
+                        >
+                            <div class="block text-xs text-gray-400">
+                                Publié
+                                <time>{{ formatDate(post.created_at) }}</time>
+                            </div>
+                            <div
+                                class="flex items-center space-x-2 text-xs text-gray-400"
+                            >
+                                <EyeIcon class="h-5 w-5 text-gray-400" />
+                                <span>{{ post.views_count }}</span>
+                            </div>
+                        </div>
                     </div>
                 </header>
 
                 <div class="mt-2 space-y-4 text-sm" v-html="post.excerpt"></div>
+                <div
+                    class="mt-2 flex items-center justify-between text-xs text-gray-600"
+                >
+                    <span>{{ post.comments_count }} commentaires</span>
+                    <div
+                        class="flex items-center space-x-2 text-xs text-gray-400"
+                    >
+                        <HandThumbUpIcon class="h-5 w-5 text-gray-400" />
+                        <span class="font-semibold">
+                            {{ post.likes }}
+                        </span>
+                    </div>
+                </div>
 
                 <footer class="mt-8 flex items-center justify-between">
                     <div class="flex items-center text-sm">

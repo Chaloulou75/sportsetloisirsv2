@@ -1,16 +1,26 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { defineAsyncComponent } from "vue";
-import { Head, Link } from "@inertiajs/vue3";
+import { computed, defineAsyncComponent } from "vue";
+import { Head, Link, usePage, router } from "@inertiajs/vue3";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
-import { HomeIcon, UserCircleIcon } from "@heroicons/vue/24/outline";
+import {
+    ChevronLeftIcon,
+    HomeIcon,
+    UserCircleIcon,
+    TrashIcon,
+    EyeIcon,
+    HandThumbUpIcon,
+} from "@heroicons/vue/24/outline";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import relativeTime from "dayjs/plugin/relativeTime";
 import localeData from "dayjs/plugin/localeData";
 const PostComment = defineAsyncComponent(() =>
     import("@/Components/Posts/PostComment.vue")
+);
+const AddPostComment = defineAsyncComponent(() =>
+    import("@/Components/Posts/AddPostComment.vue")
 );
 dayjs.extend(localeData);
 dayjs.extend(relativeTime);
@@ -22,8 +32,34 @@ const props = defineProps({
     post: Object,
 });
 
+const page = usePage();
+const user = computed(() => page.props.auth.user);
+const admin = computed(() => page.props.user_can.view_admin);
+
 const formatDate = (dateTime) => {
     return dayjs(dateTime).locale("fr").fromNow();
+};
+
+const deletePost = () => {
+    router.delete(
+        route("posts.destroy", {
+            post: props.post,
+        }),
+        {
+            preserveScroll: true,
+        }
+    );
+};
+
+const incrementPostLike = () => {
+    router.post(
+        route("posts.likes.store", {
+            post: props.post,
+        }),
+        {
+            preserveScroll: true,
+        }
+    );
 };
 </script>
 
@@ -96,7 +132,7 @@ const formatDate = (dateTime) => {
         <template #default>
             <div class="px-3 py-6 md:py-12">
                 <article
-                    class="mx-auto max-w-6xl gap-x-10 lg:grid lg:grid-cols-12"
+                    class="mx-auto max-w-6xl gap-x-10 rounded-md px-4 py-4 lg:grid lg:grid-cols-12"
                 >
                     <div class="col-span-4 mb-10 lg:pt-14 lg:text-center">
                         <img
@@ -121,34 +157,63 @@ const formatDate = (dateTime) => {
                                 </h5>
                             </div>
                         </div>
+
+                        <div
+                            class="mt-4 flex items-center justify-center space-x-5"
+                        >
+                            <div
+                                class="flex items-center space-x-2 text-base text-blue-600 lg:justify-center"
+                            >
+                                <EyeIcon class="h-6 w-6 text-blue-600" />
+                                <span class="font-semibold">{{
+                                    post.views_count
+                                }}</span>
+                            </div>
+
+                            <div
+                                class="flex items-center space-x-2 text-base text-blue-600 lg:justify-center"
+                            >
+                                <button
+                                    type="button"
+                                    @click="incrementPostLike()"
+                                >
+                                    <HandThumbUpIcon
+                                        class="h-6 w-6 text-blue-600 duration-300 hover:-rotate-45 hover:scale-125 hover:text-blue-800"
+                                    />
+                                </button>
+
+                                <span class="font-semibold">
+                                    {{ post.likes }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div
+                            class="flex items-center text-sm lg:justify-center"
+                        >
+                            <button
+                                v-if="
+                                    post.user_id === user.id || admin === true
+                                "
+                                class="mt-6 flex items-center space-x-3 rounded bg-red-500 p-2 hover:bg-red-600"
+                                @click="deletePost()"
+                                type="button"
+                            >
+                                <TrashIcon class="h-4 w-4 text-white" />
+                                <span class="text-sm text-white"
+                                    >Supprimer l'article</span
+                                >
+                            </button>
+                        </div>
                     </div>
 
                     <div class="col-span-8">
                         <div class="mb-6 justify-between lg:flex">
                             <Link
                                 :href="route('posts.index')"
-                                class="relative inline-flex items-center text-lg transition-colors duration-300 hover:text-blue-500"
+                                class="relative inline-flex items-center text-lg transition-colors duration-200 hover:text-indigo-600"
                             >
-                                <svg
-                                    width="22"
-                                    height="22"
-                                    viewBox="0 0 22 22"
-                                    class="mr-2"
-                                >
-                                    <g fill="none" fill-rule="evenodd">
-                                        <path
-                                            stroke="#000"
-                                            stroke-opacity=".012"
-                                            stroke-width=".5"
-                                            d="M21 1v20.16H.84V1z"
-                                        ></path>
-                                        <path
-                                            class="fill-current"
-                                            d="M13.854 7.224l-3.847 3.856 3.847 3.856-1.184 1.184-5.04-5.04 5.04-5.04z"
-                                        ></path>
-                                    </g>
-                                </svg>
-
+                                <ChevronLeftIcon class="mr-4 h-4 w-4" />
                                 Retour aux articles
                             </Link>
                         </div>
@@ -167,8 +232,12 @@ const formatDate = (dateTime) => {
                         <PostComment
                             v-for="comment in post.comments"
                             :key="comment.id"
+                            :post="post"
                             :comment="comment"
+                            :user="user"
+                            :admin="admin"
                         />
+                        <AddPostComment v-if="user" :post="post" :user="user" />
                     </section>
                 </article>
             </div>

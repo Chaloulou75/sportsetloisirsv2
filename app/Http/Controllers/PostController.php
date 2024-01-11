@@ -9,6 +9,7 @@ use Inertia\Response;
 use App\Models\Famille;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
+use Illuminate\Http\RedirectResponse;
 
 class PostController extends Controller
 {
@@ -20,7 +21,8 @@ class PostController extends Controller
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
-        $posts = Post::with('author', 'comments')
+        $posts = Post::with('author', 'comments', 'tags')
+                ->withCount('comments')
                 ->latest()
                 ->filter(
                     request(['search', 'author'])
@@ -65,13 +67,14 @@ class PostController extends Controller
 
         $post = Post::with('author', 'comments', 'comments.author', 'tags')->findOrFail($post->id);
 
+        $post->increment('views_count');
+
         return Inertia::render('Posts/Show', [
             'familles' => $familles,
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,
             'post' => $post,
         ]);
-
     }
 
     /**
@@ -93,8 +96,9 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Post $post): RedirectResponse
     {
-        //
+        $post->delete();
+        return to_route('posts.index')->with('success', 'Article supprimé.');
     }
 }

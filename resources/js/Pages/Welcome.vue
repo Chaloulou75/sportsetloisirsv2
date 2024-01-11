@@ -1,6 +1,6 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { ref } from "vue";
+import { ref, defineAsyncComponent } from "vue";
 import { router, Head, Link } from "@inertiajs/vue3";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
@@ -9,7 +9,9 @@ import AutocompleteCity from "@/Components/Home/AutocompleteCity.vue";
 import DisciplineSmallCard from "@/Components/Disciplines/DisciplineSmallCard.vue";
 import { ArrowSmallRightIcon, CheckIcon } from "@heroicons/vue/24/solid";
 import { MagnifyingGlassIcon } from "@heroicons/vue/24/outline";
-
+const PostFeaturedCard = defineAsyncComponent(() =>
+    import("@/Components/Posts/PostFeaturedCard.vue")
+);
 const props = defineProps({
     familles: Object,
     listDisciplines: Object,
@@ -23,6 +25,7 @@ const props = defineProps({
     allCities: Object,
     topVilles: Object,
     topDepartements: Object,
+    posts: Object,
     filters: Object,
 });
 
@@ -391,6 +394,22 @@ const formatCityName = (ville) => {
                             </span>
                         </Link>
                     </div>
+                </div>
+            </section>
+
+            <section class="mx-auto max-w-full px-2 py-8 md:px-8 md:py-20">
+                <h3 class="pb-6 text-2xl font-semibold text-gray-700">
+                    Top articles:
+                </h3>
+                <div
+                    v-if="posts"
+                    class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
+                >
+                    <PostFeaturedCard
+                        v-for="post in posts"
+                        :key="post.id"
+                        :post="post"
+                    />
                 </div>
             </section>
         </template>

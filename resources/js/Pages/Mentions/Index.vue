@@ -1,5 +1,6 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
+import ResultsHeader from "@/Components/ResultsHeader.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { ChevronUpIcon } from "@heroicons/vue/24/solid";
@@ -16,19 +17,9 @@ const props = defineProps({
     <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
         <template #header>
             <FamilleResultNavigation :familles="familles" />
-            <div class="mx-auto my-6 max-w-full px-2 py-4 md:px-4 lg:px-6">
-                <div
-                    class="mx-auto my-2 flex w-full flex-col items-center justify-center space-y-2 bg-slate-100/60 px-2 py-2 md:w-1/3"
-                >
-                    <h1
-                        class="border-b-2 border-slate-400 pb-2 text-2xl font-black leading-tight tracking-widest text-gray-600 md:text-4xl"
-                    >
-                        Mentions légales
-                    </h1>
-                </div>
-                <div
-                    class="mx-auto flex w-full flex-col items-center justify-center space-y-2 bg-gray-100/60 px-2 py-2 md:w-1/3"
-                >
+            <ResultsHeader>
+                <template v-slot:title> Mentions légales </template>
+                <template v-slot:ariane>
                     <nav aria-label="Breadcrumb" class="flex">
                         <ol
                             class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600"
@@ -76,8 +67,8 @@ const props = defineProps({
                             </li>
                         </ol>
                     </nav>
-                </div>
-            </div>
+                </template>
+            </ResultsHeader>
         </template>
 
         <div class="py-4">
