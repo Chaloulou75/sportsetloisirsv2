@@ -8,7 +8,7 @@ const page = usePage();
 const flashChangeHandler = () => {
     setTimeout(() => {
         show.value = false;
-    }, 4500);
+    }, 5000);
 };
 
 watch(
@@ -138,7 +138,7 @@ onMounted(() => {
 
 .slide-fade-enter-from,
 .slide-fade-leave-to {
-    transform: translateX(-250px);
+    transform: translateX(250px);
     opacity: 0;
 }
 </style>

@@ -314,7 +314,7 @@ const incrementPostLike = () => {
                         </h1>
 
                         <div
-                            class="space-y-4 text-justify leading-loose lg:text-lg"
+                            class="prose prose-slate space-y-4 text-justify leading-loose lg:prose-xl lg:text-lg"
                             v-html="post.body"
                         ></div>
                     </div>

@@ -60,7 +60,10 @@ const props = defineProps({
                     </div>
                 </header>
 
-                <div class="mt-2 space-y-4 text-sm" v-html="post.excerpt"></div>
+                <div
+                    class="prose prose-slate mt-2 space-y-4 text-sm"
+                    v-html="post.excerpt"
+                ></div>
                 <div
                     class="mt-2 flex items-center justify-between text-xs text-gray-600"
                 >

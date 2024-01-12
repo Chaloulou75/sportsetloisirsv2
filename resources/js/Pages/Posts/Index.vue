@@ -97,6 +97,14 @@ watch(
 
         <div class="py-6 md:py-12">
             <div class="mx-auto max-w-full px-2 sm:px-6 lg:px-8">
+                <div class="flex justify-start">
+                    <Link
+                        :href="route('posts.create')"
+                        class="flex w-full max-w-xs items-center justify-center rounded-md border border-gray-200 bg-indigo-800 px-4 py-2 text-base text-white shadow hover:bg-indigo-900"
+                    >
+                        Ecrire un article
+                    </Link>
+                </div>
                 <!-- search box -->
                 <div
                     class="mx-auto mb-8 mt-4 flex w-full max-w-3xl flex-col items-center justify-center px-2 md:flex-row md:items-end"

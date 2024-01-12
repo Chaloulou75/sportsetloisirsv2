@@ -103,7 +103,9 @@ Route::resource('product_reservations', ProductReservationController::class)->on
 ]);
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    //blog
+    //blog , conflits routes avec slug
+    Route::get('/blog/articles/create', [PostController::class, 'create'])->name('posts.create');
+    Route::post('/blog', [PostController::class, 'store'])->name('posts.store');
     Route::delete('/blog/{post:slug}', [PostController::class, 'destroy'])->name('posts.destroy');
     Route::post('/blog/{post:slug}/comments', [PostCommentController::class, 'store'])->name('posts.comments.store');
     Route::delete('/blog/{post:slug}/comments/{comment}', [PostCommentController::class, 'destroy'])->name('posts.comments.destroy');

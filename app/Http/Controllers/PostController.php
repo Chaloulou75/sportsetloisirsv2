@@ -7,6 +7,7 @@ use App\Models\Post;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Famille;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use Illuminate\Http\RedirectResponse;
@@ -43,17 +44,44 @@ class PostController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): Response
     {
-        //
+        $familles = Famille::withProducts()->get();
+        $listDisciplines = ListDiscipline::withProducts()->get();
+        $allCities = City::withProducts()->get();
+
+        return Inertia::render('Posts/Create', [
+            'familles' => $familles,
+            'listDisciplines' => $listDisciplines,
+            'allCities' => $allCities,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $request->validate([
+            'title' => 'required|string|min:3|max:255',
+            'excerpt' => 'required|string|min:3',
+            'body' => 'required',
+        ]);
+
+        $user = auth()->user();
+        $title = $request->title;
+        $slug = Str::slug($title, '-');
+        $body = $request->body;
+
+        $post = Post::create([
+            'user_id' => $user->id,
+            'title' => $title,
+            'slug' => $slug,
+            'excerpt' => $request->excerpt,
+            'body' => $body,
+        ]);
+
+        return to_route('posts.show', ['post' => $post->slug ])->with('success', 'Article publié.');
     }
 
     /**

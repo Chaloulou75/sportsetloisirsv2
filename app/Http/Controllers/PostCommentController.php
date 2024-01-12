@@ -31,7 +31,7 @@ class PostCommentController extends Controller
     public function store(Request $request, Post $post): RedirectResponse
     {
         request()->validate([
-            'body' => 'required'
+            'body' => 'required|string|min:3|max:255'
         ]);
 
         $post->comments()->create([
