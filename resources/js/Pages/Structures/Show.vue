@@ -625,13 +625,13 @@ const events = getEvents();
                                 {{ structure.name }}
                             </h2>
 
-                            <!-- <div v-if="structure.logo">
+                            <div v-if="structure.logo">
                                 <img
                                     alt="img"
-                                    :src="structure.logo"
+                                    :src="structure.image"
                                     class="h-14 w-14 shrink-0 rounded-full object-cover object-center md:h-20 md:w-20"
                                 />
-                            </div> -->
+                            </div>
                         </div>
                         <!-- Resume -->
                         <div>

@@ -1,23 +1,67 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { ref } from "vue";
+import { ref, computed, watchEffect } from "vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
+import TextInput from "@/Components/Forms/TextInput.vue";
+import InputLabel from "@/Components/Forms/InputLabel.vue";
+import InputError from "@/Components/Forms/InputError.vue";
 import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
-
+import { XCircleIcon } from "@heroicons/vue/24/outline";
 const props = defineProps({
     familles: Object,
     listDisciplines: Object,
     allCities: Object,
+    tags: Object,
 });
+
+const filterInput = ref("");
+const filteredTags = ref(null);
+
+watchEffect(() => {
+    // Update filteredTags based on filterInput.value
+    filteredTags.value = filterInput.value
+        ? props.tags.filter(
+              (tag) =>
+                  tag.name
+                      .toLowerCase()
+                      .includes(filterInput.value.toLowerCase()) &&
+                  !selectedTags.value.some(
+                      (selectedTag) => selectedTag.id === tag.id
+                  )
+          )
+        : null;
+});
+
+const selectedTags = ref([]);
+const addTagFromList = (tag) => {
+    if (!selectedTags.value.some((selectedTag) => selectedTag.id === tag.id)) {
+        selectedTags.value.push(tag);
+        articleForm.tags.push(tag);
+        filterInput.value = "";
+    }
+};
+
+const removeTagFromList = (tag) => {
+    const selectedTagIndex = selectedTags.value.indexOf(tag);
+    const articleFormTagIndex = articleForm.tags.indexOf(tag);
+    if (selectedTagIndex !== -1) {
+        selectedTags.value.splice(selectedTagIndex, 1);
+    }
+    if (articleFormTagIndex !== -1) {
+        articleForm.tags.splice(articleFormTagIndex, 1);
+    }
+};
 
 const articleForm = useForm({
     title: null,
+    thumbnail: null,
     excerpt: null,
     body: null,
+    tags: [],
 });
 
 const addArticle = () => {
@@ -30,7 +74,7 @@ const addArticle = () => {
 
 <template>
     <Head
-        title="Article de Blog"
+        title="Ecrire un article de blog"
         :description="'Creation d\'un article de blog sur www.sports-et-loisirs.fr.'"
     />
 
@@ -38,7 +82,7 @@ const addArticle = () => {
         <template #header>
             <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
-                <template v-slot:title> Article </template>
+                <template v-slot:title> Ecrire un article </template>
                 <template v-slot:ariane>
                     <nav aria-label="Breadcrumb" class="flex">
                         <ol
@@ -91,15 +135,21 @@ const addArticle = () => {
         </template>
 
         <div class="py-6 md:py-12">
-            <div class="mx-auto max-w-5xl px-2 sm:px-6 lg:px-8">
-                <form @submit.prevent="addArticle" class="space-y-6">
+            <div
+                class="mx-auto max-w-5xl rounded-md bg-gray-50 px-2 py-3 shadow sm:px-6 lg:px-8"
+            >
+                <form
+                    @submit.prevent="addArticle"
+                    enctype="multipart/form-data"
+                    class="space-y-6"
+                >
                     <!-- title -->
                     <div class="">
                         <label
                             for="title"
                             class="block text-sm font-medium text-gray-700"
                         >
-                            Titre de l'article *
+                            Titre de l'article*
                         </label>
                         <div class="mt-1 flex rounded-md">
                             <input
@@ -120,13 +170,35 @@ const addArticle = () => {
                             {{ articleForm.errors.title }}
                         </div>
                     </div>
+                    <!-- image -->
+                    <div>
+                        <label
+                            for="thumbnail"
+                            class="block text-sm font-medium text-gray-700"
+                            >Image:</label
+                        >
+                        <input
+                            class="mt-1 text-sm text-gray-700"
+                            type="file"
+                            id="thumbnail"
+                            name="thumbnail"
+                            @input="
+                                articleForm.thumbnail = $event.target.files[0]
+                            "
+                        />
+                        <span
+                            class="mt-2 text-xs text-red-500"
+                            v-if="articleForm.errors.thumbnail"
+                            v-text="articleForm.errors.thumbnail"
+                        ></span>
+                    </div>
                     <!-- presentation_courte -->
                     <div>
                         <label
-                            for="presentation_courte"
+                            for="excerpt"
                             class="block text-sm font-medium text-gray-700"
                         >
-                            Description courte / résumé *
+                            Extrait / résumé*
                         </label>
                         <div class="mt-1">
                             <textarea
@@ -138,16 +210,65 @@ const addArticle = () => {
                                 :class="{
                                     errors: 'border-red-500 focus:ring focus:ring-red-200',
                                 }"
-                                placeholder="Un peu d'historique, vos activités... Mettez votre structure en valeur"
+                                placeholder="Résumé de l'article."
                                 autocomplete="none"
                             />
                         </div>
 
                         <div
-                            v-if="articleForm.errors.presentation_courte"
+                            v-if="articleForm.errors.excerpt"
                             class="mt-2 text-xs text-red-500"
                         >
-                            {{ articleForm.errors.presentation_courte }}
+                            {{ articleForm.errors.excerpt }}
+                        </div>
+                    </div>
+                    <!-- tags -->
+                    <div>
+                        <InputLabel
+                            for="tags"
+                            value="Tags de l'article *"
+                            class="block text-sm font-medium text-gray-700"
+                        />
+                        <div
+                            v-if="selectedTags.length > 0"
+                            class="flex flex-wrap items-center"
+                        >
+                            <button
+                                type="button"
+                                @click.prevent="removeTagFromList(selectedTag)"
+                                v-for="selectedTag in selectedTags"
+                                :key="selectedTag.id"
+                                class="group m-px flex items-center border bg-white p-1 text-xs hover:bg-blue-600 hover:text-white"
+                            >
+                                {{ selectedTag.name }}
+                                <XCircleIcon
+                                    class="ml-2 h-4 w-4 text-red-500 group-hover:text-white"
+                                />
+                            </button>
+                        </div>
+
+                        <TextInput
+                            type="text"
+                            name="tags"
+                            class="mt-1 block w-full"
+                            v-model="filterInput"
+                            placeholder="Sélectionner et ajouter des tags."
+                        />
+                        <InputError
+                            v-if="articleForm.errors.tags"
+                            class="mt-2"
+                            :message="addArticle.errors.tags"
+                        />
+                        <div class="mt-2 flex flex-wrap items-center">
+                            <button
+                                type="button"
+                                v-for="tag in filteredTags"
+                                :key="tag.id"
+                                @click.prevent="addTagFromList(tag)"
+                                class="m-px border bg-white p-1 text-xs hover:bg-blue-600 hover:text-white"
+                            >
+                                {{ tag.name }}
+                            </button>
                         </div>
                     </div>
                     <div>
@@ -155,14 +276,37 @@ const addArticle = () => {
                             for="body"
                             class="block text-sm font-medium text-gray-700"
                         >
-                            Contenu de l'article *
+                            Contenu de l'article*
                         </label>
-                        <QuillEditor
-                            v-model:content="articleForm.body"
-                            contentType="html"
-                            theme="snow"
-                            toolbar="full"
-                        />
+                        <div class="bg-white">
+                            <QuillEditor
+                                v-model:content="articleForm.body"
+                                contentType="html"
+                                theme="snow"
+                                :toolbar="[
+                                    ['bold', 'italic', 'underline'],
+                                    ['blockquote'],
+                                    [{ list: 'ordered' }, { list: 'bullet' }],
+                                    [{ header: [2, 3, 4, 5, 6, false] }],
+                                    [
+                                        {
+                                            size: ['small', false, 'large'],
+                                        },
+                                    ],
+                                    [{ indent: '-1' }, { indent: '+1' }],
+                                    [{ color: [] }, { background: [] }],
+                                    [{ font: [] }],
+                                    [{ align: [] }],
+                                    ['link'],
+                                ]"
+                            />
+                        </div>
+                        <div
+                            v-if="articleForm.errors.body"
+                            class="mt-2 text-xs text-red-500"
+                        >
+                            {{ articleForm.errors.body }}
+                        </div>
                     </div>
 
                     <div class="mt-6 flex justify-end">

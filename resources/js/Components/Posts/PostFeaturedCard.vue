@@ -23,19 +23,28 @@ const props = defineProps({
 </script>
 <template>
     <article
-        class="rounded-xl border border-black border-opacity-0 bg-gray-50 transition-colors duration-300 hover:border-opacity-5 hover:bg-gray-100"
+        class="rounded-xl border border-indigo-600 border-opacity-5 bg-gray-50 transition-colors duration-300 hover:border-opacity-100 hover:bg-gray-100"
     >
         <div class="px-5 py-6 lg:flex">
             <div v-if="post.thumbnail" class="flex-1 lg:mr-8">
                 <img
-                    src="{{ asset('storage/' . post.thumbnail) }}"
+                    :src="post.image"
                     alt="Blog Post illustration"
                     class="rounded-xl"
                 />
             </div>
 
             <div class="flex flex-1 flex-col justify-between">
-                <header class="mt-8 lg:mt-0">
+                <header class="mt-2">
+                    <div v-if="post.tags" class="flex flex-wrap items-center">
+                        <div
+                            v-for="tag in post.tags"
+                            :key="tag.id"
+                            class="m-px flex items-center border bg-white p-1 text-xs"
+                        >
+                            {{ tag.name }}
+                        </div>
+                    </div>
                     <div class="mt-4">
                         <h1 class="text-3xl text-gray-800 hover:text-gray-900">
                             <Link :href="route('posts.show', post.slug)">

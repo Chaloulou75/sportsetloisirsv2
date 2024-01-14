@@ -172,10 +172,8 @@ class ActiviteController extends Controller
 
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('public/structures/' . $structure->id . '/activites/' . $structureActivite->id);
-
-            $url = Storage::url($path);
-            $structureActivite->update(['image' => $url]);
+            $path = $request->file('image')->store('structures/' . $structure->id . '/activites/' . $structureActivite->id, 'public');
+            $structureActivite->update(['image' => $path]);
         }
 
         $structureActivite->update([
@@ -329,9 +327,8 @@ class ActiviteController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('public/structures/' . $structure->id . '/activites/' . $structureActivite->id);
-            $url = Storage::url($path);
-            $structureActivite->update(['image' => $url]);
+            $path = $request->file('image')->store('structures/' . $structure->id . '/activites/' . $structureActivite->id, 'public');
+            $structureActivite->update(['image' => $path]);
         }
 
         if($request->address) {

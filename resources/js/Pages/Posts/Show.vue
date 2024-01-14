@@ -64,7 +64,7 @@ const incrementPostLike = () => {
 </script>
 
 <template>
-    <Head :title="post.title" :description="post.title" />
+    <Head :title="post.title" :description="post.excerpt" />
 
     <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
         <template #header>
@@ -132,17 +132,29 @@ const incrementPostLike = () => {
         <template #default>
             <div class="px-3 py-6 md:py-12">
                 <article
-                    class="mx-auto max-w-6xl gap-x-10 rounded-md px-4 py-4 lg:grid lg:grid-cols-12"
+                    class="mx-auto max-w-6xl gap-x-10 rounded-md bg-gray-50 px-4 py-4 lg:grid lg:grid-cols-12"
                 >
                     <div class="col-span-4 mb-10 lg:pt-14 lg:text-center">
                         <img
                             v-if="post.thumbnail"
-                            src="{{ asset('storage/' . post.thumbnail) }}"
-                            alt=""
-                            class="rounded-xl"
+                            :src="post.image"
+                            alt="image"
+                            class="rounded"
                         />
 
                         <div class="hidden lg:block">
+                            <div
+                                v-if="post.tags"
+                                class="flex flex-wrap items-center"
+                            >
+                                <div
+                                    v-for="tag in post.tags"
+                                    :key="tag.id"
+                                    class="m-px flex items-center border bg-white p-1 text-xs"
+                                >
+                                    {{ tag.name }}
+                                </div>
+                            </div>
                             <p class="mt-4 block text-xs text-gray-400">
                                 Publié
                                 <time>{{ formatDate(post.created_at) }}</time>
@@ -217,6 +229,18 @@ const incrementPostLike = () => {
                                     <ChevronLeftIcon class="mr-4 h-4 w-4" />
                                     Retour aux articles
                                 </Link>
+                            </div>
+                            <div
+                                v-if="post.tags"
+                                class="mt-4 flex flex-wrap items-center"
+                            >
+                                <div
+                                    v-for="tag in post.tags"
+                                    :key="tag.id"
+                                    class="m-px flex items-center border bg-white p-1 text-xs"
+                                >
+                                    {{ tag.name }}
+                                </div>
                             </div>
                             <div
                                 class="mt-4 flex items-center justify-between text-xs text-gray-400"

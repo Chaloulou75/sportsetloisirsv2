@@ -205,9 +205,8 @@ class StructureController extends Controller
 
         if($request->hasFile('logo')) {
             request()->validate(['logo' => ['nullable','image','max:2048']]);
-            $path = $request->file('logo')->store('public/structures/' . $structure->id);
-            $url = Storage::url($path);
-            $structure->update(['logo' => $url]);
+            $path = $request->file('logo')->store('structures/' . $structure->id . '/logo', 'public');
+            $structure->update(['logo' => $path]);
         }
 
         $validatedAddress = [
@@ -500,10 +499,8 @@ class StructureController extends Controller
             if($structure->logo !== null) {
                 Storage::delete('structures/' . $structure->id . '/' . $structure->logo);
             }
-            $path = $request->file('logo')->store('public/structures/' . $structure->id);
-            $url = Storage::url($path);
-            $structure->update(['logo' => $url]);
-
+            $path = $request->file('logo')->store('structures/' . $structure->id, 'public');
+            $structure->update(['logo' => $path]);
         }
 
         $structure->update($validated);

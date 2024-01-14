@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tag;
 use App\Models\City;
 use App\Models\Post;
 use Inertia\Inertia;
@@ -50,10 +51,13 @@ class PostController extends Controller
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
+        $tags = Tag::select('id', 'name')->get();
+
         return Inertia::render('Posts/Create', [
             'familles' => $familles,
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,
+            'tags' => $tags,
         ]);
     }
 
@@ -64,7 +68,9 @@ class PostController extends Controller
     {
         $request->validate([
             'title' => 'required|string|min:3|max:255',
+            'thumbnail' => 'nullable|image',
             'excerpt' => 'required|string|min:3',
+            'tags' => 'nullable|array',
             'body' => 'required',
         ]);
 
@@ -81,13 +87,25 @@ class PostController extends Controller
             'body' => $body,
         ]);
 
+        if($request->hasFile('thumbnail')) {
+            $path = request()->file('thumbnail')->store('blog/' . $post->id . '/thumbnails', 'public');
+            $post->update(['thumbnail' => $path ]);
+        }
+
+        $tags = $request->tags;
+        if($tags) {
+            foreach($tags as $tag) {
+                $post->tags()->attach($tag['id']);
+            }
+        }
+
         return to_route('posts.show', ['post' => $post->slug ])->with('success', 'Article publié.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Post $post): Response
+    public function show(Post $post)
     {
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();

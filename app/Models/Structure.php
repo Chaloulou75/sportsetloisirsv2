@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,6 +22,17 @@ class Structure extends Model
      */
     protected $guarded = [];
 
+    protected $appends = [
+        'image'
+    ];
+
+    protected function image(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Storage::url($this->logo),
+        );
+    }
+
     public function scopeFilter($query, array $filters): void
     {
         $query->when(
@@ -32,28 +45,11 @@ class Structure extends Model
                     ->orWhere('city', 'like', '%' . $search . '%')
                     ->orWhere('zip_code', 'like', '%' . $search . '%')
             )
-            // ->orWhereHas('disciplines', function ($query) use ($search) {
-            //     $query->where('name', 'like', '%' . $search . '%')
-            //           ->orWhere('slug', 'like', '%' . $search . '%');
-            // })
             ->orWhereHas('structuretype', function ($query) use ($search) {
                 $query->where('name', 'like', '%' . $search . '%')
                       ->orWhere('slug', 'like', '%' . $search . '%');
             })
         );
-
-        // ->orWhereHas('famille', function ($query) use ($search) {
-        //         $query->where('name', 'like', '%' . $search . '%')
-        //               ->orWhere('slug', 'like', '%' . $search . '%');
-        //     })
-        // ->orWhereHas('city', function ($query) use ($search) {
-        //     $query->where('ville', 'like', '%' . $search . '%')
-        //           ->orWhere('code_postal', 'like', '%' . $search . '%');
-        // })->orWhereHas('city.department', function ($query) use ($search) {
-        //     $query->where('name', 'like', '%' . $search . '%');
-        // })->orWhereHas('city.department.region', function ($query) use ($search) {
-        //     $query->where('name', 'like', '%' . $search . '%');
-        // })
 
         $query->when(
             $filters['famille'] ?? false,
