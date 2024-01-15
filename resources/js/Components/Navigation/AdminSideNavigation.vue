@@ -193,12 +193,12 @@ const user = computed(() => page.props.auth.user);
                 </li>
                 <li class="w-full">
                     <Link
-                        :href="route('admin.index')"
-                        :active="route().current('admin.index')"
+                        :href="route('admin.blog.index')"
+                        :active="route().current('admin.blog.index')"
                         class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
                         :class="{
                             'bg-blue-600 text-white':
-                                route().current('admin.index'),
+                                route().current('admin.blog.index'),
                         }"
                     >
                         Gestion du Blog

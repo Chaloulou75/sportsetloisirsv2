@@ -192,7 +192,7 @@ const addArticle = () => {
                             v-text="articleForm.errors.thumbnail"
                         ></span>
                     </div>
-                    <!-- presentation_courte -->
+                    <!-- excerpt -->
                     <div>
                         <label
                             for="excerpt"
@@ -252,12 +252,12 @@ const addArticle = () => {
                             name="tags"
                             class="mt-1 block w-full"
                             v-model="filterInput"
-                            placeholder="Sélectionner et ajouter des tags."
+                            placeholder="Rechercher et ajouter des tags."
                         />
                         <InputError
                             v-if="articleForm.errors.tags"
                             class="mt-2"
-                            :message="addArticle.errors.tags"
+                            :message="articleForm.errors.tags"
                         />
                         <div class="mt-2 flex flex-wrap items-center">
                             <button

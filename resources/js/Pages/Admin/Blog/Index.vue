@@ -1,22 +1,23 @@
 <script setup>
-import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { ref, onMounted, watch, defineAsyncComponent } from "vue";
+import AdminLayout from "@/Layouts/AdminLayout.vue";
 import { Head, Link, router, usePage } from "@inertiajs/vue3";
+import { ref, onMounted, watch, defineAsyncComponent } from "vue";
 import { debounce } from "lodash";
-import ResultsHeader from "@/Components/ResultsHeader.vue";
-import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
+import NavAdminBlog from "@/Components/Admin/NavAdminBlog.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
 import PostFeaturedCard from "@/Components/Posts/PostFeaturedCard.vue";
 const Pagination = defineAsyncComponent(() =>
     import("@/Components/Pagination.vue")
 );
 import autoAnimate from "@formkit/auto-animate";
+import { ChevronLeftIcon } from "@heroicons/vue/24/outline";
+
 const props = defineProps({
+    errors: Object,
     posts: Object,
+    tags: Object,
     filters: Object,
-    familles: Object,
-    listDisciplines: Object,
-    allCities: Object,
+    user_can: Object,
 });
 
 const page = usePage();
@@ -32,7 +33,7 @@ watch(
     search,
     debounce(function (value) {
         router.get(
-            route("posts.index"),
+            route("admin.blog.index"),
             { search: value },
             { preserveState: true, replace: true }
         );
@@ -46,65 +47,25 @@ onMounted(() => {
     }
 });
 </script>
-
 <template>
-    <Head title="Blog" :description="'Blog de www.sports-et-loisirs.fr.'" />
-
-    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
+    <Head title="Gestion du blog" :description="'Administration du blog.'" />
+    <AdminLayout>
         <template #header>
-            <FamilleResultNavigation :familles="familles" />
-            <ResultsHeader>
-                <template v-slot:title> Blog </template>
-                <template v-slot:ariane>
-                    <nav aria-label="Breadcrumb" class="flex">
-                        <ol
-                            class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600"
-                        >
-                            <li class="flex items-center">
-                                <Link
-                                    preserve-scroll
-                                    :href="route('welcome')"
-                                    class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        class="h-4 w-4"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                                        />
-                                    </svg>
-
-                                    <span class="ms-1.5 text-xs font-medium">
-                                        Accueil
-                                    </span>
-                                </Link>
-                            </li>
-                            <li class="relative flex items-center">
-                                <span
-                                    class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
-                                >
-                                </span>
-
-                                <Link
-                                    preserve-scroll
-                                    :href="route('posts.index')"
-                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
-                                >
-                                    Blog
-                                </Link>
-                            </li>
-                        </ol>
-                    </nav>
-                </template>
-            </ResultsHeader>
+            <div class="flex h-full items-center justify-start">
+                <Link
+                    :href="route('admin.index')"
+                    class="h-full bg-blue-600 py-2.5 md:px-4 md:py-4"
+                >
+                    <ChevronLeftIcon class="h-10 w-10 text-white" />
+                </Link>
+                <h1
+                    class="px-3 text-center text-base font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
+                >
+                    Gestion du blog
+                </h1>
+            </div>
         </template>
+        <NavAdminBlog />
 
         <div class="py-6 md:py-12">
             <div class="mx-auto max-w-full px-2 sm:px-6 lg:px-8">
@@ -177,5 +138,5 @@ onMounted(() => {
                 </template>
             </div>
         </div>
-    </ResultLayout>
+    </AdminLayout>
 </template>
