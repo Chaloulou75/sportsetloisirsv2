@@ -628,7 +628,7 @@ const events = getEvents();
                             <div v-if="structure.logo">
                                 <img
                                     alt="img"
-                                    :src="structure.image"
+                                    :src="structure.image_url"
                                     class="h-14 w-14 shrink-0 rounded-full object-cover object-center md:h-20 md:w-20"
                                 />
                             </div>

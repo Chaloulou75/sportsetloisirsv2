@@ -82,16 +82,18 @@ const showAddTarifModal = ref(false);
 
 const headerClass = computed(() => {
     const defaultClass = "bg-la-base";
-    if (props.structureActivite && props.structureActivite.discipline_id) {
-        const disciplineId = props.structureActivite.discipline_id;
-        if (classMapping[disciplineId]) {
-            return classMapping[disciplineId];
-        } else {
-            return defaultClass;
-        }
-    } else {
-        return defaultClass;
+    const image = props.structureActivite.image;
+    const disciplineId = props.structureActivite.discipline_id;
+
+    if (props.structureActivite && image) {
+        return "";
     }
+
+    if (props.structureActivite && disciplineId && classMapping[disciplineId]) {
+        return classMapping[disciplineId];
+    }
+
+    return defaultClass;
 });
 
 const uniqueCriteresByCategorie = computed(() => {
@@ -522,18 +524,18 @@ const destroyTarif = (tarif, produit) => {
                     class="h-56 w-full max-w-sm bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-soft-light"
                     :class="headerClass"
                 >
-                    <!-- <img
+                    <img
                         v-if="structureActivite.image"
                         alt="image"
-                        :src="structureActivite.image"
-                        class="h-full w-full object-cover"
-                    /> -->
+                        :src="structureActivite.image_url"
+                        class="h-56 w-auto max-w-xs object-cover"
+                    />
                     <!-- <img
                         v-else
                         alt="image"
                         src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
                         class="h-full w-full object-cover"
-                    /> -->
+                    />-->
                 </div>
                 <div
                     class="flex flex-1 flex-col items-start space-y-3 px-2 py-2 md:space-y-6 md:px-4"

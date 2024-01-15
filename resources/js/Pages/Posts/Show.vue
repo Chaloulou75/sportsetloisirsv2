@@ -135,14 +135,18 @@ const incrementPostLike = () => {
                     class="mx-auto max-w-6xl gap-x-10 rounded-md bg-gray-50 px-4 py-4 lg:grid lg:grid-cols-12"
                 >
                     <div class="col-span-4 mb-10 lg:pt-14 lg:text-center">
-                        <img
+                        <div
                             v-if="post.thumbnail"
-                            :src="post.image"
-                            alt="image"
-                            class="rounded"
-                        />
+                            class="flex items-center justify-center"
+                        >
+                            <img
+                                :src="post.image_url"
+                                alt="image"
+                                class="rounded"
+                            />
+                        </div>
 
-                        <div class="hidden lg:block">
+                        <div class="mt-4 hidden lg:block">
                             <div
                                 v-if="post.tags"
                                 class="flex flex-wrap items-center"

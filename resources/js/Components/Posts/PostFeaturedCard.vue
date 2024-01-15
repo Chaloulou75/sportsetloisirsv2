@@ -26,9 +26,9 @@ const props = defineProps({
         class="rounded-xl border border-indigo-600 border-opacity-5 bg-gray-50 transition-colors duration-300 hover:border-opacity-100 hover:bg-gray-100"
     >
         <div class="px-5 py-6 lg:flex">
-            <div v-if="post.thumbnail" class="flex-1 lg:mr-8">
+            <div v-if="post.thumbnail" class="lg:mr-8">
                 <img
-                    :src="post.image"
+                    :src="post.image_url"
                     alt="Blog Post illustration"
                     class="rounded-xl"
                 />
@@ -76,7 +76,11 @@ const props = defineProps({
                 <div
                     class="mt-2 flex items-center justify-between text-xs text-gray-600"
                 >
-                    <span>{{ post.comments_count }} commentaires</span>
+                    <span
+                        >{{ post.comments_count }}
+                        <span v-if="post.comments_count > 1">commentaires</span>
+                        <span v-else>commentaire</span>
+                    </span>
                     <div
                         class="flex items-center space-x-2 text-xs text-gray-400"
                     >

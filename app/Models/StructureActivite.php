@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,6 +23,10 @@ class StructureActivite extends Model
      * @var array
      */
     protected $guarded = [];
+
+    protected $appends = [
+        'image_url'
+    ];
 
     public function structure(): BelongsTo
     {
@@ -57,6 +63,16 @@ class StructureActivite extends Model
     public function dates(): HasMany
     {
         return $this->hasMany(StructureActiviteDate::class, 'structure_activite_id');
+    }
+
+    /**
+     * Get the activite image url.
+     */
+    protected function imageUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Storage::url($this->image),
+        );
     }
 
     public function scopeWithRelations(Builder $query): void

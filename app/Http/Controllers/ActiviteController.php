@@ -170,8 +170,10 @@ class ActiviteController extends Controller
 
         $structureActivite = StructureActivite::with(['structure','categorie', 'discipline'])->where('structure_id', $structure->id)->findOrFail($activite);
 
-
         if ($request->hasFile('image')) {
+            if($structureActivite->image) {
+                Storage::disk('public')->delete($structureActivite->image);
+            }
             $path = $request->file('image')->store('structures/' . $structure->id . '/activites/' . $structureActivite->id, 'public');
             $structureActivite->update(['image' => $path]);
         }
@@ -228,8 +230,8 @@ class ActiviteController extends Controller
             }
         }
 
-        if($activite->image !== null) {
-            Storage::delete($activite->image);
+        if($activite->image) {
+            Storage::disk('public')->delete($activite->image);
         }
 
         if($activite) {

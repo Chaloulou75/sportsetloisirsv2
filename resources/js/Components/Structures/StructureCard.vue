@@ -123,7 +123,7 @@ const formatCityName = (ville) => {
             @mouseout="emit('card-out')"
             class="block rounded-lg shadow-sm shadow-sky-700 transition duration-300 ease-in-out hover:shadow-2xl md:px-0 md:hover:scale-105"
         >
-            <div class="relative">
+            <div class="relative flex items-center justify-center">
                 <!-- Button (positioned on top right) -->
                 <button
                     class="absolute right-2 top-2 z-30 bg-transparent"
@@ -142,6 +142,13 @@ const formatCityName = (ville) => {
 
                 <!-- Image -->
                 <img
+                    v-if="structure.logo"
+                    alt="Home"
+                    :src="structure.image_url"
+                    class="h-14 w-14 shrink-0 rounded-full object-contain object-center md:h-20 md:w-20"
+                />
+                <img
+                    v-else
                     alt="Home"
                     src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
                     class="h-56 w-full rounded-md object-cover"
@@ -203,7 +210,7 @@ const formatCityName = (ville) => {
             "
             class="block rounded-lg shadow-sm shadow-sky-700 transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl md:px-0"
         >
-            <div class="relative">
+            <div class="relative flex items-center justify-center">
                 <!-- Button (positioned on top right) -->
                 <button
                     class="absolute right-2 top-2 bg-transparent"
@@ -222,6 +229,13 @@ const formatCityName = (ville) => {
 
                 <!-- Image -->
                 <img
+                    v-if="structure.logo"
+                    alt="Home"
+                    :src="structure.image_url"
+                    class="h-14 w-14 shrink-0 rounded-full object-contain object-center md:h-20 md:w-20"
+                />
+                <img
+                    v-else
                     alt="Home"
                     src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
                     class="h-56 w-full rounded-md object-cover"

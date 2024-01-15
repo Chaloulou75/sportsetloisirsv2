@@ -193,7 +193,7 @@ const form = useForm({
     presentation_longue: props.structure.presentation_longue,
     abo_news: props.structure.abo_news,
     abo_promo: props.structure.abo_promo,
-    logo: null,
+    logo: props.structure.logo,
 });
 
 const name = ref(null);
@@ -213,9 +213,38 @@ const addItem = (id) => {
 };
 
 const submit = () => {
-    form.put(route("structures.update", props.structure), {
-        preserveScroll: true,
-    });
+    router.post(
+        route("structures.update", props.structure),
+        {
+            _method: "put",
+            name: form.name,
+            structuretype_id: form.structuretype_id,
+            attributs: form.attributs,
+            address: form.address,
+            city: form.city,
+            zip_code: form.zip_code,
+            country: form.country,
+            address_lat: form.address_lat,
+            address_lng: form.address_lng,
+            email: form.email,
+            date_creation: form.date_creation,
+            website: form.website,
+            phone1: form.phone1,
+            phone2: form.phone2,
+            facebook: form.facebook,
+            instagram: form.instagram,
+            youtube: form.youtube,
+            tiktok: form.tiktok,
+            presentation_courte: form.presentation_courte,
+            presentation_longue: form.presentation_longue,
+            abo_news: form.abo_news,
+            abo_promo: form.abo_promo,
+            logo: form.logo,
+        },
+        {
+            preserveScroll: true,
+        }
+    );
 };
 
 onMounted(() => {

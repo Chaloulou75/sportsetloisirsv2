@@ -17,7 +17,7 @@ class Post extends Model
     protected $guarded = [];
 
     protected $appends = [
-        'image'
+        'image_url'
     ];
 
     /**
@@ -76,7 +76,7 @@ class Post extends Model
     /**
      * Get the post image.
      */
-    protected function image(): Attribute
+    protected function imageUrl(): Attribute
     {
         return Attribute::make(
             get: fn() => Storage::url($this->thumbnail),

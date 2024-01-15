@@ -105,7 +105,8 @@ class StructureController extends Controller
                             'structuretype' => $structure->structuretype,
                             'departement_id' => $structure->departement_id,
                             'user' => $structure->creator,
-                            'logo' => $structure->logo ? asset($structure->logo) : 'https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
+                            'logo' => $structure->logo,
+                            'image_url' => $structure->imageUrl,
                             'adresses' => $structure->adresses,
                             'categories' => $structure->categories,
                             'disciplines' => $structure->disciplines,
@@ -447,7 +448,6 @@ class StructureController extends Controller
     public function update(Request $request, Structure $structure): RedirectResponse
     {
         // $structure = Structure::where('id', $structure->id)->firstOrFail();
-
         $validated = request()->validate([
             'name' => ['required', 'string', 'max:255'],
             'structuretype_id' => ['required', Rule::exists('structuretypes', 'id')],
@@ -640,7 +640,6 @@ class StructureController extends Controller
             }
         }
 
-
         if($categories->isNotEmpty()) {
             foreach($categories as $categorie) {
                 $categorie->delete();
@@ -653,9 +652,8 @@ class StructureController extends Controller
             }
         }
 
-
         if($structure->logo) {
-            Storage::delete($structure->logo);
+            Storage::disk('public')->delete($structure->logo);
         }
 
         if($structure) {

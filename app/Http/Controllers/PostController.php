@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -144,6 +145,9 @@ class PostController extends Controller
      */
     public function destroy(Post $post): RedirectResponse
     {
+        if($post->thumbnail) {
+            Storage::disk('public')->delete($post->thumbnail);
+        }
         $post->delete();
         return to_route('posts.index')->with('success', 'Article supprimé.');
     }
