@@ -297,7 +297,7 @@ const addArticle = () => {
                                     [{ color: [] }, { background: [] }],
                                     [{ font: [] }],
                                     [{ align: [] }],
-                                    ['link'],
+                                    ['link', 'image'],
                                 ]"
                             />
                         </div>
