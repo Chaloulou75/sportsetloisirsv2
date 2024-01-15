@@ -190,7 +190,6 @@ const formatCityName = (ville) => {
                         <dt class="sr-only">Ville</dt>
                         <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
                         <p class="font-semibold">
-                            {{ produit.adresse.address }},
                             {{ produit.adresse.city }} ({{
                                 produit.adresse.zip_code
                             }})
@@ -227,6 +226,7 @@ const formatCityName = (ville) => {
                             </template>
                         </ul>
                     </div>
+
                     <div v-if="produit.dates.length > 0">
                         <p class="mt-2 text-base font-semibold">
                             Dates et horaires:
@@ -265,7 +265,7 @@ const formatCityName = (ville) => {
                         </ul>
                     </div>
 
-                    <div v-if="produit.tarifs.length > 0">
+                    <!-- <div v-if="produit.tarifs.length > 0">
                         <p class="mt-2 text-base font-semibold">Tarifs:</p>
                         <ul class="list-inside list-disc text-base">
                             <li v-for="tarif in produit.tarifs" :key="tarif.id">
@@ -276,13 +276,21 @@ const formatCityName = (ville) => {
                                 >
                             </li>
                         </ul>
-                    </div>
+                    </div> -->
                     <div
                         v-if="
                             produit.cat_tarifs && produit.cat_tarifs.length > 0
                         "
                     >
-                        <p class="mt-2 text-base font-semibold">Tarifs:</p>
+                        <p
+                            class="mt-2 text-right text-lg font-bold text-green-700"
+                        >
+                            <span class="text-sm font-medium text-gray-600"
+                                >à partir de</span
+                            >
+                            {{ formatCurrency(produit.minimum_amount) }}
+                        </p>
+                        <!-- <p class="mt-2 text-base font-semibold">Tarifs:</p>
                         <ul class="list-inside list-disc space-y-2 text-sm">
                             <li
                                 v-for="catTarif in produit.cat_tarifs"
@@ -321,7 +329,7 @@ const formatCityName = (ville) => {
                                     </li>
                                 </ul>
                             </li>
-                        </ul>
+                        </ul> -->
                     </div>
                 </div>
             </div>

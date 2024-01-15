@@ -403,13 +403,24 @@ const formatCityName = (ville) => {
                 </h3>
                 <div
                     v-if="posts"
-                    class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
+                    class="mb-8 grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                 >
                     <PostFeaturedCard
                         v-for="post in posts"
                         :key="post.id"
                         :post="post"
                     />
+                </div>
+                <div class="mb-4 flex items-center justify-center">
+                    <Link
+                        :href="route('posts.index')"
+                        class="flex items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                    >
+                        Et beaucoup d'autres
+                        <span>
+                            <ArrowSmallRightIcon class="ml-2 h-6 w-6" />
+                        </span>
+                    </Link>
                 </div>
             </section>
         </template>

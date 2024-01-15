@@ -79,7 +79,7 @@ onMounted(() => {
                 <h1
                     class="px-3 text-center text-base font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
-                    Gestion des tags
+                    Gestion du Blog
                 </h1>
             </div>
         </template>
@@ -96,7 +96,7 @@ onMounted(() => {
                         name="tag"
                         class="mt-1 block w-full"
                         v-model="tagForm.name"
-                        placeholder="ajouter un tag."
+                        placeholder="Ajouter un tag"
                     />
                     <InputError
                         v-if="tagForm.errors.name"
@@ -157,7 +157,7 @@ onMounted(() => {
                 <TextInput
                     type="text"
                     name="tags"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full max-w-sm"
                     v-model="filterInput"
                     placeholder="Rechercher un tag"
                 />

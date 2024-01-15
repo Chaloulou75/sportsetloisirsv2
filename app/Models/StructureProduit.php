@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,6 +23,32 @@ class StructureProduit extends Model
      * @var array
      */
     protected $guarded = [];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['minimum_amount'];
+
+    protected function minimumAmount(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $minAmount = PHP_INT_MAX;
+
+                if ($this->catTarifs && count($this->catTarifs) > 0) {
+                    foreach ($this->catTarifs as $catTarif) {
+                        if ($catTarif['amount'] < $minAmount) {
+                            $minAmount = $catTarif['amount'];
+                        }
+                    }
+                }
+
+                return $minAmount !== PHP_INT_MAX ? $minAmount : null;
+            }
+        );
+    }
 
     public function structure(): BelongsTo
     {
@@ -110,5 +137,7 @@ class StructureProduit extends Model
             'plannings',
         ]);
     }
+
+
 
 }

@@ -105,6 +105,7 @@ class StructureActivite extends Model
             'produits.tarifs.tarifType',
             'produits.tarifs.structureTarifTypeInfos',
             'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut',
+            // 'produits.minimumAmount',
             'produits.catTarifs',
             'produits.catTarifs.attributs',
             'produits.catTarifs.attributs.tarif_attribut',
