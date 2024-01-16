@@ -146,7 +146,7 @@ const incrementPostLike = () => {
                     <div class="col-span-4 mb-10 lg:text-center">
                         <div
                             v-if="post.disciplines"
-                            class="flex flex-wrap items-center justify-center space-x-2"
+                            class="mb-4 flex flex-wrap items-center justify-center gap-1"
                         >
                             <div
                                 v-for="discipline in post.disciplines"
@@ -182,22 +182,6 @@ const incrementPostLike = () => {
                         </div>
 
                         <div class="mt-4 hidden lg:block">
-                            <p class="mt-4 block text-xs text-gray-400">
-                                Publié
-                                <time>{{ formatDate(post.created_at) }}</time>
-                            </p>
-
-                            <div
-                                class="mt-4 flex items-center text-sm lg:justify-center"
-                            >
-                                <UserCircleIcon class="h-6 w-6 fill-gray-300" />
-                                <div class="ml-3 text-left">
-                                    <h5 class="font-bold">
-                                        {{ post.author.name }}
-                                    </h5>
-                                </div>
-                            </div>
-
                             <div
                                 class="mt-4 flex items-center justify-center space-x-5"
                             >
@@ -227,15 +211,52 @@ const incrementPostLike = () => {
                                     </span>
                                 </div>
                             </div>
+                            <p class="mt-4 block text-xs text-gray-400">
+                                Publié
+                                <time>{{ formatDate(post.created_at) }}</time>
+                            </p>
 
                             <div
-                                class="flex items-center text-sm lg:justify-center"
+                                class="mt-4 flex items-center text-sm lg:justify-center"
+                            >
+                                <UserCircleIcon class="h-6 w-6 fill-gray-300" />
+                                <div class="ml-3 text-left">
+                                    <h5 class="font-bold">
+                                        {{ post.author.name }}
+                                    </h5>
+                                </div>
+                            </div>
+
+                            <div
+                                v-if="
+                                    post.author.structures &&
+                                    post.author.structures.length > 0
+                                "
+                                class="mt-4 flex items-center text-sm lg:justify-center"
+                            >
+                                <div class="text-gray-600">
+                                    <Link
+                                        :href="
+                                            route(
+                                                'structures.show',
+                                                post.author.structures[0].slug
+                                            )
+                                        "
+                                        class="my-2 rounded-sm border border-gray-300 bg-white px-2 py-1 font-bold hover:bg-gray-100 hover:text-gray-800"
+                                    >
+                                        {{ post.author.structures[0].name }}
+                                    </Link>
+                                </div>
+                            </div>
+
+                            <div
+                                v-if="
+                                    (user && post.user_id === user.id) ||
+                                    (admin && admin === true)
+                                "
+                                class="mt-8 flex items-center text-sm lg:justify-center"
                             >
                                 <button
-                                    v-if="
-                                        (user && post.user_id === user.id) ||
-                                        (admin && admin === true)
-                                    "
                                     class="mt-6 flex items-center space-x-3 rounded bg-red-500 p-2 hover:bg-red-600"
                                     @click="deletePost()"
                                     type="button"
@@ -321,6 +342,27 @@ const incrementPostLike = () => {
                                     </h5>
                                 </div>
                             </div>
+                            <div
+                                v-if="
+                                    post.author.structures &&
+                                    post.author.structures.length > 0
+                                "
+                                class="mt-4 flex items-center text-sm lg:justify-center"
+                            >
+                                <div class="text-gray-600">
+                                    <Link
+                                        :href="
+                                            route(
+                                                'structures.show',
+                                                post.author.structures[0].slug
+                                            )
+                                        "
+                                        class="my-2 rounded-sm border border-gray-300 bg-white px-2 py-1 font-bold hover:bg-gray-100 hover:text-gray-800"
+                                    >
+                                        {{ post.author.structures[0].name }}
+                                    </Link>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -332,7 +374,7 @@ const incrementPostLike = () => {
                         </h1>
 
                         <div
-                            class="prose prose-slate space-y-4 text-justify leading-loose lg:prose-xl lg:text-lg"
+                            class="prose prose-slate space-y-4 break-words text-justify leading-loose lg:prose-xl lg:text-lg"
                             v-html="post.body"
                         ></div>
                     </div>

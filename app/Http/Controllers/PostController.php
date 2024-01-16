@@ -123,7 +123,7 @@ class PostController extends Controller
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
-        $post = Post::with('author', 'comments', 'comments.author', 'tags', 'disciplines')->findOrFail($post->id);
+        $post = Post::with('author', 'author.structures', 'comments', 'comments.author', 'tags', 'disciplines')->findOrFail($post->id);
 
         $post->increment('views_count');
 
