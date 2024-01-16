@@ -36,7 +36,6 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 dayjs.locale("fr");
 
 const props = defineProps({
-    logoUrl: String,
     departement: Object,
     city: Object,
     citiesAround: Object,

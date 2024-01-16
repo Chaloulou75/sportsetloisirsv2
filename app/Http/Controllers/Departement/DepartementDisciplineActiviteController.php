@@ -66,9 +66,6 @@ class DepartementDisciplineActiviteController extends Controller
 
         $produits = $activite->produits;
 
-        $logoUrl = asset($activite->structure->logo);
-
-
         $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
             $query->orderBy('defaut', 'desc');
         }])
@@ -89,7 +86,6 @@ class DepartementDisciplineActiviteController extends Controller
             'familles' => $familles,
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,
-            'logoUrl' => $logoUrl,
             'activite' => $activite,
             'criteres' => $criteres,
             'activiteSimilaires' => $activiteSimilaires,

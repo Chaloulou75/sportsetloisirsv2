@@ -31,7 +31,6 @@ import ActiviteCard from "@/Components/Structures/ActiviteCard.vue";
 
 const props = defineProps({
     structure: Object,
-    logoUrl: String,
     familles: Object,
     listDisciplines: Object,
     requestDiscipline: Object,

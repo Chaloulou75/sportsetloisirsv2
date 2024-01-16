@@ -5,7 +5,6 @@ import { Head, Link, useForm, router } from "@inertiajs/vue3";
 import { ChevronLeftIcon, XCircleIcon } from "@heroicons/vue/24/outline";
 import NavAdminBlog from "@/Components/Admin/NavAdminBlog.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
-import InputLabel from "@/Components/Forms/InputLabel.vue";
 import InputError from "@/Components/Forms/InputError.vue";
 import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import autoAnimate from "@formkit/auto-animate";
@@ -28,9 +27,8 @@ const filteredTags = computed(() => {
 
 const tagForm = useForm({
     name: null,
-    disciplines: false,
+    // disciplines: false,
     categories: false,
-    // cities: false,
 });
 
 const addTag = () => {
@@ -103,7 +101,7 @@ onMounted(() => {
                         class="mt-2"
                         :message="tagForm.errors.name"
                     />
-                    <div class="flex items-center">
+                    <!-- <div class="flex items-center">
                         <input
                             v-model="tagForm.disciplines"
                             id="disciplines"
@@ -115,7 +113,7 @@ onMounted(() => {
                             class="ml-2 text-sm font-medium text-gray-700"
                             >Ajouter les noms de toutes les disciplines?</label
                         >
-                    </div>
+                    </div> -->
                     <div class="flex items-center">
                         <input
                             v-model="tagForm.categories"

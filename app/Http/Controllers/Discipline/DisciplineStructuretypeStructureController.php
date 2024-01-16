@@ -31,8 +31,6 @@ class DisciplineStructuretypeStructureController extends Controller
                             ->where('slug', $structure)
                             ->first();
 
-        $logoUrl = asset($structure->logo);
-
         $requestDiscipline = ListDiscipline::with('structureProduits')->where('slug', $discipline->slug)
                                     ->select(['id', 'name', 'slug', 'view_count'])
                                     ->first();
@@ -76,7 +74,6 @@ class DisciplineStructuretypeStructureController extends Controller
             'allCities' => $allCities,
             'listDisciplines' => $listDisciplines,
             'criteres' => $criteres,
-            'logoUrl' => $logoUrl,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),

@@ -50,7 +50,6 @@ const props = defineProps({
     city: Object,
     discipline: Object,
     structure: Object,
-    logoUrl: String,
     activite: Object,
     criteres: Object,
     activiteSimilaires: Object,

@@ -76,9 +76,9 @@ const handleButtonEvent = (message) => {
 };
 
 const form = useForm({
-    structure_id: ref(props.structure.id),
-    discipline_id: ref(null),
-    categories_id: ref([]),
+    structure_id: props.structure.id,
+    discipline_id: null,
+    categories_id: [],
 });
 
 const categoriesList = ref([]);
@@ -144,7 +144,9 @@ const refreshPage = () => {
 const submit = () => {
     form.post(route("structures.activites.store", props.structure.slug), {
         preserveScroll: true,
-        onSuccess: () => form.reset(),
+        onSuccess: () => {
+            form.reset();
+        },
     });
 };
 
@@ -181,202 +183,172 @@ const openAddTarifModal = (structure) => {
         </template>
         <template #default>
             <MicroNavActiviteBackPro @eventFromChild="handleButtonEvent" />
-            <div
-                class="relative my-4 flex flex-col space-y-6 py-2 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
-            >
+            <div class="relative my-4 flex flex-col md:flex-row md:space-y-0">
                 <div class="mx-auto max-w-full flex-1 lg:px-4">
-                    <div
-                        v-if="displayTarifs"
-                        class="flex w-full flex-col items-center justify-end space-y-2 px-2 py-3 md:h-20 md:flex-row md:space-y-0 md:px-0 md:py-6"
-                    >
-                        <button
-                            type="button"
-                            @click="openAddTarifModal(structure)"
-                            class="w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:flex md:w-auto"
-                        >
-                            Ajouter un tarif
-                            <PlusIcon class="ml-2 h-5 w-5" />
-                        </button>
-                    </div>
                     <template v-if="displayActivites">
-                        <div class="min-h-screen">
-                            <form @submit.prevent="submit" autocomplete="off">
-                                <div
-                                    class="flex w-full flex-col items-start justify-start bg-white px-4 py-5 md:flex-row md:px-6 md:py-10"
-                                >
-                                    <!-- discipline -->
-                                    <AutocompleteActiviteFormSmall
-                                        class="h-full w-full md:w-1/2"
-                                        :disciplines="listDisciplines"
-                                        :deja-used-disciplines="
-                                            dejaUsedDisciplinesRef
-                                        "
-                                        :errors="form.errors"
-                                        v-model:discipline="form.discipline_id"
-                                        :selected-discipline="
-                                            selectedDiscipline
-                                        "
-                                        @update:modelValue="
-                                            (discipline) =>
-                                                (form.discipline_id =
-                                                    discipline)
-                                        "
-                                    />
-                                </div>
+                        <form
+                            class="space-y-6 px-2 py-2 sm:px-4 md:px-6 md:py-4 lg:px-8"
+                            @submit.prevent="submit"
+                            autocomplete="off"
+                        >
+                            <!-- discipline -->
+                            <AutocompleteActiviteFormSmall
+                                class="w-full md:w-1/2"
+                                :disciplines="listDisciplines"
+                                :deja-used-disciplines="dejaUsedDisciplinesRef"
+                                :errors="form.errors"
+                                v-model:discipline="form.discipline_id"
+                                :selected-discipline="selectedDiscipline"
+                                @update:modelValue="
+                                    (discipline) =>
+                                        (form.discipline_id = discipline)
+                                "
+                            />
 
-                                <!-- categories -->
-                                <div
-                                    v-if="form.discipline_id"
-                                    class="w-full px-4 py-5 sm:p-6"
+                            <!-- categories -->
+                            <div
+                                v-if="
+                                    form.discipline_id &&
+                                    categoriesList.length > 0
+                                "
+                                class="w-full"
+                            >
+                                <label
+                                    for="categories"
+                                    class="mb-4 block text-lg font-medium text-gray-700"
                                 >
-                                    <label
-                                        for="categories"
-                                        class="mb-4 block text-lg font-medium text-gray-700"
+                                    Categories d'activité
+                                    <span class="text-base italic text-gray-600"
+                                        >(Selectionnez une ou plusieurs
+                                        categories)</span
                                     >
-                                        Categories d'activité
-                                        <span
-                                            class="text-base italic text-gray-600"
-                                            >(Selectionnez une ou plusieurs
-                                            categories)</span
+                                </label>
+                                <div class="mt-1">
+                                    <ul
+                                        class="flex w-full flex-col items-start justify-between rounded-md border border-gray-300 bg-white px-3 py-2 shadow-md focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-base md:flex-row md:items-center"
+                                    >
+                                        <li
+                                            v-for="categorie in categoriesList"
+                                            :key="categorie.id"
+                                            class="py-2"
                                         >
-                                    </label>
-                                    <div class="mt-1">
-                                        <ul
-                                            class="flex w-full flex-col items-start justify-between rounded-md border border-gray-300 bg-white px-3 py-2 shadow-md focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-base md:flex-row md:items-center"
-                                        >
-                                            <li
-                                                v-for="categorie in categoriesList"
-                                                :key="categorie.id"
-                                                class="py-2"
+                                            <div
+                                                class="flex items-center justify-between"
                                             >
-                                                <div
-                                                    class="flex items-center justify-between"
+                                                <input
+                                                    name="categories"
+                                                    id="categories"
+                                                    v-model="form.categories_id"
+                                                    type="checkbox"
+                                                    multiple
+                                                    :value="categorie.id"
+                                                    :checked="
+                                                        form.categories_id.includes(
+                                                            categorie.id
+                                                        )
+                                                    "
+                                                    class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                />
+                                                <span
+                                                    class="ml-2 text-gray-700"
+                                                    >{{
+                                                        categorie.pivot
+                                                            .nom_categorie_pro
+                                                    }}</span
                                                 >
-                                                    <input
-                                                        name="categories"
-                                                        id="categories"
-                                                        v-model="
-                                                            form.categories_id
-                                                        "
-                                                        type="checkbox"
-                                                        multiple
-                                                        :value="categorie.id"
-                                                        :checked="
-                                                            form.categories_id.includes(
-                                                                categorie.id
-                                                            )
-                                                        "
-                                                        class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                                    />
-                                                    <span
-                                                        class="ml-2 text-gray-700"
-                                                        >{{
-                                                            categorie.pivot
-                                                                .nom_categorie_pro
-                                                        }}</span
-                                                    >
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div
-                                        v-if="form.errors.categories_id"
-                                        class="mt-2 text-xs text-red-500"
-                                    >
-                                        {{ form.errors.categories_id }}
-                                    </div>
+                                            </div>
+                                        </li>
+                                    </ul>
                                 </div>
-
-                                <!--buttons -->
                                 <div
-                                    v-if="form.categories_id.length > 0"
-                                    class="px-4 py-3 text-right md:px-6"
+                                    v-if="form.errors.categories_id"
+                                    class="mt-2 text-xs text-red-500"
+                                >
+                                    {{ form.errors.categories_id }}
+                                </div>
+                            </div>
+
+                            <!--buttons -->
+                            <div
+                                v-if="form.categories_id.length > 0"
+                                class="py-3 text-right"
+                            >
+                                <button
+                                    :disabled="form.processing"
+                                    type="submit"
+                                    class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                >
+                                    <LoadingSVG v-if="form.processing" />
+                                    Enregistrer
+                                </button>
+                            </div>
+                        </form>
+                        <!-- disciplines similaires -->
+                        <section
+                            v-if="activiteSimilairesList.length > 0"
+                            class="mx-auto w-full px-2 py-2 sm:px-4 md:py-4 lg:px-8"
+                        >
+                            <h2 class="mb-4 text-lg font-medium text-gray-700">
+                                Les disciplines similaires
+                            </h2>
+                            <div
+                                class="flex w-full flex-col flex-wrap items-stretch gap-3 text-gray-700 md:flex-row"
+                            >
+                                <div
+                                    v-for="discipline in activiteSimilairesList"
+                                    :key="discipline.id"
+                                    :index="discipline.id"
+                                    :class="{
+                                        'pointer-events-none text-gray-400':
+                                            dejaUsedDisciplinesRef.includes(
+                                                discipline.id
+                                            ),
+                                    }"
+                                    class="inline-flex w-auto items-center justify-center rounded border border-gray-600 px-4 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                                 >
                                     <button
-                                        :disabled="form.processing"
-                                        type="submit"
-                                        class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                        type="button"
+                                        @click="updateDiscipline(discipline)"
                                     >
-                                        <LoadingSVG v-if="form.processing" />
-                                        Enregistrer
-                                    </button>
-                                </div>
-                            </form>
-
-                            <!-- disciplines similaires -->
-                            <section
-                                v-if="activiteSimilairesList.length > 0"
-                                class="mx-auto w-full px-2 py-6 sm:px-4 lg:px-8"
-                            >
-                                <h2
-                                    class="mb-4 text-lg font-medium text-gray-700"
-                                >
-                                    Les disciplines similaires
-                                </h2>
-                                <div
-                                    class="flex w-full flex-col flex-wrap items-stretch gap-3 text-gray-700 md:flex-row"
-                                >
-                                    <div
-                                        v-for="discipline in activiteSimilairesList"
-                                        :key="discipline.id"
-                                        :index="discipline.id"
-                                        :class="{
-                                            'pointer-events-none text-gray-400':
+                                        {{ discipline.name }}
+                                        <span
+                                            v-if="
                                                 dejaUsedDisciplinesRef.includes(
                                                     discipline.id
-                                                ),
-                                        }"
-                                        class="inline-flex w-auto items-center justify-center rounded border border-gray-600 px-4 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
-                                    >
-                                        <button
-                                            type="button"
-                                            @click="
-                                                updateDiscipline(discipline)
+                                                )
                                             "
+                                            class="text-xs italic text-gray-400"
+                                            >(déjà sélectionné)</span
                                         >
-                                            {{ discipline.name }}
-                                            <span
-                                                v-if="
-                                                    dejaUsedDisciplinesRef.includes(
-                                                        discipline.id
-                                                    )
-                                                "
-                                                class="text-xs italic text-gray-400"
-                                                >(déjà sélectionné)</span
-                                            >
-                                        </button>
-                                    </div>
+                                    </button>
                                 </div>
-                            </section>
+                            </div>
+                        </section>
+                        <section
+                            v-if="activites.length > 0"
+                            class="mx-auto my-4 max-w-full space-y-4 px-2 sm:px-4 lg:px-8"
+                        >
+                            <h2 class="text-xl font-bold text-gray-700">
+                                Vos activités
+                            </h2>
 
-                            <section
-                                v-if="activites.length > 0"
-                                class="mx-auto my-4 max-w-full space-y-4 px-2 sm:px-4 lg:px-8"
+                            <div
+                                class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
                             >
-                                <h2 class="text-xl font-bold text-gray-700">
-                                    Vos activités
-                                </h2>
-
-                                <div
-                                    class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
-                                >
-                                    <DisciplineCard
-                                        v-for="(
-                                            activite, index
-                                        ) in actByDiscAndCategorie"
-                                        :key="activite.id"
-                                        :activite="activite"
-                                        :structure="structure"
-                                        @open-delete-modal="
-                                            handleOpenDeleteModal
-                                        "
-                                        @open-delete-categorie-modal="
-                                            handleOpenDeleteCategorieModal
-                                        "
-                                    />
-                                </div>
-                            </section>
-                        </div>
+                                <DisciplineCard
+                                    v-for="(
+                                        activite, index
+                                    ) in actByDiscAndCategorie"
+                                    :key="activite.id"
+                                    :activite="activite"
+                                    :structure="structure"
+                                    @open-delete-modal="handleOpenDeleteModal"
+                                    @open-delete-categorie-modal="
+                                        handleOpenDeleteCategorieModal
+                                    "
+                                />
+                            </div>
+                        </section>
                     </template>
                     <template v-if="displayPlanning">
                         <PlanningDisplay
@@ -386,6 +358,18 @@ const openAddTarifModal = (structure) => {
                         />
                     </template>
                     <template v-if="displayTarifs">
+                        <div
+                            class="flex w-full flex-col items-center justify-end space-y-2 px-2 py-3 md:my-4 md:h-20 md:flex-row md:space-y-0 md:px-0 md:py-6"
+                        >
+                            <button
+                                type="button"
+                                @click="openAddTarifModal(structure)"
+                                class="w-full items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 sm:rounded-sm md:flex md:w-auto"
+                            >
+                                Ajouter un tarif
+                                <PlusIcon class="ml-2 h-5 w-5" />
+                            </button>
+                        </div>
                         <TarifDisplay
                             :errors="errors"
                             :structure="structure"

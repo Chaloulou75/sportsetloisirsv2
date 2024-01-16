@@ -15,9 +15,56 @@ const props = defineProps({
     familles: Object,
     listDisciplines: Object,
     allCities: Object,
+    disciplines: Object,
     tags: Object,
 });
 
+const filterDiscipline = ref("");
+const filteredDisciplines = ref(null);
+
+watchEffect(() => {
+    // Update filteredDisciplines based on filterDiscipline.value
+    filteredDisciplines.value = filterDiscipline.value
+        ? props.disciplines.filter(
+              (discipline) =>
+                  discipline.name
+                      .toLowerCase()
+                      .includes(filterDiscipline.value.toLowerCase()) &&
+                  !selectedDisciplines.value.some(
+                      (selectedDiscipline) =>
+                          selectedDiscipline.id === discipline.id
+                  )
+          )
+        : null;
+});
+
+const selectedDisciplines = ref([]);
+const addDisciplineFromList = (discipline) => {
+    if (
+        !selectedDisciplines.value.some(
+            (selectedDiscipline) => selectedDiscipline.id === discipline.id
+        )
+    ) {
+        selectedDisciplines.value.push(discipline);
+        articleForm.disciplines.push(discipline);
+        filterDiscipline.value = "";
+    }
+};
+
+const removeDisciplineFromList = (discipline) => {
+    const selectedDisciplineIndex =
+        selectedDisciplines.value.indexOf(discipline);
+    const articleFormDisciplineIndex =
+        articleForm.disciplines.indexOf(discipline);
+    if (selectedDisciplineIndex !== -1) {
+        selectedDisciplines.value.splice(selectedDisciplineIndex, 1);
+    }
+    if (articleFormDisciplineIndex !== -1) {
+        articleForm.disciplines.splice(articleFormDisciplineIndex, 1);
+    }
+};
+
+//tags
 const filterInput = ref("");
 const filteredTags = ref(null);
 
@@ -58,6 +105,7 @@ const removeTagFromList = (tag) => {
 
 const articleForm = useForm({
     title: null,
+    disciplines: [],
     thumbnail: null,
     excerpt: null,
     body: null,
@@ -170,6 +218,59 @@ const addArticle = () => {
                             {{ articleForm.errors.title }}
                         </div>
                     </div>
+                    <!-- disciplines -->
+                    <div>
+                        <InputLabel
+                            for="tags"
+                            value="Disciplines liées à l'article"
+                            class="block text-sm font-medium text-gray-700"
+                        />
+                        <div
+                            v-if="selectedDisciplines.length > 0"
+                            class="flex flex-wrap items-center"
+                        >
+                            <button
+                                type="button"
+                                @click.prevent="
+                                    removeDisciplineFromList(selectedDiscipline)
+                                "
+                                v-for="selectedDiscipline in selectedDisciplines"
+                                :key="selectedDiscipline.id"
+                                class="group m-px flex items-center border bg-white p-1 text-xs hover:bg-blue-600 hover:text-white"
+                            >
+                                {{ selectedDiscipline.name }}
+                                <XCircleIcon
+                                    class="ml-2 h-4 w-4 text-red-500 group-hover:text-white"
+                                />
+                            </button>
+                        </div>
+
+                        <TextInput
+                            type="text"
+                            name="tags"
+                            class="mt-1 block w-full"
+                            v-model="filterDiscipline"
+                            placeholder="Rechercher et ajouter des disciplines."
+                        />
+                        <InputError
+                            v-if="articleForm.errors.disciplines"
+                            class="mt-2"
+                            :message="articleForm.errors.disciplines"
+                        />
+                        <div class="mt-2 flex flex-wrap items-center">
+                            <button
+                                type="button"
+                                v-for="discipline in filteredDisciplines"
+                                :key="discipline.id"
+                                @click.prevent="
+                                    addDisciplineFromList(discipline)
+                                "
+                                class="m-px border bg-white p-1 text-xs hover:bg-blue-600 hover:text-white"
+                            >
+                                {{ discipline.name }}
+                            </button>
+                        </div>
+                    </div>
                     <!-- image -->
                     <div>
                         <label
@@ -271,6 +372,7 @@ const addArticle = () => {
                             </button>
                         </div>
                     </div>
+                    <!-- body -->
                     <div>
                         <label
                             for="body"

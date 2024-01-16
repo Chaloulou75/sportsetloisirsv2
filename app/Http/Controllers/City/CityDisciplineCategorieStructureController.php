@@ -31,7 +31,6 @@ class CityDisciplineCategorieStructureController extends Controller
         $structure = Structure::withRelations()
                     ->where('slug', $structure)
                     ->first();
-        $logoUrl = asset($structure->logo);
 
         $city = City::with(['structures', 'produits', 'produits.adresse'])
                     ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
@@ -98,7 +97,6 @@ class CityDisciplineCategorieStructureController extends Controller
             'allCities' => $allCities,
             'listDisciplines' => $listDisciplines,
             'criteres' => $criteres,
-            'logoUrl' => $logoUrl,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),

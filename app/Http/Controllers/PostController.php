@@ -24,7 +24,7 @@ class PostController extends Controller
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
-        $posts = Post::with('author', 'comments', 'tags')
+        $posts = Post::with('author', 'comments', 'tags', 'disciplines')
                 ->withCount('comments')
                 ->latest()
                 ->filter(
@@ -53,11 +53,13 @@ class PostController extends Controller
         $allCities = City::withProducts()->get();
 
         $tags = Tag::select('id', 'name')->get();
+        $disciplines = ListDiscipline::select('id', 'name')->get();
 
         return Inertia::render('Posts/Create', [
             'familles' => $familles,
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,
+            'disciplines' => $disciplines,
             'tags' => $tags,
         ]);
     }
@@ -72,6 +74,7 @@ class PostController extends Controller
             'thumbnail' => 'nullable|image',
             'excerpt' => 'required|string|min:3',
             'tags' => 'nullable|array',
+            'disciplines' => 'nullable|array',
             'body' => 'required',
         ]);
 
@@ -93,6 +96,14 @@ class PostController extends Controller
             $post->update(['thumbnail' => $path ]);
         }
 
+
+        $disciplines = $request->disciplines;
+        if($disciplines) {
+            foreach($disciplines as $discipline) {
+                $post->disciplines()->attach($discipline['id']);
+            }
+        }
+
         $tags = $request->tags;
         if($tags) {
             foreach($tags as $tag) {
@@ -112,7 +123,7 @@ class PostController extends Controller
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
-        $post = Post::with('author', 'comments', 'comments.author', 'tags')->findOrFail($post->id);
+        $post = Post::with('author', 'comments', 'comments.author', 'tags', 'disciplines')->findOrFail($post->id);
 
         $post->increment('views_count');
 

@@ -1,6 +1,6 @@
 <script setup>
-import { ref, reactive, watch, onMounted } from "vue";
-import { router, useForm } from "@inertiajs/vue3";
+import { ref, watch, onMounted } from "vue";
+import { useForm } from "@inertiajs/vue3";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
@@ -270,215 +270,216 @@ const onSubmit = () => {
     );
 };
 
-// Old Form Part!
-const uniteDurees = reactive([
-    { id: 1, name: "Heures" },
-    { id: 2, name: "Jours" },
-    { id: 3, name: "Mois" },
-    { id: 4, name: "Années" },
-]);
-
-const selectedUniteeDuree = ref(uniteDurees[0]);
-const selectedTarifType = ref(props.tarifTypes[0]);
-const checkAll = ref(false);
-
-const formAddTarif = reactive({
-    structure_id: ref(props.structure.id),
-    titre: ref(null),
-    description: ref(null),
-    tarifType: ref(selectedTarifType.value),
-    attributs: ref([]),
-    amount: ref(null),
-    disciplines: ref({}),
-    categories: ref({}),
-    activites: ref({}),
-    produits: ref({}),
-    uniteDuree: ref(selectedUniteeDuree.value),
-});
-
-watch(
-    () => props.structureActivites,
-    (newStructureActivites) => {
-        if (newStructureActivites) {
-            for (const activite of props.structureActivites) {
-                for (const produit of activite.produits) {
-                    formAddTarif.produits[produit.id] = true;
-                }
-            }
-        }
-    },
-    {
-        immediate: true,
-        deep: true,
-    }
-);
-
-watch(
-    () => formAddTarif.disciplines,
-    (newValue) => {
-        if (newValue) {
-            formAddTarif.categories = {};
-            formAddTarif.activites = {};
-            formAddTarif.produits = {};
-            // Set related checkboxes to true based on the discipline selection
-            for (const disciplineId in newValue) {
-                const discipline = newValue[disciplineId];
-                if (discipline) {
-                    const disciplineData =
-                        props.activiteForTarifs[disciplineId];
-
-                    if (disciplineData) {
-                        const categories = disciplineData.categories;
-
-                        for (const categoryId in categories) {
-                            formAddTarif.categories[categoryId] = true;
-                            const category = categories[categoryId];
-
-                            for (const activity of category.activites) {
-                                formAddTarif.activites[activity.id] = true;
-
-                                for (const product of activity.produits) {
-                                    formAddTarif.produits[product.id] = true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    },
-    { deep: true }
-);
-
-watch(
-    () => formAddTarif.categories,
-    (newValue) => {
-        if (newValue) {
-            formAddTarif.activites = {};
-            formAddTarif.produits = {};
-            // Set related checkboxes to true based on the categorie selection
-            for (const categoryId in newValue) {
-                const category = newValue[categoryId];
-
-                if (category) {
-                    for (const disciplineId in props.activiteForTarifs) {
-                        const disciplineData =
-                            props.activiteForTarifs[disciplineId];
-                        const categoryData =
-                            disciplineData.categories[categoryId];
-
-                        if (categoryData) {
-                            const activites = categoryData.activites;
-
-                            for (const activity of activites) {
-                                formAddTarif.activites[activity.id] = true;
-
-                                for (const product of activity.produits) {
-                                    formAddTarif.produits[product.id] = true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    },
-    { deep: true }
-);
-
-watch(
-    () => formAddTarif.activites,
-    (newValue) => {
-        if (newValue) {
-            formAddTarif.produits = {};
-
-            // Set related checkboxes to true based on the activity selection
-            for (const disciplineId in props.activiteForTarifs) {
-                const disciplineData = props.activiteForTarifs[disciplineId];
-
-                for (const categoryId in disciplineData.categories) {
-                    const categoryData = disciplineData.categories[categoryId];
-
-                    for (const activity of categoryData.activites) {
-                        if (newValue[activity.id]) {
-                            formAddTarif.activites[activity.id] = true;
-
-                            for (const product of activity.produits) {
-                                formAddTarif.produits[product.id] = true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    },
-    { deep: true }
-);
-
-watch(
-    () => checkAll,
-    (newValue) => {
-        if (newValue) {
-            for (const disciplineId in props.activiteForTarifs) {
-                formAddTarif.disciplines[disciplineId] = newValue.value;
-                for (const categoryId in formAddTarif.categories) {
-                    formAddTarif.categories[categoryId] = newValue.value;
-                    for (const activityId in formAddTarif.activites) {
-                        formAddTarif.activites[activityId] = newValue.value;
-                        for (const productId in formAddTarif.produits) {
-                            formAddTarif.produits[productId] = newValue.value;
-                        }
-                    }
-                }
-            }
-        }
-    },
-    { deep: true }
-);
-
-const onSubmitAddTarifForm = () => {
-    router.post(
-        route("structures.tarifs.store", {
-            structure: props.structure,
-        }),
-        {
-            structure_id: formAddTarif.structure_id,
-            titre: formAddTarif.titre,
-            description: formAddTarif.description,
-            tarifType: selectedTarifType.value.id,
-            attributs: formAddTarif.attributs,
-            amount: formAddTarif.amount,
-            disciplines: formAddTarif.disciplines,
-            categories: formAddTarif.categories,
-            activites: formAddTarif.activites,
-            produits: formAddTarif.produits,
-            uniteDuree: selectedUniteeDuree.value,
-        },
-        {
-            preserveScroll: true,
-            remember: false,
-            onSuccess: () => {
-                // formAddTarif.reset();
-                formAddTarif.titre = "";
-                formAddTarif.attributs = [];
-                formAddTarif.amount = "";
-                formAddTarif.tarifType = props.tarifTypes[0];
-                formAddTarif.uniteDuree = uniteDurees[0];
-                formAddTarif.disciplines = {};
-                formAddTarif.categories = {};
-                formAddTarif.activites = {};
-                formAddTarif.produits = {};
-                checkAll.value = false;
-                emit("close");
-            },
-        }
-    );
-};
-
-// part of the new form
 onMounted(() => {
     addTarifForm.categorie_id = newSelectedCategorieId.value;
 });
+
+// Old Form Part!
+// const uniteDurees = reactive([
+//     { id: 1, name: "Heures" },
+//     { id: 2, name: "Jours" },
+//     { id: 3, name: "Mois" },
+//     { id: 4, name: "Années" },
+// ]);
+
+// const selectedUniteeDuree = ref(uniteDurees[0]);
+// const selectedTarifType = ref(props.tarifTypes[0]);
+// const checkAll = ref(false);
+
+// const formAddTarif = reactive({
+//     structure_id: ref(props.structure.id),
+//     titre: ref(null),
+//     description: ref(null),
+//     tarifType: ref(selectedTarifType.value),
+//     attributs: ref([]),
+//     amount: ref(null),
+//     disciplines: ref({}),
+//     categories: ref({}),
+//     activites: ref({}),
+//     produits: ref({}),
+//     uniteDuree: ref(selectedUniteeDuree.value),
+// });
+
+// watch(
+//     () => props.structureActivites,
+//     (newStructureActivites) => {
+//         if (newStructureActivites) {
+//             for (const activite of props.structureActivites) {
+//                 for (const produit of activite.produits) {
+//                     formAddTarif.produits[produit.id] = true;
+//                 }
+//             }
+//         }
+//     },
+//     {
+//         immediate: true,
+//         deep: true,
+//     }
+// );
+
+// watch(
+//     () => formAddTarif.disciplines,
+//     (newValue) => {
+//         if (newValue) {
+//             formAddTarif.categories = {};
+//             formAddTarif.activites = {};
+//             formAddTarif.produits = {};
+//             // Set related checkboxes to true based on the discipline selection
+//             for (const disciplineId in newValue) {
+//                 const discipline = newValue[disciplineId];
+//                 if (discipline) {
+//                     const disciplineData =
+//                         props.activiteForTarifs[disciplineId];
+
+//                     if (disciplineData) {
+//                         const categories = disciplineData.categories;
+
+//                         for (const categoryId in categories) {
+//                             formAddTarif.categories[categoryId] = true;
+//                             const category = categories[categoryId];
+
+//                             for (const activity of category.activites) {
+//                                 formAddTarif.activites[activity.id] = true;
+
+//                                 for (const product of activity.produits) {
+//                                     formAddTarif.produits[product.id] = true;
+//                                 }
+//                             }
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//     },
+//     { deep: true }
+// );
+
+// watch(
+//     () => formAddTarif.categories,
+//     (newValue) => {
+//         if (newValue) {
+//             formAddTarif.activites = {};
+//             formAddTarif.produits = {};
+//             // Set related checkboxes to true based on the categorie selection
+//             for (const categoryId in newValue) {
+//                 const category = newValue[categoryId];
+
+//                 if (category) {
+//                     for (const disciplineId in props.activiteForTarifs) {
+//                         const disciplineData =
+//                             props.activiteForTarifs[disciplineId];
+//                         const categoryData =
+//                             disciplineData.categories[categoryId];
+
+//                         if (categoryData) {
+//                             const activites = categoryData.activites;
+
+//                             for (const activity of activites) {
+//                                 formAddTarif.activites[activity.id] = true;
+
+//                                 for (const product of activity.produits) {
+//                                     formAddTarif.produits[product.id] = true;
+//                                 }
+//                             }
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//     },
+//     { deep: true }
+// );
+
+// watch(
+//     () => formAddTarif.activites,
+//     (newValue) => {
+//         if (newValue) {
+//             formAddTarif.produits = {};
+
+//             // Set related checkboxes to true based on the activity selection
+//             for (const disciplineId in props.activiteForTarifs) {
+//                 const disciplineData = props.activiteForTarifs[disciplineId];
+
+//                 for (const categoryId in disciplineData.categories) {
+//                     const categoryData = disciplineData.categories[categoryId];
+
+//                     for (const activity of categoryData.activites) {
+//                         if (newValue[activity.id]) {
+//                             formAddTarif.activites[activity.id] = true;
+
+//                             for (const product of activity.produits) {
+//                                 formAddTarif.produits[product.id] = true;
+//                             }
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//     },
+//     { deep: true }
+// );
+
+// watch(
+//     () => checkAll,
+//     (newValue) => {
+//         if (newValue) {
+//             for (const disciplineId in props.activiteForTarifs) {
+//                 formAddTarif.disciplines[disciplineId] = newValue.value;
+//                 for (const categoryId in formAddTarif.categories) {
+//                     formAddTarif.categories[categoryId] = newValue.value;
+//                     for (const activityId in formAddTarif.activites) {
+//                         formAddTarif.activites[activityId] = newValue.value;
+//                         for (const productId in formAddTarif.produits) {
+//                             formAddTarif.produits[productId] = newValue.value;
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//     },
+//     { deep: true }
+// );
+
+// const onSubmitAddTarifForm = () => {
+//     router.post(
+//         route("structures.tarifs.store", {
+//             structure: props.structure,
+//         }),
+//         {
+//             structure_id: formAddTarif.structure_id,
+//             titre: formAddTarif.titre,
+//             description: formAddTarif.description,
+//             tarifType: selectedTarifType.value.id,
+//             attributs: formAddTarif.attributs,
+//             amount: formAddTarif.amount,
+//             disciplines: formAddTarif.disciplines,
+//             categories: formAddTarif.categories,
+//             activites: formAddTarif.activites,
+//             produits: formAddTarif.produits,
+//             uniteDuree: selectedUniteeDuree.value,
+//         },
+//         {
+//             preserveScroll: true,
+//             remember: false,
+//             onSuccess: () => {
+//                 // formAddTarif.reset();
+//                 formAddTarif.titre = "";
+//                 formAddTarif.attributs = [];
+//                 formAddTarif.amount = "";
+//                 formAddTarif.tarifType = props.tarifTypes[0];
+//                 formAddTarif.uniteDuree = uniteDurees[0];
+//                 formAddTarif.disciplines = {};
+//                 formAddTarif.categories = {};
+//                 formAddTarif.activites = {};
+//                 formAddTarif.produits = {};
+//                 checkAll.value = false;
+//                 emit("close");
+//             },
+//         }
+//     );
+// };
+
+// part of the new form
 </script>
 <template>
     <TransitionRoot appear :show="show" as="template">
@@ -1283,7 +1284,7 @@ onMounted(() => {
                                 </div>
                             </form>
                             <!-- Tarif form classic -->
-                            <form
+                            <!-- <form
                                 @submit.prevent="onSubmitAddTarifForm()"
                                 autocomplete="off"
                             >
@@ -1292,7 +1293,6 @@ onMounted(() => {
                                         <div
                                             class="flex w-full flex-col items-center justify-start space-x-0 space-y-2 md:flex-row md:space-x-2 md:space-y-0"
                                         >
-                                            <!-- titre -->
                                             <div class="w-full md:w-1/2">
                                                 <label
                                                     for="titre"
@@ -1411,7 +1411,6 @@ onMounted(() => {
                                                 </div>
                                             </Listbox>
                                         </div>
-                                        <!-- description -->
                                         <div>
                                             <label
                                                 for="description"
@@ -1579,7 +1578,6 @@ onMounted(() => {
                                                 </Listbox>
                                             </div>
                                         </div>
-                                        <!-- Amount -->
                                         <div class="w-full md:w-1/2">
                                             <label
                                                 for="amount"
@@ -1612,7 +1610,6 @@ onMounted(() => {
                                                 {{ errors.amount }}
                                             </div>
                                         </div>
-                                        <!-- liste des produits -->
                                         <div class="flex flex-col space-y-2">
                                             <p
                                                 class="text-base font-medium text-gray-700"
@@ -1776,7 +1773,6 @@ onMounted(() => {
                                         </div>
                                     </div>
                                 </div>
-
                                 <div
                                     class="mt-4 flex w-full items-center justify-between"
                                 >
@@ -1798,7 +1794,7 @@ onMounted(() => {
                                         Enregistrer
                                     </button>
                                 </div>
-                            </form>
+                            </form> -->
                         </DialogPanel>
                     </TransitionChild>
                 </div>

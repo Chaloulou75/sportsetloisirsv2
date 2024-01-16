@@ -49,7 +49,6 @@ const props = defineProps({
     structuretypeElected: Object,
     allStructureTypes: Object,
     structure: Object,
-    logoUrl: String,
     activite: Object,
     criteres: Object,
     categories: Object,

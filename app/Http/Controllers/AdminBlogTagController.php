@@ -52,20 +52,11 @@ class AdminBlogTagController extends Controller
     {
         $request->validate([
             "name" => 'nullable|string|min:3|max:255|unique:tags',
-            'disciplines' => 'boolean',
             'categories' => 'boolean',
-            // 'cities' => 'boolean'
         ]);
 
         if($request->name) {
             Tag::create(["name" => $request->name]);
-        }
-
-        if($request->disciplines === true) {
-            $disciplines = ListDiscipline::select('id', 'name')->get();
-            foreach($disciplines as $discipline) {
-                Tag::firstOrCreate(["name" => $discipline->name]);
-            }
         }
 
         if($request->categories === true) {
@@ -74,19 +65,6 @@ class AdminBlogTagController extends Controller
                 Tag::firstOrCreate(["name" => $categorie->nom]);
             }
         }
-
-        // if($request->cities === true) {
-        //     $cities = City::select('id', 'ville')->get();
-        //     foreach($cities as $city) {
-        //         if($city->ville) {
-        //             Tag::where('name', $city->ville)->chunk(200, function ($tags) {
-        //                 foreach ($tags as $tag) {
-        //                     $tag->delete();
-        //                 }
-        //             });
-        //         }
-        //     }
-        // }
 
         return to_route('admin.blog.tags.index')->with('success', 'Etiquette ajouté.');
     }

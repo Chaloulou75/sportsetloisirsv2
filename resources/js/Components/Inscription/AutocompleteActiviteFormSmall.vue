@@ -45,13 +45,11 @@ watch(
 const selectDiscipline = (discipline) => {
     selectedDiscipline.value = discipline;
     searchTerm.value = "";
-    // Add the selected discipline ID to dejaUsedDisciplinesRef
-    dejaUsedDisciplinesRef.value.push(discipline.id);
     emit("update:model-value", discipline.id);
 };
 </script>
 <template>
-    <div class="min-w-screen min-h-72 flex items-center justify-start">
+    <div class="flex items-start justify-start">
         <div class="relative max-w-md space-y-3">
             <label for="search" class="text-lg font-medium text-gray-700">
                 Taper le nom de la discipline à proposer:

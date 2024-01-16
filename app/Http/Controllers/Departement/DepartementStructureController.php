@@ -31,8 +31,6 @@ class DepartementStructureController extends Controller
                             ->where('slug', $structure)
                             ->first();
 
-        $logoUrl = asset($structure->logo);
-
         $departement = Departement::with(['cities' => function ($query) {
             $query->whereHas('produits');
         }])
@@ -55,7 +53,6 @@ class DepartementStructureController extends Controller
             'allCities' => $allCities,
             'listDisciplines' => $listDisciplines,
             'criteres' => $criteres,
-            'logoUrl' => $logoUrl,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),

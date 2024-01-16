@@ -36,14 +36,26 @@ const props = defineProps({
 
             <div class="flex flex-1 flex-col justify-between">
                 <header class="mt-2">
-                    <div v-if="post.tags" class="flex flex-wrap items-center">
+                    <div
+                        v-if="post.disciplines"
+                        class="flex flex-wrap items-center"
+                    >
                         <div
-                            v-for="tag in post.tags"
-                            :key="tag.id"
+                            v-for="discipline in post.disciplines"
+                            :key="discipline.id"
                             class="m-px flex items-center border bg-white p-1 text-xs"
                         >
-                            {{ tag.name }}
+                            {{ discipline.name }}
                         </div>
+                        <template v-if="post.tags">
+                            <div
+                                v-for="tag in post.tags"
+                                :key="tag.id"
+                                class="m-px flex items-center border bg-white p-1 text-xs"
+                            >
+                                {{ tag.name }}
+                            </div>
+                        </template>
                     </div>
                     <div class="mt-4">
                         <h1 class="text-3xl text-gray-800 hover:text-gray-900">

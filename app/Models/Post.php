@@ -68,6 +68,11 @@ class Post extends Model
         return $this->belongsToMany(Tag::class);
     }
 
+    public function disciplines(): BelongsToMany
+    {
+        return $this->belongsToMany(ListDiscipline::class, 'discipline_post', 'post_id', 'discipline_id');
+    }
+
     public function likers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'likes')->withTimestamps();

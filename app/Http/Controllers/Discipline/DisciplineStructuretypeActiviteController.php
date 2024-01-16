@@ -59,8 +59,6 @@ class DisciplineStructuretypeActiviteController extends Controller
 
         $produits = $activite->produits;
 
-        $logoUrl = asset($activite->structure->logo);
-
         $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
             $query->orderBy('defaut', 'desc');
         }])
@@ -80,7 +78,6 @@ class DisciplineStructuretypeActiviteController extends Controller
             'familles' => $familles,
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,
-            'logoUrl' => $logoUrl,
             'activite' => $activite,
             'criteres' => $criteres,
             'activiteSimilaires' => $activiteSimilaires,

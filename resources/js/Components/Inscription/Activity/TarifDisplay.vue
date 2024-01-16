@@ -13,9 +13,6 @@ import {
 const ModalEditCatTarif = defineAsyncComponent(() =>
     import("@/Components/Modals/ModalEditCatTarif.vue")
 );
-const ModalEditTarif = defineAsyncComponent(() =>
-    import("@/Components/Modals/ModalEditTarif.vue")
-);
 
 const props = defineProps({
     errors: Object,
@@ -50,21 +47,6 @@ const destroyCatTarif = (catTarif) => {
     );
 };
 
-// Old version
-const tarifsList = computed(() => {
-    const tarifs = [];
-    for (const structureActivite of props.structureActivites) {
-        if (structureActivite.produits.length > 0) {
-            for (const produit of structureActivite.produits) {
-                for (const tarif of produit.tarifs) {
-                    tarifs.push(tarif);
-                }
-            }
-        }
-    }
-    return tarifs;
-});
-
 const formatCurrency = (value) => {
     const numericValue = Number(value.replace(/[^0-9.-]+/g, ""));
     if (!isNaN(numericValue)) {
@@ -76,25 +58,44 @@ const formatCurrency = (value) => {
     }
     return value;
 };
-const currentTarif = ref(null);
-const showEditTarifModal = ref(false);
 
-const openEditTarifModal = (tarif) => {
-    currentTarif.value = tarif;
-    showEditTarifModal.value = true;
-};
+// Old version
+// const ModalEditTarif = defineAsyncComponent(() =>
+//     import("@/Components/Modals/ModalEditTarif.vue")
+// );
+// const tarifsList = computed(() => {
+//     const tarifs = [];
+//     for (const structureActivite of props.structureActivites) {
+//         if (structureActivite.produits.length > 0) {
+//             for (const produit of structureActivite.produits) {
+//                 for (const tarif of produit.tarifs) {
+//                     tarifs.push(tarif);
+//                 }
+//             }
+//         }
+//     }
+//     return tarifs;
+// });
 
-const destroyTarif = (tarif) => {
-    router.delete(
-        route("tarifs.destroyTarif", {
-            structure: props.structure.slug,
-            tarif: tarif.id,
-        }),
-        {
-            preserveScroll: true,
-        }
-    );
-};
+// const currentTarif = ref(null);
+// const showEditTarifModal = ref(false);
+
+// const openEditTarifModal = (tarif) => {
+//     currentTarif.value = tarif;
+//     showEditTarifModal.value = true;
+// };
+
+// const destroyTarif = (tarif) => {
+//     router.delete(
+//         route("tarifs.destroyTarif", {
+//             structure: props.structure.slug,
+//             tarif: tarif.id,
+//         }),
+//         {
+//             preserveScroll: true,
+//         }
+//     );
+// };
 </script>
 <template>
     <div v-if="strCatTarifs.length > 0" class="overflow-x-auto">
@@ -272,19 +273,35 @@ const destroyTarif = (tarif) => {
             </tbody>
         </table>
     </div>
-
-    <div
+    <div v-if="!strCatTarifs.length > 0">
+        <p class="font-semibold italic text-gray-600">
+            Pas de tarif associé à cette structure
+        </p>
+    </div>
+    <ModalEditCatTarif
+        :errors="errors"
+        :structure="structure"
+        :discipline="discipline"
+        :categorie="categorie"
+        :tarif-to-update="tarifToUpdate"
+        :all-categories="allCategories"
+        :activite-for-tarifs="activiteForTarifs"
+        :show="showEditCatTarifModal"
+        @close="showEditCatTarifModal = false"
+    />
+</template>
+<!-- <div
         v-if="
             structure.tarifs.length === 0 &&
             tarifsList.length === 0 &&
-            !strCatTarifs.length > 0
         "
     >
         <p class="font-semibold italic text-gray-600">
             Pas de tarif associé à cette structure
         </p>
-    </div>
-    <div
+    </div> -->
+
+<!-- <div
         v-if="
             structure.tarifs.length > 0 &&
             route().current('structures.disciplines.index', structure)
@@ -472,19 +489,9 @@ const destroyTarif = (tarif) => {
                 </tr>
             </tbody>
         </table>
-    </div>
-    <ModalEditCatTarif
-        :errors="errors"
-        :structure="structure"
-        :discipline="discipline"
-        :categorie="categorie"
-        :tarif-to-update="tarifToUpdate"
-        :all-categories="allCategories"
-        :activite-for-tarifs="activiteForTarifs"
-        :show="showEditCatTarifModal"
-        @close="showEditCatTarifModal = false"
-    />
-    <ModalEditTarif
+    </div> -->
+
+<!-- <ModalEditTarif
         :errors="errors"
         :structure="structure"
         :tarif="currentTarif"
@@ -493,5 +500,4 @@ const destroyTarif = (tarif) => {
         :activite-for-tarifs="activiteForTarifs"
         :show="showEditTarifModal"
         @close="showEditTarifModal = false"
-    />
-</template>
+    /> -->

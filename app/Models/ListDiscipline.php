@@ -75,4 +75,9 @@ class ListDiscipline extends Model
     {
         return $this->belongsToMany(ListDiscipline::class, 'liens_disciplines_similaires', 'discipline_id', 'discipline_similaire_id');
     }
+
+    public function posts(): BelongsToMany
+    {
+        return $this->belongsToMany(Post::class, 'discipline_post', 'discipline_id', 'post_id');
+    }
 }

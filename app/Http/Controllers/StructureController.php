@@ -270,8 +270,6 @@ class StructureController extends Controller
                             ->where('slug', $structure->slug)
                             ->first();
 
-        $logoUrl = asset($structure->logo);
-
         if($departement !== null) {
             $departement = Departement::with([
                         'structures',
@@ -362,7 +360,6 @@ class StructureController extends Controller
             'allCities' => $allCities,
             'listDisciplines' => $listDisciplines,
             'criteres' => $criteres,
-            'logoUrl' => $logoUrl,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),

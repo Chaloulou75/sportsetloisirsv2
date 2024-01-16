@@ -46,7 +46,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="min-h-screen w-full bg-white">
+    <div class="min-h-full w-full bg-white">
         <main>
             <div class="flex flex-col md:flex-row">
                 <!-- Page Heading -->

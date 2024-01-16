@@ -34,8 +34,6 @@ class CityStructureController extends Controller
                             ->where('slug', $structure)
                             ->first();
 
-        $logoUrl = asset($structure->logo);
-
         if($departement !== null) {
             $departement = Departement::with([
                             'structures',
@@ -126,7 +124,6 @@ class CityStructureController extends Controller
             'allCities' => $allCities,
             'listDisciplines' => $listDisciplines,
             'criteres' => $criteres,
-            'logoUrl' => $logoUrl,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),

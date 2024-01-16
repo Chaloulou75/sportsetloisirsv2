@@ -110,7 +110,7 @@ class ActiviteController extends Controller
             }
         }
 
-        return to_route('structures.disciplines.index', $structure)->with('success', 'Activité créée, vous pouvez ajouter d\'autres activités à votre structure.');
+        return to_route('structures.disciplines.show', ['structure' => $structure , 'discipline' => $discipline])->with('success', 'Activité créée, vous pouvez ajouter d\'autres activités à votre structure.');
     }
 
     public function show($activite): Response
@@ -122,8 +122,6 @@ class ActiviteController extends Controller
         $activite = StructureActivite::withRelations()->find($activite);
 
         $produits = $activite->produits;
-
-        $logoUrl = asset($activite->structure->logo);
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
                 ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))->whereIn('categorie_id', $activite->structure->categories->pluck('categorie_id'))
@@ -140,7 +138,6 @@ class ActiviteController extends Controller
             'familles' => $familles,
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,
-            'logoUrl' => $logoUrl,
             'activite' => $activite,
             'produits' => $produits,
             'criteres' => $criteres,
