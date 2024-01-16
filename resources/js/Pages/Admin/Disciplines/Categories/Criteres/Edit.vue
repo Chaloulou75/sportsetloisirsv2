@@ -460,6 +460,8 @@ onMounted(() => {
                     <span class="text-indigo-600">{{
                         categorie.nom_categorie_client
                     }}</span>
+                    de
+                    <span class="text-indigo-600">{{ discipline.name }}</span>
                 </h1>
             </div>
         </template>
