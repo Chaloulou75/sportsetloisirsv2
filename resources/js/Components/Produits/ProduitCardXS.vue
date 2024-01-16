@@ -79,7 +79,6 @@ const formatCurrency = (value) => {
                 </Link>
                 <ul v-if="produit.adresse" class="text-xs">
                     <li class="list-inside list-disc font-semibold">
-                        {{ produit.adresse.address }},
                         {{ produit.adresse.city }} ({{
                             produit.adresse.zip_code
                         }})
@@ -109,7 +108,16 @@ const formatCurrency = (value) => {
                     </li>
                 </ul>
 
-                <ul
+                <div v-if="produit.cat_tarifs && produit.cat_tarifs.length > 0">
+                    <p class="mt-2 text-right text-sm font-bold text-green-700">
+                        <span class="text-xs font-medium text-gray-600"
+                            >à partir de</span
+                        >
+                        {{ formatCurrency(produit.minimum_amount) }}
+                    </p>
+                </div>
+
+                <!-- <ul
                     v-if="produit.tarifs.length > 0"
                     class="list-inside list-disc text-xs"
                 >
@@ -120,7 +128,7 @@ const formatCurrency = (value) => {
                             {{ tarif.tarif_type.type }}</span
                         >
                     </li>
-                </ul>
+                </ul> -->
             </div>
         </div>
     </TransitionRoot>

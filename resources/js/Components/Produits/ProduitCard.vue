@@ -182,10 +182,10 @@ const formatCityName = (ville) => {
                     }}</span>
                 </div>
 
-                <div class="w-full px-4 py-2 text-slate-700">
+                <div class="w-full text-slate-700">
                     <div
                         v-if="produit.adresse"
-                        class="flex items-center py-1.5 text-base"
+                        class="flex items-center px-4 py-2 text-base"
                     >
                         <dt class="sr-only">Ville</dt>
                         <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
@@ -195,39 +195,8 @@ const formatCityName = (ville) => {
                             }})
                         </p>
                     </div>
-                    <div v-if="produit.criteres.length > 0">
-                        <p class="mt-2 text-base font-semibold">Critères:</p>
-                        <ul class="list-inside list-disc text-base">
-                            <template
-                                v-for="critere in produit.criteres"
-                                :key="critere.id"
-                            >
-                                <li v-if="critere.valeur.length > 0">
-                                    {{ critere.critere.nom }}:
 
-                                    <span class="font-semibold"
-                                        >{{ critere.valeur }}
-                                        <span
-                                            v-if="
-                                                critere.sous_criteres.length > 0
-                                            "
-                                            class="text-xs font-medium text-gray-600"
-                                        >
-                                            <span
-                                                v-for="sousCriteres in critere.sous_criteres"
-                                                :key="sousCriteres.id"
-                                                class="text-xs font-semibold text-gray-600"
-                                            >
-                                                ({{ sousCriteres.valeur }})
-                                            </span>
-                                        </span>
-                                    </span>
-                                </li>
-                            </template>
-                        </ul>
-                    </div>
-
-                    <div v-if="produit.dates.length > 0">
+                    <div v-if="produit.dates.length > 0" class="px-4">
                         <p class="mt-2 text-base font-semibold">
                             Dates et horaires:
                         </p>
@@ -278,6 +247,7 @@ const formatCityName = (ville) => {
                         </ul>
                     </div> -->
                     <div
+                        class="px-4"
                         v-if="
                             produit.cat_tarifs && produit.cat_tarifs.length > 0
                         "
@@ -330,6 +300,72 @@ const formatCityName = (ville) => {
                                 </ul>
                             </li>
                         </ul> -->
+                    </div>
+
+                    <div v-if="produit.criteres.length > 0" class="w-full">
+                        <!-- <ul class="list-inside list-disc text-base">
+                            <template
+                                v-for="critere in produit.criteres"
+                                :key="critere.id"
+                            >
+                                <li v-if="critere.valeur.length > 0">
+                                    {{ critere.critere.nom }}:
+
+                                    <span class="font-semibold"
+                                        >{{ critere.valeur }}
+                                        <span
+                                            v-if="
+                                                critere.sous_criteres.length > 0
+                                            "
+                                            class="text-xs font-medium text-gray-600"
+                                        >
+                                            <span
+                                                v-for="sousCriteres in critere.sous_criteres"
+                                                :key="sousCriteres.id"
+                                                class="text-xs font-semibold text-gray-600"
+                                            >
+                                                ({{ sousCriteres.valeur }})
+                                            </span>
+                                        </span>
+                                    </span>
+                                </li>
+                            </template>
+                        </ul> -->
+                        <div
+                            class="mt-2 grid grid-cols-3 justify-items-center gap-1 text-xs text-gray-900"
+                        >
+                            <template
+                                v-for="critere in produit.criteres"
+                                :key="critere.id"
+                            >
+                                <div
+                                    v-if="critere.valeur"
+                                    class="flex w-full flex-col items-center justify-center bg-gray-200 px-1 py-3 font-medium"
+                                >
+                                    <div class="text-xs uppercase">
+                                        {{ critere.critere.nom }}
+                                    </div>
+                                    <div v-if="critere.valeur" class="text-sm">
+                                        {{ critere.valeur }}
+                                        <span
+                                            v-if="
+                                                critere.sous_criteres &&
+                                                critere.sous_criteres.length > 0
+                                            "
+                                            class="text-xs"
+                                        >
+                                            <span
+                                                v-for="sousCriteres in critere.sous_criteres"
+                                                :key="sousCriteres.id"
+                                                class="text-sm"
+                                            >
+                                                ({{ sousCriteres.valeur }})
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
                     </div>
                 </div>
             </div>
