@@ -149,7 +149,7 @@ const formatCityName = (ville) => {
             :data="data"
             @mouseover="emit('card-hover', produit)"
             @mouseout="emit('card-out')"
-            class="block rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:shadow-2xl md:px-0 md:hover:scale-105"
+            class="flex h-full flex-col rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:shadow-2xl md:px-0 md:hover:scale-105"
         >
             <div
                 class="relative h-56 w-full rounded-md bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-soft-light"
@@ -171,7 +171,7 @@ const formatCityName = (ville) => {
                 </button>
             </div>
 
-            <div class="mt-2 flex flex-col">
+            <div class="mt-2 flex flex-1 flex-col">
                 <div
                     v-if="produit.activite"
                     class="inline-flex flex-col items-center justify-center px-2 py-1.5 text-center text-lg font-semibold tracking-wide text-gray-600"
@@ -182,7 +182,9 @@ const formatCityName = (ville) => {
                     }}</span>
                 </div>
 
-                <div class="w-full text-slate-700">
+                <div
+                    class="flex flex-1 flex-col justify-between justify-items-end text-slate-700"
+                >
                     <div
                         v-if="produit.adresse"
                         class="flex items-center px-4 py-2 text-base"
@@ -196,151 +198,72 @@ const formatCityName = (ville) => {
                         </p>
                     </div>
 
-                    <div v-if="produit.dates.length > 0" class="px-4">
-                        <p class="mt-2 text-base font-semibold">
-                            Dates et horaires:
-                        </p>
-                        <ul class="list-inside list-disc text-base">
-                            <template
-                                v-for="date in produit.dates"
-                                :key="date.id"
-                            >
-                                <li
-                                    v-if="date.dayopen"
-                                    class="text-base font-medium text-gray-600"
-                                >
-                                    Ouvert du
-                                    {{ formatDate(date.dayopen) }}
-                                    au
-                                    {{ formatDate(date.dayclose) }}
-                                </li>
-                                <li
-                                    v-if="date.houropen"
-                                    class="text-base font-medium text-gray-600"
-                                >
-                                    De
-                                    {{ formatTime(date.houropen) }}
-                                    à
-                                    {{ formatTime(date.hourclose) }}
-                                </li>
-                                <li
-                                    v-if="date.time_debut"
-                                    class="text-base font-medium text-gray-600"
-                                >
-                                    A partir de
-                                    {{ formatTime(date.time_debut) }}
-                                </li>
-                            </template>
-                        </ul>
-                    </div>
-
-                    <!-- <div v-if="produit.tarifs.length > 0">
-                        <p class="mt-2 text-base font-semibold">Tarifs:</p>
-                        <ul class="list-inside list-disc text-base">
-                            <li v-for="tarif in produit.tarifs" :key="tarif.id">
-                                {{ tarif.titre }}:
-                                <span class="font-semibold">
-                                    {{ tarif.amount }} € /
-                                    {{ tarif.tarif_type.type }}</span
-                                >
-                            </li>
-                        </ul>
-                    </div> -->
                     <div
-                        class="px-4"
+                        class="my-4 px-4"
                         v-if="
                             produit.cat_tarifs && produit.cat_tarifs.length > 0
                         "
                     >
-                        <p
-                            class="mt-2 text-right text-lg font-bold text-green-700"
-                        >
+                        <p class="text-right text-lg font-bold text-green-700">
                             <span class="text-sm font-medium text-gray-600"
                                 >à partir de</span
                             >
                             {{ formatCurrency(produit.minimum_amount) }}
                         </p>
-                        <!-- <p class="mt-2 text-base font-semibold">Tarifs:</p>
-                        <ul class="list-inside list-disc space-y-2 text-sm">
-                            <li
-                                v-for="catTarif in produit.cat_tarifs"
-                                :key="catTarif.id"
-                            >
-                                {{ catTarif.titre }}:
-                                <span class="font-semibold"
-                                    >{{ formatCurrency(catTarif.amount) }}
-                                </span>
-
-                                <ul class="ml-3 list-inside list-disc text-xs">
-                                    <li
-                                        v-for="attribut in catTarif.attributs"
-                                        :key="attribut.id"
-                                    >
-                                        <span>
-                                            {{ attribut.tarif_attribut.nom }}:
-                                            <span class="mr-1 font-semibold">{{
-                                                attribut.valeur
-                                            }}</span>
-                                            <span
-                                                class="mr-1 font-semibold"
-                                                v-for="sousAttr in attribut.sous_attributs"
-                                                :key="sousAttr.id"
-                                            >
-                                                <span class="font-thin italic"
-                                                    >{{
-                                                        sousAttr.sous_attribut
-                                                            .nom
-                                                    }}:</span
-                                                >
-
-                                                {{ sousAttr.valeur }}
-                                            </span>
-                                        </span>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul> -->
                     </div>
 
-                    <div v-if="produit.criteres.length > 0" class="w-full">
-                        <!-- <ul class="list-inside list-disc text-base">
-                            <template
-                                v-for="critere in produit.criteres"
-                                :key="critere.id"
-                            >
-                                <li v-if="critere.valeur.length > 0">
-                                    {{ critere.critere.nom }}:
-
-                                    <span class="font-semibold"
-                                        >{{ critere.valeur }}
-                                        <span
-                                            v-if="
-                                                critere.sous_criteres.length > 0
-                                            "
-                                            class="text-xs font-medium text-gray-600"
-                                        >
-                                            <span
-                                                v-for="sousCriteres in critere.sous_criteres"
-                                                :key="sousCriteres.id"
-                                                class="text-xs font-semibold text-gray-600"
-                                            >
-                                                ({{ sousCriteres.valeur }})
-                                            </span>
-                                        </span>
-                                    </span>
-                                </li>
-                            </template>
-                        </ul> -->
+                    <template
+                        v-if="
+                            produit.criteres.length > 0 ||
+                            produit.dates.length > 0
+                        "
+                    >
                         <div
-                            class="mt-2 grid grid-cols-3 justify-items-center gap-1 text-xs text-gray-900"
+                            class="mt-auto grid w-full grid-cols-3 justify-items-center gap-1 text-xs text-gray-900"
                         >
+                            <template
+                                v-for="date in produit.dates"
+                                :key="date.id"
+                            >
+                                <div
+                                    v-if="date.dayopen"
+                                    class="flex w-full flex-col items-center justify-center bg-slate-100 px-1 py-3 font-medium"
+                                >
+                                    <p class="text-center">
+                                        Ouvert du
+                                        {{ formatDate(date.dayopen) }}
+                                        au
+                                        {{ formatDate(date.dayclose) }}
+                                    </p>
+                                </div>
+                                <div
+                                    v-if="date.houropen"
+                                    class="flex w-full flex-col items-center justify-center bg-slate-100 px-1 py-3 font-medium"
+                                >
+                                    <p class="text-center">
+                                        De
+                                        {{ formatTime(date.houropen) }}
+                                        à
+                                        {{ formatTime(date.hourclose) }}
+                                    </p>
+                                </div>
+                                <div
+                                    v-if="date.time_debut"
+                                    class="flex w-full flex-col items-center justify-center bg-slate-100 px-1 py-3 font-medium"
+                                >
+                                    <p class="text-center">
+                                        A partir de
+                                        {{ formatTime(date.time_debut) }}
+                                    </p>
+                                </div>
+                            </template>
                             <template
                                 v-for="critere in produit.criteres"
                                 :key="critere.id"
                             >
                                 <div
                                     v-if="critere.valeur"
-                                    class="flex w-full flex-col items-center justify-center bg-gray-200 px-1 py-3 font-medium"
+                                    class="flex w-full flex-col items-center justify-center bg-slate-200 px-1 py-3 font-medium"
                                 >
                                     <div class="text-xs uppercase">
                                         {{ critere.critere.nom }}
@@ -366,7 +289,7 @@ const formatCityName = (ville) => {
                                 </div>
                             </template>
                         </div>
-                    </div>
+                    </template>
                 </div>
             </div>
         </Link>
