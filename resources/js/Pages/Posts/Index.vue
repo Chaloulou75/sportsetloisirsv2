@@ -16,6 +16,7 @@ const props = defineProps({
     filters: Object,
     familles: Object,
     listDisciplines: Object,
+    discipline: Object,
     allCities: Object,
 });
 
@@ -133,7 +134,7 @@ onMounted(() => {
                         type="text"
                         class="mt-1 block w-full flex-1 px-2 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
                         v-model="search"
-                        placeholder="mots clés..."
+                        placeholder="mots clés, tag, discipline..."
                     />
 
                     <button type="button" @click="resetSearch">
@@ -152,7 +153,7 @@ onMounted(() => {
                 </div>
                 <div
                     ref="toAnimateOne"
-                    v-if="posts.data"
+                    v-if="posts.data.length > 0"
                     class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                 >
                     <PostFeaturedCard
@@ -161,16 +162,24 @@ onMounted(() => {
                         :post="post"
                     />
                 </div>
-                <div v-if="posts.data" class="flex justify-end p-10">
+                <div v-if="posts.data.length > 0" class="flex justify-end p-10">
                     <Pagination :links="posts.links" />
                 </div>
                 <template v-else>
                     <div class="py-6 md:py-12">
                         <div
-                            class="mx-auto min-h-screen max-w-full px-2 sm:px-6 lg:px-8"
+                            class="mx-auto min-h-full max-w-full px-2 sm:px-6 lg:px-8"
                         >
                             <p class="font-medium text-gray-700">
-                                Pas encore d'article. Revenez plus tard.
+                                Pas encore d'article
+                                <span v-if="discipline"
+                                    >concernant la discipline
+                                </span>
+                                <span
+                                    v-if="discipline"
+                                    class="text-indigo-700"
+                                    >{{ discipline.name }}</span
+                                >. Revenez plus tard.
                             </p>
                         </div>
                     </div>

@@ -142,7 +142,7 @@ const showStructuresTypes = () => {
                 </Link>
                 <Link
                     preserve-scroll
-                    :href="route('posts.index')"
+                    :href="route('posts.index', { discipline: discipline })"
                     class="group inline-flex w-full items-center justify-center border-b-8 border-pink-600 py-3 text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:bg-pink-600 hover:text-white focus:bg-pink-600 focus:text-white focus:outline-none"
                 >
                     <NewspaperIcon
@@ -203,7 +203,7 @@ const showStructuresTypes = () => {
                 class="col-span-1 flex items-center justify-center bg-pink-600 px-2 py-3 hover:bg-pink-800"
             >
                 <Link
-                    :href="route('posts.index')"
+                    :href="route('posts.index', { discipline: discipline })"
                     class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
                     ><NewspaperIcon class="h-6 w-6" />
                     <p class="sr-only">Blog</p>
@@ -362,7 +362,7 @@ const showStructuresTypes = () => {
                 </Link>
                 <Link
                     preserve-scroll
-                    :href="route('posts.index')"
+                    :href="route('posts.index', { discipline: discipline })"
                     class="group inline-flex w-full items-center justify-center border-b-8 border-pink-600 py-3 text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:bg-pink-600 hover:text-white focus:bg-pink-600 focus:text-white focus:outline-none"
                 >
                     <NewspaperIcon
@@ -423,7 +423,7 @@ const showStructuresTypes = () => {
                 class="col-span-1 flex items-center justify-center bg-pink-600 px-2 py-3 hover:bg-pink-800"
             >
                 <Link
-                    :href="route('posts.index')"
+                    :href="route('posts.index', { discipline: discipline })"
                     class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
                     ><NewspaperIcon class="h-6 w-6" />
                     <p class="sr-only">Blog</p>
@@ -622,7 +622,7 @@ const showStructuresTypes = () => {
                 </Link>
                 <Link
                     preserve-scroll
-                    :href="route('posts.index')"
+                    :href="route('posts.index', { discipline: discipline })"
                     class="group inline-flex w-full items-center justify-center border-b-8 border-pink-600 py-3 text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:bg-pink-600 hover:text-white focus:bg-pink-600 focus:text-white focus:outline-none"
                 >
                     <NewspaperIcon
@@ -686,7 +686,7 @@ const showStructuresTypes = () => {
                 class="col-span-1 flex items-center justify-center bg-pink-600 px-2 py-3 hover:bg-pink-800"
             >
                 <Link
-                    :href="route('posts.index')"
+                    :href="route('posts.index', { discipline: discipline })"
                     class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
                     ><NewspaperIcon class="h-6 w-6" />
                     <p class="sr-only">Blog</p>
@@ -851,7 +851,7 @@ const showStructuresTypes = () => {
                 </Link>
                 <Link
                     preserve-scroll
-                    :href="route('posts.index')"
+                    :href="route('posts.index', { discipline: discipline })"
                     class="group inline-flex w-full items-center justify-center border-b-8 border-pink-600 py-3 text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:bg-pink-600 hover:text-white focus:bg-pink-600 focus:text-white focus:outline-none"
                 >
                     <NewspaperIcon
@@ -913,7 +913,7 @@ const showStructuresTypes = () => {
                 class="col-span-1 flex items-center justify-center bg-pink-600 px-2 py-3 hover:bg-pink-800"
             >
                 <Link
-                    :href="route('posts.index')"
+                    :href="route('posts.index', { discipline: discipline })"
                     class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
                     ><NewspaperIcon class="h-6 w-6" />
                     <p class="sr-only">Blog</p>
@@ -1115,7 +1115,7 @@ const showStructuresTypes = () => {
                 </Link>
                 <Link
                     preserve-scroll
-                    :href="route('posts.index')"
+                    :href="route('posts.index', { discipline: discipline })"
                     class="group inline-flex w-full items-center justify-center border-b-8 border-pink-600 py-3 text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:bg-pink-600 hover:text-white focus:bg-pink-600 focus:text-white focus:outline-none"
                 >
                     <NewspaperIcon
@@ -1179,7 +1179,7 @@ const showStructuresTypes = () => {
                 class="col-span-1 flex items-center justify-center bg-pink-600 px-2 py-3 hover:bg-pink-800"
             >
                 <Link
-                    :href="route('posts.index')"
+                    :href="route('posts.index', { discipline: discipline })"
                     class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
                     ><NewspaperIcon class="h-6 w-6" />
                     <p class="sr-only">Blog</p>
@@ -1359,7 +1359,7 @@ const showStructuresTypes = () => {
                 </Link>
                 <Link
                     preserve-scroll
-                    :href="route('posts.index')"
+                    :href="route('posts.index', { discipline: discipline })"
                     class="group inline-flex w-full items-center justify-center border-b-8 border-pink-600 py-3 text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:bg-pink-600 hover:text-white focus:bg-pink-600 focus:text-white focus:outline-none"
                 >
                     <NewspaperIcon
@@ -1422,7 +1422,7 @@ const showStructuresTypes = () => {
                 class="col-span-1 flex items-center justify-center bg-pink-600 px-2 py-3 hover:bg-pink-800"
             >
                 <Link
-                    :href="route('posts.index')"
+                    :href="route('posts.index', { discipline: discipline })"
                     class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
                     ><NewspaperIcon class="h-6 w-6" />
                     <p class="sr-only">Blog</p>
@@ -1569,7 +1569,7 @@ const showStructuresTypes = () => {
                 </Link>
                 <Link
                     preserve-scroll
-                    :href="route('posts.index')"
+                    :href="route('posts.index', { discipline: discipline })"
                     class="group inline-flex w-full items-center justify-center border-b-8 border-pink-600 py-3 text-center text-sm font-semibold leading-5 text-gray-800 transition duration-150 ease-in-out hover:bg-pink-600 hover:text-white focus:bg-pink-600 focus:text-white focus:outline-none"
                 >
                     <NewspaperIcon
@@ -1632,7 +1632,7 @@ const showStructuresTypes = () => {
                 class="col-span-1 flex items-center justify-center bg-pink-600 px-2 py-3 hover:bg-pink-800"
             >
                 <Link
-                    :href="route('posts.index')"
+                    :href="route('posts.index', { discipline: discipline })"
                     class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
                     ><NewspaperIcon class="h-6 w-6" />
                     <p class="sr-only">Blog</p>

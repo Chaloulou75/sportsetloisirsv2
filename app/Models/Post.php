@@ -39,6 +39,7 @@ class Post extends Model
                     ->orWhere('excerpt', 'like', '%' . $search . '%')
                     ->orWhere('body', 'like', '%' . $search . '%')
                     ->orWhereHas('tags', fn($query) => $query->where('name', 'like', '%' . $search . '%'))
+                    ->orWhereHas('disciplines', fn($query) => $query->where('name', 'like', '%' . $search . '%'))
             )
         );
 

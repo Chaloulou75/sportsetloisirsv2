@@ -446,6 +446,107 @@ onMounted(() => {
                     </form>
                 </div>
             </div>
+
+            <div
+                class="flex w-full flex-col items-start justify-center space-y-4 py-4"
+            >
+                <h3
+                    class="mb-4 w-full text-center text-lg font-bold text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
+                >
+                    Liaison des types de tarifs aux disciplines / categories et
+                    leurs attributs / sous attributs:
+                </h3>
+                <div
+                    class="flex h-full flex-col items-stretch gap-8 text-base text-slate-600 md:flex-row md:flex-wrap"
+                >
+                    <div
+                        class="flex max-w-sm flex-col items-stretch justify-between border border-gray-100 bg-gray-50 px-4 py-3 shadow"
+                        v-for="tarif in tarifs"
+                        :key="tarif.id"
+                    >
+                        <div>
+                            <h3>
+                                <span
+                                    class="text-lg font-semibold text-indigo-600"
+                                >
+                                    {{ tarif.type }}</span
+                                >
+                                est lié aux
+                                <span class="font-semibold"
+                                    >discipline-catégories</span
+                                >
+                                suivantes:
+                            </h3>
+                        </div>
+                        <div class="my-4">
+                            <ul class="ml-4 list-inside list-disc">
+                                <li
+                                    v-for="disCat in tarif.categories"
+                                    :key="disCat.id"
+                                >
+                                    <span class="text-base font-semibold"
+                                        >{{
+                                            disCat.categorie
+                                                .nom_categorie_client
+                                        }}
+                                        /
+                                        {{
+                                            disCat.categorie.discipline.name
+                                        }}</span
+                                    >
+                                    , avec pour attributs:
+                                    <ul class="ml-4 list-inside list-disc">
+                                        <li
+                                            v-for="attribut in disCat.tarif_attributs"
+                                            :key="attribut.id"
+                                        >
+                                            <span
+                                                class="font-semibold italic"
+                                                >{{ attribut.nom }}</span
+                                            >
+                                            avec pour sous attributs:
+                                            <ul
+                                                class="ml-4 list-inside list-disc"
+                                            >
+                                                <li
+                                                    v-for="ssAttr in attribut.sous_attributs"
+                                                    :key="ssAttr.id"
+                                                >
+                                                    {{ ssAttr.nom }}
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="mt-auto space-y-3">
+                            <button
+                                type="button"
+                                @click.prevent="attachAllDisCat(tarif)"
+                                class="rounded border border-gray-600 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                            >
+                                Lier
+                                <span class="text-red-500">{{
+                                    tarif.type
+                                }}</span>
+                                à toutes les disciplines-catégories existantes?
+                            </button>
+                            <button
+                                type="button"
+                                @click.prevent="detachAllDisCat(tarif)"
+                                class="rounded border border-gray-600 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                            >
+                                Délier
+                                <span class="text-red-500">{{
+                                    tarif.type
+                                }}</span>
+                                à toutes ses disciplines-categories?
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </AdminLayout>
 </template>

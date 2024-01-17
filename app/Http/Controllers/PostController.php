@@ -19,25 +19,34 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index(ListDiscipline $discipline = null): Response
     {
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
-        $posts = Post::with('author', 'comments', 'tags', 'disciplines')
+
+        $postsQuery = Post::with('author', 'comments', 'tags', 'disciplines')
                 ->withCount('comments')
                 ->latest()
                 ->filter(
                     request(['search', 'author'])
-                )
-                ->paginate(18)
-                ->withQueryString();
+                );
+
+        // Filter posts based on the provided discipline
+        if ($discipline) {
+            $postsQuery->whereHas('disciplines', function ($query) use ($discipline) {
+                $query->where('discipline_post.discipline_id', $discipline->id);
+            });
+        }
+
+        $posts = $postsQuery->paginate(18)->withQueryString();
 
         return Inertia::render('Posts/Index', [
             'familles' => $familles,
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,
             'posts' => $posts,
+            'discipline' => $discipline ?? null,
             'filters' => request()->all(['search', 'author']),
         ]);
 

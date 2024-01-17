@@ -172,12 +172,12 @@ const incrementPostLike = () => {
                         </h1>
                         <div
                             v-if="post.thumbnail"
-                            class="flex items-center justify-center"
+                            class="my-4 flex items-center justify-center"
                         >
                             <img
                                 :src="post.image_url"
                                 alt="image"
-                                class="rounded"
+                                class="h-20 w-20 rounded-xl object-cover"
                             />
                         </div>
 

@@ -265,10 +265,13 @@ const formatCityName = (ville) => {
                                     v-if="critere.valeur"
                                     class="flex w-full flex-col items-center justify-center bg-slate-200 px-1 py-3 font-medium"
                                 >
-                                    <div class="text-xs uppercase">
+                                    <div class="text-center text-xs uppercase">
                                         {{ critere.critere.nom }}
                                     </div>
-                                    <div v-if="critere.valeur" class="text-sm">
+                                    <div
+                                        v-if="critere.valeur"
+                                        class="text-center text-sm"
+                                    >
                                         {{ critere.valeur }}
                                         <span
                                             v-if="

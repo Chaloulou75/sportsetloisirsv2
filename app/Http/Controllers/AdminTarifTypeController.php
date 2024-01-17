@@ -20,7 +20,15 @@ class AdminTarifTypeController extends Controller
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 
-        $tarifs = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();
+        $tarifs = ListeTarifType::with([
+                'categories',
+                'categories.categorie',
+                'categories.categorie.discipline',
+                'categories.tarif_attributs',
+                'categories.tarif_attributs.sous_attributs',
+            ])
+            ->select(['id', 'type', 'slug'])
+            ->get();
 
         return Inertia::render('Admin/Tarifs/Index', [
             'user_can' => [

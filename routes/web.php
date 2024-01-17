@@ -19,6 +19,7 @@ use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\AdminBlogTagController;
+use App\Http\Controllers\AdminCategorieDisciplineController;
 use App\Http\Controllers\StructureUserController;
 use App\Http\Controllers\AdminStructureController;
 use App\Http\Controllers\AdminTarifTypeController;
@@ -73,7 +74,7 @@ Route::get('/favoris', [FavoritesController::class, 'index'])->name(
 );
 
 //Blog
-Route::get('/blog', [PostController::class, 'index'])->name('posts.index');
+Route::get('/blog/articles/{discipline?}', [PostController::class, 'index'])->name('posts.index');
 Route::get('/blog/{post:slug}', [PostController::class, 'show'])->name('posts.show');
 Route::post('/blog/{post:slug}/likes', [PostLikeController::class, 'store'])->name('posts.likes.store');
 
@@ -105,8 +106,8 @@ Route::resource('product_reservations', ProductReservationController::class)->on
 ]);
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    //blog , conflits routes avec slug
-    Route::get('/blog/articles/create', [PostController::class, 'create'])->name('posts.create');
+    //blog create, conflits routes avec slug && disciplines
+    Route::get('/blog/posts/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/blog', [PostController::class, 'store'])->name('posts.store');
     Route::delete('/blog/{post:slug}', [PostController::class, 'destroy'])->name('posts.destroy');
     Route::post('/blog/{post:slug}/comments', [PostCommentController::class, 'store'])->name('posts.comments.store');
@@ -177,6 +178,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/categories', [CategoryController::class, 'store'])->name('admin.categories.store');
         Route::patch('/categories/{categorie}', [CategoryController::class, 'update'])->name('admin.categories.update');
         Route::delete('/categories/{categorie}', [CategoryController::class, 'destroy'])->name('admin.categories.destroy');
+        Route::post('/admin/categories/{categorie}/disciplines', [AdminCategorieDisciplineController::class, 'store'])->name('admin.categories.disciplines.store');
+        Route::delete('/admin/categories/{categorie}/disciplines', [AdminCategorieDisciplineController::class, 'destroy'])->name('admin.categories.disciplines.destroy');
+
 
         Route::get('/utilisateurs', [UserController::class, 'index'])->name('admin.users.index');
         Route::get('/structures', [AdminStructureController::class, 'index'])->name('admin.structures.index');

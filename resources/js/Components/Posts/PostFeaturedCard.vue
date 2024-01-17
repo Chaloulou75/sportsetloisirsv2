@@ -30,7 +30,7 @@ const props = defineProps({
                 <img
                     :src="post.image_url"
                     alt="Blog Post illustration"
-                    class="rounded-xl"
+                    class="h-20 w-20 rounded-xl object-cover"
                 />
             </div>
 
