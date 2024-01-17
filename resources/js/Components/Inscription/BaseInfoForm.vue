@@ -1,80 +1,23 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import MazPhoneNumberInput from "maz-ui/components/MazPhoneNumberInput";
 import { GlobeAltIcon } from "@heroicons/vue/24/solid";
 
+const website = defineModel("website");
+const email = defineModel("email");
+const date_creation = defineModel("date_creation");
+const phone1 = defineModel("phone1");
+const phone2 = defineModel("phone2");
+const facebook = defineModel("facebook");
+const instagram = defineModel("instagram");
+const youtube = defineModel("youtube");
+const tiktok = defineModel("tiktok");
+
 const props = defineProps({
     errors: Object,
-    website: String,
-    email: String,
-    date_creation: String,
-    phone1: String,
-    phone2: String,
-    facebook: String,
-    instagram: String,
-    youtube: String,
-    tiktok: String,
 });
-
-const emit = defineEmits([
-    "update:website",
-    "update:email",
-    "update:date_creation",
-    "update:phone1",
-    "update:phone2",
-    "update:facebook",
-    "update:instagram",
-    "update:youtube",
-    "update:tiktok",
-]);
 
 const results = ref();
-
-const website = ref(props.website);
-const email = ref(props.email);
-const date_creation = ref(props.date_creation);
-const phone1 = ref(props.phone1);
-const phone2 = ref(props.phone2);
-const facebook = ref(props.facebook);
-const instagram = ref(props.instagram);
-const youtube = ref(props.youtube);
-const tiktok = ref(props.tiktok);
-
-watch(website, (value) => {
-    emit("update:website", value);
-});
-
-watch(email, (value) => {
-    emit("update:email", value);
-});
-
-watch(date_creation, (value) => {
-    emit("update:date_creation", value);
-});
-
-watch(phone1, (value) => {
-    emit("update:phone1", value);
-});
-
-watch(phone2, (value) => {
-    emit("update:phone2", value);
-});
-
-watch(facebook, (value) => {
-    emit("update:facebook", value);
-});
-
-watch(instagram, (value) => {
-    emit("update:instagram", value);
-});
-
-watch(youtube, (value) => {
-    emit("update:youtube", value);
-});
-
-watch(tiktok, (value) => {
-    emit("update:tiktok", tiktok);
-});
 </script>
 <template>
     <div class="grid grid-cols-4 gap-6">

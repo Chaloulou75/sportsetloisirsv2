@@ -1,31 +1,18 @@
 <script setup>
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import { ref, computed, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { TransitionRoot } from "@headlessui/vue";
 
+const model = defineModel();
 const props = defineProps({
-    modelValue: {
-        type: [Date, Object, Array, String],
-    },
     name: String,
 });
 
-const emit = defineEmits(["update:modelValue"]);
-
 const isShowing = ref(true);
 
-const model = computed({
-    get() {
-        return props.modelValue;
-    },
-    set(value) {
-        emit("update:modelValue", value);
-    },
-});
-
 onMounted(() => {
-    if (!props.modelValue) {
+    if (!model.value) {
         const currentDate = {
             month: new Date().getMonth(),
             year: new Date().getFullYear(),

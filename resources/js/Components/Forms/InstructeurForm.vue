@@ -1,51 +1,19 @@
 <script setup>
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref } from "vue";
 import MazPhoneNumberInput from "maz-ui/components/MazPhoneNumberInput";
 import { TransitionRoot } from "@headlessui/vue";
 
+const instructeur_email = defineModel("instructeur_email");
+const instructeur_contact = defineModel("instructeur_contact");
+const instructeur_phone = defineModel("instructeur_phone");
+
 const props = defineProps({
-    instructeur_email: String,
-    instructeur_contact: String,
-    instructeur_phone: String,
     errors: Object,
 });
-
-const emit = defineEmits([
-    "update:instructeur_email",
-    "update:instructeur_contact",
-    "update:instructeur_phone",
-]);
 
 const input = ref(null);
 const results = ref();
 const isShowing = ref(true);
-
-const instructeur_email = computed({
-    get() {
-        return props.instructeur_email;
-    },
-    set(value) {
-        emit("update:instructeur_email", value);
-    },
-});
-
-const instructeur_contact = computed({
-    get() {
-        return props.instructeur_contact;
-    },
-    set(value) {
-        emit("update:instructeur_contact", value);
-    },
-});
-
-const instructeur_phone = computed({
-    get() {
-        return props.instructeur_phone;
-    },
-    set(value) {
-        emit("update:instructeur_phone", value);
-    },
-});
 
 onMounted(() => {
     if (input.value.hasAttribute("autofocus")) {

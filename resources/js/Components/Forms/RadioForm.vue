@@ -1,28 +1,14 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { TransitionRoot } from "@headlessui/vue";
 
+const model = defineModel();
 const props = defineProps({
-    modelValue: {
-        type: [Object, String, Number],
-    },
     options: Array,
     name: String,
 });
 
-const emit = defineEmits(["update:modelValue"]);
-
-const select = ref(null);
 const isShowing = ref(true);
-
-const model = computed({
-    get() {
-        return props.modelValue;
-    },
-    set(value) {
-        emit("update:modelValue", value);
-    },
-});
 </script>
 
 <template>

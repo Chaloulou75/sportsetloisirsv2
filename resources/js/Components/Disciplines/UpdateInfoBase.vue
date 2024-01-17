@@ -1,29 +1,10 @@
 <script setup>
-import { ref, watch } from "vue";
+const name = defineModel("name");
+const description = defineModel("description");
+const theme = defineModel("theme");
 
 const props = defineProps({
     errors: Object,
-    name: String,
-    description: String,
-    theme: String,
-});
-
-const emit = defineEmits(["update:name", "update:description", "update:theme"]);
-
-const name = ref(props.name);
-const description = ref(props.description);
-const theme = ref(props.theme);
-
-watch(name, (value) => {
-    emit("update:name", value);
-});
-
-watch(description, (value) => {
-    emit("update:description", value);
-});
-
-watch(theme, (value) => {
-    emit("update:theme", value);
 });
 </script>
 <template>
