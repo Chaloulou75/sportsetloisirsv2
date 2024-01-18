@@ -38,15 +38,9 @@ class StructureDisciplineController extends Controller
                 $query->latest();
             },
             'produits',
-            'tarifs',
-            'tarifs.tarifType',
-            'tarifs.structureTarifTypeInfos',
-            'tarifs.structureTarifTypeInfos.tarifTypeAttribut'
         ])->select(['id', 'name', 'slug'])
         ->where('id', $structure->id)
         ->first();
-
-        $tarifTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();
 
         $allReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {
             $query->where('structure_id', $structure->id);
@@ -104,10 +98,7 @@ class StructureDisciplineController extends Controller
                     'structure:id,name,slug',
                     'categorie:id,nom_categorie_pro',
                     'discipline:id,name',
-                    'produits',
-                    'produits.tarifs',
-                    'produits.tarifs.structureTarifTypeInfos',
-                    'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut'])
+                    'produits'])
                     ->where('structure_id', $structure->id)
                     ->latest()
                     ->get()
@@ -129,25 +120,6 @@ class StructureDisciplineController extends Controller
                                                 'disciplineId' => $produitItem->discipline_id,
                                                 'categorieId' => $produitItem->categorie_id,
                                                 'activiteId' => $produitItem->activite_id,
-                                                'tarifs' => $produitItem->tarifs->map(function ($tarifItem) {
-                                                    return [
-                                                        'id' => $tarifItem->id,
-                                                        'typeId' => $tarifItem->type_id,
-                                                        'titre' => $tarifItem->titre,
-                                                        'description' => $tarifItem->description,
-                                                        'amount' => $tarifItem->amount,
-                                                        'produits' => $tarifItem->produits,
-                                                        'infos' => $tarifItem->structureTarifTypeInfos->map(function ($infoItem) {
-                                                            return [
-                                                                'id' => $infoItem->id,
-                                                                'attribut_id' => $infoItem->attribut_id,
-                                                                'valeur' => $infoItem->valeur,
-                                                                'unite' => $infoItem->unite,
-                                                                'tarifTypeAttribut' => $infoItem->tarifTypeAttribut
-                                                            ];
-                                                        }),
-                                                    ];
-                                                }),
                                             ];
                                         }),
                                     ];
@@ -176,7 +148,6 @@ class StructureDisciplineController extends Controller
             'dejaUsedDisciplines' => $dejaUsedDisciplines,
             'listDisciplines' => $listDisciplines,
             'activites' => $activites,
-            'tarifTypes' => $tarifTypes,
             'actByDiscAndCategorie' => $actByDiscAndCategorie,
             'categoriesListByDiscipline' => $categoriesListByDiscipline,
             'activiteForTarifs' => $activiteForTarifs,
@@ -232,10 +203,6 @@ class StructureDisciplineController extends Controller
                 $query->latest();
             },
             'produits',
-            'tarifs',
-            'tarifs.tarifType',
-            'tarifs.structureTarifTypeInfos',
-            'tarifs.structureTarifTypeInfos.tarifTypeAttribut'
         ])
         ->select(['id', 'name', 'slug'])
         ->where('slug', $structure->slug)
@@ -291,16 +258,11 @@ class StructureDisciplineController extends Controller
             ->where('visible_back', true)
             ->get();
 
-        $tarifTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();
-
         $activiteForTarifs = StructureActivite::with([
                 'structure:id,name,slug',
                 'categorie:id,nom_categorie_pro',
                 'discipline:id,name',
                 'produits',
-                'produits.tarifs',
-                'produits.tarifs.structureTarifTypeInfos',
-                'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut'
             ])
             ->where('structure_id', $structure->id)
             ->latest()
@@ -323,34 +285,6 @@ class StructureDisciplineController extends Controller
                                         'disciplineId' => $produitItem->discipline_id,
                                         'categorieId' => $produitItem->categorie_id,
                                         'activiteId' => $produitItem->activite_id,
-                                        'tarifs' => $produitItem->tarifs->map(function ($tarifItem) {
-                                            return [
-                                                'id' => $tarifItem->id,
-                                                'typeId' => $tarifItem->type_id,
-                                                'titre' => $tarifItem->titre,
-                                                'description' => $tarifItem->description,
-                                                'amount' => $tarifItem->amount,
-                                                'produits' => $tarifItem->produits,
-                                                'infos' => $tarifItem->structureTarifTypeInfos->map(function ($infoItem) {
-                                                    return [
-                                                        'id' => $infoItem->id,
-                                                        'attribut_id' => $infoItem->attribut_id,
-                                                        'valeur' => $infoItem->valeur,
-                                                        'unite' => $infoItem->unite,
-                                                        'tarifTypeAttribut' => $infoItem->tarifTypeAttribut
-                                                    ];
-                                                }),
-                                            ];
-                                        }),
-                                        'catTarifs' => $produitItem->catTarifs->map(function ($catTarifItem) {
-                                            return [
-                                                'id' => $catTarifItem->id,
-                                                'typeId' => $catTarifItem->dis_cat_tar_typ_id,
-                                                'titre' => $catTarifItem->titre,
-                                                'description' => $catTarifItem->description,
-                                                'amount' => $catTarifItem->amount,
-                                            ];
-                                        }),
                                     ];
                                 }),
                             ];
@@ -374,7 +308,6 @@ class StructureDisciplineController extends Controller
             'categoriesListByDiscipline' => $categoriesListByDiscipline,
             'categoriesWithoutStructures' => $categoriesWithoutStructures,
             'allCategories' => $allCategories,
-            'tarifTypes' => $tarifTypes,
             'activiteForTarifs' => $activiteForTarifs,
             'strCatTarifs' => $strCatTarifs,
             'allReservationsCount' => $allReservationsCount,

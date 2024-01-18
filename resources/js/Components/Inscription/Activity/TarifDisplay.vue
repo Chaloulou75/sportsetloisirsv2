@@ -1,14 +1,7 @@
 <script setup>
-import { ref, computed, defineAsyncComponent } from "vue";
+import { ref, defineAsyncComponent } from "vue";
 import { router } from "@inertiajs/vue3";
-import {
-    TrashIcon,
-    UsersIcon,
-    UserGroupIcon,
-    ClockIcon,
-    ArrowPathIcon,
-    PencilSquareIcon,
-} from "@heroicons/vue/24/outline";
+import { TrashIcon, PencilSquareIcon } from "@heroicons/vue/24/outline";
 
 const ModalEditCatTarif = defineAsyncComponent(() =>
     import("@/Components/Modals/ModalEditCatTarif.vue")

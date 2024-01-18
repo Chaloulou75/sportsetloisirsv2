@@ -1,6 +1,6 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
-import { ref, watch, nextTick } from "vue";
+import { ref, watch } from "vue";
 import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";

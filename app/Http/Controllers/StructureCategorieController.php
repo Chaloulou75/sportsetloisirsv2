@@ -51,10 +51,6 @@ class StructureCategorieController extends Controller
                 $query->latest();
             },
             'produits',
-            'tarifs',
-            'tarifs.tarifType',
-            'tarifs.structureTarifTypeInfos',
-            'tarifs.structureTarifTypeInfos.tarifTypeAttribut'
         ])
         ->select(['id', 'name', 'slug'])
         ->where('slug', $structure->slug)
@@ -116,16 +112,11 @@ class StructureCategorieController extends Controller
                 ->where('categorie_id', $categorie->id)
                 ->get();
 
-        $tarifTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type', 'slug'])->get();
-
         $activiteForTarifs = StructureActivite::with([
             'structure:id,name,slug',
             'categorie:id,nom_categorie_pro',
             'discipline:id,name',
-            'produits',
-            'produits.tarifs',
-            'produits.tarifs.structureTarifTypeInfos',
-            'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut'])
+            'produits',])
             ->where('structure_id', $structure->id)
             ->latest()
             ->get()
@@ -147,25 +138,6 @@ class StructureCategorieController extends Controller
                                         'disciplineId' => $produitItem->discipline_id,
                                         'categorieId' => $produitItem->categorie_id,
                                         'activiteId' => $produitItem->activite_id,
-                                        'tarifs' => $produitItem->tarifs->map(function ($tarifItem) {
-                                            return [
-                                                'id' => $tarifItem->id,
-                                                'typeId' => $tarifItem->type_id,
-                                                'titre' => $tarifItem->titre,
-                                                'description' => $tarifItem->description,
-                                                'amount' => $tarifItem->amount,
-                                                'produits' => $tarifItem->produits,
-                                                'infos' => $tarifItem->structureTarifTypeInfos->map(function ($infoItem) {
-                                                    return [
-                                                        'id' => $infoItem->id,
-                                                        'attribut_id' => $infoItem->attribut_id,
-                                                        'valeur' => $infoItem->valeur,
-                                                        'unite' => $infoItem->unite,
-                                                        'tarifTypeAttribut' => $infoItem->tarifTypeAttribut
-                                                    ];
-                                                }),
-                                            ];
-                                        }),
                                     ];
                                 }),
                             ];
@@ -191,7 +163,6 @@ class StructureCategorieController extends Controller
             'categoriesListByDiscipline' => $categoriesListByDiscipline,
             'categoriesWithoutStructures' => $categoriesWithoutStructures,
             'strCatTarifs' => $strCatTarifs,
-            'tarifTypes' => $tarifTypes,
             'activiteForTarifs' => $activiteForTarifs,
             'allReservationsCount' => $allReservationsCount,
             'confirmedReservationsCount' => $confirmedReservationsCount,

@@ -31,7 +31,6 @@ const props = defineProps({
     discipline: Object,
     categorie: Object,
     allCategories: Object,
-    tarifTypes: Object,
     activiteForTarifs: Object,
     structureActivites: Object,
     show: Boolean,

@@ -22,7 +22,6 @@ const props = defineProps({
     categoriesListByDiscipline: Object,
     categoriesWithoutStructures: Object,
     strCatTarifs: Object,
-    tarifTypes: Object,
     activiteForTarifs: Object,
     confirmedReservationsCount: Number,
     allReservationsCount: Number,
@@ -74,7 +73,6 @@ const handleButtonEvent = (message) => {
     }
 };
 
-const currentCategorie = ref({});
 const showAddActiviteModal = ref(false);
 const openAddActiviteModal = () => {
     showAddActiviteModal.value = true;
@@ -252,8 +250,9 @@ const latestAdresseId = computed(() => {
                             "
                             :criteres="criteres"
                             :latest-adresse-id="latestAdresseId"
-                            :tarif-types="tarifTypes"
                             :activite-for-tarifs="activiteForTarifs"
+                            :all-categories="categoriesListByDiscipline"
+                            @add-tarif="openAddTarifModal"
                         />
                         <div v-if="structureActivites.length === 0">
                             <p class="font-semibold italic text-gray-600">
@@ -276,7 +275,6 @@ const latestAdresseId = computed(() => {
                             :categorie="categorie"
                             :str-cat-tarifs="strCatTarifs"
                             :all-categories="categoriesListByDiscipline"
-                            :tarif-types="tarifTypes"
                             :structure-activites="structureActivites"
                             :activite-for-tarifs="activiteForTarifs"
                         />
@@ -297,7 +295,6 @@ const latestAdresseId = computed(() => {
                 :errors="errors"
                 :structure="structure"
                 :discipline="discipline"
-                :tarif-types="tarifTypes"
                 :categorie="categorie"
                 :all-categories="categoriesListByDiscipline"
                 :activite-for-tarifs="activiteForTarifs"

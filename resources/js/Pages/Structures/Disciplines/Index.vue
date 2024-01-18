@@ -400,7 +400,6 @@ const openAddTarifModal = (structure) => {
             <ModalAddTarif
                 :errors="errors"
                 :structure="structure"
-                :tarif-types="tarifTypes"
                 :all-categories="categoriesListByDiscipline"
                 :activite-for-tarifs="activiteForTarifs"
                 :structure-activites="activites"

@@ -20,7 +20,6 @@ const props = defineProps({
     categoriesListByDiscipline: Object,
     categoriesWithoutStructures: Object,
     allCategories: Object,
-    tarifTypes: Object,
     activiteForTarifs: Object,
     strCatTarifs: Object,
     confirmedReservationsCount: Number,
@@ -231,9 +230,9 @@ const latestAdresseId = computed(() => {
                             "
                             :criteres="criteres"
                             :latest-adresse-id="latestAdresseId"
-                            :tarif-types="tarifTypes"
                             :activite-for-tarifs="activiteForTarifs"
-                            :all-categories="allCategories"
+                            :all-categories="categoriesListByDiscipline"
+                            @add-tarif="openAddTarifModal"
                         />
                         <div v-if="structureActivites.length === 0">
                             <p class="font-semibold italic text-gray-600">
@@ -275,7 +274,6 @@ const latestAdresseId = computed(() => {
                 :errors="errors"
                 :structure="structure"
                 :discipline="discipline"
-                :tarif-types="tarifTypes"
                 :all-categories="categoriesListByDiscipline"
                 :activiteForTarifs="activiteForTarifs"
                 :structureActivites="structureActivites"

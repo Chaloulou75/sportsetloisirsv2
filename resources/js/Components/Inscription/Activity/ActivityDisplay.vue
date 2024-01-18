@@ -14,8 +14,6 @@ import {
     XCircleIcon,
     TrashIcon,
     PlusIcon,
-    UsersIcon,
-    UserGroupIcon,
     ClockIcon,
     PencilSquareIcon,
     CurrencyEuroIcon,
@@ -36,9 +34,10 @@ import {
 dayjs.locale("fr");
 dayjs.extend(localeData);
 
-const ModalAddTarif = defineAsyncComponent(() =>
-    import("@/Components/Modals/ModalAddTarif.vue")
-);
+const emit = defineEmits(["addTarif"]);
+const openAddTarifModal = () => {
+    emit("addTarif");
+};
 
 const ModalAddProduit = defineAsyncComponent(() =>
     import("@/Components/Modals/ModalAddProduit.vue")
@@ -52,8 +51,8 @@ const ModalDeleteActivite = defineAsyncComponent(() =>
     import("@/Components/Modals/ModalDeleteActivite.vue")
 );
 
-const ModalEditTarif = defineAsyncComponent(() =>
-    import("@/Components/Modals/ModalEditTarif.vue")
+const ModalEditCatTarif = defineAsyncComponent(() =>
+    import("@/Components/Modals/ModalEditCatTarif.vue")
 );
 
 const props = defineProps({
@@ -111,10 +110,6 @@ const groupCriteres = (criteres) => {
         grouped[critereId].push(critere);
         return grouped;
     }, {});
-};
-
-const openAddTarifModal = (structure) => {
-    showAddTarifModal.value = true;
 };
 
 const formatDate = (dateTime) => {
@@ -265,12 +260,11 @@ const duplicateTarif = (tarif, produit) => {
     );
 };
 
-const destroyTarif = (tarif, produit) => {
+const destroyTarif = (tarif) => {
     router.delete(
-        route("tarifs.destroy", {
+        route("structures.cat.tarifs.destroy", {
             structure: props.structure.slug,
-            tarif: tarif.id,
-            produit: produit.id,
+            tarif: tarif,
         }),
         {
             preserveScroll: true,
@@ -920,7 +914,7 @@ const destroyTarif = (tarif, produit) => {
                                                 >
                                                     <p
                                                         v-if="
-                                                            produit.tarifs
+                                                            produit.cat_tarifs
                                                                 .length > 0
                                                         "
                                                     >
@@ -938,11 +932,7 @@ const destroyTarif = (tarif, produit) => {
                                             >
                                                 <button
                                                     type="button"
-                                                    @click="
-                                                        openAddTarifModal(
-                                                            structure
-                                                        )
-                                                    "
+                                                    @click="openAddTarifModal"
                                                     class="flex h-full w-full items-center justify-center p-4 text-xs text-white"
                                                 >
                                                     Ajouter un tarif
@@ -952,11 +942,11 @@ const destroyTarif = (tarif, produit) => {
                                         <template
                                             v-if="
                                                 isOpenTarif(produit) &&
-                                                produit.tarifs.length > 0
+                                                produit.cat_tarifs.length > 0
                                             "
                                         >
                                             <tr
-                                                v-for="tarif in produit.tarifs"
+                                                v-for="tarif in produit.cat_tarifs"
                                                 :key="tarif.id"
                                                 class="w-full border-t"
                                             >
@@ -975,94 +965,95 @@ const destroyTarif = (tarif, produit) => {
                                                     :colspan="
                                                         uniqueCriteresByCategorie.length
                                                     "
-                                                    class="border border-slate-300 text-center text-sm text-gray-600"
+                                                    class="border border-slate-300 px-2 text-left text-xs text-gray-600"
                                                 >
-                                                    <div
-                                                        class="flex w-full items-center justify-around space-x-2"
-                                                        v-if="
-                                                            tarif
-                                                                .structure_tarif_type_infos
-                                                                .length > 0
-                                                        "
+                                                    <template
+                                                        v-if="tarif.attributs"
                                                     >
-                                                        <div
-                                                            class="flex items-center space-x-2"
-                                                            v-for="info in tarif.structure_tarif_type_infos"
-                                                            :key="info.id"
+                                                        <ul
+                                                            class="flex list-inside list-disc justify-around"
                                                         >
-                                                            <div v-if="info">
-                                                                <ClockIcon
-                                                                    v-if="
-                                                                        [
-                                                                            1,
-                                                                            2,
-                                                                            5,
-                                                                            7,
-                                                                        ].includes(
-                                                                            info.attribut_id
-                                                                        )
-                                                                    "
-                                                                    class="mr-1 h-5 w-5 text-slate-500"
-                                                                />
-                                                                <UserGroupIcon
-                                                                    v-else-if="
-                                                                        [
-                                                                            3,
-                                                                            6,
-                                                                        ].includes(
-                                                                            info.attribut_id
-                                                                        )
-                                                                    "
-                                                                    class="mr-1 h-5 w-5 text-slate-500"
-                                                                />
-                                                                <UsersIcon
-                                                                    v-else
-                                                                    class="mr-1 h-5 w-5 text-slate-500"
-                                                                />
-                                                            </div>
-                                                            <div v-else>
-                                                                <UsersIcon
-                                                                    class="mr-1 h-5 w-5 text-slate-500"
-                                                                />
-                                                            </div>
-
-                                                            <div>
-                                                                <span
-                                                                    v-if="
-                                                                        info.valeur
-                                                                    "
-                                                                    class="text-sm text-gray-600"
-                                                                    >{{
-                                                                        info
-                                                                            .tarif_type_attribut
-                                                                            .attribut
-                                                                    }}:
+                                                            <li
+                                                                v-for="attribut in tarif.attributs"
+                                                                :key="
+                                                                    attribut.id
+                                                                "
+                                                                class="items-start"
+                                                            >
+                                                                <span>
                                                                     {{
-                                                                        info.valeur
-                                                                    }}
+                                                                        attribut
+                                                                            .tarif_attribut
+                                                                            .nom
+                                                                    }}:
                                                                     <span
-                                                                        v-if="
-                                                                            info.unite
-                                                                        "
+                                                                        class="font-semibold"
                                                                         >{{
-                                                                            info.unite
+                                                                            attribut.valeur
                                                                         }}</span
-                                                                    >
-                                                                </span>
-                                                                <span
-                                                                    v-else
-                                                                    class="text-sm text-gray-600"
-                                                                    >Pas de
-                                                                    valeur</span
+                                                                    ></span
                                                                 >
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                                <template
+                                                                    v-if="
+                                                                        attribut.sous_attributs
+                                                                    "
+                                                                >
+                                                                    <ul
+                                                                        class="ml-2 flex list-inside list-disc flex-col justify-start"
+                                                                    >
+                                                                        <li
+                                                                            v-for="sousattr in attribut.sous_attributs"
+                                                                            :key="
+                                                                                sousattr.id
+                                                                            "
+                                                                            class=""
+                                                                        >
+                                                                            <span
+                                                                                v-if="
+                                                                                    sousattr.sous_attribut_valeur
+                                                                                "
+                                                                            >
+                                                                                {{
+                                                                                    sousattr
+                                                                                        .sous_attribut
+                                                                                        .nom
+                                                                                }}:
+                                                                                <span
+                                                                                    class="font-semibold"
+                                                                                    >{{
+                                                                                        sousattr
+                                                                                            .sous_attribut_valeur
+                                                                                            .valeur
+                                                                                    }}</span
+                                                                                >
+                                                                            </span>
+                                                                            <span
+                                                                                v-else
+                                                                                >{{
+                                                                                    sousattr
+                                                                                        .sous_attribut
+                                                                                        .nom
+                                                                                }}:
+                                                                                <span
+                                                                                    class="font-semibold"
+                                                                                    >{{
+                                                                                        sousattr.valeur
+                                                                                    }}</span
+                                                                                >
+                                                                            </span>
+                                                                        </li>
+                                                                    </ul>
+                                                                </template>
+                                                            </li>
+                                                        </ul>
+                                                    </template>
                                                 </td>
                                                 <td
                                                     class="border border-slate-300 text-center text-sm text-gray-600"
                                                 >
-                                                    {{ tarif.tarif_type.type }}
+                                                    {{
+                                                        tarif.cat_tarif_type.nom
+                                                    }}
                                                 </td>
                                                 <td
                                                     class="border border-slate-300 text-center text-sm text-gray-600"
@@ -1165,21 +1156,13 @@ const destroyTarif = (tarif, produit) => {
         :criteres="criteres"
         :latest-adresse-id="latestAdresseId"
     />
-    <ModalAddTarif
+
+    <ModalEditCatTarif
         :errors="errors"
         :structure="structure"
-        :tarif-types="tarifTypes"
+        :tarif-to-update="currentTarif"
         :all-categories="allCategories"
         :activite-for-tarifs="activiteForTarifs"
-        :show="showAddTarifModal"
-        @close="showAddTarifModal = false"
-    />
-    <ModalEditTarif
-        :errors="errors"
-        :structure="structure"
-        :tarif="currentTarif"
-        :tarif-types="tarifTypes"
-        :activiteForTarifs="activiteForTarifs"
         :show="showEditTarifModal"
         @close="showEditTarifModal = false"
     />
