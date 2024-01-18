@@ -182,9 +182,6 @@ class Structure extends Model
                 'activites.produits.criteres.critere',
                 'activites.produits.criteres.sous_criteres',
                 'activites.produits.criteres.critere_valeur',
-                'activites.produits.tarifs',
-                'activites.produits.tarifs.tarifType',
-                'activites.produits.tarifs.structureTarifTypeInfos',
                 'activites.produits.plannings',
             ])
             ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo']);

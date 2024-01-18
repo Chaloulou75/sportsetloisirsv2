@@ -23,7 +23,9 @@ class AdminTarifTypeController extends Controller
         $tarifs = ListeTarifType::with([
                 'categories',
                 'categories.categorie',
-                'categories.categorie.discipline',
+                'categories.categorie.discipline' => function ($query) {
+                    $query->orderBy('name');
+                },
                 'categories.tarif_attributs',
                 'categories.tarif_attributs.sous_attributs',
             ])

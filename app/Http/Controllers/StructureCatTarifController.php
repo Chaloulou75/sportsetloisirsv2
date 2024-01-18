@@ -56,7 +56,7 @@ class StructureCatTarifController extends Controller
         ]);
 
         foreach($request->attributs as $key => $valeur) {
-            if(is_string($valeur)) {
+            if(is_string($valeur) || is_numeric($valeur)) {
                 $strCatTarifAttribut = $strCatTarif->attributs()->create([
                    'cat_tar_att_id' => $key,
                    'valeur' => $valeur
@@ -76,7 +76,7 @@ class StructureCatTarifController extends Controller
                     foreach($tarAttribut->sous_attributs as $sousAttribut) {
                         foreach($request->sousattributs as $sousAttId => $sousAttributValeur) {
                             if($sousAttribut->id === $sousAttId) {
-                                if(is_string($sousAttributValeur)) {
+                                if(is_string($sousAttributValeur) || is_numeric($sousAttributValeur)) {
                                     $strCatTarifAttribut->sous_attributs()->create([
                                         'sousattribut_id' => $sousAttId,
                                         'valeur' => $sousAttributValeur
@@ -154,7 +154,7 @@ class StructureCatTarifController extends Controller
             }
 
             foreach($request->attributs as $key => $valeur) {
-                if(is_string($valeur)) {
+                if(is_string($valeur) || is_numeric($valeur)) {
                     $strCatTarifAttribut = $tarif->attributs()->create([
                        'cat_tar_att_id' => $key,
                        'valeur' => $valeur
@@ -173,7 +173,7 @@ class StructureCatTarifController extends Controller
                         foreach($tarAttribut->sous_attributs as $sousAttribut) {
                             foreach($request->sousattributs as $sousAttId => $sousAttributValeur) {
                                 if($sousAttribut->id === $sousAttId) {
-                                    if(is_string($sousAttributValeur)) {
+                                    if(is_string($sousAttributValeur) || is_numeric($sousAttributValeur)) {
                                         $strCatTarifAttribut->sous_attributs()->create([
                                             'sousattribut_id' => $sousAttId,
                                             'valeur' => $sousAttributValeur

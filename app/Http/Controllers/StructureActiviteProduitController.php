@@ -539,7 +539,7 @@ class StructureActiviteProduitController extends Controller
 
     private function insertCriteresRecursively($structure, $activite, $structureProduit, $critereId, $criteresValues, $defaut)
     {
-        if(is_string($criteresValues)) {
+        if(is_string($criteresValues) || is_numeric($criteresValues)) {
             $valeur = $criteresValues;
             $this->createStructureProduitCritere($structure, $activite, $structureProduit, $critereId, null, $valeur);
         } elseif (isset($criteresValues['valeur'])) {

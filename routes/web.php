@@ -19,7 +19,6 @@ use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\AdminBlogTagController;
-use App\Http\Controllers\AdminCategorieDisciplineController;
 use App\Http\Controllers\StructureUserController;
 use App\Http\Controllers\AdminStructureController;
 use App\Http\Controllers\AdminTarifTypeController;
@@ -35,16 +34,19 @@ use App\Http\Controllers\StructureCategorieController;
 use App\Http\Controllers\DisciplineSimilaireController;
 use App\Http\Controllers\LienDisCatTariftypeController;
 use App\Http\Controllers\StructureDisciplineController;
+use App\Http\Controllers\AdminTarifTypeDisCatController;
 use App\Http\Controllers\StructureStatistiqueController;
 use App\Http\Controllers\Discipline\DisciplineController;
 use App\Http\Controllers\AdminTarifTypeAttributController;
 use App\Http\Controllers\Departement\DepartementController;
 use App\Http\Controllers\LienDisCatCritValSsCritController;
 use App\Http\Controllers\LienDisCatTarAttrValeurController;
+use App\Http\Controllers\AdminCategorieDisciplineController;
 use App\Http\Controllers\StructureActiviteProduitController;
 use App\Http\Controllers\CategoryDisciplineCritereController;
 use App\Http\Controllers\LienDisCatTarAttrSousAttrController;
 use App\Http\Controllers\LienDisCatTariftypeAttributController;
+use App\Http\Controllers\AdminTarifTypeDisCatAttributController;
 use App\Http\Controllers\Discipline\CategoryDisciplineController;
 use App\Http\Controllers\LienDisCatCritValSsCritValeurController;
 use App\Http\Controllers\CategoryDisciplineCritereValeurController;
@@ -213,6 +215,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/tarifs/{tarif}/attributs', [AdminTarifTypeAttributController::class, 'store'])->name('admin.tarifs.attributs.store');
         Route::patch('/tarifs/{tarif}/attributs/{attribut}', [AdminTarifTypeAttributController::class, 'update'])->name('admin.tarifs.attributs.update');
         Route::delete('/tarifs/{tarif}/attributs/{attribut}', [AdminTarifTypeAttributController::class, 'destroy'])->name('admin.tarifs.attributs.destroy');
+
+        Route::post('/tarifsTypes/{tarifType}/discats', [AdminTarifTypeDisCatController::class, 'store'])->name('admin.tariftypes.discats.store');
+        Route::delete('/tarifsTypes/{tarifType}/discats', [AdminTarifTypeDisCatController::class, 'destroy'])->name('admin.tariftypes.discats.destroy');
+
+        Route::post('/tarifsType/{tarifType}/discat/attributs', [AdminTarifTypeDisCatAttributController::class, 'store'])->name('admin.tariftypes.discats.attributs.store');
+
 
         Route::post('/discipline-similaire/{discipline}', [DisciplineSimilaireController::class, 'store'])->name('discipline-similaire.store');
         Route::put('/discipline-similaire/{discipline}', [DisciplineSimilaireController::class, 'detach'])->name('discipline-similaire.detach');

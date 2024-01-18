@@ -4,12 +4,20 @@ import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import { ref, onMounted } from "vue";
 import autoAnimate from "@formkit/auto-animate";
 import {
-    ChevronLeftIcon,
     TrashIcon,
-    ArrowPathIcon,
     XCircleIcon,
     PlusCircleIcon,
+    ArrowPathIcon,
+    ChevronUpDownIcon,
+    ChevronLeftIcon,
+    CheckCircleIcon,
 } from "@heroicons/vue/24/outline";
+import {
+    Listbox,
+    ListboxButton,
+    ListboxOptions,
+    ListboxOption,
+} from "@headlessui/vue";
 
 const props = defineProps({
     errors: Object,
@@ -78,86 +86,155 @@ const deleteTarif = (tarif) => {
     );
 };
 
-const updateAttributForm = ref({});
-const initializeAttributForm = () => {
-    for (const tarifId in props.tarifs) {
-        const tarif = props.tarifs[tarifId];
-
-        for (const attributId in tarif.tariftypeattributs) {
-            const attribut = tarif.tariftypeattributs[attributId];
-            updateAttributForm.value[attribut.id] = useForm({
-                attribut: ref(attribut.attribut),
-                remember: true,
-            });
-        }
+const attachAllDisCat = (tarifType) => {
+    const isConfirmed = window.confirm(
+        "Sûr de vouloir lier toutes les disciplines/catégories à ce type de tarif?"
+    );
+    if (isConfirmed) {
+        router.post(
+            route("admin.tariftypes.discats.store", {
+                tarifType: tarifType,
+            }),
+            {
+                preserveScroll: true,
+            }
+        );
     }
 };
 
-initializeAttributForm();
-
-const attributFormsVisibility = ref({});
-
-const toggleAddAttributForm = (tarif) => {
-    attributFormsVisibility.value[tarif.id] =
-        !attributFormsVisibility.value[tarif.id];
+const detachAllDisCat = (tarifType) => {
+    const isConfirmed = window.confirm(
+        "Attention! Sûr de vouloir délier toutes les disciplines/catégories à ce type de tarif? Cela supprimera les attributs et les tarifs associés..."
+    );
+    if (isConfirmed) {
+        router.delete(
+            route("admin.tariftypes.discats.destroy", {
+                tarifType: tarifType,
+            }),
+            {
+                preserveScroll: true,
+            }
+        );
+    }
 };
 
-const showAddAttributForm = (tarif) => {
-    return attributFormsVisibility.value[tarif.id] || false;
+const type_champs = [
+    { type: "select" },
+    { type: "checkbox" },
+    { type: "text" },
+    { type: "number" },
+];
+const addAttributFormVisibility = ref([]);
+const toggleAddAttributForm = (tarifType) => {
+    addAttributFormVisibility.value[tarifType.id] =
+        !addAttributFormVisibility.value[tarifType.id];
+};
+const showAddAttributForm = (tarifType) => {
+    return addAttributFormVisibility.value[tarifType.id] || false;
 };
 
 const addAttributForm = useForm({
-    attribut: null,
+    nom: null,
+    type_champ: type_champs[0],
     remember: true,
 });
 
-const addAttribut = (tarif) => {
+const addTarifAttribut = (tarifType) => {
     addAttributForm.post(
-        route("admin.tarifs.attributs.store", {
-            tarif: tarif,
+        route("admin.tariftypes.discats.attributs.store", {
+            tarifType: tarifType,
         }),
         {
             errorBag: "addAttributForm",
             preserveScroll: true,
             onSuccess: () => {
-                initializeAttributForm();
                 addAttributForm.reset();
-                toggleAddAttributForm(tarif);
+                toggleAddAttributForm(tarifType);
             },
         }
     );
 };
 
-const updateAttribut = (tarif, attribut) => {
-    router.patch(
-        route("admin.tarifs.attributs.update", {
-            tarif: tarif,
-            attribut: attribut,
-        }),
-        {
-            attribut: updateAttributForm.value[attribut.id].attribut,
-        },
-        {
-            errorBag: "updateAttributForm",
-            preserveScroll: true,
-        }
-    );
-};
+// const updateAttributForm = ref({});
+// const initializeAttributForm = () => {
+//     for (const tarifId in props.tarifs) {
+//         const tarif = props.tarifs[tarifId];
 
-const removeAttribut = (tarif, attribut) => {
-    router.delete(
-        route("admin.tarifs.attributs.destroy", {
-            tarif: tarif,
-            attribut: attribut,
-        }),
-        {
-            preserveScroll: true,
-            onSuccess: () => {
-                initializeAttributForm();
-            },
-        }
-    );
-};
+//         for (const attributId in tarif.tariftypeattributs) {
+//             const attribut = tarif.tariftypeattributs[attributId];
+//             updateAttributForm.value[attribut.id] = useForm({
+//                 attribut: ref(attribut.attribut),
+//                 remember: true,
+//             });
+//         }
+//     }
+// };
+
+// initializeAttributForm();
+
+// const attributFormsVisibility = ref({});
+
+// const toggleAddAttributForm = (tarif) => {
+//     attributFormsVisibility.value[tarif.id] =
+//         !attributFormsVisibility.value[tarif.id];
+// };
+
+// const showAddAttributForm = (tarif) => {
+//     return attributFormsVisibility.value[tarif.id] || false;
+// };
+
+// const addAttributForm = useForm({
+//     attribut: null,
+//     remember: true,
+// });
+
+// const addAttribut = (tarif) => {
+//     addAttributForm.post(
+//         route("admin.tarifs.attributs.store", {
+//             tarif: tarif,
+//         }),
+//         {
+//             errorBag: "addAttributForm",
+//             preserveScroll: true,
+//             onSuccess: () => {
+//                 initializeAttributForm();
+//                 addAttributForm.reset();
+//                 toggleAddAttributForm(tarif);
+//             },
+//         }
+//     );
+// };
+
+// const updateAttribut = (tarif, attribut) => {
+//     router.patch(
+//         route("admin.tarifs.attributs.update", {
+//             tarif: tarif,
+//             attribut: attribut,
+//         }),
+//         {
+//             attribut: updateAttributForm.value[attribut.id].attribut,
+//         },
+//         {
+//             errorBag: "updateAttributForm",
+//             preserveScroll: true,
+//         }
+//     );
+// };
+
+// const removeAttribut = (tarif, attribut) => {
+//     router.delete(
+//         route("admin.tarifs.attributs.destroy", {
+//             tarif: tarif,
+//             attribut: attribut,
+//         }),
+//         {
+//             preserveScroll: true,
+//             onSuccess: () => {
+//                 initializeAttributForm();
+//             },
+//         }
+//     );
+// };
 
 const toAnimateOne = ref();
 onMounted(() => {
@@ -167,7 +244,10 @@ onMounted(() => {
 });
 </script>
 <template>
-    <Head title="Gestion du site" :description="'Administration des tarifs.'" />
+    <Head
+        title="Gestion des types de tarifs"
+        :description="'Administration des types de tarifs.'"
+    />
     <AdminLayout>
         <template #header>
             <div class="flex h-full items-center justify-start">
@@ -180,7 +260,7 @@ onMounted(() => {
                 <h1
                     class="px-3 text-center text-base font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
-                    Gestion des tarifs
+                    Gestion des types de tarifs
                 </h1>
             </div>
         </template>
@@ -191,7 +271,7 @@ onMounted(() => {
             >
                 <div class="w-full md:w-2/3">
                     <h3
-                        class="mb-4 text-center text-lg text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
+                        class="mb-4 w-full text-center text-lg font-bold text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
                     >
                         Gérer les types de tarifs:
                     </h3>
@@ -202,7 +282,7 @@ onMounted(() => {
                         <li
                             v-for="tarif in tarifs"
                             :key="tarif.id"
-                            class="text-base text-slate-600"
+                            class="w-full text-base text-slate-600"
                         >
                             <form
                                 v-if="tarif"
@@ -392,7 +472,7 @@ onMounted(() => {
                     class="flex w-full flex-col items-center justify-center md:w-1/3"
                 >
                     <h3
-                        class="mb-4 text-center text-lg text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
+                        class="mb-4 w-full text-center text-lg font-bold text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
                     >
                         Créer un type de tarif:
                     </h3>
@@ -453,27 +533,32 @@ onMounted(() => {
                 <h3
                     class="mb-4 w-full text-center text-lg font-bold text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
                 >
-                    Liaison des types de tarifs aux disciplines / categories et
-                    leurs attributs / sous attributs:
+                    Liaison des types de tarifs aux couples "disciplines /
+                    categories" et leurs attributs / sous attributs associés:
+                    <span class="text-xs italic"
+                        >(Vérifier dans les parties "gestion des catégories" ou
+                        "gestion des disciplines" le lien entre les disciplines
+                        et catégories!)</span
+                    >
                 </h3>
                 <div
-                    class="flex h-full flex-col items-stretch gap-8 text-base text-slate-600 md:flex-row md:flex-wrap"
+                    class="flex h-full flex-col items-stretch justify-around gap-8 text-base text-slate-600 md:flex-row md:flex-wrap"
                 >
                     <div
                         class="flex max-w-sm flex-col items-stretch justify-between border border-gray-100 bg-gray-50 px-4 py-3 shadow"
-                        v-for="tarif in tarifs"
-                        :key="tarif.id"
+                        v-for="tarifType in tarifs"
+                        :key="tarifType.id"
                     >
                         <div>
                             <h3>
                                 <span
                                     class="text-lg font-semibold text-indigo-600"
                                 >
-                                    {{ tarif.type }}</span
+                                    {{ tarifType.type }}</span
                                 >
                                 est lié aux
                                 <span class="font-semibold"
-                                    >discipline-catégories</span
+                                    >disciplines-catégories</span
                                 >
                                 suivantes:
                             </h3>
@@ -481,20 +566,21 @@ onMounted(() => {
                         <div class="my-4">
                             <ul class="ml-4 list-inside list-disc">
                                 <li
-                                    v-for="disCat in tarif.categories"
+                                    v-for="disCat in tarifType.categories"
                                     :key="disCat.id"
                                 >
                                     <span class="text-base font-semibold"
-                                        >{{
+                                        >{{ disCat.categorie.discipline.name }}
+                                        /
+                                        {{
                                             disCat.categorie
                                                 .nom_categorie_client
                                         }}
-                                        /
-                                        {{
-                                            disCat.categorie.discipline.name
-                                        }}</span
+                                    </span>
+                                    <span
+                                        v-if="disCat.tarif_attributs.length > 0"
+                                        >, avec pour attributs:</span
                                     >
-                                    , avec pour attributs:
                                     <ul class="ml-4 list-inside list-disc">
                                         <li
                                             v-for="attribut in disCat.tarif_attributs"
@@ -504,7 +590,14 @@ onMounted(() => {
                                                 class="font-semibold italic"
                                                 >{{ attribut.nom }}</span
                                             >
-                                            avec pour sous attributs:
+                                            <span
+                                                v-if="
+                                                    attribut.sous_attributs
+                                                        .length > 0
+                                                "
+                                            >
+                                                avec pour sous attributs:</span
+                                            >
                                             <ul
                                                 class="ml-4 list-inside list-disc"
                                             >
@@ -523,26 +616,180 @@ onMounted(() => {
                         <div class="mt-auto space-y-3">
                             <button
                                 type="button"
-                                @click.prevent="attachAllDisCat(tarif)"
-                                class="rounded border border-gray-600 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                @click.prevent="attachAllDisCat(tarifType)"
+                                class="group rounded border border-gray-600 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                             >
                                 Lier
-                                <span class="text-red-500">{{
-                                    tarif.type
-                                }}</span>
+                                <span
+                                    class="text-red-500 group-hover:text-white"
+                                    >{{ tarifType.type }}</span
+                                >
                                 à toutes les disciplines-catégories existantes?
                             </button>
                             <button
                                 type="button"
-                                @click.prevent="detachAllDisCat(tarif)"
-                                class="rounded border border-gray-600 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                @click.prevent="detachAllDisCat(tarifType)"
+                                class="group rounded border border-gray-600 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                             >
                                 Délier
-                                <span class="text-red-500">{{
-                                    tarif.type
-                                }}</span>
+                                <span
+                                    class="text-red-500 group-hover:text-white"
+                                    >{{ tarifType.type }}</span
+                                >
                                 à toutes ses disciplines-categories?
                             </button>
+
+                            <div class="my-4">
+                                <button
+                                    v-if="!showAddAttributForm(tarifType)"
+                                    @click="toggleAddAttributForm(tarifType)"
+                                    class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                    type="button"
+                                >
+                                    <div>
+                                        Ajouter un attribut à toutes les
+                                        disciplines - catégories liées à
+                                        <span class="font-semibold">{{
+                                            tarifType.type
+                                        }}</span>
+                                    </div>
+                                </button>
+                                <form
+                                    v-if="showAddAttributForm(tarifType)"
+                                    class="ml-6 inline-flex flex-grow items-end justify-between text-center text-xs font-medium text-gray-600"
+                                    @submit.prevent="
+                                        addTarifAttribut(tarifType)
+                                    "
+                                >
+                                    <div class="flex flex-col items-start">
+                                        <label for="newAttribut"
+                                            >Ajouter un attribut à
+                                            <span class="font-semibold">{{
+                                                tarifType.type
+                                            }}</span
+                                            >:</label
+                                        >
+                                        <div class="mt-1 flex rounded-md">
+                                            <input
+                                                v-model="addAttributForm.nom"
+                                                type="text"
+                                                name="newAttribut"
+                                                id="newAttribut"
+                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                placeholder=""
+                                                autocomplete="none"
+                                            />
+                                        </div>
+                                        <div
+                                            v-if="errors.addAttributForm"
+                                            class="text-xs text-red-500"
+                                        >
+                                            {{ errors.addAttributForm.nom }}
+                                        </div>
+                                        <Listbox
+                                            class="w-full flex-grow"
+                                            v-model="addAttributForm.type_champ"
+                                        >
+                                            <div class="relative mt-1">
+                                                <ListboxButton
+                                                    class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                                                >
+                                                    <span
+                                                        class="block truncate"
+                                                        >{{
+                                                            addAttributForm
+                                                                .type_champ.type
+                                                        }}</span
+                                                    >
+                                                    <span
+                                                        class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+                                                    >
+                                                        <ChevronUpDownIcon
+                                                            class="h-5 w-5 text-gray-400"
+                                                            aria-hidden="true"
+                                                        />
+                                                    </span>
+                                                </ListboxButton>
+
+                                                <transition
+                                                    leave-active-class="transition duration-100 ease-in"
+                                                    leave-from-class="opacity-100"
+                                                    leave-to-class="opacity-0"
+                                                >
+                                                    <ListboxOptions
+                                                        class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-left text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                                                    >
+                                                        <ListboxOption
+                                                            v-slot="{
+                                                                active,
+                                                                selected,
+                                                            }"
+                                                            v-for="(
+                                                                type_champ,
+                                                                index
+                                                            ) in type_champs"
+                                                            :key="index"
+                                                            :value="type_champ"
+                                                            as="template"
+                                                        >
+                                                            <li
+                                                                :class="[
+                                                                    active
+                                                                        ? 'bg-amber-100 text-amber-900'
+                                                                        : 'text-gray-700',
+                                                                    'relative cursor-default select-none py-2 pl-10 pr-4',
+                                                                ]"
+                                                            >
+                                                                <span
+                                                                    :class="[
+                                                                        selected
+                                                                            ? 'font-medium'
+                                                                            : 'font-normal',
+                                                                        'block truncate',
+                                                                    ]"
+                                                                    >{{
+                                                                        type_champ.type
+                                                                    }}</span
+                                                                >
+                                                                <span
+                                                                    v-if="
+                                                                        selected
+                                                                    "
+                                                                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
+                                                                >
+                                                                    <CheckCircleIcon
+                                                                        class="h-5 w-5"
+                                                                        aria-hidden="true"
+                                                                    />
+                                                                </span>
+                                                            </li>
+                                                        </ListboxOption>
+                                                    </ListboxOptions>
+                                                </transition>
+                                            </div>
+                                        </Listbox>
+                                    </div>
+                                    <button
+                                        type="submit"
+                                        class="ml-4 inline-flex items-end"
+                                    >
+                                        <PlusCircleIcon
+                                            class="h-6 w-6 text-indigo-500 hover:text-indigo-700"
+                                        />
+                                    </button>
+                                    <button
+                                        @click="
+                                            toggleAddAttributForm(tarifType)
+                                        "
+                                        type="button"
+                                        class="ml-4 inline-flex items-center"
+                                    >
+                                        <XCircleIcon
+                                            class="h-6 w-6 text-red-500 hover:text-red-700"
+                                        />
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

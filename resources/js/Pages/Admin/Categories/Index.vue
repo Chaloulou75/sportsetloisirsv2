@@ -141,7 +141,7 @@ onMounted(() => {
             >
                 <div class="w-full md:w-2/3">
                     <h3
-                        class="mb-4 text-center text-lg text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
+                        class="mb-4 w-full text-center text-lg font-bold text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
                     >
                         Gérer les catégories existantes:
                     </h3>
@@ -210,7 +210,7 @@ onMounted(() => {
                     class="flex w-full flex-col items-center justify-center md:w-1/3"
                 >
                     <h3
-                        class="mb-4 text-center text-lg text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
+                        class="mb-4 w-full text-center text-lg font-bold text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
                     >
                         Créer une catégorie:
                     </h3>
@@ -265,7 +265,7 @@ onMounted(() => {
                 </div>
             </div>
             <div
-                class="flex w-full flex-col items-start justify-center space-y-4 py-4"
+                class="flex w-full flex-col items-center justify-center space-y-4 py-4"
             >
                 <h3
                     class="mb-4 w-full text-center text-lg font-bold text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
@@ -274,7 +274,7 @@ onMounted(() => {
                 </h3>
 
                 <div
-                    class="flex h-full flex-col items-stretch gap-8 text-base text-slate-600 md:flex-row md:flex-wrap"
+                    class="flex h-full flex-col items-stretch justify-around gap-8 text-base text-slate-600 md:flex-row md:flex-wrap"
                 >
                     <div
                         class="flex max-w-sm flex-col items-stretch justify-between border border-gray-100 bg-gray-50 px-4 py-3 shadow"
@@ -307,23 +307,25 @@ onMounted(() => {
                             <button
                                 type="button"
                                 @click.prevent="attachAllDisciplines(categorie)"
-                                class="w-full rounded border border-gray-600 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                class="group w-full rounded border border-gray-600 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                             >
                                 Lier
-                                <span class="text-red-500">{{
-                                    categorie.nom
-                                }}</span>
+                                <span
+                                    class="text-red-500 group-hover:text-white"
+                                    >{{ categorie.nom }}</span
+                                >
                                 à toutes les disciplines existantes?
                             </button>
                             <button
                                 type="button"
                                 @click.prevent="detachAllDisciplines(categorie)"
-                                class="w-full rounded border border-gray-600 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                class="group w-full rounded border border-gray-600 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                             >
                                 Délier
-                                <span class="text-red-500">{{
-                                    categorie.nom
-                                }}</span>
+                                <span
+                                    class="text-red-500 group-hover:text-white"
+                                    >{{ categorie.nom }}</span
+                                >
                                 à toutes ses disciplines?
                             </button>
                         </div>

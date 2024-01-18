@@ -189,23 +189,6 @@ const formatCityName = (ville) => {
                                     </span></span
                                 >
                             </p>
-                            <p
-                                v-if="produit.tarifs.length > 0"
-                                class="mt-2 text-sm"
-                            >
-                                Tarifs:
-                            </p>
-                            <p
-                                class="text-sm"
-                                v-for="tarif in produit.tarifs"
-                                :key="tarif.id"
-                            >
-                                <span class=""> {{ tarif.titre }}: </span>
-                                <span class="font-semibold">
-                                    {{ tarif.amount }} € /
-                                    {{ tarif.tarif_type.type }}</span
-                                >
-                            </p>
                         </div>
                     </div>
                 </dl>

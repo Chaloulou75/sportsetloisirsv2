@@ -42,7 +42,7 @@ class AdminCategorieDisciplineController extends Controller
         foreach ($disciplineIds as $disciplineId) {
             if (!$categorie->disciplines->contains($disciplineId)) {
                 $timestamp = now()->timestamp;
-                $randomComponent = mt_rand(1000, 99999);
+                $randomComponent = mt_rand(0, 99999);
                 $slug = Str::slug($categorie->nom . '-' . $timestamp . '-' . $randomComponent);
 
                 $categorie->disciplines()->attach($disciplineId, [
