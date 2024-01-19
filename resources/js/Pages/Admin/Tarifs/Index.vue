@@ -471,10 +471,11 @@ onMounted(() => {
                             </h3>
                         </div>
                         <button
+                            v-if="tarifType.categories.length > 0"
                             @click="toggleShowCategories(tarifType)"
                             class="my-3 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
                         >
-                            Voir toutes les disciplines-categories
+                            Montrer / fermer toutes les disciplines-categories
                         </button>
                         <TransitionRoot
                             :show="showCategories[tarifType.id]"
@@ -485,7 +486,10 @@ onMounted(() => {
                             leave-from="opacity-100"
                             leave-to="opacity-0"
                         >
-                            <div class="my-4">
+                            <div
+                                v-if="tarifType.categories.length > 0"
+                                class="my-4"
+                            >
                                 <ul class="ml-4 list-inside list-disc">
                                     <li
                                         v-for="disCat in tarifType.categories"
@@ -587,7 +591,7 @@ onMounted(() => {
                                                         <div>
                                                             Dupliquer
                                                             <span
-                                                                class="text-red-500 group-hover:text-white"
+                                                                class="font-semibold text-red-500 group-hover:text-white"
                                                                 >{{
                                                                     attribut.nom
                                                                 }}</span
@@ -611,7 +615,7 @@ onMounted(() => {
                             <button
                                 type="button"
                                 @click.prevent="attachAllDisCat(tarifType)"
-                                class="group inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                class="group inline-flex w-full items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                             >
                                 <div>
                                     Lier
@@ -626,7 +630,7 @@ onMounted(() => {
                             <button
                                 type="button"
                                 @click.prevent="detachAllDisCat(tarifType)"
-                                class="group inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                class="group inline-flex w-full items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                             >
                                 <div>
                                     Délier

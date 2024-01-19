@@ -22,7 +22,11 @@ class CategoryController extends Controller
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 
-        $categories = Categorie::with('disciplines')->select(['id', 'nom'])->get();
+        $categories = Categorie::with(['disciplines' => function ($query) {
+            $query->orderBy('name');
+        }])
+                ->select(['id', 'nom'])
+                ->get();
 
         return Inertia::render('Admin/Categories/Index', [
             'user_can' => [

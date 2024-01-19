@@ -274,10 +274,10 @@ onMounted(() => {
                 </h3>
 
                 <div
-                    class="flex h-full flex-col items-stretch justify-around gap-8 text-base text-slate-600 md:flex-row md:flex-wrap"
+                    class="flex h-full flex-col items-start justify-around gap-8 text-base text-slate-600 md:flex-row md:flex-wrap"
                 >
                     <div
-                        class="flex max-w-sm flex-col items-stretch justify-between border border-gray-100 bg-gray-50 px-4 py-3 shadow"
+                        class="flex max-w-md flex-col items-stretch justify-between border border-gray-100 bg-gray-50 px-4 py-3 shadow"
                         v-for="categorie in categories"
                         :key="categorie.id"
                     >
@@ -307,12 +307,12 @@ onMounted(() => {
                             <button
                                 type="button"
                                 @click.prevent="attachAllDisciplines(categorie)"
-                                class="group inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                class="group inline-flex w-full items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                             >
                                 <div>
                                     Lier
                                     <span
-                                        class="text-red-500 group-hover:text-white"
+                                        class="font-semibold text-red-500 group-hover:text-white"
                                         >{{ categorie.nom }}</span
                                     >
                                     à toutes les disciplines existantes?
@@ -321,12 +321,12 @@ onMounted(() => {
                             <button
                                 type="button"
                                 @click.prevent="detachAllDisciplines(categorie)"
-                                class="group inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                class="group inline-flex w-full items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                             >
                                 <div>
                                     Délier
                                     <span
-                                        class="text-red-500 group-hover:text-white"
+                                        class="font-semibold text-red-500 group-hover:text-white"
                                         >{{ categorie.nom }}</span
                                     >
                                     à toutes ses disciplines?
