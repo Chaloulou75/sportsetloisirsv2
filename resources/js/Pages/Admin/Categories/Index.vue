@@ -307,26 +307,30 @@ onMounted(() => {
                             <button
                                 type="button"
                                 @click.prevent="attachAllDisciplines(categorie)"
-                                class="group w-full rounded border border-gray-600 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                class="group inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                             >
-                                Lier
-                                <span
-                                    class="text-red-500 group-hover:text-white"
-                                    >{{ categorie.nom }}</span
-                                >
-                                à toutes les disciplines existantes?
+                                <div>
+                                    Lier
+                                    <span
+                                        class="text-red-500 group-hover:text-white"
+                                        >{{ categorie.nom }}</span
+                                    >
+                                    à toutes les disciplines existantes?
+                                </div>
                             </button>
                             <button
                                 type="button"
                                 @click.prevent="detachAllDisciplines(categorie)"
-                                class="group w-full rounded border border-gray-600 bg-white px-4 py-3 text-center text-sm font-medium text-gray-700 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                class="group inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                             >
-                                Délier
-                                <span
-                                    class="text-red-500 group-hover:text-white"
-                                    >{{ categorie.nom }}</span
-                                >
-                                à toutes ses disciplines?
+                                <div>
+                                    Délier
+                                    <span
+                                        class="text-red-500 group-hover:text-white"
+                                        >{{ categorie.nom }}</span
+                                    >
+                                    à toutes ses disciplines?
+                                </div>
                             </button>
                         </div>
                     </div>

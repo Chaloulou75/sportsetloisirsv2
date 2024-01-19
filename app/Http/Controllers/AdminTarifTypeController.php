@@ -27,7 +27,9 @@ class AdminTarifTypeController extends Controller
                     $query->orderBy('name');
                 },
                 'categories.tarif_attributs',
+                'categories.tarif_attributs.valeurs',
                 'categories.tarif_attributs.sous_attributs',
+                'categories.tarif_attributs.sous_attributs.valeurs',
             ])
             ->select(['id', 'type', 'slug'])
             ->get();

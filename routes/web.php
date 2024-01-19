@@ -219,7 +219,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/tarifsTypes/{tarifType}/discats', [AdminTarifTypeDisCatController::class, 'store'])->name('admin.tariftypes.discats.store');
         Route::delete('/tarifsTypes/{tarifType}/discats', [AdminTarifTypeDisCatController::class, 'destroy'])->name('admin.tariftypes.discats.destroy');
 
-        Route::post('/tarifsType/{tarifType}/discat/attributs', [AdminTarifTypeDisCatAttributController::class, 'store'])->name('admin.tariftypes.discats.attributs.store');
+        Route::post('/tarifsType/{tarifType}/discats/attributs/{attribut}', [AdminTarifTypeDisCatAttributController::class, 'store'])->name('admin.tariftypes.discats.attributs.store');
 
 
         Route::post('/discipline-similaire/{discipline}', [DisciplineSimilaireController::class, 'store'])->name('discipline-similaire.store');
