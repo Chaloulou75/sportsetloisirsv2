@@ -38,6 +38,7 @@ class CategoryDisciplineCritereController extends Controller
             "type_champ_form" => $request->type_champ['type'],
             "visible_back" => true,
             "visible_front" => true,
+            "visible_block" => true,
             "indexable" => false,
         ]);
 
@@ -111,6 +112,7 @@ class CategoryDisciplineCritereController extends Controller
         $request->validate([
             'visible_front' => 'required|boolean:0,1,true,false',
             'visible_back' => 'required|boolean:0,1,true,false',
+            'visible_block' => 'required|boolean:0,1,true,false',
             'ordre' => 'nullable|numeric',
             'indexable' => 'nullable|boolean:0,1,true,false',
         ]);
@@ -120,6 +122,7 @@ class CategoryDisciplineCritereController extends Controller
         $discCatCritere->update([
             'visible_front' => $request->visible_front,
             'visible_back' => $request->visible_back,
+            'visible_block' => $request->visible_block,
             'ordre' => $request->ordre,
             'indexable' => $request->indexable,
         ]);

@@ -106,8 +106,10 @@ class DisciplineController extends Controller
             })
             ->paginate(12);
 
-        $produits = $discipline->structureProduits()->withRelations()
-        ->paginate(12);
+        // filtrer par "visible_block true
+        $produits = $discipline->structureProduits()
+                    ->withRelations()
+                    ->paginate(12);
 
         $discipline->timestamps = false;
         $discipline->increment('view_count');

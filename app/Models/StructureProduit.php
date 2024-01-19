@@ -120,7 +120,7 @@ class StructureProduit extends Model
             'activite:id,titre',
             'structure:id,name,slug',
             'criteres:id,activite_id,produit_id,critere_id,valeur_id,valeur',
-            'criteres.critere:id,nom',
+            'criteres.critere:id,nom,visible_block',
             'criteres.critere_valeur.sous_criteres',
             'criteres.critere_valeur.sous_criteres.prodSousCritValeurs.sous_critere_valeur',
             'criteres.sous_criteres',

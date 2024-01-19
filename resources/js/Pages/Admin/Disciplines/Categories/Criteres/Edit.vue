@@ -46,6 +46,7 @@ const initializeValeurForm = () => {
             critereVisibilityForm.value[critere.id] = useForm({
                 visible_front: ref(!!critere.visible_front),
                 visible_back: ref(!!critere.visible_back),
+                visible_block: ref(!!critere.visible_block),
                 ordre: ref(critere.ordre),
                 indexable: ref(!!critere.indexable),
                 remember: true,
@@ -128,6 +129,8 @@ const updateCritereVisibility = (critere) => {
                 !!critereVisibilityForm.value[critere.id].visible_front,
             visible_back:
                 !!critereVisibilityForm.value[critere.id].visible_back,
+            visible_block:
+                !!critereVisibilityForm.value[critere.id].visible_block,
             ordre: critereVisibilityForm.value[critere.id].ordre,
             indexable: !!critereVisibilityForm.value[critere.id].indexable,
         },
@@ -677,6 +680,22 @@ onMounted(() => {
                                     <span class="ml-2 text-sm text-gray-600"
                                         >Visible Back (Visible à l'ajout
                                         d'activité)</span
+                                    ></label
+                                >
+
+                                <label class="flex items-center">
+                                    <Checkbox
+                                        v-model:checked="
+                                            critereVisibilityForm[critere.id]
+                                                .visible_block
+                                        "
+                                        @change="
+                                            updateCritereVisibility(critere)
+                                        "
+                                    />
+                                    <span class="ml-2 text-sm text-gray-600"
+                                        >Visible Bloc (Visible pour bloc de
+                                        résultats)</span
                                     ></label
                                 >
 
