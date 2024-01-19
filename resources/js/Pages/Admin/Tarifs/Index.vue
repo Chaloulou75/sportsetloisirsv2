@@ -12,12 +12,7 @@ import {
     ChevronLeftIcon,
     CheckCircleIcon,
 } from "@heroicons/vue/24/outline";
-import {
-    Listbox,
-    ListboxButton,
-    ListboxOptions,
-    ListboxOption,
-} from "@headlessui/vue";
+import { TransitionRoot } from "@headlessui/vue";
 
 const props = defineProps({
     errors: Object,
@@ -84,6 +79,18 @@ const deleteTarif = (tarif) => {
             tarif: tarif,
         }
     );
+};
+
+const showCategories = ref({});
+
+props.tarifs.forEach((tarifType) => {
+    if (!showCategories.value[tarifType.id]) {
+        showCategories.value[tarifType.id] = ref(false);
+    }
+});
+
+const toggleShowCategories = (tarifType) => {
+    showCategories.value[tarifType.id] = !showCategories.value[tarifType.id];
 };
 
 const attachAllDisCat = (tarifType) => {
@@ -442,10 +449,10 @@ onMounted(() => {
                     >
                 </h3>
                 <div
-                    class="flex h-full flex-col items-stretch justify-around gap-8 text-base text-slate-600 md:flex-row md:flex-wrap"
+                    class="flex h-full flex-col items-start justify-around gap-8 text-base text-slate-600 md:flex-row md:flex-wrap"
                 >
                     <div
-                        class="flex max-w-sm flex-col items-stretch justify-between border border-gray-100 bg-gray-50 px-4 py-3 shadow"
+                        class="flex max-w-md flex-col items-center justify-between border border-gray-100 bg-gray-50 px-4 py-3 shadow"
                         v-for="tarifType in tarifs"
                         :key="tarifType.id"
                     >
@@ -463,115 +470,143 @@ onMounted(() => {
                                 suivantes:
                             </h3>
                         </div>
-                        <div class="my-4">
-                            <ul class="ml-4 list-inside list-disc">
-                                <li
-                                    v-for="disCat in tarifType.categories"
-                                    :key="disCat.id"
-                                >
-                                    <span class="text-base font-semibold"
-                                        >{{ disCat.categorie.discipline.name }}
-                                        /
-                                        {{
-                                            disCat.categorie
-                                                .nom_categorie_client
-                                        }}
-                                    </span>
-                                    <span
-                                        class="text-xs"
-                                        v-if="disCat.tarif_attributs.length > 0"
-                                        >, avec pour attributs:</span
+                        <button
+                            @click="toggleShowCategories(tarifType)"
+                            class="my-3 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
+                        >
+                            Voir toutes les disciplines-categories
+                        </button>
+                        <TransitionRoot
+                            :show="showCategories[tarifType.id]"
+                            enter="transition-opacity duration-75"
+                            enter-from="opacity-0"
+                            enter-to="opacity-100"
+                            leave="transition-opacity duration-150"
+                            leave-from="opacity-100"
+                            leave-to="opacity-0"
+                        >
+                            <div class="my-4">
+                                <ul class="ml-4 list-inside list-disc">
+                                    <li
+                                        v-for="disCat in tarifType.categories"
+                                        :key="disCat.id"
                                     >
-                                    <ul class="ml-4 list-inside list-disc">
-                                        <li
-                                            v-for="attribut in disCat.tarif_attributs"
-                                            :key="attribut.id"
+                                        <span class="text-base font-semibold"
+                                            >{{
+                                                disCat.categorie.discipline.name
+                                            }}
+                                            /
+                                            {{
+                                                disCat.categorie
+                                                    .nom_categorie_client
+                                            }}
+                                        </span>
+                                        <span
+                                            class="text-xs"
+                                            v-if="
+                                                disCat.tarif_attributs.length >
+                                                0
+                                            "
+                                            >, avec pour attributs:</span
                                         >
-                                            <span class="font-semibold italic"
-                                                >{{ attribut.nom }} ({{
-                                                    attribut.type_champ_form
-                                                }})
-                                            </span>
-                                            <ul
-                                                class="ml-4 list-inside list-disc"
-                                                v-if="
-                                                    attribut.valeurs.length > 0
-                                                "
+                                        <ul class="ml-4 list-inside list-disc">
+                                            <li
+                                                v-for="attribut in disCat.tarif_attributs"
+                                                :key="attribut.id"
                                             >
-                                                <li
-                                                    class="ml-4 text-sm"
-                                                    v-for="valeur in attribut.valeurs"
-                                                    :key="valeur.id"
-                                                >
-                                                    {{ valeur.valeur }},
-                                                </li>
-                                            </ul>
-                                            <span
-                                                class="text-xs"
-                                                v-if="
-                                                    attribut.sous_attributs
-                                                        .length > 0
-                                                "
-                                            >
-                                                avec pour sous attributs:</span
-                                            >
-                                            <ul
-                                                class="ml-4 list-inside list-disc text-sm"
-                                            >
-                                                <li
-                                                    v-for="ssAttr in attribut.sous_attributs"
-                                                    :key="ssAttr.id"
-                                                >
-                                                    {{ ssAttr.nom }} ({{
-                                                        ssAttr.type_champ_form
+                                                <span
+                                                    class="font-semibold italic"
+                                                    >{{ attribut.nom }} ({{
+                                                        attribut.type_champ_form
                                                     }})
-                                                    <ul
-                                                        v-if="
-                                                            ssAttr.valeurs
-                                                                .length > 0
-                                                        "
-                                                        class="ml-4 list-inside list-disc text-xs"
-                                                    >
-                                                        <li
-                                                            v-for="valeur in ssAttr.valeurs"
-                                                            :key="valeur.id"
-                                                        >
-                                                            {{ valeur.valeur }}
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                            <div class="my-2">
-                                                <button
-                                                    type="button"
-                                                    @click.prevent="
-                                                        duplicateAttribut(
-                                                            tarifType,
-                                                            attribut
-                                                        )
+                                                </span>
+                                                <ul
+                                                    class="ml-4 list-inside list-disc"
+                                                    v-if="
+                                                        attribut.valeurs
+                                                            .length > 0
                                                     "
-                                                    class="group inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                                                 >
-                                                    <div>
-                                                        Dupliquer
-                                                        <span
-                                                            class="text-red-500 group-hover:text-white"
-                                                            >{{
-                                                                attribut.nom
-                                                            }}</span
+                                                    <li
+                                                        class="ml-4 text-sm"
+                                                        v-for="valeur in attribut.valeurs"
+                                                        :key="valeur.id"
+                                                    >
+                                                        {{ valeur.valeur }},
+                                                    </li>
+                                                </ul>
+                                                <span
+                                                    class="text-xs"
+                                                    v-if="
+                                                        attribut.sous_attributs
+                                                            .length > 0
+                                                    "
+                                                >
+                                                    avec pour sous
+                                                    attributs:</span
+                                                >
+                                                <ul
+                                                    class="ml-4 list-inside list-disc text-sm"
+                                                >
+                                                    <li
+                                                        v-for="ssAttr in attribut.sous_attributs"
+                                                        :key="ssAttr.id"
+                                                    >
+                                                        {{ ssAttr.nom }} ({{
+                                                            ssAttr.type_champ_form
+                                                        }})
+                                                        <ul
+                                                            v-if="
+                                                                ssAttr.valeurs
+                                                                    .length > 0
+                                                            "
+                                                            class="ml-4 list-inside list-disc text-xs"
                                                         >
-                                                        à toutes les
-                                                        disciplines-categories
-                                                        liées à
-                                                        {{ tarifType.type }}?
-                                                    </div>
-                                                </button>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
+                                                            <li
+                                                                v-for="valeur in ssAttr.valeurs"
+                                                                :key="valeur.id"
+                                                            >
+                                                                {{
+                                                                    valeur.valeur
+                                                                }}
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                                <div class="my-2">
+                                                    <button
+                                                        type="button"
+                                                        @click.prevent="
+                                                            duplicateAttribut(
+                                                                tarifType,
+                                                                attribut
+                                                            )
+                                                        "
+                                                        class="group inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                                    >
+                                                        <div>
+                                                            Dupliquer
+                                                            <span
+                                                                class="text-red-500 group-hover:text-white"
+                                                                >{{
+                                                                    attribut.nom
+                                                                }}</span
+                                                            >
+                                                            à toutes les
+                                                            disciplines-categories
+                                                            liées à
+                                                            {{
+                                                                tarifType.type
+                                                            }}?
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </TransitionRoot>
                         <div class="mt-auto space-y-3">
                             <button
                                 type="button"
