@@ -1,8 +1,14 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
+import { HSCopyMarkup as HSStaticMethods } from "preline";
 import { Link } from "@inertiajs/vue3";
+import { MapPinIcon } from "@heroicons/vue/24/outline";
+
 const props = defineProps({
     familles: Object,
+    currentDiscipline: Object,
+    currentCity: Object,
+    currentCategory: Object,
 });
 
 const hoveredFamille = ref(null);
@@ -12,18 +18,26 @@ const hoveredFamilleDisciplines = computed(() => {
     }
     return [];
 });
+
+const formatCityName = (ville) => {
+    return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
+};
+
+onMounted(() => {
+    window.HSStaticMethods.autoInit();
+});
 </script>
 <template>
     <header
         @mouseleave="hoveredFamille = null"
-        class="z-50 flex w-full flex-wrap bg-white py-3 text-sm md:flex-nowrap md:justify-start md:py-0 dark:bg-gray-800"
+        class="z-50 flex w-full flex-wrap bg-slate-300/30 py-3 text-sm bg-blend-soft-light md:flex-nowrap md:justify-start md:py-0 dark:bg-gray-800/20"
     >
         <nav
             class="mx-auto w-full max-w-[85rem] px-4 md:px-6 lg:px-8"
             aria-label="Global"
         >
-            <div class="relative md:flex md:items-center md:justify-center">
-                <div class="flex items-center justify-end">
+            <div class="relative md:flex md:items-center md:justify-between">
+                <div class="flex items-center justify-end md:hidden">
                     <div class="md:hidden">
                         <button
                             type="button"
@@ -78,14 +92,107 @@ const hoveredFamilleDisciplines = computed(() => {
                             class="mt-5 flex flex-col gap-x-0 divide-y divide-dashed divide-gray-200 md:mt-0 md:flex-row md:items-center md:justify-center md:gap-x-7 md:divide-y-0 md:divide-solid md:ps-7 dark:divide-gray-700"
                         >
                             <div
-                                v-for="famille in familles"
-                                :key="famille.id"
+                                v-if="currentCity"
                                 class="hs-dropdown py-3 [--adaptive:none] [--strategy:static] md:py-4 md:[--strategy:absolute] md:[--trigger:hover]"
                             >
                                 <button
-                                    @mouseenter="hoveredFamille = famille"
                                     type="button"
-                                    class="flex w-full items-center font-medium text-gray-500 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                                    :class="{
+                                        'text-gray-100 hover:text-white':
+                                            currentDiscipline?.theme === 'dark',
+                                        'text-gray-800 hover:text-black':
+                                            currentDiscipline?.theme ===
+                                                'light' ||
+                                            !props.currentDiscipline,
+                                    }"
+                                    class="group flex w-full items-center font-semibold"
+                                >
+                                    <MapPinIcon
+                                        class="ms-2 h-4 w-4 flex-shrink-0"
+                                        :class="{
+                                            'text-gray-100 group-hover:text-white':
+                                                currentDiscipline?.theme ===
+                                                'dark',
+                                            'text-gray-800 group-hover:text-black':
+                                                currentDiscipline?.theme ===
+                                                    'light' ||
+                                                !currentDiscipline,
+                                        }"
+                                    />
+                                    {{ formatCityName(currentCity.ville) }}
+                                    <svg
+                                        class="ms-2 h-4 w-4 flex-shrink-0"
+                                        :class="{
+                                            'text-gray-100 group-hover:text-white':
+                                                currentDiscipline?.theme ===
+                                                'dark',
+                                            'text-gray-800 group-hover:text-black':
+                                                currentDiscipline?.theme ===
+                                                    'light' ||
+                                                !currentDiscipline,
+                                        }"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        <path d="m6 9 6 6 6-6" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div
+                                v-if="currentDiscipline"
+                                class="hs-dropdown py-3 [--adaptive:none] [--strategy:static] md:py-4 md:[--strategy:absolute] md:[--trigger:hover]"
+                            >
+                                <button
+                                    type="button"
+                                    :class="{
+                                        'text-gray-100 group-hover:text-white':
+                                            currentDiscipline?.theme === 'dark',
+                                        'text-gray-800 group-hover:text-black':
+                                            currentDiscipline?.theme ===
+                                                'light' || !currentDiscipline,
+                                    }"
+                                    class="flex w-full items-center font-semibold"
+                                >
+                                    {{ currentDiscipline.name }}
+                                    <svg
+                                        class="ms-2 h-4 w-4 flex-shrink-0"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        <path d="m6 9 6 6 6-6" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div
+                                v-for="famille in familles"
+                                :key="famille.id"
+                                @mouseenter="hoveredFamille = famille"
+                                class="hs-dropdown py-3 [--adaptive:none] [--strategy:static] md:py-4 md:[--strategy:absolute] md:[--trigger:hover]"
+                            >
+                                <button
+                                    type="button"
+                                    :class="{
+                                        'text-gray-100 group-hover:text-white':
+                                            currentDiscipline?.theme === 'dark',
+                                        'text-gray-800 group-hover:text-black':
+                                            currentDiscipline?.theme ===
+                                                'light' || !currentDiscipline,
+                                    }"
+                                    class="flex w-full items-center font-medium"
                                 >
                                     {{ famille.name }}
                                     <svg
@@ -147,25 +254,24 @@ const hoveredFamilleDisciplines = computed(() => {
                                                 </svg>
                                                 <div class="grow">
                                                     <p
-                                                        class="font-medium text-gray-800 dark:text-gray-200"
+                                                        class="font-medium text-gray-800 group-hover:text-gray-900 dark:text-gray-200"
                                                     >
                                                         {{ discipline.name }}
                                                     </p>
                                                     <p
                                                         class="text-sm text-gray-500 group-hover:text-gray-800 dark:group-hover:text-gray-200"
                                                     >
-                                                        Explore advice and
-                                                        explanations for all of
-                                                        Preline's features.
+                                                        Voir les activités liées
+                                                        au {{ discipline.name }}
                                                     </p>
                                                 </div>
                                             </Link>
                                         </div>
 
                                         <div class="mx-1 flex flex-col md:mx-0">
-                                            <a
+                                            <Link
+                                                :href="route('posts.index')"
                                                 class="group flex gap-x-5 rounded-lg p-4 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-900 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                                                href="#"
                                             >
                                                 <svg
                                                     class="mt-1 h-5 w-5 flex-shrink-0"
@@ -179,30 +285,27 @@ const hoveredFamilleDisciplines = computed(() => {
                                                     stroke-linecap="round"
                                                     stroke-linejoin="round"
                                                 >
-                                                    <circle
-                                                        cx="12"
-                                                        cy="12"
-                                                        r="10"
+                                                    <path
+                                                        d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
                                                     />
                                                     <path
-                                                        d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
+                                                        d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
                                                     />
-                                                    <path d="M12 17h.01" />
                                                 </svg>
                                                 <div class="grow">
                                                     <p
                                                         class="font-medium text-gray-800 dark:text-gray-200"
                                                     >
-                                                        Help Center
+                                                        Blog
                                                     </p>
                                                     <p
                                                         class="text-sm text-gray-500 group-hover:text-gray-800 dark:group-hover:text-gray-200"
                                                     >
-                                                        Learn how to install,
-                                                        set up, and use Preline.
+                                                        Découvrir les derniers
+                                                        articles en ligne.
                                                     </p>
                                                 </div>
-                                            </a>
+                                            </Link>
 
                                             <a
                                                 class="group flex gap-x-5 rounded-lg p-4 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-900 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
@@ -301,5 +404,4 @@ const hoveredFamilleDisciplines = computed(() => {
             </div>
         </nav>
     </header>
-    <!-- ========== END HEADER ========== -->
 </template>

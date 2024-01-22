@@ -33,7 +33,7 @@ class DepartementDisciplineStructuretypeStructureController extends Controller
                             ->first();
 
         $requestDiscipline = ListDiscipline::with('structureProduits')
-        ->where('slug', $discipline)->select(['id', 'name', 'slug', 'view_count'])->first();
+        ->where('slug', $discipline)->select(['id', 'name', 'slug', 'view_count', 'theme'])->first();
 
         $disciplinesSimilaires = $requestDiscipline->disciplinesSimilaires()
             ->select('discipline_similaire_id', 'name', 'slug', 'famille')

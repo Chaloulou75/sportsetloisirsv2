@@ -1,9 +1,8 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { ref, computed, watchEffect } from "vue";
+import { ref, watchEffect } from "vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
-import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import TextInput from "@/Components/Forms/TextInput.vue";
@@ -126,9 +125,12 @@ const addArticle = () => {
         :description="'Creation d\'un article de blog sur www.sports-et-loisirs.fr.'"
     />
 
-    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
+    <ResultLayout
+        :familles="familles"
+        :list-disciplines="listDisciplines"
+        :all-cities="allCities"
+    >
         <template #header>
-            <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
                 <template v-slot:title> Ecrire un article </template>
                 <template v-slot:ariane>

@@ -44,7 +44,7 @@ class CityDisciplineCategorieActiviteController extends Controller
         $cityAroundIds = $citiesAround->pluck('id');
 
         $requestDiscipline = ListDiscipline::with('structureProduits')->where('slug', $discipline)
-                            ->select(['id', 'name', 'slug', 'view_count'])
+                            ->select(['id', 'name', 'slug', 'view_count', 'theme'])
                             ->first();
 
         $disciplinesSimilaires = $requestDiscipline->disciplinesSimilaires()

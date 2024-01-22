@@ -2,7 +2,6 @@
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { computed, defineAsyncComponent } from "vue";
 import { Head, Link, usePage, router } from "@inertiajs/vue3";
-import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import {
     ChevronLeftIcon,
@@ -66,9 +65,12 @@ const incrementPostLike = () => {
 <template>
     <Head :title="post.title" :description="post.excerpt" />
 
-    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
+    <ResultLayout
+        :familles="familles"
+        :list-disciplines="listDisciplines"
+        :all-cities="allCities"
+    >
         <template #header>
-            <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
                 <template v-slot:title>
                     {{ post.title }}

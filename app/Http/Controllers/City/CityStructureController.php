@@ -73,7 +73,7 @@ class CityStructureController extends Controller
 
         if($discipline !== null) {
             $requestDiscipline = ListDiscipline::where('slug', $discipline)
-                                        ->select(['id', 'name', 'slug', 'view_count'])
+                                        ->select(['id', 'name', 'slug', 'view_count', 'theme'])
                                         ->first();
 
             $disciplinesSimilaires = $requestDiscipline->disciplinesSimilaires()->select(['famille', 'name', 'slug'])->whereHas('structures')->get();

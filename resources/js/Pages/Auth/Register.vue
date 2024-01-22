@@ -4,7 +4,6 @@ import InputError from "@/Components/Forms/InputError.vue";
 import InputLabel from "@/Components/Forms/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
-import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { CheckIcon } from "@heroicons/vue/24/solid";
@@ -36,9 +35,12 @@ const submit = () => {
         title="Inscription"
         description="Sports-et-loisirs.fr recense les structures proposant des activités de sport ou de loisirs en France - plus de 300 disciplines et 32000 clubs référencés."
     />
-    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
+    <ResultLayout
+        :familles="familles"
+        :list-disciplines="listDisciplines"
+        :all-cities="allCities"
+    >
         <template #header>
-            <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
                 <template v-slot:title>
                     <UserCircleIcon

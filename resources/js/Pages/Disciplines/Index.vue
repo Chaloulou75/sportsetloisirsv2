@@ -5,7 +5,6 @@ import { ref, watch, defineAsyncComponent } from "vue";
 import { debounce } from "lodash";
 import TextInput from "@/Components/Forms/TextInput.vue";
 import DisciplineSmallCard from "@/Components/Disciplines/DisciplineSmallCard.vue";
-import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import { HomeIcon } from "@heroicons/vue/24/outline";
 
@@ -52,9 +51,12 @@ watch(
         "
     />
 
-    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
+    <ResultLayout
+        :familles="familles"
+        :list-disciplines="listDisciplines"
+        :all-cities="allCities"
+    >
         <template #header>
-            <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
                 <template v-slot:title> Les disciplines </template>
                 <template v-slot:ariane>

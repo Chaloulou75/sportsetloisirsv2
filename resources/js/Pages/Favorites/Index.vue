@@ -23,9 +23,12 @@ const props = defineProps({
         :description="'Vos structures et activités favorites.'"
     />
 
-    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
+    <ResultLayout
+        :familles="familles"
+        :list-disciplines="listDisciplines"
+        :all-cities="allCities"
+    >
         <template #header>
-            <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
                 <template v-slot:title> Vos Favoris </template>
                 <template v-slot:ariane>

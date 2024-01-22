@@ -2,7 +2,6 @@
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { ref, defineAsyncComponent } from "vue";
-import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import DisciplineSmallCard from "@/Components/Disciplines/DisciplineSmallCard.vue";
 import { TransitionRoot } from "@headlessui/vue";
@@ -100,9 +99,12 @@ const onfilteredStructuresUpdate = (filteredStr) => {
         "
     />
 
-    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
+    <ResultLayout
+        :familles="familles"
+        :list-disciplines="listDisciplines"
+        :all-cities="allCities"
+    >
         <template #header>
-            <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
                 <template v-slot:title>
                     {{ departement.departement }}

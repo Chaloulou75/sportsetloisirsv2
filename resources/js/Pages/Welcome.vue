@@ -2,7 +2,6 @@
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { ref, defineAsyncComponent } from "vue";
 import { router, Head, Link } from "@inertiajs/vue3";
-import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import AutocompleteDiscipline from "@/Components/Home/AutocompleteDiscipline.vue";
 import AutocompleteCity from "@/Components/Home/AutocompleteCity.vue";
@@ -75,9 +74,12 @@ const formatCityName = (ville) => {
         description="Sports-et-loisirs.fr recense les structures proposant des activités de sport ou de loisirs en France - plus de 300 disciplines et 32000 structures référencées."
     />
 
-    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
+    <ResultLayout
+        :list-disciplines="listDisciplines"
+        :all-cities="allCities"
+        :familles="familles"
+    >
         <template #header>
-            <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
                 <template v-slot:title> Sports et loisirs </template>
             </ResultsHeader>

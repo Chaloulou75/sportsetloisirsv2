@@ -6,7 +6,6 @@ import { debounce } from "lodash";
 import TextInput from "@/Components/Forms/TextInput.vue";
 import LeafletMapMultiple from "@/Components/Maps/LeafletMapMultiple.vue";
 import StructureCard from "@/Components/Structures/StructureCard.vue";
-import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import { HomeIcon, ListBulletIcon, MapIcon } from "@heroicons/vue/24/outline";
 import { useElementVisibility } from "@vueuse/core";
@@ -76,9 +75,12 @@ watch(
         "
     />
 
-    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
+    <ResultLayout
+        :familles="familles"
+        :list-disciplines="listDisciplines"
+        :all-cities="allCities"
+    >
         <template #header>
-            <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
                 <template v-slot:title> Structures </template>
                 <template v-slot:ariane>

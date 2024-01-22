@@ -26,7 +26,7 @@ class DepartementDisciplineStructuretypeController extends Controller
         $allCities = City::withProducts()->get();
 
         $discipline = ListDiscipline::where('slug', $discipline)
-                            ->select(['id', 'name', 'slug', 'view_count'])
+                            ->select(['id', 'name', 'slug', 'view_count', 'theme'])
                             ->first();
 
         $disciplinesSimilaires = $discipline->disciplinesSimilaires()

@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from "vue";
 import { classMapping } from "@/Utils/classMapping.js";
+
 const props = defineProps({
     discipline: Object,
 });
@@ -23,19 +24,28 @@ const headerClass = computed(() => {
 <template>
     <div
         class="mx-auto bg-slate-100/20 bg-cover bg-center bg-no-repeat px-10 py-2 bg-blend-soft-light md:py-6"
-        :class="headerClass"
     >
         <div
-            class="mx-auto my-2 flex w-full max-w-max flex-col items-center justify-center bg-slate-100/10 px-2 py-2 backdrop-blur-sm backdrop-opacity-60 md:w-auto md:px-6"
+            class="mx-auto my-2 flex w-full max-w-max flex-col items-center justify-center bg-slate-100/10 px-2 py-2 md:w-auto md:px-6"
         >
             <h1
-                class="w-auto text-center text-2xl font-black leading-tight tracking-widest text-gray-600 md:text-4xl"
+                class="w-auto text-center text-2xl font-black leading-tight tracking-widest md:text-4xl"
+                :class="{
+                    'text-white': discipline?.theme === 'dark',
+                    'text-gray-900':
+                        discipline?.theme === 'light' || !discipline,
+                }"
                 v-if="$slots.title"
             >
                 <slot name="title"></slot>
             </h1>
             <h2
-                class="hidden w-auto text-center text-lg font-semibold leading-tight tracking-widest text-gray-600 md:block md:border-t-2 md:border-slate-400 md:text-2xl"
+                :class="{
+                    'text-white': discipline?.theme === 'dark',
+                    'text-gray-900':
+                        discipline?.theme === 'light' || !discipline,
+                }"
+                class="hidden w-auto text-center text-lg font-semibold leading-tight tracking-widest md:block md:border-t-2 md:border-slate-400 md:text-2xl"
                 v-if="$slots.subtitle"
             >
                 <slot name="subtitle"></slot>

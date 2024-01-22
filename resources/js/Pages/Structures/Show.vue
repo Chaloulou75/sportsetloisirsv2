@@ -2,7 +2,6 @@
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, watch, computed } from "vue";
-import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
@@ -305,13 +304,13 @@ const events = getEvents();
     />
 
     <ResultLayout
+        :familles="familles"
         :list-disciplines="listDisciplines"
         :all-cities="allCities"
         :discipline="requestDiscipline"
         :city="city"
     >
         <template #header>
-            <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
                 <template v-slot:title>
                     {{ structure.name }}

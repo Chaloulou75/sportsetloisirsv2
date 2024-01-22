@@ -3,7 +3,6 @@ import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { router, Head, Link } from "@inertiajs/vue3";
 import { ref, watch, defineAsyncComponent } from "vue";
 import { debounce } from "lodash";
-import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
 import { HomeIcon } from "@heroicons/vue/24/outline";
@@ -55,9 +54,12 @@ watch(
         "
     />
 
-    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
+    <ResultLayout
+        :familles="familles"
+        :list-disciplines="listDisciplines"
+        :all-cities="allCities"
+    >
         <template #header>
-            <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
                 <template v-slot:title> Localités </template>
                 <template v-slot:ariane>

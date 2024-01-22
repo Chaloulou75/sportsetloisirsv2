@@ -14,7 +14,6 @@ import SelectForm from "@/Components/Forms/SelectForm.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
 import InputLabel from "@/Components/Forms/InputLabel.vue";
 import RangeInputForm from "@/Components/Forms/RangeInputForm.vue";
-import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
 import CitiesAround from "@/Components/Cities/CitiesAround.vue";
@@ -289,6 +288,7 @@ onMounted(() => {
     />
 
     <ResultLayout
+        :familles="familles"
         :list-disciplines="listDisciplines"
         :all-cities="allCities"
         :discipline="discipline"
@@ -298,7 +298,6 @@ onMounted(() => {
         :is-criteres-visible="isCriteresVisible"
     >
         <template #header>
-            <FamilleResultNavigation :familles="familles" />
             <ResultsHeader :discipline="discipline">
                 <template v-slot:title>
                     {{ discipline.name }}

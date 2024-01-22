@@ -1,7 +1,6 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import DisciplineSmallCard from "@/Components/Disciplines/DisciplineSmallCard.vue";
 import { HomeIcon } from "@heroicons/vue/24/outline";
@@ -26,9 +25,12 @@ defineProps({
         "
     />
 
-    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
+    <ResultLayout
+        :familles="familles"
+        :list-disciplines="listDisciplines"
+        :all-cities="allCities"
+    >
         <template #header>
-            <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
                 <template v-slot:title>
                     {{ famille.name }}

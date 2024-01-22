@@ -3,7 +3,6 @@ import ResultLayout from "@/Layouts/ResultLayout.vue";
 import DeleteUserForm from "./Partials/DeleteUserForm.vue";
 import UpdatePasswordForm from "./Partials/UpdatePasswordForm.vue";
 import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm.vue";
-import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import { Link, Head } from "@inertiajs/vue3";
 import { HomeIcon } from "@heroicons/vue/24/outline";
@@ -21,13 +20,13 @@ defineProps({
     <Head title="Profil" />
 
     <ResultLayout
+        :familles="familles"
         :list-disciplines="listDisciplines"
         :all-cities="allCities"
         :discipline="discipline"
         :categories="categories"
     >
         <template #header>
-            <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
                 <template v-slot:title> Informations du profil </template>
                 <template v-slot:ariane>

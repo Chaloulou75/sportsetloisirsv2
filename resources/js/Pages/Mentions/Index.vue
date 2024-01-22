@@ -14,9 +14,12 @@ const props = defineProps({
 <template>
     <Head title="Mentions Légales" description="Mentions Légales" />
 
-    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
+    <ResultLayout
+        :familles="familles"
+        :list-disciplines="listDisciplines"
+        :all-cities="allCities"
+    >
         <template #header>
-            <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
                 <template v-slot:title> Mentions légales </template>
                 <template v-slot:ariane>

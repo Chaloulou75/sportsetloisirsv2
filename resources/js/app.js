@@ -1,12 +1,12 @@
 import "./bootstrap";
 import "maz-ui/css/main.css";
+import "preline";
 import "../css/app.css";
 
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
-import "preline";
 
 const appName =
     window.document.getElementsByTagName("title")[0]?.innerText ||

@@ -2,7 +2,6 @@
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, onMounted, defineAsyncComponent } from "vue";
-import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import { HomeIcon } from "@heroicons/vue/24/outline";
@@ -72,9 +71,12 @@ function submit() {
 <template>
     <Head title="Inscription de votre structure" />
 
-    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
+    <ResultLayout
+        :familles="familles"
+        :list-disciplines="listDisciplines"
+        :all-cities="allCities"
+    >
         <template #header>
-            <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
                 <template v-slot:title>
                     Inscription de votre structure

@@ -67,7 +67,7 @@ const submitForm = async () => {
 
 <template>
     <nav
-        class="fixed inset-x-0 top-0 z-[9998] border-b border-gray-100 bg-slate-900/80 backdrop-blur-sm backdrop-opacity-60"
+        class="fixed inset-x-0 top-0 z-[9998] border-b border-gray-100 bg-slate-900/60 backdrop-blur-sm backdrop-opacity-60"
     >
         <!-- Primary Navigation Menu -->
         <div class="mx-auto max-w-full px-4 sm:px-6 lg:px-8">

@@ -4,7 +4,6 @@ import { ref, onMounted, watch, defineAsyncComponent } from "vue";
 import { Head, Link, router, usePage } from "@inertiajs/vue3";
 import { debounce } from "lodash";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
-import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
 import PostFeaturedCard from "@/Components/Posts/PostFeaturedCard.vue";
 const Pagination = defineAsyncComponent(() =>
@@ -51,9 +50,12 @@ onMounted(() => {
 <template>
     <Head title="Blog" :description="'Blog de www.sports-et-loisirs.fr.'" />
 
-    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
+    <ResultLayout
+        :familles="familles"
+        :list-disciplines="listDisciplines"
+        :all-cities="allCities"
+    >
         <template #header>
-            <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
                 <template v-slot:title> Blog </template>
                 <template v-slot:ariane>

@@ -2,7 +2,6 @@
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, reactive, computed } from "vue";
-import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
 import ActiviteCard from "@/Components/Structures/ActiviteCard.vue";
@@ -230,9 +229,12 @@ const submitReservation = () => {
         "
     />
 
-    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
+    <ResultLayout
+        :familles="familles"
+        :list-disciplines="listDisciplines"
+        :all-cities="allCities"
+    >
         <template #header>
-            <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
                 <template v-slot:title> {{ activite.titre }} </template>
                 <template v-slot:ariane>

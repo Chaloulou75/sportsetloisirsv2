@@ -2,7 +2,6 @@
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { ref, defineAsyncComponent, provide } from "vue";
-import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
 import { HomeIcon, ListBulletIcon, MapIcon } from "@heroicons/vue/24/outline";
@@ -124,6 +123,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
     />
 
     <ResultLayout
+        :familles="familles"
         :list-disciplines="listDisciplines"
         :all-cities="allCities"
         :discipline="discipline"
@@ -131,7 +131,6 @@ const onfilteredStructuresUpdate = (filteredStr) => {
         :is-categories-visible="isCategoriesVisible"
     >
         <template #header>
-            <FamilleResultNavigation :familles="familles" />
             <ResultsHeader :discipline="discipline">
                 <template v-slot:title>
                     {{ discipline.name }}

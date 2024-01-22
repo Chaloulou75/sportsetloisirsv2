@@ -4,7 +4,6 @@ import { Head, Link } from "@inertiajs/vue3";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { ChevronUpIcon } from "@heroicons/vue/24/solid";
 import { HomeIcon, QuestionMarkCircleIcon } from "@heroicons/vue/24/outline";
-import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 const props = defineProps({
     familles: Object,
@@ -16,9 +15,12 @@ const props = defineProps({
 <template>
     <Head title="Questions fréquentes" description="Questions fréquentes" />
 
-    <ResultLayout :list-disciplines="listDisciplines" :all-cities="allCities">
+    <ResultLayout
+        :familles="familles"
+        :list-disciplines="listDisciplines"
+        :all-cities="allCities"
+    >
         <template #header>
-            <FamilleResultNavigation :familles="familles" />
             <ResultsHeader>
                 <template v-slot:title>
                     <QuestionMarkCircleIcon
