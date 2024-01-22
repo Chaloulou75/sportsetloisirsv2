@@ -17,7 +17,6 @@ class HomeController extends Controller
 {
     public function index(): Response
     {
-        $familleCount = Famille::count();
         $disciplinesCount = ListDiscipline::count();
         $structuresCount = Structure::count();
         $produitsCount = StructureProduit::count();
@@ -79,7 +78,6 @@ class HomeController extends Controller
             'familles' => $familles,
             'listDisciplines' => $listDisciplines,
             'disciplines' => $disciplines,
-            'familleCount' => $familleCount,
             'disciplinesCount' => $disciplinesCount,
             'structuresCount' => $structuresCount,
             'produitsCount' => $produitsCount,

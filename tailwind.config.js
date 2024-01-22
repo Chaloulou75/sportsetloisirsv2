@@ -8,6 +8,7 @@ module.exports = {
         "./resources/views/**/*.blade.php",
         "./resources/js/**/*.vue",
         "./resources/js/**/*.js",
+        "node_modules/preline/dist/*.js",
     ],
 
     theme: {
@@ -122,5 +123,6 @@ module.exports = {
         require("@tailwindcss/forms"),
         require("prettier-plugin-tailwindcss"),
         require("@tailwindcss/typography"),
+        require("preline/plugin"),
     ],
 };

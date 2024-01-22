@@ -7,7 +7,7 @@ import ResultsHeader from "@/Components/ResultsHeader.vue";
 import AutocompleteDiscipline from "@/Components/Home/AutocompleteDiscipline.vue";
 import AutocompleteCity from "@/Components/Home/AutocompleteCity.vue";
 import DisciplineSmallCard from "@/Components/Disciplines/DisciplineSmallCard.vue";
-import { ArrowSmallRightIcon, CheckIcon } from "@heroicons/vue/24/solid";
+import { ArrowRightIcon, CheckIcon } from "@heroicons/vue/24/solid";
 import { MagnifyingGlassIcon } from "@heroicons/vue/24/outline";
 const PostFeaturedCard = defineAsyncComponent(() =>
     import("@/Components/Posts/PostFeaturedCard.vue")
@@ -200,7 +200,7 @@ const formatCityName = (ville) => {
                     >
                         Et beaucoup d'autres
                         <span>
-                            <ArrowSmallRightIcon class="ml-2 h-6 w-6" />
+                            <ArrowRightIcon class="ml-2 h-6 w-6" />
                         </span>
                     </Link>
                 </div>
@@ -236,7 +236,7 @@ const formatCityName = (ville) => {
                     >
                         Et beaucoup d'autres
                         <span>
-                            <ArrowSmallRightIcon class="ml-2 h-6 w-6" />
+                            <ArrowRightIcon class="ml-2 h-6 w-6" />
                         </span>
                     </Link>
                 </div>
@@ -278,7 +278,7 @@ const formatCityName = (ville) => {
                     >
                         Et beaucoup d'autres
                         <span>
-                            <ArrowSmallRightIcon class="ml-2 h-6 w-6" />
+                            <ArrowRightIcon class="ml-2 h-6 w-6" />
                         </span>
                     </Link>
                 </div>
@@ -324,7 +324,7 @@ const formatCityName = (ville) => {
                         >
                             Et beaucoup d'autres
                             <span>
-                                <ArrowSmallRightIcon class="ml-2 h-6 w-6" />
+                                <ArrowRightIcon class="ml-2 h-6 w-6" />
                             </span>
                         </Link>
                     </div>
@@ -380,7 +380,7 @@ const formatCityName = (ville) => {
                         >
                             Créer votre structure
                             <span>
-                                <ArrowSmallRightIcon class="ml-2 h-6 w-6" />
+                                <ArrowRightIcon class="ml-2 h-6 w-6" />
                             </span>
                         </Link>
                         <Link
@@ -390,7 +390,7 @@ const formatCityName = (ville) => {
                         >
                             S'inscrire
                             <span>
-                                <ArrowSmallRightIcon class="ml-2 h-6 w-6" />
+                                <ArrowRightIcon class="ml-2 h-6 w-6" />
                             </span>
                         </Link>
                     </div>
@@ -418,7 +418,7 @@ const formatCityName = (ville) => {
                     >
                         Et beaucoup d'autres
                         <span>
-                            <ArrowSmallRightIcon class="ml-2 h-6 w-6" />
+                            <ArrowRightIcon class="ml-2 h-6 w-6" />
                         </span>
                     </Link>
                 </div>

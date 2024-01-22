@@ -25,8 +25,9 @@ class Famille extends Model
      */
     public function scopeWithProducts(Builder $query): void
     {
-        $query->whereHas('disciplines.structureProduits')
-                ->select(['id', 'name', 'slug']);
+        $query->withWhereHas('disciplines', function ($subquery) {
+            $subquery->whereHas('structureProduits')->select(['liste_disciplines.id', 'liste_disciplines.name', 'liste_disciplines.slug']);
+        })->select(['id', 'name', 'slug']);
     }
 
     public function disciplines(): BelongsToMany

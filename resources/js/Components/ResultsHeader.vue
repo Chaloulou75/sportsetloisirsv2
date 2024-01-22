@@ -26,7 +26,7 @@ const headerClass = computed(() => {
         :class="headerClass"
     >
         <div
-            class="mx-auto my-2 flex w-full max-w-max flex-col items-center justify-center bg-slate-100/70 px-2 py-2 backdrop-blur-sm backdrop-opacity-60 md:w-auto md:px-6"
+            class="mx-auto my-2 flex w-full max-w-max flex-col items-center justify-center bg-slate-100/10 px-2 py-2 backdrop-blur-sm backdrop-opacity-60 md:w-auto md:px-6"
         >
             <h1
                 class="w-auto text-center text-2xl font-black leading-tight tracking-widest text-gray-600 md:text-4xl"
@@ -42,7 +42,7 @@ const headerClass = computed(() => {
             </h2>
         </div>
         <div
-            class="mx-auto hidden w-auto max-w-max flex-col items-center justify-center space-y-2 bg-gray-100/50 px-2 py-2 backdrop-blur-sm backdrop-opacity-60 md:flex md:px-4"
+            class="mx-auto hidden w-auto max-w-max flex-col items-center justify-center space-y-2 bg-gray-100/50 px-2 py-2 backdrop-blur-sm backdrop-opacity-60 md:px-4"
             v-if="$slots.ariane"
         >
             <slot name="ariane"></slot>
