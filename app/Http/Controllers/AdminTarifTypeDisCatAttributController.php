@@ -30,6 +30,7 @@ class AdminTarifTypeDisCatAttributController extends Controller
                     'ordre' => $attributToDuplicate->ordre ?? null,
                 ]);
                 if($attributToDuplicate->valeurs->isNotEmpty()) {
+
                     foreach($attributToDuplicate->valeurs as $valeur) {
                         $disCatTarifAttr->valeurs()->create([
                             'valeur' => $valeur->valeur,
@@ -48,7 +49,7 @@ class AdminTarifTypeDisCatAttributController extends Controller
 
                         if($sousAttribut->valeurs->isNotEmpty()) {
                             foreach($sousAttribut->valeurs as $sousAttributValeur) {
-                                $disCatTarAttSsAttr = $disCatTarAttSsAttr->valeurs()->create([
+                                $disCatTarAttSsAttrValeur = $disCatTarAttSsAttr->valeurs()->create([
                                     'valeur' => $sousAttributValeur->valeur,
                                     'ordre' => $sousAttributValeur->ordre ?? null,
                                     'inclus_all' => $sousAttributValeur->inclus_all ?? false,
