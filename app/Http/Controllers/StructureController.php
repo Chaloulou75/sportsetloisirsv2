@@ -310,11 +310,9 @@ class StructureController extends Controller
 
         if($discipline !== null) {
 
-            $requestDiscipline = ListDiscipline::where('slug', $discipline)
-                                        ->select(['id', 'name', 'slug', 'view_count', 'theme'])
-                                        ->first();
-
-            $disciplinesSimilaires = $requestDiscipline->disciplinesSimilaires()->select(['famille', 'name', 'slug'])->whereHas('structures')->get();
+            $requestDiscipline = ListDiscipline::withProductsAndDisciplinesSimilaires()
+            ->where('slug', $discipline)
+            ->first();
 
             $categories = $structure->activites->pluck('categorie')->where('discipline_id', $requestDiscipline->id);
 
@@ -339,7 +337,6 @@ class StructureController extends Controller
             $requestCategory = null;
             $categories = null;
             $categoriesWithoutProduit = null;
-            $disciplinesSimilaires = null;
             $structuretypeElected = null;
         }
 
@@ -373,7 +370,6 @@ class StructureController extends Controller
             'citiesAround' => $citiesAround,
             'departement' => $departement,
             'requestDiscipline' => $requestDiscipline,
-            'disciplinesSimilaires' => $disciplinesSimilaires,
         ]);
     }
 

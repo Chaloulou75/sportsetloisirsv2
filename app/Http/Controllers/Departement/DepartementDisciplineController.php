@@ -25,13 +25,8 @@ class DepartementDisciplineController extends Controller
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
-        $discipline = ListDiscipline::with('structureProduits')->where('slug', $discipline)
-                            ->select(['id', 'name', 'slug', 'view_count', 'theme'])
-                            ->first();
-
-        $disciplinesSimilaires = $discipline->disciplinesSimilaires()
-            ->select('discipline_similaire_id', 'name', 'slug', 'famille')
-            ->get();
+        $discipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->where('slug', $discipline)
+        ->first();
 
         $departement = Departement::withCitiesAndRelations()
                 ->where('slug', $departement->slug)
@@ -96,7 +91,6 @@ class DepartementDisciplineController extends Controller
             'categoriesNotInFirst' => $categoriesNotInFirst,
             'allStructureTypes' => $allStructureTypes,
             'departement' => $departement,
-            'disciplinesSimilaires' => $disciplinesSimilaires,
             'produits' => $produits,
             'structures' => $structures,
             'discipline' => $discipline,

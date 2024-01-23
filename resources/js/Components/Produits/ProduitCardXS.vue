@@ -89,23 +89,35 @@ const formatCurrency = (value) => {
                     v-if="produit.criteres.length > 0"
                     class="list-inside list-disc text-xs"
                 >
-                    <li v-for="critere in produit.criteres" :key="critere.id">
-                        {{ critere.critere.nom }}:
-                        <span class="font-semibold"
-                            >{{ critere.valeur }}
-                            <span
-                                v-if="critere.sous_criteres.length > 0"
-                                class="text-xs font-medium text-gray-600"
-                            >
-                                <span
-                                    v-for="sousCriteres in critere.sous_criteres"
-                                    :key="sousCriteres.id"
-                                >
-                                    ({{ sousCriteres.valeur }})
+                    <template
+                        v-for="critere in produit.criteres"
+                        :key="critere.id"
+                    >
+                        <template
+                            v-if="
+                                critere.valeur &&
+                                !!critere.critere.visible_block === true
+                            "
+                        >
+                            <li>
+                                {{ critere.critere.nom }}:
+                                <span class="font-semibold"
+                                    >{{ critere.valeur }}
+                                    <span
+                                        v-if="critere.sous_criteres.length > 0"
+                                        class="text-xs font-medium text-gray-600"
+                                    >
+                                        <span
+                                            v-for="sousCriteres in critere.sous_criteres"
+                                            :key="sousCriteres.id"
+                                        >
+                                            ({{ sousCriteres.valeur }})
+                                        </span>
+                                    </span>
                                 </span>
-                            </span>
-                        </span>
-                    </li>
+                            </li>
+                        </template>
+                    </template>
                 </ul>
 
                 <div v-if="produit.cat_tarifs && produit.cat_tarifs.length > 0">

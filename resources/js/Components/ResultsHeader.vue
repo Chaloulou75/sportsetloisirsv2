@@ -26,7 +26,7 @@ const headerClass = computed(() => {
         class="mx-auto bg-slate-100/20 bg-cover bg-center bg-no-repeat px-10 py-2 bg-blend-soft-light md:py-6"
     >
         <div
-            class="mx-auto my-2 flex w-full max-w-max flex-col items-center justify-center bg-slate-100/10 px-2 py-2 md:w-auto md:px-6"
+            class="mx-auto my-2 flex w-full max-w-max flex-col items-center justify-center px-2 py-2 md:w-auto md:px-6"
         >
             <h1
                 class="w-auto text-center text-2xl font-black leading-tight tracking-widest md:text-4xl"

@@ -59,14 +59,8 @@ class CityStructureController extends Controller
             ->withCount('structures')
             ->first();
 
-            $citiesAround = City::with('structures', 'produits', 'produits.adresse')
-                            ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
-                            ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
-                            ->whereNot('id', $city->id)
-                            ->havingRaw('distance <= ?', [$city->tolerance_rayon])
-                            ->orderBy('distance', 'ASC')
-                            ->limit(10)
-                            ->get();
+            $citiesAround = City::with('structures', 'produits', 'produits.adresse')->withCitiesAround($city)->get();
+
         } else {
             $citiesAround = null;
         }

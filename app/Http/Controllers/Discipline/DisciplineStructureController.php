@@ -31,13 +31,15 @@ class DisciplineStructureController extends Controller
                             ->where('slug', $structure)
                             ->first();
 
-        $requestDiscipline = ListDiscipline::with('structureProduits')->where('slug', $discipline->slug)
-                    ->select(['id', 'name', 'slug', 'view_count', 'theme'])
-                    ->first();
-
-        $disciplinesSimilaires = $requestDiscipline->disciplinesSimilaires()
-            ->select('discipline_similaire_id', 'name', 'slug', 'famille')
-            ->get();
+        $requestDiscipline = ListDiscipline::with([
+                'structureProduits',
+                'disciplinesSimilaires' => function ($query) {
+                    $query->select('discipline_similaire_id', 'name', 'slug', 'famille');
+                }
+            ])
+            ->where('slug', $discipline->slug)
+            ->select(['id', 'name', 'slug', 'view_count', 'theme'])
+            ->first();
 
         $categories = LienDisciplineCategorie::whereHas('structures_produits')
                 ->where('discipline_id', $requestDiscipline->id)
@@ -81,7 +83,6 @@ class DisciplineStructureController extends Controller
             'categoriesNotInFirst' => $categoriesNotInFirst,
             'allStructureTypes' => $allStructureTypes,
             'requestDiscipline' => $requestDiscipline,
-            'disciplinesSimilaires' => $disciplinesSimilaires,
         ]);
     }
 }

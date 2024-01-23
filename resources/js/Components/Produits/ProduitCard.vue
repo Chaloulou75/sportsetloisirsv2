@@ -262,7 +262,10 @@ const formatCityName = (ville) => {
                                 :key="critere.id"
                             >
                                 <div
-                                    v-if="critere.valeur"
+                                    v-if="
+                                        critere.valeur &&
+                                        !!critere.critere.visible_block === true
+                                    "
                                     class="flex w-full flex-col items-center justify-center bg-slate-200 px-1 py-3 font-medium"
                                 >
                                     <div class="text-center text-xs uppercase">

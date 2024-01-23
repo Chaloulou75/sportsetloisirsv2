@@ -11,7 +11,6 @@ import { useElementVisibility } from "@vueuse/core";
 const props = defineProps({
     familles: Object,
     discipline: Object,
-    disciplinesSimilaires: Object,
     listDisciplines: Object,
     allCities: Object,
     familles: Object,
@@ -348,8 +347,10 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                         </h2>
                         <!-- les disciplines similaires -->
                         <DisciplinesSimilaires
-                            v-if="disciplinesSimilaires.length > 0"
-                            :disciplines-similaires="disciplinesSimilaires"
+                            v-if="discipline.disciplines_similaires.length > 0"
+                            :disciplines-similaires="
+                                discipline.disciplines_similaires
+                            "
                         />
                     </TransitionRoot>
 
@@ -396,9 +397,14 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                         <span class="font-semibold">{{ discipline.name }}</span
                         >.
                     </p>
-                    <div v-if="disciplinesSimilaires.length > 0" class="w-full">
+                    <div
+                        v-if="discipline.disciplines_similaires.length > 0"
+                        class="w-full"
+                    >
                         <DisciplinesSimilaires
-                            :disciplines-similaires="disciplinesSimilaires"
+                            :disciplines-similaires="
+                                discipline.disciplines_similaires
+                            "
                         />
                     </div>
                 </div>

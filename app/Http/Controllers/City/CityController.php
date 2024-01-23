@@ -63,19 +63,7 @@ class CityController extends Controller
                     ->withCount('produits')
                     ->first();
 
-        $citiesAround = City::whereHas('produits')
-                    ->select('id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
-                    ->selectRaw("
-                        (6366 * acos(
-                            cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) +
-                            sin(radians({$city->latitude})) * sin(radians(latitude))
-                        )) AS distance
-                    ")
-                    ->whereNot('slug', $city->slug)
-                    ->havingRaw('distance <= ?', [$city->tolerance_rayon])
-                    ->orderBy('distance', 'ASC')
-                    ->limit(10)
-                    ->get();
+        $citiesAround = City::withCitiesAround($city)->get();
 
         $citiesAroundProducts = $citiesAround->flatMap(function ($cityAr) {
             return $cityAr->produits()->withRelations()->get();

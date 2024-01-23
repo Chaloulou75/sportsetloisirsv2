@@ -29,13 +29,8 @@ class CategoryDisciplineController extends Controller
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
-        $discipline = ListDiscipline::with('structureProduits')->where('slug', $discipline->slug)
-                            ->select(['id', 'name', 'slug', 'view_count', 'theme'])
-                            ->first();
-
-        $disciplinesSimilaires = $discipline->disciplinesSimilaires()
-            ->select('discipline_similaire_id', 'name', 'slug', 'famille')
-            ->get();
+        $discipline = ListDiscipline::withProductsAndDisciplinesSimilaires()
+        ->find($discipline->id);
 
         $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('slug', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
 
@@ -101,7 +96,6 @@ class CategoryDisciplineController extends Controller
             'firstCategories' => $firstCategories,
             'categoriesNotInFirst' => $categoriesNotInFirst,
             'allStructureTypes' => $allStructureTypes,
-            'disciplinesSimilaires' => $disciplinesSimilaires,
             'discipline' => $discipline,
             'criteres' => $criteres,
             'listDisciplines' => $listDisciplines,

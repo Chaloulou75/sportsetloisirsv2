@@ -38,24 +38,13 @@ class CityDisciplineCategorieStructureController extends Controller
                     ->withCount('produits')
                     ->first();
 
-        $citiesAround = City::withWhereHas('produits')
-            ->select('id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
-            ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
-            ->whereNot('id', $city->id)
-            ->havingRaw('distance <= ?', [$city->tolerance_rayon])
-            ->orderBy('distance', 'ASC')
-            ->limit(10)
-            ->get();
+        $citiesAround = City::with('produits')->withCitiesAround($city)->get();
 
         $cityAroundIds = $citiesAround->pluck('id');
 
-        $requestDiscipline = ListDiscipline::with('structureProduits')->where('slug', $discipline)
-                            ->select(['id', 'name', 'slug', 'view_count', 'theme'])
-                            ->first();
+        $requestDiscipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->where('slug', $discipline)
+        ->first();
 
-        $disciplinesSimilaires = $requestDiscipline->disciplinesSimilaires()
-                    ->select('discipline_similaire_id', 'name', 'slug', 'famille')
-                    ->get();
 
         $categories = LienDisciplineCategorie::withWhereHas('structures_produits.adresse', function (Builder $query) use ($city, $cityAroundIds) {
             $query->where('city_id', $city->id)->orWhereIn('city_id', $cityAroundIds);
@@ -109,7 +98,6 @@ class CityDisciplineCategorieStructureController extends Controller
             'city' => $city,
             'citiesAround' => $citiesAround,
             'requestDiscipline' => $requestDiscipline,
-            'disciplinesSimilaires' => $disciplinesSimilaires,
         ]);
     }
 }

@@ -42,7 +42,6 @@ const props = defineProps({
     familles: Object,
     listDisciplines: Object,
     discipline: Object,
-    disciplineSimilaires: Object,
     activite: Object,
     criteres: Object,
     activiteSimilaires: Object,

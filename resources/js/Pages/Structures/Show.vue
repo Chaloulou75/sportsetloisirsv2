@@ -33,7 +33,6 @@ const props = defineProps({
     familles: Object,
     listDisciplines: Object,
     requestDiscipline: Object,
-    disciplinesSimilaires: Object,
     allCities: Object,
     city: Object,
     citiesAround: Object,

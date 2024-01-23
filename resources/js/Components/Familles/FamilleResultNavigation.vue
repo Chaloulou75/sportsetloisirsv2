@@ -2,7 +2,11 @@
 import { ref, computed, onMounted } from "vue";
 import { HSCopyMarkup as HSStaticMethods } from "preline";
 import { Link } from "@inertiajs/vue3";
-import { MapPinIcon } from "@heroicons/vue/24/outline";
+import {
+    MapPinIcon,
+    ChevronRightIcon,
+    ChevronDownIcon,
+} from "@heroicons/vue/24/outline";
 
 const props = defineProps({
     familles: Object,
@@ -30,10 +34,10 @@ onMounted(() => {
 <template>
     <header
         @mouseleave="hoveredFamille = null"
-        class="z-50 flex w-full flex-wrap bg-slate-300/30 py-3 text-sm bg-blend-soft-light md:flex-nowrap md:justify-start md:py-0 dark:bg-gray-800/20"
+        class="z-50 flex w-full flex-wrap bg-gray-200/30 py-3 text-base md:flex-nowrap md:justify-start md:py-0"
     >
         <nav
-            class="mx-auto w-full max-w-[85rem] px-4 md:px-6 lg:px-8"
+            class="mx-auto w-full max-w-full px-4 md:px-6 lg:px-8"
             aria-label="Global"
         >
             <div class="relative md:flex md:items-center md:justify-between">
@@ -41,7 +45,7 @@ onMounted(() => {
                     <div class="md:hidden">
                         <button
                             type="button"
-                            class="hs-collapse-toggle flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 text-sm font-semibold text-gray-800 hover:bg-gray-100 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                            class="hs-collapse-toggle flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 text-sm font-semibold text-gray-800 hover:bg-gray-100 disabled:pointer-events-none disabled:opacity-50"
                             data-hs-collapse="#navbar-collapse-with-animation"
                             aria-controls="navbar-collapse-with-animation"
                             aria-label="Toggle navigation"
@@ -86,318 +90,732 @@ onMounted(() => {
                     class="hs-collapse hidden grow basis-full overflow-hidden transition-all duration-300 md:block"
                 >
                     <div
-                        class="max-h-[75vh] overflow-hidden overflow-y-auto [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-slate-500 [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-slate-700 [&::-webkit-scrollbar]:w-2"
+                        class="max-h-[75vh] overflow-hidden overflow-y-auto [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar]:w-2"
                     >
                         <div
-                            class="mt-5 flex flex-col gap-x-0 divide-y divide-dashed divide-gray-200 md:mt-0 md:flex-row md:items-center md:justify-center md:gap-x-7 md:divide-y-0 md:divide-solid md:ps-7 dark:divide-gray-700"
+                            class="mt-5 flex flex-col gap-x-0 divide-y divide-dashed divide-gray-200 md:mt-0 md:flex-row md:items-center md:justify-between md:gap-x-7 md:divide-y-0 md:divide-solid md:ps-7"
                         >
                             <div
-                                v-if="currentCity"
-                                class="hs-dropdown py-3 [--adaptive:none] [--strategy:static] md:py-4 md:[--strategy:absolute] md:[--trigger:hover]"
+                                class="flex flex-col gap-x-0 divide-y divide-dashed divide-gray-200 md:flex-row md:items-center md:justify-start md:gap-x-7 md:divide-y-0 md:divide-solid"
                             >
-                                <button
-                                    type="button"
-                                    :class="{
-                                        'text-gray-100 hover:text-white':
-                                            currentDiscipline?.theme === 'dark',
-                                        'text-gray-800 hover:text-black':
-                                            currentDiscipline?.theme ===
-                                                'light' ||
-                                            !props.currentDiscipline,
-                                    }"
-                                    class="group flex w-full items-center font-semibold"
-                                >
-                                    <MapPinIcon
-                                        class="ms-2 h-4 w-4 flex-shrink-0"
-                                        :class="{
-                                            'text-gray-100 group-hover:text-white':
-                                                currentDiscipline?.theme ===
-                                                'dark',
-                                            'text-gray-800 group-hover:text-black':
-                                                currentDiscipline?.theme ===
-                                                    'light' ||
-                                                !currentDiscipline,
-                                        }"
-                                    />
-                                    {{ formatCityName(currentCity.ville) }}
-                                    <svg
-                                        class="ms-2 h-4 w-4 flex-shrink-0"
-                                        :class="{
-                                            'text-gray-100 group-hover:text-white':
-                                                currentDiscipline?.theme ===
-                                                'dark',
-                                            'text-gray-800 group-hover:text-black':
-                                                currentDiscipline?.theme ===
-                                                    'light' ||
-                                                !currentDiscipline,
-                                        }"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    >
-                                        <path d="m6 9 6 6 6-6" />
-                                    </svg>
-                                </button>
-                            </div>
-                            <div
-                                v-if="currentDiscipline"
-                                class="hs-dropdown py-3 [--adaptive:none] [--strategy:static] md:py-4 md:[--strategy:absolute] md:[--trigger:hover]"
-                            >
-                                <button
-                                    type="button"
-                                    :class="{
-                                        'text-gray-100 group-hover:text-white':
-                                            currentDiscipline?.theme === 'dark',
-                                        'text-gray-800 group-hover:text-black':
-                                            currentDiscipline?.theme ===
-                                                'light' || !currentDiscipline,
-                                    }"
-                                    class="flex w-full items-center font-semibold"
-                                >
-                                    {{ currentDiscipline.name }}
-                                    <svg
-                                        class="ms-2 h-4 w-4 flex-shrink-0"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    >
-                                        <path d="m6 9 6 6 6-6" />
-                                    </svg>
-                                </button>
-                            </div>
-                            <div
-                                v-for="famille in familles"
-                                :key="famille.id"
-                                @mouseenter="hoveredFamille = famille"
-                                class="hs-dropdown py-3 [--adaptive:none] [--strategy:static] md:py-4 md:[--strategy:absolute] md:[--trigger:hover]"
-                            >
-                                <button
-                                    type="button"
-                                    :class="{
-                                        'text-gray-100 group-hover:text-white':
-                                            currentDiscipline?.theme === 'dark',
-                                        'text-gray-800 group-hover:text-black':
-                                            currentDiscipline?.theme ===
-                                                'light' || !currentDiscipline,
-                                    }"
-                                    class="flex w-full items-center font-medium"
-                                >
-                                    {{ famille.name }}
-                                    <svg
-                                        class="ms-2 h-4 w-4 flex-shrink-0"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    >
-                                        <path d="m6 9 6 6 6-6" />
-                                    </svg>
-                                </button>
-
                                 <div
-                                    class="hs-dropdown-menu start-0 top-full z-[1200] hidden w-full min-w-[15rem] rounded-lg bg-white py-2 opacity-0 transition-[opacity,margin] duration-[0.1ms] before:absolute before:-top-5 before:start-0 before:h-5 before:w-full hs-dropdown-open:opacity-100 md:p-4 md:shadow-2xl md:duration-[150ms] dark:divide-gray-700 dark:bg-gray-800"
+                                    v-if="currentCity"
+                                    class="hs-dropdown py-3 [--adaptive:none] [--strategy:static] md:py-4 md:[--strategy:absolute] md:[--trigger:hover]"
                                 >
-                                    <span
-                                        class="mb-2 text-xs font-semibold uppercase text-gray-800 dark:text-gray-200"
-                                        >{{ famille.name }}</span
+                                    <button
+                                        type="button"
+                                        class="group flex w-full items-center rounded bg-white px-2 py-2 font-semibold"
                                     >
+                                        <MapPinIcon
+                                            class="mr-2 h-4 w-4 flex-shrink-0"
+                                        />
+                                        {{ formatCityName(currentCity.ville) }}
+                                        <ChevronRightIcon
+                                            class="ms-2 h-4 w-4 flex-shrink-0"
+                                        />
+                                        <!-- <span
+                                            class="-start-px h-6 w-4 bg-gray-300 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
+                                        >
+                                        </span> -->
+                                    </button>
                                     <div
-                                        class="gap-4 md:grid md:grid-cols-2 lg:grid-cols-3"
+                                        class="hs-dropdown-menu start-0 top-full z-[1200] hidden w-full min-w-[15rem] rounded-lg bg-white py-2 opacity-0 transition-[opacity,margin] duration-[0.1ms] before:absolute before:-top-5 before:start-0 before:h-5 before:w-full hs-dropdown-open:opacity-100 md:p-4 md:shadow-2xl md:duration-[150ms]"
                                     >
-                                        <div class="mx-1 flex flex-col md:mx-0">
-                                            <Link
-                                                :href="
-                                                    route('disciplines.show', {
-                                                        discipline: discipline,
-                                                    })
-                                                "
-                                                preserve-scroll
-                                                v-for="discipline in hoveredFamilleDisciplines"
-                                                :key="discipline.id"
-                                                class="group flex gap-x-5 rounded-lg p-4 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-900 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                                        <span
+                                            class="mb-2 text-xs font-semibold uppercase text-gray-800"
+                                            >{{
+                                                formatCityName(
+                                                    currentCity.ville
+                                                )
+                                            }}</span
+                                        >
+                                        <div
+                                            class="gap-4 md:grid md:grid-cols-2 lg:grid-cols-3"
+                                        >
+                                            <div
+                                                class="mx-1 flex flex-col md:mx-0"
                                             >
-                                                <svg
-                                                    class="mt-1 h-5 w-5 flex-shrink-0"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="24"
-                                                    height="24"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    stroke-width="2"
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
+                                                <Link
+                                                    :href="
+                                                        route('villes.show', {
+                                                            city: currentCity,
+                                                        })
+                                                    "
+                                                    preserve-scroll
+                                                    class="group flex gap-x-5 rounded-lg p-4 hover:bg-gray-100"
                                                 >
-                                                    <path
-                                                        d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
-                                                    />
-                                                    <path
-                                                        d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
-                                                    />
-                                                </svg>
-                                                <div class="grow">
-                                                    <p
-                                                        class="font-medium text-gray-800 group-hover:text-gray-900 dark:text-gray-200"
+                                                    <svg
+                                                        class="mt-1 h-5 w-5 flex-shrink-0"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
                                                     >
-                                                        {{ discipline.name }}
-                                                    </p>
-                                                    <p
-                                                        class="text-sm text-gray-500 group-hover:text-gray-800 dark:group-hover:text-gray-200"
+                                                        <path
+                                                            d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
+                                                        />
+                                                        <path
+                                                            d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
+                                                        />
+                                                    </svg>
+                                                    <div class="grow">
+                                                        <p
+                                                            class="font-medium text-gray-800 group-hover:text-gray-900"
+                                                        >
+                                                            {{
+                                                                formatCityName(
+                                                                    currentCity.ville
+                                                                )
+                                                            }}
+                                                        </p>
+                                                        <p
+                                                            class="text-sm text-gray-500 group-hover:text-gray-800"
+                                                        >
+                                                            Voir les activités
+                                                            pratiquées dans
+                                                            votre ville.
+                                                        </p>
+                                                    </div>
+                                                </Link>
+                                            </div>
+
+                                            <div
+                                                class="mx-1 flex flex-col md:mx-0"
+                                            >
+                                                <Link
+                                                    :href="route('posts.index')"
+                                                    class="group flex gap-x-5 rounded-lg p-4 hover:bg-gray-100"
+                                                >
+                                                    <svg
+                                                        class="mt-1 h-5 w-5 flex-shrink-0"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
                                                     >
-                                                        Voir les activités liées
-                                                        au {{ discipline.name }}
-                                                    </p>
-                                                </div>
-                                            </Link>
+                                                        <path
+                                                            d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
+                                                        />
+                                                        <path
+                                                            d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
+                                                        />
+                                                    </svg>
+                                                    <div class="grow">
+                                                        <p
+                                                            class="font-medium text-gray-800"
+                                                        >
+                                                            Blog
+                                                        </p>
+                                                        <p
+                                                            class="text-sm text-gray-500 group-hover:text-gray-800"
+                                                        >
+                                                            Découvrir les
+                                                            derniers articles en
+                                                            ligne.
+                                                        </p>
+                                                    </div>
+                                                </Link>
+
+                                                <Link
+                                                    :href="
+                                                        route(
+                                                            'disciplines.index'
+                                                        )
+                                                    "
+                                                    class="group flex gap-x-5 rounded-lg p-4 hover:bg-gray-100"
+                                                >
+                                                    <svg
+                                                        class="mt-1 h-5 w-5 flex-shrink-0"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    >
+                                                        <circle
+                                                            cx="12"
+                                                            cy="12"
+                                                            r="4"
+                                                        />
+                                                        <path
+                                                            d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"
+                                                        />
+                                                    </svg>
+                                                    <div class="grow">
+                                                        <p
+                                                            class="font-medium text-gray-800"
+                                                        >
+                                                            Disciplines
+                                                        </p>
+                                                        <p
+                                                            class="text-sm text-gray-500 group-hover:text-gray-800"
+                                                        >
+                                                            Rechercher parmi
+                                                            plus de 300
+                                                            disciplines.
+                                                        </p>
+                                                    </div>
+                                                </Link>
+
+                                                <Link
+                                                    :href="
+                                                        route(
+                                                            'structures.index'
+                                                        )
+                                                    "
+                                                    class="group flex gap-x-5 rounded-lg p-4 hover:bg-gray-100"
+                                                >
+                                                    <svg
+                                                        class="mt-1 h-5 w-5 flex-shrink-0"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    >
+                                                        <path
+                                                            d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
+                                                        />
+                                                        <circle
+                                                            cx="9"
+                                                            cy="7"
+                                                            r="4"
+                                                        />
+                                                        <path
+                                                            d="M22 21v-2a4 4 0 0 0-3-3.87"
+                                                        />
+                                                        <path
+                                                            d="M16 3.13a4 4 0 0 1 0 7.75"
+                                                        />
+                                                    </svg>
+                                                    <div class="grow">
+                                                        <p
+                                                            class="font-medium text-gray-800"
+                                                        >
+                                                            Structures et
+                                                            activités
+                                                        </p>
+                                                        <p
+                                                            class="text-sm text-gray-500 group-hover:text-gray-800"
+                                                        >
+                                                            Découvrez les
+                                                            structures et
+                                                            activités près de
+                                                            chez vous.
+                                                        </p>
+                                                    </div>
+                                                </Link>
+                                            </div>
                                         </div>
-
-                                        <div class="mx-1 flex flex-col md:mx-0">
-                                            <Link
-                                                :href="route('posts.index')"
-                                                class="group flex gap-x-5 rounded-lg p-4 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-900 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                                    </div>
+                                </div>
+                                <div
+                                    v-if="currentDiscipline"
+                                    class="hs-dropdown py-3 [--adaptive:none] [--strategy:static] md:py-4 md:[--strategy:absolute] md:[--trigger:hover]"
+                                >
+                                    <button
+                                        type="button"
+                                        :class="{
+                                            'rounded bg-white px-2 py-2 text-gray-800 group-hover:text-black':
+                                                !currentCity,
+                                            'text-gray-100 group-hover:text-white':
+                                                currentDiscipline?.theme ===
+                                                'dark',
+                                            'text-gray-800 group-hover:text-black':
+                                                currentDiscipline?.theme ===
+                                                    'light' ||
+                                                !currentDiscipline,
+                                        }"
+                                        class="flex w-full items-center font-semibold"
+                                    >
+                                        {{ currentDiscipline.name }}
+                                        <svg
+                                            class="ms-2 h-4 w-4 flex-shrink-0"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        >
+                                            <path d="m6 9 6 6 6-6" />
+                                        </svg>
+                                    </button>
+                                    <div
+                                        class="hs-dropdown-menu start-0 top-full z-[1200] hidden w-full min-w-[15rem] rounded-lg bg-white py-2 opacity-0 transition-[opacity,margin] duration-[0.1ms] before:absolute before:-top-5 before:start-0 before:h-5 before:w-full hs-dropdown-open:opacity-100 md:p-4 md:shadow-2xl md:duration-[150ms]"
+                                    >
+                                        <span
+                                            class="mb-2 text-xs font-semibold uppercase text-gray-800"
+                                            >{{ currentDiscipline.name }}</span
+                                        >
+                                        <div
+                                            class="gap-4 md:grid md:grid-cols-2 lg:grid-cols-3"
+                                        >
+                                            <div
+                                                class="mx-1 flex flex-col md:mx-0"
                                             >
-                                                <svg
-                                                    class="mt-1 h-5 w-5 flex-shrink-0"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="24"
-                                                    height="24"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    stroke-width="2"
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
+                                                <Link
+                                                    :href="
+                                                        route(
+                                                            'disciplines.show',
+                                                            {
+                                                                discipline:
+                                                                    discipline,
+                                                            }
+                                                        )
+                                                    "
+                                                    preserve-scroll
+                                                    v-for="discipline in currentDiscipline.disciplines_similaires"
+                                                    :key="discipline.id"
+                                                    class="group flex gap-x-5 rounded-lg p-4 hover:bg-gray-100"
                                                 >
-                                                    <path
-                                                        d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
-                                                    />
-                                                    <path
-                                                        d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
-                                                    />
-                                                </svg>
-                                                <div class="grow">
-                                                    <p
-                                                        class="font-medium text-gray-800 dark:text-gray-200"
+                                                    <svg
+                                                        class="mt-1 h-5 w-5 flex-shrink-0"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
                                                     >
-                                                        Blog
-                                                    </p>
-                                                    <p
-                                                        class="text-sm text-gray-500 group-hover:text-gray-800 dark:group-hover:text-gray-200"
-                                                    >
-                                                        Découvrir les derniers
-                                                        articles en ligne.
-                                                    </p>
-                                                </div>
-                                            </Link>
+                                                        <path
+                                                            d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
+                                                        />
+                                                        <path
+                                                            d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
+                                                        />
+                                                    </svg>
+                                                    <div class="grow">
+                                                        <p
+                                                            class="font-medium text-gray-800 group-hover:text-gray-900"
+                                                        >
+                                                            {{
+                                                                discipline.name
+                                                            }}
+                                                        </p>
+                                                        <p
+                                                            class="text-sm text-gray-500 group-hover:text-gray-800"
+                                                        >
+                                                            Voir les activités
+                                                            liées au
+                                                            {{
+                                                                discipline.name
+                                                            }}
+                                                        </p>
+                                                    </div>
+                                                </Link>
+                                            </div>
 
-                                            <a
-                                                class="group flex gap-x-5 rounded-lg p-4 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-900 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                                                href="#"
+                                            <div
+                                                class="mx-1 flex flex-col md:mx-0"
                                             >
-                                                <svg
-                                                    class="mt-1 h-5 w-5 flex-shrink-0"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="24"
-                                                    height="24"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    stroke-width="2"
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
+                                                <Link
+                                                    :href="route('posts.index')"
+                                                    class="group flex gap-x-5 rounded-lg p-4 hover:bg-gray-100"
                                                 >
-                                                    <circle
-                                                        cx="12"
-                                                        cy="12"
-                                                        r="4"
-                                                    />
-                                                    <path
-                                                        d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"
-                                                    />
-                                                </svg>
-                                                <div class="grow">
-                                                    <p
-                                                        class="font-medium text-gray-800 dark:text-gray-200"
+                                                    <svg
+                                                        class="mt-1 h-5 w-5 flex-shrink-0"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
                                                     >
-                                                        Developer Hub
-                                                    </p>
-                                                    <p
-                                                        class="text-sm text-gray-500 group-hover:text-gray-800 dark:group-hover:text-gray-200"
-                                                    >
-                                                        Learn how to integrate
-                                                        or build on top of
-                                                        Preline.
-                                                    </p>
-                                                </div>
-                                            </a>
+                                                        <path
+                                                            d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
+                                                        />
+                                                        <path
+                                                            d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
+                                                        />
+                                                    </svg>
+                                                    <div class="grow">
+                                                        <p
+                                                            class="font-medium text-gray-800"
+                                                        >
+                                                            Blog
+                                                        </p>
+                                                        <p
+                                                            class="text-sm text-gray-500 group-hover:text-gray-800"
+                                                        >
+                                                            Découvrir les
+                                                            derniers articles en
+                                                            ligne.
+                                                        </p>
+                                                    </div>
+                                                </Link>
 
-                                            <a
-                                                class="group flex gap-x-5 rounded-lg p-4 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-900 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                                                href="#"
-                                            >
-                                                <svg
-                                                    class="mt-1 h-5 w-5 flex-shrink-0"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="24"
-                                                    height="24"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    stroke-width="2"
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
+                                                <Link
+                                                    :href="
+                                                        route(
+                                                            'disciplines.index'
+                                                        )
+                                                    "
+                                                    class="group flex gap-x-5 rounded-lg p-4 hover:bg-gray-100"
                                                 >
-                                                    <path
-                                                        d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
-                                                    />
-                                                    <circle
-                                                        cx="9"
-                                                        cy="7"
-                                                        r="4"
-                                                    />
-                                                    <path
-                                                        d="M22 21v-2a4 4 0 0 0-3-3.87"
-                                                    />
-                                                    <path
-                                                        d="M16 3.13a4 4 0 0 1 0 7.75"
-                                                    />
-                                                </svg>
-                                                <div class="grow">
-                                                    <p
-                                                        class="font-medium text-gray-800 dark:text-gray-200"
+                                                    <svg
+                                                        class="mt-1 h-5 w-5 flex-shrink-0"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
                                                     >
-                                                        Community Forum
-                                                    </p>
-                                                    <p
-                                                        class="text-sm text-gray-500 group-hover:text-gray-800 dark:group-hover:text-gray-200"
+                                                        <circle
+                                                            cx="12"
+                                                            cy="12"
+                                                            r="4"
+                                                        />
+                                                        <path
+                                                            d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"
+                                                        />
+                                                    </svg>
+                                                    <div class="grow">
+                                                        <p
+                                                            class="font-medium text-gray-800"
+                                                        >
+                                                            Disciplines
+                                                        </p>
+                                                        <p
+                                                            class="text-sm text-gray-500 group-hover:text-gray-800"
+                                                        >
+                                                            Rechercher parmi
+                                                            plus de 300
+                                                            disciplines.
+                                                        </p>
+                                                    </div>
+                                                </Link>
+
+                                                <Link
+                                                    :href="
+                                                        route(
+                                                            'structures.index'
+                                                        )
+                                                    "
+                                                    class="group flex gap-x-5 rounded-lg p-4 hover:bg-gray-100"
+                                                >
+                                                    <svg
+                                                        class="mt-1 h-5 w-5 flex-shrink-0"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
                                                     >
-                                                        Learn, share, and
-                                                        connect with other
-                                                        Preline users.
-                                                    </p>
-                                                </div>
-                                            </a>
+                                                        <path
+                                                            d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
+                                                        />
+                                                        <circle
+                                                            cx="9"
+                                                            cy="7"
+                                                            r="4"
+                                                        />
+                                                        <path
+                                                            d="M22 21v-2a4 4 0 0 0-3-3.87"
+                                                        />
+                                                        <path
+                                                            d="M16 3.13a4 4 0 0 1 0 7.75"
+                                                        />
+                                                    </svg>
+                                                    <div class="grow">
+                                                        <p
+                                                            class="font-medium text-gray-800"
+                                                        >
+                                                            Structures et
+                                                            activités
+                                                        </p>
+                                                        <p
+                                                            class="text-sm text-gray-500 group-hover:text-gray-800"
+                                                        >
+                                                            Découvrez les
+                                                            structures et
+                                                            activités près de
+                                                            chez vous.
+                                                        </p>
+                                                    </div>
+                                                </Link>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <div
+                                class="flex flex-col gap-x-0 divide-y divide-dashed divide-gray-200 md:flex-row md:items-center md:justify-start md:gap-x-7 md:divide-y-0 md:divide-solid"
+                            >
+                                <div
+                                    v-for="famille in familles"
+                                    :key="famille.id"
+                                    @mouseenter="hoveredFamille = famille"
+                                    class="hs-dropdown py-3 [--adaptive:none] [--strategy:static] md:py-4 md:[--strategy:absolute] md:[--trigger:hover]"
+                                >
+                                    <button
+                                        type="button"
+                                        :class="{
+                                            'text-gray-100 group-hover:text-white':
+                                                currentDiscipline?.theme ===
+                                                'dark',
+                                            'text-gray-800 group-hover:text-black':
+                                                currentDiscipline?.theme ===
+                                                    'light' ||
+                                                !currentDiscipline,
+                                        }"
+                                        class="flex w-full items-center font-semibold"
+                                    >
+                                        {{ famille.name }}
+                                        <ChevronDownIcon
+                                            class="ms-2 h-4 w-4 flex-shrink-0"
+                                        />
+                                    </button>
+
+                                    <div
+                                        class="hs-dropdown-menu start-0 top-full z-[1200] hidden w-full min-w-[15rem] rounded-lg bg-white py-2 opacity-0 transition-[opacity,margin] duration-[0.1ms] before:absolute before:-top-5 before:start-0 before:h-5 before:w-full hs-dropdown-open:opacity-100 md:p-4 md:shadow-2xl md:duration-[150ms]"
+                                    >
+                                        <span
+                                            class="mb-2 text-xs font-semibold uppercase text-gray-800"
+                                            >{{ famille.name }}</span
+                                        >
+                                        <div
+                                            class="gap-4 md:grid md:grid-cols-2 lg:grid-cols-3"
+                                        >
+                                            <div
+                                                class="mx-1 flex flex-col md:mx-0"
+                                            >
+                                                <Link
+                                                    :href="
+                                                        route(
+                                                            'disciplines.show',
+                                                            {
+                                                                discipline:
+                                                                    discipline,
+                                                            }
+                                                        )
+                                                    "
+                                                    preserve-scroll
+                                                    v-for="discipline in hoveredFamilleDisciplines"
+                                                    :key="discipline.id"
+                                                    class="group flex gap-x-5 rounded-lg p-4 hover:bg-gray-100"
+                                                >
+                                                    <svg
+                                                        class="mt-1 h-5 w-5 flex-shrink-0"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    >
+                                                        <path
+                                                            d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
+                                                        />
+                                                        <path
+                                                            d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
+                                                        />
+                                                    </svg>
+                                                    <div class="grow">
+                                                        <p
+                                                            class="font-medium text-gray-800 group-hover:text-gray-900"
+                                                        >
+                                                            {{
+                                                                discipline.name
+                                                            }}
+                                                        </p>
+                                                        <p
+                                                            class="text-sm text-gray-500 group-hover:text-gray-800"
+                                                        >
+                                                            Voir les activités
+                                                            liées au
+                                                            {{
+                                                                discipline.name
+                                                            }}
+                                                        </p>
+                                                    </div>
+                                                </Link>
+                                            </div>
+
+                                            <div
+                                                class="mx-1 flex flex-col md:mx-0"
+                                            >
+                                                <Link
+                                                    :href="route('posts.index')"
+                                                    class="group flex gap-x-5 rounded-lg p-4 hover:bg-gray-100"
+                                                >
+                                                    <svg
+                                                        class="mt-1 h-5 w-5 flex-shrink-0"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    >
+                                                        <path
+                                                            d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
+                                                        />
+                                                        <path
+                                                            d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
+                                                        />
+                                                    </svg>
+                                                    <div class="grow">
+                                                        <p
+                                                            class="font-medium text-gray-800"
+                                                        >
+                                                            Blog
+                                                        </p>
+                                                        <p
+                                                            class="text-sm text-gray-500 group-hover:text-gray-800"
+                                                        >
+                                                            Découvrir les
+                                                            derniers articles en
+                                                            ligne.
+                                                        </p>
+                                                    </div>
+                                                </Link>
+
+                                                <Link
+                                                    :href="
+                                                        route(
+                                                            'disciplines.index'
+                                                        )
+                                                    "
+                                                    class="group flex gap-x-5 rounded-lg p-4 hover:bg-gray-100"
+                                                >
+                                                    <svg
+                                                        class="mt-1 h-5 w-5 flex-shrink-0"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    >
+                                                        <circle
+                                                            cx="12"
+                                                            cy="12"
+                                                            r="4"
+                                                        />
+                                                        <path
+                                                            d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"
+                                                        />
+                                                    </svg>
+                                                    <div class="grow">
+                                                        <p
+                                                            class="font-medium text-gray-800"
+                                                        >
+                                                            Disciplines
+                                                        </p>
+                                                        <p
+                                                            class="text-sm text-gray-500 group-hover:text-gray-800"
+                                                        >
+                                                            Rechercher parmi
+                                                            plus de 300
+                                                            disciplines.
+                                                        </p>
+                                                    </div>
+                                                </Link>
+
+                                                <Link
+                                                    :href="
+                                                        route(
+                                                            'structures.index'
+                                                        )
+                                                    "
+                                                    class="group flex gap-x-5 rounded-lg p-4 hover:bg-gray-100"
+                                                >
+                                                    <svg
+                                                        class="mt-1 h-5 w-5 flex-shrink-0"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    >
+                                                        <path
+                                                            d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
+                                                        />
+                                                        <circle
+                                                            cx="9"
+                                                            cy="7"
+                                                            r="4"
+                                                        />
+                                                        <path
+                                                            d="M22 21v-2a4 4 0 0 0-3-3.87"
+                                                        />
+                                                        <path
+                                                            d="M16 3.13a4 4 0 0 1 0 7.75"
+                                                        />
+                                                    </svg>
+                                                    <div class="grow">
+                                                        <p
+                                                            class="font-medium text-gray-800"
+                                                        >
+                                                            Structures et
+                                                            activités
+                                                        </p>
+                                                        <p
+                                                            class="text-sm text-gray-500 group-hover:text-gray-800"
+                                                        >
+                                                            Découvrez les
+                                                            structures et
+                                                            activités près de
+                                                            chez vous.
+                                                        </p>
+                                                    </div>
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div></div>
                         </div>
                     </div>
                 </div>

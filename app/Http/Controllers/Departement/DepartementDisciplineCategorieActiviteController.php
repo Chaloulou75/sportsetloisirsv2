@@ -26,14 +26,8 @@ class DepartementDisciplineCategorieActiviteController extends Controller
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
-        $requestDiscipline = ListDiscipline::with('structureProduits')
-        ->where('slug', $discipline)
-        ->select(['id', 'name', 'slug', 'view_count', 'theme'])
+        $requestDiscipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->where('slug', $discipline)
         ->first();
-
-        $disciplinesSimilaires = $requestDiscipline->disciplinesSimilaires()
-            ->select('discipline_similaire_id', 'name', 'slug', 'famille')
-            ->get();
 
         $departement = Departement::with(['cities' => function ($query) {
             $query->whereHas('produits');
@@ -88,7 +82,6 @@ class DepartementDisciplineCategorieActiviteController extends Controller
         return Inertia::render('Structures/Activites/Show', [
             'departement' => $departement,
             'discipline' => $requestDiscipline,
-            'disciplinesSimilaires' => $disciplinesSimilaires,
             'produits' => $produits,
             'familles' => $familles,
             'listDisciplines' => $listDisciplines,

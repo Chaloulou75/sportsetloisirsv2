@@ -25,13 +25,8 @@ class CityDisciplineCategorieController extends Controller
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
-        $discipline = ListDiscipline::with('structureProduits')->where('slug', $discipline)
-                            ->select(['id', 'name', 'slug', 'view_count', 'theme'])
-                            ->first();
-
-        $disciplinesSimilaires = $discipline->disciplinesSimilaires()
-            ->select('discipline_similaire_id', 'name', 'slug', 'famille')
-            ->get();
+        $discipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->where('slug', $discipline)
+        ->first();
 
         $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('slug', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
 
@@ -44,14 +39,7 @@ class CityDisciplineCategorieController extends Controller
             ->withCount('structures')
             ->first();
 
-        $citiesAround = City::withWhereHas('produits')
-            ->select('id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
-            ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
-            ->whereNot('id', $city->id)
-            ->havingRaw('distance <= ?', [$city->tolerance_rayon])
-            ->orderBy('distance', 'ASC')
-            ->limit(10)
-            ->get();
+        $citiesAround = City::with('produits')->withCitiesAround($city)->get();
 
         $cityAroundIds = $citiesAround->pluck('id');
 
@@ -155,7 +143,6 @@ class CityDisciplineCategorieController extends Controller
             'allStructureTypes' => $allStructureTypes,
             'city' => $city,
             'citiesAround' => $citiesAround,
-            'disciplinesSimilaires' => $disciplinesSimilaires,
             'produits' => $produits,
             'structures' => $structures,
             'discipline' => $discipline,

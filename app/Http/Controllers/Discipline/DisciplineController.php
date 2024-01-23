@@ -34,7 +34,7 @@ class DisciplineController extends Controller
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
-        $disciplines = ListDiscipline::with('structureProduits')->select(['id', 'name', 'slug'])
+        $disciplines = ListDiscipline::withProductsAndDisciplinesSimilaires()
                         ->withCount('structureProduits')
                         ->filter(
                             request(['search'])
@@ -63,13 +63,7 @@ class DisciplineController extends Controller
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
-        $discipline = ListDiscipline::with('structureProduits')->where('slug', $discipline->slug)
-            ->select(['id', 'name', 'slug', 'view_count', 'theme'])
-            ->first();
-
-        $disciplinesSimilaires = $discipline->disciplinesSimilaires()
-            ->select('discipline_similaire_id', 'name', 'slug', 'famille')
-            ->get();
+        $discipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->find($discipline->id);
 
         $categories = LienDisciplineCategorie::whereHas('structures_produits')
                 ->where('discipline_id', $discipline->id)
@@ -117,7 +111,6 @@ class DisciplineController extends Controller
         return Inertia::render('Disciplines/Show', [
             'familles' => $familles,
             'discipline' => $discipline,
-            'disciplinesSimilaires' => $disciplinesSimilaires,
             'categories' => $categories,
             'firstCategories' => $firstCategories,
             'categoriesNotInFirst' => $categoriesNotInFirst,

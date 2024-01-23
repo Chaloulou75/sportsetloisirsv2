@@ -25,13 +25,8 @@ class DepartementDisciplineStructuretypeController extends Controller
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
-        $discipline = ListDiscipline::where('slug', $discipline)
-                            ->select(['id', 'name', 'slug', 'view_count', 'theme'])
-                            ->first();
-
-        $disciplinesSimilaires = $discipline->disciplinesSimilaires()
-            ->select('discipline_similaire_id', 'name', 'slug', 'famille')
-            ->get();
+        $discipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->where('slug', $discipline)
+        ->first();
 
         $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
 
@@ -108,7 +103,6 @@ class DepartementDisciplineStructuretypeController extends Controller
             'categoriesNotInFirst' => $categoriesNotInFirst,
             'departement' => $departement,
             'citiesAround' => $citiesAround,
-            'disciplinesSimilaires' => $disciplinesSimilaires,
             'produits' => $produits,
             'structures' => $structures,
             'discipline' => $discipline,

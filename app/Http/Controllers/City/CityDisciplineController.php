@@ -25,13 +25,8 @@ class CityDisciplineController extends Controller
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
-        $discipline = ListDiscipline::with('structureProduits')->where('slug', $discipline)
-                            ->select(['id', 'name', 'slug', 'view_count', 'theme'])
-                            ->first();
-
-        $disciplinesSimilaires = $discipline->disciplinesSimilaires()
-            ->select('discipline_similaire_id', 'name', 'slug', 'famille')
-            ->get();
+        $discipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->where('slug', $discipline)
+        ->first();
 
         $city = City::with(['structures', 'produits', 'produits.adresse'])
                             ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
@@ -39,15 +34,7 @@ class CityDisciplineController extends Controller
                             ->withCount('produits')
                             ->first();
 
-        $citiesAround = City::withWhereHas('produits')
-                            ->select('id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
-                            ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
-                            ->whereNot('id', $city->id)
-                            ->havingRaw('distance <= ?', [$city->tolerance_rayon])
-                            ->orderBy('distance', 'ASC')
-                            ->limit(10)
-                            ->get();
-        // $citiesAround = $city->getCitiesAround($city->latitude, $city->longitude, $city->tolerance_rayon);
+        $citiesAround = City::with('produits')->withCitiesAround($city)->get();
 
         $cityAroundIds = $citiesAround->pluck('id');
 
@@ -129,7 +116,6 @@ class CityDisciplineController extends Controller
             'allStructureTypes' => $allStructureTypes,
             'city' => $city,
             'citiesAround' => $citiesAround,
-            'disciplinesSimilaires' => $disciplinesSimilaires,
             'produits' => $produits,
             'structures' => $structures,
             'discipline' => $discipline,

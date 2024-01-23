@@ -26,7 +26,7 @@ class HomeController extends Controller
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
-        $disciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug'])
+        $disciplines = ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug', 'theme'])
                         ->withCount('structureProduits')
                         ->orderByDesc('structure_produits_count')
                         ->take(12)

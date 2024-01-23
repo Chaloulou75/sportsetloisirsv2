@@ -40,7 +40,6 @@ const props = defineProps({
     produits: Object,
     structures: Object,
     discipline: Object,
-    disciplinesSimilaires: Object,
     listDisciplines: Object,
     allCities: Object,
 });
@@ -968,8 +967,10 @@ onMounted(() => {
                         </h2>
                         <!-- les disciplines similaires -->
                         <DisciplinesSimilaires
-                            v-if="disciplinesSimilaires.length > 0"
-                            :disciplines-similaires="disciplinesSimilaires"
+                            v-if="discipline.disciplines_similaires.length > 0"
+                            :disciplines-similaires="
+                                discipline.disciplines_similaires
+                            "
                         />
                     </TransitionRoot>
 
@@ -1027,12 +1028,12 @@ onMounted(() => {
                         }}</span>
                     </p>
                     <div
-                        v-if="disciplinesSimilaires.length > 0"
+                        v-if="discipline.disciplines_similaires.length > 0"
                         class="w-full px-4 md:w-1/3"
                     >
                         <DisciplinesSimilaires
                             :disciplines-similaires="
-                                props.disciplinesSimilaires
+                                discipline.disciplines_similaires
                             "
                         />
                     </div>

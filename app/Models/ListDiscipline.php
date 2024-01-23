@@ -30,7 +30,20 @@ class ListDiscipline extends Model
      */
     public function scopeWithProducts(Builder $query): void
     {
-        $query->whereHas('structureProduits')->select(['id', 'name', 'slug']);
+        $query->whereHas('structureProduits')->select(['id', 'name', 'slug', 'theme', 'view_count']);
+    }
+
+    /**
+     * Scope a query to include disciplines with products and disciplines similaires.
+     */
+    public function scopeWithProductsAndDisciplinesSimilaires(Builder $query): void
+    {
+        $query->with([
+            'structureProduits',
+            'disciplinesSimilaires' => function ($query) {
+                $query->select('discipline_similaire_id', 'name', 'slug', 'famille', 'theme', 'view_count');
+            }
+        ])->select(['id', 'name', 'slug', 'view_count', 'theme']);
     }
 
     public function scopeFilter($query, array $filters): void

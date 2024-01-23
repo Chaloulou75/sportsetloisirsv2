@@ -57,7 +57,13 @@ const headerClass = computed(() => {
             :class="headerClass"
         >
             <div
-                class="inline-flex w-full flex-col items-center justify-center rounded px-6 py-3 text-center text-base font-semibold text-gray-700 transition duration-150 group-hover:text-white md:text-lg"
+                class="inline-flex w-full flex-col items-center justify-center rounded px-6 py-3 text-center text-base font-semibold transition duration-150 md:text-lg"
+                :class="{
+                    'text-gray-100 group-hover:text-white':
+                        discipline?.theme === 'dark',
+                    'text-gray-800 group-hover:text-black':
+                        discipline?.theme === 'light' || !discipline,
+                }"
             >
                 {{ discipline.name }}
 

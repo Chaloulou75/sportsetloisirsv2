@@ -32,12 +32,8 @@ class DepartementDisciplineStructuretypeStructureController extends Controller
                             ->where('slug', $structure)
                             ->first();
 
-        $requestDiscipline = ListDiscipline::with('structureProduits')
-        ->where('slug', $discipline)->select(['id', 'name', 'slug', 'view_count', 'theme'])->first();
-
-        $disciplinesSimilaires = $requestDiscipline->disciplinesSimilaires()
-            ->select('discipline_similaire_id', 'name', 'slug', 'famille')
-            ->get();
+        $requestDiscipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->where('slug', $discipline)
+        ->first();
 
         $departement = Departement::with(['cities' => function ($query) {
             $query->whereHas('produits');
@@ -98,7 +94,6 @@ class DepartementDisciplineStructuretypeStructureController extends Controller
             'structuretypeElected' => $structuretypeElected,
             'departement' => $departement,
             'requestDiscipline' => $requestDiscipline,
-            'disciplinesSimilaires' => $disciplinesSimilaires,
         ]);
     }
 }
