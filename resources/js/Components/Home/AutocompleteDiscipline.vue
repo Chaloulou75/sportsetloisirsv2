@@ -61,7 +61,7 @@ watchEffect(() => {
         ref="target"
         class="flex w-full flex-col items-start justify-start md:w-full"
     >
-        <label for="search" class="text-lg font-medium text-gray-700">
+        <label for="discipline" class="text-lg font-medium text-gray-700">
             Rechercher une discipline:
             <span
                 v-if="selectedDiscipline"
@@ -76,7 +76,7 @@ watchEffect(() => {
             </span>
             <input
                 type="text"
-                id="search"
+                id="discipline"
                 v-model="searchTerm"
                 @focus="isInputFocused = true"
                 placeholder="rugby, randonnées..."

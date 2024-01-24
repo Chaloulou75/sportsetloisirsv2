@@ -28,8 +28,12 @@ class CityController extends Controller
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
-        $listDisciplines = ListDiscipline::withProducts()->get();
-        $allCities = City::withProducts()->get();
+        $allCities = Cache::remember('allCities', 600, function () {
+            return City::withProducts()->get();
+        });
+        $listDisciplines = Cache::remember('listDisciplines', 600, function () {
+            return ListDiscipline::withProducts()->get();
+        });
 
         $cities = City::withProducts()
                         ->withCount('produits')
@@ -59,8 +63,12 @@ class CityController extends Controller
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
-        $listDisciplines = ListDiscipline::withProducts()->get();
-        $allCities = City::withProducts()->get();
+        $allCities = Cache::remember('allCities', 600, function () {
+            return City::withProducts()->get();
+        });
+        $listDisciplines = Cache::remember('listDisciplines', 600, function () {
+            return ListDiscipline::withProducts()->get();
+        });
 
         $city = City::withProductsAndDepartement()->where('slug', $city->slug)
                     ->withCount('produits')

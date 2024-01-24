@@ -62,7 +62,7 @@ watchEffect(() => {
         ref="target"
         class="flex w-full flex-col items-start justify-start md:w-full"
     >
-        <label for="search" class="text-lg font-medium text-gray-700">
+        <label for="localisation" class="text-lg font-medium text-gray-700">
             Rechercher une ville:
             <span
                 v-if="selectedCity"
@@ -80,7 +80,7 @@ watchEffect(() => {
 
             <input
                 type="text"
-                id="localite"
+                id="localisation"
                 v-model="searchTerm"
                 @focus="isInputFocused = true"
                 placeholder="Toulouse"

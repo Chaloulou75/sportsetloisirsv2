@@ -50,8 +50,12 @@ class StructureController extends Controller
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
-        $listDisciplines = ListDiscipline::withProducts()->get();
-        $allCities = City::withProducts()->get();
+        $allCities = Cache::remember('allCities', 600, function () {
+            return City::withProducts()->get();
+        });
+        $listDisciplines = Cache::remember('listDisciplines', 600, function () {
+            return ListDiscipline::withProducts()->get();
+        });
 
         return Inertia::render('Structures/Index', [
             'structures' => Structure::with([
@@ -137,8 +141,12 @@ class StructureController extends Controller
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
-        $listDisciplines = ListDiscipline::withProducts()->get();
-        $allCities = City::withProducts()->get();
+        $allCities = Cache::remember('allCities', 600, function () {
+            return City::withProducts()->get();
+        });
+        $listDisciplines = Cache::remember('listDisciplines', 600, function () {
+            return ListDiscipline::withProducts()->get();
+        });
 
         $structurestypes = Structuretype::with(['structuretypeattributs', 'structuretypeattributs.structuretypevaleurs'])->select(['id', 'name', 'slug'])->get();
         $disciplines = ListDiscipline::select(['id', 'name', 'slug'])->get();
@@ -270,8 +278,12 @@ class StructureController extends Controller
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
-        $listDisciplines = ListDiscipline::withProducts()->get();
-        $allCities = City::withProducts()->get();
+        $allCities = Cache::remember('allCities', 600, function () {
+            return City::withProducts()->get();
+        });
+        $listDisciplines = Cache::remember('listDisciplines', 600, function () {
+            return ListDiscipline::withProducts()->get();
+        });
 
         $structure = Structure::withRelations()
                             ->where('slug', $structure->slug)

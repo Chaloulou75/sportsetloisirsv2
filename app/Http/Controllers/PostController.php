@@ -25,8 +25,12 @@ class PostController extends Controller
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
-        $listDisciplines = ListDiscipline::withProducts()->get();
-        $allCities = City::withProducts()->get();
+        $allCities = Cache::remember('allCities', 600, function () {
+            return City::withProducts()->get();
+        });
+        $listDisciplines = Cache::remember('listDisciplines', 600, function () {
+            return ListDiscipline::withProducts()->get();
+        });
 
         $postsQuery = Post::with('author', 'comments', 'tags', 'disciplines')
                 ->withCount('comments')
@@ -62,8 +66,12 @@ class PostController extends Controller
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
-        $listDisciplines = ListDiscipline::withProducts()->get();
-        $allCities = City::withProducts()->get();
+        $allCities = Cache::remember('allCities', 600, function () {
+            return City::withProducts()->get();
+        });
+        $listDisciplines = Cache::remember('listDisciplines', 600, function () {
+            return ListDiscipline::withProducts()->get();
+        });
 
         $tags = Tag::select('id', 'name')->get();
         $disciplines = ListDiscipline::select('id', 'name')->get();
@@ -135,8 +143,12 @@ class PostController extends Controller
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
-        $listDisciplines = ListDiscipline::withProducts()->get();
-        $allCities = City::withProducts()->get();
+        $allCities = Cache::remember('allCities', 600, function () {
+            return City::withProducts()->get();
+        });
+        $listDisciplines = Cache::remember('listDisciplines', 600, function () {
+            return ListDiscipline::withProducts()->get();
+        });
 
         $post = Post::with('author', 'author.structures', 'comments', 'comments.author', 'tags', 'disciplines')->findOrFail($post->id);
 

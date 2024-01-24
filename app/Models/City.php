@@ -78,7 +78,10 @@ class City extends Model
      */
     public function scopeWithProductsAndDepartement(Builder $query): void
     {
-        $query->with(['produits', 'city_departement:id,slug,departement,numero,view_count'])
+        $query->with([
+                'produits',
+                'city_departement:id,slug,departement,numero,view_count'
+            ])
             ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon', 'departement']);
     }
 
