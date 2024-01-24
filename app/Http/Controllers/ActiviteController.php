@@ -21,6 +21,7 @@ use App\Models\StructureCategorie;
 use App\Models\StructureDiscipline;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
 use App\Models\LienDisciplineCategorie;
 use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Storage;
@@ -115,7 +116,9 @@ class ActiviteController extends Controller
 
     public function show($activite): Response
     {
-        $familles = Famille::withProducts()->get();
+        $familles = Cache::remember('familles', 600, function () {
+            return Famille::withProducts()->get();
+        });
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 

@@ -8,12 +8,15 @@ use Inertia\Response;
 use App\Models\Famille;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
+use Illuminate\Support\Facades\Cache;
 
 class FaqController extends Controller
 {
     public function index(): Response
     {
-        $familles = Famille::withProducts()->get();
+        $familles = Cache::remember('familles', 600, function () {
+            return Famille::withProducts()->get();
+        });
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 

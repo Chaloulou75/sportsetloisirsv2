@@ -13,6 +13,7 @@ use App\Models\ListDiscipline;
 use App\Models\StructureProduit;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 
 class CityController extends Controller
 {
@@ -24,7 +25,9 @@ class CityController extends Controller
         $structuresCount = Structure::count();
         $produitsCount = StructureProduit::count();
 
-        $familles = Famille::withProducts()->get();
+        $familles = Cache::remember('familles', 600, function () {
+            return Famille::withProducts()->get();
+        });
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
@@ -53,7 +56,9 @@ class CityController extends Controller
      */
     public function show(City $city): Response
     {
-        $familles = Famille::withProducts()->get();
+        $familles = Cache::remember('familles', 600, function () {
+            return Famille::withProducts()->get();
+        });
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 

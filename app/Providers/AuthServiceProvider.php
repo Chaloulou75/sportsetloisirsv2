@@ -55,5 +55,9 @@ class AuthServiceProvider extends ServiceProvider
             return ($user->id === $activite->user_id) || ($user->email === 'c.jeandey@gmail.com') || ($user->email === 'tonio20@hotmail.fr');
         });
 
+        Gate::define('viewPulse', function (User $user) {
+            return ($user->email === 'c.jeandey@gmail.com') || ($user->email === 'tonio20@hotmail.fr');
+        });
+
     }
 }

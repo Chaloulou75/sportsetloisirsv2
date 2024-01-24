@@ -12,6 +12,7 @@ use App\Models\ListDiscipline;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -22,7 +23,9 @@ class CityDisciplineCategorieActiviteController extends Controller
     {
         $selectedProduit = StructureProduit::where('id', request()->produit)->first();
 
-        $familles = Famille::withProducts()->get();
+        $familles = Cache::remember('familles', 600, function () {
+            return Famille::withProducts()->get();
+        });
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 

@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 use App\Models\LienDisciplineCategorie;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
@@ -22,7 +23,9 @@ class DepartementDisciplineController extends Controller
      */
     public function show(Departement $departement, $discipline): Response
     {
-        $familles = Famille::withProducts()->get();
+        $familles = Cache::remember('familles', 600, function () {
+            return Famille::withProducts()->get();
+        });
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 

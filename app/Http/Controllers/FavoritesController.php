@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
+use Illuminate\Support\Facades\Cache;
 
 class FavoritesController extends Controller
 {
@@ -19,7 +20,9 @@ class FavoritesController extends Controller
      */
     public function index(Request $request): Response
     {
-        $familles = Famille::withProducts()->get();
+        $familles = Cache::remember('familles', 600, function () {
+            return Famille::withProducts()->get();
+        });
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 

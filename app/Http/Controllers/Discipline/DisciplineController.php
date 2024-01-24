@@ -16,6 +16,7 @@ use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineSimilaire;
 use App\Http\Resources\CategorieResource;
@@ -31,7 +32,9 @@ class DisciplineController extends Controller
     {
         $structuresCount = Structure::count();
 
-        $familles = Famille::withProducts()->get();
+        $familles = Cache::remember('familles', 600, function () {
+            return Famille::withProducts()->get();
+        });
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
@@ -60,7 +63,9 @@ class DisciplineController extends Controller
     public function show(ListDiscipline $discipline): Response
     {
 
-        $familles = Famille::withProducts()->get();
+        $familles = Cache::remember('familles', 600, function () {
+            return Famille::withProducts()->get();
+        });
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 

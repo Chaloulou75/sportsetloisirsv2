@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
@@ -21,7 +22,9 @@ class PostController extends Controller
      */
     public function index(ListDiscipline $discipline = null): Response
     {
-        $familles = Famille::withProducts()->get();
+        $familles = Cache::remember('familles', 600, function () {
+            return Famille::withProducts()->get();
+        });
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
@@ -56,7 +59,9 @@ class PostController extends Controller
      */
     public function create(): Response
     {
-        $familles = Famille::withProducts()->get();
+        $familles = Cache::remember('familles', 600, function () {
+            return Famille::withProducts()->get();
+        });
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
@@ -127,7 +132,9 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $familles = Famille::withProducts()->get();
+        $familles = Cache::remember('familles', 600, function () {
+            return Famille::withProducts()->get();
+        });
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 

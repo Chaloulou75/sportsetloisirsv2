@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
 use App\Models\StructureTarifTypeInfo;
 use App\Models\LienDisciplineCategorie;
 use App\Models\StructureProduitCritere;
@@ -46,7 +47,9 @@ class StructureController extends Controller
     public function index(): Response
     {
 
-        $familles = Famille::withProducts()->get();
+        $familles = Cache::remember('familles', 600, function () {
+            return Famille::withProducts()->get();
+        });
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
@@ -131,7 +134,9 @@ class StructureController extends Controller
     public function create(): Response
     {
 
-        $familles = Famille::withProducts()->get();
+        $familles = Cache::remember('familles', 600, function () {
+            return Famille::withProducts()->get();
+        });
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
@@ -262,7 +267,9 @@ class StructureController extends Controller
         $category = request()->category;
         $structuretype = request()->structuretype;
 
-        $familles = Famille::withProducts()->get();
+        $familles = Cache::remember('familles', 600, function () {
+            return Famille::withProducts()->get();
+        });
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 

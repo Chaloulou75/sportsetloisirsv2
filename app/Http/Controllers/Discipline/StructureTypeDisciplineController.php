@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
 
@@ -22,7 +23,9 @@ class StructureTypeDisciplineController extends Controller
      */
     public function show(ListDiscipline $discipline, $structuretype): Response
     {
-        $familles = Famille::withProducts()->get();
+        $familles = Cache::remember('familles', 600, function () {
+            return Famille::withProducts()->get();
+        });
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 

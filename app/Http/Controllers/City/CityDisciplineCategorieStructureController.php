@@ -13,6 +13,7 @@ use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -24,7 +25,9 @@ class CityDisciplineCategorieStructureController extends Controller
      */
     public function show(City $city, $discipline, $category, $structure): Response
     {
-        $familles = Famille::withProducts()->get();
+        $familles = Cache::remember('familles', 600, function () {
+            return Famille::withProducts()->get();
+        });
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
