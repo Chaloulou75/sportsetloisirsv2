@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -52,6 +53,16 @@ class Post extends Model
                 $query->where('name', 'like', '%' . $author . '%')
             )
         );
+    }
+
+    public function scopeOrderByDiscipline(Builder $query, $disciplineId)
+    {
+        $query->with(['author', 'comments', 'tags', 'disciplines'])
+            ->whereHas('disciplines', function ($query) use ($disciplineId) {
+                $query->where('discipline_post.discipline_id', $disciplineId);
+            })
+            ->withCount('comments')
+            ->latest();
     }
 
     public function author(): BelongsTo

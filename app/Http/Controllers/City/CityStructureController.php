@@ -49,15 +49,12 @@ class CityStructureController extends Controller
         }
 
         if ($city !== null) {
-            $city = City::with([
-                'structures',
-                'produits',
-                'produits.adresse'
-            ])
-            ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
-            ->where('slug', $city->slug)
-            ->withCount('structures')
-            ->first();
+            $city = City::with(['structures', 'produits.adresse'])
+                                ->withProductsAndDepartement()
+                                ->where('slug', $city->slug)
+                                ->withCount('produits')
+                                ->withCount('structures')
+                                ->first();
 
             $citiesAround = City::with('structures', 'produits', 'produits.adresse')->withCitiesAround($city)->get();
 

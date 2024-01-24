@@ -82,7 +82,7 @@ const props = defineProps({
                 </header>
 
                 <div
-                    class="prose prose-slate mt-2 space-y-4 text-sm"
+                    class="prose prose-slate mt-2 space-y-4 break-words text-sm"
                     v-html="post.excerpt"
                 ></div>
                 <div

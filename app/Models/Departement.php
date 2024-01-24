@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Departement extends Model
 {
@@ -70,9 +67,9 @@ class Departement extends Model
             'cities.produits.criteres.critere:id,nom',
             'cities.produits.criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
             'cities.produits.criteres.sous_criteres',
-            'cities.produits.tarifs',
-            'cities.produits.tarifs.tarifType',
-            'cities.produits.tarifs.structureTarifTypeInfos',
+            // 'cities.produits.tarifs',
+            // 'cities.produits.tarifs.tarifType',
+            // 'cities.produits.tarifs.structureTarifTypeInfos',
             'cities.produits.catTarifs',
             'cities.produits.catTarifs.attributs',
             'cities.produits.catTarifs.attributs.tarif_attribut',

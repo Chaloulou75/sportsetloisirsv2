@@ -107,9 +107,9 @@ const submitForm = async () => {
                                 :disabled="processing"
                                 type="submit"
                                 :class="{
-                                    'bg-sky-700 text-white ring-sky-700 ring-offset-2 hover:bg-sky-800 hover:font-semibold hover:text-white':
+                                    'bg-white text-gray-800 ring-sky-700 ring-offset-2 hover:font-semibold hover:text-gray-900':
                                         localite && search,
-                                    'bg-gray-50 text-gray-400 hover:bg-sky-800 hover:text-white':
+                                    'bg-white text-gray-500 hover:text-gray-900':
                                         !localite || !search,
                                 }"
                                 class="flex w-full items-center justify-center rounded border border-gray-300 px-2 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring focus:ring-gray-500 focus:ring-offset-2 md:w-auto"
@@ -441,9 +441,9 @@ const submitForm = async () => {
                         :disabled="processing"
                         type="submit"
                         :class="{
-                            'bg-sky-700 text-white ring-sky-700 ring-offset-2 hover:bg-sky-800 hover:font-semibold hover:text-white':
+                            'bg-white text-gray-800 ring-sky-700 ring-offset-2  hover:font-semibold hover:text-gray-900':
                                 localite && search,
-                            'bg-white text-gray-700 hover:bg-sky-800 hover:text-white':
+                            'bg-white text-gray-700 hover:text-gray-900':
                                 !localite || !search,
                         }"
                         class="flex w-full items-center justify-center rounded-md border border-gray-500 px-2 py-2 text-base font-semibold shadow-sm hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:w-auto"

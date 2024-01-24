@@ -19,7 +19,7 @@ const props = defineProps({
                         discipline
                     ),
                 }"
-                class="group relative w-full px-4 py-2 text-left text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 md:w-auto md:px-6 md:py-2.5 md:text-base md:font-semibold"
+                class="group relative w-full px-4 py-2 text-left text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 md:w-auto md:py-2.5 md:text-base md:font-semibold"
             >
                 Informations
                 <div
@@ -34,7 +34,7 @@ const props = defineProps({
             </Link>
             <Link
                 :href="route('admin.disciplines.familles.edit', discipline)"
-                class="group relative w-full px-4 py-2 text-left text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 md:w-auto md:px-6 md:py-2.5 md:text-base md:font-semibold"
+                class="group relative w-full px-4 py-2 text-left text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 md:w-auto md:py-2.5 md:text-base md:font-semibold"
                 :class="{
                     'bg-indigo-500 text-white': route().current(
                         'admin.disciplines.familles.edit',
@@ -56,7 +56,7 @@ const props = defineProps({
 
             <Link
                 :href="route('admin.disciplines.similaires.edit', discipline)"
-                class="group relative w-full px-4 py-2 text-left text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 md:w-auto md:px-6 md:py-2.5 md:text-base md:font-semibold"
+                class="group relative w-full px-4 py-2 text-left text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 md:w-auto md:py-2.5 md:text-base md:font-semibold"
                 :class="{
                     'bg-indigo-500 text-white': route().current(
                         'admin.disciplines.similaires.edit',
@@ -77,7 +77,7 @@ const props = defineProps({
             </Link>
             <Link
                 :href="route('admin.disciplines.categories.edit', discipline)"
-                class="group relative w-full px-4 py-2 text-left text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 md:w-auto md:px-6 md:py-2.5 md:text-base md:font-semibold"
+                class="group relative w-full px-4 py-2 text-left text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 md:w-auto md:py-2.5 md:text-base md:font-semibold"
                 :class="{
                     'bg-indigo-500 text-white': route().current(
                         'admin.disciplines.categories.edit',

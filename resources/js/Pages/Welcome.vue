@@ -8,6 +8,9 @@ import AutocompleteCity from "@/Components/Home/AutocompleteCity.vue";
 import DisciplineSmallCard from "@/Components/Disciplines/DisciplineSmallCard.vue";
 import { ArrowRightIcon, CheckIcon } from "@heroicons/vue/24/solid";
 import { MagnifyingGlassIcon } from "@heroicons/vue/24/outline";
+const StructureCard = defineAsyncComponent(() =>
+    import("@/Components/Structures/StructureCard.vue")
+);
 const PostFeaturedCard = defineAsyncComponent(() =>
     import("@/Components/Posts/PostFeaturedCard.vue")
 );
@@ -296,28 +299,17 @@ const formatCityName = (ville) => {
                     <div
                         class="mb-8 grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3"
                     >
-                        <Link
-                            :href="route('structures.show', structure.slug)"
-                            :active="
-                                route().current(
-                                    'structures.show',
-                                    structure.slug
-                                )
-                            "
+                        <StructureCard
                             v-for="structure in lastStructures"
                             :key="structure.id"
-                            class="flex flex-col items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
-                        >
-                            <div class="mb-1 text-center">
-                                {{ structure.name }}
-                            </div>
-                            <div class="mb-1 text-xs">
-                                {{ structure.structuretype.name }}
-                            </div>
-                            <div class="mb-1 text-xs">
-                                {{ structure.city }} ({{ structure.zip_code }})
-                            </div>
-                        </Link>
+                            :structure="structure"
+                            :link="
+                                route('structures.show', {
+                                    structure: structure,
+                                })
+                            "
+                            :data="{}"
+                        />
                     </div>
                     <div class="mb-4 flex items-center justify-center">
                         <Link

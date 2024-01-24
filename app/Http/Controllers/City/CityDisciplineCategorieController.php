@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\City;
 
 use App\Models\City;
+use App\Models\Post;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Famille;
@@ -30,14 +31,13 @@ class CityDisciplineCategorieController extends Controller
 
         $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('slug', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
 
-        $city = City::with([
-                'produits',
-                'produits.adresse'
-            ])
-            ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
-            ->where('slug', $city->slug)
-            ->withCount('structures')
-            ->first();
+
+        $city = City::with(['structures', 'produits.adresse'])
+                            ->withProductsAndDepartement()
+                            ->where('slug', $city->slug)
+                            ->withCount('produits')
+                            ->withCount('structures')
+                            ->first();
 
         $citiesAround = City::with('produits')->withCitiesAround($city)->get();
 
@@ -65,21 +65,11 @@ class CityDisciplineCategorieController extends Controller
                 ->select(['id', 'name', 'slug'])
                 ->get();
 
-        $criteres = LienDisciplineCategorieCritere::with([
-                    'valeurs' => function ($query) {
-                        $query->orderBy('ordre');
-                    },
-                    'valeurs.sous_criteres',
-                    'valeurs.sous_criteres.sous_criteres_valeurs' => function ($query) {
-                        $query->orderBy('ordre');
-                    },
-                ])
+        $criteres = LienDisciplineCategorieCritere::withValeurs()
                 ->where('discipline_id', $discipline->id)
                 ->where('categorie_id', $category->id)
                 ->where('visible_front', true)
-                ->orderBy('ordre')
                 ->get();
-
 
         $citiesAroundProducts = $citiesAround->flatMap(function ($city) use ($discipline, $category) {
             return $city->produits()->withRelations()->where('discipline_id', $discipline->id)->where('categorie_id', $category->id)->get();
@@ -131,6 +121,8 @@ class CityDisciplineCategorieController extends Controller
 
         $structures = $structuresFromCity->merge($citiesAroundStructures)->paginate(12);
 
+        $posts = Post::orderByDiscipline($discipline->id)->take(6)->get();
+
         $city->timestamp = false;
         $city->increment('view_count');
 
@@ -149,6 +141,7 @@ class CityDisciplineCategorieController extends Controller
             'criteres' => $criteres,
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,
+            'posts' => $posts
         ]);
 
     }

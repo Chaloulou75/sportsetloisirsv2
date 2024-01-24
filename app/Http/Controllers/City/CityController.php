@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\City;
 
 use App\Models\City;
+use App\Models\Post;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Famille;
@@ -27,7 +28,7 @@ class CityController extends Controller
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
-        $cities = City::whereHas('produits')->select(['id', 'slug', 'ville', 'ville_formatee', 'code_postal'])
+        $cities = City::withProducts()
                         ->withCount('produits')
                         ->filter(
                             request(['search'])
@@ -52,14 +53,11 @@ class CityController extends Controller
      */
     public function show(City $city): Response
     {
-
         $familles = Famille::withProducts()->get();
         $listDisciplines = ListDiscipline::withProducts()->get();
         $allCities = City::withProducts()->get();
 
-        $city = City::with(['produits'])
-                    ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
-                    ->where('slug', $city->slug)
+        $city = City::withProductsAndDepartement()->where('slug', $city->slug)
                     ->withCount('produits')
                     ->first();
 
@@ -83,7 +81,7 @@ class CityController extends Controller
                 'city:id,slug,ville,code_postal',
                 'structuretype:id,name,slug',
                 'activites',
-                'activites.discipline:id,name,slug',
+                'activites.discipline:id,name,slug,theme',
                 'activites.categorie:id,slug,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
             ])
             ->select(['id', 'name', 'slug', 'structuretype_id', 'address', 'zip_code', 'city', 'address_lat', 'address_lng'])
@@ -97,13 +95,15 @@ class CityController extends Controller
                 'city:id,slug,ville,code_postal',
                 'structuretype:id,name,slug',
                 'activites',
-                'activites.discipline:id,name,slug',
+                'activites.discipline:id,name,slug,theme',
                 'activites.categorie:id,slug,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
         ])
         ->select(['id', 'name', 'slug', 'structuretype_id', 'address', 'zip_code', 'city', 'address_lat', 'address_lng'])
         ->get();
 
         $structures = $structuresFromCity->merge($citiesAroundStructures)->paginate(12);
+
+        $posts = Post::with(['comments', 'author', 'tags', 'disciplines'])->latest()->take(6)->get();
 
         $city->timestamp = false;
         $city->increment('view_count');
@@ -117,6 +117,7 @@ class CityController extends Controller
             'produits' => $produits,
             'flattenedDisciplines' => $flattenedDisciplines,
             'structures' => $structures,
+            'posts' => $posts,
             'filters' => request()->all(['discipline']),
         ]);
     }

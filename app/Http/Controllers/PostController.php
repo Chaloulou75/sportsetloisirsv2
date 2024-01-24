@@ -32,7 +32,6 @@ class PostController extends Controller
                     request(['search', 'author'])
                 );
 
-        // Filter posts based on the provided discipline
         if ($discipline) {
             $postsQuery->whereHas('disciplines', function ($query) use ($discipline) {
                 $query->where('discipline_post.discipline_id', $discipline->id);

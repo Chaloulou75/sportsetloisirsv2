@@ -27,11 +27,13 @@ class CityDisciplineStructuretypeActiviteController extends Controller
         $allCities = City::withProducts()->get();
 
 
-        $city = City::with(['structures', 'produits', 'produits.adresse'])
-        ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
-        ->where('slug', $city->slug)
-        ->withCount('produits')
-        ->first();
+        $city = City::with(['structures', 'produits.adresse'])
+                            ->withProductsAndDepartement()
+                            ->where('slug', $city->slug)
+                            ->withCount('produits')
+                            ->withCount('structures')
+                            ->first();
+
 
         $citiesAround = City::with('produits')->withCitiesAround($city)->get();
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Departement;
 
 use App\Models\City;
+use App\Models\Post;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Famille;
@@ -81,6 +82,8 @@ class DepartementDisciplineController extends Controller
             })->select(['id', 'name', 'slug', 'structuretype_id', 'address', 'zip_code', 'city', 'address_lat', 'address_lng'])->get();
         })->paginate(12);
 
+        $posts = Post::orderByDiscipline($discipline->id)->take(6)->get();
+
         $departement->timestamp = false;
         $departement->increment('view_count');
 
@@ -96,6 +99,7 @@ class DepartementDisciplineController extends Controller
             'discipline' => $discipline,
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,
+            'posts' => $posts,
         ]);
 
     }

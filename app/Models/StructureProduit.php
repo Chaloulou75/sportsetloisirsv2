@@ -113,7 +113,7 @@ class StructureProduit extends Model
     {
         $query->with([
             'adresse',
-            'discipline:id,name,slug',
+            'discipline:id,name,slug,theme',
             'dates',
             'horaire',
             'categorie',

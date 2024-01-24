@@ -21,6 +21,18 @@ class LienDisciplineCategorieCritere extends Model
      */
     protected $guarded = [];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'visible_back' => 'boolean',
+        'visible_front' => 'boolean',
+        'visible_block' => 'boolean',
+        'indexable' => 'boolean',
+    ];
+
     public function discipline(): BelongsTo
     {
         return $this->belongsTo(ListDiscipline::class, 'discipline_id');

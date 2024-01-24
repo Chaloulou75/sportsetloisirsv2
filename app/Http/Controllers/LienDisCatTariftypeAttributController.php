@@ -46,7 +46,7 @@ class LienDisCatTariftypeAttributController extends Controller
             'type_champ_form' => $request->type_champ['type'],
         ]);
 
-        return to_route('admin.disciplines.categories.tarifs.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Attribut ajouté');
+        return to_route('admin.disciplines.categories.tarifs.index', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Attribut ajouté');
 
     }
 
@@ -82,7 +82,7 @@ class LienDisCatTariftypeAttributController extends Controller
             'nom' => $request->nom,
         ]);
 
-        return to_route('admin.disciplines.categories.tarifs.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Attribut modifié');
+        return to_route('admin.disciplines.categories.tarifs.index', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Attribut modifié');
     }
 
     /**
@@ -95,6 +95,6 @@ class LienDisCatTariftypeAttributController extends Controller
 
         $attribut->delete();
 
-        return to_route('admin.disciplines.categories.tarifs.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Attribut de type de tarif supprimé');
+        return to_route('admin.disciplines.categories.tarifs.index', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Attribut de type de tarif supprimé');
     }
 }

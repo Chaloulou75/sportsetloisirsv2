@@ -121,7 +121,7 @@ const formatCityName = (ville) => {
             :data="data"
             @mouseover="emit('card-hover', structure)"
             @mouseout="emit('card-out')"
-            class="block rounded-lg shadow-sm shadow-sky-700 transition duration-300 ease-in-out hover:shadow-2xl md:px-0 md:hover:scale-105"
+            class="block h-full rounded-lg shadow-sm shadow-sky-700 transition duration-300 ease-in-out hover:shadow-2xl md:px-0 md:hover:scale-105"
         >
             <div class="relative flex items-center justify-center">
                 <!-- Button (positioned on top right) -->
@@ -185,7 +185,6 @@ const formatCityName = (ville) => {
                         v-if="structure.adresses.length > 0"
                         class="text-sm font-medium"
                     >
-                        {{ structure.adresses[0].address }},
                         {{ formatCityName(structure.adresses[0].city) }}
                         <span class="text-xs"
                             >({{ structure.adresses[0].zip_code }})</span
@@ -193,7 +192,6 @@ const formatCityName = (ville) => {
                     </div>
 
                     <div v-else class="text-sm font-medium">
-                        {{ structure.address }},
                         <span>{{ formatCityName(structure.city) }}</span>
                         <span class="text-xs">({{ structure.zip_code }})</span>
                     </div>
@@ -208,7 +206,7 @@ const formatCityName = (ville) => {
                     structure: structure.slug,
                 })
             "
-            class="block rounded-lg shadow-sm shadow-sky-700 transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl md:px-0"
+            class="block h-full rounded-lg shadow-sm shadow-sky-700 transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl md:px-0"
         >
             <div class="relative flex items-center justify-center">
                 <!-- Button (positioned on top right) -->
@@ -280,7 +278,6 @@ const formatCityName = (ville) => {
                         <dt class="sr-only">Ville</dt>
                         <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
                         <div class="text-sm font-medium">
-                            {{ structure.address }},
                             {{ formatCityName(structure.city) }}
                             <span class="text-xs"
                                 >({{ structure.zip_code }})</span

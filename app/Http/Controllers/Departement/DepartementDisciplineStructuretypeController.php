@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Departement;
 
 use App\Models\City;
+use App\Models\Post;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Famille;
@@ -91,6 +92,8 @@ class DepartementDisciplineStructuretypeController extends Controller
                             ->limit(10)
                             ->get();
 
+        $posts = Post::orderByDiscipline($discipline->id)->take(6)->get();
+
         $departement->timestamp = false;
         $departement->increment('view_count');
 
@@ -108,6 +111,7 @@ class DepartementDisciplineStructuretypeController extends Controller
             'discipline' => $discipline,
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,
+            'posts' => $posts,
         ]);
 
     }

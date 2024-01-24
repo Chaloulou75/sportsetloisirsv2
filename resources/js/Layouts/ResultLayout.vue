@@ -12,6 +12,8 @@ const props = defineProps({
     allCities: Object,
     discipline: Object,
     city: Object,
+    citiesAround: Object,
+    departement: Object,
     isCategoriesVisible: Boolean,
     isCriteresVisible: Boolean,
     currentCategory: Object,
@@ -58,7 +60,9 @@ const isShowing = ref(true);
                     :familles="familles"
                     :current-discipline="discipline"
                     :current-city="city"
+                    :current-departement="departement"
                     :current-category="currentCategory"
+                    :cities-around="citiesAround"
                 />
 
                 <slot name="header" />

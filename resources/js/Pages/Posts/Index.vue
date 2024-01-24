@@ -10,6 +10,7 @@ const Pagination = defineAsyncComponent(() =>
     import("@/Components/Pagination.vue")
 );
 import autoAnimate from "@formkit/auto-animate";
+import { ArrowRightIcon } from "@heroicons/vue/24/outline";
 const props = defineProps({
     posts: Object,
     filters: Object,
@@ -115,9 +116,12 @@ onMounted(() => {
                     <Link
                         v-if="user"
                         :href="route('posts.create')"
-                        class="flex w-full max-w-xs items-center justify-center rounded-md border border-gray-200 bg-indigo-800 px-4 py-2 text-base text-white shadow hover:bg-indigo-900"
+                        class="group flex items-center text-sm text-gray-800 hover:text-gray-900 md:text-base"
                     >
                         Ecrire un article
+                        <ArrowRightIcon
+                            class="ml-2 w-5 group-hover:text-gray-900"
+                        />
                     </Link>
                 </div>
                 <!-- search box -->

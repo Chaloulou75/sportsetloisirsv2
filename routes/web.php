@@ -201,7 +201,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/disciplines/dis-{discipline:slug}/categories', [CategoryDisciplineController::class, 'edit'])->name('admin.disciplines.categories.edit');
         Route::get('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/criteres', [CategoryDisciplineCritereController::class, 'edit'])->name('admin.disciplines.categories.criteres.edit');
 
-        Route::get('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs', [LienDisCatTariftypeController::class, 'edit'])->name('admin.disciplines.categories.tarifs.edit');
+        Route::get('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs', [LienDisCatTariftypeController::class, 'index'])->name('admin.disciplines.categories.tarifs.index');
+        Route::get('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/edit', [LienDisCatTariftypeController::class, 'edit'])->name('admin.disciplines.categories.tarifs.edit');
 
         Route::get('/criteres', [CritereController::class, 'index'])->name('admin.criteres.index');
         Route::post('/criteres', [CritereController::class, 'store'])->name('admin.criteres.store');

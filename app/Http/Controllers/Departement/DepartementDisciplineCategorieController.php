@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Departement;
 
 use App\Models\City;
+use App\Models\Post;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Famille;
@@ -31,21 +32,11 @@ class DepartementDisciplineCategorieController extends Controller
 
         $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('slug', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
 
-        $criteres = LienDisciplineCategorieCritere::with([
-                    'valeurs' => function ($query) {
-                        $query->orderBy('ordre');
-                    },
-                    'valeurs.sous_criteres',
-                    'valeurs.sous_criteres.sous_criteres_valeurs' => function ($query) {
-                        $query->orderBy('ordre');
-                    },
-                ])
+        $criteres = LienDisciplineCategorieCritere::withValeurs()
                 ->where('discipline_id', $discipline->id)
                 ->where('categorie_id', $category->id)
                 ->where('visible_front', true)
-                ->orderBy('ordre')
                 ->get();
-
 
         $departement = Departement::withCitiesAndRelations()
                         ->where('slug', $departement->slug)
@@ -112,6 +103,8 @@ class DepartementDisciplineCategorieController extends Controller
                             ->limit(10)
                             ->get();
 
+        $posts = Post::orderByDiscipline($discipline->id)->take(6)->get();
+
         $departement->timestamp = false;
         $departement->increment('view_count');
 
@@ -130,6 +123,7 @@ class DepartementDisciplineCategorieController extends Controller
             'discipline' => $discipline,
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,
+            'posts' => $posts,
         ]);
 
     }

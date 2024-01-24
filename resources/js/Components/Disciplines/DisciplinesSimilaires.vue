@@ -11,11 +11,14 @@ const DisciplineSmallCard = defineAsyncComponent(() =>
 </script>
 <template>
     <div
-        class="mx-auto w-full rounded bg-gray-50 px-4 py-4 text-gray-600 shadow-lg"
+        v-if="disciplinesSimilaires.length > 0"
+        class="mx-auto w-full px-4 py-4 text-gray-600"
     >
-        <h3 class="mb-4 text-center font-semibold md:text-xl">
+        <h2
+            class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
+        >
             Les disciplines similaires
-        </h3>
+        </h2>
         <div
             class="flex w-full flex-col flex-wrap items-stretch justify-start gap-4 md:flex-row"
         >

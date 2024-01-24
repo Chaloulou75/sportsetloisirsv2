@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Discipline;
 
 use App\Models\City;
+use App\Models\Post;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Famille;
@@ -72,6 +73,9 @@ class StructureTypeDisciplineController extends Controller
         })
         ->paginate(12);
 
+        $posts = Post::orderByDiscipline($discipline->id)->take(6)->get();
+
+
         $discipline->timestamp = false;
         $discipline->increment('view_count');
 
@@ -88,6 +92,7 @@ class StructureTypeDisciplineController extends Controller
             'criteres' => $criteres,
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,
+            'posts' => $posts,
         ]);
 
     }

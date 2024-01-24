@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\City;
 
 use App\Models\City;
+use App\Models\Post;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Famille;
@@ -30,10 +31,14 @@ class CityDisciplineStructuretypeController extends Controller
 
         $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
 
-        $city = City::with(['produits', 'produits.adresse'])->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
+
+        $city = City::with(['structures', 'produits.adresse'])
+                            ->withProductsAndDepartement()
                             ->where('slug', $city->slug)
+                            ->withCount('produits')
                             ->withCount('structures')
                             ->first();
+
 
         $citiesAround = City::with('produits')->withCitiesAround($city)->get();
 
@@ -115,6 +120,9 @@ class CityDisciplineStructuretypeController extends Controller
 
         $structures = $structuresFromCity->merge($citiesAroundStructures)->paginate(12);
 
+        $posts = Post::orderByDiscipline($discipline->id)->take(6)->get();
+
+
         $city->timestamp = false;
         $city->increment('view_count');
 
@@ -132,6 +140,7 @@ class CityDisciplineStructuretypeController extends Controller
             'discipline' => $discipline,
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,
+            'posts' => $posts,
         ]);
 
     }

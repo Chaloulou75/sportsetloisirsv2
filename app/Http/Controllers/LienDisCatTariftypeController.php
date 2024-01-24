@@ -16,31 +16,9 @@ use App\Models\LienDisciplineCategorie;
 class LienDisCatTariftypeController extends Controller
 {
     /**
-     * Store a newly created resource in storage.
+     * Show the index.
      */
-    public function store(Request $request, ListDiscipline $discipline, LienDisciplineCategorie $categorie): RedirectResponse
-    {
-        $user = auth()->user();
-        $this->authorize('viewAdmin', $user);
-
-        $request->validate([
-            'type.id' =>  ['required', Rule::exists('liste_tarifs_types', 'id')],
-            'nom' => ['nullable', 'string', 'min:3', 'max:255'],
-        ]);
-
-        $categorie->tarif_types()->create([
-            'discipline_id' => $discipline->id,
-            'tarif_type_id' => $request->type['id'],
-            'nom' => $request->nom ?? $request->type['type'],
-        ]);
-
-        return to_route('admin.disciplines.categories.tarifs.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Type de tarif ajouté');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ListDiscipline $discipline, LienDisciplineCategorie $categorie): Response
+    public function index(ListDiscipline $discipline, LienDisciplineCategorie $categorie): Response
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
@@ -69,7 +47,7 @@ class LienDisCatTariftypeController extends Controller
 
         $listeTarifsTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type'])->get();
 
-        return Inertia::render('Admin/Disciplines/Categories/Tarifs/Edit', [
+        return Inertia::render('Admin/Disciplines/Categories/Tarifs/Index', [
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
@@ -79,6 +57,69 @@ class LienDisCatTariftypeController extends Controller
             'listeTarifsTypes' => $listeTarifsTypes,
         ]);
 
+    }
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request, ListDiscipline $discipline, LienDisciplineCategorie $categorie): RedirectResponse
+    {
+        $user = auth()->user();
+        $this->authorize('viewAdmin', $user);
+
+        $request->validate([
+            'type.id' =>  ['required', Rule::exists('liste_tarifs_types', 'id')],
+            'nom' => ['nullable', 'string', 'min:3', 'max:255'],
+        ]);
+
+        $categorie->tarif_types()->create([
+            'discipline_id' => $discipline->id,
+            'tarif_type_id' => $request->type['id'],
+            'nom' => $request->nom ?? $request->type['type'],
+        ]);
+
+        return to_route('admin.disciplines.categories.tarifs.index', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Type de tarif ajouté');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(ListDiscipline $discipline, LienDisciplineCategorie $categorie, LienDisCatTariftype $tarifType): Response
+    {
+        $user = auth()->user();
+        $this->authorize('viewAdmin', $user);
+
+        $discipline = ListDiscipline::with('familles')->findOrFail($discipline->id);
+
+        $categorie = LienDisciplineCategorie::with([
+            'discipline',
+            'categorie',
+            'tarif_types',
+            'tarif_types.tarif_attributs.sous_attributs.valeurs',
+            'tarif_types.tarif_attributs.valeurs',
+        ])
+        ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+        ->findOrFail($categorie->id);
+
+        $categories = LienDisciplineCategorie::with([
+            'discipline',
+            'categorie',
+            'tarif_types',
+            'tarif_types.tarif_attributs.sous_attributs.valeurs',
+            'tarif_types.tarif_attributs.valeurs',
+        ])->where('discipline_id', $discipline->id)
+            ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+            ->get();
+
+
+        return Inertia::render('Admin/Disciplines/Categories/Tarifs/Edit', [
+            'user_can' => [
+                'view_admin' => $user->can('viewAdmin', User::class),
+            ],
+            'categorie' => $categorie,
+            'categories' => $categories,
+            'discipline' => $discipline,
+            'tarifType' => $tarifType,
+        ]);
     }
 
     /**
@@ -97,7 +138,7 @@ class LienDisCatTariftypeController extends Controller
             'nom' => $request->nom,
         ]);
 
-        return to_route('admin.disciplines.categories.tarifs.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Nom du type de tarif mis à jour');
+        return to_route('admin.disciplines.categories.tarifs.index', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Nom du type de tarif mis à jour');
     }
 
     /**
@@ -110,7 +151,7 @@ class LienDisCatTariftypeController extends Controller
 
         $tarifType->delete();
 
-        return to_route('admin.disciplines.categories.tarifs.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Type de tarif supprimé');
+        return to_route('admin.disciplines.categories.tarifs.index', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Type de tarif supprimé');
 
     }
 }

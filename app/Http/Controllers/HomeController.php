@@ -62,14 +62,15 @@ class HomeController extends Controller
             ->sortByDesc('count')
             ->values();
 
-        $lastStructures = Structure::with('structuretype:id,name')
-                ->select(['id', 'name', 'structuretype_id', 'slug', 'city', 'zip_code'])
+        $lastStructures = Structure::withRelations()
                 ->latest()
                 ->take(12)
                 ->get();
 
-        $posts = Post::with('author', 'comments', 'tags')
+        $posts = Post::with('author', 'comments', 'tags', 'disciplines')
                 ->withCount('comments')
+                ->orderByDesc('likes')
+                ->orderByDesc('views_count')
                 ->latest()
                 ->take(6)
                 ->get();

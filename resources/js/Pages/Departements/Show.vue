@@ -20,6 +20,10 @@ const StructureCard = defineAsyncComponent(() =>
     import("@/Components/Structures/StructureCard.vue")
 );
 
+const PostFeaturedCard = defineAsyncComponent(() =>
+    import("@/Components/Posts/PostFeaturedCard.vue")
+);
+
 const Pagination = defineAsyncComponent(() =>
     import("@/Components/Pagination.vue")
 );
@@ -32,6 +36,7 @@ const props = defineProps({
     produits: Object,
     structures: Object,
     flattenedDisciplines: Object,
+    posts: Object,
     filters: Object,
 });
 
@@ -103,6 +108,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
         :familles="familles"
         :list-disciplines="listDisciplines"
         :all-cities="allCities"
+        :departement="departement"
     >
         <template #header>
             <ResultsHeader>
@@ -341,11 +347,26 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                             />
                         </div>
                         <!-- Blog -->
-                        <h2
-                            class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
+                        <div
+                            v-if="posts.length > 0"
+                            class="my-8 px-3 md:my-16 md:px-6 lg:px-8"
                         >
-                            Les derniers articles
-                        </h2>
+                            <h2
+                                class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
+                            >
+                                Les derniers articles
+                            </h2>
+                            <div
+                                v-if="posts.length > 0"
+                                class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
+                            >
+                                <PostFeaturedCard
+                                    v-for="post in posts"
+                                    :key="post.id"
+                                    :post="post"
+                                />
+                            </div>
+                        </div>
                     </TransitionRoot>
 
                     <TransitionRoot
@@ -395,6 +416,27 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                 departement.departement
                             }}</span>
                         </p>
+                    </div>
+                    <!-- Blog -->
+                    <div
+                        v-if="posts.length > 0"
+                        class="my-8 px-3 md:my-16 md:px-6 lg:px-8"
+                    >
+                        <h2
+                            class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
+                        >
+                            Les derniers articles
+                        </h2>
+                        <div
+                            v-if="posts.length > 0"
+                            class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
+                        >
+                            <PostFeaturedCard
+                                v-for="post in posts"
+                                :key="post.id"
+                                :post="post"
+                            />
+                        </div>
                     </div>
                 </div>
             </template>

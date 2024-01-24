@@ -22,17 +22,20 @@ const formatCityName = (ville) => {
         leave-to="opacity-0"
     >
         <div
-            class="mx-auto w-full rounded bg-gray-50 px-4 py-4 text-gray-600 shadow-lg"
+            v-if="citiesAround.length > 0"
+            class="mx-auto w-full px-4 py-4 text-gray-600"
         >
-            <h3 class="mb-2 text-center font-semibold">
+            <h2
+                class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
+            >
                 Les localités à proximités
-            </h3>
+            </h2>
             <ul class="list-inside list-disc space-y-1.5">
                 <li v-for="city in citiesAround" :key="city.id">
                     <Link
                         :href="route('villes.show', city.slug)"
                         :active="route().current('villes.show', city.slug)"
-                        class="hover:text-gray-800 hover:underline"
+                        class="hover:font-semibold hover:text-gray-900"
                     >
                         {{ formatCityName(city.ville) }}
                         <span class="text-xs">({{ city.code_postal }})</span>

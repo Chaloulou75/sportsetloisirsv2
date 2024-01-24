@@ -69,13 +69,23 @@ class City extends Model
     public function scopeWithProducts(Builder $query): void
     {
         $query->whereHas('produits')
-        ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee']);
+            ->with('city_departement:id,slug,departement,numero,view_count')
+            ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon', 'departement']);
+    }
+
+    /**
+     * Scope a query to only include cities with products.
+     */
+    public function scopeWithProductsAndDepartement(Builder $query): void
+    {
+        $query->with(['produits', 'city_departement:id,slug,departement,numero,view_count'])
+            ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon', 'departement']);
     }
 
     public function scopeWithCitiesAround(Builder $query, $city, $limit = 10)
     {
         $query->whereHas('produits')
-            ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
+            ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
             ->selectRaw("
                 (6366 * acos(
                     cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) +
@@ -88,9 +98,14 @@ class City extends Model
             ->limit($limit);
     }
 
-    public function departement(): BelongsTo
+    protected function radians($degrees)
     {
-        return $this->belongsTo(Departement::class);
+        return $degrees * pi() / 180;
+    }
+
+    public function city_departement(): BelongsTo
+    {
+        return $this->belongsTo(Departement::class, 'departement', 'numero');
     }
 
     public function structures(): HasMany

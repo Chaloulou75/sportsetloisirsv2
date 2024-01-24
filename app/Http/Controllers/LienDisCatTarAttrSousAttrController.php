@@ -46,7 +46,7 @@ class LienDisCatTarAttrSousAttrController extends Controller
             'type_champ_form' => $request->type_champ['type'],
         ]);
 
-        return to_route('admin.disciplines.categories.tarifs.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Sous Attribut ajouté');
+        return to_route('admin.disciplines.categories.tarifs.index', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Sous Attribut ajouté');
 
     }
 
@@ -83,7 +83,7 @@ class LienDisCatTarAttrSousAttrController extends Controller
             'nom' => $request->nom,
         ]);
 
-        return to_route('admin.disciplines.categories.tarifs.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Sous Attribut modifié');
+        return to_route('admin.disciplines.categories.tarifs.index', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Sous Attribut modifié');
 
     }
 
@@ -98,7 +98,7 @@ class LienDisCatTarAttrSousAttrController extends Controller
 
         $sousAttribut->delete();
 
-        return to_route('admin.disciplines.categories.tarifs.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Sous Attribut supprimé');
+        return to_route('admin.disciplines.categories.tarifs.index', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Sous Attribut supprimé');
 
     }
 }

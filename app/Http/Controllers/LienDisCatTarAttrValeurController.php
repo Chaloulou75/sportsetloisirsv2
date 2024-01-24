@@ -44,7 +44,7 @@ class LienDisCatTarAttrValeurController extends Controller
             'valeur' => $request->valeur,
         ]);
 
-        return to_route('admin.disciplines.categories.tarifs.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Valeur ajoutée');
+        return to_route('admin.disciplines.categories.tarifs.index', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Valeur ajoutée');
     }
 
     /**
@@ -80,7 +80,7 @@ class LienDisCatTarAttrValeurController extends Controller
             'valeur' => $request->valeur,
         ]);
 
-        return to_route('admin.disciplines.categories.tarifs.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Valeur modifiée');
+        return to_route('admin.disciplines.categories.tarifs.index', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Valeur modifiée');
 
     }
 
@@ -93,6 +93,6 @@ class LienDisCatTarAttrValeurController extends Controller
         $this->authorize('viewAdmin', $user);
 
         $valeur->delete();
-        return to_route('admin.disciplines.categories.tarifs.edit', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Valeur supprimée');
+        return to_route('admin.disciplines.categories.tarifs.index', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Valeur supprimée');
     }
 }

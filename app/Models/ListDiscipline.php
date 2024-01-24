@@ -41,7 +41,8 @@ class ListDiscipline extends Model
         $query->with([
             'structureProduits',
             'disciplinesSimilaires' => function ($query) {
-                $query->select('discipline_similaire_id', 'name', 'slug', 'famille', 'theme', 'view_count');
+                $query->whereHas('structureProduits')
+                    ->select('discipline_similaire_id', 'name', 'slug', 'famille', 'theme', 'view_count');
             }
         ])->select(['id', 'name', 'slug', 'view_count', 'theme']);
     }

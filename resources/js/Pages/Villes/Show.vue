@@ -18,6 +18,7 @@ const props = defineProps({
     flattenedDisciplines: Object,
     listDisciplines: Object,
     allCities: Object,
+    posts: Object,
     filters: Object,
 });
 
@@ -31,6 +32,10 @@ const ProduitCard = defineAsyncComponent(() =>
 
 const StructureCard = defineAsyncComponent(() =>
     import("@/Components/Structures/StructureCard.vue")
+);
+
+const PostFeaturedCard = defineAsyncComponent(() =>
+    import("@/Components/Posts/PostFeaturedCard.vue")
 );
 
 const Pagination = defineAsyncComponent(() =>
@@ -108,6 +113,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
         :list-disciplines="listDisciplines"
         :all-cities="allCities"
         :city="city"
+        :cities-around="citiesAround"
     >
         <template #header>
             <ResultsHeader>
@@ -339,11 +345,23 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                             />
                         </div>
                         <!-- Blog -->
-                        <h2
-                            class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
-                        >
-                            Les derniers articles
-                        </h2>
+                        <div class="my-8 px-3 md:my-16 md:px-6 lg:px-8">
+                            <h2
+                                class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
+                            >
+                                Les derniers articles
+                            </h2>
+                            <div
+                                v-if="posts.length > 0"
+                                class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
+                            >
+                                <PostFeaturedCard
+                                    v-for="post in posts"
+                                    :key="post.id"
+                                    :post="post"
+                                />
+                            </div>
+                        </div>
                         <CitiesAround
                             v-if="citiesAround.length > 0"
                             :cities-around="props.citiesAround"
@@ -395,6 +413,27 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                         }}</span
                         >.
                     </p>
+                    <!-- Blog -->
+                    <div
+                        v-if="posts.length > 0"
+                        class="my-8 px-3 md:my-16 md:px-6 lg:px-8"
+                    >
+                        <h2
+                            class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
+                        >
+                            Les derniers articles
+                        </h2>
+                        <div
+                            v-if="posts.length > 0"
+                            class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
+                        >
+                            <PostFeaturedCard
+                                v-for="post in posts"
+                                :key="post.id"
+                                :post="post"
+                            />
+                        </div>
+                    </div>
                     <div
                         v-if="citiesAround.length > 0"
                         class="w-full px-4 md:w-1/3"
