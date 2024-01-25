@@ -8,7 +8,6 @@ use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Famille;
-use App\Models\Categorie;
 use App\Models\Structure;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -20,7 +19,6 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineSimilaire;
 use App\Http\Resources\CategorieResource;
-use Illuminate\Database\Eloquent\Builder;
 use App\Http\Resources\ListDisciplineResource;
 
 class DisciplineController extends Controller
@@ -66,7 +64,6 @@ class DisciplineController extends Controller
      */
     public function show(ListDiscipline $discipline): Response
     {
-
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
@@ -114,7 +111,6 @@ class DisciplineController extends Controller
             })
             ->paginate(12);
 
-        // filtrer par "visible_block true
         $produits = $discipline->structureProduits()
                     ->withRelations()
                     ->paginate(12);

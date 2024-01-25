@@ -232,6 +232,8 @@ const submitReservation = () => {
         :familles="familles"
         :list-disciplines="listDisciplines"
         :all-cities="allCities"
+        :departement="departement"
+        :city="city"
     >
         <template #header>
             <ResultsHeader>

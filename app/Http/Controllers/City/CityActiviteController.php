@@ -32,10 +32,9 @@ class CityActiviteController extends Controller
 
         $city = City::with(['structures', 'produits.adresse'])
                     ->withProductsAndDepartement()
-                    ->where('slug', $city->slug)
                     ->withCount('produits')
                     ->withCount('structures')
-                    ->first();
+                    ->find($city->id);
 
         $citiesAround = City::withCitiesAround($city)->get();
 
@@ -43,10 +42,9 @@ class CityActiviteController extends Controller
 
         $produits = $activite->produits;
 
-        $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
-            $query->orderBy('defaut', 'desc');
-        }])
-                ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))->whereIn('categorie_id', $activite->structure->categories->pluck('categorie_id'))
+        $criteres = LienDisciplineCategorieCritere::withValeurs()
+                ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))
+                ->whereIn('categorie_id', $activite->structure->categories->pluck('categorie_id'))
                 ->get();
 
         $activiteSimilaires = StructureActivite::withRelations()->whereNot('id', $activite->id)

@@ -308,6 +308,7 @@ const events = getEvents();
         :all-cities="allCities"
         :discipline="requestDiscipline"
         :city="city"
+        :departement="departement"
     >
         <template #header>
             <ResultsHeader>
@@ -938,7 +939,7 @@ const events = getEvents();
                                             critere.type_champ_form ===
                                             'adresse'
                                         "
-                                        class="flex w-full max-w-sm flex-col space-y-2"
+                                        class="flex flex-col w-full max-w-sm space-y-2"
                                     >
                                         <div v-if="!addAddress" class="flex-1">
                                             <label
@@ -947,7 +948,7 @@ const events = getEvents();
                                             >
                                                 Adresse
                                             </label>
-                                            <div class="mt-1 flex rounded-md">
+                                            <div class="flex mt-1 rounded-md">
                                                 <select
                                                     name="
                                                                 adresse
@@ -958,7 +959,7 @@ const events = getEvents();
                                                     v-model="
                                                         formCriteres.adresse
                                                     "
-                                                    class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                    class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
                                                 >
                                                     <option
                                                         v-for="adresse in structure.adresses"
@@ -978,7 +979,7 @@ const events = getEvents();
                                                 v-model="addAddress"
                                                 id="addAddress"
                                                 type="checkbox"
-                                                class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded form-checkbox focus:ring-blue-500"
                                             />
                                             <label
                                                 for="addAddress"

@@ -20,7 +20,7 @@ class DepartementDisciplineStructuretypeController extends Controller
     /**
      * Display the specified resource.
     */
-    public function show(Departement $departement, $discipline, $structuretype): Response
+    public function show(Departement $departement, ListDiscipline $discipline, Structuretype $structuretype): Response
     {
 
         $familles = Cache::remember('familles', 600, function () {
@@ -33,15 +33,13 @@ class DepartementDisciplineStructuretypeController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $discipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->where('slug', $discipline)
-        ->first();
+        $discipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->find($discipline->id);
 
-        $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
+        $structuretypeElected = Structuretype::select(['id', 'name', 'slug'])->find($structuretype->id);
 
         $departement = Departement::withCitiesAndRelations()
-                                ->where('slug', $departement->slug)
                                 ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count'])
-                                ->first();
+                                ->find($departement->id);
 
         $categories = LienDisciplineCategorie::withWhereHas('structures_produits.adresse', function ($query) use ($departement) {
             $query->whereIn('city_id', $departement->cities->pluck('id'));
@@ -67,7 +65,6 @@ class DepartementDisciplineStructuretypeController extends Controller
         $produits = $departement->cities->flatMap(function ($city) use ($discipline) {
             return $city->produits->where('discipline_id', $discipline->id);
         })->paginate(12);
-
 
         $structuresFlat = $departement->cities->flatMap(function ($city) use ($structuretypeElected, $discipline) {
             return $city->structures->where('structuretype_id', $structuretypeElected->id)->filter(function ($structure) use ($discipline) {

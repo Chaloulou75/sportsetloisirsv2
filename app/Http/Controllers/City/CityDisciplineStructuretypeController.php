@@ -21,7 +21,7 @@ class CityDisciplineStructuretypeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(City $city, $discipline, $structuretype): Response
+    public function show(City $city, ListDiscipline $discipline, StructureType $structuretype): Response
     {
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -33,19 +33,16 @@ class CityDisciplineStructuretypeController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $discipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->where('slug', $discipline)
-        ->first();
+        $discipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->find($discipline->id);
 
-        $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
+        $structuretypeElected = Structuretype::select(['id', 'name', 'slug'])->find($structuretype->id);
 
 
         $city = City::with(['structures', 'produits.adresse'])
                             ->withProductsAndDepartement()
-                            ->where('slug', $city->slug)
                             ->withCount('produits')
                             ->withCount('structures')
-                            ->first();
-
+                            ->find($city->id);
 
         $citiesAround = City::with('produits')->withCitiesAround($city)->get();
 
@@ -128,7 +125,6 @@ class CityDisciplineStructuretypeController extends Controller
         $structures = $structuresFromCity->merge($citiesAroundStructures)->paginate(12);
 
         $posts = Post::orderByDiscipline($discipline->id)->take(6)->get();
-
 
         $city->timestamp = false;
         $city->increment('view_count');

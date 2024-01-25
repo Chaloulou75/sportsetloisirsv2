@@ -407,7 +407,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
             <template v-else>
                 <div class="py-6 md:py-12">
                     <div
-                        class="mx-auto min-h-screen max-w-full px-2 sm:px-6 lg:px-8"
+                        class="mx-auto min-h-full max-w-full px-2 sm:px-6 lg:px-8"
                     >
                         <p class="font-medium text-gray-700">
                             Dommage, il n'y a pas encore d'activité inscrite

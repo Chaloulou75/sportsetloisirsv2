@@ -20,7 +20,7 @@ class CityDisciplineController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(City $city, $discipline): Response
+    public function show(City $city, ListDiscipline $discipline): Response
     {
 
         $familles = Cache::remember('familles', 600, function () {
@@ -33,16 +33,13 @@ class CityDisciplineController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $discipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->where('slug', $discipline)
-        ->first();
-
+        $discipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->find($discipline->id);
 
         $city = City::with(['structures', 'produits.adresse'])
                             ->withProductsAndDepartement()
-                            ->where('slug', $city->slug)
                             ->withCount('produits')
                             ->withCount('structures')
-                            ->first();
+                            ->find($city->id);
 
 
         $citiesAround = City::with('produits')->withCitiesAround($city)->get();

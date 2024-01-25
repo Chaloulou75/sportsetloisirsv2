@@ -23,7 +23,7 @@ class CityDisciplineStructuretypeStructureController extends Controller
     /**
       * Display the specified resource.
       */
-    public function show(City $city, $discipline, $structuretype, $structure): Response
+    public function show(City $city, ListDiscipline $discipline, StructureType $structuretype, Structure $structure): Response
     {
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -35,26 +35,20 @@ class CityDisciplineStructuretypeStructureController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $structure = Structure::withRelations()
-                            ->where('slug', $structure)
-                            ->first();
-
+        $structure = Structure::withRelations()->find($structure->id);
 
         $city = City::with(['structures', 'produits.adresse'])
                             ->withProductsAndDepartement()
-                            ->where('slug', $city->slug)
                             ->withCount('produits')
                             ->withCount('structures')
-                            ->first();
+                            ->find($city->id);
 
 
         $citiesAround = City::with('produits')->withCitiesAround($city)->get();
 
         $cityAroundIds = $citiesAround->pluck('id');
 
-        $requestDiscipline =
-ListDiscipline::withProductsAndDisciplinesSimilaires()->where('slug', $discipline)
-        ->first();
+        $requestDiscipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->find($discipline->id);
 
 
         $categories = LienDisciplineCategorie::withWhereHas('structures_produits.adresse', function (Builder $query) use ($city, $cityAroundIds) {
@@ -78,7 +72,7 @@ ListDiscipline::withProductsAndDisciplinesSimilaires()->where('slug', $disciplin
                 ->select(['id', 'name', 'slug'])
                 ->get();
 
-        $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
+        $structuretypeElected = Structuretype::select(['id', 'name', 'slug'])->find($structuretype->id);
 
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()

@@ -19,7 +19,7 @@ use App\Models\LienDisciplineCategorieCritere;
 
 class CityStructureController extends Controller
 {
-    public function show(City $city, $structure): Response
+    public function show(City $city, Structure $structure): Response
     {
         $discipline = request()->discipline;
         $departement = request()->departement;
@@ -37,9 +37,7 @@ class CityStructureController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $structure = Structure::withRelations()
-                            ->where('slug', $structure)
-                            ->first();
+        $structure = Structure::withRelations()->find($structure->id);
 
         if($departement !== null) {
             $departement = Departement::with([
@@ -58,10 +56,9 @@ class CityStructureController extends Controller
         if ($city !== null) {
             $city = City::with(['structures', 'produits.adresse'])
                                 ->withProductsAndDepartement()
-                                ->where('slug', $city->slug)
                                 ->withCount('produits')
                                 ->withCount('structures')
-                                ->first();
+                                ->find($city->id);
 
             $citiesAround = City::with('structures', 'produits', 'produits.adresse')->withCitiesAround($city)->get();
 
@@ -70,11 +67,8 @@ class CityStructureController extends Controller
         }
 
         if($discipline !== null) {
-            $requestDiscipline = ListDiscipline::where('slug', $discipline)
-                                        ->select(['id', 'name', 'slug', 'view_count', 'theme'])
-                                        ->first();
+            $requestDiscipline = ListDiscipline::where('slug', $discipline)->withProductsAndDisciplinesSimilaires()->first();
 
-            $disciplinesSimilaires = $requestDiscipline->disciplinesSimilaires()->select(['famille', 'name', 'slug'])->whereHas('structures')->get();
 
             $categories = $structure->activites->pluck('categorie')->where('discipline_id', $requestDiscipline->id);
 
@@ -83,13 +77,15 @@ class CityStructureController extends Controller
             ->get();
 
             if($category !== null) {
-                $requestCategory = LienDisciplineCategorie::where('discipline_id', $requestDiscipline->id)->where('id', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
+                $requestCategory = LienDisciplineCategorie::where('discipline_id', $requestDiscipline->id)->where('id', $category)
+                ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+                ->first();
             } else {
                 $requestCategory = null;
             }
 
             if($structuretype !== null) {
-                $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
+                $structuretypeElected = Structuretype::select(['id', 'name', 'slug'])->find($structuretype);
             } else {
                 $structuretypeElected = null;
             }
@@ -104,7 +100,6 @@ class CityStructureController extends Controller
         }
 
         $allStructureTypes = Structuretype::whereHas('structures')->select(['id', 'name', 'slug'])->get();
-
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
                         ->whereIn('discipline_id', $structure->activites->pluck('discipline_id'))

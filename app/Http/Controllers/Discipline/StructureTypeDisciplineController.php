@@ -21,7 +21,7 @@ class StructureTypeDisciplineController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ListDiscipline $discipline, $structuretype): Response
+    public function show(ListDiscipline $discipline, StructureType $structuretype): Response
     {
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -53,9 +53,9 @@ class StructureTypeDisciplineController extends Controller
                         ->select(['id', 'name', 'slug'])
                         ->get();
 
-        $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
+        $structuretypeElected = Structuretype::select(['id', 'name', 'slug'])->find($structuretype->id);
 
-        $criteres = LienDisciplineCategorieCritere::with('valeurs')->where('discipline_id', $discipline->id)->get();
+        $criteres = LienDisciplineCategorieCritere::withValeurs()->where('discipline_id', $discipline->id)->get();
 
         $structures = Structure::with([
             'adresses'  => function ($query) {
@@ -81,7 +81,6 @@ class StructureTypeDisciplineController extends Controller
         ->paginate(12);
 
         $posts = Post::orderByDiscipline($discipline->id)->take(6)->get();
-
 
         $discipline->timestamp = false;
         $discipline->increment('view_count');

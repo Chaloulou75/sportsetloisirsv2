@@ -18,7 +18,7 @@ return new class () extends Migration {
             $table->string('ico');
             $table->string('type');
             $table->string('diffuseur');
-            $table->text('derivés');
+            $table->text('derives');
             $table->integer('ordre');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();

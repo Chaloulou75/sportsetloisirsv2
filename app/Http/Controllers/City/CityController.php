@@ -70,9 +70,9 @@ class CityController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $city = City::withProductsAndDepartement()->where('slug', $city->slug)
+        $city = City::withProductsAndDepartement()
                     ->withCount('produits')
-                    ->first();
+                    ->find($city->id);
 
         $citiesAround = City::withCitiesAround($city)->get();
 

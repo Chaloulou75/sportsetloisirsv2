@@ -41,6 +41,7 @@ const props = defineProps({
     allCities: Object,
     produits: Object,
     structures: Object,
+    posts: Object,
 });
 
 const ProduitCard = defineAsyncComponent(() =>
@@ -53,6 +54,10 @@ const StructureCard = defineAsyncComponent(() =>
 
 const LeafletMapProduitMultiple = defineAsyncComponent(() =>
     import("@/Components/Maps/LeafletMapProduitMultiple.vue")
+);
+
+const PostFeaturedCard = defineAsyncComponent(() =>
+    import("@/Components/Posts/PostFeaturedCard.vue")
 );
 
 const DisciplinesSimilaires = defineAsyncComponent(() =>
@@ -528,14 +533,14 @@ onMounted(() => {
                         <!-- Dates x 2 -->
                         <!-- <div
                             v-if="critere.type_champ_form === 'dates'"
-                            class="flex max-w-sm flex-col items-start space-y-3"
+                            class="flex flex-col items-start max-w-sm space-y-3"
                         >
                             <div class="flex items-center">
                                 <input
                                     v-model="addDatesOpened"
                                     id="addDatesOpened"
                                     type="checkbox"
-                                    class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded form-checkbox focus:ring-blue-500"
                                 />
                                 <label
                                     for="addDatesOpened"
@@ -554,14 +559,14 @@ onMounted(() => {
                         <!-- Heures ouverture / fermeture -->
                         <!-- <div
                             v-if="critere.type_champ_form === 'times'"
-                            class="flex max-w-sm flex-col items-start space-y-3"
+                            class="flex flex-col items-start max-w-sm space-y-3"
                         >
                             <div class="flex items-center">
                                 <input
                                     v-model="addHoursOpened"
                                     id="addHoursOpened"
                                     type="checkbox"
-                                    class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded form-checkbox focus:ring-blue-500"
                                 />
                                 <label
                                     for="addHoursOpened"
@@ -581,14 +586,14 @@ onMounted(() => {
                         <!-- Date seule -->
                         <!-- <div
                             v-if="critere.type_champ_form === 'date'"
-                            class="flex max-w-sm flex-col items-start space-y-3"
+                            class="flex flex-col items-start max-w-sm space-y-3"
                         >
                             <div class="flex items-center">
                                 <input
                                     v-model="addDateOpen"
                                     id="addDateOpen"
                                     type="checkbox"
-                                    class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded form-checkbox focus:ring-blue-500"
                                 />
                                 <label
                                     for="addDateOpen"
@@ -607,14 +612,14 @@ onMounted(() => {
                         <!-- Heure seule -->
                         <!-- <div
                             v-if="critere.type_champ_form === 'time'"
-                            class="flex max-w-sm flex-col items-start space-y-3"
+                            class="flex flex-col items-start max-w-sm space-y-3"
                         >
                             <div class="flex items-center">
                                 <input
                                     v-model="addHourOpen"
                                     id="addHourOpen"
                                     type="checkbox"
-                                    class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded form-checkbox focus:ring-blue-500"
                                 />
                                 <label
                                     for="addHourOpen"
@@ -633,14 +638,14 @@ onMounted(() => {
                         <!-- Mois -->
                         <!-- <div v-if="critere.type_champ_form === 'mois'">
                             <div
-                                class="flex max-w-sm flex-col items-start space-y-3"
+                                class="flex flex-col items-start max-w-sm space-y-3"
                             >
                                 <div class="flex items-center">
                                     <input
                                         v-model="addMonthsOpen"
                                         id="addMonthsOpen"
                                         type="checkbox"
-                                        class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded form-checkbox focus:ring-blue-500"
                                     />
                                     <label
                                         for="addMonthsOpen"
@@ -660,7 +665,7 @@ onMounted(() => {
                         <!-- Adresse -->
                         <!-- <div
                             v-if="critere.type_champ_form === 'adresse'"
-                            class="flex w-full max-w-sm flex-col space-y-2"
+                            class="flex flex-col w-full max-w-sm space-y-2"
                         >
                             <div v-if="!addAddress" class="flex-1">
                                 <label
@@ -671,7 +676,7 @@ onMounted(() => {
                                 >
                                     Adresse
                                 </label>
-                                <div class="mt-1 flex rounded-md">
+                                <div class="flex mt-1 rounded-md">
                                     <select
                                         name="
                                                                 adresse
@@ -680,7 +685,7 @@ onMounted(() => {
                                                                 adresse
                                                             "
                                         v-model="form.adresse"
-                                        class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                        class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
                                     >
                                         <option
                                             v-for="adresse in structure.adresses"
@@ -700,7 +705,7 @@ onMounted(() => {
                                     v-model="addAddress"
                                     id="addAddress"
                                     type="checkbox"
-                                    class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded form-checkbox focus:ring-blue-500"
                                 />
                                 <label
                                     for="addAddress"
@@ -930,11 +935,23 @@ onMounted(() => {
                             />
                         </div>
                         <!-- Blog -->
-                        <h2
-                            class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
-                        >
-                            Les derniers articles
-                        </h2>
+                        <div class="my-8 px-3 md:my-16 md:px-6 lg:px-8">
+                            <h2
+                                class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
+                            >
+                                Les derniers articles
+                            </h2>
+                            <div
+                                v-if="posts.length > 0"
+                                class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
+                            >
+                                <PostFeaturedCard
+                                    v-for="post in posts"
+                                    :key="post.id"
+                                    :post="post"
+                                />
+                            </div>
+                        </div>
                         <!-- les disciplines similaires -->
                         <DisciplinesSimilaires
                             v-if="discipline.disciplines_similaires.length > 0"
@@ -980,13 +997,14 @@ onMounted(() => {
             </template>
             <template v-else>
                 <div
-                    class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
+                    class="mx-auto flex min-h-full max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
                 >
                     <p class="w-full font-medium text-gray-700 md:w-2/3">
                         Il n'y a pas encore d'activités en
                         <span class="font-semibold">{{ discipline.name }}</span
                         >.
                     </p>
+
                     <div
                         v-if="discipline.disciplines_similaires.length > 0"
                         class="w-full px-4 md:w-1/3"
@@ -995,6 +1013,24 @@ onMounted(() => {
                             :disciplines-similaires="
                                 discipline.disciplines_similaires
                             "
+                        />
+                    </div>
+                </div>
+                <!-- Blog -->
+                <div class="my-8 px-3 md:my-16 md:px-6 lg:px-8">
+                    <h2
+                        class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
+                    >
+                        Les derniers articles
+                    </h2>
+                    <div
+                        v-if="posts.length > 0"
+                        class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
+                    >
+                        <PostFeaturedCard
+                            v-for="post in posts"
+                            :key="post.id"
+                            :post="post"
                         />
                     </div>
                 </div>

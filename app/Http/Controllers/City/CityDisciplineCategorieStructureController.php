@@ -23,7 +23,7 @@ class CityDisciplineCategorieStructureController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(City $city, $discipline, $category, $structure): Response
+    public function show(City $city, ListDiscipline $discipline, $category, Structure $structure): Response
     {
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -35,26 +35,19 @@ class CityDisciplineCategorieStructureController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $structure = Structure::withRelations()
-                    ->where('slug', $structure)
-                    ->first();
-
+        $structure = Structure::withRelations()->find($structure->id);
 
         $city = City::with(['structures', 'produits.adresse'])
                             ->withProductsAndDepartement()
-                            ->where('slug', $city->slug)
                             ->withCount('produits')
                             ->withCount('structures')
-                            ->first();
-
+                            ->find($city->id);
 
         $citiesAround = City::with('produits')->withCitiesAround($city)->get();
 
         $cityAroundIds = $citiesAround->pluck('id');
 
-        $requestDiscipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->where('slug', $discipline)
-        ->first();
-
+        $requestDiscipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->find($discipline->id);
 
         $categories = LienDisciplineCategorie::withWhereHas('structures_produits.adresse', function (Builder $query) use ($city, $cityAroundIds) {
             $query->where('city_id', $city->id)->orWhereIn('city_id', $cityAroundIds);
@@ -77,15 +70,16 @@ class CityDisciplineCategorieStructureController extends Controller
                 ->select(['id', 'name', 'slug'])
                 ->get();
 
-        $requestCategory = LienDisciplineCategorie::where('discipline_id', $requestDiscipline->id)->where('slug', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
-
+        $requestCategory = LienDisciplineCategorie::where('discipline_id', $requestDiscipline->id)
+        ->where('slug', $category)
+        ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+        ->first();
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
                         ->whereIn('discipline_id', $structure->activites->pluck('discipline_id'))
                         ->whereIn('categorie_id', $structure->activites->pluck('categorie_id'))
                         ->where('visible_front', true)
                         ->get();
-
 
         $structure->timestamps = false;
         $structure->increment('view_count');

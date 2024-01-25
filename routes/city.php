@@ -68,10 +68,10 @@ Route::get('/{city:slug}/dis-{discipline:slug}/cat-{category:slug}/activites-{ac
 Route::get('/{city:slug}/dis-{discipline:slug}/typ-{structuretype:id}', [CityDisciplineStructuretypeController::class, 'show'])->name('villes.disciplines.structuretypes.show');
 // /villes/disciplines/structuretypes/
 
-Route::get('/{city:slug}/{discipline:slug}/typ-{structuretype:id}/str-{structure:slug}', [CityDisciplineStructuretypeStructureController::class, 'show'])->name('villes.disciplines.structuretypes.structures.show');
+Route::get('/{city:slug}/{discipline:slug}/typ-{structuretype}/str-{structure:slug}', [CityDisciplineStructuretypeStructureController::class, 'show'])->name('villes.disciplines.structuretypes.structures.show');
 // /villes/disciplines/structuretypes/structures/
 
-Route::get('/{city:slug}/dis-{discipline:slug}/typ-{structuretype:id}/activites-{activite:id}', [CityDisciplineStructuretypeActiviteController::class, 'show'])->name('villes.disciplines.structuretypes.activites.show');
+Route::get('/{city:slug}/dis-{discipline:slug}/typ-{structuretype}/activites-{activite:id}', [CityDisciplineStructuretypeActiviteController::class, 'show'])->name('villes.disciplines.structuretypes.activites.show');
 // /villes/disciplines/structuretypes/activites/
 
 Route::get('/localite-1/index.{extension?}', function ($extension = null) {

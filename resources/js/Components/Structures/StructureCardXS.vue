@@ -84,7 +84,6 @@ const formatCityName = (ville) => {
                         v-if="structure.adresses.length > 0"
                         class="list-inside list-disc text-xs font-medium"
                     >
-                        {{ structure.adresses[0].address }},
                         {{ formatCityName(structure.adresses[0].city) }}
                         <span class="text-xs"
                             >({{ structure.adresses[0].zip_code }})</span

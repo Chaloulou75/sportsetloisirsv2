@@ -23,6 +23,7 @@ const props = defineProps({
     disciplinesSimilaires: Object,
     listDisciplines: Object,
     allCities: Object,
+    posts: Object,
 });
 
 const LeafletMapProduitMultiple = defineAsyncComponent(() =>
@@ -137,6 +138,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
         :discipline="discipline"
         :categories="props.categories"
         :is-categories-visible="isCategoriesVisible"
+        :departement="departement"
     >
         <template #header>
             <ResultsHeader :discipline="discipline">
@@ -375,7 +377,6 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                             />
                         </div>
                         <!-- Blog -->
-                        <!-- Blog -->
                         <div
                             v-if="posts.length > 0"
                             class="my-8 px-3 md:my-16 md:px-6 lg:px-8"
@@ -441,27 +442,28 @@ const onfilteredStructuresUpdate = (filteredStr) => {
             </template>
             <template v-else>
                 <div
-                    class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
+                    class="mx-auto flex min-h-full max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
                 >
                     <p class="w-full font-medium text-gray-700 md:w-2/3">
                         Il n'y a pas encore d'activités en
-                        <span class="font-semibold">{{ discipline.name }}</span
-                        >{{ departement.prefixe }}
+                        <span class="font-semibold"
+                            >{{ discipline.name }}
+                        </span>
+                        {{ departement.prefixe }}
                         <span class="font-semibold">
                             {{ departement.departement }}</span
                         >.
                     </p>
-
-                    <div
-                        v-if="discipline.disciplines_similaires.length > 0"
-                        class="w-full px-4 md:w-1/3"
-                    >
-                        <DisciplinesSimilaires
-                            :disciplines-similaires="
-                                discipline.disciplines_similaires
-                            "
-                        />
-                    </div>
+                </div>
+                <div
+                    v-if="discipline.disciplines_similaires.length > 0"
+                    class="w-full px-4"
+                >
+                    <DisciplinesSimilaires
+                        :disciplines-similaires="
+                            discipline.disciplines_similaires
+                        "
+                    />
                 </div>
                 <!-- Blog -->
                 <div

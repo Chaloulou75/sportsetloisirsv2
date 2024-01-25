@@ -60,19 +60,10 @@ class CategoryDisciplineController extends Controller
                         ->select(['id', 'name', 'slug'])
                         ->get();
 
-        $criteres = LienDisciplineCategorieCritere::with([
-            'valeurs' => function ($query) {
-                $query->orderBy('ordre');
-            },
-            'valeurs.sous_criteres',
-            'valeurs.sous_criteres.sous_criteres_valeurs' => function ($query) {
-                $query->orderBy('ordre');
-            },
-        ])
+        $criteres = LienDisciplineCategorieCritere::withValeurs()
         ->where('discipline_id', $discipline->id)
         ->where('categorie_id', $category->id)
         ->where('visible_front', true)
-        ->orderBy('ordre')
         ->get();
 
         $structures = Structure::with([

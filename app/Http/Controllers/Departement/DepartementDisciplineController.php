@@ -21,7 +21,7 @@ class DepartementDisciplineController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Departement $departement, $discipline): Response
+    public function show(Departement $departement, ListDiscipline $discipline): Response
     {
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -33,13 +33,11 @@ class DepartementDisciplineController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $discipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->where('slug', $discipline)
-        ->first();
+        $discipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->find($discipline->id);
 
         $departement = Departement::withCitiesAndRelations()
-                ->where('slug', $departement->slug)
                 ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count'])
-                ->first();
+                ->find($departement->id);
 
         $categories = LienDisciplineCategorie::whereHas('structures_produits.adresse', function ($query) use ($departement) {
             $query->whereIn('city_id', $departement->cities->pluck('id'));

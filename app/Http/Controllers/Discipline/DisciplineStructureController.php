@@ -22,7 +22,7 @@ class DisciplineStructureController extends Controller
     /**
     * Display the specified resource.
     */
-    public function show(ListDiscipline $discipline, $structure): Response
+    public function show(ListDiscipline $discipline, Structure $structure): Response
     {
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -34,16 +34,9 @@ class DisciplineStructureController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $structure = Structure::withRelations()
-                            ->where('slug', $structure)
-                            ->first();
+        $structure = Structure::withRelations()->find($structure->id);
 
-        $requestDiscipline = ListDiscipline::with([
-                'structureProduits',
-                'disciplinesSimilaires' => function ($query) {
-                    $query->select('discipline_similaire_id', 'name', 'slug', 'famille');
-                }
-            ])
+        $requestDiscipline = ListDiscipline::withProductsAndDisciplinesSimilaires()
             ->where('slug', $discipline->slug)
             ->select(['id', 'name', 'slug', 'view_count', 'theme'])
             ->first();

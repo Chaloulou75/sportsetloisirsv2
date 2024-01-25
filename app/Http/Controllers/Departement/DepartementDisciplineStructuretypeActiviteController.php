@@ -19,9 +19,9 @@ use App\Models\LienDisciplineCategorieCritere;
 
 class DepartementDisciplineStructuretypeActiviteController extends Controller
 {
-    public function show(Departement $departement, $discipline, $structuretype, $activite, ?string $produit = null): Response
+    public function show(Departement $departement, ListDiscipline $discipline, $structuretype, $activite, ?string $produit = null): Response
     {
-        $selectedProduit = StructureProduit::where('id', request()->produit)->first();
+        $selectedProduit = StructureProduit::find(request()->produit);
 
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -33,15 +33,11 @@ class DepartementDisciplineStructuretypeActiviteController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $requestDiscipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->where('slug', $discipline)
-        ->first();
+        $requestDiscipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->find($discipline->id);
 
-        $departement = Departement::with(['cities' => function ($query) {
-            $query->whereHas('produits');
-        }])
-                ->where('slug', $departement->slug)
+        $departement = Departement::withCitiesAndRelations()
                 ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count'])
-                ->first();
+                ->find($departement->id);
 
         $categories = LienDisciplineCategorie::whereHas('structures_produits.adresse', function ($query) use ($departement) {
             $query->whereIn('city_id', $departement->cities->pluck('id'));
@@ -63,16 +59,16 @@ class DepartementDisciplineStructuretypeActiviteController extends Controller
         })
                         ->select(['id', 'name', 'slug'])
                         ->get();
-        $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
+
+        $structuretypeElected = Structuretype::select(['id', 'name', 'slug'])->find($structuretype);
 
         $activite = StructureActivite::withRelations()->find($activite);
 
         $produits = $activite->produits;
 
-        $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
-            $query->orderBy('defaut', 'desc');
-        }])
-                ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))->whereIn('categorie_id', $activite->structure->categories->pluck('categorie_id'))
+        $criteres = LienDisciplineCategorieCritere::withValeurs()
+                ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))
+                ->whereIn('categorie_id', $activite->structure->categories->pluck('categorie_id'))
                 ->get();
 
         $activiteSimilaires = StructureActivite::withRelations()->whereNot('id', $activite->id)

@@ -22,7 +22,7 @@ class DisciplineStructuretypeStructureController extends Controller
     /**
       * Display the specified resource.
       */
-    public function show(ListDiscipline $discipline, $structuretype, $structure): Response
+    public function show(ListDiscipline $discipline, StructureType $structuretype, Structure $structure): Response
     {
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -34,9 +34,7 @@ class DisciplineStructuretypeStructureController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $structure = Structure::withRelations()
-                            ->where('slug', $structure)
-                            ->first();
+        $structure = Structure::withRelations()->find($structure->id);
 
         $requestDiscipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->find($discipline->id);
 
@@ -58,7 +56,7 @@ class DisciplineStructuretypeStructureController extends Controller
         ->select(['id', 'name', 'slug'])
         ->get();
 
-        $structuretypeElected = Structuretype::select(['id', 'name', 'slug'])->find($structuretype);
+        $structuretypeElected = Structuretype::select(['id', 'name', 'slug'])->find($structuretype->id);
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
                 ->whereIn('discipline_id', $structure->activites->pluck('discipline_id'))

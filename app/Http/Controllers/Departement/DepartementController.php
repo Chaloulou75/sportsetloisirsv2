@@ -73,9 +73,8 @@ class DepartementController extends Controller
         });
 
         $departement = Departement::withCitiesAndRelations()
-        ->where('slug', $departement->slug)
         ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count'])
-        ->first();
+        ->find($departement->id);
 
         $collectionProduits = $departement->cities->flatMap(function ($city) {
             return $city->produits;

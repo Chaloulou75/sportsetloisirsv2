@@ -22,6 +22,7 @@ const props = defineProps({
     disciplinesSimilaires: Object,
     listDisciplines: Object,
     allCities: Object,
+    posts: Object,
 });
 
 const ProduitCard = defineAsyncComponent(() =>
@@ -34,6 +35,10 @@ const StructureCard = defineAsyncComponent(() =>
 
 const LeafletMapProduitMultiple = defineAsyncComponent(() =>
     import("@/Components/Maps/LeafletMapProduitMultiple.vue")
+);
+
+const PostFeaturedCard = defineAsyncComponent(() =>
+    import("@/Components/Posts/PostFeaturedCard.vue")
 );
 
 const DisciplinesSimilaires = defineAsyncComponent(() =>
@@ -362,11 +367,23 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                             />
                         </div>
                         <!-- Blog -->
-                        <h2
-                            class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
-                        >
-                            Les derniers articles
-                        </h2>
+                        <div class="my-8 px-3 md:my-16 md:px-6 lg:px-8">
+                            <h2
+                                class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
+                            >
+                                Les derniers articles
+                            </h2>
+                            <div
+                                v-if="posts.length > 0"
+                                class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
+                            >
+                                <PostFeaturedCard
+                                    v-for="post in posts"
+                                    :key="post.id"
+                                    :post="post"
+                                />
+                            </div>
+                        </div>
                         <!-- les disciplines similaires -->
                         <DisciplinesSimilaires
                             v-if="discipline.disciplines_similaires.length > 0"
@@ -419,6 +436,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                         <span class="font-semibold">{{ discipline.name }}</span
                         >.
                     </p>
+
                     <div
                         v-if="discipline.disciplines_similaires.length > 0"
                         class="w-full px-4 md:w-1/3"
@@ -427,6 +445,23 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                             :disciplines-similaires="
                                 discipline.disciplines_similaires
                             "
+                        />
+                    </div>
+                </div>
+                <div class="my-8 px-3 md:my-16 md:px-6 lg:px-8">
+                    <h2
+                        class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
+                    >
+                        Les derniers articles
+                    </h2>
+                    <div
+                        v-if="posts.length > 0"
+                        class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
+                    >
+                        <PostFeaturedCard
+                            v-for="post in posts"
+                            :key="post.id"
+                            :post="post"
                         />
                     </div>
                 </div>

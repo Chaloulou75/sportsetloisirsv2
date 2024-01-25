@@ -18,9 +18,9 @@ use App\Models\LienDisciplineCategorieCritere;
 
 class DisciplineStructuretypeActiviteController extends Controller
 {
-    public function show(ListDiscipline $discipline, $structuretype, $activite, ?string $produit = null): Response
+    public function show(ListDiscipline $discipline, Structuretype $structuretype, $activite, ?string $produit = null): Response
     {
-        $selectedProduit = StructureProduit::where('id', request()->produit)->first();
+        $selectedProduit = StructureProduit::find(request()->produit);
 
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -31,7 +31,6 @@ class DisciplineStructuretypeActiviteController extends Controller
         $listDisciplines = Cache::remember('listDisciplines', 600, function () {
             return ListDiscipline::withProducts()->get();
         });
-
 
         $requestDiscipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->find($discipline->id);
 
@@ -53,17 +52,15 @@ class DisciplineStructuretypeActiviteController extends Controller
         ->select(['id', 'name', 'slug'])
         ->get();
 
-
-        $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
+        $structuretypeElected = Structuretype::select(['id', 'name', 'slug'])->find($structuretype->id);
 
         $activite = StructureActivite::withRelations()->find($activite);
 
         $produits = $activite->produits;
 
-        $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
-            $query->orderBy('defaut', 'desc');
-        }])
-                ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))->whereIn('categorie_id', $activite->structure->categories->pluck('categorie_id'))
+        $criteres = LienDisciplineCategorieCritere::withValeurs()
+                ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))
+                ->whereIn('categorie_id', $activite->structure->categories->pluck('categorie_id'))
                 ->get();
 
         $activiteSimilaires = StructureActivite::withRelations()->whereNot('id', $activite->id)

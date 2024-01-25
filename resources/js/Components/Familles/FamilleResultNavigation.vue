@@ -665,7 +665,8 @@ onMounted(() => {
                                         type="button"
                                         :class="{
                                             'rounded px-2 text-gray-800 group-hover:text-black md:bg-white md:py-2':
-                                                !currentCity,
+                                                !currentCity &&
+                                                !currentDepartement,
                                             'text-gray-100 group-hover:text-white':
                                                 currentDiscipline?.theme ===
                                                 'dark',

@@ -20,7 +20,7 @@ class DisciplineCategorieActiviteController extends Controller
 {
     public function show(ListDiscipline $discipline, $category, $activite, ?string $produit = null): Response
     {
-        $selectedProduit = StructureProduit::where('id', request()->produit)->first();
+        $selectedProduit = StructureProduit::find(request()->produit);
 
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -57,13 +57,7 @@ class DisciplineCategorieActiviteController extends Controller
         $activite = StructureActivite::withRelations()->find($activite);
         $produits = $activite->produits;
 
-        $criteres = LienDisciplineCategorieCritere::with([
-            'valeurs' => function ($query) {
-                $query->orderBy('defaut', 'desc');
-            },
-            'valeurs.sous_criteres',
-            'valeurs.sous_criteres.sous_criteres_valeurs'
-        ])
+        $criteres = LienDisciplineCategorieCritere::withValeurs()
         ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))->whereIn('categorie_id', $activite->structure->categories->pluck('categorie_id'))
         ->get();
 

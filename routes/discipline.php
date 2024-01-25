@@ -27,11 +27,11 @@ Route::get('/dis-{discipline:slug}/cat-{category:slug}/str-{structure:slug}', [D
 
 Route::get('/dis-{discipline:slug}/cat-{category:slug}/activite-{activite:id}', [DisciplineCategorieActiviteController::class, 'show'])->name('disciplines.categories.activites.show');
 
-Route::get('/dis-{discipline:slug}/typ-{structuretype:id}', [StructureTypeDisciplineController::class, 'show'])->name('disciplines.structuretypes.show');
+Route::get('/dis-{discipline:slug}/typ-{structuretype}', [StructureTypeDisciplineController::class, 'show'])->name('disciplines.structuretypes.show');
 
-Route::get('/dis-{discipline:slug}/typ-{structuretype:id}/str-{structure:slug}', [DisciplineStructuretypeStructureController::class, 'show'])->name('disciplines.structuretypes.structures.show');
+Route::get('/dis-{discipline:slug}/typ-{structuretype}/str-{structure:slug}', [DisciplineStructuretypeStructureController::class, 'show'])->name('disciplines.structuretypes.structures.show');
 
-Route::get('/dis-{discipline:slug}/typ-{structuretype:id}/activite-{activite:id}', [DisciplineStructuretypeActiviteController::class, 'show'])->name('disciplines.structuretypes.activites.show');
+Route::get('/dis-{discipline:slug}/typ-{structuretype}/activite-{activite:id}', [DisciplineStructuretypeActiviteController::class, 'show'])->name('disciplines.structuretypes.activites.show');
 
 Route::get('/discipline/index.{extension?}', function ($extension = null) {
     return redirect('/disciplines/', 301);

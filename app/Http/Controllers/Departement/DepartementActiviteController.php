@@ -18,7 +18,7 @@ class DepartementActiviteController extends Controller
 {
     public function show(Departement $departement, $activite, ?string $produit = null): Response
     {
-        $selectedProduit = StructureProduit::where('id', request()->produit)->first();
+        $selectedProduit = StructureProduit::find(request()->produit);
 
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -30,22 +30,17 @@ class DepartementActiviteController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-
-        $departement = Departement::with(['cities' => function ($query) {
-            $query->withWhereHas('produits');
-        }])
-                ->where('slug', $departement->slug)
+        $departement = Departement::withCitiesAndRelations()
                 ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count'])
-                ->first();
+                ->find($departement->id);
 
         $activite = StructureActivite::withRelations()->find($activite);
 
         $produits = $activite->produits;
 
-        $criteres = LienDisciplineCategorieCritere::with(['valeurs' => function ($query) {
-            $query->orderBy('defaut', 'desc');
-        }])
-                ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))->whereIn('categorie_id', $activite->structure->categories->pluck('categorie_id'))
+        $criteres = LienDisciplineCategorieCritere::withValeurs()
+                ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))
+                ->whereIn('categorie_id', $activite->structure->categories->pluck('categorie_id'))
                 ->get();
 
         $activiteSimilaires = StructureActivite::withRelations()->whereNot('id', $activite->id)

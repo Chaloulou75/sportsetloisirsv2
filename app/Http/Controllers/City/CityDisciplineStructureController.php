@@ -23,7 +23,7 @@ class CityDisciplineStructureController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(City $city, $discipline, $structure): Response
+    public function show(City $city, ListDiscipline $discipline, Structure $structure): Response
     {
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -35,25 +35,20 @@ class CityDisciplineStructureController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $structure = Structure::withRelations()
-                            ->where('slug', $structure)
-                            ->first();
-
+        $structure = Structure::withRelations()->find($structure->id);
 
         $city = City::with(['structures', 'produits.adresse'])
                             ->withProductsAndDepartement()
-                            ->where('slug', $city->slug)
                             ->withCount('produits')
                             ->withCount('structures')
-                            ->first();
+                            ->find($city->id);
 
 
         $citiesAround = City::with('produits')->withCitiesAround($city)->get();
 
         $cityAroundIds = $citiesAround->pluck('id');
 
-        $requestDiscipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->where('slug', $discipline)
-        ->first();
+        $requestDiscipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->find($discipline->id);
 
         $categories = LienDisciplineCategorie::withWhereHas('structures_produits.adresse', function (Builder $query) use ($city, $cityAroundIds) {
             $query->where('city_id', $city->id)->orWhereIn('city_id', $cityAroundIds);
@@ -105,29 +100,5 @@ class CityDisciplineStructureController extends Controller
             'citiesAround' => $citiesAround,
             'requestDiscipline' => $requestDiscipline,
         ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

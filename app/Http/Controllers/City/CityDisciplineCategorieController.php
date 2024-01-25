@@ -21,7 +21,7 @@ class CityDisciplineCategorieController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(City $city, $discipline, $category): Response
+    public function show(City $city, ListDiscipline $discipline, $category): Response
     {
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -33,18 +33,19 @@ class CityDisciplineCategorieController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $discipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->where('slug', $discipline)
-        ->first();
+        $discipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->find($discipline->id);
 
-        $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('slug', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
+        $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)
+        ->where('slug', $category)
+        ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+        ->first();
 
 
         $city = City::with(['structures', 'produits.adresse'])
                             ->withProductsAndDepartement()
-                            ->where('slug', $city->slug)
                             ->withCount('produits')
                             ->withCount('structures')
-                            ->first();
+                            ->find($city->id);
 
         $citiesAround = City::with('produits')->withCitiesAround($city)->get();
 

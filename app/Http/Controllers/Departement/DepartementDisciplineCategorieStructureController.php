@@ -19,7 +19,7 @@ use App\Models\LienDisciplineCategorieCritere;
 
 class DepartementDisciplineCategorieStructureController extends Controller
 {
-    public function show(Departement $departement, $discipline, $category, $structure): Response
+    public function show(Departement $departement, ListDiscipline $discipline, $category, $structure): Response
     {
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -35,15 +35,11 @@ class DepartementDisciplineCategorieStructureController extends Controller
                             ->where('slug', $structure)
                             ->first();
 
-        $requestDiscipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->where('slug', $discipline)
-        ->first();
+        $requestDiscipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->find($discipline->id);
 
-        $departement = Departement::with(['cities' => function ($query) {
-            $query->whereHas('produits');
-        }])
-                ->where('slug', $departement->slug)
+        $departement = Departement::withCitiesAndRelations()
                 ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count'])
-                ->first();
+                ->find($departement->id);
 
         $categories = LienDisciplineCategorie::whereHas('structures_produits.adresse', function ($query) use ($departement) {
             $query->whereIn('city_id', $departement->cities->pluck('id'));
@@ -66,8 +62,10 @@ class DepartementDisciplineCategorieStructureController extends Controller
                         ->select(['id', 'name', 'slug'])
                         ->get();
 
-        $requestCategory = LienDisciplineCategorie::where('discipline_id', $requestDiscipline->id)->where('slug', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
-
+        $requestCategory = LienDisciplineCategorie::where('discipline_id', $requestDiscipline->id)
+        ->where('slug', $category)
+        ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+        ->first();
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
                         ->whereIn('discipline_id', $structure->activites->pluck('discipline_id'))

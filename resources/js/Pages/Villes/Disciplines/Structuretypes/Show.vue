@@ -23,6 +23,7 @@ const props = defineProps({
     discipline: Object,
     listDisciplines: Object,
     allCities: Object,
+    posts: Object,
 });
 
 const ProduitCard = defineAsyncComponent(() =>
@@ -35,6 +36,10 @@ const StructureCard = defineAsyncComponent(() =>
 
 const LeafletMapProduitMultiple = defineAsyncComponent(() =>
     import("@/Components/Maps/LeafletMapProduitMultiple.vue")
+);
+
+const PostFeaturedCard = defineAsyncComponent(() =>
+    import("@/Components/Posts/PostFeaturedCard.vue")
 );
 
 const DisciplinesSimilaires = defineAsyncComponent(() =>
@@ -398,11 +403,23 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                             />
                         </div>
                         <!-- Blog -->
-                        <h2
-                            class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
-                        >
-                            Les derniers articles
-                        </h2>
+                        <div class="my-8 px-3 md:my-16 md:px-6 lg:px-8">
+                            <h2
+                                class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
+                            >
+                                Les derniers articles
+                            </h2>
+                            <div
+                                v-if="posts.length > 0"
+                                class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
+                            >
+                                <PostFeaturedCard
+                                    v-for="post in posts"
+                                    :key="post.id"
+                                    :post="post"
+                                />
+                            </div>
+                        </div>
                         <!-- les disciplines similaires -->
                         <DisciplinesSimilaires
                             v-if="discipline.disciplines_similaires.length > 0"
@@ -448,10 +465,10 @@ const onfilteredStructuresUpdate = (filteredStr) => {
             </template>
             <template v-else>
                 <div
-                    class="mx-auto flex min-h-screen max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
+                    class="mx-auto flex min-h-full max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
                 >
                     <p class="w-full font-medium text-gray-700 md:w-2/3">
-                        Dommage, il n'y a pas encore de structures ou activités
+                        Dommage, il n'y a pas encore de structure ou activité
                         inscrites de type
                         <span class="font-semibold text-gray-800">{{
                             structuretypeElected.name
@@ -465,21 +482,38 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                             formatCityName(city.ville)
                         }}</span>
                     </p>
-
-                    <div
-                        v-if="discipline.disciplines_similaires.length > 0"
-                        class="w-full px-4 md:w-1/3"
+                </div>
+                <div
+                    v-if="discipline.disciplines_similaires.length > 0"
+                    class="w-full px-4"
+                >
+                    <DisciplinesSimilaires
+                        :disciplines-similaires="
+                            discipline.disciplines_similaires
+                        "
+                    />
+                </div>
+                <CitiesAround
+                    v-if="citiesAround.length > 0"
+                    :cities-around="props.citiesAround"
+                />
+                <!-- Blog -->
+                <div class="my-8 px-3 md:my-16 md:px-6 lg:px-8">
+                    <h2
+                        class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
                     >
-                        <DisciplinesSimilaires
-                            :disciplines-similaires="
-                                discipline.disciplines_similaires
-                            "
+                        Les derniers articles
+                    </h2>
+                    <div
+                        v-if="posts.length > 0"
+                        class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
+                    >
+                        <PostFeaturedCard
+                            v-for="post in posts"
+                            :key="post.id"
+                            :post="post"
                         />
                     </div>
-                    <CitiesAround
-                        v-if="citiesAround.length > 0"
-                        :cities-around="props.citiesAround"
-                    />
                 </div>
             </template>
         </template>
