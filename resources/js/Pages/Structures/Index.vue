@@ -170,6 +170,11 @@ watch(
                                 :key="structure.id"
                                 :index="index"
                                 :structure="structure"
+                                :link="
+                                    route('structures.show', {
+                                        structure: structure,
+                                    })
+                                "
                                 @mouseover="showTooltip(structure)"
                                 @mouseout="hideTooltip()"
                             />

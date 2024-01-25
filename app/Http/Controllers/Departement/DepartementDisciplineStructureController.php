@@ -22,7 +22,7 @@ class DepartementDisciplineStructureController extends Controller
     /**
          * Display the specified resource.
          */
-    public function show(Departement $departement, ListDiscipline $discipline, $structure): Response
+    public function show(Departement $departement, ListDiscipline $discipline, Structure $structure): Response
     {
 
         $familles = Cache::remember('familles', 600, function () {
@@ -35,9 +35,7 @@ class DepartementDisciplineStructureController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $structure = Structure::withRelations()
-                            ->where('slug', $structure)
-                            ->first();
+        $structure = Structure::withRelations()->find($structure->id);
 
         $requestDiscipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->find($discipline->id);
 

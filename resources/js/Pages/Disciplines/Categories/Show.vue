@@ -881,9 +881,9 @@ onMounted(() => {
                                             route(
                                                 'disciplines.categories.structures.show',
                                                 {
-                                                    discipline: discipline.slug,
+                                                    discipline: discipline,
                                                     category: category.slug,
-                                                    structure: structure.slug,
+                                                    structure: structure,
                                                 }
                                             )
                                         "

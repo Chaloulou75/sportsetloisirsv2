@@ -34,17 +34,9 @@ class StructureProduit extends Model
     {
         return Attribute::make(
             get: function () {
-                $minAmount = PHP_INT_MAX;
-
-                if ($this->catTarifs && count($this->catTarifs) > 0) {
-                    foreach ($this->catTarifs as $catTarif) {
-                        if ($catTarif['amount'] < $minAmount) {
-                            $minAmount = $catTarif['amount'];
-                        }
-                    }
-                }
-
-                return $minAmount !== PHP_INT_MAX ? $minAmount : null;
+                return $this->catTarifs->isNotEmpty()
+                    ? $this->catTarifs->min('amount')
+                    : null;
             }
         );
     }

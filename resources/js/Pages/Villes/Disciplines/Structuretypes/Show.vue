@@ -347,11 +347,11 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                             route(
                                                 'villes.disciplines.structuretypes.structures.show',
                                                 {
-                                                    city: city.slug,
-                                                    discipline: discipline.slug,
+                                                    city: city,
+                                                    discipline: discipline,
                                                     structuretype:
-                                                        structuretypeElected.id,
-                                                    structure: structure.slug,
+                                                        structuretypeElected,
+                                                    structure: structure,
                                                 }
                                             )
                                         "

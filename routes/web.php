@@ -180,9 +180,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/categories', [CategoryController::class, 'store'])->name('admin.categories.store');
         Route::patch('/categories/{categorie}', [CategoryController::class, 'update'])->name('admin.categories.update');
         Route::delete('/categories/{categorie}', [CategoryController::class, 'destroy'])->name('admin.categories.destroy');
-        Route::post('/admin/categories/{categorie}/disciplines', [AdminCategorieDisciplineController::class, 'store'])->name('admin.categories.disciplines.store');
-        Route::delete('/admin/categories/{categorie}/disciplines', [AdminCategorieDisciplineController::class, 'destroy'])->name('admin.categories.disciplines.destroy');
-
+        Route::post('/categories/{categorie}/disciplines', [AdminCategorieDisciplineController::class, 'store'])->name('admin.categories.disciplines.store');
+        Route::delete('/categories/{categorie}/disciplines', [AdminCategorieDisciplineController::class, 'destroy'])->name('admin.categories.disciplines.destroy');
 
         Route::get('/utilisateurs', [UserController::class, 'index'])->name('admin.users.index');
         Route::get('/structures', [AdminStructureController::class, 'index'])->name('admin.structures.index');

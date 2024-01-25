@@ -234,7 +234,7 @@ const handleMoveEnd = () => {
                             :structure="structure"
                             :link="
                                 route('structures.show', {
-                                    structure: structure.slug,
+                                    structure: structure,
                                 })
                             "
                             :data="{}"

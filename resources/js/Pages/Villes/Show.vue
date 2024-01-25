@@ -293,8 +293,8 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                         @card-out="hideStructureTooltip"
                                         :link="
                                             route('villes.structures.show', {
-                                                city: city.slug,
-                                                structure: structure.slug,
+                                                city: city,
+                                                structure: structure,
                                             })
                                         "
                                         :data="{}"

@@ -293,9 +293,8 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                             route(
                                                 'departements.structures.show',
                                                 {
-                                                    departement:
-                                                        departement.slug,
-                                                    structure: structure.slug,
+                                                    departement: departement,
+                                                    structure: structure,
                                                 }
                                             )
                                         "

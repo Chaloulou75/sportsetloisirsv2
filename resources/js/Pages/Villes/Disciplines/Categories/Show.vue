@@ -913,10 +913,10 @@ onMounted(() => {
                                             route(
                                                 'villes.disciplines.categories.structures.show',
                                                 {
-                                                    city: city.slug,
-                                                    discipline: discipline.slug,
+                                                    city: city,
+                                                    discipline: discipline,
                                                     category: category.slug,
-                                                    structure: structure.slug,
+                                                    structure: structure,
                                                 }
                                             )
                                         "

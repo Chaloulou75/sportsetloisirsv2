@@ -910,11 +910,10 @@ onMounted(() => {
                                             route(
                                                 'departements.disciplines.categories.structures.show',
                                                 {
-                                                    departement:
-                                                        departement.slug,
-                                                    discipline: discipline.slug,
+                                                    departement: departement,
+                                                    discipline: discipline,
                                                     category: category.slug,
-                                                    structure: structure.slug,
+                                                    structure: structure,
                                                 }
                                             )
                                         "

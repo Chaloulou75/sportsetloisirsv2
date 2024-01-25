@@ -261,10 +261,7 @@ const formatCityName = (ville) => {
                             })
                         "
                         :active="
-                            route().current(
-                                'departements.show',
-                                departement.slug
-                            )
+                            route().current('departements.show', departement)
                         "
                         v-for="departement in topDepartements"
                         :key="departement.id"

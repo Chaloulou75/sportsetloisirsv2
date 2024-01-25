@@ -22,7 +22,6 @@ class CityDisciplineController extends Controller
      */
     public function show(City $city, ListDiscipline $discipline): Response
     {
-
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });

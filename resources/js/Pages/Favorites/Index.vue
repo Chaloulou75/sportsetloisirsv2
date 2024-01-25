@@ -142,6 +142,11 @@ const props = defineProps({
                             :key="structure.id"
                             :index="index"
                             :structure="structure"
+                            :link="
+                                route('structures.show', {
+                                    structure: structure,
+                                })
+                            "
                         />
                     </div>
                 </div>
