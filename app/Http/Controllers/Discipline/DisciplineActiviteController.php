@@ -18,7 +18,7 @@ use App\Models\LienDisciplineCategorieCritere;
 
 class DisciplineActiviteController extends Controller
 {
-    public function show(ListDiscipline $discipline, $activite, ?string $produit = null): Response
+    public function show(ListDiscipline $discipline, StructureActivite $activite, ?string $produit = null): Response
     {
         $selectedProduit = StructureProduit::find(request()->produit);
 
@@ -52,9 +52,9 @@ class DisciplineActiviteController extends Controller
         ->select(['id', 'name', 'slug'])
         ->get();
 
-        $activite = StructureActivite::withRelations()->find($activite);
+        $activite = StructureActivite::withRelations()->find($activite->id);
 
-        $produits = $activite->produits;
+        $produits = $activite->produits()->withRelations()->get();
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
                 ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))

@@ -22,6 +22,14 @@ class Structure extends Model
      */
     protected $guarded = [];
 
+    /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName(): String
+    {
+        return 'slug';
+    }
+
     protected $appends = [
         'image_url'
     ];
@@ -167,11 +175,11 @@ class Structure extends Model
                 'adresses'  => function ($query) {
                     $query->latest();
                 },
-                'city:id,ville,ville_formatee,code_postal',
+                'city',
                 'departement:id,departement,numero',
                 'structuretype:id,name,slug',
                 'disciplines',
-                'disciplines.discipline:id,name,slug',
+                'disciplines.discipline:id,name,slug,theme',
                 'categories',
                 'activites',
                 'activites.discipline:id,name',

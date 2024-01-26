@@ -239,9 +239,8 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                             route(
                                                 'disciplines.activites.show',
                                                 {
-                                                    discipline: discipline.slug,
-                                                    activite:
-                                                        produit.activite.id,
+                                                    discipline: discipline,
+                                                    activite: produit.activite,
                                                     produit: produit.id,
                                                 }
                                             )

@@ -827,10 +827,9 @@ onMounted(() => {
                                             route(
                                                 'disciplines.categories.activites.show',
                                                 {
-                                                    discipline: discipline.slug,
+                                                    discipline: discipline,
                                                     category: category.slug,
-                                                    activite:
-                                                        produit.activite.id,
+                                                    activite: produit.activite,
                                                     produit: produit.id,
                                                 }
                                             )

@@ -67,7 +67,7 @@ const showStructuresTypes = () => {
                 <Link
                     :href="
                         route('disciplines.show', {
-                            discipline: discipline.slug,
+                            discipline: discipline,
                         })
                     "
                     class="group relative flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
@@ -82,7 +82,7 @@ const showStructuresTypes = () => {
                     :key="categorie.id"
                     :href="
                         route('disciplines.categories.show', {
-                            discipline: discipline.slug,
+                            discipline: discipline,
                             category: categorie.slug,
                         })
                     "
@@ -115,7 +115,7 @@ const showStructuresTypes = () => {
                             preserve-scroll
                             :href="
                                 route('disciplines.categories.show', {
-                                    discipline: discipline.slug,
+                                    discipline: discipline,
                                     category: category.slug,
                                 })
                             "
@@ -132,8 +132,8 @@ const showStructuresTypes = () => {
                     :key="structureType.id"
                     :href="
                         route('disciplines.structuretypes.show', {
-                            discipline: discipline.slug,
-                            structuretype: structureType.id,
+                            discipline: discipline,
+                            structuretype: structureType,
                         })
                     "
                     class="w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-blue-400 focus:text-white focus:outline-none"
@@ -168,7 +168,7 @@ const showStructuresTypes = () => {
                 <Link
                     :href="
                         route('disciplines.show', {
-                            discipline: discipline.slug,
+                            discipline: discipline,
                         })
                     "
                     class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
@@ -214,7 +214,7 @@ const showStructuresTypes = () => {
                     preserve-scroll
                     :href="
                         route('disciplines.categories.show', {
-                            discipline: discipline.slug,
+                            discipline: discipline,
                             category: category.slug,
                         })
                     "
@@ -231,8 +231,8 @@ const showStructuresTypes = () => {
                     preserve-scroll
                     :href="
                         route('disciplines.structuretypes.show', {
-                            discipline: discipline.slug,
-                            structuretype: structureType.id,
+                            discipline: discipline,
+                            structuretype: structureType,
                         })
                     "
                     class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
@@ -255,7 +255,7 @@ const showStructuresTypes = () => {
                 <Link
                     :href="
                         route('villes.show', {
-                            city: city.slug,
+                            city: city,
                         })
                     "
                     class="group relative flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
@@ -270,8 +270,8 @@ const showStructuresTypes = () => {
                     :key="categorie.id"
                     :href="
                         route('villes.disciplines.categories.show', {
-                            city: city.slug,
-                            discipline: discipline.slug,
+                            city: city,
+                            discipline: discipline,
                             category: categorie.slug,
                         })
                     "
@@ -318,8 +318,8 @@ const showStructuresTypes = () => {
                             preserve-scroll
                             :href="
                                 route('villes.disciplines.categories.show', {
-                                    city: city.slug,
-                                    discipline: discipline.slug,
+                                    city: city,
+                                    discipline: discipline,
                                     category: category.slug,
                                 })
                             "
@@ -336,9 +336,9 @@ const showStructuresTypes = () => {
                     :key="structureType.id"
                     :href="
                         route('villes.disciplines.structuretypes.show', {
-                            city: city.slug,
-                            discipline: discipline.slug,
-                            structuretype: structureType.id,
+                            city: city,
+                            discipline: discipline,
+                            structuretype: structureType,
                         })
                     "
                     class="relative w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-sky-700 focus:text-white focus:outline-none"
@@ -388,7 +388,7 @@ const showStructuresTypes = () => {
                 <Link
                     :href="
                         route('villes.show', {
-                            city: city.slug,
+                            city: city,
                         })
                     "
                     class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
@@ -434,8 +434,8 @@ const showStructuresTypes = () => {
                     preserve-scroll
                     :href="
                         route('villes.disciplines.categories.show', {
-                            city: city.slug,
-                            discipline: discipline.slug,
+                            city: city,
+                            discipline: discipline,
                             category: category.slug,
                         })
                     "
@@ -452,9 +452,9 @@ const showStructuresTypes = () => {
                     preserve-scroll
                     :href="
                         route('villes.disciplines.structuretypes.show', {
-                            city: city.slug,
-                            discipline: discipline.slug,
-                            structuretype: structureType.id,
+                            city: city,
+                            discipline: discipline,
+                            structuretype: structureType,
                         })
                     "
                     class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
@@ -477,8 +477,8 @@ const showStructuresTypes = () => {
                 <Link
                     :href="
                         route('villes.disciplines.show', {
-                            city: city.slug,
-                            discipline: discipline.slug,
+                            city: city,
+                            discipline: discipline,
                         })
                     "
                     class="group relative flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
@@ -493,8 +493,8 @@ const showStructuresTypes = () => {
                     :key="categorie.id"
                     :href="
                         route('villes.disciplines.categories.show', {
-                            city: city.slug,
-                            discipline: discipline.slug,
+                            city: city,
+                            discipline: discipline,
                             category: categorie.slug,
                         })
                     "
@@ -571,8 +571,8 @@ const showStructuresTypes = () => {
                             preserve-scroll
                             :href="
                                 route('villes.disciplines.categories.show', {
-                                    city: city.slug,
-                                    discipline: discipline.slug,
+                                    city: city,
+                                    discipline: discipline,
                                     category: category.slug,
                                 })
                             "
@@ -589,9 +589,9 @@ const showStructuresTypes = () => {
                     :key="structureType.id"
                     :href="
                         route('villes.disciplines.structuretypes.show', {
-                            city: city.slug,
-                            discipline: discipline.slug,
-                            structuretype: structureType.id,
+                            city: city,
+                            discipline: discipline,
+                            structuretype: structureType,
                         })
                     "
                     class="relative w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-sky-700 focus:text-white focus:outline-none"
@@ -648,8 +648,8 @@ const showStructuresTypes = () => {
                 <Link
                     :href="
                         route('villes.disciplines.show', {
-                            city: city.slug,
-                            discipline: discipline.slug,
+                            city: city,
+                            discipline: discipline,
                         })
                     "
                     class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
@@ -697,8 +697,8 @@ const showStructuresTypes = () => {
                     preserve-scroll
                     :href="
                         route('villes.disciplines.categories.show', {
-                            city: city.slug,
-                            discipline: discipline.slug,
+                            city: city,
+                            discipline: discipline,
                             category: category.slug,
                         })
                     "
@@ -715,9 +715,9 @@ const showStructuresTypes = () => {
                     preserve-scroll
                     :href="
                         route('villes.disciplines.structuretypes.show', {
-                            city: city.slug,
-                            discipline: discipline.slug,
-                            structuretype: structureType.id,
+                            city: city,
+                            discipline: discipline,
+                            structuretype: structureType,
                         })
                     "
                     class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
@@ -740,7 +740,7 @@ const showStructuresTypes = () => {
                 <Link
                     :href="
                         route('departements.show', {
-                            departement: departement.slug,
+                            departement: departement,
                         })
                     "
                     class="group relative flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
@@ -755,8 +755,8 @@ const showStructuresTypes = () => {
                     :key="categorie.id"
                     :href="
                         route('departements.disciplines.categories.show', {
-                            departement: departement.slug,
-                            discipline: discipline.slug,
+                            departement: departement,
+                            discipline: discipline,
                             category: categorie.slug,
                         })
                     "
@@ -806,8 +806,8 @@ const showStructuresTypes = () => {
                                 route(
                                     'departements.disciplines.categories.show',
                                     {
-                                        departement: departement.slug,
-                                        discipline: discipline.slug,
+                                        departement: departement,
+                                        discipline: discipline,
                                         category: category.slug,
                                     }
                                 )
@@ -825,9 +825,9 @@ const showStructuresTypes = () => {
                     :key="structureType.id"
                     :href="
                         route('departements.disciplines.structuretypes.show', {
-                            departement: departement.slug,
-                            discipline: discipline.slug,
-                            structuretype: structureType.id,
+                            departement: departement,
+                            discipline: discipline,
+                            structuretype: structureType,
                         })
                     "
                     class="relative w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-sky-700 focus:text-white focus:outline-none"
@@ -877,8 +877,8 @@ const showStructuresTypes = () => {
                 <Link
                     :href="
                         route('departements.disciplines.show', {
-                            departement: departement.slug,
-                            discipline: discipline.slug,
+                            departement: departement,
+                            discipline: discipline,
                         })
                     "
                     class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
@@ -924,8 +924,8 @@ const showStructuresTypes = () => {
                     preserve-scroll
                     :href="
                         route('departements.disciplines.categories.show', {
-                            departement: departement.slug,
-                            discipline: discipline.slug,
+                            departement: departement,
+                            discipline: discipline,
                             category: category.slug,
                         })
                     "
@@ -942,9 +942,9 @@ const showStructuresTypes = () => {
                     preserve-scroll
                     :href="
                         route('departements.disciplines.structuretypes.show', {
-                            departement: departement.slug,
-                            discipline: discipline.slug,
-                            structuretype: structureType.id,
+                            departement: departement,
+                            discipline: discipline,
+                            structuretype: structureType,
                         })
                     "
                     class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
@@ -967,8 +967,8 @@ const showStructuresTypes = () => {
                 <Link
                     :href="
                         route('departements.disciplines.show', {
-                            departement: departement.slug,
-                            discipline: discipline.slug,
+                            departement: departement,
+                            discipline: discipline,
                         })
                     "
                     class="group relative flex w-full items-center justify-center border-b-8 border-blue-400 py-3 text-center transition duration-150 ease-in-out hover:bg-blue-400 focus:bg-blue-400 focus:text-white focus:outline-none"
@@ -983,8 +983,8 @@ const showStructuresTypes = () => {
                     :key="categorie.id"
                     :href="
                         route('departements.disciplines.categories.show', {
-                            departement: departement.slug,
-                            discipline: discipline.slug,
+                            departement: departement,
+                            discipline: discipline,
                             category: categorie.slug,
                         })
                     "
@@ -1063,8 +1063,8 @@ const showStructuresTypes = () => {
                                 route(
                                     'departements.disciplines.categories.show',
                                     {
-                                        departement: departement.slug,
-                                        discipline: discipline.slug,
+                                        departement: departement,
+                                        discipline: discipline,
                                         category: category.slug,
                                     }
                                 )
@@ -1082,9 +1082,9 @@ const showStructuresTypes = () => {
                     :key="structureType.id"
                     :href="
                         route('departements.disciplines.structuretypes.show', {
-                            departement: departement.slug,
-                            discipline: discipline.slug,
-                            structuretype: structureType.id,
+                            departement: departement,
+                            discipline: discipline,
+                            structuretype: structureType,
                         })
                     "
                     class="relative w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-sky-700 focus:text-white focus:outline-none"
@@ -1141,8 +1141,8 @@ const showStructuresTypes = () => {
                 <Link
                     :href="
                         route('departements.disciplines.show', {
-                            departement: departement.slug,
-                            discipline: discipline.slug,
+                            departement: departement,
+                            discipline: discipline,
                         })
                     "
                     class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
@@ -1190,8 +1190,8 @@ const showStructuresTypes = () => {
                     preserve-scroll
                     :href="
                         route('departements.disciplines.categories.show', {
-                            departement: departement.slug,
-                            discipline: discipline.slug,
+                            departement: departement,
+                            discipline: discipline,
                             category: category.slug,
                         })
                     "
@@ -1208,9 +1208,9 @@ const showStructuresTypes = () => {
                     preserve-scroll
                     :href="
                         route('departements.disciplines.structuretypes.show', {
-                            departement: departement.slug,
-                            discipline: discipline.slug,
-                            structuretype: structureType.id,
+                            departement: departement,
+                            discipline: discipline,
+                            structuretype: structureType,
                         })
                     "
                     class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
@@ -1248,7 +1248,7 @@ const showStructuresTypes = () => {
                     :key="categorie.id"
                     :href="
                         route('disciplines.categories.show', {
-                            discipline: discipline.slug,
+                            discipline: discipline,
                             category: categorie.slug,
                         })
                     "
@@ -1318,7 +1318,7 @@ const showStructuresTypes = () => {
                             preserve-scroll
                             :href="
                                 route('disciplines.categories.show', {
-                                    discipline: discipline.slug,
+                                    discipline: discipline,
                                     category: category.slug,
                                 })
                             "
@@ -1335,8 +1335,8 @@ const showStructuresTypes = () => {
                     :key="structureType.id"
                     :href="
                         route('disciplines.structuretypes.show', {
-                            discipline: discipline.slug,
-                            structuretype: structureType.id,
+                            discipline: discipline,
+                            structuretype: structureType,
                         })
                     "
                     class="relative w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-sky-700 focus:text-white focus:outline-none"
@@ -1385,7 +1385,7 @@ const showStructuresTypes = () => {
                 <Link
                     :href="
                         route('disciplines.show', {
-                            discipline: discipline.slug,
+                            discipline: discipline,
                         })
                     "
                     class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
@@ -1433,7 +1433,7 @@ const showStructuresTypes = () => {
                     preserve-scroll
                     :href="
                         route('disciplines.categories.show', {
-                            discipline: discipline.slug,
+                            discipline: discipline,
                             category: category.slug,
                         })
                     "
@@ -1450,8 +1450,8 @@ const showStructuresTypes = () => {
                     preserve-scroll
                     :href="
                         route('disciplines.structuretypes.show', {
-                            discipline: discipline.slug,
-                            structuretype: structureType.id,
+                            discipline: discipline,
+                            structuretype: structureType,
                         })
                     "
                     class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"
@@ -1522,7 +1522,7 @@ const showStructuresTypes = () => {
                             preserve-scroll
                             :href="
                                 route('disciplines.categories.show', {
-                                    discipline: discipline.slug,
+                                    discipline: discipline,
                                     category: category.slug,
                                 })
                             "
@@ -1539,8 +1539,8 @@ const showStructuresTypes = () => {
                     :key="structureType.id"
                     :href="
                         route('disciplines.structuretypes.show', {
-                            discipline: discipline.slug,
-                            structuretype: structureType.id,
+                            discipline: discipline,
+                            structuretype: structureType,
                         })
                     "
                     class="relative w-full border-b-8 border-sky-700 py-4 text-center text-sm font-semibold leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-sky-700 hover:text-white focus:bg-sky-700 focus:text-white focus:outline-none"
@@ -1595,7 +1595,7 @@ const showStructuresTypes = () => {
                 <Link
                     :href="
                         route('disciplines.show', {
-                            discipline: discipline.slug,
+                            discipline: discipline,
                         })
                     "
                     class="items-center text-center transition duration-150 ease-in-out focus:outline-none"
@@ -1643,7 +1643,7 @@ const showStructuresTypes = () => {
                     preserve-scroll
                     :href="
                         route('disciplines.categories.show', {
-                            discipline: discipline.slug,
+                            discipline: discipline,
                             category: category.slug,
                         })
                     "
@@ -1660,8 +1660,8 @@ const showStructuresTypes = () => {
                     preserve-scroll
                     :href="
                         route('disciplines.structuretypes.show', {
-                            discipline: discipline.slug,
-                            structuretype: structureType.id,
+                            discipline: discipline,
+                            structuretype: structureType,
                         })
                     "
                     class="col-span-6 px-4 py-2 transition duration-150 ease-in-out last:pb-3"

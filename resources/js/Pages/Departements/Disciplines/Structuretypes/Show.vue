@@ -273,13 +273,11 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                             route(
                                                 'departements.disciplines.structuretypes.activites.show',
                                                 {
-                                                    departement:
-                                                        departement.slug,
-                                                    discipline: discipline.slug,
+                                                    departement: departement,
+                                                    discipline: discipline,
                                                     structuretype:
-                                                        structuretypeElected.id,
-                                                    activite:
-                                                        produit.activite.id,
+                                                        structuretypeElected,
+                                                    activite: produit.activite,
                                                     produit: produit.id,
                                                 }
                                             )

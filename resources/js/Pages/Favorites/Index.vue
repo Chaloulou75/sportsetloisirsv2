@@ -91,7 +91,7 @@ const props = defineProps({
                             :produit="produit"
                             :link="
                                 route('structures.activites.show', {
-                                    activite: produit.activite.id,
+                                    activite: produit.activite,
                                 })
                             "
                             :data="{
@@ -119,7 +119,7 @@ const props = defineProps({
                             :activite="activite"
                             :link="
                                 route('structures.activites.show', {
-                                    activite: activite.id,
+                                    activite: activite,
                                 })
                             "
                         />

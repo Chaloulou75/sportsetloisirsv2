@@ -456,9 +456,7 @@ const events = getEvents();
 
                                 <Link
                                     preserve-scroll
-                                    :href="
-                                        route('structures.show', structure.slug)
-                                    "
+                                    :href="route('structures.show', structure)"
                                     class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     {{ structure.name }}
@@ -1117,7 +1115,7 @@ const events = getEvents();
                                                 route(
                                                     'structures.activites.show',
                                                     {
-                                                        activite: activite.id,
+                                                        activite: activite,
                                                     }
                                                 )
                                             "

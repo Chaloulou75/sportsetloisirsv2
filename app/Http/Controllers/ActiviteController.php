@@ -114,7 +114,7 @@ class ActiviteController extends Controller
         return to_route('structures.disciplines.show', ['structure' => $structure , 'discipline' => $discipline])->with('success', 'Activité créée, vous pouvez ajouter d\'autres activités à votre structure.');
     }
 
-    public function show($activite): Response
+    public function show(StructureActivite $activite): Response
     {
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -126,9 +126,9 @@ class ActiviteController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $activite = StructureActivite::withRelations()->find($activite);
+        $activite = StructureActivite::withRelations()->find($activite->id);
 
-        $produits = $activite->produits;
+        $produits = $activite->produits()->withRelations()->get();
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
                 ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))->whereIn('categorie_id', $activite->structure->categories->pluck('categorie_id'))

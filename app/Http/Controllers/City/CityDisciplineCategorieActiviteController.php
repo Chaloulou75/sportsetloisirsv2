@@ -19,7 +19,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class CityDisciplineCategorieActiviteController extends Controller
 {
-    public function show(City $city, ListDiscipline $discipline, $category, $activite, ?string $produit = null): Response
+    public function show(City $city, ListDiscipline $discipline, $category, StructureActivite $activite, ?string $produit = null): Response
     {
         $selectedProduit = StructureProduit::find(request()->produit);
 
@@ -71,9 +71,9 @@ class CityDisciplineCategorieActiviteController extends Controller
         ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
         ->first();
 
-        $activite = StructureActivite::withRelations()->find($activite);
+        $activite = StructureActivite::withRelations()->find($activite->id);
 
-        $produits = $activite->produits;
+        $produits = $activite->produits()->withRelations()->get();
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
                 ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))

@@ -11,6 +11,15 @@ class Structuretype extends Model
 {
     use HasFactory;
 
+    /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName(): String
+    {
+        return 'slug';
+    }
+
+
     public function structures(): HasMany
     {
         return $this->hasMany(Structure::class);

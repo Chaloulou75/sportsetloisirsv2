@@ -167,28 +167,63 @@ const formatCityName = (ville) => {
                                     }})
                                 </p>
                             </div>
-                            <p
-                                class="text-sm"
-                                v-for="critere in produit.criteres"
-                                :key="critere.id"
+                            <ul
+                                v-if="produit.criteres.length > 0"
+                                class="list-inside list-disc text-xs"
                             >
-                                {{ critere.critere.nom }}:
-                                <span class="font-semibold"
-                                    >{{ critere.valeur
-                                    }}<span
-                                        v-if="critere.sous_criteres.length > 0"
-                                        class="text-xs font-medium text-gray-600"
-                                    >
-                                        <span
-                                            v-for="sousCriteres in critere.sous_criteres"
-                                            :key="sousCriteres.id"
-                                            class="text-xs font-semibold text-gray-600"
-                                        >
-                                            ({{ sousCriteres.valeur }})
-                                        </span>
-                                    </span></span
+                                <template
+                                    v-for="critere in produit.criteres"
+                                    :key="critere.id"
                                 >
-                            </p>
+                                    <template
+                                        v-if="
+                                            critere.valeur &&
+                                            !!critere.critere.visible_block ===
+                                                true
+                                        "
+                                    >
+                                        <li>
+                                            {{ critere.critere.nom }}:
+                                            <span class="font-semibold"
+                                                >{{ critere.valeur }}
+                                                <span
+                                                    v-if="
+                                                        critere.sous_criteres
+                                                            .length > 0
+                                                    "
+                                                    class="text-xs font-medium text-gray-600"
+                                                >
+                                                    <span
+                                                        v-for="sousCriteres in critere.sous_criteres"
+                                                        :key="sousCriteres.id"
+                                                    >
+                                                        ({{
+                                                            sousCriteres.valeur
+                                                        }})
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        </li>
+                                    </template>
+                                </template>
+                            </ul>
+
+                            <div
+                                v-if="
+                                    produit.cat_tarifs &&
+                                    produit.cat_tarifs.length > 0
+                                "
+                            >
+                                <p
+                                    class="mt-2 text-right text-sm font-bold text-green-700"
+                                >
+                                    <span
+                                        class="text-xs font-medium text-gray-600"
+                                        >à partir de</span
+                                    >
+                                    {{ formatCurrency(produit.minimum_amount) }}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </dl>

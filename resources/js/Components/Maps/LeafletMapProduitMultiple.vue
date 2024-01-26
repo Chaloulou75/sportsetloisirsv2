@@ -204,7 +204,7 @@ const handleMoveEnd = () => {
                             :discipline="produit.discipline"
                             :link="
                                 route('structures.activites.show', {
-                                    activite: produit.activite.id,
+                                    activite: produit.activite,
                                 })
                             "
                             :data="{

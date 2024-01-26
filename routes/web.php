@@ -98,7 +98,7 @@ Route::get('str-{structure:slug}', [StructureController::class, 'show'])
     ->name('structures.show');
 
 // activites route
-Route::get('/activites-{activite:id}', [ActiviteController::class, 'show'])->name('structures.activites.show');
+Route::get('/activites-{activite}', [ActiviteController::class, 'show'])->name('structures.activites.show');
 
 // Departements routes
 require __DIR__ . '/departement.php';

@@ -94,18 +94,7 @@ class DisciplineController extends Controller
         ->select(['id', 'name', 'slug'])
         ->get();
 
-        $structures = Structure::with([
-                'adresses'  => function ($query) {
-                    $query->latest();
-                },
-                'city:id,slug,ville,ville_formatee,code_postal',
-                'structuretype:id,name,slug',
-                'activites' => function ($query) use ($discipline) {
-                    $query->where('discipline_id', $discipline->id);
-                },
-                'activites.discipline:id,name,slug',
-                'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
-            ])
+        $structures = Structure::withRelations()
             ->whereHas('activites', function ($subquery) use ($discipline) {
                 $subquery->where('discipline_id', $discipline->id);
             })

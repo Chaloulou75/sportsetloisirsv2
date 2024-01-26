@@ -19,7 +19,7 @@ use App\Models\LienDisciplineCategorieCritere;
 
 class DepartementDisciplineStructuretypeActiviteController extends Controller
 {
-    public function show(Departement $departement, ListDiscipline $discipline, $structuretype, $activite, ?string $produit = null): Response
+    public function show(Departement $departement, ListDiscipline $discipline,StructureType $structuretype, StructureActivite $activite, ?string $produit = null): Response
     {
         $selectedProduit = StructureProduit::find(request()->produit);
 
@@ -60,11 +60,11 @@ class DepartementDisciplineStructuretypeActiviteController extends Controller
                         ->select(['id', 'name', 'slug'])
                         ->get();
 
-        $structuretypeElected = Structuretype::select(['id', 'name', 'slug'])->find($structuretype);
+        $structuretypeElected = Structuretype::select(['id', 'name', 'slug'])->find($structuretype->id);
 
-        $activite = StructureActivite::withRelations()->find($activite);
+        $activite = StructureActivite::withRelations()->find($activite->id);
 
-        $produits = $activite->produits;
+        $produits = $activite->produits()->withRelations()->get();
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
                 ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))

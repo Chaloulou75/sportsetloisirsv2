@@ -18,7 +18,7 @@ use App\Models\LienDisciplineCategorieCritere;
 
 class DisciplineCategorieActiviteController extends Controller
 {
-    public function show(ListDiscipline $discipline, $category, $activite, ?string $produit = null): Response
+    public function show(ListDiscipline $discipline, $category, StructureActivite $activite, ?string $produit = null): Response
     {
         $selectedProduit = StructureProduit::find(request()->produit);
 
@@ -52,10 +52,13 @@ class DisciplineCategorieActiviteController extends Controller
         ->select(['id', 'name', 'slug'])
         ->get();
 
-        $requestCategory = LienDisciplineCategorie::where('discipline_id', $requestDiscipline->id)->where('slug', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
+        $requestCategory = LienDisciplineCategorie::where('discipline_id', $requestDiscipline->id)
+        ->where('slug', $category)
+        ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
+        ->first();
 
-        $activite = StructureActivite::withRelations()->find($activite);
-        $produits = $activite->produits;
+        $activite = StructureActivite::withRelations()->find($activite->id);
+        $produits = $activite->produits()->withRelations()->get();
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
         ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))->whereIn('categorie_id', $activite->structure->categories->pluck('categorie_id'))

@@ -260,7 +260,7 @@ const formatCurrency = (value) => {
                             :activite="activite"
                             :link="
                                 route('structures.activites.show', {
-                                    activite: activite.id,
+                                    activite: activite,
                                 })
                             "
                         />

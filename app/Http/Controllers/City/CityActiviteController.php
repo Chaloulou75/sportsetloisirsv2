@@ -16,7 +16,7 @@ use App\Models\LienDisciplineCategorieCritere;
 
 class CityActiviteController extends Controller
 {
-    public function show(City $city, $activite, ?string $produit = null): Response
+    public function show(City $city, StructureActivite $activite, ?string $produit = null): Response
     {
         $selectedProduit = StructureProduit::find(request()->produit);
 
@@ -38,9 +38,9 @@ class CityActiviteController extends Controller
 
         $citiesAround = City::withCitiesAround($city)->get();
 
-        $activite = StructureActivite::withRelations()->find($activite);
+        $activite = StructureActivite::withRelations()->find($activite->id);
 
-        $produits = $activite->produits;
+        $produits = $activite->produits()->withRelations()->get();
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
                 ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))

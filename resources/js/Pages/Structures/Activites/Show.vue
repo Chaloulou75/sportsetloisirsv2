@@ -380,7 +380,7 @@ const submitReservation = () => {
                                     preserve-scroll
                                     :href="
                                         route('structures.activites.show', {
-                                            activite: activite.id,
+                                            activite: activite,
                                         })
                                     "
                                     class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
@@ -416,172 +416,18 @@ const submitReservation = () => {
                 <div
                     class="flex flex-col-reverse justify-between rounded-lg bg-white px-4 py-6 text-slate-600 shadow md:flex-row md:items-start md:space-x-6"
                 >
-                    <div class="w-full space-y-12 md:w-1/3">
-                        <Link
-                            class="my-6 flex items-center justify-center rounded border border-indigo-600 bg-indigo-600 px-6 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 hover:shadow focus:outline-none focus:ring active:text-indigo-500"
-                            preserve-scroll
-                            :href="
-                                route(
-                                    'structures.show',
-                                    activite.structure.slug
-                                )
-                            "
-                        >
-                            <ArrowUturnLeftIcon class="mr-2 h-5 w-5" />
-                            Retour vers l'accueil de la structure
-                            {{ activite.structure.name }}
-                        </Link>
-                        <div
-                            class="my-4 flex items-center justify-center md:mb-4"
-                        >
-                            <h3 class="text-base font-semibold uppercase">
-                                Coordonnées de la structure
-                            </h3>
-                        </div>
-                        <div class="flex flex-col space-y-3">
-                            <h3 class="text-base">
-                                Localisation:
-                                <span class="font-semibold">
-                                    {{ activite.structure.adresses[0].city }},
-                                    {{
-                                        activite.structure.adresses[0].zip_code
-                                    }}
-                                </span>
-                            </h3>
-                            <LeafletMap :item="activite.structure" />
-                        </div>
-                        <div
-                            class="flex w-full flex-col space-y-3 rounded-md bg-indigo-100 px-2 py-4 text-slate-800"
-                        >
-                            <h3 class="text-center text-base font-semibold">
-                                Activité proposée par:
-                                {{ activite.structure.name }}
-                            </h3>
-                            <Link
-                                class="my-6 flex items-center justify-center rounded border border-indigo-600 bg-indigo-600 px-6 py-3 text-sm font-medium text-white hover:bg-white hover:text-indigo-600 hover:shadow focus:outline-none focus:ring active:text-indigo-500"
-                                preserve-scroll
-                                :href="
-                                    route(
-                                        'structures.show',
-                                        activite.structure.slug
-                                    )
-                                "
-                            >
-                                Voir la fiche
-                            </Link>
-                            <p class="text-base font-semibold text-gray-700">
-                                <UserIcon class="inline-block h-4 w-4" />
-                                {{ activite.structure.creator.name }}
-                            </p>
-                            <p
-                                v-if="activite.structure.website"
-                                class="text-base font-medium text-gray-700"
-                            >
-                                <GlobeAltIcon
-                                    class="mr-1.5 inline-block h-4 w-4"
-                                />
-                                Site web:
-                                <a
-                                    :href="activite.structure.website"
-                                    target="_blank"
-                                    class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
-                                >
-                                    {{ activite.structure.website }}
-                                </a>
-                            </p>
-                            <p
-                                v-if="activite.structure.facebook"
-                                class="text-base font-medium text-gray-700"
-                            >
-                                <GlobeAltIcon
-                                    class="mr-1.5 inline-block h-4 w-4"
-                                />
-                                Facebook:
-                                <a
-                                    :href="activite.structure.facebook"
-                                    target="_blank"
-                                    class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
-                                >
-                                    {{ activite.structure.facebook }}
-                                </a>
-                            </p>
-                            <p
-                                v-if="activite.structure.instagram"
-                                class="text-base font-medium text-gray-700"
-                            >
-                                <GlobeAltIcon
-                                    class="mr-1.5 inline-block h-4 w-4"
-                                />
-                                Instagram:
-                                <a
-                                    :href="activite.structure.instagram"
-                                    target="_blank"
-                                    class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
-                                >
-                                    {{ activite.structure.instagram }}
-                                </a>
-                            </p>
-                            <p
-                                v-if="activite.structure.youtube"
-                                class="text-base font-medium text-gray-700"
-                            >
-                                <GlobeAltIcon
-                                    class="mr-1.5 inline-block h-4 w-4"
-                                />
-                                Youtube:
-                                <a
-                                    :href="activite.structure.youtube"
-                                    target="_blank"
-                                    class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
-                                >
-                                    {{ activite.structure.youtube }}
-                                </a>
-                            </p>
-
-                            <p
-                                v-if="activite.structure.phone1"
-                                class="text-base font-medium text-gray-700"
-                            >
-                                <PhoneIcon class="inline-block h-4 w-4" />
-                                <a
-                                    :href="`tel:${activite.structure.phone1}`"
-                                    target="_blank"
-                                    class="text-base font-medium text-blue-700 hover:text-blue-800 hover:underline"
-                                >
-                                    {{
-                                        formatPhoneNumber(
-                                            activite.structure.phone1
-                                        )
-                                    }}
-                                </a>
-                            </p>
-                            <p
-                                v-if="activite.structure.email"
-                                class="text-base font-medium text-gray-700"
-                            >
-                                <AtSymbolIcon class="inline-block h-4 w-4" />
-                                {{ activite.structure.email }}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="w-full md:w-2/3 md:pr-10">
+                    <div class="w-full">
                         <div class="relative space-y-12">
                             <!-- titre -->
                             <div
                                 class="my-4 flex items-center justify-start space-x-4"
                             >
-                                <div v-if="activite.structure.logo">
-                                    <img
-                                        alt="img"
-                                        :src="activite.structure.logo"
-                                        class="h-14 w-14 shrink-0 rounded-full object-cover object-center md:h-20 md:w-20"
-                                    />
-                                </div>
-                                <h2
+                                <h1
                                     class="inline-block w-full text-center text-xl font-semibold sm:text-2xl sm:leading-7 md:text-3xl"
                                 >
+                                    Page à refaire totalement:
                                     {{ activite.titre }}
-                                </h2>
+                                </h1>
                             </div>
                             <!-- Resume -->
                             <div>
@@ -622,17 +468,17 @@ const submitReservation = () => {
                                 </ul>
                             </div>
                             <!-- Filters -->
-                            <div v-if="filteredCriteres.length > 0">
+                            <!-- <div v-if="filteredCriteres.length > 0">
                                 <div
-                                    class="my-6 grid w-full grid-cols-1 gap-4 md:grid-cols-3"
+                                    class="grid w-full grid-cols-1 gap-4 my-6 md:grid-cols-3"
                                 >
                                     <div
                                         v-for="critere in filteredCriteres"
                                         :key="critere.id"
                                         class="col-span-1"
-                                    >
-                                        <!-- select -->
-                                        <SelectForm
+                                    > -->
+                            <!-- select -->
+                            <!-- <SelectForm
                                             :classes="'block'"
                                             class="max-w-sm"
                                             v-if="
@@ -644,10 +490,10 @@ const submitReservation = () => {
                                                 selectedCriteres[critere.id]
                                             "
                                             :options="critere.valeurs"
-                                        />
+                                        /> -->
 
-                                        <!-- checkbox -->
-                                        <CheckboxForm
+                            <!-- checkbox -->
+                            <!-- <CheckboxForm
                                             class="max-w-sm"
                                             v-if="
                                                 critere.type_champ_form ===
@@ -665,10 +511,10 @@ const submitReservation = () => {
                                             @update-selected-checkboxes="
                                                 updateSelectedCheckboxes
                                             "
-                                        />
+                                        /> -->
 
-                                        <!-- radio -->
-                                        <RadioForm
+                            <!-- radio -->
+                            <!-- <RadioForm
                                             class="max-w-sm"
                                             v-if="
                                                 critere.type_champ_form ===
@@ -679,10 +525,10 @@ const submitReservation = () => {
                                                 selectedCriteres[critere.id]
                                             "
                                             :options="critere.valeurs"
-                                        />
+                                        /> -->
 
-                                        <!-- sous criteres -->
-                                        <div
+                            <!-- sous criteres -->
+                            <!-- <div
                                             v-for="valeur in critere.valeurs"
                                             :key="valeur.id"
                                         >
@@ -757,16 +603,16 @@ const submitReservation = () => {
                                                     "
                                                 />
                                             </div>
-                                        </div>
-                                    </div>
+                                        </div> -->
+                            <!-- </div>
                                 </div>
-                            </div>
+                            </div> -->
 
-                            <TabGroup
+                            <!-- <TabGroup
                                 v-if="filteredProductsWithCriteres.length > 0"
                             >
                                 <TabList
-                                    class="flex space-x-1 rounded-xl bg-indigo-600 p-1"
+                                    class="flex p-1 space-x-1 bg-indigo-600 rounded-xl"
                                 >
                                     <Tab as="template" v-slot="{ selected }">
                                         <button
@@ -796,20 +642,25 @@ const submitReservation = () => {
                                     </Tab>
                                 </TabList>
                                 <TabPanels class="mt-2">
-                                    <TabPanel>
+                                    <TabPanel
+                                        v-if="
+                                            filteredProductsWithCriteres.length >
+                                            0
+                                        "
+                                    >
                                         <form
                                             @submit.prevent="
                                                 submitReservation()
                                             "
                                         >
                                             <div
-                                                class="flex w-full flex-col space-y-3 divide-y divide-slate-200 text-slate-500"
+                                                class="flex flex-col w-full space-y-3 divide-y divide-slate-200 text-slate-500"
                                             >
                                                 <p class="font-semibold">
                                                     Choisir un produit:
                                                 </p>
                                                 <div
-                                                    class="flex flex-col space-y-5 rounded border border-gray-200 px-2 py-3 odd:bg-white even:bg-slate-50"
+                                                    class="flex flex-col px-2 py-3 space-y-5 border border-gray-200 rounded odd:bg-white even:bg-slate-50"
                                                     v-for="produit in filteredProductsWithCriteres"
                                                     :key="produit.id"
                                                 >
@@ -837,14 +688,14 @@ const submitReservation = () => {
                                                                 "
                                                                 name="produit"
                                                                 type="radio"
-                                                                class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                                                class="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-600"
                                                             />
                                                             <label
                                                                 :for="
                                                                     'produit_' +
                                                                     produit.id
                                                                 "
-                                                                class="flex w-full items-center justify-between gap-x-3 text-sm font-medium leading-6"
+                                                                class="flex items-center justify-between w-full text-sm font-medium leading-6 gap-x-3"
                                                                 >Produit n°
                                                                 {{
                                                                     produit.id
@@ -859,7 +710,7 @@ const submitReservation = () => {
                                                                 Ville
                                                             </dt>
                                                             <MapPinIcon
-                                                                class="mr-1 h-4 w-4 text-indigo-700"
+                                                                class="w-4 h-4 mr-1 text-indigo-700"
                                                             />
                                                             <p
                                                                 class="font-semibold"
@@ -917,7 +768,7 @@ const submitReservation = () => {
                                                             <div
                                                                 v-for="tarif in produit.tarifs"
                                                                 :key="tarif.id"
-                                                                class="flex items-center gap-x-3 border-b border-gray-200 px-6 py-4 last:border-none hover:bg-gray-200"
+                                                                class="flex items-center px-6 py-4 border-b border-gray-200 gap-x-3 last:border-none hover:bg-gray-200"
                                                             >
                                                                 <input
                                                                     :id="
@@ -931,11 +782,11 @@ const submitReservation = () => {
                                                                         reservationForm.formule
                                                                     "
                                                                     type="radio"
-                                                                    class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                                                    class="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-600"
                                                                 />
                                                                 <label
                                                                     for="formule-produit"
-                                                                    class="flex w-full items-center justify-between gap-x-3 text-sm font-semibold leading-6"
+                                                                    class="flex items-center justify-between w-full text-sm font-semibold leading-6 gap-x-3"
                                                                 >
                                                                     <div
                                                                         v-if="
@@ -978,7 +829,7 @@ const submitReservation = () => {
                                                                                         info.attribut_id
                                                                                     )
                                                                                 "
-                                                                                class="mr-1 h-5 w-5"
+                                                                                class="w-5 h-5 mr-1"
                                                                             />
                                                                             <UserGroupIcon
                                                                                 v-else-if="
@@ -989,7 +840,7 @@ const submitReservation = () => {
                                                                                         info.attribut_id
                                                                                     )
                                                                                 "
-                                                                                class="mr-1 h-5 w-5 text-slate-500"
+                                                                                class="w-5 h-5 mr-1 text-slate-500"
                                                                             />
                                                                             <UsersIcon
                                                                                 v-else-if="
@@ -999,12 +850,12 @@ const submitReservation = () => {
                                                                                         info.attribut_id
                                                                                     )
                                                                                 "
-                                                                                class="mr-1 h-5 w-5"
+                                                                                class="w-5 h-5 mr-1"
                                                                             />
 
                                                                             <UsersIcon
                                                                                 v-else
-                                                                                class="mr-1 h-5 w-5"
+                                                                                class="w-5 h-5 mr-1"
                                                                             />
                                                                         </div>
 
@@ -1047,7 +898,7 @@ const submitReservation = () => {
                                                                         "
                                                                     >
                                                                         <p
-                                                                            class="line-clamp-1 w-36 overflow-hidden text-ellipsis"
+                                                                            class="overflow-hidden line-clamp-1 w-36 text-ellipsis"
                                                                         >
                                                                             {{
                                                                                 tarif.description
@@ -1077,7 +928,7 @@ const submitReservation = () => {
                                                         class="self-end"
                                                     >
                                                         <button
-                                                            class="my-4 inline-block rounded border border-indigo-600 bg-indigo-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500"
+                                                            class="inline-block px-12 py-3 my-4 text-sm font-medium text-white bg-indigo-600 border border-indigo-600 rounded hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500"
                                                             type="button"
                                                             @click="
                                                                 displayPlanning = true
@@ -1089,7 +940,7 @@ const submitReservation = () => {
 
                                                     <template
                                                         v-if="displayPlanning"
-                                                        class="my-6 gap-y-6 bg-white"
+                                                        class="my-6 bg-white gap-y-6"
                                                     >
                                                         <vue-cal
                                                             class="vuecal--rounded-theme"
@@ -1106,14 +957,14 @@ const submitReservation = () => {
                                                                 #arrow-prev
                                                             >
                                                                 <ChevronLeftIcon
-                                                                    class="h-4 w-4"
+                                                                    class="w-4 h-4"
                                                                 />
                                                             </template>
                                                             <template
                                                                 #arrow-next
                                                             >
                                                                 <ChevronRightIcon
-                                                                    class="h-4 w-4"
+                                                                    class="w-4 h-4"
                                                                 />
                                                             </template>
                                                         </vue-cal>
@@ -1152,7 +1003,7 @@ const submitReservation = () => {
                                                                     :key="
                                                                         planning.id
                                                                     "
-                                                                    class="flex items-center gap-x-3 border-b border-gray-200 px-3 py-4 last:border-none hover:bg-slate-100"
+                                                                    class="flex items-center px-3 py-4 border-b border-gray-200 gap-x-3 last:border-none hover:bg-slate-100"
                                                                 >
                                                                     <input
                                                                         :id="
@@ -1166,11 +1017,11 @@ const submitReservation = () => {
                                                                             reservationForm.planning
                                                                         "
                                                                         type="radio"
-                                                                        class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                                                        class="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-600"
                                                                     />
                                                                     <label
                                                                         for="creneaux"
-                                                                        class="flex w-full items-center justify-between gap-x-3 text-sm font-semibold leading-6"
+                                                                        class="flex items-center justify-between w-full text-sm font-semibold leading-6 gap-x-3"
                                                                     >
                                                                         {{
                                                                             planning.title
@@ -1200,7 +1051,7 @@ const submitReservation = () => {
                                                         v-if="
                                                             reservationForm.formule
                                                         "
-                                                        class="my-4 inline-block self-end rounded border border-indigo-600 bg-indigo-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500"
+                                                        class="self-end inline-block px-12 py-3 my-4 text-sm font-medium text-white bg-indigo-600 border border-indigo-600 rounded hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500"
                                                         type="submit"
                                                         :disabled="
                                                             reservationForm.processing
@@ -1217,10 +1068,10 @@ const submitReservation = () => {
                                             </div>
                                         </form>
                                     </TabPanel>
-                                    <!-- Planning -->
-                                    <TabPanel>
+                                     Planning -->
+                            <!-- <TabPanel>
                                         <div
-                                            class="mt-6 min-h-full w-full overflow-x-auto rounded-sm shadow-lg"
+                                            class="w-full min-h-full mt-6 overflow-x-auto rounded-sm shadow-lg"
                                         >
                                             <vue-cal
                                                 small
@@ -1239,14 +1090,14 @@ const submitReservation = () => {
                                         </div>
                                     </TabPanel>
                                 </TabPanels>
-                            </TabGroup>
+                            </TabGroup> -->
 
-                            <div v-else>
+                            <!-- <div v-else>
                                 <p class="font-medium text-slate-500">
                                     Il n'y a pas encore d'activité pour cette
                                     requète.
                                 </p>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -1369,7 +1220,7 @@ const submitReservation = () => {
                     </div>
                 </div>
             </section>
-            <section class="bg-white">
+            <section v-if="activiteSimilaires.length > 0" class="bg-white">
                 <div
                     class="mx-auto max-w-full px-4 py-16 sm:px-6 sm:py-24 lg:px-8"
                 >
@@ -1387,7 +1238,7 @@ const submitReservation = () => {
                             :activite="activite"
                             :link="
                                 route('structures.activites.show', {
-                                    activite: activite.id,
+                                    activite: activite,
                                 })
                             "
                         />

@@ -463,55 +463,66 @@ onMounted(() => {
                                                         </p>
                                                     </div>
                                                 </Link>
-                                                <Link
-                                                    v-for="cityAround in citiesAround"
-                                                    :key="cityAround.id"
-                                                    :href="
-                                                        route('villes.show', {
-                                                            city: cityAround,
-                                                        })
+                                                <template
+                                                    v-if="
+                                                        citiesAround &&
+                                                        citiesAround.length > 0
                                                     "
-                                                    preserve-scroll
-                                                    class="group flex gap-x-5 rounded-lg p-4 hover:bg-gray-100"
                                                 >
-                                                    <svg
-                                                        class="mt-1 h-5 w-5 flex-shrink-0"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        width="24"
-                                                        height="24"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        stroke-width="2"
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
+                                                    <Link
+                                                        v-for="cityAround in citiesAround"
+                                                        :key="cityAround.id"
+                                                        :href="
+                                                            route(
+                                                                'villes.show',
+                                                                {
+                                                                    city: cityAround,
+                                                                }
+                                                            )
+                                                        "
+                                                        preserve-scroll
+                                                        class="group flex gap-x-5 rounded-lg p-4 hover:bg-gray-100"
                                                     >
-                                                        <path
-                                                            d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
-                                                        />
-                                                        <path
-                                                            d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
-                                                        />
-                                                    </svg>
-                                                    <div class="grow">
-                                                        <p
-                                                            class="font-medium text-gray-800 group-hover:text-gray-900"
+                                                        <svg
+                                                            class="mt-1 h-5 w-5 flex-shrink-0"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            width="24"
+                                                            height="24"
+                                                            viewBox="0 0 24 24"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            stroke-width="2"
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
                                                         >
-                                                            {{
-                                                                formatCityName(
-                                                                    cityAround.ville
-                                                                )
-                                                            }}
-                                                        </p>
-                                                        <p
-                                                            class="text-sm text-gray-500 group-hover:text-gray-800"
-                                                        >
-                                                            Voir les activités
-                                                            pratiquées aux
-                                                            alentours.
-                                                        </p>
-                                                    </div>
-                                                </Link>
+                                                            <path
+                                                                d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
+                                                            />
+                                                            <path
+                                                                d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
+                                                            />
+                                                        </svg>
+                                                        <div class="grow">
+                                                            <p
+                                                                class="font-medium text-gray-800 group-hover:text-gray-900"
+                                                            >
+                                                                {{
+                                                                    formatCityName(
+                                                                        cityAround.ville
+                                                                    )
+                                                                }}
+                                                            </p>
+                                                            <p
+                                                                class="text-sm text-gray-500 group-hover:text-gray-800"
+                                                            >
+                                                                Voir les
+                                                                activités
+                                                                pratiquées aux
+                                                                alentours.
+                                                            </p>
+                                                        </div>
+                                                    </Link>
+                                                </template>
                                             </div>
 
                                             <div
@@ -704,6 +715,11 @@ onMounted(() => {
                                             class="gap-4 md:grid md:grid-cols-2 lg:grid-cols-3"
                                         >
                                             <div
+                                                v-if="
+                                                    currentDiscipline
+                                                        .disciplines_similaires
+                                                        .length > 0
+                                                "
                                                 class="mx-1 flex flex-col md:mx-0"
                                             >
                                                 <Link
@@ -906,6 +922,7 @@ onMounted(() => {
                                 </div>
                             </div>
                             <div
+                                v-if="familles.length > 0"
                                 class="flex flex-1 flex-col gap-x-0 divide-y divide-dashed divide-gray-200 md:flex-row md:items-center md:justify-center md:gap-x-7 md:divide-y-0 md:divide-solid"
                             >
                                 <div

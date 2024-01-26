@@ -858,11 +858,10 @@ onMounted(() => {
                                             route(
                                                 'villes.disciplines.categories.activites.show',
                                                 {
-                                                    city: city.slug,
-                                                    discipline: discipline.slug,
+                                                    city: city,
+                                                    discipline: discipline,
                                                     category: category.slug,
-                                                    activite:
-                                                        produit.activite.id,
+                                                    activite: produit.activite,
                                                     produit: produit.id,
                                                 }
                                             )

@@ -14,11 +14,11 @@ const props = defineProps({
     city: Object,
     citiesAround: Object,
     departement: Object,
-    isCategoriesVisible: Boolean,
-    isCriteresVisible: Boolean,
     currentCategory: Object,
     categories: Object,
     familles: Object,
+    isCategoriesVisible: Boolean,
+    isCriteresVisible: Boolean,
 });
 const headerClass = computed(() => {
     const defaultClass = "bg-la-base";

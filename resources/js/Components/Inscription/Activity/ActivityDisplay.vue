@@ -290,10 +290,9 @@ const destroyTarif = (tarif) => {
                     <Link
                         class="text-xs lowercase italic text-gray-300 hover:text-gray-100 md:text-sm"
                         :href="
-                            route(
-                                'structures.activites.show',
-                                structureActivite.id
-                            )
+                            route('structures.activites.show', {
+                                activite: structureActivite,
+                            })
                         "
                     >
                         (voir la fiche)</Link
@@ -528,7 +527,7 @@ const destroyTarif = (tarif) => {
                         v-else
                         alt="image"
                         src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                        class="h-full w-full object-cover"
+                        class="object-cover w-full h-full"
                     />-->
                 </div>
                 <div

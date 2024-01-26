@@ -294,6 +294,7 @@ const formatCityName = (ville) => {
                         Les dernieres structures inscrites:
                     </h3>
                     <div
+                        v-if="lastStructures.length > 0"
                         class="mb-8 grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3"
                     >
                         <StructureCard

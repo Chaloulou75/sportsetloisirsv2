@@ -37,9 +37,8 @@ class DisciplineStructureController extends Controller
         $structure = Structure::withRelations()->find($structure->id);
 
         $requestDiscipline = ListDiscipline::withProductsAndDisciplinesSimilaires()
-            ->where('slug', $discipline->slug)
             ->select(['id', 'name', 'slug', 'view_count', 'theme'])
-            ->first();
+            ->find($discipline->id);
 
         $categories = LienDisciplineCategorie::whereHas('structures_produits')
                 ->where('discipline_id', $requestDiscipline->id)
