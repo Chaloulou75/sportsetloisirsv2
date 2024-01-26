@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import InscriptionNavigation from "@/Components/Navigation/InscriptionNavigation.vue";
 import ProNavigation from "@/Components/Navigation/ProNavigation.vue";
-import FlashMessages from "@/Components/FlashMessages.vue";
+import ToastMessages from "@/Components/ToastMessages.vue";
 import Footer from "@/Components/Footer.vue";
 import { TransitionRoot } from "@headlessui/vue";
 
@@ -92,7 +92,8 @@ const props = defineProps({
                                 handleCloseEvent,
                             }"
                         />
-                        <FlashMessages />
+                        <ToastMessages />
+                        <!-- <FlashMessages /> -->
                     </TransitionRoot>
                 </div>
             </div>

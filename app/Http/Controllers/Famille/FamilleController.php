@@ -10,6 +10,7 @@ use App\Models\Structure;
 use App\Models\Discipline;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
+use App\Models\StructureProduit;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
@@ -34,8 +35,12 @@ class FamilleController extends Controller
         });
 
         $familleCount = Famille::count();
-        $disciplinesCount = ListDiscipline::count();
-        $structuresCount = Structure::count();
+        $disciplinesCount = Cache::remember('disciplinesCount', 600, function () {
+            return ListDiscipline::count();
+        });
+        $structuresCount = Cache::remember('structuresCount', 600, function () {
+            return Structure::count();
+        });
 
         return Inertia::render('Familles/Index', [
             'familles' => $familles,

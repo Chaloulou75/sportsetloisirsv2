@@ -28,7 +28,9 @@ class DisciplineController extends Controller
      */
     public function index(): Response
     {
-        $structuresCount = Structure::count();
+        $structuresCount = Cache::remember('structuresCount', 600, function () {
+            return Structure::count();
+        });
 
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();

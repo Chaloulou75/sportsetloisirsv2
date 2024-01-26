@@ -151,14 +151,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('structures/{structure:slug}/plannings/{planning}', [StructurePlanningController::class, 'update'])->name('structures.plannings.update');
     Route::delete('structures/{structure:slug}/plannings/{planning}', [StructurePlanningController::class, 'destroy'])->name('structures.plannings.destroy');
 
-    Route::resource('structures.disciplines', StructureDisciplineController::class)->scoped(['structure' => 'slug','discipline' => 'id'])->only(['destroy']);
-
     Route::get('str-{structure:slug}/disciplines', [StructureDisciplineController::class, 'index'])->name('structures.disciplines.index');
     Route::get('str-{structure:slug}/dis-{discipline:slug}', [StructureDisciplineController::class, 'show'])->name('structures.disciplines.show');
+    Route::delete('structures/{structure}/disciplines/{discipline}', [StructureDisciplineController::class, 'destroy'])->name('structures.disciplines.destroy');
 
     Route::get('str-{structure:slug}/dis-{discipline:slug}/cat-{categorie:id}', [StructureCategorieController::class, 'show'])->name('structures.categories.show');
 
-    Route::resource('structures.categories', StructureCategorieController::class)->scoped(['structure' => 'slug','categorie' => 'id'])->only(['destroy']);
+    Route::delete('structures/{structure}/categories/{category}', [StructureCategorieController::class, 'destroy'])->name('structures.categories.destroy');
 
     Route::post('structures/{structure:slug}/adresses', [StructureAddresseController::class, 'store'])->name('structures.adresses.store');
     Route::put('structures/{structure:slug}/adresses/{adress}', [StructureAddresseController::class, 'update'])->name('structures.adresses.update');

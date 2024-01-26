@@ -1,6 +1,6 @@
 <script setup>
 import MainNavigation from "@/Components/MainNavigation.vue";
-import FlashMessages from "@/Components/FlashMessages.vue";
+import ToastMessages from "@/Components/ToastMessages.vue";
 import Footer from "@/Components/Footer.vue";
 import { ref } from "vue";
 import { TransitionRoot } from "@headlessui/vue";
@@ -34,7 +34,7 @@ const isShowing = ref(true);
                 leave-to="opacity-0"
             >
                 <slot name="default" />
-                <FlashMessages />
+                <ToastMessages />
             </TransitionRoot>
             <!-- Page Footer -->
             <Footer />

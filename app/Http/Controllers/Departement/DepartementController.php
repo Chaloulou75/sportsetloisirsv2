@@ -11,6 +11,7 @@ use App\Models\Structure;
 use App\Models\Departement;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
+use App\Models\StructureProduit;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
@@ -22,7 +23,9 @@ class DepartementController extends Controller
      */
     public function index(): Response
     {
-        $structuresCount = Structure::count();
+        $structuresCount = Cache::remember('structuresCount', 600, function () {
+            return Structure::count();
+        });
 
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();

@@ -110,7 +110,6 @@ class LienDisCatTariftypeController extends Controller
             ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
             ->get();
 
-
         return Inertia::render('Admin/Disciplines/Categories/Tarifs/Edit', [
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),

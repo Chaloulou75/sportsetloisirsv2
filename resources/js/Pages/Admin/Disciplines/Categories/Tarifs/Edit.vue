@@ -4,16 +4,8 @@ import NavAdminDiscipline from "@/Components/Admin/NavAdminDiscipline.vue";
 import NavAdminDisciplineCategorie from "@/Components/Admin/NavAdminDisciplineCategorie.vue";
 import NavAdminDisCatParametres from "@/Components/Admin/NavAdminDisCatParametres.vue";
 import NavAdminDisCatTarifsForm from "@/Components/Admin/NavAdminDisCatTarifsForm.vue";
-import { Head, Link, router, useForm } from "@inertiajs/vue3";
-import { ref, watch, onMounted } from "vue";
-import autoAnimate from "@formkit/auto-animate";
-import { ChevronLeftIcon, CheckCircleIcon } from "@heroicons/vue/24/outline";
-import {
-    Listbox,
-    ListboxButton,
-    ListboxOptions,
-    ListboxOption,
-} from "@headlessui/vue";
+import { Head, Link } from "@inertiajs/vue3";
+import { ChevronLeftIcon } from "@heroicons/vue/24/outline";
 
 const props = defineProps({
     errors: Object,

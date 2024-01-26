@@ -1,7 +1,7 @@
 <script setup>
 import ResultNavigation from "@/Components/Navigation/ResultNavigation.vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
-import FlashMessages from "@/Components/FlashMessages.vue";
+import ToastMessages from "@/Components/ToastMessages.vue";
 import Footer from "@/Components/Footer.vue";
 import { ref, computed } from "vue";
 import { classMapping } from "@/Utils/classMapping.js";
@@ -80,7 +80,7 @@ const isShowing = ref(true);
                 leave-to="opacity-0"
             >
                 <slot name="default" />
-                <FlashMessages />
+                <ToastMessages />
             </TransitionRoot>
             <!-- Page Footer -->
             <Footer />

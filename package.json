@@ -44,6 +44,7 @@
         "preline": "^2.0.3",
         "swiper": "^10.0.3",
         "universal-cookie": "^4.0.4",
-        "vue-cal": "^4.8.1"
+        "vue-cal": "^4.8.1",
+        "vue3-toastify": "^0.2.1"
     }
 }

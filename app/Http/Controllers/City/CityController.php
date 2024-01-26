@@ -22,8 +22,13 @@ class CityController extends Controller
      */
     public function index(): Response
     {
-        $structuresCount = Structure::count();
-        $produitsCount = StructureProduit::count();
+        $structuresCount = Cache::remember('structuresCount', 600, function () {
+            return Structure::count();
+        });
+
+        $produitsCount = Cache::remember('structuresCount', 600, function () {
+            return StructureProduit::count();
+        });
 
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
