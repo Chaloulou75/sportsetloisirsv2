@@ -360,6 +360,12 @@ const type_champs = [
     { type: "instructeur" },
 ];
 
+const sous_crit_type_champs = [
+    { type: "select" },
+    { type: "text" },
+    { type: "number" },
+];
+
 const addCritereForm = useForm({
     critere: props.listeCriteres[0],
     type_champ: type_champs[0],
@@ -409,7 +415,7 @@ const showAddSousCritereForm = (valeur) => {
 
 const addSousCritereForm = useForm({
     nom: ref(null),
-    type_champ: ref(type_champs[0]),
+    type_champ: ref(sous_crit_type_champs[0]),
     remember: true,
 });
 
@@ -1255,7 +1261,7 @@ onMounted(() => {
                                                                 v-for="(
                                                                     type_champ,
                                                                     index
-                                                                ) in type_champs"
+                                                                ) in sous_crit_type_champs"
                                                                 :key="index"
                                                                 :value="
                                                                     type_champ

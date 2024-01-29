@@ -462,8 +462,6 @@ onMounted(() => {
                                                     >
                                                         <TextInput
                                                             type="number"
-                                                            min="1"
-                                                            max="59"
                                                             v-model="
                                                                 form.criteres[
                                                                     critere.id
@@ -489,7 +487,9 @@ onMounted(() => {
                                                     <SingleTimeForm
                                                         class="w-full"
                                                         v-model="
-                                                            form.time_seule
+                                                            form.criteres[
+                                                                critere.id
+                                                            ]
                                                         "
                                                         :name="critere.nom"
                                                     />
@@ -505,7 +505,11 @@ onMounted(() => {
                                                 >
                                                     <OpenTimesForm
                                                         class="w-full"
-                                                        v-model="form.times"
+                                                        v-model="
+                                                            form.criteres[
+                                                                critere.id
+                                                            ]
+                                                        "
                                                         :name="critere.nom"
                                                     />
                                                 </div>
@@ -521,7 +525,9 @@ onMounted(() => {
                                                     <SingleDateForm
                                                         class="w-full"
                                                         v-model="
-                                                            form.date_seule
+                                                            form.criteres[
+                                                                critere.id
+                                                            ]
                                                         "
                                                         :name="critere.nom"
                                                     />
@@ -537,7 +543,11 @@ onMounted(() => {
                                                 >
                                                     <OpenDaysForm
                                                         class="w-full"
-                                                        v-model="form.dates"
+                                                        v-model="
+                                                            form.criteres[
+                                                                critere.id
+                                                            ]
+                                                        "
                                                         :name="critere.nom"
                                                     />
                                                 </div>
@@ -555,7 +565,9 @@ onMounted(() => {
                                                         <OpenMonthsForm
                                                             class="w-full"
                                                             v-model="
-                                                                form.months
+                                                                form.criteres[
+                                                                    critere.id
+                                                                ]
                                                             "
                                                             :name="critere.nom"
                                                         />
@@ -654,10 +666,14 @@ onMounted(() => {
                                                 >
                                                     <RangeInputForm
                                                         class="w-full max-w-sm"
-                                                        v-model="form.rayon_km"
+                                                        v-model="
+                                                            form.criteres[
+                                                                critere.id
+                                                            ]
+                                                        "
                                                         :min="0"
-                                                        :max="200"
-                                                        :name="`Rayon de déplacement (en km)`"
+                                                        :max="300"
+                                                        :name="critere.nom"
                                                         :metric="`Km`"
                                                     />
                                                 </div>
@@ -698,8 +714,8 @@ onMounted(() => {
                                                     <div
                                                         v-for="souscritere in valeur.sous_criteres"
                                                         :key="souscritere.id"
-                                                        class=""
                                                     >
+                                                        <!-- sous crit select -->
                                                         <SelectForm
                                                             :classes="'block'"
                                                             class="max-w-sm py-2"
@@ -726,14 +742,14 @@ onMounted(() => {
                                                                 souscritere.sous_criteres_valeurs
                                                             "
                                                         />
-
+                                                        <!-- sous crit number -->
                                                         <InputLabel
                                                             class="py-2"
-                                                            for="
-                                                                Quantité
+                                                            :for="
+                                                                souscritere.nom
                                                             "
-                                                            value="
-                                                                Quantité
+                                                            :value="
+                                                                souscritere.nom
                                                             "
                                                             v-if="
                                                                 form.criteres[
@@ -748,11 +764,11 @@ onMounted(() => {
                                                         <TextInput
                                                             class="w-full"
                                                             type="number"
-                                                            id="
-                                                                Nombre
+                                                            :id="
+                                                                souscritere.nom
                                                             "
-                                                            name="
-                                                                Nombre
+                                                            :name="
+                                                                souscritere.nom
                                                             "
                                                             v-if="
                                                                 form.criteres[
@@ -760,6 +776,51 @@ onMounted(() => {
                                                                 ] === valeur &&
                                                                 souscritere.type_champ_form ===
                                                                     'number' &&
+                                                                souscritere.dis_cat_crit_val_id ===
+                                                                    valeur.id
+                                                            "
+                                                            v-model="
+                                                                form
+                                                                    .souscriteres[
+                                                                    souscritere
+                                                                        .id
+                                                                ]
+                                                            "
+                                                        />
+                                                        <!-- sous crit text -->
+                                                        <InputLabel
+                                                            class="py-2"
+                                                            :for="
+                                                                souscritere.nom
+                                                            "
+                                                            :value="
+                                                                souscritere.nom
+                                                            "
+                                                            v-if="
+                                                                form.criteres[
+                                                                    critere.id
+                                                                ] === valeur &&
+                                                                souscritere.type_champ_form ===
+                                                                    'text' &&
+                                                                souscritere.dis_cat_crit_val_id ===
+                                                                    valeur.id
+                                                            "
+                                                        />
+                                                        <TextInput
+                                                            class="w-full"
+                                                            type="text"
+                                                            :id="
+                                                                souscritere.nom
+                                                            "
+                                                            :name="
+                                                                souscritere.nom
+                                                            "
+                                                            v-if="
+                                                                form.criteres[
+                                                                    critere.id
+                                                                ] === valeur &&
+                                                                souscritere.type_champ_form ===
+                                                                    'text' &&
                                                                 souscritere.dis_cat_crit_val_id ===
                                                                     valeur.id
                                                             "

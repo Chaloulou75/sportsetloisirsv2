@@ -785,6 +785,10 @@ const destroyTarif = (tarif) => {
                                                             :key="date.id"
                                                         >
                                                             <span
+                                                                v-if="
+                                                                    date.dayopen &&
+                                                                    date.dayclose
+                                                                "
                                                                 class="text-xs text-gray-600"
                                                                 >Du
                                                                 {{
@@ -800,6 +804,10 @@ const destroyTarif = (tarif) => {
                                                                 }}</span
                                                             >
                                                             <span
+                                                                v-if="
+                                                                    date.houropen &&
+                                                                    date.hourclose
+                                                                "
                                                                 class="text-xs text-gray-600"
                                                                 >De
                                                                 {{

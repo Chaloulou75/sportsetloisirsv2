@@ -281,8 +281,7 @@ class ActiviteController extends Controller
             'categorie',
             'discipline'
         ])->where('structure_id', $structure->id)
-            ->where('id', $activite)
-            ->first();
+            ->find($activite);
 
         $structureActivite->update(['actif' => $request->actif]);
 
@@ -371,10 +370,10 @@ class ActiviteController extends Controller
             $structureAddressId = $structure->adresses->first()->id;
         }
 
-        $structureProduit = $structure->produits()->create([
+        $structureProduit = $structureActivite->produits()->create([
+            'structure_id' => $structure->id,
             'discipline_id' => $request->discipline_id,
             'categorie_id' => $request->categorie_id,
-            'activite_id' => $structureActivite->id,
             "actif" => true,
             'lieu_id' => $structureAddressId,
             'horaire_id' => null,
@@ -385,7 +384,8 @@ class ActiviteController extends Controller
 
         if (isset($criteresValuesSets)) {
             foreach ($criteresValuesSets as $critereId => $criteresValues) {
-                $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $critereId)->first();
+
+                $defaut = LienDisciplineCategorieCritereValeur::where('defaut', true)->where('discipline_categorie_critere_id', $critereId)->first() ?? null;
 
                 $this->insertCriteresRecursively($structure, $structureActivite, $structureProduit, $critereId, $criteresValues, $defaut);
             }
@@ -419,105 +419,117 @@ class ActiviteController extends Controller
 
 
         // Dates et horaires
-        if($request->time_seule) {
-            $time_seule = Carbon::createFromTime($request->time_seule['hours'], $request->time_seule['minutes'])->format('H:i');
-        }
+        // if($request->time_seule) {
+        //     $time_seule = Carbon::createFromTime($request->time_seule['hours'], $request->time_seule['minutes'])->format('H:i');
+        // }
 
-        if($request->times) {
-            $times = $request->times;
-            $horaires = array_map(function ($time) {
-                return Carbon::createFromTime($time['hours'], $time['minutes'])->format('H:i');
-            }, $times);
-            $houropen = $horaires[0];
-            $hourclose = $horaires[1];
-        }
+        // if($request->times) {
+        //     $times = $request->times;
+        //     $horaires = array_map(function ($time) {
+        //         return Carbon::createFromTime($time['hours'], $time['minutes'])->format('H:i');
+        //     }, $times);
+        //     $houropen = $horaires[0];
+        //     $hourclose = $horaires[1];
+        // }
 
-        if($request->date_seule) {
-            $date_seule = Carbon::parse($request->date_seule)->format('Y-m-d');
-        }
+        // if($request->date_seule) {
+        //     $date_seule = Carbon::parse($request->date_seule)->format('Y-m-d');
+        // }
 
-        if($request->dates) {
-            $dayopen = Carbon::parse($request->dates[0])->format('Y-m-d');
-            $dayclose = Carbon::parse($request->dates[1])->format('Y-m-d');
-        }
+        // if($request->dates) {
+        //     $dayopen = Carbon::parse($request->dates[0])->format('Y-m-d');
+        //     $dayclose = Carbon::parse($request->dates[1])->format('Y-m-d');
+        // }
 
-        if ($request->months) {
-            $startMonth = Carbon::create(
-                $request->months[0]['year'],
-                $request->months[0]['month'] + 1,
-                1
-            )->startOfMonth();
+        // if ($request->months) {
+        //     $startMonth = Carbon::create(
+        //         $request->months[0]['year'],
+        //         $request->months[0]['month'] + 1,
+        //         1
+        //     )->startOfMonth();
 
-            $endMonth = Carbon::create(
-                $request->months[1]['year'],
-                $request->months[1]['month'] + 1,
-                1
-            )->endOfMonth();
-        }
+        //     $endMonth = Carbon::create(
+        //         $request->months[1]['year'],
+        //         $request->months[1]['month'] + 1,
+        //         1
+        //     )->endOfMonth();
+        // }
 
-        if (
-            (isset($time_seule) && !empty($time_seule)) ||
-            (isset($houropen) && !empty($houropen)) ||
-            (isset($hourclose) && !empty($hourclose)) ||
-            (isset($date_seule) && !empty($date_seule)) ||
-            (isset($dayopen) && !empty($dayopen)) ||
-            (isset($dayclose) && !empty($dayclose)) ||
-            (isset($startMonth) && !empty($startMonth)) ||
-            (isset($endMonth) && !empty($endMonth))
-        ) {
-            $data = [
-                'structure_activite_id' => $structureActivite->id,
-                'structure_produit_id' => $structureProduit->id,
-                'dayopen' => $dayopen ?? null,
-                'dayclose' => $dayclose ?? null,
-                'houropen' => $houropen ?? null,
-                'hourclose' => $hourclose ?? null,
-                'date_debut' => $date_seule ?? null,
-                'time_debut' => $time_seule ?? null,
-                'start_month' => $startMonth ?? null,
-                'end_month' => $endMonth ?? null,
-            ];
+        // if (
+        //     (isset($time_seule) && !empty($time_seule)) ||
+        //     (isset($houropen) && !empty($houropen)) ||
+        //     (isset($hourclose) && !empty($hourclose)) ||
+        //     (isset($date_seule) && !empty($date_seule)) ||
+        //     (isset($dayopen) && !empty($dayopen)) ||
+        //     (isset($dayclose) && !empty($dayclose)) ||
+        //     (isset($startMonth) && !empty($startMonth)) ||
+        //     (isset($endMonth) && !empty($endMonth))
+        // ) {
+        //     $data = [
+        //         'structure_activite_id' => $structureActivite->id,
+        //         'structure_produit_id' => $structureProduit->id,
+        //         'dayopen' => $dayopen ?? null,
+        //         'dayclose' => $dayclose ?? null,
+        //         'houropen' => $houropen ?? null,
+        //         'hourclose' => $hourclose ?? null,
+        //         'date_debut' => $date_seule ?? null,
+        //         'time_debut' => $time_seule ?? null,
+        //         'start_month' => $startMonth ?? null,
+        //         'end_month' => $endMonth ?? null,
+        //     ];
 
-            $activiteDatesTimes = $structureActivite->dates()->create($data);
-        }
+        //     $activiteDatesTimes = $structureActivite->dates()->create($data);
+        // }
 
-        //insertion ds le planning
-        if($request->dates && $request->times) {
-            $allDates = [];
-            $combinedDatePairs = [];
-            $start = Carbon::parse($request->dates[0])->startOfDay();
-            $end = Carbon::parse($request->dates[1])->startOfDay();
+        //insertion ds le planning dates et heures
 
-            // Create an array of all dates between the start and end dates
-            while ($start->lte($end)) {
-                $allDates[] = $start->copy();
-                $start->addDay();
-            }
+        $datesProduit = StructureProduitCritere::withWhereHas('critere', function ($query) {
+            $query->where('type_champ_form', 'dates');
+        })->where('produit_id', $structureProduit->id)->first();
 
-            $startTime = $request->times[0];
-            $endTime = $request->times[1];
+        $timesProduit = StructureProduitCritere::withWhereHas('critere', function ($query) {
+            $query->where('type_champ_form', 'times');
+        })->where('produit_id', $structureProduit->id)->first();
 
-            foreach ($allDates as $date) {
-                $startDateTime = $date->copy()->setTime($startTime['hours'], $startTime['minutes']);
-                $endDateTime = $date->copy()->setTime($endTime['hours'], $endTime['minutes']);
+        // dd($datesProduit->valeur, $timesProduit->valeur);
 
-                $combinedDatePairs[] = [
-                    'start' => $startDateTime->toDateTimeString(),
-                    'end' => $endDateTime->toDateTimeString()
-                ];
-            }
+        if($datesProduit && $timesProduit) {
+            $datesArray = json_decode($datesProduit->valeur);
+            $horairesArray = json_decode($timesProduit->valeur, true);
 
-            foreach($combinedDatePairs as $combinedDatePair) {
-                StructurePlanning::create([
-                    'structure_id' => $request->structure_id,
-                    'discipline_id' => $structureActivite->discipline_id,
-                    'categorie_id' => $structureActivite->categorie_id,
-                    'activite_id' => $structureActivite->id,
-                    'produit_id' => $structureProduit->id,
-                    'title' => $structureActivite->titre,
-                    'start' => $combinedDatePair['start'] ?? "",
-                    'end' => $combinedDatePair['end'] ?? "",
-                ]);
+            if (is_array($horairesArray) && is_array($datesArray) && count($horairesArray) > 0 && count($datesArray) > 0) {
+                $startDate = $datesArray[0];
+                $endDate = $datesArray[0];
+                $startTime = $horairesArray[0];
+                $endTime = $horairesArray[1];
+
+                $combinedDatePairs = [];
+                $currentDate = Carbon::parse($startDate);
+
+                while ($currentDate->lte(Carbon::parse($endDate))) {
+                    $startDateTime = $currentDate->copy()->setTimeFromTimeString($startTime);
+                    $endDateTime = $currentDate->copy()->setTimeFromTimeString($endTime);
+
+                    $combinedDatePairs[] = [
+                        'start' => $startDateTime->toDateTimeString(),
+                        'end' => $endDateTime->toDateTimeString(),
+                    ];
+
+                    $currentDate->addDay();
+                }
+
+                foreach($combinedDatePairs as $combinedDatePair) {
+                    StructurePlanning::create([
+                        'structure_id' => $request->structure_id,
+                        'discipline_id' => $structureActivite->discipline_id,
+                        'categorie_id' => $structureActivite->categorie_id,
+                        'activite_id' => $structureActivite->id,
+                        'produit_id' => $structureProduit->id,
+                        'title' => $structureActivite->titre,
+                        'start' => $combinedDatePair['start'] ?? "",
+                        'end' => $combinedDatePair['end'] ?? "",
+                    ]);
+                }
             }
         }
 
@@ -527,17 +539,29 @@ class ActiviteController extends Controller
 
     private function insertCriteresRecursively($structure, $structureActivite, $structureProduit, $critereId, $criteresValues, $defaut)
     {
-        if(is_string($criteresValues) || is_numeric($criteresValues)) {
-            $valeur = $criteresValues;
-            $this->createStructureProduitCritere($structure, $structureActivite, $structureProduit, $critereId, null, $valeur);
-        } elseif (isset($criteresValues['valeur'])) {
-            $critereValueId = $criteresValues['id'];
-            $critereValue = $criteresValues['valeur'];
-            $valeurId = isset($critereValueId) ? $critereValueId : ($defaut ? $defaut->id : null);
-            $valeur = isset($critereValue) ? $critereValue : ($defaut ? $defaut->valeur : null);
-
-            $this->createStructureProduitCritere($structure, $structureActivite, $structureProduit, $critereId, $valeurId, $valeur);
+        if (isset($criteresValues['valeur'])) {
+            // Object
+            $this->handleSingleValue($structure, $structureActivite, $structureProduit, $critereId, $criteresValues['id'] ?? null, $criteresValues['valeur'] ?? null, $defaut);
+        } elseif (isset($criteresValues['hours'], $criteresValues['minutes'])) {
+            // Single hour
+            $this->handleSingleValue($structure, $structureActivite, $structureProduit, $critereId, null, Carbon::createFromTime($criteresValues['hours'], $criteresValues['minutes'])->format('H:i'), $defaut);
+        } elseif (is_array($criteresValues) && isset($criteresValues[0]['hours'], $criteresValues[0]['minutes'])) {
+            // Multiple hours
+            $this->handleMultipleHours($structure, $structureActivite, $structureProduit, $critereId, $criteresValues);
+        } elseif (is_string($criteresValues) && strtotime($criteresValues) !== false) {
+            // Single date
+            $this->handleSingleValue($structure, $structureActivite, $structureProduit, $critereId, null, Carbon::parse($criteresValues)->format('Y-m-d'), $defaut);
+        } elseif (is_array($criteresValues) && count($criteresValues) > 0 && is_string($criteresValues[0]) && strtotime($criteresValues[0]) !== false) {
+            // Multiple dates
+            $this->handleMultipleDates($structure, $structureActivite, $structureProduit, $critereId, $criteresValues);
+        } elseif (is_array($criteresValues) && isset($criteresValues[0]['month']) && isset($criteresValues[0]['year'])) {
+            // Month start/end
+            $this->handleMonthStartEnd($structure, $structureActivite, $structureProduit, $critereId, $criteresValues);
+        } elseif (is_string($criteresValues) || is_numeric($criteresValues)) {
+            // String or numeric value
+            $this->handleSingleValue($structure, $structureActivite, $structureProduit, $critereId, null, $criteresValues, null);
         } else {
+            // Recursive call for nested values
             foreach ($criteresValues as $critereValue) {
                 $this->insertCriteresRecursively($structure, $structureActivite, $structureProduit, $critereId, $critereValue, $defaut);
             }
@@ -587,7 +611,40 @@ class ActiviteController extends Controller
                 'valeur' => $souscriteresValues['valeur'] ?? $souscriteresValues,
             ]);
         }
+    }
 
+    private function handleSingleValue($structure, $structureActivite, $structureProduit, $critereId, $valeurId, $valeur, $defaut)
+    {
+        $this->createStructureProduitCritere($structure, $structureActivite, $structureProduit, $critereId, $valeurId ?? ($defaut ? $defaut->id : null), $valeur ?? ($defaut ? $defaut->valeur : null));
+    }
+
+    private function handleMultipleHours($structure, $structureActivite, $structureProduit, $critereId, $criteresValues)
+    {
+        $horaires = array_map(function ($horaire) {
+            return Carbon::createFromTime($horaire['hours'], $horaire['minutes'])->format('H:i');
+        }, $criteresValues);
+
+        $this->createStructureProduitCritere($structure, $structureActivite, $structureProduit, $critereId, null, json_encode($horaires));
+    }
+
+    private function handleMultipleDates($structure, $structureActivite, $structureProduit, $critereId, $criteresValues)
+    {
+        $dates = array_map(function ($date) {
+            return Carbon::parse($date)->format('Y-m-d');
+        }, $criteresValues);
+
+        $this->createStructureProduitCritere($structure, $structureActivite, $structureProduit, $critereId, null, json_encode($dates));
+    }
+
+    private function handleMonthStartEnd($structure, $structureActivite, $structureProduit, $critereId, $criteresValues)
+    {
+        $dates = array_map(function ($dateInfo) {
+            $month = $dateInfo['month'];
+            $year = $dateInfo['year'];
+            return Carbon::create($year, $month, 1, 0, 0, 0)->format('Y-m-d');
+        }, $criteresValues);
+
+        $this->createStructureProduitCritere($structure, $structureActivite, $structureProduit, $critereId, null, json_encode($dates));
     }
 
 }

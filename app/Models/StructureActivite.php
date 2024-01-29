@@ -28,6 +28,15 @@ class StructureActivite extends Model
         'image_url'
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'actif' => 'boolean',
+    ];
+
     public function structure(): BelongsTo
     {
         return $this->belongsTo(Structure::class);

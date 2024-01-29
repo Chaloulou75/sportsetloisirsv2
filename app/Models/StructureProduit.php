@@ -24,6 +24,16 @@ class StructureProduit extends Model
     protected $guarded = [];
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'actif' => 'boolean',
+        'reservable' => 'boolean'
+    ];
+
+    /**
      * The accessors to append to the model's array form.
      *
      * @var array

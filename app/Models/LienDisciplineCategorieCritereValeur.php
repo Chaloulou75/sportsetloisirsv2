@@ -21,6 +21,15 @@ class LienDisciplineCategorieCritereValeur extends Model
      */
     protected $guarded = [];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'defaut' => 'boolean',
+    ];
+
     public function critere(): BelongsTo
     {
         return $this->belongsTo(LienDisciplineCategorieCritere::class, 'discipline_categorie_critere_id');
