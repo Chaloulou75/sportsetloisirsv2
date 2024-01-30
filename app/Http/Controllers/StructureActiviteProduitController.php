@@ -42,11 +42,6 @@ class StructureActiviteProduitController extends Controller
             'country' => ['nullable'],
             'address_lat' => ['nullable'],
             'address_lng' => ['nullable'],
-            'time_seule' => ['nullable', 'array'],
-            'times' => ['nullable', new NestedArrays()],
-            'date_seule' => ['nullable', 'date'],
-            'dates' => ['nullable', 'array'],
-            'months' => ['nullable', new NestedArrays()],
             'instructeur_email' => ['nullable', 'email:filter', 'exists:users,email'],
             'instructeur_contact' => ['nullable'],
             'instructeur_phone' => ['nullable'],
@@ -100,109 +95,6 @@ class StructureActiviteProduitController extends Controller
             'reservable' => 0,
         ]);
 
-        // Dates et horaires
-        if($request->time_seule) {
-            $time_seule = Carbon::createFromTime($request->time_seule['hours'], $request->time_seule['minutes'])->format('H:i');
-        }
-
-        if($request->times) {
-            $times = $request->times;
-            $horaires = array_map(function ($time) {
-                return Carbon::createFromTime($time['hours'], $time['minutes'])->format('H:i');
-            }, $times);
-            $houropen = $horaires[0];
-            $hourclose = $horaires[1];
-        }
-
-        if($request->date_seule) {
-            $date_seule = Carbon::parse($request->date_seule)->format('Y-m-d');
-        }
-
-        if($request->dates) {
-            $dayopen = Carbon::parse($request->dates[0])->format('Y-m-d');
-            $dayclose = Carbon::parse($request->dates[1])->format('Y-m-d');
-        }
-
-        if ($request->months) {
-            $startMonth = Carbon::create(
-                $request->months[0]['year'],
-                $request->months[0]['month'] + 1,
-                1
-            )->startOfMonth();
-
-            $endMonth = Carbon::create(
-                $request->months[1]['year'],
-                $request->months[1]['month'] + 1,
-                1
-            )->endOfMonth();
-        }
-
-        if (
-            (isset($time_seule) && !empty($time_seule)) ||
-            (isset($houropen) && !empty($houropen)) ||
-            (isset($hourclose) && !empty($hourclose)) ||
-            (isset($date_seule) && !empty($date_seule)) ||
-            (isset($dayopen) && !empty($dayopen)) ||
-            (isset($dayclose) && !empty($dayclose)) ||
-            (isset($startMonth) && !empty($startMonth)) ||
-            (isset($endMonth) && !empty($endMonth))
-        ) {
-            $data = [
-                'structure_activite_id' => $activite->id,
-                'structure_produit_id' => $structureProduit->id,
-                'dayopen' => $dayopen ?? null,
-                'dayclose' => $dayclose ?? null,
-                'houropen' => $houropen ?? null,
-                'hourclose' => $hourclose ?? null,
-                'date_debut' => $date_seule ?? null,
-                'time_debut' => $time_seule ?? null,
-                'start_month' => $startMonth ?? null,
-                'end_month' => $endMonth ?? null,
-            ];
-
-            $activiteDatesTimes = $activite->dates()->create($data);
-        }
-
-        //insertion ds le planning
-        if($request->dates && $request->times) {
-            $allDates = [];
-            $combinedDatePairs = [];
-            $start = Carbon::parse($request->dates[0])->startOfDay();
-            $end = Carbon::parse($request->dates[1])->startOfDay();
-
-            // Create an array of all dates between the start and end dates
-            while ($start->lte($end)) {
-                $allDates[] = $start->copy();
-                $start->addDay();
-            }
-
-            $startTime = $request->times[0];
-            $endTime = $request->times[1];
-
-            foreach ($allDates as $date) {
-                $startDateTime = $date->copy()->setTime($startTime['hours'], $startTime['minutes']);
-                $endDateTime = $date->copy()->setTime($endTime['hours'], $endTime['minutes']);
-
-                $combinedDatePairs[] = [
-                    'start' => $startDateTime->toDateTimeString(),
-                    'end' => $endDateTime->toDateTimeString()
-                ];
-            }
-
-            foreach($combinedDatePairs as $combinedDatePair) {
-                StructurePlanning::create([
-                    'structure_id' => $request->structure_id,
-                    'discipline_id' => $activite->discipline_id,
-                    'categorie_id' => $activite->categorie_id,
-                    'activite_id' => $activite->id,
-                    'produit_id' => $structureProduit->id,
-                    'title' => $activite->titre,
-                    'start' => $combinedDatePair['start'] ?? "",
-                    'end' => $combinedDatePair['end'] ?? "",
-                ]);
-            }
-        }
-
         $criteresValuesSets = $request->criteres;
 
         if (isset($criteresValuesSets)) {
@@ -238,6 +130,22 @@ class StructureActiviteProduitController extends Controller
                 'email' => $request->instructeur_email,
                 'phone' => $request->instructeur_phone,
             ]);
+        }
+
+        $datesProduit = StructureProduitCritere::withWhereHas('critere', function ($query) {
+            $query->where('type_champ_form', 'dates');
+        })->where('produit_id', $structureProduit->id)->first();
+
+        $timesProduit = StructureProduitCritere::withWhereHas('critere', function ($query) {
+            $query->where('type_champ_form', 'times');
+        })->where('produit_id', $structureProduit->id)->first();
+
+        $formattedDates = $datesProduit->valeur;
+        $formattedTimes = $timesProduit->valeur;
+
+        if ($formattedDates && $formattedTimes) {
+
+            $this->generateStructurePlannings($formattedDates, $formattedTimes, $activite, $structureProduit, $structure);
         }
 
         return to_route('structures.categories.show', ['structure' => $structure->slug, 'discipline' => $activite->discipline->slug, 'categorie' => $activite->categorie->id ])->with('success', 'Produit ajouté.');

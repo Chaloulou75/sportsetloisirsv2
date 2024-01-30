@@ -60,11 +60,6 @@ const formAddProduit = useForm({
     country: null,
     address_lat: null,
     address_lng: null,
-    date_seule: null,
-    dates: null,
-    time_seule: null,
-    times: null,
-    months: null,
     instructeurId: null,
     instructeur_email: null,
     instructeur_contact: null,
@@ -326,8 +321,6 @@ const onSubmitAddProduitForm = () => {
                                                         >
                                                             <TextInput
                                                                 type="number"
-                                                                min="1"
-                                                                max="59"
                                                                 v-model="
                                                                     formAddProduit
                                                                         .criteres[
@@ -359,7 +352,10 @@ const onSubmitAddProduitForm = () => {
                                                         <SingleTimeForm
                                                             class="w-full"
                                                             v-model="
-                                                                formAddProduit.time_seule
+                                                                formAddProduit
+                                                                    .criteres[
+                                                                    critere.id
+                                                                ]
                                                             "
                                                             :name="critere.nom"
                                                         />
@@ -376,7 +372,10 @@ const onSubmitAddProduitForm = () => {
                                                         <OpenTimesForm
                                                             class="w-full"
                                                             v-model="
-                                                                formAddProduit.times
+                                                                formAddProduit
+                                                                    .criteres[
+                                                                    critere.id
+                                                                ]
                                                             "
                                                             :name="critere.nom"
                                                         />
@@ -393,7 +392,10 @@ const onSubmitAddProduitForm = () => {
                                                         <SingleDateForm
                                                             class="w-full"
                                                             v-model="
-                                                                formAddProduit.date_seule
+                                                                formAddProduit
+                                                                    .criteres[
+                                                                    critere.id
+                                                                ]
                                                             "
                                                             :name="critere.nom"
                                                         />
@@ -410,7 +412,10 @@ const onSubmitAddProduitForm = () => {
                                                         <OpenDaysForm
                                                             class="w-full"
                                                             v-model="
-                                                                formAddProduit.dates
+                                                                formAddProduit
+                                                                    .criteres[
+                                                                    critere.id
+                                                                ]
                                                             "
                                                             :name="critere.nom"
                                                         />
@@ -429,7 +434,11 @@ const onSubmitAddProduitForm = () => {
                                                             <OpenMonthsForm
                                                                 class="w-full"
                                                                 v-model="
-                                                                    formAddProduit.months
+                                                                    formAddProduit
+                                                                        .criteres[
+                                                                        critere
+                                                                            .id
+                                                                    ]
                                                                 "
                                                                 :name="
                                                                     critere.nom
@@ -537,11 +546,12 @@ const onSubmitAddProduitForm = () => {
                                                         <RangeInputForm
                                                             class="w-full max-w-sm"
                                                             v-model="
-                                                                formAddProduit.rayon_km
+                                                                formAddProduit
+                                                                    .criteres[
+                                                                    critere.id
+                                                                ]
                                                             "
-                                                            :min="0"
-                                                            :max="200"
-                                                            :name="`Rayon de déplacement (en km)`"
+                                                            :name="critere.nom"
                                                             :metric="`Km`"
                                                         />
                                                     </div>
@@ -658,6 +668,56 @@ const onSubmitAddProduitForm = () => {
                                                                         valeur &&
                                                                     souscritere.type_champ_form ===
                                                                         'number' &&
+                                                                    souscritere.dis_cat_crit_val_id ===
+                                                                        valeur.id
+                                                                "
+                                                                v-model="
+                                                                    formAddProduit
+                                                                        .souscriteres[
+                                                                        souscritere
+                                                                            .id
+                                                                    ]
+                                                                "
+                                                            />
+                                                            <InputLabel
+                                                                class="py-2"
+                                                                :for="
+                                                                    souscritere.nom
+                                                                "
+                                                                :value="
+                                                                    souscritere.nom
+                                                                "
+                                                                v-if="
+                                                                    formAddProduit
+                                                                        .criteres[
+                                                                        critere
+                                                                            .id
+                                                                    ] ===
+                                                                        valeur &&
+                                                                    souscritere.type_champ_form ===
+                                                                        'text' &&
+                                                                    souscritere.dis_cat_crit_val_id ===
+                                                                        valeur.id
+                                                                "
+                                                            />
+                                                            <TextInput
+                                                                class="w-full"
+                                                                type="text"
+                                                                :id="
+                                                                    souscritere.nom
+                                                                "
+                                                                :name="
+                                                                    souscritere.nom
+                                                                "
+                                                                v-if="
+                                                                    formAddProduit
+                                                                        .criteres[
+                                                                        critere
+                                                                            .id
+                                                                    ] ===
+                                                                        valeur &&
+                                                                    souscritere.type_champ_form ===
+                                                                        'text' &&
                                                                     souscritere.dis_cat_crit_val_id ===
                                                                         valeur.id
                                                                 "

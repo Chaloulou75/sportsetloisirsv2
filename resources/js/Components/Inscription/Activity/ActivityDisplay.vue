@@ -619,9 +619,9 @@ const destroyTarif = (tarif) => {
                     leave-to-class="transform opacity-0"
                 >
                     <DisclosurePanel as="div">
-                        <div class="overflow-x-scroll">
+                        <div class="overflow-x-auto">
                             <table
-                                class="w-full min-w-full table-auto border-collapse border border-slate-300 md:table-auto"
+                                class="w-full min-w-full table-auto border-collapse overflow-scroll border border-slate-300"
                             >
                                 <thead
                                     class="bg-gray-700 text-xs font-medium uppercase tracking-wider text-gray-50"
@@ -718,7 +718,7 @@ const destroyTarif = (tarif) => {
                                                                                 .length >
                                                                                 0
                                                                         "
-                                                                        class="text-xs text-gray-600"
+                                                                        class="list-inside list-disc text-xs text-gray-600"
                                                                     >
                                                                         <li
                                                                             v-for="sousCritere in critere.sous_criteres"
@@ -727,7 +727,7 @@ const destroyTarif = (tarif) => {
                                                                             "
                                                                             class="text-xs text-gray-600"
                                                                         >
-                                                                            &bull;{{
+                                                                            {{
                                                                                 sousCritere.valeur
                                                                             }}
                                                                         </li>
