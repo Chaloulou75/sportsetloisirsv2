@@ -23,6 +23,8 @@ import {
     DialogTitle,
     Switch,
 } from "@headlessui/vue";
+import { parse, isValid } from "date-fns";
+import { fr } from "date-fns/locale";
 
 const emit = defineEmits(["close"]);
 
@@ -60,16 +62,10 @@ const formEditProduit = useForm({
     country: null,
     address_lat: null,
     address_lng: null,
-    date_seule: null,
-    dates: null,
-    time_seule: null,
-    times: null,
-    months: null,
     instructeurId: null,
     instructeur_email: null,
     instructeur_contact: null,
     instructeur_phone: null,
-    rayon_km: 0,
 });
 
 const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
@@ -111,172 +107,233 @@ watch(
 
             newValue.criteres.forEach((critere) => {
                 const critereId = critere.critere_id;
+                const produitValeur = critere.valeur;
                 const critereValue = critere.critere_valeur;
                 const sousCriteres = critere.sous_criteres;
                 filteredCriteres.value.forEach((officialCritere) => {
-                    if (officialCritere.type_champ_form === "time") {
-                        alert("time");
-                    } else if (officialCritere.type_champ_form === "date") {
-                        alert("date");
-                    } else if (officialCritere.type_champ_form === "dates") {
-                        alert("dates");
-                    } else if (officialCritere.type_champ_form === "times") {
-                        alert("times");
-                    } else {
-                        officialCritere.valeurs.forEach(
-                            (officialCritereValeur) => {
-                                if (
-                                    officialCritereValeur.id === critereValue.id
-                                ) {
-                                    if (!formEditProduit.criteres[critereId]) {
-                                        if (
-                                            officialCritere.type_champ_form ===
-                                            "checkbox"
-                                        ) {
-                                            formEditProduit.criteres[
-                                                critereId
-                                            ] = [officialCritereValeur];
-                                        } else {
-                                            formEditProduit.criteres[
-                                                critereId
-                                            ] = officialCritereValeur;
-                                        }
-                                    } else {
-                                        const existingValue =
-                                            formEditProduit.criteres[critereId];
+                    if (officialCritere.id === critereId) {
+                        if (
+                            officialCritere.type_champ_form === "time" &&
+                            produitValeur !== null
+                        ) {
+                            const [hours, minutes] = produitValeur
+                                .split("h")
+                                .map(Number);
+                            formEditProduit.criteres[critereId] = {
+                                hours,
+                                minutes,
+                            };
+                        } else if (
+                            officialCritere.type_champ_form === "date" &&
+                            produitValeur !== null
+                        ) {
+                            const parsedDate = parse(
+                                produitValeur,
+                                "d MMMM yyyy",
+                                new Date(),
+                                { locale: fr }
+                            );
+                            if (isValid(parsedDate)) {
+                                formEditProduit.criteres[critereId] =
+                                    parsedDate;
+                            }
+                        } else if (
+                            officialCritere.type_champ_form === "dates" &&
+                            produitValeur !== null
+                        ) {
+                            const [start, end] = produitValeur
+                                .split(" au ")
+                                .map((dateStr) => {
+                                    const parsedDate = parse(
+                                        dateStr,
+                                        "d MMMM yyyy",
+                                        new Date(),
+                                        { locale: fr }
+                                    );
+                                    return isValid(parsedDate)
+                                        ? parsedDate
+                                        : null;
+                                });
 
-                                        if (!Array.isArray(existingValue)) {
-                                            formEditProduit.criteres[
-                                                critereId
-                                            ] = [existingValue];
+                            if (start && end) {
+                                formEditProduit.criteres[critereId] = [
+                                    start,
+                                    end,
+                                ];
+                            }
+                        } else if (
+                            officialCritere.type_champ_form === "mois" &&
+                            produitValeur !== null
+                        ) {
+                            const [startMonth, endMonth] = produitValeur
+                                .split(" à ")
+                                .map((dateStr) => {
+                                    const parsedDate = parse(
+                                        dateStr,
+                                        "MMMM yyyy",
+                                        new Date(),
+                                        { locale: fr }
+                                    );
+                                    return isValid(parsedDate)
+                                        ? parsedDate
+                                        : null;
+                                });
+
+                            if (startMonth && endMonth) {
+                                const startMonthYear = {
+                                    month: startMonth.getMonth(),
+                                    year: startMonth.getFullYear(),
+                                };
+                                const endMonthYear = {
+                                    month: endMonth.getMonth(),
+                                    year: endMonth.getFullYear(),
+                                };
+
+                                formEditProduit.criteres[critereId] = [
+                                    startMonthYear,
+                                    endMonthYear,
+                                ];
+                            }
+                        } else if (
+                            officialCritere.type_champ_form === "times" &&
+                            produitValeur !== null
+                        ) {
+                            const [openTime, closeTime] = produitValeur
+                                .split(" à ")
+                                .map((timeString) => {
+                                    const [hours, minutes] = timeString
+                                        .split("h")
+                                        .map(Number);
+                                    return { hours, minutes };
+                                });
+
+                            formEditProduit.criteres[critereId] = [
+                                openTime,
+                                closeTime,
+                            ];
+                        } else if (officialCritere.valeurs.length > 0) {
+                            officialCritere.valeurs.forEach(
+                                (officialCritereValeur) => {
+                                    if (
+                                        officialCritereValeur.id ===
+                                        critereValue.id
+                                    ) {
+                                        if (
+                                            !formEditProduit.criteres[critereId]
+                                        ) {
                                             if (
-                                                !formEditProduit.criteres[
-                                                    critereId
-                                                ].includes(
-                                                    officialCritereValeur
-                                                )
+                                                officialCritere.type_champ_form ===
+                                                "checkbox"
                                             ) {
                                                 formEditProduit.criteres[
                                                     critereId
-                                                ].push(officialCritereValeur);
+                                                ] = [officialCritereValeur];
+                                            } else {
+                                                formEditProduit.criteres[
+                                                    critereId
+                                                ] = officialCritereValeur;
                                             }
                                         } else {
-                                            if (
-                                                !formEditProduit.criteres[
-                                                    critereId
-                                                ].includes(
-                                                    officialCritereValeur
-                                                )
-                                            ) {
+                                            const existingValue =
                                                 formEditProduit.criteres[
                                                     critereId
-                                                ].push(officialCritereValeur);
-                                            }
-                                        }
-                                    }
-                                    if (officialCritereValeur.sous_criteres) {
-                                        officialCritereValeur.sous_criteres.forEach(
-                                            (officialSousCritere) => {
-                                                const souscritereId =
-                                                    officialSousCritere.id;
+                                                ];
+
+                                            if (!Array.isArray(existingValue)) {
+                                                formEditProduit.criteres[
+                                                    critereId
+                                                ] = [existingValue];
                                                 if (
-                                                    officialSousCritere
-                                                        .sous_criteres_valeurs
-                                                        .length > 0
+                                                    !formEditProduit.criteres[
+                                                        critereId
+                                                    ].includes(
+                                                        officialCritereValeur
+                                                    )
                                                 ) {
-                                                    officialSousCritere.sous_criteres_valeurs.forEach(
-                                                        (
-                                                            officialSousCritereValeur
-                                                        ) => {
-                                                            const officialSousCritereValeurId =
-                                                                officialSousCritereValeur.id;
-                                                            sousCriteres.forEach(
-                                                                (
-                                                                    sousCritere
-                                                                ) => {
-                                                                    const prodSousCritValeur =
-                                                                        sousCritere.sous_critere_valeur;
-                                                                    if (
-                                                                        prodSousCritValeur &&
-                                                                        prodSousCritValeur.id ===
-                                                                            officialSousCritereValeurId
-                                                                    ) {
-                                                                        formEditProduit.souscriteres[
-                                                                            souscritereId
-                                                                        ] =
-                                                                            officialSousCritereValeur;
-                                                                    }
-                                                                }
-                                                            );
-                                                        }
+                                                    formEditProduit.criteres[
+                                                        critereId
+                                                    ].push(
+                                                        officialCritereValeur
                                                     );
-                                                } else {
-                                                    sousCriteres.forEach(
-                                                        (sousCritere) => {
-                                                            const prodSousCritValeur =
-                                                                sousCritere.valeur;
-                                                            formEditProduit.souscriteres[
-                                                                souscritereId
-                                                            ] =
-                                                                prodSousCritValeur;
-                                                        }
+                                                }
+                                            } else {
+                                                if (
+                                                    !formEditProduit.criteres[
+                                                        critereId
+                                                    ].includes(
+                                                        officialCritereValeur
+                                                    )
+                                                ) {
+                                                    formEditProduit.criteres[
+                                                        critereId
+                                                    ].push(
+                                                        officialCritereValeur
                                                     );
                                                 }
                                             }
-                                        );
+                                        }
+                                        if (
+                                            officialCritereValeur.sous_criteres
+                                        ) {
+                                            officialCritereValeur.sous_criteres.forEach(
+                                                (officialSousCritere) => {
+                                                    const souscritereId =
+                                                        officialSousCritere.id;
+                                                    if (
+                                                        officialSousCritere
+                                                            .sous_criteres_valeurs
+                                                            .length > 0
+                                                    ) {
+                                                        officialSousCritere.sous_criteres_valeurs.forEach(
+                                                            (
+                                                                officialSousCritereValeur
+                                                            ) => {
+                                                                const officialSousCritereValeurId =
+                                                                    officialSousCritereValeur.id;
+                                                                sousCriteres.forEach(
+                                                                    (
+                                                                        sousCritere
+                                                                    ) => {
+                                                                        const prodSousCritValeur =
+                                                                            sousCritere.sous_critere_valeur;
+                                                                        if (
+                                                                            prodSousCritValeur &&
+                                                                            prodSousCritValeur.id ===
+                                                                                officialSousCritereValeurId
+                                                                        ) {
+                                                                            formEditProduit.souscriteres[
+                                                                                souscritereId
+                                                                            ] =
+                                                                                officialSousCritereValeur;
+                                                                        }
+                                                                    }
+                                                                );
+                                                            }
+                                                        );
+                                                    } else {
+                                                        sousCriteres.forEach(
+                                                            (sousCritere) => {
+                                                                const prodSousCritValeur =
+                                                                    sousCritere.valeur;
+                                                                formEditProduit.souscriteres[
+                                                                    souscritereId
+                                                                ] =
+                                                                    prodSousCritValeur;
+                                                            }
+                                                        );
+                                                    }
+                                                }
+                                            );
+                                        }
                                     }
                                 }
-                            }
-                        );
+                            );
+                        } else if (produitValeur !== null) {
+                            formEditProduit.criteres[critereId] = produitValeur;
+                        }
                     }
                 });
             });
-
-            if (newValue.dates) {
-                newValue.dates.forEach((dateProduit) => {
-                    if (dateProduit.time_debut) {
-                        const [hours, minutes] = dateProduit.time_debut
-                            .split(":")
-                            .map(Number);
-                        formEditProduit.time_seule = { hours, minutes };
-                    }
-                    if (dateProduit.houropen && dateProduit.hourclose) {
-                        const [hoursopen, minutesopen] = dateProduit.houropen
-                            .split(":")
-                            .map(Number);
-                        const [hoursclose, minutesclose] = dateProduit.hourclose
-                            .split(":")
-                            .map(Number);
-                        formEditProduit.times = [
-                            { hours: hoursopen, minutes: minutesopen },
-                            { hours: hoursclose, minutes: minutesclose },
-                        ];
-                    }
-                    if (dateProduit.date_debut) {
-                        formEditProduit.date_seule = new Date(
-                            dateProduit.date_debut
-                        );
-                    }
-                    if (dateProduit.dayopen && dateProduit.dayclose) {
-                        const dateOpen = new Date(dateProduit.dayopen);
-                        const dateClose = new Date(dateProduit.dayclose);
-                        formEditProduit.dates = [dateOpen, dateClose];
-                    }
-                    if (dateProduit.start_month && dateProduit.end_month) {
-                        const start = {
-                            month: new Date(dateProduit.start_month).getMonth(),
-                            year: new Date(
-                                dateProduit.start_month
-                            ).getFullYear(),
-                        };
-                        const end = {
-                            month: new Date(dateProduit.end_month).getMonth(),
-                            year: new Date(dateProduit.end_month).getFullYear(),
-                        };
-                        formEditProduit.months = [start, end];
-                    }
-                });
-            }
         }
     }
 );
@@ -532,8 +589,6 @@ const onSubmitEditProduitForm = () => {
                                                         >
                                                             <TextInput
                                                                 type="number"
-                                                                min="1"
-                                                                max="59"
                                                                 v-model="
                                                                     formEditProduit
                                                                         .criteres[
@@ -565,7 +620,10 @@ const onSubmitEditProduitForm = () => {
                                                         <SingleTimeForm
                                                             class="w-full"
                                                             v-model="
-                                                                formEditProduit.time_seule
+                                                                formEditProduit
+                                                                    .criteres[
+                                                                    critere.id
+                                                                ]
                                                             "
                                                             :name="critere.nom"
                                                         />
@@ -582,7 +640,10 @@ const onSubmitEditProduitForm = () => {
                                                         <OpenTimesForm
                                                             class="w-full"
                                                             v-model="
-                                                                formEditProduit.times
+                                                                formEditProduit
+                                                                    .criteres[
+                                                                    critere.id
+                                                                ]
                                                             "
                                                             :name="critere.nom"
                                                         />
@@ -599,7 +660,10 @@ const onSubmitEditProduitForm = () => {
                                                         <SingleDateForm
                                                             class="w-full"
                                                             v-model="
-                                                                formEditProduit.date_seule
+                                                                formEditProduit
+                                                                    .criteres[
+                                                                    critere.id
+                                                                ]
                                                             "
                                                             :name="critere.nom"
                                                         />
@@ -616,7 +680,10 @@ const onSubmitEditProduitForm = () => {
                                                         <OpenDaysForm
                                                             class="w-full"
                                                             v-model="
-                                                                formEditProduit.dates
+                                                                formEditProduit
+                                                                    .criteres[
+                                                                    critere.id
+                                                                ]
                                                             "
                                                             :name="critere.nom"
                                                         />
@@ -635,22 +702,16 @@ const onSubmitEditProduitForm = () => {
                                                             <OpenMonthsForm
                                                                 class="w-full"
                                                                 v-model="
-                                                                    formEditProduit.months
+                                                                    formEditProduit
+                                                                        .criteres[
+                                                                        critere
+                                                                            .id
+                                                                    ]
                                                                 "
                                                                 :name="
                                                                     critere.nom
                                                                 "
                                                             />
-                                                            <div
-                                                                v-if="
-                                                                    errors.months
-                                                                "
-                                                                class="mt-2 text-xs text-red-500"
-                                                            >
-                                                                {{
-                                                                    errors.months
-                                                                }}
-                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -743,11 +804,12 @@ const onSubmitEditProduitForm = () => {
                                                         <RangeInputForm
                                                             class="w-full max-w-sm"
                                                             v-model="
-                                                                formEditProduit.rayon_km
+                                                                formEditProduit
+                                                                    .criteres[
+                                                                    critere.id
+                                                                ]
                                                             "
-                                                            :min="0"
-                                                            :max="200"
-                                                            :name="`Rayon de déplacement (en km)`"
+                                                            :name="critere.nom"
                                                             :metric="`Km`"
                                                         />
                                                         <!-- Instructeur -->
@@ -824,15 +886,65 @@ const onSubmitEditProduitForm = () => {
                                                                     souscritere.sous_criteres_valeurs
                                                                 "
                                                             />
+                                                            <InputLabel
+                                                                class="py-2"
+                                                                :for="
+                                                                    souscritere.nom
+                                                                "
+                                                                :value="
+                                                                    souscritere.nom
+                                                                "
+                                                                v-if="
+                                                                    formEditProduit
+                                                                        .criteres[
+                                                                        critere
+                                                                            .id
+                                                                    ] ===
+                                                                        valeur &&
+                                                                    souscritere.type_champ_form ===
+                                                                        'number' &&
+                                                                    souscritere.dis_cat_crit_val_id ===
+                                                                        valeur.id
+                                                                "
+                                                            />
+                                                            <TextInput
+                                                                class="w-full"
+                                                                type="text"
+                                                                :id="
+                                                                    souscritere.nom
+                                                                "
+                                                                :name="
+                                                                    souscritere.nom
+                                                                "
+                                                                v-if="
+                                                                    formEditProduit
+                                                                        .criteres[
+                                                                        critere
+                                                                            .id
+                                                                    ] ===
+                                                                        valeur &&
+                                                                    souscritere.type_champ_form ===
+                                                                        'number' &&
+                                                                    souscritere.dis_cat_crit_val_id ===
+                                                                        valeur.id
+                                                                "
+                                                                v-model="
+                                                                    formEditProduit
+                                                                        .souscriteres[
+                                                                        souscritere
+                                                                            .id
+                                                                    ]
+                                                                "
+                                                            />
 
                                                             <InputLabel
                                                                 class="py-2"
-                                                                for="
-                                                                Quantité
-                                                            "
-                                                                value="
-                                                                Quantité
-                                                            "
+                                                                :for="
+                                                                    souscritere.nom
+                                                                "
+                                                                :value="
+                                                                    souscritere.nom
+                                                                "
                                                                 v-if="
                                                                     formEditProduit
                                                                         .criteres[
@@ -849,12 +961,12 @@ const onSubmitEditProduitForm = () => {
                                                             <TextInput
                                                                 class="w-full"
                                                                 type="number"
-                                                                id="
-                                                                Nombre
-                                                            "
-                                                                name="
-                                                                Nombre
-                                                            "
+                                                                :id="
+                                                                    souscritere.nom
+                                                                "
+                                                                :name="
+                                                                    souscritere.nom
+                                                                "
                                                                 v-if="
                                                                     formEditProduit
                                                                         .criteres[

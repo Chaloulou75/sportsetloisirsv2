@@ -34,8 +34,6 @@ class StructureProduitCritere extends Model
     {
         return Attribute::make(
             get: function (mixed $value) {
-
-
                 if (is_string($value)) {
                     if ($this->critere && $this->critere->type_champ_form === 'date') {
                         return Carbon::parse($value)->isoFormat('LL');
@@ -74,11 +72,8 @@ class StructureProduitCritere extends Model
                             return implode(' à ', $formattedMonths);
                         }
                     }
-
-
                     return $value;
                 }
-
                 return $value;
             }
         );
