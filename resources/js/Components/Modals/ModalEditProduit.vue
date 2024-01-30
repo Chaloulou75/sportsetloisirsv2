@@ -114,97 +114,121 @@ watch(
                 const critereValue = critere.critere_valeur;
                 const sousCriteres = critere.sous_criteres;
                 filteredCriteres.value.forEach((officialCritere) => {
-                    officialCritere.valeurs.forEach((officialCritereValeur) => {
-                        if (officialCritereValeur.id === critereValue.id) {
-                            if (!formEditProduit.criteres[critereId]) {
+                    if (officialCritere.type_champ_form === "time") {
+                        alert("time");
+                    } else if (officialCritere.type_champ_form === "date") {
+                        alert("date");
+                    } else if (officialCritere.type_champ_form === "dates") {
+                        alert("dates");
+                    } else if (officialCritere.type_champ_form === "times") {
+                        alert("times");
+                    } else {
+                        officialCritere.valeurs.forEach(
+                            (officialCritereValeur) => {
                                 if (
-                                    officialCritere.type_champ_form ===
-                                    "checkbox"
+                                    officialCritereValeur.id === critereValue.id
                                 ) {
-                                    formEditProduit.criteres[critereId] = [
-                                        officialCritereValeur,
-                                    ];
-                                } else {
-                                    formEditProduit.criteres[critereId] =
-                                        officialCritereValeur;
-                                }
-                            } else {
-                                const existingValue =
-                                    formEditProduit.criteres[critereId];
-
-                                if (!Array.isArray(existingValue)) {
-                                    formEditProduit.criteres[critereId] = [
-                                        existingValue,
-                                    ];
-                                    if (
-                                        !formEditProduit.criteres[
-                                            critereId
-                                        ].includes(officialCritereValeur)
-                                    ) {
-                                        formEditProduit.criteres[
-                                            critereId
-                                        ].push(officialCritereValeur);
-                                    }
-                                } else {
-                                    if (
-                                        !formEditProduit.criteres[
-                                            critereId
-                                        ].includes(officialCritereValeur)
-                                    ) {
-                                        formEditProduit.criteres[
-                                            critereId
-                                        ].push(officialCritereValeur);
-                                    }
-                                }
-                            }
-                            if (officialCritereValeur.sous_criteres) {
-                                officialCritereValeur.sous_criteres.forEach(
-                                    (officialSousCritere) => {
-                                        const souscritereId =
-                                            officialSousCritere.id;
+                                    if (!formEditProduit.criteres[critereId]) {
                                         if (
-                                            officialSousCritere
-                                                .sous_criteres_valeurs.length >
-                                            0
+                                            officialCritere.type_champ_form ===
+                                            "checkbox"
                                         ) {
-                                            officialSousCritere.sous_criteres_valeurs.forEach(
-                                                (officialSousCritereValeur) => {
-                                                    const officialSousCritereValeurId =
-                                                        officialSousCritereValeur.id;
+                                            formEditProduit.criteres[
+                                                critereId
+                                            ] = [officialCritereValeur];
+                                        } else {
+                                            formEditProduit.criteres[
+                                                critereId
+                                            ] = officialCritereValeur;
+                                        }
+                                    } else {
+                                        const existingValue =
+                                            formEditProduit.criteres[critereId];
+
+                                        if (!Array.isArray(existingValue)) {
+                                            formEditProduit.criteres[
+                                                critereId
+                                            ] = [existingValue];
+                                            if (
+                                                !formEditProduit.criteres[
+                                                    critereId
+                                                ].includes(
+                                                    officialCritereValeur
+                                                )
+                                            ) {
+                                                formEditProduit.criteres[
+                                                    critereId
+                                                ].push(officialCritereValeur);
+                                            }
+                                        } else {
+                                            if (
+                                                !formEditProduit.criteres[
+                                                    critereId
+                                                ].includes(
+                                                    officialCritereValeur
+                                                )
+                                            ) {
+                                                formEditProduit.criteres[
+                                                    critereId
+                                                ].push(officialCritereValeur);
+                                            }
+                                        }
+                                    }
+                                    if (officialCritereValeur.sous_criteres) {
+                                        officialCritereValeur.sous_criteres.forEach(
+                                            (officialSousCritere) => {
+                                                const souscritereId =
+                                                    officialSousCritere.id;
+                                                if (
+                                                    officialSousCritere
+                                                        .sous_criteres_valeurs
+                                                        .length > 0
+                                                ) {
+                                                    officialSousCritere.sous_criteres_valeurs.forEach(
+                                                        (
+                                                            officialSousCritereValeur
+                                                        ) => {
+                                                            const officialSousCritereValeurId =
+                                                                officialSousCritereValeur.id;
+                                                            sousCriteres.forEach(
+                                                                (
+                                                                    sousCritere
+                                                                ) => {
+                                                                    const prodSousCritValeur =
+                                                                        sousCritere.sous_critere_valeur;
+                                                                    if (
+                                                                        prodSousCritValeur &&
+                                                                        prodSousCritValeur.id ===
+                                                                            officialSousCritereValeurId
+                                                                    ) {
+                                                                        formEditProduit.souscriteres[
+                                                                            souscritereId
+                                                                        ] =
+                                                                            officialSousCritereValeur;
+                                                                    }
+                                                                }
+                                                            );
+                                                        }
+                                                    );
+                                                } else {
                                                     sousCriteres.forEach(
                                                         (sousCritere) => {
                                                             const prodSousCritValeur =
-                                                                sousCritere.sous_critere_valeur;
-                                                            if (
-                                                                prodSousCritValeur &&
-                                                                prodSousCritValeur.id ===
-                                                                    officialSousCritereValeurId
-                                                            ) {
-                                                                formEditProduit.souscriteres[
-                                                                    souscritereId
-                                                                ] =
-                                                                    officialSousCritereValeur;
-                                                            }
+                                                                sousCritere.valeur;
+                                                            formEditProduit.souscriteres[
+                                                                souscritereId
+                                                            ] =
+                                                                prodSousCritValeur;
                                                         }
                                                     );
                                                 }
-                                            );
-                                        } else {
-                                            sousCriteres.forEach(
-                                                (sousCritere) => {
-                                                    const prodSousCritValeur =
-                                                        sousCritere.valeur;
-                                                    formEditProduit.souscriteres[
-                                                        souscritereId
-                                                    ] = prodSousCritValeur;
-                                                }
-                                            );
-                                        }
+                                            }
+                                        );
                                     }
-                                );
+                                }
                             }
-                        }
-                    });
+                        );
+                    }
                 });
             });
 

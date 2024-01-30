@@ -36,39 +36,50 @@ class StructureProduitCritere extends Model
             get: function (mixed $value) {
 
 
-                // if (is_string($value)) {
-                //     // Check if it's a JSON-encoded string
-                //     $decodedValue = json_decode($value, true);
+                if (is_string($value)) {
+                    if ($this->critere && $this->critere->type_champ_form === 'date') {
+                        return Carbon::parse($value)->isoFormat('LL');
+                    }
+                    if ($this->critere && $this->critere->type_champ_form === 'dates') {
+                        $datesArray = json_decode($value, true);
+                        if (is_array($datesArray)) {
+                            $formattedDates = [];
+                            foreach ($datesArray as $date) {
+                                $formattedDates[] = Carbon::parse($date)->isoFormat('LL');
+                            }
+                            return implode(' au ', $formattedDates);
+                        }
+                    }
+                    if ($this->critere && $this->critere->type_champ_form === 'time') {
+                        return Carbon::parse($value)->format('H\hi');
+                    }
+                    if ($this->critere && $this->critere->type_champ_form === 'times') {
+                        $timesArray = json_decode($value, true);
+                        if (is_array($timesArray)) {
+                            $formattedTimes = [];
+                            foreach ($timesArray as $time) {
+                                $formattedTimes[] = Carbon::parse($time)->format('H\hi');
+                            }
+                            return implode(' à ', $formattedTimes);
+                        }
+                    }
 
-                //     if ($decodedValue !== null) {
-                //         return $decodedValue;
-                //     }
-
-                //     // Check if it's a valid date or time
-                //     $dateValue = Carbon::parse($value, 'UTC', false);
-
-
-                //     if ($dateValue->isValid()) {
-                //         if ($dateValue->format('H:i:s') === '00:00:00') {
-                //             return $dateValue->isoFormat('LL'); // Format date for humans (e.g., "23 mars 2024")
-                //         } else {
-                //             return $dateValue->format('H\hi'); // Format time for humans (e.g., "9h00")
-                //         }
-                //     }
+                    if ($this->critere && $this->critere->type_champ_form === 'mois') {
+                        $monthsArray = json_decode($value, true);
+                        if (is_array($monthsArray)) {
+                            $formattedMonths = [];
+                            foreach ($monthsArray as $month) {
+                                $formattedMonths[] = Carbon::parse($month)->isoFormat('MMMM YYYY');
+                            }
+                            return implode(' à ', $formattedMonths);
+                        }
+                    }
 
 
-                //     // Handle other cases as needed
-                //     return $value;
-                // } elseif (is_array($value)) {
-                //     // Handle array cases as needed
-                //     // Example: JSON encode the array
-                //     return json_encode($value);
-                // }
+                    return $value;
+                }
 
                 return $value;
-
-
-
             }
         );
     }
