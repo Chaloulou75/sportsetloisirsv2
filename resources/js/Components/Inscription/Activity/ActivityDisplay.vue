@@ -619,9 +619,9 @@ const destroyTarif = (tarif) => {
                     leave-to-class="transform opacity-0"
                 >
                     <DisclosurePanel as="div">
-                        <div class="overflow-x-auto">
+                        <div class="overflow-x-scroll">
                             <table
-                                class="w-full min-w-full table-auto border-collapse overflow-scroll border border-slate-300"
+                                class="w-full min-w-full table-auto border-collapse border border-slate-300 md:table-auto"
                             >
                                 <thead
                                     class="bg-gray-700 text-xs font-medium uppercase tracking-wider text-gray-50"
