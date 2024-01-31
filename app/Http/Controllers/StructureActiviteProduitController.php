@@ -140,13 +140,14 @@ class StructureActiviteProduitController extends Controller
             $query->where('type_champ_form', 'times');
         })->where('produit_id', $structureProduit->id)->first();
 
-        $formattedDates = $datesProduit->valeur;
-        $formattedTimes = $timesProduit->valeur;
-
-        if ($formattedDates && $formattedTimes) {
-
-            $this->generateStructurePlannings($formattedDates, $formattedTimes, $activite, $structureProduit, $structure);
+        if($datesProduit && $timesProduit) {
+            $formattedDates = $datesProduit->valeur;
+            $formattedTimes = $timesProduit->valeur;
+            if ($formattedDates !== null && $formattedTimes !== null) {
+                $this->generateStructurePlannings($formattedDates, $formattedTimes, $activite, $structureProduit, $structure);
+            }
         }
+
 
         return to_route('structures.categories.show', ['structure' => $structure->slug, 'discipline' => $activite->discipline->slug, 'categorie' => $activite->categorie->id ])->with('success', 'Produit ajouté.');
 
@@ -247,14 +248,14 @@ class StructureActiviteProduitController extends Controller
             $query->where('type_champ_form', 'times');
         })->where('produit_id', $structureProduit->id)->first();
 
-        $formattedDates = $datesProduit->valeur;
-        $formattedTimes = $timesProduit->valeur;
+        if($datesProduit && $timesProduit) {
+            $formattedDates = $datesProduit->valeur;
+            $formattedTimes = $timesProduit->valeur;
 
-        if ($formattedDates && $formattedTimes) {
-
-            $this->generateStructurePlannings($formattedDates, $formattedTimes, $activite, $structureProduit, $structure);
+            if ($formattedDates !== null && $formattedTimes !== null) {
+                $this->generateStructurePlannings($formattedDates, $formattedTimes, $activite, $structureProduit, $structure);
+            }
         }
-
 
         return to_route('structures.categories.show', ['structure' => $structure->slug, 'discipline' => $activite->discipline->slug, 'categorie' => $activite->categorie->id])->with('success', 'Produit mise à jour.');
 

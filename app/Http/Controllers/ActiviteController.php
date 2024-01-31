@@ -426,14 +426,14 @@ class ActiviteController extends Controller
             $query->where('type_champ_form', 'times');
         })->where('produit_id', $structureProduit->id)->first();
 
-        $formattedDates = $datesProduit->valeur;
-        $formattedTimes = $timesProduit->valeur;
+        if($datesProduit && $timesProduit) {
+            $formattedDates = $datesProduit->valeur;
+            $formattedTimes = $timesProduit->valeur;
 
-        if ($formattedDates && $formattedTimes) {
-
-            $this->generateStructurePlannings($formattedDates, $formattedTimes, $structureActivite, $structureProduit, $structure);
+            if ($formattedDates !== null && $formattedTimes !== null) {
+                $this->generateStructurePlannings($formattedDates, $formattedTimes, $structureActivite, $structureProduit, $structure);
+            }
         }
-
 
         return to_route('structures.disciplines.show', ['structure' => $structure->slug, 'discipline' => $discipline])->with('success', 'Activité ajoutée avec succès, ajoutez d\'autres activités à votre structure.');
     }
