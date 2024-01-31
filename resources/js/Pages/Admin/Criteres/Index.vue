@@ -109,7 +109,7 @@ onMounted(() => {
                 >
                     <div class="w-full md:w-2/3">
                         <h3
-                            class="mb-4 text-center text-lg text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
+                            class="mb-4 w-full text-center text-lg font-bold text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
                         >
                             Gérer les critères existants:
                         </h3>
@@ -180,7 +180,7 @@ onMounted(() => {
                         class="flex w-full flex-col items-center justify-center md:w-1/3"
                     >
                         <h3
-                            class="mb-4 text-center text-lg text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
+                            class="mb-4 w-full text-center text-lg font-bold text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
                         >
                             Créer un critère:
                         </h3>
