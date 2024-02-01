@@ -104,8 +104,8 @@ class StructureActivite extends Model
                 $query->latest();
             },
             'produits.adresse',
-            'produits.dates',
-            'produits.horaire',
+            // 'produits.dates',
+            // 'produits.horaire',
             'produits.criteres',
             'produits.criteres.critere',
             'produits.criteres.critere_valeur',

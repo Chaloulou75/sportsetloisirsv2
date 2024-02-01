@@ -1,5 +1,4 @@
 <script setup>
-import { Link } from "@inertiajs/vue3";
 import { ref, nextTick, watch, onMounted, computed } from "vue";
 import { useCookies } from "@vueuse/integrations/useCookies";
 import { classMapping } from "@/Utils/classMapping.js";
@@ -17,14 +16,6 @@ const emit = defineEmits(["card-hover", "card-out"]);
 const props = defineProps({
     produit: Object,
     discipline: Object,
-    link: {
-        type: String,
-        default: null,
-    },
-    data: {
-        type: Object,
-        default: null,
-    },
 });
 
 const isShowing = ref(true);
@@ -43,79 +34,6 @@ const headerClass = computed(() => {
     }
 });
 
-const cookies = useCookies(["favoriteProduits"]);
-const favoriteProduits = ref(cookies.get("favoriteProduits") || []);
-const isFavorite = ref(false);
-
-const toggleFavorite = (produitId) => {
-    if (!props.produit) {
-        return;
-    }
-    const cookieValue = cookies.get("favoriteProduits");
-    // Convert the cookie value to an array
-    const favoriteProduitsArray = cookieValue
-        ? String(cookieValue).split(",")
-        : [];
-    // Ensure that produitId is always an array
-    if (!Array.isArray(produitId)) {
-        produitId = [produitId];
-    }
-    // Toggle each produitId
-    produitId.forEach((id) => {
-        const index = favoriteProduitsArray.indexOf(String(id));
-        if (index !== -1) {
-            favoriteProduitsArray.splice(index, 1); // Remove the activity ID from favorites
-        } else {
-            favoriteProduitsArray.push(String(id)); // Add the activity ID to favorites
-        }
-    });
-
-    const expirationDate = new Date();
-    expirationDate.setDate(expirationDate.getDate() + 2);
-
-    const updatedCookieValue = JSON.stringify(favoriteProduitsArray);
-    cookies.set("favoriteProduits", updatedCookieValue, {
-        expires: expirationDate,
-    });
-    favoriteProduits.value = favoriteProduitsArray;
-    updateIsFavorite();
-};
-
-watch(
-    () => props.produit,
-    async (newProduit) => {
-        if (newProduit) {
-            await nextTick();
-            updateIsFavorite();
-        }
-    }
-);
-
-const updateIsFavorite = async () => {
-    await nextTick();
-    if (!props.produit) {
-        return;
-    }
-    const produitId = String(props.produit.id);
-    const favoriteProduitIds = Object.values(favoriteProduits.value);
-    isFavorite.value = favoriteProduitIds.includes(produitId);
-};
-
-onMounted(() => {
-    updateIsFavorite();
-});
-
-const formatDate = (dateTime) => {
-    return dayjs(dateTime).locale("fr").format("DD MMMM YYYY");
-};
-
-const formatTime = (time) => {
-    const hours = time.substring(0, 2);
-    const minutes = time.substring(3, 5);
-    let formattedTime = `${hours}h${minutes}`;
-    return formattedTime;
-};
-
 const formatCurrency = (value) => {
     const numericValue = Number(value.replace(/[^0-9.-]+/g, ""));
     if (!isNaN(numericValue)) {
@@ -126,10 +44,6 @@ const formatCurrency = (value) => {
         }
     }
     return value;
-};
-
-const formatCityName = (ville) => {
-    return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
 };
 </script>
 
@@ -144,32 +58,13 @@ const formatCityName = (ville) => {
         leave-from="opacity-100"
         leave-to="opacity-0"
     >
-        <Link
-            :href="link"
-            :data="data"
-            @mouseover="emit('card-hover', produit)"
-            @mouseout="emit('card-out')"
-            class="flex flex-col h-full transition duration-300 ease-in-out rounded-lg shadow-sm shadow-indigo-200 hover:shadow-2xl md:px-0 md:hover:scale-105"
+        <div
+            class="flex flex-col h-full transition duration-300 ease-in-out rounded-lg shadow-sm shadow-indigo-200 hover:shadow-2xl md:px-0"
         >
             <div
                 class="relative w-full h-56 bg-center bg-no-repeat bg-cover rounded-md bg-slate-100/20 bg-blend-soft-light"
                 :class="headerClass"
-            >
-                <button
-                    class="absolute right-2 top-2 z-30 rounded-full bg-white p-1.5"
-                    type="button"
-                    @click.prevent="() => toggleFavorite(produit.id)"
-                >
-                    <HeartIcon
-                        class="w-6 h-6"
-                        :class="
-                            isFavorite
-                                ? 'text-red-500'
-                                : 'text-red-300 hover:text-red-500'
-                        "
-                    />
-                </button>
-            </div>
+            ></div>
 
             <div class="flex flex-col flex-1 mt-2">
                 <div
@@ -212,12 +107,7 @@ const formatCityName = (ville) => {
                         </p>
                     </div>
 
-                    <template
-                        v-if="
-                            produit.criteres.length > 0 ||
-                            produit.dates.length > 0
-                        "
-                    >
+                    <template v-if="produit.criteres.length > 0">
                         <div
                             class="grid w-full grid-cols-3 gap-1 mt-auto text-xs text-gray-900 justify-items-center"
                         >
@@ -277,6 +167,6 @@ const formatCityName = (ville) => {
                     </template>
                 </div>
             </div>
-        </Link>
+        </div>
     </TransitionRoot>
 </template>

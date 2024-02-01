@@ -40,7 +40,6 @@ const ModalAddTarif = defineAsyncComponent(() =>
 const props = defineProps({
     errors: Object,
     activites: Object,
-    tarifTypes: Object,
     categoriesListByDiscipline: Object,
     activiteForTarifs: Object,
     strCatTarifs: Object,
@@ -167,12 +166,12 @@ const openAddTarifModal = (structure) => {
         :confirmed-reservations-count="confirmedReservationsCount"
     >
         <template #header>
-            <div class="flex h-full items-center justify-start">
+            <div class="flex items-center justify-start h-full">
                 <Link
                     class="h-full bg-blue-600 py-2.5 md:px-4 md:py-4"
                     :href="route('structures.gestion.index', structure)"
                 >
-                    <ChevronLeftIcon class="h-10 w-10 text-white" />
+                    <ChevronLeftIcon class="w-10 h-10 text-white" />
                 </Link>
                 <h1
                     class="shrink-0 px-3 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
@@ -183,11 +182,11 @@ const openAddTarifModal = (structure) => {
         </template>
         <template #default>
             <MicroNavActiviteBackPro @eventFromChild="handleButtonEvent" />
-            <div class="relative my-4 flex flex-col md:flex-row md:space-y-0">
-                <div class="mx-auto max-w-full flex-1 lg:px-4">
+            <div class="relative flex flex-col my-4 md:flex-row md:space-y-0">
+                <div class="flex-1 max-w-full mx-auto lg:px-4">
                     <template v-if="displayActivites">
                         <form
-                            class="space-y-6 px-2 py-2 sm:px-4 md:px-6 md:py-4 lg:px-8"
+                            class="px-2 py-2 space-y-6 sm:px-4 md:px-6 md:py-4 lg:px-8"
                             @submit.prevent="submit"
                             autocomplete="off"
                         >
@@ -215,7 +214,7 @@ const openAddTarifModal = (structure) => {
                             >
                                 <label
                                     for="categories"
-                                    class="mb-4 block text-lg font-medium text-gray-700"
+                                    class="block mb-4 text-lg font-medium text-gray-700"
                                 >
                                     Categories d'activité
                                     <span class="text-base italic text-gray-600"
@@ -225,7 +224,7 @@ const openAddTarifModal = (structure) => {
                                 </label>
                                 <div class="mt-1">
                                     <ul
-                                        class="flex w-full flex-col items-start justify-between rounded-md border border-gray-300 bg-white px-3 py-2 shadow-md focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-base md:flex-row md:items-center"
+                                        class="flex flex-col items-start justify-between w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-md focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-base md:flex-row md:items-center"
                                     >
                                         <li
                                             v-for="categorie in categoriesList"
@@ -247,7 +246,7 @@ const openAddTarifModal = (structure) => {
                                                             categorie.id
                                                         )
                                                     "
-                                                    class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded form-checkbox focus:ring-blue-500"
                                                 />
                                                 <span
                                                     class="ml-2 text-gray-700"
@@ -276,7 +275,7 @@ const openAddTarifModal = (structure) => {
                                 <button
                                     :disabled="form.processing"
                                     type="submit"
-                                    class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                    class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                 >
                                     <LoadingSVG v-if="form.processing" />
                                     Enregistrer
@@ -286,13 +285,13 @@ const openAddTarifModal = (structure) => {
                         <!-- disciplines similaires -->
                         <section
                             v-if="activiteSimilairesList.length > 0"
-                            class="mx-auto w-full px-2 py-2 sm:px-4 md:py-4 lg:px-8"
+                            class="w-full px-2 py-2 mx-auto sm:px-4 md:py-4 lg:px-8"
                         >
                             <h2 class="mb-4 text-lg font-medium text-gray-700">
                                 Les disciplines similaires
                             </h2>
                             <div
-                                class="flex w-full flex-col flex-wrap items-stretch gap-3 text-gray-700 md:flex-row"
+                                class="flex flex-col flex-wrap items-stretch w-full gap-3 text-gray-700 md:flex-row"
                             >
                                 <div
                                     v-for="discipline in activiteSimilairesList"
@@ -304,7 +303,7 @@ const openAddTarifModal = (structure) => {
                                                 discipline.id
                                             ),
                                     }"
-                                    class="inline-flex w-auto items-center justify-center rounded border border-gray-600 px-4 py-3 text-center text-base font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                    class="inline-flex items-center justify-center w-auto px-4 py-3 text-base font-medium text-center text-gray-600 border border-gray-600 rounded shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                                 >
                                     <button
                                         type="button"
@@ -326,7 +325,7 @@ const openAddTarifModal = (structure) => {
                         </section>
                         <section
                             v-if="activites.length > 0"
-                            class="mx-auto my-4 max-w-full space-y-4 px-2 sm:px-4 lg:px-8"
+                            class="max-w-full px-2 mx-auto my-4 space-y-4 sm:px-4 lg:px-8"
                         >
                             <h2 class="text-xl font-bold text-gray-700">
                                 Vos activités
@@ -359,17 +358,17 @@ const openAddTarifModal = (structure) => {
                     </template>
                     <template v-if="displayTarifs">
                         <div
-                            class="flex w-full flex-col items-center justify-end space-y-2 px-2 py-3 md:my-4 md:h-20 md:flex-row md:space-y-0 md:px-0 md:py-6"
+                            class="flex flex-col items-center justify-end w-full px-2 py-3 space-y-2 md:my-4 md:h-20 md:flex-row md:space-y-0 md:px-0 md:py-6"
                         >
                             <button
                                 type="button"
                                 @click="openAddTarifModal(structure)"
-                                class="inline-flex w-auto items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white hover:bg-green-700 md:flex"
+                                class="inline-flex items-center justify-between w-auto px-4 py-3 text-lg text-white bg-green-600 rounded-sm hover:bg-green-700 md:flex"
                             >
                                 <span class="hidden md:block"
                                     >Ajouter un tarif</span
                                 >
-                                <PlusIcon class="h-5 w-5 md:ml-2" />
+                                <PlusIcon class="w-5 h-5 md:ml-2" />
                             </button>
                         </div>
                         <TarifDisplay
@@ -377,7 +376,6 @@ const openAddTarifModal = (structure) => {
                             :structure="structure"
                             :all-categories="categoriesListByDiscipline"
                             :str-cat-tarifs="strCatTarifs"
-                            :tarif-types="tarifTypes"
                             :structure-activites="activites"
                             :activite-for-tarifs="activiteForTarifs"
                         />

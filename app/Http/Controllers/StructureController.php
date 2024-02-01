@@ -56,75 +56,27 @@ class StructureController extends Controller
         $listDisciplines = Cache::remember('listDisciplines', 600, function () {
             return ListDiscipline::withProducts()->get();
         });
-
-        return Inertia::render('Structures/Index', [
-            'structures' => Structure::with([
-                    'adresses'  => function ($query) {
-                        $query->latest();
-                    },
-                    'creator:id,name',
-                    'users:id,name',
-                    'city:id,ville,ville_formatee,code_postal',
-                    'departement:id,departement,numero',
-                    'structuretype:id,name,slug',
-                    'disciplines',
-                    'categories',
-                    'activites',
-                    'activites.discipline',
-                    'activites.categorie',
-                    'produits',
-                    'produits.criteres',
-                    'tarifs',
-                    'tarifs.tarifType',
-                    'tarifs.structureTarifTypeInfos',
-                    'plannings',
-                ])
+        $structures = Structure::with([
+                'adresses'  => function ($query) {
+                    $query->latest();
+                },
+                'city:id,slug,ville',
+                'departement:id,slug,departement,numero',
+                'structuretype:id,name,slug',
+                'disciplines',
+                'categories',
+                'activites',
+            ])->withCount(['disciplines', 'activites'])
+            ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'logo'])
                         ->filter(
                             request(['search'])
                         )
                         ->latest()
                         ->paginate(12)
-                        ->through(function ($structure) {
-                            $disciplinesCount = $structure->disciplines->count();
-                            $activitiesCount = $structure->activites->count();
-                            $produitsCount = $structure->produits->count();
+                        ->withQueryString();
 
-                            return [
-                            'id' => $structure->id,
-                            'name' => $structure->name,
-                            'slug' => $structure->slug,
-                            'website' => $structure->website,
-                            'email' => $structure->email,
-                            'facebook' => $structure->facebook,
-                            'instagram' => $structure->instagram,
-                            'youtube' => $structure->youtube,
-                            'tiktok' => $structure->tiktok,
-                            'phone1' => $structure->phone1,
-                            'phone2' => $structure->phone2,
-                            'address' => $structure->address,
-                            'zip_code' => $structure->zip_code,
-                            'city' => $structure->city,
-                            'country' => $structure->country,
-                            'address_lat' => $structure->address_lat,
-                            'address_lng' => $structure->address_lng,
-                            'presentation_courte' => $structure->presentation_courte,
-                            'presentation_longue' => $structure->presentation_longue,
-                            'structuretype' => $structure->structuretype,
-                            'departement_id' => $structure->departement_id,
-                            'user' => $structure->creator,
-                            'logo' => $structure->logo,
-                            'image_url' => $structure->imageUrl,
-                            'adresses' => $structure->adresses,
-                            'categories' => $structure->categories,
-                            'disciplines' => $structure->disciplines,
-                            'activites' => $structure->activites,
-                            'produits' => $structure->produits,
-                            'tarifs' => $structure->tarifs,
-                            'disciplines_count' => $disciplinesCount,
-                            'activites_count' => $activitiesCount,
-                            'produits_count' => $produitsCount,
-                ];
-                        })->withQueryString(),
+        return Inertia::render('Structures/Index', [
+            'structures' => $structures,
             'filters' => request()->all(['search']),
             'familles' => $familles,
             'allCities' => $allCities,

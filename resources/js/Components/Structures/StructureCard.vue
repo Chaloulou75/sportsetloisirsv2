@@ -121,21 +121,21 @@ const formatCityName = (ville) => {
             :data="data"
             @mouseover="emit('card-hover', structure)"
             @mouseout="emit('card-out')"
-            class="block h-full rounded-lg shadow-sm shadow-sky-700 transition duration-300 ease-in-out hover:shadow-2xl md:px-0 md:hover:scale-105"
+            class="block h-full transition duration-300 ease-in-out rounded-lg shadow-sm shadow-sky-700 hover:shadow-2xl md:px-0 md:hover:scale-105"
         >
             <div class="relative flex items-center justify-center">
                 <!-- Button (positioned on top right) -->
                 <button
-                    class="absolute right-2 top-2 z-30 bg-transparent"
+                    class="absolute right-2 top-2 z-30 rounded-full bg-white p-1.5"
                     type="button"
-                    @click.prevent="() => toggleFavorite(structure.id)"
+                    @click="() => toggleFavorite(structure.id)"
                 >
                     <HeartIcon
-                        class="h-6 w-6"
+                        class="w-6 h-6"
                         :class="
                             isFavorite
                                 ? 'text-red-500'
-                                : 'text-white hover:text-red-500'
+                                : 'text-red-300 hover:text-red-500'
                         "
                     />
                 </button>
@@ -145,19 +145,19 @@ const formatCityName = (ville) => {
                     v-if="structure.logo"
                     alt="Home"
                     :src="structure.image_url"
-                    class="h-14 w-14 shrink-0 rounded-full object-contain object-center md:h-20 md:w-20"
+                    class="object-contain object-center rounded-full h-14 w-14 shrink-0 md:h-20 md:w-20"
                 />
                 <img
                     v-else
                     alt="Home"
                     src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                    class="h-56 w-full rounded-md object-cover"
+                    class="object-cover w-full h-56 rounded-md"
                 />
             </div>
 
-            <div class="mt-2 flex flex-col px-3">
+            <div class="flex flex-col px-3 mt-2">
                 <p
-                    class="text-center text-sm font-medium uppercase text-pink-500"
+                    class="text-sm font-medium text-center text-pink-500 uppercase"
                 >
                     {{ structure.structuretype.name }}
                 </p>
@@ -168,7 +168,7 @@ const formatCityName = (ville) => {
                 </p>
                 <ul>
                     <li
-                        class="list-inside list-disc text-sm font-semibold"
+                        class="text-sm font-semibold list-disc list-inside"
                         v-for="(activite, index) in getUniqueActivitesTitre(
                             structure.activites
                         )"
@@ -180,7 +180,7 @@ const formatCityName = (ville) => {
 
                 <div class="flex items-center py-1.5">
                     <dt class="sr-only">Ville</dt>
-                    <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
+                    <MapPinIcon class="w-4 h-4 mr-1 text-indigo-700" />
                     <div
                         v-if="structure.adresses.length > 0"
                         class="text-sm font-medium"
@@ -206,21 +206,21 @@ const formatCityName = (ville) => {
                     structure: structure.slug,
                 })
             "
-            class="block h-full rounded-lg shadow-sm shadow-sky-700 transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl md:px-0"
+            class="block h-full transition duration-300 ease-in-out rounded-lg shadow-sm shadow-sky-700 hover:scale-105 hover:shadow-2xl md:px-0"
         >
             <div class="relative flex items-center justify-center">
                 <!-- Button (positioned on top right) -->
                 <button
-                    class="absolute right-2 top-2 bg-transparent"
+                    class="absolute right-2 top-2 z-30 rounded-full bg-white p-1.5"
                     type="button"
                     @click="() => toggleFavorite(structure.id)"
                 >
                     <HeartIcon
-                        class="h-6 w-6"
+                        class="w-6 h-6"
                         :class="
                             isFavorite
                                 ? 'text-red-500'
-                                : 'text-white hover:text-red-500'
+                                : 'text-red-300 hover:text-red-500'
                         "
                     />
                 </button>
@@ -230,61 +230,57 @@ const formatCityName = (ville) => {
                     v-if="structure.logo"
                     alt="Home"
                     :src="structure.image_url"
-                    class="h-14 w-14 shrink-0 rounded-full object-contain object-center md:h-20 md:w-20"
+                    class="object-contain object-center rounded-full h-14 w-14 shrink-0 md:h-20 md:w-20"
                 />
                 <img
                     v-else
                     alt="Home"
                     src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                    class="h-56 w-full rounded-md object-cover"
+                    class="object-cover w-full h-56 rounded-md"
                 />
             </div>
 
-            <div>
-                <dl class="mt-2 flex flex-col px-3">
-                    <p
-                        class="text-center text-sm font-medium uppercase tracking-widest text-pink-500"
+            <div class="flex flex-col px-3 mt-2">
+                <p
+                    class="text-sm font-medium text-center text-pink-500 uppercase"
+                >
+                    {{ structure.structuretype.name }}
+                </p>
+                <p
+                    class="py-1.5 text-center text-base font-semibold tracking-widest text-gray-600"
+                >
+                    {{ structure.name }}
+                </p>
+                <ul>
+                    <li
+                        class="text-sm font-semibold list-disc list-inside"
+                        v-for="(activite, index) in getUniqueActivitesTitre(
+                            structure.activites
+                        )"
+                        :key="activite.id"
                     >
-                        {{ structure.structuretype.name }}
-                    </p>
-                    <p
-                        class="py-1.5 text-sm font-medium tracking-widest text-gray-600"
+                        {{ activite.titre }}
+                    </li>
+                </ul>
+
+                <div class="flex items-center py-1.5">
+                    <dt class="sr-only">Ville</dt>
+                    <MapPinIcon class="w-4 h-4 mr-1 text-indigo-700" />
+                    <div
+                        v-if="structure.adresses.length > 0"
+                        class="text-sm font-medium"
                     >
-                        {{ structure.name }}
-                    </p>
-                    <div class="py-1.5">
-                        <span
-                            class="text-sm font-semibold"
-                            v-for="(activite, index) in getUniqueActivitesTitre(
-                                structure.activites
-                            )"
-                            :key="activite.id"
+                        {{ formatCityName(structure.adresses[0].city) }}
+                        <span class="text-xs"
+                            >({{ structure.adresses[0].zip_code }})</span
                         >
-                            {{ activite.titre }}
-                            <span
-                                v-if="
-                                    index <
-                                    getUniqueActivitesTitre(structure.activites)
-                                        .length -
-                                        1
-                                "
-                            >
-                                -
-                            </span>
-                        </span>
                     </div>
 
-                    <div class="flex items-center py-1.5">
-                        <dt class="sr-only">Ville</dt>
-                        <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
-                        <div class="text-sm font-medium">
-                            {{ formatCityName(structure.city) }}
-                            <span class="text-xs"
-                                >({{ structure.zip_code }})</span
-                            >
-                        </div>
+                    <div v-else class="text-sm font-medium">
+                        <span>{{ formatCityName(structure.city) }}</span>
+                        <span class="text-xs">({{ structure.zip_code }})</span>
                     </div>
-                </dl>
+                </div>
             </div>
         </Link>
     </TransitionRoot>

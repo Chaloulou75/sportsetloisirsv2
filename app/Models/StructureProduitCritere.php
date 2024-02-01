@@ -23,13 +23,6 @@ class StructureProduitCritere extends Model
      */
     protected $guarded = [];
 
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
-    // protected $appends = ['valeur'];
-
     protected function valeur(): Attribute
     {
         return Attribute::make(

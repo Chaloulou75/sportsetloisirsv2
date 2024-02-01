@@ -113,21 +113,21 @@ const formatCityName = (ville) => {
     >
         <Link
             :href="link"
-            class="block rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:shadow-2xl md:px-0 md:hover:scale-105"
+            class="block transition duration-300 ease-in-out rounded-lg shadow-sm shadow-indigo-200 hover:shadow-2xl md:px-0 md:hover:scale-105"
         >
             <div class="relative">
                 <!-- Button (positioned on top right) -->
                 <button
-                    class="absolute right-2 top-2 z-30 bg-transparent"
+                    class="absolute right-2 top-2 z-30 rounded-full bg-white p-1.5"
                     type="button"
                     @click.prevent="() => toggleFavorite(activite.id)"
                 >
                     <HeartIcon
-                        class="h-6 w-6"
+                        class="w-6 h-6"
                         :class="
                             isFavorite
                                 ? 'text-red-500'
-                                : 'text-white hover:text-red-500'
+                                : 'text-red-300 hover:text-red-500'
                         "
                     />
                 </button>
@@ -136,7 +136,7 @@ const formatCityName = (ville) => {
                 <img
                     alt="Home"
                     src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                    class="h-56 w-full rounded-md bg-opacity-75 object-cover"
+                    class="object-cover w-full h-56 bg-opacity-75 rounded-md"
                 />
             </div>
 
@@ -159,7 +159,7 @@ const formatCityName = (ville) => {
                             <div class="flex items-center py-1.5 text-xs">
                                 <dt class="sr-only">Ville</dt>
                                 <MapPinIcon
-                                    class="mr-1 h-4 w-4 text-indigo-700"
+                                    class="w-4 h-4 mr-1 text-indigo-700"
                                 />
                                 <p class="font-semibold">
                                     {{ produit.adresse.city }} ({{
@@ -169,7 +169,7 @@ const formatCityName = (ville) => {
                             </div>
                             <ul
                                 v-if="produit.criteres.length > 0"
-                                class="list-inside list-disc text-xs"
+                                class="text-xs list-disc list-inside"
                             >
                                 <template
                                     v-for="critere in produit.criteres"
@@ -215,7 +215,7 @@ const formatCityName = (ville) => {
                                 "
                             >
                                 <p
-                                    class="mt-2 text-right text-sm font-bold text-green-700"
+                                    class="mt-2 text-sm font-bold text-right text-green-700"
                                 >
                                     <span
                                         class="text-xs font-medium text-gray-600"

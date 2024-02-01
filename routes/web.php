@@ -84,6 +84,12 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/structures', [StructureController::class, 'index'])
+        ->name('structures.index');
+
+Route::get('str-{structure:slug}', [StructureController::class, 'show'])
+    ->name('structures.show');
+
 // familles routes
 require __DIR__ . '/famille.php';
 
@@ -91,11 +97,7 @@ require __DIR__ . '/famille.php';
 require __DIR__ . '/discipline.php';
 
 // structures route
-Route::get('/structures', [StructureController::class, 'index'])
-        ->name('structures.index');
 
-Route::get('str-{structure:slug}', [StructureController::class, 'show'])
-    ->name('structures.show');
 
 // activites route
 Route::get('/activites-{activite}', [ActiviteController::class, 'show'])->name('structures.activites.show');
