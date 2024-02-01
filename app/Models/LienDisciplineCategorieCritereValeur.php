@@ -28,6 +28,7 @@ class LienDisciplineCategorieCritereValeur extends Model
      */
     protected $casts = [
         'defaut' => 'boolean',
+        'inclus_all' => 'boolean'
     ];
 
     public function critere(): BelongsTo
