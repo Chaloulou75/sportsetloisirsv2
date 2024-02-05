@@ -120,34 +120,34 @@ onMounted(() => {
     <Head title="Gestion du site" :description="'Administration du site.'" />
     <AdminLayout>
         <template #header>
-            <div class="flex h-full items-center justify-start">
+            <div class="flex items-center justify-start h-full">
                 <Link
                     :href="route('admin.index')"
                     class="h-full bg-blue-600 py-2.5 md:px-4 md:py-4"
                 >
-                    <ChevronLeftIcon class="h-10 w-10 text-white" />
+                    <ChevronLeftIcon class="w-10 h-10 text-white" />
                 </Link>
                 <h1
-                    class="px-3 text-center text-base font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
+                    class="px-3 text-base font-semibold text-center text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
                     Gestion des catégories
                 </h1>
             </div>
         </template>
 
-        <div class="w-full space-y-16 px-2 py-6 text-slate-700 md:px-6">
+        <div class="w-full px-2 py-6 space-y-16 text-slate-700 md:px-6">
             <div
-                class="flex w-full flex-col items-start justify-center space-y-4 py-4 md:flex-row md:justify-around md:space-y-0"
+                class="flex flex-col items-start justify-center w-full py-4 space-y-4 md:flex-row md:justify-around md:space-y-0"
             >
                 <div class="w-full md:w-2/3">
                     <h3
-                        class="mb-4 w-full text-center text-lg font-bold text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
+                        class="w-full mb-4 text-lg font-bold text-center underline text-slate-700 decoration-sky-600 decoration-2 underline-offset-2"
                     >
                         Gérer les catégories existantes:
                     </h3>
                     <ul
                         ref="toAnimateOne"
-                        class="max-w-3xl list-inside list-disc space-y-2 py-4 text-sm text-slate-600 marker:text-indigo-600"
+                        class="max-w-3xl py-4 space-y-2 text-sm list-disc list-inside text-slate-600 marker:text-indigo-600"
                     >
                         <li
                             v-for="categorie in categories"
@@ -159,7 +159,7 @@ onMounted(() => {
                                 class="inline-flex space-x-2"
                                 @submit.prevent="updateCategorie(categorie)"
                             >
-                                <div class="mt-1 flex flex-col rounded-md">
+                                <div class="flex flex-col mt-1 rounded-md">
                                     <input
                                         v-model="
                                             categorieForm[categorie.id].nom
@@ -167,7 +167,7 @@ onMounted(() => {
                                         type="text"
                                         :name="categorie.nom"
                                         :id="categorie.nom"
-                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                         placeholder=""
                                         autocomplete="none"
                                     />
@@ -188,7 +188,7 @@ onMounted(() => {
                                 <div class="flex items-center">
                                     <button type="submit">
                                         <ArrowPathIcon
-                                            class="mr-1 h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
+                                            class="w-6 h-6 mr-1 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
                                         />
                                         <span class="sr-only"
                                             >Mettre à jour la catégorie</span
@@ -199,7 +199,7 @@ onMounted(() => {
                                     type="button"
                                     @click="deleteCategorie(categorie)"
                                 >
-                                    <TrashIcon class="h-5 w-5 text-red-500" />
+                                    <TrashIcon class="w-5 h-5 text-red-500" />
                                 </button>
                             </form>
                         </li>
@@ -207,10 +207,10 @@ onMounted(() => {
                 </div>
 
                 <div
-                    class="flex w-full flex-col items-center justify-center md:w-1/3"
+                    class="flex flex-col items-center justify-center w-full md:w-1/3"
                 >
                     <h3
-                        class="mb-4 w-full text-center text-lg font-bold text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
+                        class="w-full mb-4 text-lg font-bold text-center underline text-slate-700 decoration-sky-600 decoration-2 underline-offset-2"
                     >
                         Créer une catégorie:
                     </h3>
@@ -218,7 +218,7 @@ onMounted(() => {
                         type="button"
                         v-if="!showCreateCategoryForm"
                         @click="toggleCreateCategoryForm"
-                        class="inline-flex w-auto items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                        class="inline-flex items-center justify-center w-auto px-4 py-3 space-y-1 text-sm font-medium text-center text-gray-600 border border-gray-600 rounded shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                     >
                         Créer une nouvelle catégorie
                     </button>
@@ -227,13 +227,13 @@ onMounted(() => {
                         class="flex flex-col items-start space-y-4"
                         @submit.prevent="createCategorie"
                     >
-                        <div class="mt-1 flex flex-col rounded-md">
+                        <div class="flex flex-col mt-1 rounded-md">
                             <input
                                 v-model="createCategorieForm.nom"
                                 type="text"
                                 name="categorie_nom"
                                 id="categorie_nom"
-                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                 placeholder=""
                                 autocomplete="none"
                             />
@@ -245,16 +245,20 @@ onMounted(() => {
                             </div>
                         </div>
 
-                        <div class="flex w-full items-center justify-between">
+                        <div class="flex items-center justify-between w-full">
                             <button
                                 :disabled="createCategorieForm.processing"
-                                class="rounded border border-gray-300 bg-blue-600 px-2 py-2 text-center text-sm font-medium text-white shadow-sm"
+                                :class="{
+                                    'opacity-25':
+                                        createCategorieForm.processing,
+                                }"
+                                class="px-2 py-2 text-sm font-medium text-center text-white bg-blue-600 border border-gray-300 rounded shadow-sm"
                                 type="submit"
                             >
                                 Enregistrer
                             </button>
                             <button
-                                class="rounded border border-gray-300 bg-white px-2 py-2 text-center text-sm font-medium text-gray-600 shadow-sm"
+                                class="px-2 py-2 text-sm font-medium text-center text-gray-600 bg-white border border-gray-300 rounded shadow-sm"
                                 type="button"
                                 @click="toggleCreateCategoryForm"
                             >
@@ -265,19 +269,19 @@ onMounted(() => {
                 </div>
             </div>
             <div
-                class="flex w-full flex-col items-center justify-center space-y-4 py-4"
+                class="flex flex-col items-center justify-center w-full py-4 space-y-4"
             >
                 <h3
-                    class="mb-4 w-full text-center text-lg font-bold text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
+                    class="w-full mb-4 text-lg font-bold text-center underline text-slate-700 decoration-sky-600 decoration-2 underline-offset-2"
                 >
                     Liaison des catégories aux disciplines:
                 </h3>
 
                 <div
-                    class="flex h-full flex-col items-start justify-around gap-8 text-base text-slate-600 md:flex-row md:flex-wrap"
+                    class="flex flex-col items-start justify-around h-full gap-8 text-base text-slate-600 md:flex-row md:flex-wrap"
                 >
                     <div
-                        class="flex max-w-md flex-col items-stretch justify-between border border-gray-100 bg-gray-50 px-4 py-3 shadow"
+                        class="flex flex-col items-stretch justify-between max-w-md px-4 py-3 border border-gray-100 shadow bg-gray-50"
                         v-for="categorie in categories"
                         :key="categorie.id"
                     >
@@ -294,7 +298,7 @@ onMounted(() => {
                             </h3>
                         </div>
                         <div class="my-4">
-                            <ul class="ml-4 list-inside list-disc">
+                            <ul class="ml-4 list-disc list-inside">
                                 <li
                                     v-for="discipline in categorie.disciplines"
                                     :key="discipline.id"
@@ -307,7 +311,7 @@ onMounted(() => {
                             <button
                                 type="button"
                                 @click.prevent="attachAllDisciplines(categorie)"
-                                class="group inline-flex w-full items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                class="inline-flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-center text-gray-600 bg-white border border-gray-300 rounded-lg shadow-sm group hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                             >
                                 <div>
                                     Lier
@@ -321,7 +325,7 @@ onMounted(() => {
                             <button
                                 type="button"
                                 @click.prevent="detachAllDisciplines(categorie)"
-                                class="group inline-flex w-full items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                class="inline-flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-center text-gray-600 bg-white border border-gray-300 rounded-lg shadow-sm group hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                             >
                                 <div>
                                     Délier

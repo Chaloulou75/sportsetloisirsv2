@@ -130,7 +130,7 @@ const onSubmitPlanningForm = () => {
 
                 <div class="fixed inset-0 overflow-y-auto">
                     <div
-                        class="flex min-h-full items-center justify-center p-4 text-center"
+                        class="flex items-center justify-center min-h-full p-4 text-center"
                     >
                         <TransitionChild
                             as="template"
@@ -142,7 +142,7 @@ const onSubmitPlanningForm = () => {
                             leave-to="opacity-0 scale-95"
                         >
                             <DialogPanel
-                                class="min-h-full w-full max-w-6xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                                class="w-full max-w-6xl min-h-full p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
                             >
                                 <form
                                     @submit.prevent="onSubmitPlanningForm()"
@@ -150,7 +150,7 @@ const onSubmitPlanningForm = () => {
                                 >
                                     <DialogTitle
                                         as="div"
-                                        class="mb-4 flex w-full items-center justify-between"
+                                        class="flex items-center justify-between w-full mb-4"
                                     >
                                         <h3
                                             class="text-lg font-medium leading-6 text-gray-800"
@@ -165,7 +165,7 @@ const onSubmitPlanningForm = () => {
                                         <button type="button">
                                             <XCircleIcon
                                                 @click="emit('close')"
-                                                class="h-6 w-6 text-gray-600 hover:text-red-600"
+                                                class="w-6 h-6 text-gray-600 hover:text-red-600"
                                             />
                                         </button>
                                     </DialogTitle>
@@ -195,19 +195,23 @@ const onSubmitPlanningForm = () => {
                                     />
 
                                     <div
-                                        class="mt-4 flex w-full items-center justify-between"
+                                        class="flex items-center justify-between w-full mt-4"
                                     >
                                         <button
                                             type="button"
-                                            class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                                            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
                                             @click="emit('close')"
                                         >
                                             Annuler
                                         </button>
                                         <button
                                             :disabled="formPlanning.processing"
+                                            :class="{
+                                                'opacity-25':
+                                                    formPlanning.processing,
+                                            }"
                                             type="submit"
-                                            class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                                            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                         >
                                             <LoadingSVG
                                                 v-if="formPlanning.processing"
@@ -238,7 +242,7 @@ const onSubmitPlanningForm = () => {
                 </TransitionChild>
                 <div class="fixed inset-0 overflow-y-auto">
                     <div
-                        class="flex min-h-full items-center justify-center p-4 text-center"
+                        class="flex items-center justify-center min-h-full p-4 text-center"
                     >
                         <TransitionChild
                             as="template"
@@ -250,7 +254,7 @@ const onSubmitPlanningForm = () => {
                             leave-to="opacity-0 scale-95"
                         >
                             <DialogPanel
-                                class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                                class="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
                             >
                                 <form
                                     @submit.prevent="onSubmitEventForm()"
@@ -264,7 +268,7 @@ const onSubmitPlanningForm = () => {
                                             type="text"
                                             name="title"
                                             id="title"
-                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                             v-model="selectedEvent.title"
                                             placeholder="Titre"
                                         />
@@ -275,17 +279,17 @@ const onSubmitPlanningForm = () => {
                                         </p>
                                     </div>
 
-                                    <div class="mt-4 flex justify-between">
+                                    <div class="flex justify-between mt-4">
                                         <button
                                             type="button"
-                                            class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                                             @click="closeModal"
                                         >
                                             Annuler
                                         </button>
                                         <button
                                             type="submit"
-                                            class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                                         >
                                             Enregister
                                         </button>

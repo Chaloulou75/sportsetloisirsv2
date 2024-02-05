@@ -39,7 +39,7 @@ const onCodeSubmit = () => {
                 <span class="italic">(4 chiffres)</span>
                 *
             </label>
-            <div class="mt-1 flex rounded-md">
+            <div class="flex mt-1 rounded-md">
                 <input
                     v-model="codeForm.code"
                     type="text"
@@ -48,7 +48,7 @@ const onCodeSubmit = () => {
                     :class="{
                         'border-red-400': codeForm.errors.code,
                     }"
-                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                     placeholder="1234"
                     autocomplete="none"
                 />
@@ -60,7 +60,10 @@ const onCodeSubmit = () => {
         <button
             type="submit"
             :disabled="codeForm.processing"
-            class="w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-indigo-500 shadow hover:bg-gray-100 hover:text-indigo-800"
+            :class="{
+                'opacity-25': codeForm.processing,
+            }"
+            class="w-full px-4 py-2 text-lg text-indigo-500 bg-white border border-gray-200 rounded-md shadow hover:bg-gray-100 hover:text-indigo-800"
         >
             <LoadingSVG v-if="codeForm.processing" />
             Verifier le code

@@ -6,23 +6,18 @@ use Carbon\Carbon;
 use App\Models\City;
 use App\Models\User;
 use App\Models\Structure;
-use App\Rules\NestedArrays;
 use Illuminate\Http\Request;
-use App\Models\StructureTarif;
 use Illuminate\Validation\Rule;
 use App\Models\StructureAddress;
-use App\Models\StructureHoraire;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Models\StructurePlanning;
-use App\Models\StructureTarifTypeInfo;
 use App\Models\StructureProduitCritere;
 use App\Models\LiensDisCatCritValSsCrit;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\StructureProduitSousCritere;
 use App\Models\LienDisciplineCategorieCritere;
 use App\Models\LienDisciplineCategorieCritereValeur;
-use App\Models\StructureActiviteDate;
 use Illuminate\Http\RedirectResponse;
 
 class StructureActiviteProduitController extends Controller
@@ -92,7 +87,7 @@ class StructureActiviteProduitController extends Controller
             "actif" => true,
             'lieu_id' => $structureAddressId,
             'horaire_id' => null,
-            'reservable' => 0,
+            'reservable' => true,
         ]);
 
         $criteresValuesSets = $request->criteres;
@@ -100,7 +95,7 @@ class StructureActiviteProduitController extends Controller
         if (isset($criteresValuesSets)) {
             foreach ($criteresValuesSets as $critereId => $criteresValues) {
 
-                $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $critereId)->first();
+                $defaut = LienDisciplineCategorieCritereValeur::where('defaut', true)->where('discipline_categorie_critere_id', $critereId)->first();
 
                 $this->insertCriteresRecursively($structure, $activite, $structureProduit, $critereId, $criteresValues, $defaut);
             }
@@ -153,7 +148,6 @@ class StructureActiviteProduitController extends Controller
 
     }
 
-
     /**
      * Update the specified resource in storage.
      */
@@ -190,13 +184,14 @@ class StructureActiviteProduitController extends Controller
             }
 
             foreach ($criteresValuesSets as $critereId => $criteresValues) {
-                $defaut = LienDisciplineCategorieCritereValeur::where('defaut', 1)->where('discipline_categorie_critere_id', $critereId)->first();
+                $defaut = LienDisciplineCategorieCritereValeur::where('defaut', true)->where('discipline_categorie_critere_id', $critereId)->first();
 
                 $this->insertCriteresRecursively($structure, $activite, $structureProduit, $critereId, $criteresValues, $defaut);
             }
         }
 
         $souscriteresValues = $request->souscriteres;
+
         if(isset($souscriteresValues)) {
             foreach ($souscriteresValues as $souscritereId => $souscritereValue) {
 
@@ -290,7 +285,7 @@ class StructureActiviteProduitController extends Controller
             }
         }
 
-        $produit->tarifs()->detach();
+        $produit->catTarifs()->detach();
 
         $produit->delete();
 
@@ -326,8 +321,8 @@ class StructureActiviteProduitController extends Controller
             $newRelated = $planning->replicate();
             $newProduit->plannings()->save($newRelated);
         }
-        foreach ($originalProduit->tarifs as $tarif) {
-            $newProduit->tarifs()->attach($tarif);
+        foreach ($originalProduit->catTarifs as $tarif) {
+            $newProduit->catTarifs()->attach($tarif);
         }
 
         return to_route('structures.categories.show', ['structure' => $structure->slug, 'discipline' => $activite->discipline->slug, 'categorie' => $activite->categorie->id])->with('success', "Le produit a bien été dupliqué");
@@ -347,7 +342,7 @@ class StructureActiviteProduitController extends Controller
                 $this->handleMultipleHours($structure, $structureActivite, $structureProduit, $critereId, $criteresValues);
             } elseif (is_string($criteresValues) && strtotime($criteresValues) !== false) {
                 // Single date
-                $this->handleSingleValue($structure, $structureActivite, $structureProduit, $critereId, null, Carbon::parse($criteresValues)->format('Y-m-d'), $defaut);
+                $this->handleSingleValue($structure, $structureActivite, $structureProduit, $critereId, null, Carbon::parse($criteresValues)->setTimezone('Europe/Paris')->format('Y-m-d'), $defaut);
             } elseif (is_array($criteresValues) && count($criteresValues) > 0 && is_string($criteresValues[0]) && strtotime($criteresValues[0]) !== false) {
                 // Multiple dates
                 $this->handleMultipleDates($structure, $structureActivite, $structureProduit, $critereId, $criteresValues);
@@ -428,7 +423,7 @@ class StructureActiviteProduitController extends Controller
     private function handleMultipleDates($structure, $structureActivite, $structureProduit, $critereId, $criteresValues)
     {
         $dates = array_map(function ($date) {
-            return Carbon::parse($date)->format('Y-m-d');
+            return Carbon::parse($date)->setTimezone('Europe/Paris')->format('Y-m-d');
         }, $criteresValues);
 
         $this->createStructureProduitCritere($structure, $structureActivite, $structureProduit, $critereId, null, json_encode($dates));
@@ -454,32 +449,13 @@ class StructureActiviteProduitController extends Controller
         $timesArray = $matches[0];
 
         if (count($timesArray) === 2 && count($datesArray) === 2) {
-            function createCarbonInstance($dateString, $format)
-            {
-                $frenchMonths = [
-                    'janvier' => 'January',
-                    'février' => 'February',
-                    'mars' => 'March',
-                    'avril' => 'April',
-                    'mai' => 'May',
-                    'juin' => 'June',
-                    'juillet' => 'July',
-                    'août' => 'August',
-                    'septembre' => 'September',
-                    'octobre' => 'October',
-                    'novembre' => 'November',
-                    'décembre' => 'December',
-                ];
 
-                $englishDateString = str_replace(array_keys($frenchMonths), array_values($frenchMonths), $dateString);
-                $cleanedDateString = str_replace(' ', '', $englishDateString);
-
-                return Carbon::createFromFormat($format, $cleanedDateString)->locale('fr_FR');
-            }
+            //delete previous plannings?
+            $structureProduit->plannings()->delete();
 
             // Create Carbon instances
-            $startDate = createCarbonInstance($datesArray[0], 'j F Y');
-            $endDate = createCarbonInstance($datesArray[1], 'j F Y');
+            $startDate = $this->createCarbonInstance($datesArray[0], 'j F Y');
+            $endDate = $this->createCarbonInstance($datesArray[1], 'j F Y');
             $startTime = Carbon::createFromFormat('H\hi', $timesArray[0]);
             $endTime = Carbon::createFromFormat('H\hi', $timesArray[1]);
 
@@ -497,21 +473,41 @@ class StructureActiviteProduitController extends Controller
 
                 $currentDate->addDay();
             }
-
             foreach ($combinedDatePairs as $combinedDatePair) {
-                StructurePlanning::updateOrCreate(
-                    [
+                StructurePlanning::create([
                     'structure_id' => $structure->id,
                     'discipline_id' => $structureActivite->discipline_id,
                     'categorie_id' => $structureActivite->categorie_id,
                     'activite_id' => $structureActivite->id,
                     'produit_id' => $structureProduit->id,
-                    'title' => $structureActivite->titre],
-                    ['start' => $combinedDatePair['start'] ?? "",
+                    'title' => $structureActivite->titre,
+                    'start' => $combinedDatePair['start'] ?? "",
                     'end' => $combinedDatePair['end'] ?? "",
-                ]
-                );
+                ]);
             }
         }
+    }
+
+    private function createCarbonInstance($dateString, $format)
+    {
+        $frenchMonths = [
+            'janvier' => 'January',
+            'février' => 'February',
+            'mars' => 'March',
+            'avril' => 'April',
+            'mai' => 'May',
+            'juin' => 'June',
+            'juillet' => 'July',
+            'août' => 'August',
+            'septembre' => 'September',
+            'octobre' => 'October',
+            'novembre' => 'November',
+            'décembre' => 'December',
+        ];
+
+        $englishDateString = str_replace(array_keys($frenchMonths), array_values($frenchMonths), $dateString);
+        $cleanedDateString = str_replace(' ', '', $englishDateString);
+
+        return Carbon::createFromFormat($format, $cleanedDateString)->locale('fr_FR');
     }
 }

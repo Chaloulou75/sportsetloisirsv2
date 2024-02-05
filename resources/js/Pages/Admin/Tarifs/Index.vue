@@ -157,34 +157,34 @@ onMounted(() => {
     />
     <AdminLayout>
         <template #header>
-            <div class="flex h-full items-center justify-start">
+            <div class="flex items-center justify-start h-full">
                 <Link
                     :href="route('admin.index')"
                     class="h-full bg-blue-600 py-2.5 md:px-4 md:py-4"
                 >
-                    <ChevronLeftIcon class="h-10 w-10 text-white" />
+                    <ChevronLeftIcon class="w-10 h-10 text-white" />
                 </Link>
                 <h1
-                    class="px-3 text-center text-base font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
+                    class="px-3 text-base font-semibold text-center text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
                     Gestion des types de tarifs
                 </h1>
             </div>
         </template>
 
-        <div class="w-full space-y-16 px-2 py-6 text-slate-700 md:px-6">
+        <div class="w-full px-2 py-6 space-y-16 text-slate-700 md:px-6">
             <div
-                class="flex w-full flex-col items-start justify-center space-y-4 py-4 md:flex-row md:justify-around md:space-y-0"
+                class="flex flex-col items-start justify-center w-full py-4 space-y-4 md:flex-row md:justify-around md:space-y-0"
             >
                 <div class="w-full md:w-2/3">
                     <h3
-                        class="mb-4 w-full text-center text-lg font-bold text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
+                        class="w-full mb-4 text-lg font-bold text-center underline text-slate-700 decoration-sky-600 decoration-2 underline-offset-2"
                     >
                         Gérer les types de tarifs:
                     </h3>
                     <ul
                         ref="toAnimateOne"
-                        class="max-w-3xl list-inside list-disc space-y-4 py-4 text-sm text-slate-600 marker:text-indigo-600"
+                        class="max-w-3xl py-4 space-y-4 text-sm list-disc list-inside text-slate-600 marker:text-indigo-600"
                     >
                         <li
                             v-for="tarif in tarifs"
@@ -196,13 +196,13 @@ onMounted(() => {
                                 class="inline-flex space-x-2"
                                 @submit.prevent="updateTarif(tarif)"
                             >
-                                <div class="mt-1 flex flex-col rounded-md">
+                                <div class="flex flex-col mt-1 rounded-md">
                                     <input
                                         v-model="tarifForm[tarif.id].type"
                                         type="text"
                                         :name="tarif.type"
                                         :id="tarif.type"
-                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                         placeholder=""
                                         autocomplete="none"
                                     />
@@ -217,7 +217,7 @@ onMounted(() => {
                                 <div class="flex items-center space-x-3">
                                     <button type="submit">
                                         <ArrowPathIcon
-                                            class="mr-1 h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
+                                            class="w-6 h-6 mr-1 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
                                         />
                                         <span class="sr-only"
                                             >Mettre à jour le tarif</span
@@ -228,12 +228,12 @@ onMounted(() => {
                                         @click="deleteTarif(tarif)"
                                     >
                                         <TrashIcon
-                                            class="h-5 w-5 text-red-500"
+                                            class="w-5 h-5 text-red-500"
                                         />
                                     </button>
                                     <!-- <button
                                         v-if="!showAddAttributForm(tarif)"
-                                        class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white p-2 text-center text-xs font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                        class="inline-flex items-center justify-center p-2 text-xs font-medium text-center text-gray-600 bg-white border border-gray-300 rounded-lg shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                                         type="button"
                                         @click="toggleAddAttributForm(tarif)"
                                     >
@@ -248,7 +248,7 @@ onMounted(() => {
                             </form>
 
                             <!-- <ul
-                                class="ml-6 list-inside list-disc space-y-3 py-2 marker:text-indigo-600"
+                                class="py-2 ml-6 space-y-3 list-disc list-inside marker:text-indigo-600"
                             >
                                 <li
                                     v-for="attribut in tarif.tariftypeattributs"
@@ -277,7 +277,7 @@ onMounted(() => {
                                                 type="text"
                                                 :name="attribut.attribut"
                                                 :id="attribut.attribut"
-                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                 placeholder=""
                                                 autocomplete="none"
                                             />
@@ -296,7 +296,7 @@ onMounted(() => {
                                         >
                                             <button type="submit">
                                                 <ArrowPathIcon
-                                                    class="mr-1 h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
+                                                    class="w-6 h-6 mr-1 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
                                                 />
                                                 <span class="sr-only"
                                                     >Mettre à jour l'
@@ -314,7 +314,7 @@ onMounted(() => {
                                                 "
                                             >
                                                 <TrashIcon
-                                                    class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                    class="w-6 h-6 text-red-500 hover:text-red-700"
                                                 />
                                             </button>
                                         </div>
@@ -323,7 +323,7 @@ onMounted(() => {
                             </ul>
                             <form
                                 v-if="showAddAttributForm(tarif)"
-                                class="ml-6 inline-flex flex-grow items-end justify-between text-center text-xs font-medium text-gray-600"
+                                class="inline-flex items-end justify-between flex-grow ml-6 text-xs font-medium text-center text-gray-600"
                                 @submit.prevent="addAttribut(tarif)"
                             >
                                 <div class="flex flex-col items-start">
@@ -334,13 +334,13 @@ onMounted(() => {
                                         }}</span
                                         >:</label
                                     >
-                                    <div class="mt-1 flex rounded-md">
+                                    <div class="flex mt-1 rounded-md">
                                         <input
                                             v-model="addAttributForm.attribut"
                                             type="text"
                                             name="newAttribut"
                                             id="newAttribut"
-                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                             placeholder=""
                                             autocomplete="none"
                                         />
@@ -354,19 +354,19 @@ onMounted(() => {
                                 </div>
                                 <button
                                     type="submit"
-                                    class="ml-4 inline-flex items-end"
+                                    class="inline-flex items-end ml-4"
                                 >
                                     <PlusCircleIcon
-                                        class="h-6 w-6 text-indigo-500 hover:text-indigo-700"
+                                        class="w-6 h-6 text-indigo-500 hover:text-indigo-700"
                                     />
                                 </button>
                                 <button
                                     @click="toggleAddAttributForm(tarif)"
                                     type="button"
-                                    class="ml-4 inline-flex items-center"
+                                    class="inline-flex items-center ml-4"
                                 >
                                     <XCircleIcon
-                                        class="h-6 w-6 text-red-500 hover:text-red-700"
+                                        class="w-6 h-6 text-red-500 hover:text-red-700"
                                     />
                                 </button>
                             </form> -->
@@ -376,10 +376,10 @@ onMounted(() => {
 
                 <!-- Create type de tarif -->
                 <div
-                    class="flex w-full flex-col items-center justify-center md:w-1/3"
+                    class="flex flex-col items-center justify-center w-full md:w-1/3"
                 >
                     <h3
-                        class="mb-4 w-full text-center text-lg font-bold text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
+                        class="w-full mb-4 text-lg font-bold text-center underline text-slate-700 decoration-sky-600 decoration-2 underline-offset-2"
                     >
                         Créer un type de tarif:
                     </h3>
@@ -387,7 +387,7 @@ onMounted(() => {
                         type="button"
                         v-if="!showCreateTarifForm"
                         @click="toggleCreateTarifForm"
-                        class="inline-flex w-auto items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                        class="inline-flex items-center justify-center w-auto px-4 py-3 space-y-1 text-sm font-medium text-center text-gray-600 border border-gray-600 rounded shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                     >
                         Créer un type de tarif
                     </button>
@@ -396,13 +396,13 @@ onMounted(() => {
                         class="flex flex-col items-start space-y-4"
                         @submit.prevent="createTarif"
                     >
-                        <div class="mt-1 flex flex-col rounded-md">
+                        <div class="flex flex-col mt-1 rounded-md">
                             <input
                                 v-model="createtarifForm.type"
                                 type="text"
                                 name="tarif_type"
                                 id="tarif_type"
-                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                 placeholder=""
                                 autocomplete="none"
                             />
@@ -414,16 +414,19 @@ onMounted(() => {
                             </div>
                         </div>
 
-                        <div class="flex w-full items-center justify-between">
+                        <div class="flex items-center justify-between w-full">
                             <button
                                 :disabled="createtarifForm.processing"
-                                class="rounded border border-gray-300 bg-blue-600 px-2 py-2 text-center text-sm font-medium text-white shadow-sm"
+                                :class="{
+                                    'opacity-25': createtarifForm.processing,
+                                }"
+                                class="px-2 py-2 text-sm font-medium text-center text-white bg-blue-600 border border-gray-300 rounded shadow-sm"
                                 type="submit"
                             >
                                 Enregistrer
                             </button>
                             <button
-                                class="rounded border border-gray-300 bg-white px-2 py-2 text-center text-sm font-medium text-gray-600 shadow-sm"
+                                class="px-2 py-2 text-sm font-medium text-center text-gray-600 bg-white border border-gray-300 rounded shadow-sm"
                                 type="button"
                                 @click="toggleCreateTarifForm"
                             >
@@ -435,10 +438,10 @@ onMounted(() => {
             </div>
 
             <div
-                class="flex w-full flex-col items-start justify-center space-y-4 py-4"
+                class="flex flex-col items-start justify-center w-full py-4 space-y-4"
             >
                 <h3
-                    class="mb-4 w-full text-center text-lg font-bold text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
+                    class="w-full mb-4 text-lg font-bold text-center underline text-slate-700 decoration-sky-600 decoration-2 underline-offset-2"
                 >
                     Liaison des types de tarifs aux couples "disciplines /
                     categories" et leurs attributs / sous attributs associés:
@@ -449,10 +452,10 @@ onMounted(() => {
                     >
                 </h3>
                 <div
-                    class="flex h-full flex-col items-start justify-around gap-8 text-base text-slate-600 md:flex-row md:flex-wrap"
+                    class="flex flex-col items-start justify-around h-full gap-8 text-base text-slate-600 md:flex-row md:flex-wrap"
                 >
                     <div
-                        class="flex max-w-md flex-col items-center justify-between border border-gray-100 bg-gray-50 px-4 py-3 shadow"
+                        class="flex flex-col items-center justify-between max-w-md px-4 py-3 border border-gray-100 shadow bg-gray-50"
                         v-for="tarifType in tarifs"
                         :key="tarifType.id"
                     >
@@ -473,7 +476,7 @@ onMounted(() => {
                         <button
                             v-if="tarifType.categories.length > 0"
                             @click="toggleShowCategories(tarifType)"
-                            class="my-3 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
+                            class="w-full px-3 py-2 my-3 text-sm bg-white border border-gray-200 rounded-md"
                         >
                             Montrer / fermer toutes les disciplines-categories
                         </button>
@@ -490,7 +493,7 @@ onMounted(() => {
                                 v-if="tarifType.categories.length > 0"
                                 class="my-4"
                             >
-                                <ul class="ml-4 list-inside list-disc">
+                                <ul class="ml-4 list-disc list-inside">
                                     <li
                                         v-for="disCat in tarifType.categories"
                                         :key="disCat.id"
@@ -513,19 +516,19 @@ onMounted(() => {
                                             "
                                             >, avec pour attributs:</span
                                         >
-                                        <ul class="ml-4 list-inside list-disc">
+                                        <ul class="ml-4 list-disc list-inside">
                                             <li
                                                 v-for="attribut in disCat.tarif_attributs"
                                                 :key="attribut.id"
                                             >
                                                 <span
-                                                    class="font-semibold italic"
+                                                    class="italic font-semibold"
                                                     >{{ attribut.nom }} ({{
                                                         attribut.type_champ_form
                                                     }})
                                                 </span>
                                                 <ul
-                                                    class="ml-4 list-inside list-disc"
+                                                    class="ml-4 list-disc list-inside"
                                                     v-if="
                                                         attribut.valeurs
                                                             .length > 0
@@ -550,7 +553,7 @@ onMounted(() => {
                                                     attributs:</span
                                                 >
                                                 <ul
-                                                    class="ml-4 list-inside list-disc text-sm"
+                                                    class="ml-4 text-sm list-disc list-inside"
                                                 >
                                                     <li
                                                         v-for="ssAttr in attribut.sous_attributs"
@@ -564,7 +567,7 @@ onMounted(() => {
                                                                 ssAttr.valeurs
                                                                     .length > 0
                                                             "
-                                                            class="ml-4 list-inside list-disc text-xs"
+                                                            class="ml-4 text-xs list-disc list-inside"
                                                         >
                                                             <li
                                                                 v-for="valeur in ssAttr.valeurs"
@@ -586,7 +589,7 @@ onMounted(() => {
                                                                 attribut
                                                             )
                                                         "
-                                                        class="group inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                                        class="inline-flex items-center justify-center px-4 py-3 text-sm font-medium text-center text-gray-600 bg-white border border-gray-300 rounded-lg shadow-sm group hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                                                     >
                                                         <div>
                                                             Dupliquer
@@ -615,7 +618,7 @@ onMounted(() => {
                             <button
                                 type="button"
                                 @click.prevent="attachAllDisCat(tarifType)"
-                                class="group inline-flex w-full items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                class="inline-flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-center text-gray-600 bg-white border border-gray-300 rounded-lg shadow-sm group hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                             >
                                 <div>
                                     Lier
@@ -630,7 +633,7 @@ onMounted(() => {
                             <button
                                 type="button"
                                 @click.prevent="detachAllDisCat(tarifType)"
-                                class="group inline-flex w-full items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                class="inline-flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-center text-gray-600 bg-white border border-gray-300 rounded-lg shadow-sm group hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                             >
                                 <div>
                                     Délier

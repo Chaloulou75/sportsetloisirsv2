@@ -82,16 +82,16 @@ class ActiviteController extends Controller
                 'titre' => $titre,
                 'description' => "",
                 'image' => "",
-                "actif" => 1,
+                "actif" => true,
             ]);
 
             $produit = $structure->produits()->create([
                 'discipline_id' => $discipline->id,
                 'categorie_id' => $disCat->id,
                 'activite_id' => $activite->id,
-                "actif" => 1,
+                "actif" => true,
                 'lieu_id' => $structureAdresse->id,
-                'reservable' => 0,
+                'reservable' => false,
             ]);
 
             $criteres = LienDisciplineCategorieCritere::withValeurs()
@@ -307,15 +307,9 @@ class ActiviteController extends Controller
             'country' => ['nullable'],
             'address_lat' => ['nullable'],
             'address_lng' => ['nullable'],
-            'time_seule' => ['nullable', 'array'],
-            'times' => ['nullable', new NestedArrays()],
-            'date_seule' => ['nullable', 'date'],
-            'dates' => ['nullable', 'array'],
-            'months' => ['nullable', new NestedArrays()],
             'instructeur_email' => ['nullable', 'email:filter', 'exists:users,email'],
             'instructeur_contact' => ['nullable'],
             'instructeur_phone' => ['nullable'],
-            'rayon_km' => ['nullable'],
         ]);
 
         $structure = Structure::with('adresses')->findOrFail($structure->id);
@@ -377,7 +371,7 @@ class ActiviteController extends Controller
             "actif" => true,
             'lieu_id' => $structureAddressId,
             'horaire_id' => null,
-            'reservable' => 0,
+            'reservable' => false,
         ]);
 
         $criteresValuesSets = $request->criteres;

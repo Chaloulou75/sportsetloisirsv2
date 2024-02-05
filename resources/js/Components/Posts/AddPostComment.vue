@@ -35,7 +35,7 @@ const addComment = () => {
             />
             <label
                 for="commentPost"
-                class="ml-4 block text-sm font-medium text-gray-700"
+                class="block ml-4 text-sm font-medium text-gray-700"
             >
                 Ajouter un commentaire?
             </label>
@@ -46,7 +46,7 @@ const addComment = () => {
                 id="commentPost"
                 name="body"
                 v-model="commentForm.body"
-                class="mt-2 w-full rounded-lg border-gray-200 align-top shadow-sm sm:text-sm"
+                class="w-full mt-2 align-top border-gray-200 rounded-lg shadow-sm sm:text-sm"
                 rows="4"
                 placeholder=""
                 required
@@ -59,10 +59,13 @@ const addComment = () => {
             </span>
         </div>
 
-        <div class="mt-6 flex justify-end">
+        <div class="flex justify-end mt-6">
             <button
-                class="flex w-full max-w-xs items-center justify-center rounded-md border border-gray-200 bg-indigo-800 px-4 py-2 text-base text-white shadow hover:bg-indigo-900"
+                class="flex items-center justify-center w-full max-w-xs px-4 py-2 text-base text-white bg-indigo-800 border border-gray-200 rounded-md shadow hover:bg-indigo-900"
                 :disabled="commentForm.processing"
+                :class="{
+                    'opacity-25': commentForm.processing,
+                }"
                 type="submit"
             >
                 <LoadingSVG v-if="commentForm.processing" />

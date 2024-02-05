@@ -38,7 +38,7 @@ onMounted(() => {
                 v-model="model"
                 range
                 multi-calendars
-                :year-range="[2022, 2030]"
+                :year-range="[2022, 2033]"
                 locale="fr"
                 :transitions="true"
                 :format="'dd/MM/yyyy'"

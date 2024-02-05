@@ -72,7 +72,7 @@ const onPermissionSubmit = () => {
                 >: création, mise à jour de vos disciplines, activités et
                 produits, ou seulement pour certains d'entre eux.
             </p>
-            <ul class="list-inside list-disc text-base">
+            <ul class="text-base list-disc list-inside">
                 <li>
                     <span class="font-semibold">Super Administrateur</span> a
                     accès à tous les droits d'administration et de gestion sur
@@ -100,13 +100,13 @@ const onPermissionSubmit = () => {
                     >
                         Email *
                     </label>
-                    <div class="mt-1 flex rounded-md shadow-sm">
+                    <div class="flex mt-1 rounded-md shadow-sm">
                         <input
                             v-model="addPermissionForm.email"
                             type="email"
                             name="email"
                             id="email"
-                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-50 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                             placeholder=""
                             autocomplete="none"
                         />
@@ -126,7 +126,7 @@ const onPermissionSubmit = () => {
                     >
                         Nom du partenaire*
                     </label>
-                    <div class="mt-1 flex rounded-md">
+                    <div class="flex mt-1 rounded-md">
                         <input
                             v-model="addPermissionForm.contact"
                             type="text"
@@ -136,7 +136,7 @@ const onPermissionSubmit = () => {
                                 'border-red-400':
                                     addPermissionForm.errors.contact,
                             }"
-                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                             placeholder=""
                             autocomplete="none"
                         />
@@ -156,12 +156,12 @@ const onPermissionSubmit = () => {
                     >
                         Fonction*
                     </label>
-                    <div class="mt-1 flex rounded-md">
+                    <div class="flex mt-1 rounded-md">
                         <select
                             name="niveau"
                             id="niveau"
                             v-model="addPermissionForm.niveau"
-                            class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                            class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
                         >
                             <option
                                 v-for="niveau in niveaux"
@@ -181,7 +181,7 @@ const onPermissionSubmit = () => {
                     >
                         Numéro de téléphone *
                     </label>
-                    <div class="mt-1 flex w-full">
+                    <div class="flex w-full mt-1">
                         <MazPhoneNumberInput
                             class="w-full"
                             v-model="addPermissionForm.phone"
@@ -228,7 +228,7 @@ const onPermissionSubmit = () => {
                                 v-model="
                                     addPermissionForm.activites[activite.id]
                                 "
-                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500"
                             />
 
                             <span class="ml-2 text-sm text-gray-600">{{
@@ -240,7 +240,10 @@ const onPermissionSubmit = () => {
                 <button
                     type="submit"
                     :disabled="addPermissionForm.processing"
-                    class="mt-4 inline-flex justify-center self-end rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:col-end-5"
+                    :class="{
+                        'opacity-25': addPermissionForm.processing,
+                    }"
+                    class="inline-flex self-end justify-center px-4 py-2 mt-4 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:col-end-5"
                 >
                     <LoadingSVG v-if="addPermissionForm.processing" />
                     Enregistrer

@@ -263,12 +263,12 @@ onMounted(() => {
         :confirmed-reservations-count="confirmedReservationsCount"
     >
         <template #header>
-            <div class="flex h-full items-center justify-start">
+            <div class="flex items-center justify-start h-full">
                 <Link
                     class="h-full bg-blue-600 py-2.5 md:px-4 md:py-4"
                     :href="route('structures.gestion.index', structure)"
                 >
-                    <ChevronLeftIcon class="h-10 w-10 text-white" />
+                    <ChevronLeftIcon class="w-10 h-10 text-white" />
                 </Link>
                 <h1
                     class="px-2 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-6 md:py-4 md:text-left md:text-2xl md:font-bold"
@@ -285,11 +285,11 @@ onMounted(() => {
                 @eventFromChild="handleButtonEvent"
             />
             <div
-                class="relative flex flex-col space-y-6 py-2 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
+                class="relative flex flex-col py-2 space-y-6 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
             >
                 <div class="flex-1">
                     <template v-if="displayEditStructure">
-                        <div class="mx-auto my-4 max-w-full md:px-4">
+                        <div class="max-w-full mx-auto my-4 md:px-4">
                             <div class="md:grid md:grid-cols-3 md:gap-6">
                                 <div class="md:col-span-3">
                                     <!--  -->
@@ -318,7 +318,7 @@ onMounted(() => {
                                             class="shadow sm:overflow-hidden sm:rounded-md"
                                         >
                                             <div
-                                                class="space-y-6 bg-white px-4 py-5 sm:p-6"
+                                                class="px-4 py-5 space-y-6 bg-white sm:p-6"
                                             >
                                                 <div
                                                     class="grid grid-cols-3 gap-6"
@@ -345,7 +345,7 @@ onMounted(() => {
                                                             >
                                                         </label>
                                                         <div
-                                                            class="mt-1 flex rounded-md"
+                                                            class="flex mt-1 rounded-md"
                                                         >
                                                             <input
                                                                 ref="name"
@@ -355,7 +355,7 @@ onMounted(() => {
                                                                 type="text"
                                                                 name="name"
                                                                 id="name"
-                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                                 placeholder=""
                                                                 autocomplete="none"
                                                             />
@@ -384,7 +384,7 @@ onMounted(() => {
                                                                 v-model="
                                                                     form.structuretype_id
                                                                 "
-                                                                class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                                class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
                                                             >
                                                                 <option
                                                                     v-for="structure in structurestypes"
@@ -459,7 +459,7 @@ onMounted(() => {
                                                                             }}
                                                                         </label>
                                                                         <div
-                                                                            class="mt-1 flex rounded-md"
+                                                                            class="flex mt-1 rounded-md"
                                                                         >
                                                                             <input
                                                                                 type="text"
@@ -476,7 +476,7 @@ onMounted(() => {
                                                                                 :id="
                                                                                     attribut.nom
                                                                                 "
-                                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                                                 placeholder=""
                                                                                 autocomplete="none"
                                                                             />
@@ -511,7 +511,7 @@ onMounted(() => {
                                                                             }}
                                                                         </label>
                                                                         <div
-                                                                            class="mt-1 flex rounded-md"
+                                                                            class="flex mt-1 rounded-md"
                                                                         >
                                                                             <select
                                                                                 :name="
@@ -527,7 +527,7 @@ onMounted(() => {
                                                                                             .id
                                                                                     ]
                                                                                 "
-                                                                                class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                                                class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
                                                                             >
                                                                                 <option
                                                                                     v-for="(
@@ -581,7 +581,7 @@ onMounted(() => {
                                                                                     attribut.nom
                                                                                 "
                                                                                 type="checkbox"
-                                                                                class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
+                                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600"
                                                                             />
                                                                             <label
                                                                                 :for="
@@ -623,7 +623,7 @@ onMounted(() => {
                                                                         </label>
 
                                                                         <div
-                                                                            class="mt-1 flex rounded-md"
+                                                                            class="flex mt-1 rounded-md"
                                                                         >
                                                                             <div>
                                                                                 <label
@@ -740,7 +740,7 @@ onMounted(() => {
                                                             id="presentation_courte"
                                                             name="presentation_courte"
                                                             rows="3"
-                                                            class="mt-1 block h-48 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                            class="block w-full h-48 min-h-full mt-1 placeholder-gray-400 placeholder-opacity-50 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                             :class="{
                                                                 errors: 'border-red-500 focus:ring focus:ring-red-200',
                                                             }"
@@ -783,7 +783,7 @@ onMounted(() => {
                                                             id="presentation_longue"
                                                             name="presentation_longue"
                                                             rows="3"
-                                                            class="mt-1 block h-48 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                            class="block w-full h-48 min-h-full mt-1 placeholder-gray-400 placeholder-opacity-50 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                             :class="{
                                                                 errors: 'border-red-500 focus:ring focus:ring-red-200',
                                                             }"
@@ -851,7 +851,7 @@ onMounted(() => {
                                                             "
                                                             id="abo_news"
                                                             type="checkbox"
-                                                            class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
+                                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600"
                                                         />
                                                         <label
                                                             for="abo_news"
@@ -881,7 +881,7 @@ onMounted(() => {
                                                             "
                                                             id="abo_promo"
                                                             type="checkbox"
-                                                            class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
+                                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600"
                                                         />
                                                         <label
                                                             for="abo_promo"
@@ -895,12 +895,16 @@ onMounted(() => {
 
                                             <!--buttons  -->
                                             <div
-                                                class="bg-gray-50 px-4 py-3 text-right sm:px-6"
+                                                class="px-4 py-3 text-right bg-gray-50 sm:px-6"
                                             >
                                                 <button
                                                     :disabled="form.processing"
+                                                    :class="{
+                                                        'opacity-25':
+                                                            form.processing,
+                                                    }"
                                                     type="submit"
-                                                    class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                                    class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                                 >
                                                     <LoadingSVG
                                                         v-if="form.processing"
@@ -917,7 +921,7 @@ onMounted(() => {
 
                     <template v-if="displayAdresses">
                         <div
-                            class="my-4 flex w-full flex-col space-y-6 rounded-md border border-gray-200 bg-gray-50 px-4 py-2 text-gray-800 shadow-md"
+                            class="flex flex-col w-full px-4 py-2 my-4 space-y-6 text-gray-800 border border-gray-200 rounded-md shadow-md bg-gray-50"
                         >
                             <div class="flex items-center justify-start">
                                 <h3 class="text-xl font-semibold">
@@ -925,7 +929,7 @@ onMounted(() => {
                                 </h3>
                             </div>
 
-                            <ul class="list-inside list-disc space-y-2">
+                            <ul class="space-y-2 list-disc list-inside">
                                 <li
                                     class="flex items-center justify-between"
                                     v-for="adresse in structure.adresses"
@@ -946,7 +950,7 @@ onMounted(() => {
                                             "
                                         >
                                             <ArrowPathIcon
-                                                class="h-6 w-6 text-blue-500 transition-all duration-200 hover:-rotate-90 hover:text-indigo-500"
+                                                class="w-6 h-6 text-blue-500 transition-all duration-200 hover:-rotate-90 hover:text-indigo-500"
                                             />
                                         </button>
                                         <button
@@ -954,7 +958,7 @@ onMounted(() => {
                                             @click="deleteAdresse(adresse)"
                                         >
                                             <TrashIcon
-                                                class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                class="w-6 h-6 text-red-500 hover:text-red-700"
                                             />
                                         </button>
                                     </div>
@@ -971,11 +975,11 @@ onMounted(() => {
                                     >
                                     <PlusIcon
                                         v-if="!addAddress"
-                                        class="ml-4 h-5 w-5 text-blue-500 group-hover:text-white"
+                                        class="w-5 h-5 ml-4 text-blue-500 group-hover:text-white"
                                     />
                                     <MinusIcon
                                         v-else
-                                        class="ml-4 h-5 w-5 text-blue-500 group-hover:text-white"
+                                        class="w-5 h-5 ml-4 text-blue-500 group-hover:text-white"
                                     />
                                 </button>
                             </div>
@@ -1003,6 +1007,10 @@ onMounted(() => {
                                 <button
                                     type="submit"
                                     :disabled="updateAddressForm.processing"
+                                    :class="{
+                                        'opacity-25':
+                                            updateAddressForm.processing,
+                                    }"
                                     class="my-4 flex items-center self-end rounded-md border border-gray-200 bg-white px-4 py-2.5 text-sm hover:bg-blue-500 hover:text-white"
                                 >
                                     <LoadingSVG
@@ -1032,6 +1040,9 @@ onMounted(() => {
                                 />
                                 <button
                                     :disabled="addressForm.processing"
+                                    :class="{
+                                        'opacity-25': addressForm.processing,
+                                    }"
                                     type="submit"
                                     class="my-4 flex items-center self-end rounded-md border border-gray-200 bg-white px-4 py-2.5 text-sm hover:bg-blue-500 hover:text-white"
                                 >
@@ -1044,14 +1055,14 @@ onMounted(() => {
 
                     <template v-if="displayPartenaire">
                         <div
-                            class="my-4 flex w-full flex-col space-y-6 rounded-md border border-gray-200 bg-gray-50 px-4 py-2 text-gray-800 shadow-md"
+                            class="flex flex-col w-full px-4 py-2 my-4 space-y-6 text-gray-800 border border-gray-200 rounded-md shadow-md bg-gray-50"
                         >
                             <div class="flex items-center justify-start">
                                 <h3 class="text-xl font-semibold">
                                     Vos partenaires et instructeurs:
                                 </h3>
                             </div>
-                            <ul class="list-inside list-disc space-y-2">
+                            <ul class="space-y-2 list-disc list-inside">
                                 <li
                                     class="flex items-center justify-between"
                                     v-for="partenaire in structure.partenaires"
@@ -1096,7 +1107,7 @@ onMounted(() => {
                                             "
                                         >
                                             <ArrowPathIcon
-                                                class="h-6 w-6 text-blue-500 transition-all duration-200 hover:-rotate-90 hover:text-indigo-500"
+                                                class="w-6 h-6 text-blue-500 transition-all duration-200 hover:-rotate-90 hover:text-indigo-500"
                                             />
                                         </button> -->
                                         <button
@@ -1106,7 +1117,7 @@ onMounted(() => {
                                             "
                                         >
                                             <TrashIcon
-                                                class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                class="w-6 h-6 text-red-500 hover:text-red-700"
                                             />
                                         </button>
                                     </div>
@@ -1122,7 +1133,7 @@ onMounted(() => {
                                         >Ajouter une permission</span
                                     >
                                     <PlusIcon
-                                        class="ml-4 h-5 w-5 text-blue-500 group-hover:text-white"
+                                        class="w-5 h-5 ml-4 text-blue-500 group-hover:text-white"
                                     />
                                 </button>
                             </div>

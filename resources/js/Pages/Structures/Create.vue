@@ -84,7 +84,7 @@ function submit() {
                 <template v-slot:ariane>
                     <nav aria-label="Breadcrumb" class="flex">
                         <ol
-                            class="flex rounded-lg border border-gray-200 text-gray-600"
+                            class="flex text-gray-600 border border-gray-200 rounded-lg"
                         >
                             <li class="flex items-center">
                                 <Link
@@ -92,7 +92,7 @@ function submit() {
                                     :href="route('welcome')"
                                     class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
                                 >
-                                    <HomeIcon class="h-4 w-4" />
+                                    <HomeIcon class="w-4 h-4" />
 
                                     <span
                                         class="ms-1.5 hidden text-xs font-medium md:block"
@@ -111,7 +111,7 @@ function submit() {
                                 <Link
                                     preserve-scroll
                                     :href="route('structures.create')"
-                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                                    class="flex items-center h-10 text-xs font-medium transition bg-white pe-4 ps-8 hover:text-gray-900"
                                 >
                                     Structure
                                 </Link>
@@ -123,10 +123,10 @@ function submit() {
         </template>
         <template #default>
             <div
-                class="relative flex flex-col space-y-6 py-2 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
+                class="relative flex flex-col py-2 space-y-6 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
             >
                 <div class="flex-1">
-                    <div class="mx-auto max-w-full lg:px-4">
+                    <div class="max-w-full mx-auto lg:px-4">
                         <div class="md:grid md:grid-cols-3 md:gap-6">
                             <div class="md:col-span-3">
                                 <!--  -->
@@ -154,7 +154,7 @@ function submit() {
                                         class="shadow sm:overflow-hidden sm:rounded-md"
                                     >
                                         <div
-                                            class="space-y-6 bg-white px-4 py-5 sm:p-6"
+                                            class="px-4 py-5 space-y-6 bg-white sm:p-6"
                                         >
                                             <div class="grid grid-cols-3 gap-6">
                                                 <!-- Name -->
@@ -168,7 +168,7 @@ function submit() {
                                                         Nom de la structure *
                                                     </label>
                                                     <div
-                                                        class="mt-1 flex rounded-md"
+                                                        class="flex mt-1 rounded-md"
                                                     >
                                                         <input
                                                             ref="name"
@@ -176,7 +176,7 @@ function submit() {
                                                             type="text"
                                                             name="name"
                                                             id="name"
-                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                             placeholder=""
                                                             autocomplete="none"
                                                         />
@@ -208,7 +208,7 @@ function submit() {
                                                             v-model="
                                                                 form.structuretype_id
                                                             "
-                                                            class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                            class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
                                                         >
                                                             <option
                                                                 v-for="structure in structurestypes"
@@ -278,7 +278,7 @@ function submit() {
                                                                         }}
                                                                     </label>
                                                                     <div
-                                                                        class="mt-1 flex rounded-md"
+                                                                        class="flex mt-1 rounded-md"
                                                                     >
                                                                         <input
                                                                             type="text"
@@ -295,7 +295,7 @@ function submit() {
                                                                             :id="
                                                                                 attribut.nom
                                                                             "
-                                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                                             placeholder=""
                                                                             autocomplete="none"
                                                                         />
@@ -330,7 +330,7 @@ function submit() {
                                                                         }}
                                                                     </label>
                                                                     <div
-                                                                        class="mt-1 flex rounded-md"
+                                                                        class="flex mt-1 rounded-md"
                                                                     >
                                                                         <select
                                                                             :name="
@@ -346,7 +346,7 @@ function submit() {
                                                                                         .id
                                                                                 ]
                                                                             "
-                                                                            class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                                            class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
                                                                         >
                                                                             <option
                                                                                 v-for="(
@@ -400,7 +400,7 @@ function submit() {
                                                                                 attribut.nom
                                                                             "
                                                                             type="checkbox"
-                                                                            class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
+                                                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600"
                                                                         />
                                                                         <label
                                                                             :for="
@@ -442,7 +442,7 @@ function submit() {
                                                                     </label>
 
                                                                     <div
-                                                                        class="mt-1 flex rounded-md"
+                                                                        class="flex mt-1 rounded-md"
                                                                     >
                                                                         <div>
                                                                             <label
@@ -548,7 +548,7 @@ function submit() {
                                                         id="presentation_courte"
                                                         name="presentation_courte"
                                                         rows="2"
-                                                        class="mt-1 block h-48 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                        class="block w-full h-48 min-h-full mt-1 placeholder-gray-400 placeholder-opacity-50 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                         :class="{
                                                             errors: 'border-red-500 focus:ring focus:ring-red-200',
                                                         }"
@@ -591,7 +591,7 @@ function submit() {
                                                         id="presentation_longue"
                                                         name="presentation_longue"
                                                         rows="3"
-                                                        class="mt-1 block h-48 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                        class="block w-full h-48 min-h-full mt-1 placeholder-gray-400 placeholder-opacity-50 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                         :class="{
                                                             errors: 'border-red-500 focus:ring focus:ring-red-200',
                                                         }"
@@ -648,7 +648,7 @@ function submit() {
                                                         checked
                                                         id="abo_news"
                                                         type="checkbox"
-                                                        class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
+                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600"
                                                     />
                                                     <label
                                                         for="abo_news"
@@ -667,7 +667,7 @@ function submit() {
                                                         checked
                                                         id="abo_promo"
                                                         type="checkbox"
-                                                        class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
+                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600"
                                                     />
                                                     <label
                                                         for="abo_promo"
@@ -681,12 +681,16 @@ function submit() {
 
                                         <!--buttons -->
                                         <div
-                                            class="bg-gray-50 px-4 py-3 text-right sm:px-6"
+                                            class="px-4 py-3 text-right bg-gray-50 sm:px-6"
                                         >
                                             <button
                                                 :disabled="form.processing"
+                                                :class="{
+                                                    'opacity-25':
+                                                        form.processing,
+                                                }"
                                                 type="submit"
-                                                class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                                class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                             >
                                                 <LoadingSVG
                                                     v-if="form.processing"

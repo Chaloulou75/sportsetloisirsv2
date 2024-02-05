@@ -136,7 +136,7 @@ const addArticle = () => {
                 <template v-slot:ariane>
                     <nav aria-label="Breadcrumb" class="flex">
                         <ol
-                            class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600"
+                            class="flex overflow-hidden text-gray-600 border border-gray-200 rounded-lg"
                         >
                             <li class="flex items-center">
                                 <Link
@@ -146,7 +146,7 @@ const addArticle = () => {
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
-                                        class="h-4 w-4"
+                                        class="w-4 h-4"
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         stroke="currentColor"
@@ -173,7 +173,7 @@ const addArticle = () => {
                                 <Link
                                     preserve-scroll
                                     :href="route('posts.index')"
-                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                                    class="flex items-center h-10 text-xs font-medium transition bg-white pe-4 ps-8 hover:text-gray-900"
                                 >
                                     Blog
                                 </Link>
@@ -186,7 +186,7 @@ const addArticle = () => {
 
         <div class="py-6 md:py-12">
             <div
-                class="mx-auto max-w-5xl rounded-md bg-gray-50 px-2 py-3 shadow sm:px-6 lg:px-8"
+                class="max-w-5xl px-2 py-3 mx-auto rounded-md shadow bg-gray-50 sm:px-6 lg:px-8"
             >
                 <form
                     @submit.prevent="addArticle"
@@ -201,14 +201,14 @@ const addArticle = () => {
                         >
                             Titre de l'article*
                         </label>
-                        <div class="mt-1 flex rounded-md">
+                        <div class="flex mt-1 rounded-md">
                             <input
                                 ref="title"
                                 v-model="articleForm.title"
                                 type="text"
                                 name="title"
                                 id="title"
-                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                 placeholder=""
                                 autocomplete="none"
                             />
@@ -238,11 +238,11 @@ const addArticle = () => {
                                 "
                                 v-for="selectedDiscipline in selectedDisciplines"
                                 :key="selectedDiscipline.id"
-                                class="group m-px flex items-center border bg-white p-1 text-xs hover:bg-blue-600 hover:text-white"
+                                class="flex items-center p-1 m-px text-xs bg-white border group hover:bg-blue-600 hover:text-white"
                             >
                                 {{ selectedDiscipline.name }}
                                 <XCircleIcon
-                                    class="ml-2 h-4 w-4 text-red-500 group-hover:text-white"
+                                    class="w-4 h-4 ml-2 text-red-500 group-hover:text-white"
                                 />
                             </button>
                         </div>
@@ -250,7 +250,7 @@ const addArticle = () => {
                         <TextInput
                             type="text"
                             name="tags"
-                            class="mt-1 block w-full"
+                            class="block w-full mt-1"
                             v-model="filterDiscipline"
                             placeholder="Rechercher et ajouter des disciplines."
                         />
@@ -259,7 +259,7 @@ const addArticle = () => {
                             class="mt-2"
                             :message="articleForm.errors.disciplines"
                         />
-                        <div class="mt-2 flex flex-wrap items-center">
+                        <div class="flex flex-wrap items-center mt-2">
                             <button
                                 type="button"
                                 v-for="discipline in filteredDisciplines"
@@ -267,7 +267,7 @@ const addArticle = () => {
                                 @click.prevent="
                                     addDisciplineFromList(discipline)
                                 "
-                                class="m-px border bg-white p-1 text-xs hover:bg-blue-600 hover:text-white"
+                                class="p-1 m-px text-xs bg-white border hover:bg-blue-600 hover:text-white"
                             >
                                 {{ discipline.name }}
                             </button>
@@ -309,7 +309,7 @@ const addArticle = () => {
                                 id="excerpt"
                                 name="excerpt"
                                 rows="2"
-                                class="mt-1 block h-48 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                class="block w-full h-48 min-h-full mt-1 placeholder-gray-400 placeholder-opacity-50 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 :class="{
                                     errors: 'border-red-500 focus:ring focus:ring-red-200',
                                 }"
@@ -341,11 +341,11 @@ const addArticle = () => {
                                 @click.prevent="removeTagFromList(selectedTag)"
                                 v-for="selectedTag in selectedTags"
                                 :key="selectedTag.id"
-                                class="group m-px flex items-center border bg-white p-1 text-xs hover:bg-blue-600 hover:text-white"
+                                class="flex items-center p-1 m-px text-xs bg-white border group hover:bg-blue-600 hover:text-white"
                             >
                                 {{ selectedTag.name }}
                                 <XCircleIcon
-                                    class="ml-2 h-4 w-4 text-red-500 group-hover:text-white"
+                                    class="w-4 h-4 ml-2 text-red-500 group-hover:text-white"
                                 />
                             </button>
                         </div>
@@ -353,7 +353,7 @@ const addArticle = () => {
                         <TextInput
                             type="text"
                             name="tags"
-                            class="mt-1 block w-full"
+                            class="block w-full mt-1"
                             v-model="filterInput"
                             placeholder="Rechercher et ajouter des tags."
                         />
@@ -362,13 +362,13 @@ const addArticle = () => {
                             class="mt-2"
                             :message="articleForm.errors.tags"
                         />
-                        <div class="mt-2 flex flex-wrap items-center">
+                        <div class="flex flex-wrap items-center mt-2">
                             <button
                                 type="button"
                                 v-for="tag in filteredTags"
                                 :key="tag.id"
                                 @click.prevent="addTagFromList(tag)"
-                                class="m-px border bg-white p-1 text-xs hover:bg-blue-600 hover:text-white"
+                                class="p-1 m-px text-xs bg-white border hover:bg-blue-600 hover:text-white"
                             >
                                 {{ tag.name }}
                             </button>
@@ -413,10 +413,13 @@ const addArticle = () => {
                         </div>
                     </div>
 
-                    <div class="mt-6 flex justify-end">
+                    <div class="flex justify-end mt-6">
                         <button
-                            class="flex w-full max-w-xs items-center justify-center rounded-md border border-gray-200 bg-indigo-800 px-4 py-2 text-base text-white shadow hover:bg-indigo-900"
+                            class="flex items-center justify-center w-full max-w-xs px-4 py-2 text-base text-white bg-indigo-800 border border-gray-200 rounded-md shadow hover:bg-indigo-900"
                             :disabled="articleForm.processing"
+                            :class="{
+                                'opacity-25': articleForm.processing,
+                            }"
                             type="submit"
                         >
                             <LoadingSVG v-if="articleForm.processing" />
