@@ -213,7 +213,7 @@ const latestAdresseId = computed(() => {
                             v-if="displayTarifs"
                             type="button"
                             @click="openAddTarifModal()"
-                            class="items-center justify-between w-full px-4 py-3 text-lg text-white transition duration-150 bg-green-600 shadow-lg hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
+                            class="inline-flex items-center justify-between w-auto px-4 py-3 text-lg text-white transition duration-150 bg-green-600 shadow-lg hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
                         >
                             <PlusIcon class="w-5 h-5" />
                         </button>

@@ -56,6 +56,233 @@ const critereForm = ref({
     souscriteres: {},
 });
 
+watch(
+    () => props.selectedProduit,
+    (newValue) => {
+        critereForm.value.criteres = {};
+        critereForm.value.souscriteres = {};
+        console.log("yoooooooooo", newValue);
+
+        newValue.criteres.forEach((critere) => {
+            const critereId = critere.critere_id;
+            const produitValeur = critere.valeur;
+            const critereValue = critere.critere_valeur;
+            const sousCriteres = critere.sous_criteres;
+            selectedCriteres.value.forEach((officialCritere) => {
+                if (officialCritere.id === critereId) {
+                    if (
+                        officialCritere.type_champ_form === "time" &&
+                        produitValeur !== null
+                    ) {
+                        const [hours, minutes] = produitValeur
+                            .split("h")
+                            .map(Number);
+                        critereForm.value.criteres[critereId] = {
+                            hours,
+                            minutes,
+                        };
+                    } else if (
+                        officialCritere.type_champ_form === "date" &&
+                        produitValeur !== null
+                    ) {
+                        const parsedDate = parse(
+                            produitValeur,
+                            "d MMMM yyyy",
+                            new Date(),
+                            { locale: fr }
+                        );
+                        if (isValid(parsedDate)) {
+                            critereForm.value.criteres[critereId] = parsedDate;
+                        }
+                    } else if (
+                        officialCritere.type_champ_form === "dates" &&
+                        produitValeur !== null
+                    ) {
+                        const [start, end] = produitValeur
+                            .split(" au ")
+                            .map((dateStr) => {
+                                const parsedDate = parse(
+                                    dateStr,
+                                    "d MMMM yyyy",
+                                    new Date(),
+                                    { locale: fr }
+                                );
+                                return isValid(parsedDate) ? parsedDate : null;
+                            });
+
+                        if (start && end) {
+                            critereForm.value.criteres[critereId] = [
+                                start,
+                                end,
+                            ];
+                        }
+                    } else if (
+                        officialCritere.type_champ_form === "mois" &&
+                        produitValeur !== null
+                    ) {
+                        const [startMonth, endMonth] = produitValeur
+                            .split(" à ")
+                            .map((dateStr) => {
+                                const parsedDate = parse(
+                                    dateStr,
+                                    "MMMM yyyy",
+                                    new Date(),
+                                    { locale: fr }
+                                );
+                                return isValid(parsedDate) ? parsedDate : null;
+                            });
+
+                        if (startMonth && endMonth) {
+                            const startMonthYear = {
+                                month: startMonth.getMonth(),
+                                year: startMonth.getFullYear(),
+                            };
+                            const endMonthYear = {
+                                month: endMonth.getMonth(),
+                                year: endMonth.getFullYear(),
+                            };
+
+                            critereForm.value.criteres[critereId] = [
+                                startMonthYear,
+                                endMonthYear,
+                            ];
+                        }
+                    } else if (
+                        officialCritere.type_champ_form === "times" &&
+                        produitValeur !== null
+                    ) {
+                        const [openTime, closeTime] = produitValeur
+                            .split(" à ")
+                            .map((timeString) => {
+                                const [hours, minutes] = timeString
+                                    .split("h")
+                                    .map(Number);
+                                return { hours, minutes };
+                            });
+
+                        critereForm.value.criteres[critereId] = [
+                            openTime,
+                            closeTime,
+                        ];
+                    } else if (officialCritere.valeurs.length > 0) {
+                        officialCritere.valeurs.forEach(
+                            (officialCritereValeur) => {
+                                if (
+                                    officialCritereValeur.id === critereValue.id
+                                ) {
+                                    if (
+                                        !critereForm.value.criteres[critereId]
+                                    ) {
+                                        if (
+                                            officialCritere.type_champ_form ===
+                                            "checkbox"
+                                        ) {
+                                            critereForm.value.criteres[
+                                                critereId
+                                            ] = [officialCritereValeur];
+                                        } else {
+                                            critereForm.value.criteres[
+                                                critereId
+                                            ] = officialCritereValeur;
+                                        }
+                                    } else {
+                                        const existingValue =
+                                            critereForm.value.criteres[
+                                                critereId
+                                            ];
+
+                                        if (!Array.isArray(existingValue)) {
+                                            critereForm.value.criteres[
+                                                critereId
+                                            ] = [existingValue];
+                                            if (
+                                                !critereForm.value.criteres[
+                                                    critereId
+                                                ].includes(
+                                                    officialCritereValeur
+                                                )
+                                            ) {
+                                                critereForm.value.criteres[
+                                                    critereId
+                                                ].push(officialCritereValeur);
+                                            }
+                                        } else {
+                                            if (
+                                                !critereForm.value.criteres[
+                                                    critereId
+                                                ].includes(
+                                                    officialCritereValeur
+                                                )
+                                            ) {
+                                                critereForm.value.criteres[
+                                                    critereId
+                                                ].push(officialCritereValeur);
+                                            }
+                                        }
+                                    }
+                                    if (officialCritereValeur.sous_criteres) {
+                                        officialCritereValeur.sous_criteres.forEach(
+                                            (officialSousCritere) => {
+                                                const souscritereId =
+                                                    officialSousCritere.id;
+                                                if (
+                                                    officialSousCritere
+                                                        .sous_criteres_valeurs
+                                                        .length > 0
+                                                ) {
+                                                    officialSousCritere.sous_criteres_valeurs.forEach(
+                                                        (
+                                                            officialSousCritereValeur
+                                                        ) => {
+                                                            const officialSousCritereValeurId =
+                                                                officialSousCritereValeur.id;
+                                                            sousCriteres.forEach(
+                                                                (
+                                                                    sousCritere
+                                                                ) => {
+                                                                    const prodSousCritValeur =
+                                                                        sousCritere.sous_critere_valeur;
+                                                                    if (
+                                                                        prodSousCritValeur &&
+                                                                        prodSousCritValeur.id ===
+                                                                            officialSousCritereValeurId
+                                                                    ) {
+                                                                        critereForm.value.souscriteres[
+                                                                            souscritereId
+                                                                        ] =
+                                                                            officialSousCritereValeur;
+                                                                    }
+                                                                }
+                                                            );
+                                                        }
+                                                    );
+                                                } else {
+                                                    sousCriteres.forEach(
+                                                        (sousCritere) => {
+                                                            const prodSousCritValeur =
+                                                                sousCritere.valeur;
+                                                            critereForm.value.souscriteres[
+                                                                souscritereId
+                                                            ] =
+                                                                prodSousCritValeur;
+                                                        }
+                                                    );
+                                                }
+                                            }
+                                        );
+                                    }
+                                }
+                            }
+                        );
+                    } else if (produitValeur !== null) {
+                        critereForm.value.criteres[critereId] = produitValeur;
+                    }
+                }
+            });
+        });
+    }
+);
+
 const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
     if (checked) {
         if (!critereForm.value.criteres[critereId]) {
@@ -391,7 +618,7 @@ onMounted(() => {
                                 <h1
                                     class="inline-block w-full text-xl font-semibold text-center sm:text-2xl sm:leading-7 md:text-3xl"
                                 >
-                                    Page à refaire totalement:
+                                    Page en refonte:
                                     {{ activite.titre }}
                                 </h1>
                             </div>
@@ -437,7 +664,8 @@ onMounted(() => {
                                 class="flex items-center justify-between w-full"
                             >
                                 <h3 class="text-xl text-gray-700">
-                                    Selectionner une formule:
+                                    Selectionner une formule en fonction de vos
+                                    critères:
                                 </h3>
                                 <button
                                     class="flex justify-center w-full md:w-auto"
