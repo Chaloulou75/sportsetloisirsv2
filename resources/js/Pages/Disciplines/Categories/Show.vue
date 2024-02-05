@@ -310,7 +310,7 @@ onMounted(() => {
                 <template v-slot:ariane>
                     <nav aria-label="Breadcrumb" class="flex">
                         <ol
-                            class="flex rounded-lg border border-gray-200 text-gray-600"
+                            class="flex text-gray-600 border border-gray-200 rounded-lg"
                         >
                             <li class="flex items-center">
                                 <Link
@@ -318,7 +318,7 @@ onMounted(() => {
                                     :href="route('welcome')"
                                     class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
                                 >
-                                    <HomeIcon class="h-4 w-4" />
+                                    <HomeIcon class="w-4 h-4" />
 
                                     <span
                                         class="ms-1.5 hidden text-xs font-medium md:block"
@@ -342,7 +342,7 @@ onMounted(() => {
                                             discipline.slug
                                         )
                                     "
-                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                                    class="flex items-center h-10 text-xs font-medium transition bg-white pe-4 ps-8 hover:text-gray-900"
                                 >
                                     {{ discipline.name }}
                                 </Link>
@@ -361,7 +361,7 @@ onMounted(() => {
                                             category: category.slug,
                                         })
                                     "
-                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                                    class="flex items-center h-10 text-xs font-medium transition bg-white pe-4 ps-8 hover:text-gray-900"
                                 >
                                     {{ category.nom_categorie_client }}
                                 </Link>
@@ -388,20 +388,20 @@ onMounted(() => {
                 />
                 <!-- Criteres -->
                 <div
-                    class="flex w-full items-center justify-between border-b border-gray-300 px-2 py-3 md:hidden"
+                    class="flex items-center justify-between w-full px-2 py-3 border-b border-gray-300 md:hidden"
                 >
                     <h3 class="font-semibold">
                         {{ category.nom_categorie_client }}
                     </h3>
                     <button type="button" @click="toggleCriteres">
-                        <XMarkIcon v-if="showCriteres" class="h-6 w-6" />
-                        <AdjustmentsHorizontalIcon v-else class="h-6 w-6" />
+                        <XMarkIcon v-if="showCriteres" class="w-6 h-6" />
+                        <AdjustmentsHorizontalIcon v-else class="w-6 h-6" />
                     </button>
                 </div>
 
                 <div
                     v-if="criteres"
-                    class="mx-auto w-full flex-col items-start justify-center space-x-0 space-y-2 rounded bg-transparent px-2 py-2 backdrop-blur-md md:flex-row md:items-center md:space-x-6 md:space-y-0 md:px-6"
+                    class="flex-col items-start justify-center w-full px-2 py-2 mx-auto space-x-0 space-y-2 bg-transparent rounded backdrop-blur-md md:flex-row md:items-center md:space-x-6 md:space-y-0 md:px-6"
                     :class="{
                         flex: showCriteres,
                         hidden: !showCriteres,
@@ -562,7 +562,7 @@ onMounted(() => {
                                         souscritere.dis_cat_crit_val_id ===
                                             valeur.id
                                     "
-                                    class="mt-2 flex items-center space-x-4"
+                                    class="flex items-center mt-2 space-x-4"
                                 >
                                     <InputLabel
                                         class="py-2"
@@ -590,7 +590,7 @@ onMounted(() => {
                                         souscritere.dis_cat_crit_val_id ===
                                             valeur.id
                                     "
-                                    class="mt-2 flex items-center space-x-4"
+                                    class="flex items-center mt-2 space-x-4"
                                 >
                                     <InputLabel
                                         class="py-2"
@@ -613,19 +613,19 @@ onMounted(() => {
                         </div>
                     </div>
                     <button
-                        class="flex w-full justify-center md:w-auto"
+                        class="flex justify-center w-full md:w-auto"
                         type="button"
                         @click="resetFormCriteres"
                     >
                         <ArrowPathIcon
-                            class="h-6 w-6 text-gray-500 transition duration-200 hover:-rotate-90 hover:text-gray-700 md:h-8 md:w-8"
+                            class="w-6 h-6 text-gray-500 transition duration-200 hover:-rotate-90 hover:text-gray-700 md:h-8 md:w-8"
                         />
                     </button>
                 </div>
             </div>
 
             <template v-if="produits.data.length > 0">
-                <div class="mx-auto py-6 md:py-12">
+                <div class="py-6 mx-auto md:py-12">
                     <TransitionRoot
                         as="div"
                         :show="displayProduits"
@@ -637,12 +637,12 @@ onMounted(() => {
                         leave-to="opacity-0"
                     >
                         <h2
-                            class="mb-4 w-full text-center text-lg font-semibold text-gray-600 md:mb-8 md:w-1/2 md:text-2xl"
+                            class="w-full mb-4 text-lg font-semibold text-center text-gray-600 md:mb-8 md:w-1/2 md:text-2xl"
                         >
                             Les activités
                         </h2>
                         <div
-                            class="mx-auto flex w-full flex-col px-2 md:flex-row md:space-x-4"
+                            class="flex flex-col w-full px-2 mx-auto md:flex-row md:space-x-4"
                         >
                             <div
                                 ref="listeStructure"
@@ -650,7 +650,7 @@ onMounted(() => {
                             >
                                 <div
                                     ref="listToAnimate"
-                                    class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
+                                    class="grid h-auto grid-cols-1 gap-4 place-content-stretch place-items-stretch lg:grid-cols-2"
                                 >
                                     <ProduitCard
                                         v-for="(
@@ -697,12 +697,12 @@ onMounted(() => {
                                 <!-- les structures -->
                                 <h2
                                     v-if="structures.data.length > 0"
-                                    class="mb-4 text-center text-lg font-semibold text-gray-600 md:mb-8 md:text-2xl"
+                                    class="mb-4 text-lg font-semibold text-center text-gray-600 md:mb-8 md:text-2xl"
                                 >
                                     Les structures
                                 </h2>
                                 <div
-                                    class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
+                                    class="grid h-auto grid-cols-1 gap-4 place-content-stretch place-items-stretch lg:grid-cols-2"
                                 >
                                     <StructureCard
                                         v-for="(
@@ -751,12 +751,12 @@ onMounted(() => {
                                     class="fixed inset-x-2 bottom-4 z-[999] mx-auto flex w-3/4 max-w-xs items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-xs text-white transition duration-75 hover:scale-105 hover:bg-gray-800 hover:font-semibold md:hidden md:w-auto md:text-sm"
                                     @click="goToMap"
                                 >
-                                    <MapIcon class="mr-2 h-5 w-5" />
+                                    <MapIcon class="w-5 h-5 mr-2" />
                                     Afficher la carte
                                 </button>
                             </div>
                             <LeafletMapProduitMultiple
-                                class="sticky top-48 hidden md:block md:w-1/2"
+                                class="sticky hidden top-48 md:block md:w-1/2"
                                 :produits="produits.data"
                                 :hovered-produit="hoveredProduit"
                                 :structures="structures.data"
@@ -773,15 +773,15 @@ onMounted(() => {
                             />
                         </div>
                         <!-- Blog -->
-                        <div class="my-8 px-3 md:my-16 md:px-6 lg:px-8">
+                        <div class="px-3 my-8 md:my-16 md:px-6 lg:px-8">
                             <h2
-                                class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
+                                class="my-4 text-lg font-semibold text-center text-gray-600 md:my-8 md:text-2xl"
                             >
                                 Les derniers articles
                             </h2>
                             <div
                                 v-if="posts.length > 0"
-                                class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
+                                class="grid h-auto grid-cols-1 gap-4 place-items-stretch sm:grid-cols-2 md:grid-cols-3"
                             >
                                 <PostFeaturedCard
                                     v-for="post in posts"
@@ -809,7 +809,7 @@ onMounted(() => {
                         leave-from="opacity-100"
                         leave-to="opacity-0"
                     >
-                        <div class="mx-auto flex w-full flex-col space-y-4">
+                        <div class="flex flex-col w-full mx-auto space-y-4">
                             <div ref="mapStructure" class="w-full">
                                 <LeafletMapProduitMultiple
                                     class="md:top-2"
@@ -825,7 +825,7 @@ onMounted(() => {
                                     class="fixed inset-x-2 bottom-4 z-[999] mx-auto flex w-3/4 max-w-xs items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-xs text-white transition duration-75 hover:scale-105 hover:bg-gray-800 hover:font-semibold md:hidden md:w-auto md:text-sm"
                                     @click="goToListe"
                                 >
-                                    <ListBulletIcon class="mr-2 h-5 w-5" />
+                                    <ListBulletIcon class="w-5 h-5 mr-2" />
                                     Afficher la liste
                                 </button>
                             </div>
@@ -835,7 +835,7 @@ onMounted(() => {
             </template>
             <template v-else>
                 <div
-                    class="mx-auto flex min-h-full max-w-full flex-col px-2 py-6 sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
+                    class="flex flex-col max-w-full min-h-full px-2 py-6 mx-auto sm:px-6 md:flex-row md:space-x-4 md:py-12 lg:px-8"
                 >
                     <p class="w-full font-medium text-gray-700 md:w-2/3">
                         Il n'y a pas encore d'activités en
@@ -855,15 +855,15 @@ onMounted(() => {
                     </div>
                 </div>
                 <!-- Blog -->
-                <div class="my-8 px-3 md:my-16 md:px-6 lg:px-8">
+                <div class="px-3 my-8 md:my-16 md:px-6 lg:px-8">
                     <h2
-                        class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
+                        class="my-4 text-lg font-semibold text-center text-gray-600 md:my-8 md:text-2xl"
                     >
                         Les derniers articles
                     </h2>
                     <div
                         v-if="posts.length > 0"
-                        class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
+                        class="grid h-auto grid-cols-1 gap-4 place-items-stretch sm:grid-cols-2 md:grid-cols-3"
                     >
                         <PostFeaturedCard
                             v-for="post in posts"

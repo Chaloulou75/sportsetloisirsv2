@@ -58,19 +58,19 @@ const formatCurrency = (value) => {
         leave-to="opacity-0"
     >
         <div
-            class="max-w-xs rounded-lg bg-gray-100 shadow-sm shadow-indigo-200"
+            class="max-w-xs bg-gray-100 rounded-lg shadow-sm shadow-indigo-200"
         >
             <div
-                class="relative h-24 w-auto max-w-xs rounded-md bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-soft-light"
+                class="relative w-auto h-24 max-w-xs bg-center bg-no-repeat bg-cover rounded-md bg-slate-100/20 bg-blend-soft-light"
                 :class="headerClass"
             ></div>
 
-            <div class="flex w-auto flex-col p-1 text-slate-700">
+            <div class="flex flex-col w-auto p-1 text-slate-700">
                 <Link
                     :href="link"
                     :data="data"
                     v-if="produit.activite"
-                    class="inline-flex flex-col items-center justify-center px-2 py-1 text-center text-sm font-semibold text-gray-600 transition duration-150 hover:text-indigo-600 focus:text-indigo-600 focus:outline-none"
+                    class="inline-flex flex-col items-center justify-center px-2 py-1 text-sm font-semibold text-center text-gray-600 transition duration-150 hover:text-indigo-600 focus:text-indigo-600 focus:outline-none"
                 >
                     {{ produit.activite.titre }}
                     <span class="text-xs font-medium">{{
@@ -78,7 +78,7 @@ const formatCurrency = (value) => {
                     }}</span>
                 </Link>
                 <ul v-if="produit.adresse" class="text-xs">
-                    <li class="list-inside list-disc font-semibold">
+                    <li class="font-semibold list-disc list-inside">
                         {{ produit.adresse.city }} ({{
                             produit.adresse.zip_code
                         }})
@@ -87,7 +87,7 @@ const formatCurrency = (value) => {
 
                 <ul
                     v-if="produit.criteres.length > 0"
-                    class="list-inside list-disc text-xs"
+                    class="text-xs list-disc list-inside"
                 >
                     <template
                         v-for="critere in produit.criteres"
@@ -121,26 +121,13 @@ const formatCurrency = (value) => {
                 </ul>
 
                 <div v-if="produit.cat_tarifs && produit.cat_tarifs.length > 0">
-                    <p class="mt-2 text-right text-sm font-bold text-green-700">
+                    <p class="mt-2 text-sm font-bold text-right text-green-700">
                         <span class="text-xs font-medium text-gray-600"
                             >à partir de</span
                         >
                         {{ formatCurrency(produit.minimum_amount) }}
                     </p>
                 </div>
-
-                <!-- <ul
-                    v-if="produit.tarifs.length > 0"
-                    class="list-inside list-disc text-xs"
-                >
-                    <li v-for="tarif in produit.tarifs" :key="tarif.id">
-                        {{ tarif.titre }}:
-                        <span class="font-medium">
-                            {{ tarif.amount }} € /
-                            {{ tarif.tarif_type.type }}</span
-                        >
-                    </li>
-                </ul> -->
             </div>
         </div>
     </TransitionRoot>

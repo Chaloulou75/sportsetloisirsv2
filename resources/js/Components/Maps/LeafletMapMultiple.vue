@@ -6,7 +6,7 @@ import "leaflet/dist/leaflet.css";
 const props = defineProps({
     structures: Object,
     hoveredStructure: Number,
-    zoom : Number,
+    zoom: Number,
 });
 
 const center = ref([

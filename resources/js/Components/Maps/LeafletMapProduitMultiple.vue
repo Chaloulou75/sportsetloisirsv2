@@ -155,7 +155,7 @@ const handleMoveEnd = () => {
 </script>
 
 <template>
-    <div class="flex h-full flex-col items-center justify-start space-y-4 pb-4">
+    <div class="flex flex-col items-center justify-start h-full pb-4 space-y-4">
         <div class="flex items-center justify-start space-x-4">
             <label for="zoomSize">Zoom:</label>
             <input id="zoomSize" v-model="zoom" type="range" min="7" max="18" />
