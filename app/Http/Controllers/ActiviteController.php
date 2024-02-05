@@ -446,7 +446,7 @@ class ActiviteController extends Controller
                 $this->handleMultipleHours($structure, $structureActivite, $structureProduit, $critereId, $criteresValues);
             } elseif (is_string($criteresValues) && strtotime($criteresValues) !== false) {
                 // Single date
-                $this->handleSingleValue($structure, $structureActivite, $structureProduit, $critereId, null, Carbon::parse($criteresValues)->format('Y-m-d'), $defaut);
+                $this->handleSingleValue($structure, $structureActivite, $structureProduit, $critereId, null, Carbon::parse($criteresValues)->setTimezone('Europe/Paris')->format('Y-m-d'), $defaut);
             } elseif (is_array($criteresValues) && count($criteresValues) > 0 && is_string($criteresValues[0]) && strtotime($criteresValues[0]) !== false) {
                 // Multiple dates
                 $this->handleMultipleDates($structure, $structureActivite, $structureProduit, $critereId, $criteresValues);
@@ -527,7 +527,7 @@ class ActiviteController extends Controller
     private function handleMultipleDates($structure, $structureActivite, $structureProduit, $critereId, $criteresValues)
     {
         $dates = array_map(function ($date) {
-            return Carbon::parse($date)->format('Y-m-d');
+            return Carbon::parse($date)->setTimezone('Europe/Paris')->format('Y-m-d');
         }, $criteresValues);
 
         $this->createStructureProduitCritere($structure, $structureActivite, $structureProduit, $critereId, null, json_encode($dates));
