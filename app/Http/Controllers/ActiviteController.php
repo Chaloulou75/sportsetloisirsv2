@@ -114,8 +114,10 @@ class ActiviteController extends Controller
         return to_route('structures.disciplines.show', ['structure' => $structure , 'discipline' => $discipline])->with('success', 'Activité créée, vous pouvez ajouter d\'autres activités à votre structure.');
     }
 
-    public function show(StructureActivite $activite): Response
+    public function show(StructureActivite $activite, ?string $produit = null): Response
     {
+        $selectedProduit = StructureProduit::withRelations()->find(request()->produit);
+
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
@@ -131,7 +133,10 @@ class ActiviteController extends Controller
         $produits = $activite->produits()->withRelations()->get();
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
-                ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))->whereIn('categorie_id', $activite->structure->categories->pluck('categorie_id'))
+                ->where('discipline_id', $activite->discipline_id)
+                ->where('categorie_id', $activite->categorie_id)
+                ->where('visible_front', true)
+                ->where('visible_block', true)
                 ->get();
 
         $activiteSimilaires = StructureActivite::withRelations()
@@ -148,6 +153,7 @@ class ActiviteController extends Controller
             'activite' => $activite,
             'produits' => $produits,
             'criteres' => $criteres,
+            'selectedProduit' => $selectedProduit,
             'activiteSimilaires' => $activiteSimilaires
         ]);
     }

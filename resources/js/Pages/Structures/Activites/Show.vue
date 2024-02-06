@@ -23,6 +23,8 @@ import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import { HomeIcon, ArrowPathIcon } from "@heroicons/vue/24/outline";
 import { StarIcon } from "@heroicons/vue/24/solid";
+import { parse, isValid } from "date-fns";
+import { fr } from "date-fns/locale";
 dayjs.locale("fr");
 
 const props = defineProps({
@@ -48,6 +50,7 @@ const props = defineProps({
 
 const listToAnimate = ref();
 const filteredProduits = ref(props.produits);
+const selectedProduct = ref();
 const selectedCriteres = ref([]);
 const selectedSousCriteres = ref([]);
 
@@ -55,233 +58,6 @@ const critereForm = ref({
     criteres: {},
     souscriteres: {},
 });
-
-watch(
-    () => props.selectedProduit,
-    (newValue) => {
-        critereForm.value.criteres = {};
-        critereForm.value.souscriteres = {};
-        console.log("yoooooooooo", newValue);
-
-        newValue.criteres.forEach((critere) => {
-            const critereId = critere.critere_id;
-            const produitValeur = critere.valeur;
-            const critereValue = critere.critere_valeur;
-            const sousCriteres = critere.sous_criteres;
-            selectedCriteres.value.forEach((officialCritere) => {
-                if (officialCritere.id === critereId) {
-                    if (
-                        officialCritere.type_champ_form === "time" &&
-                        produitValeur !== null
-                    ) {
-                        const [hours, minutes] = produitValeur
-                            .split("h")
-                            .map(Number);
-                        critereForm.value.criteres[critereId] = {
-                            hours,
-                            minutes,
-                        };
-                    } else if (
-                        officialCritere.type_champ_form === "date" &&
-                        produitValeur !== null
-                    ) {
-                        const parsedDate = parse(
-                            produitValeur,
-                            "d MMMM yyyy",
-                            new Date(),
-                            { locale: fr }
-                        );
-                        if (isValid(parsedDate)) {
-                            critereForm.value.criteres[critereId] = parsedDate;
-                        }
-                    } else if (
-                        officialCritere.type_champ_form === "dates" &&
-                        produitValeur !== null
-                    ) {
-                        const [start, end] = produitValeur
-                            .split(" au ")
-                            .map((dateStr) => {
-                                const parsedDate = parse(
-                                    dateStr,
-                                    "d MMMM yyyy",
-                                    new Date(),
-                                    { locale: fr }
-                                );
-                                return isValid(parsedDate) ? parsedDate : null;
-                            });
-
-                        if (start && end) {
-                            critereForm.value.criteres[critereId] = [
-                                start,
-                                end,
-                            ];
-                        }
-                    } else if (
-                        officialCritere.type_champ_form === "mois" &&
-                        produitValeur !== null
-                    ) {
-                        const [startMonth, endMonth] = produitValeur
-                            .split(" à ")
-                            .map((dateStr) => {
-                                const parsedDate = parse(
-                                    dateStr,
-                                    "MMMM yyyy",
-                                    new Date(),
-                                    { locale: fr }
-                                );
-                                return isValid(parsedDate) ? parsedDate : null;
-                            });
-
-                        if (startMonth && endMonth) {
-                            const startMonthYear = {
-                                month: startMonth.getMonth(),
-                                year: startMonth.getFullYear(),
-                            };
-                            const endMonthYear = {
-                                month: endMonth.getMonth(),
-                                year: endMonth.getFullYear(),
-                            };
-
-                            critereForm.value.criteres[critereId] = [
-                                startMonthYear,
-                                endMonthYear,
-                            ];
-                        }
-                    } else if (
-                        officialCritere.type_champ_form === "times" &&
-                        produitValeur !== null
-                    ) {
-                        const [openTime, closeTime] = produitValeur
-                            .split(" à ")
-                            .map((timeString) => {
-                                const [hours, minutes] = timeString
-                                    .split("h")
-                                    .map(Number);
-                                return { hours, minutes };
-                            });
-
-                        critereForm.value.criteres[critereId] = [
-                            openTime,
-                            closeTime,
-                        ];
-                    } else if (officialCritere.valeurs.length > 0) {
-                        officialCritere.valeurs.forEach(
-                            (officialCritereValeur) => {
-                                if (
-                                    officialCritereValeur.id === critereValue.id
-                                ) {
-                                    if (
-                                        !critereForm.value.criteres[critereId]
-                                    ) {
-                                        if (
-                                            officialCritere.type_champ_form ===
-                                            "checkbox"
-                                        ) {
-                                            critereForm.value.criteres[
-                                                critereId
-                                            ] = [officialCritereValeur];
-                                        } else {
-                                            critereForm.value.criteres[
-                                                critereId
-                                            ] = officialCritereValeur;
-                                        }
-                                    } else {
-                                        const existingValue =
-                                            critereForm.value.criteres[
-                                                critereId
-                                            ];
-
-                                        if (!Array.isArray(existingValue)) {
-                                            critereForm.value.criteres[
-                                                critereId
-                                            ] = [existingValue];
-                                            if (
-                                                !critereForm.value.criteres[
-                                                    critereId
-                                                ].includes(
-                                                    officialCritereValeur
-                                                )
-                                            ) {
-                                                critereForm.value.criteres[
-                                                    critereId
-                                                ].push(officialCritereValeur);
-                                            }
-                                        } else {
-                                            if (
-                                                !critereForm.value.criteres[
-                                                    critereId
-                                                ].includes(
-                                                    officialCritereValeur
-                                                )
-                                            ) {
-                                                critereForm.value.criteres[
-                                                    critereId
-                                                ].push(officialCritereValeur);
-                                            }
-                                        }
-                                    }
-                                    if (officialCritereValeur.sous_criteres) {
-                                        officialCritereValeur.sous_criteres.forEach(
-                                            (officialSousCritere) => {
-                                                const souscritereId =
-                                                    officialSousCritere.id;
-                                                if (
-                                                    officialSousCritere
-                                                        .sous_criteres_valeurs
-                                                        .length > 0
-                                                ) {
-                                                    officialSousCritere.sous_criteres_valeurs.forEach(
-                                                        (
-                                                            officialSousCritereValeur
-                                                        ) => {
-                                                            const officialSousCritereValeurId =
-                                                                officialSousCritereValeur.id;
-                                                            sousCriteres.forEach(
-                                                                (
-                                                                    sousCritere
-                                                                ) => {
-                                                                    const prodSousCritValeur =
-                                                                        sousCritere.sous_critere_valeur;
-                                                                    if (
-                                                                        prodSousCritValeur &&
-                                                                        prodSousCritValeur.id ===
-                                                                            officialSousCritereValeurId
-                                                                    ) {
-                                                                        critereForm.value.souscriteres[
-                                                                            souscritereId
-                                                                        ] =
-                                                                            officialSousCritereValeur;
-                                                                    }
-                                                                }
-                                                            );
-                                                        }
-                                                    );
-                                                } else {
-                                                    sousCriteres.forEach(
-                                                        (sousCritere) => {
-                                                            const prodSousCritValeur =
-                                                                sousCritere.valeur;
-                                                            critereForm.value.souscriteres[
-                                                                souscritereId
-                                                            ] =
-                                                                prodSousCritValeur;
-                                                        }
-                                                    );
-                                                }
-                                            }
-                                        );
-                                    }
-                                }
-                            }
-                        );
-                    } else if (produitValeur !== null) {
-                        critereForm.value.criteres[critereId] = produitValeur;
-                    }
-                }
-            });
-        });
-    }
-);
 
 const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
     if (checked) {
@@ -320,8 +96,9 @@ const filterProducts = () => {
         filteredProduits.value = props.produits.filter((produit) => {
             return (
                 selectedCriteres.value.every((selectedCritere) => {
+                    console.log(selectedCritere, produit.criteres);
                     if (!!selectedCritere.inclus_all === true) {
-                        return true; // Do not apply the filter
+                        return true;
                     } else if (Array.isArray(selectedCritere)) {
                         return selectedCritere.some((critereInArray) => {
                             return produit.criteres.some(
@@ -332,7 +109,7 @@ const filterProducts = () => {
                         });
                     } else {
                         return produit.criteres.some((produitCritere) => {
-                            // Check if 'valeur_id' exists in produitCritere
+                            // Check if 'valeur_id' et 'critere_valeur' exists in produitCritere
                             const valeurIdExists =
                                 produitCritere.hasOwnProperty("valeur_id");
 
@@ -383,6 +160,258 @@ watch(
     { deep: true }
 );
 
+watch(
+    () => selectedProduct.value,
+    (newValue) => {
+        if (newValue) {
+            critereForm.value.criteres = {};
+            critereForm.value.souscriteres = {};
+
+            props.criteres.forEach((officialCritere) => {
+                newValue.criteres.forEach((critere) => {
+                    const critereId = critere.critere_id;
+                    const produitValeur = critere.valeur;
+                    const critereValueId = critere.valeur_id;
+                    const sousCriteres = critere.sous_criteres;
+                    if (officialCritere.id === critereId) {
+                        if (
+                            officialCritere.type_champ_form === "time" &&
+                            produitValeur !== null
+                        ) {
+                            const [hours, minutes] = produitValeur
+                                .split("h")
+                                .map(Number);
+                            critereForm.value.criteres[critereId] = {
+                                hours,
+                                minutes,
+                            };
+                        } else if (
+                            officialCritere.type_champ_form === "date" &&
+                            produitValeur !== null
+                        ) {
+                            const parsedDate = parse(
+                                produitValeur,
+                                "d MMMM yyyy",
+                                new Date(),
+                                { locale: fr }
+                            );
+                            if (isValid(parsedDate)) {
+                                critereForm.value.criteres[critereId] =
+                                    parsedDate;
+                            }
+                        } else if (
+                            officialCritere.type_champ_form === "dates" &&
+                            produitValeur !== null
+                        ) {
+                            const [start, end] = produitValeur
+                                .split(" au ")
+                                .map((dateStr) => {
+                                    const parsedDate = parse(
+                                        dateStr,
+                                        "d MMMM yyyy",
+                                        new Date(),
+                                        { locale: fr }
+                                    );
+                                    return isValid(parsedDate)
+                                        ? parsedDate
+                                        : null;
+                                });
+
+                            if (start && end) {
+                                critereForm.value.criteres[critereId] = [
+                                    start,
+                                    end,
+                                ];
+                            }
+                        } else if (
+                            officialCritere.type_champ_form === "mois" &&
+                            produitValeur !== null
+                        ) {
+                            const [startMonth, endMonth] = produitValeur
+                                .split(" à ")
+                                .map((dateStr) => {
+                                    const parsedDate = parse(
+                                        dateStr,
+                                        "MMMM yyyy",
+                                        new Date(),
+                                        { locale: fr }
+                                    );
+                                    return isValid(parsedDate)
+                                        ? parsedDate
+                                        : null;
+                                });
+
+                            if (startMonth && endMonth) {
+                                const startMonthYear = {
+                                    month: startMonth.getMonth(),
+                                    year: startMonth.getFullYear(),
+                                };
+                                const endMonthYear = {
+                                    month: endMonth.getMonth(),
+                                    year: endMonth.getFullYear(),
+                                };
+
+                                critereForm.value.criteres[critereId] = [
+                                    startMonthYear,
+                                    endMonthYear,
+                                ];
+                            }
+                        } else if (
+                            officialCritere.type_champ_form === "times" &&
+                            produitValeur !== null
+                        ) {
+                            const [openTime, closeTime] = produitValeur
+                                .split(" à ")
+                                .map((timeString) => {
+                                    const [hours, minutes] = timeString
+                                        .split("h")
+                                        .map(Number);
+                                    return { hours, minutes };
+                                });
+
+                            critereForm.value.criteres[critereId] = [
+                                openTime,
+                                closeTime,
+                            ];
+                        } else if (
+                            officialCritere.valeurs.length > 0 &&
+                            critereValueId
+                        ) {
+                            officialCritere.valeurs.forEach(
+                                (officialCritereValeur) => {
+                                    if (
+                                        officialCritereValeur.id ===
+                                        critereValueId
+                                    ) {
+                                        if (
+                                            !critereForm.value.criteres[
+                                                critereId
+                                            ]
+                                        ) {
+                                            if (
+                                                officialCritere.type_champ_form ===
+                                                "checkbox"
+                                            ) {
+                                                critereForm.value.criteres[
+                                                    critereId
+                                                ] = [officialCritereValeur];
+                                            } else {
+                                                critereForm.value.criteres[
+                                                    critereId
+                                                ] = officialCritereValeur;
+                                            }
+                                        } else {
+                                            const existingValue =
+                                                critereForm.value.criteres[
+                                                    critereId
+                                                ];
+
+                                            if (!Array.isArray(existingValue)) {
+                                                critereForm.value.criteres[
+                                                    critereId
+                                                ] = [existingValue];
+                                                if (
+                                                    !critereForm.value.criteres[
+                                                        critereId
+                                                    ].includes(
+                                                        officialCritereValeur
+                                                    )
+                                                ) {
+                                                    critereForm.value.criteres[
+                                                        critereId
+                                                    ].push(
+                                                        officialCritereValeur
+                                                    );
+                                                }
+                                            } else {
+                                                if (
+                                                    !critereForm.value.criteres[
+                                                        critereId
+                                                    ].includes(
+                                                        officialCritereValeur
+                                                    )
+                                                ) {
+                                                    critereForm.value.criteres[
+                                                        critereId
+                                                    ].push(
+                                                        officialCritereValeur
+                                                    );
+                                                }
+                                            }
+                                        }
+                                        if (
+                                            officialCritereValeur.sous_criteres
+                                        ) {
+                                            officialCritereValeur.sous_criteres.forEach(
+                                                (officialSousCritere) => {
+                                                    const souscritereId =
+                                                        officialSousCritere.id;
+                                                    if (
+                                                        officialSousCritere
+                                                            .sous_criteres_valeurs
+                                                            .length > 0
+                                                    ) {
+                                                        officialSousCritere.sous_criteres_valeurs.forEach(
+                                                            (
+                                                                officialSousCritereValeur
+                                                            ) => {
+                                                                const officialSousCritereValeurId =
+                                                                    officialSousCritereValeur.id;
+                                                                sousCriteres.forEach(
+                                                                    (
+                                                                        sousCritere
+                                                                    ) => {
+                                                                        const prodSousCritValeur =
+                                                                            sousCritere.sous_critere_valeur;
+
+                                                                        if (
+                                                                            prodSousCritValeur &&
+                                                                            prodSousCritValeur.id ===
+                                                                                officialSousCritereValeurId
+                                                                        ) {
+                                                                            critereForm.value.souscriteres[
+                                                                                souscritereId
+                                                                            ] =
+                                                                                officialSousCritereValeur;
+                                                                        }
+                                                                    }
+                                                                );
+                                                            }
+                                                        );
+                                                    } else {
+                                                        sousCriteres.forEach(
+                                                            (sousCritere) => {
+                                                                const prodSousCritValeur =
+                                                                    sousCritere.valeur;
+                                                                if (
+                                                                    prodSousCritValeur !==
+                                                                    null
+                                                                ) {
+                                                                    critereForm.value.souscriteres[
+                                                                        souscritereId
+                                                                    ] =
+                                                                        prodSousCritValeur;
+                                                                }
+                                                            }
+                                                        );
+                                                    }
+                                                }
+                                            );
+                                        }
+                                    }
+                                }
+                            );
+                        } else if (produitValeur !== null) {
+                            critereForm.value.criteres[critereId] =
+                                produitValeur;
+                        }
+                    }
+                });
+            });
+        }
+    }
+);
+
 const resetFormCriteres = () => {
     critereForm.value.criteres = {};
     critereForm.value.souscriteres = {};
@@ -406,9 +435,13 @@ const submitReservation = () => {
         },
     });
 };
+const formatCityName = (ville) => {
+    return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
+};
 
 onMounted(() => {
     autoAnimate(listToAnimate.value);
+    selectedProduct.value = props.selectedProduit ?? null;
     filterProducts();
 });
 </script>
@@ -427,6 +460,7 @@ onMounted(() => {
         :all-cities="allCities"
         :departement="departement"
         :city="city"
+        :discipline="discipline"
     >
         <template #header>
             <ResultsHeader>
@@ -434,7 +468,7 @@ onMounted(() => {
                 <template v-slot:ariane>
                     <nav aria-label="Breadcrumb" class="flex">
                         <ol
-                            class="flex text-gray-600 border border-gray-200 rounded-lg"
+                            class="flex rounded-lg border border-gray-200 text-gray-600"
                         >
                             <li class="flex items-center">
                                 <Link
@@ -442,7 +476,7 @@ onMounted(() => {
                                     :href="route('welcome')"
                                     class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
                                 >
-                                    <HomeIcon class="w-4 h-4" />
+                                    <HomeIcon class="h-4 w-4" />
 
                                     <span
                                         class="ms-1.5 hidden text-xs font-medium md:block"
@@ -461,7 +495,7 @@ onMounted(() => {
                                 <Link
                                     preserve-scroll
                                     :href="route('villes.show', city.slug)"
-                                    class="flex items-center h-10 text-xs font-medium transition bg-white pe-4 ps-8 hover:text-gray-900"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     {{ formatCityName(city.ville) }}
                                 </Link>
@@ -484,7 +518,7 @@ onMounted(() => {
                                             departement.slug
                                         )
                                     "
-                                    class="flex items-center h-10 text-xs font-medium transition bg-white pe-4 ps-8 hover:text-gray-900"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     {{ departement.departement }}
                                 </Link>
@@ -507,7 +541,7 @@ onMounted(() => {
                                             discipline.slug
                                         )
                                     "
-                                    class="flex items-center h-10 text-xs font-medium transition bg-white pe-4 ps-8 hover:text-gray-900"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     {{ discipline.name }}
                                 </Link>
@@ -530,7 +564,7 @@ onMounted(() => {
                                             category: requestCategory.slug,
                                         })
                                     "
-                                    class="flex items-center h-10 text-xs font-medium transition bg-white pe-4 ps-8 hover:text-gray-900"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     {{ requestCategory.nom_categorie_client }}
                                 </Link>
@@ -557,7 +591,7 @@ onMounted(() => {
                                             }
                                         )
                                     "
-                                    class="flex items-center h-10 text-xs font-medium transition bg-white pe-4 ps-8 hover:text-gray-900"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     {{ structuretypeElected.name }}
                                 </Link>
@@ -576,7 +610,7 @@ onMounted(() => {
                                             activite: activite,
                                         })
                                     "
-                                    class="flex items-center h-10 text-xs font-medium transition bg-white pe-4 ps-8 hover:text-gray-900"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     {{ activite.titre }}
                                 </Link>
@@ -605,18 +639,18 @@ onMounted(() => {
                 />
             </div>
 
-            <section class="max-w-full px-0 py-6 mx-auto my-4 sm:px-4 lg:px-8">
+            <section class="mx-auto my-4 max-w-full px-0 py-6 sm:px-4 lg:px-8">
                 <div
-                    class="flex flex-col justify-between px-4 py-6 bg-white rounded-lg shadow text-slate-600 md:flex-row md:items-start md:space-x-6"
+                    class="flex flex-col justify-between rounded-lg bg-white px-4 py-6 text-slate-600 shadow md:flex-row md:items-start md:space-x-6"
                 >
                     <div class="w-full">
                         <div class="relative space-y-12">
                             <!-- titre -->
                             <div
-                                class="flex items-center justify-start my-4 space-x-4"
+                                class="my-4 flex items-center justify-start space-x-4"
                             >
                                 <h1
-                                    class="inline-block w-full text-xl font-semibold text-center sm:text-2xl sm:leading-7 md:text-3xl"
+                                    class="inline-block w-full text-center text-xl font-semibold sm:text-2xl sm:leading-7 md:text-3xl"
                                 >
                                     Page en refonte:
                                     {{ activite.titre }}
@@ -626,7 +660,7 @@ onMounted(() => {
                             <div>
                                 <p
                                     v-if="activite.description"
-                                    class="text-base font-medium leading-5 text-gray-700 whitespace-pre-line"
+                                    class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
                                 >
                                     {{ activite.description }}
                                 </p>
@@ -634,13 +668,13 @@ onMounted(() => {
                                     v-else-if="
                                         activite.structure.presentation_longue
                                     "
-                                    class="text-base font-medium leading-5 text-gray-700 whitespace-pre-line"
+                                    class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
                                 >
                                     {{ activite.structure.presentation_longue }}
                                 </p>
                                 <p
                                     v-else
-                                    class="text-base font-medium leading-5 text-gray-700 whitespace-pre-line"
+                                    class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
                                 >
                                     {{ activite.structure.presentation_courte }}
                                 </p>
@@ -653,7 +687,7 @@ onMounted(() => {
                                 <ul>
                                     <li
                                         v-for="instructeur in activite.instructeurs"
-                                        class="text-base font-semibold text-gray-600 list-disc list-inside"
+                                        class="list-inside list-disc text-base font-semibold text-gray-600"
                                     >
                                         {{ instructeur.pivot.contact }} -
                                         {{ instructeur.pivot.email }}
@@ -661,26 +695,26 @@ onMounted(() => {
                                 </ul>
                             </div>
                             <div
-                                class="flex items-center justify-between w-full"
+                                class="flex w-full items-center justify-between"
                             >
                                 <h3 class="text-xl text-gray-700">
                                     Selectionner une formule en fonction de vos
                                     critères:
                                 </h3>
                                 <button
-                                    class="flex justify-center w-full md:w-auto"
+                                    class="flex w-full justify-center md:w-auto"
                                     type="button"
                                     @click="resetFormCriteres"
                                 >
                                     <ArrowPathIcon
-                                        class="w-6 h-6 text-gray-500 transition duration-200 hover:-rotate-90 hover:text-gray-700 md:h-8 md:w-8"
+                                        class="h-6 w-6 text-gray-500 transition duration-200 hover:-rotate-90 hover:text-gray-700 md:h-8 md:w-8"
                                     />
                                 </button>
                             </div>
 
                             <div
                                 v-if="criteres.length > 0"
-                                class="grid w-full grid-cols-1 gap-4 p-2 mx-auto shadow bg-gray-50 md:grid-cols-3"
+                                class="mx-auto grid w-full grid-cols-1 gap-4 bg-gray-50 p-2 shadow md:grid-cols-3"
                             >
                                 <div
                                     v-for="critere in criteres"
@@ -748,7 +782,7 @@ onMounted(() => {
                                         >
                                             {{ critere.nom }}
                                         </label>
-                                        <div class="flex mt-1 rounded-md">
+                                        <div class="mt-1 flex rounded-md">
                                             <TextInput
                                                 type="text"
                                                 v-model="
@@ -758,7 +792,7 @@ onMounted(() => {
                                                 "
                                                 :name="critere.nom"
                                                 :id="critere.nom"
-                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                 placeholder=""
                                                 autocomplete="none"
                                             />
@@ -778,7 +812,7 @@ onMounted(() => {
                                         >
                                             {{ critere.nom }}
                                         </label>
-                                        <div class="flex mt-1 rounded-md">
+                                        <div class="mt-1 flex rounded-md">
                                             <TextInput
                                                 type="number"
                                                 v-model="
@@ -788,7 +822,7 @@ onMounted(() => {
                                                 "
                                                 :name="critere.nom"
                                                 :id="critere.nom"
-                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                 placeholder=""
                                                 autocomplete="none"
                                             />
@@ -800,7 +834,7 @@ onMounted(() => {
                                         v-if="
                                             critere.type_champ_form === 'time'
                                         "
-                                        class="flex flex-col items-start max-w-sm space-y-3"
+                                        class="flex max-w-sm flex-col items-start space-y-3"
                                     >
                                         <SingleTimeForm
                                             class="w-full"
@@ -816,7 +850,7 @@ onMounted(() => {
                                         v-if="
                                             critere.type_champ_form === 'times'
                                         "
-                                        class="flex flex-col items-start max-w-sm space-y-3"
+                                        class="flex max-w-sm flex-col items-start space-y-3"
                                     >
                                         <OpenTimesForm
                                             class="w-full"
@@ -832,7 +866,7 @@ onMounted(() => {
                                         v-if="
                                             critere.type_champ_form === 'date'
                                         "
-                                        class="flex flex-col items-start max-w-sm space-y-3"
+                                        class="flex max-w-sm flex-col items-start space-y-3"
                                     >
                                         <SingleDateForm
                                             class="w-full"
@@ -848,7 +882,7 @@ onMounted(() => {
                                         v-if="
                                             critere.type_champ_form === 'dates'
                                         "
-                                        class="flex flex-col items-start max-w-sm space-y-3"
+                                        class="flex max-w-sm flex-col items-start space-y-3"
                                     >
                                         <OpenDaysForm
                                             class="w-full"
@@ -866,7 +900,7 @@ onMounted(() => {
                                         "
                                     >
                                         <div
-                                            class="flex flex-col items-start max-w-sm space-y-3"
+                                            class="flex max-w-sm flex-col items-start space-y-3"
                                         >
                                             <OpenMonthsForm
                                                 class="w-full"
@@ -885,7 +919,7 @@ onMounted(() => {
                                         v-if="
                                             critere.type_champ_form === 'rayon'
                                         "
-                                        class="flex flex-col items-start w-full max-w-sm space-y-3"
+                                        class="flex w-full max-w-sm flex-col items-start space-y-3"
                                     >
                                         <RangeInputForm
                                             class="w-full max-w-sm"
@@ -1004,7 +1038,7 @@ onMounted(() => {
                             </div>
                             <div
                                 ref="listToAnimate"
-                                class="grid h-auto grid-cols-1 gap-4 place-content-stretch place-items-stretch lg:grid-cols-2"
+                                class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
                             >
                                 <ProduitFormuleCard
                                     v-for="produit in filteredProduits"
@@ -1019,34 +1053,34 @@ onMounted(() => {
             </section>
             <section class="bg-white">
                 <div
-                    class="max-w-full px-4 py-16 mx-auto sm:px-6 sm:py-24 lg:px-8"
+                    class="mx-auto max-w-full px-4 py-16 sm:px-6 sm:py-24 lg:px-8"
                 >
                     <h2
-                        class="text-2xl font-semibold tracking-tight text-center text-gray-700 sm:text-3xl"
+                        class="text-center text-2xl font-semibold tracking-tight text-gray-700 sm:text-3xl"
                     >
                         Les derniers avis sur cette activité
                     </h2>
 
                     <div
-                        class="grid grid-cols-1 gap-4 mt-12 md:grid-cols-3 md:gap-8"
+                        class="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-8"
                     >
-                        <blockquote class="p-8 bg-gray-100 rounded-lg">
+                        <blockquote class="rounded-lg bg-gray-100 p-8">
                             <div class="flex items-center gap-4">
                                 <img
                                     alt="Man"
                                     src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
-                                    class="object-cover w-16 h-16 rounded-full"
+                                    class="h-16 w-16 rounded-full object-cover"
                                 />
 
                                 <div>
                                     <div
                                         class="flex justify-center gap-0.5 text-yellow-500"
                                     >
-                                        <StarIcon class="w-4 h-4" />
-                                        <StarIcon class="w-4 h-4 text-white" />
-                                        <StarIcon class="w-4 h-4 text-white" />
-                                        <StarIcon class="w-4 h-4 text-white" />
-                                        <StarIcon class="w-4 h-4 text-white" />
+                                        <StarIcon class="h-4 w-4" />
+                                        <StarIcon class="h-4 w-4 text-white" />
+                                        <StarIcon class="h-4 w-4 text-white" />
+                                        <StarIcon class="h-4 w-4 text-white" />
+                                        <StarIcon class="h-4 w-4 text-white" />
                                     </div>
 
                                     <p
@@ -1058,29 +1092,29 @@ onMounted(() => {
                             </div>
 
                             <p
-                                class="mt-4 text-gray-500 line-clamp-2 sm:line-clamp-none"
+                                class="mt-4 line-clamp-2 text-gray-500 sm:line-clamp-none"
                             >
                                 Très mauvaise expérience! A fuir!
                             </p>
                         </blockquote>
 
-                        <blockquote class="p-8 bg-gray-100 rounded-lg">
+                        <blockquote class="rounded-lg bg-gray-100 p-8">
                             <div class="flex items-center gap-4">
                                 <img
                                     alt="Man"
                                     src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
-                                    class="object-cover w-16 h-16 rounded-full"
+                                    class="h-16 w-16 rounded-full object-cover"
                                 />
 
                                 <div>
                                     <div
                                         class="flex justify-center gap-0.5 text-yellow-500"
                                     >
-                                        <StarIcon class="w-4 h-4" />
-                                        <StarIcon class="w-4 h-4" />
-                                        <StarIcon class="w-4 h-4" />
-                                        <StarIcon class="w-4 h-4" />
-                                        <StarIcon class="w-4 h-4" />
+                                        <StarIcon class="h-4 w-4" />
+                                        <StarIcon class="h-4 w-4" />
+                                        <StarIcon class="h-4 w-4" />
+                                        <StarIcon class="h-4 w-4" />
+                                        <StarIcon class="h-4 w-4" />
                                     </div>
 
                                     <p
@@ -1092,30 +1126,30 @@ onMounted(() => {
                             </div>
 
                             <p
-                                class="mt-4 text-gray-500 line-clamp-2 sm:line-clamp-none"
+                                class="mt-4 line-clamp-2 text-gray-500 sm:line-clamp-none"
                             >
                                 C'était à chier, mais je mets 5 étoiles pour le
                                 sourire de Roberta.
                             </p>
                         </blockquote>
 
-                        <blockquote class="p-8 bg-gray-100 rounded-lg">
+                        <blockquote class="rounded-lg bg-gray-100 p-8">
                             <div class="flex items-center gap-4">
                                 <img
                                     alt="Man"
                                     src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
-                                    class="object-cover w-16 h-16 rounded-full"
+                                    class="h-16 w-16 rounded-full object-cover"
                                 />
 
                                 <div>
                                     <div
                                         class="flex justify-center gap-0.5 text-yellow-500"
                                     >
-                                        <StarIcon class="w-4 h-4" />
-                                        <StarIcon class="w-4 h-4" />
-                                        <StarIcon class="w-4 h-4" />
-                                        <StarIcon class="w-4 h-4" />
-                                        <StarIcon class="w-4 h-4 text-white" />
+                                        <StarIcon class="h-4 w-4" />
+                                        <StarIcon class="h-4 w-4" />
+                                        <StarIcon class="h-4 w-4" />
+                                        <StarIcon class="h-4 w-4" />
+                                        <StarIcon class="h-4 w-4 text-white" />
                                     </div>
 
                                     <p
@@ -1127,7 +1161,7 @@ onMounted(() => {
                             </div>
 
                             <p
-                                class="mt-4 text-gray-500 line-clamp-2 sm:line-clamp-none"
+                                class="mt-4 line-clamp-2 text-gray-500 sm:line-clamp-none"
                             >
                                 C'était vraiment sensationnel.
                             </p>
@@ -1137,15 +1171,15 @@ onMounted(() => {
             </section>
             <section v-if="activiteSimilaires.length > 0" class="bg-white">
                 <div
-                    class="max-w-full px-4 py-16 mx-auto sm:px-6 sm:py-24 lg:px-8"
+                    class="mx-auto max-w-full px-4 py-16 sm:px-6 sm:py-24 lg:px-8"
                 >
                     <h2
-                        class="text-2xl font-semibold tracking-tight text-center text-gray-700 sm:text-3xl"
+                        class="text-center text-2xl font-semibold tracking-tight text-gray-700 sm:text-3xl"
                     >
                         Les activités similaires
                     </h2>
                     <div
-                        class="grid grid-cols-1 gap-4 mt-12 md:grid-cols-3 md:gap-8"
+                        class="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-8"
                     >
                         <ActiviteCard
                             v-for="activite in activiteSimilaires"

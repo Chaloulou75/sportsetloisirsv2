@@ -21,7 +21,7 @@ class CityDisciplineCategorieActiviteController extends Controller
 {
     public function show(City $city, ListDiscipline $discipline, $category, StructureActivite $activite, ?string $produit = null): Response
     {
-        $selectedProduit = StructureProduit::find(request()->produit);
+        $selectedProduit = StructureProduit::withRelations()->find(request()->produit);
 
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -76,8 +76,10 @@ class CityDisciplineCategorieActiviteController extends Controller
         $produits = $activite->produits()->withRelations()->get();
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
-                ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))
-                ->whereIn('categorie_id', $activite->structure->categories->pluck('categorie_id'))
+                ->where('discipline_id', $requestDiscipline->id)
+                ->where('categorie_id', $requestCategory->id)
+                ->where('visible_front', true)
+                ->where('visible_block', true)
                 ->get();
 
         $activiteSimilaires = StructureActivite::withRelations()->whereNot('id', $activite->id)

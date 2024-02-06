@@ -18,7 +18,7 @@ class DepartementActiviteController extends Controller
 {
     public function show(Departement $departement, StructureActivite $activite, ?string $produit = null): Response
     {
-        $selectedProduit = StructureProduit::find(request()->produit);
+        $selectedProduit = StructureProduit::withRelations()->find(request()->produit);
 
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -39,8 +39,10 @@ class DepartementActiviteController extends Controller
         $produits = $activite->produits()->withRelations()->get();
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
-                ->whereIn('discipline_id', $activite->structure->disciplines->pluck('discipline_id'))
-                ->whereIn('categorie_id', $activite->structure->categories->pluck('categorie_id'))
+                ->where('discipline_id', $activite->discipline_id)
+                ->where('categorie_id', $activite->categorie_id)
+                ->where('visible_front', true)
+                ->where('visible_block', true)
                 ->get();
 
         $activiteSimilaires = StructureActivite::withRelations()->whereNot('id', $activite->id)
