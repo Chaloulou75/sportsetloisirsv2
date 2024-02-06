@@ -84,50 +84,6 @@ const formatCurrency = (value) => {
                         }})
                     </li>
                 </ul>
-
-                <ul
-                    v-if="produit.criteres.length > 0"
-                    class="text-xs list-disc list-inside"
-                >
-                    <template
-                        v-for="critere in produit.criteres"
-                        :key="critere.id"
-                    >
-                        <template
-                            v-if="
-                                critere.valeur &&
-                                !!critere.critere.visible_block === true
-                            "
-                        >
-                            <li>
-                                {{ critere.critere.nom }}:
-                                <span class="font-semibold"
-                                    >{{ critere.valeur }}
-                                    <span
-                                        v-if="critere.sous_criteres.length > 0"
-                                        class="text-xs font-medium text-gray-600"
-                                    >
-                                        <span
-                                            v-for="sousCriteres in critere.sous_criteres"
-                                            :key="sousCriteres.id"
-                                        >
-                                            ({{ sousCriteres.valeur }})
-                                        </span>
-                                    </span>
-                                </span>
-                            </li>
-                        </template>
-                    </template>
-                </ul>
-
-                <div v-if="produit.cat_tarifs && produit.cat_tarifs.length > 0">
-                    <p class="mt-2 text-sm font-bold text-right text-green-700">
-                        <span class="text-xs font-medium text-gray-600"
-                            >à partir de</span
-                        >
-                        {{ formatCurrency(produit.minimum_amount) }}
-                    </p>
-                </div>
             </div>
         </div>
     </TransitionRoot>
