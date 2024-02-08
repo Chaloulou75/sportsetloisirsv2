@@ -23,7 +23,14 @@ import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import { HomeIcon, ArrowPathIcon } from "@heroicons/vue/24/outline";
 import { StarIcon } from "@heroicons/vue/24/solid";
-import { parse, isValid } from "date-fns";
+import {
+    parse,
+    isValid,
+    isSameDay,
+    set,
+    endOfMonth,
+    isWithinInterval,
+} from "date-fns";
 import { fr } from "date-fns/locale";
 dayjs.locale("fr");
 
@@ -95,56 +102,427 @@ const filterProducts = () => {
     } else {
         filteredProduits.value = props.produits.filter((produit) => {
             return (
-                selectedCriteres.value.every((selectedCritere) => {
-                    if (selectedCritere.inclus_all === true) {
+                selectedCriteres.value.every((selectedCritereEntry) => {
+                    const [critereId, selectedCritere] = selectedCritereEntry;
+                    const numericCritereId = parseInt(critereId);
+                    if (
+                        selectedCritere === null ||
+                        selectedCritere.inclus_all === true
+                    ) {
                         return true;
                     } else if (Array.isArray(selectedCritere)) {
                         return selectedCritere.some((critereInArray) => {
-                            return produit.criteres.some(
-                                (produitCritere) =>
-                                    !produitCritere.valeur_id ||
-                                    produitCritere.valeur_id ===
-                                        critereInArray.id
-                            );
+                            if (critereInArray === null) {
+                                return true;
+                            } else if (
+                                critereInArray !== null &&
+                                typeof critereInArray === "object" &&
+                                "month" in critereInArray &&
+                                "year" in critereInArray
+                            ) {
+                                // MONTHS
+                                const startMonth = selectedCritere[0]
+                                    ? new Date(
+                                          parseInt(selectedCritere[0].year),
+                                          selectedCritere[0].month,
+                                          1
+                                      )
+                                    : null;
+
+                                const endMonth = selectedCritere[1]
+                                    ? new Date(
+                                          parseInt(selectedCritere[1].year),
+                                          selectedCritere[1].month,
+                                          1
+                                      )
+                                    : null;
+                                if (startMonth && endMonth) {
+                                    return produit.criteres.some(
+                                        (produitCritere) => {
+                                            if (
+                                                numericCritereId ===
+                                                produitCritere.critere_id
+                                            ) {
+                                                const [
+                                                    startMonthStr,
+                                                    endMonthStr,
+                                                ] =
+                                                    produitCritere.valeur.split(
+                                                        " à "
+                                                    );
+
+                                                const prodStartMonth = parse(
+                                                    startMonthStr,
+                                                    "MMMM yyyy",
+                                                    new Date(),
+                                                    {
+                                                        locale: fr,
+                                                    }
+                                                );
+                                                const prodEndMonth = parse(
+                                                    endMonthStr,
+                                                    "MMMM yyyy",
+                                                    new Date(),
+                                                    {
+                                                        locale: fr,
+                                                    }
+                                                );
+
+                                                if (
+                                                    isValid(prodStartMonth) &&
+                                                    isValid(prodEndMonth)
+                                                ) {
+                                                    const lastDayProdEndMonth =
+                                                        endOfMonth(
+                                                            prodEndMonth
+                                                        );
+                                                    return (
+                                                        isWithinInterval(
+                                                            startMonth,
+                                                            {
+                                                                start: prodStartMonth,
+                                                                end: lastDayProdEndMonth,
+                                                            }
+                                                        ) &&
+                                                        isWithinInterval(
+                                                            endMonth,
+                                                            {
+                                                                start: prodStartMonth,
+                                                                end: lastDayProdEndMonth,
+                                                            }
+                                                        )
+                                                    );
+                                                } else {
+                                                    return false;
+                                                }
+                                            } else {
+                                                return false;
+                                            }
+                                        }
+                                    );
+                                } else {
+                                    return false;
+                                }
+                            } else if (
+                                critereInArray !== null &&
+                                Array.isArray(selectedCritere) &&
+                                selectedCritere.every(
+                                    (date) => date instanceof Date
+                                )
+                            ) {
+                                //DATES
+                                return produit.criteres.some(
+                                    (produitCritere) => {
+                                        if (
+                                            numericCritereId ===
+                                            produitCritere.critere_id
+                                        ) {
+                                            const [
+                                                startProdDateStr,
+                                                endProdDateStr,
+                                            ] =
+                                                produitCritere.valeur.split(
+                                                    " au "
+                                                );
+                                            const startProdDate = parse(
+                                                startProdDateStr,
+                                                "d MMMM yyyy",
+                                                new Date(),
+                                                { locale: fr }
+                                            );
+                                            const endProdDate = parse(
+                                                endProdDateStr,
+                                                "d MMMM yyyy",
+                                                new Date(),
+                                                { locale: fr }
+                                            );
+
+                                            if (
+                                                isValid(startProdDate) &&
+                                                isValid(endProdDate)
+                                            ) {
+                                                return selectedCritere.every(
+                                                    (selectedDate) => {
+                                                        return isWithinInterval(
+                                                            selectedDate,
+                                                            {
+                                                                start: startProdDate,
+                                                                end: endProdDate,
+                                                            }
+                                                        );
+                                                    }
+                                                );
+                                            } else {
+                                                return false;
+                                            }
+                                        }
+                                        return false;
+                                    }
+                                );
+                            } else if (
+                                Array.isArray(selectedCritere) &&
+                                selectedCritere.length === 2 &&
+                                selectedCritere.every(
+                                    (timeObj) =>
+                                        "hours" in timeObj &&
+                                        "minutes" in timeObj
+                                )
+                            ) {
+                                //TIMES
+                                return produit.criteres.some(
+                                    (produitCritere) => {
+                                        if (
+                                            numericCritereId ===
+                                            produitCritere.critere_id
+                                        ) {
+                                            const [startTimeObj, endTimeObj] =
+                                                selectedCritere;
+
+                                            // Create Date objects for the selected start and end times
+                                            const selectedStartTime = new Date(
+                                                0,
+                                                0,
+                                                0,
+                                                startTimeObj.hours,
+                                                startTimeObj.minutes
+                                            );
+                                            const selectedEndTime = new Date(
+                                                0,
+                                                0,
+                                                0,
+                                                endTimeObj.hours,
+                                                endTimeObj.minutes
+                                            );
+
+                                            const [startTimeStr, endTimeStr] =
+                                                produitCritere.valeur.split(
+                                                    " à "
+                                                );
+
+                                            // Parse start time
+                                            const [startHours, startMinutes] =
+                                                startTimeStr
+                                                    .split("h")
+                                                    .map(Number);
+                                            const produitStartTime = new Date(
+                                                0,
+                                                0,
+                                                0,
+                                                startHours,
+                                                startMinutes
+                                            );
+
+                                            // Parse end time
+                                            const [endHours, endMinutes] =
+                                                endTimeStr
+                                                    .split("h")
+                                                    .map(Number);
+                                            const produitEndTime = new Date(
+                                                0,
+                                                0,
+                                                0,
+                                                endHours,
+                                                endMinutes
+                                            );
+                                            // Check if the selected time range falls within the produit time range
+                                            if (
+                                                (selectedStartTime,
+                                                selectedEndTime,
+                                                produitStartTime,
+                                                produitEndTime)
+                                            ) {
+                                                return (
+                                                    isWithinInterval(
+                                                        selectedStartTime,
+                                                        {
+                                                            start: produitStartTime,
+                                                            end: produitEndTime,
+                                                        }
+                                                    ) &&
+                                                    isWithinInterval(
+                                                        selectedEndTime,
+                                                        {
+                                                            start: produitStartTime,
+                                                            end: produitEndTime,
+                                                        }
+                                                    )
+                                                );
+                                            } else {
+                                                return false;
+                                            }
+                                        } else {
+                                            return false;
+                                        }
+                                    }
+                                );
+                            } else {
+                                return produit.criteres.some(
+                                    (produitCritere) => {
+                                        const valeurIdExists =
+                                            produitCritere.hasOwnProperty(
+                                                "valeur_id"
+                                            );
+                                        if (
+                                            valeurIdExists &&
+                                            valeurIdExists !== null &&
+                                            numericCritereId ===
+                                                produitCritere.critere_id
+                                        ) {
+                                            return (
+                                                produitCritere.valeur_id ===
+                                                critereInArray.id
+                                            );
+                                        } else {
+                                            return false;
+                                        }
+                                    }
+                                );
+                            }
                         });
                     } else {
                         return produit.criteres.some((produitCritere) => {
-                            // Check if 'valeur_id' exists in produitCritere
                             const valeurIdExists =
-                                produitCritere.hasOwnProperty("valeur_id") &&
-                                produitCritere.valeur_id !== null;
+                                produitCritere.hasOwnProperty("valeur_id");
                             if (
-                                (valeurIdExists &&
-                                    produitCritere.valeur_id ===
-                                        selectedCritere.id) ||
-                                (produitCritere.critere_valeur &&
-                                    !!produitCritere.critere_valeur
-                                        .inclus_all === true)
+                                valeurIdExists &&
+                                valeurIdExists !== null &&
+                                numericCritereId === produitCritere.critere_id
                             ) {
-                                console.log("valeurIdExists", selectedCritere);
-                                return (
-                                    (valeurIdExists &&
-                                        produitCritere.valeur_id ===
-                                            selectedCritere.id) ||
-                                    (produitCritere.critere_valeur &&
-                                        produitCritere.critere_valeur
+                                if (
+                                    produitCritere.valeur_id ===
+                                        selectedCritere.id ||
+                                    (!!produitCritere.critere_valeur &&
+                                        !!produitCritere.critere_valeur
                                             .inclus_all === true)
-                                );
+                                ) {
+                                    return (
+                                        (valeurIdExists &&
+                                            produitCritere.valeur_id ===
+                                                selectedCritere.id) ||
+                                        (produitCritere.critere_valeur &&
+                                            produitCritere.critere_valeur
+                                                .inclus_all === true)
+                                    );
+                                } else if (
+                                    typeof selectedCritere === "object" &&
+                                    selectedCritere !== null &&
+                                    numericCritereId ===
+                                        produitCritere.critere_id
+                                ) {
+                                    //HORAIRE
+                                    if (
+                                        "hours" in selectedCritere &&
+                                        "minutes" in selectedCritere
+                                    ) {
+                                        const timeSelectedCritere = `${
+                                            selectedCritere.hours
+                                        }h${selectedCritere.minutes
+                                            .toString()
+                                            .padStart(2, "0")}`;
+                                        return (
+                                            produitCritere.valeur ===
+                                            timeSelectedCritere
+                                        );
+                                    } else if (
+                                        selectedCritere instanceof Date &&
+                                        numericCritereId ===
+                                            produitCritere.critere_id
+                                    ) {
+                                        // DATE
+                                        if (
+                                            produitCritere.critere
+                                                .type_champ_form === "date"
+                                        ) {
+                                            const produitDate = parse(
+                                                produitCritere.valeur,
+                                                "d MMMM yyyy",
+                                                new Date(),
+                                                { locale: fr }
+                                            );
+                                            if (isValid(produitDate)) {
+                                                return isSameDay(
+                                                    selectedCritere,
+                                                    produitDate
+                                                );
+                                            } else {
+                                                return false;
+                                            }
+                                        } else {
+                                            return false;
+                                        }
+                                    } else {
+                                        return false;
+                                    }
+                                } else if (
+                                    //NUMBER
+                                    typeof selectedCritere === "number" &&
+                                    selectedCritere !== null &&
+                                    numericCritereId ===
+                                        produitCritere.critere_id
+                                ) {
+                                    return (
+                                        produitCritere.valeur ===
+                                        selectedCritere
+                                    );
+                                } else if (
+                                    // STRING
+                                    typeof selectedCritere === "string" &&
+                                    selectedCritere !== null &&
+                                    produitCritere.valeur !== null &&
+                                    numericCritereId ===
+                                        produitCritere.critere_id
+                                ) {
+                                    return (
+                                        produitCritere.valeur ===
+                                        selectedCritere
+                                    );
+                                } else {
+                                    return false;
+                                }
                             } else {
-                                return true;
+                                return false;
                             }
                         });
                     }
                 }) &&
-                selectedSousCriteres.value.every((selectedSousCritere) => {
+                selectedSousCriteres.value.every((selectedSousCritereEntry) => {
+                    const [sousCritereId, selectedSousCritere] =
+                        selectedSousCritereEntry;
+                    const numericSousCritereId = parseInt(sousCritereId);
                     return produit.criteres.some((produitCritere) => {
                         return (
                             produitCritere.sous_criteres &&
-                            produitCritere.sous_criteres.some(
-                                (sousCritere) =>
-                                    sousCritere.sous_critere_valeur_id ===
-                                    selectedSousCritere.id
-                            )
+                            produitCritere.sous_criteres.some((sousCritere) => {
+                                if (
+                                    typeof selectedSousCritere === "number" &&
+                                    selectedSousCritere !== null &&
+                                    numericSousCritereId ===
+                                        sousCritere.sous_critere_id
+                                ) {
+                                    return (
+                                        produitCritere.valeur ===
+                                        selectedSousCritere
+                                    );
+                                } else if (
+                                    typeof selectedSousCritere === "string" &&
+                                    selectedSousCritere !== null &&
+                                    selectedSousCritere.trim() !== "" &&
+                                    numericSousCritereId ===
+                                        sousCritere.sous_critere_id
+                                ) {
+                                    return true;
+                                } else if (
+                                    numericSousCritereId ===
+                                    sousCritere.sous_critere_id
+                                ) {
+                                    return (
+                                        sousCritere.sous_critere_valeur_id ===
+                                        selectedSousCritere.id
+                                    );
+                                } else {
+                                    return false;
+                                }
+                            })
                         );
                     });
                 })
@@ -156,7 +534,7 @@ const filterProducts = () => {
 watch(
     () => critereForm.value.criteres,
     (newCriteres) => {
-        selectedCriteres.value = Object.values(newCriteres).filter(Boolean);
+        selectedCriteres.value = Object.entries(newCriteres);
         filterProducts();
     },
     { deep: true }
@@ -165,8 +543,7 @@ watch(
 watch(
     () => critereForm.value.souscriteres,
     (newSousCriteres) => {
-        selectedSousCriteres.value =
-            Object.values(newSousCriteres).filter(Boolean);
+        selectedSousCriteres.value = Object.entries(newSousCriteres);
         filterProducts();
     },
     { deep: true }
@@ -498,18 +875,18 @@ onMounted(() => {
                 />
             </div>
 
-            <section class="max-w-full px-0 py-6 mx-auto my-4 sm:px-4 lg:px-8">
+            <section class="mx-auto my-4 max-w-full px-0 py-6 sm:px-4 lg:px-8">
                 <div
-                    class="flex flex-col justify-between px-4 py-6 bg-white rounded-lg shadow text-slate-600 md:flex-row md:items-start md:space-x-6"
+                    class="flex flex-col justify-between rounded-lg bg-white px-4 py-6 text-slate-600 shadow md:flex-row md:items-start md:space-x-6"
                 >
                     <div class="w-full">
                         <div class="relative space-y-12">
                             <!-- titre -->
                             <div
-                                class="flex items-center justify-start my-4 space-x-4"
+                                class="my-4 flex items-center justify-start space-x-4"
                             >
                                 <h1
-                                    class="inline-block w-full text-xl font-semibold text-center sm:text-2xl sm:leading-7 md:text-3xl"
+                                    class="inline-block w-full text-center text-xl font-semibold sm:text-2xl sm:leading-7 md:text-3xl"
                                 >
                                     Page en refonte:
                                     {{ activite.titre }}
@@ -519,7 +896,7 @@ onMounted(() => {
                             <div>
                                 <p
                                     v-if="activite.description"
-                                    class="text-base font-medium leading-5 text-gray-700 whitespace-pre-line"
+                                    class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
                                 >
                                     {{ activite.description }}
                                 </p>
@@ -527,13 +904,13 @@ onMounted(() => {
                                     v-else-if="
                                         activite.structure.presentation_longue
                                     "
-                                    class="text-base font-medium leading-5 text-gray-700 whitespace-pre-line"
+                                    class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
                                 >
                                     {{ activite.structure.presentation_longue }}
                                 </p>
                                 <p
                                     v-else
-                                    class="text-base font-medium leading-5 text-gray-700 whitespace-pre-line"
+                                    class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
                                 >
                                     {{ activite.structure.presentation_courte }}
                                 </p>
@@ -546,7 +923,7 @@ onMounted(() => {
                                 <ul>
                                     <li
                                         v-for="instructeur in activite.instructeurs"
-                                        class="text-base font-semibold text-gray-600 list-disc list-inside"
+                                        class="list-inside list-disc text-base font-semibold text-gray-600"
                                     >
                                         {{ instructeur.pivot.contact }} -
                                         {{ instructeur.pivot.email }}
@@ -554,26 +931,26 @@ onMounted(() => {
                                 </ul>
                             </div>
                             <div
-                                class="flex items-center justify-between w-full"
+                                class="flex w-full items-center justify-between"
                             >
                                 <h3 class="text-xl text-gray-700">
                                     Selectionner une formule en fonction de vos
                                     critères:
                                 </h3>
                                 <button
-                                    class="flex justify-center w-full md:w-auto"
+                                    class="flex w-full justify-center md:w-auto"
                                     type="button"
                                     @click="resetFormCriteres"
                                 >
                                     <ArrowPathIcon
-                                        class="w-6 h-6 text-gray-500 transition duration-200 hover:-rotate-90 hover:text-gray-700 md:h-8 md:w-8"
+                                        class="h-6 w-6 text-gray-500 transition duration-200 hover:-rotate-90 hover:text-gray-700 md:h-8 md:w-8"
                                     />
                                 </button>
                             </div>
 
                             <div
                                 v-if="criteres.length > 0"
-                                class="grid w-full grid-cols-1 gap-4 p-2 mx-auto shadow bg-gray-50 md:grid-cols-3"
+                                class="mx-auto grid w-full grid-cols-1 gap-4 bg-gray-50 p-2 shadow md:grid-cols-3"
                             >
                                 <div
                                     v-for="critere in criteres"
@@ -641,7 +1018,7 @@ onMounted(() => {
                                         >
                                             {{ critere.nom }}
                                         </label>
-                                        <div class="flex mt-1 rounded-md">
+                                        <div class="mt-1 flex rounded-md">
                                             <TextInput
                                                 type="text"
                                                 v-model="
@@ -651,7 +1028,7 @@ onMounted(() => {
                                                 "
                                                 :name="critere.nom"
                                                 :id="critere.nom"
-                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                 placeholder=""
                                                 autocomplete="none"
                                             />
@@ -671,7 +1048,7 @@ onMounted(() => {
                                         >
                                             {{ critere.nom }}
                                         </label>
-                                        <div class="flex mt-1 rounded-md">
+                                        <div class="mt-1 flex rounded-md">
                                             <TextInput
                                                 type="number"
                                                 v-model="
@@ -681,7 +1058,7 @@ onMounted(() => {
                                                 "
                                                 :name="critere.nom"
                                                 :id="critere.nom"
-                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                 placeholder=""
                                                 autocomplete="none"
                                             />
@@ -693,7 +1070,7 @@ onMounted(() => {
                                         v-if="
                                             critere.type_champ_form === 'time'
                                         "
-                                        class="flex flex-col items-start max-w-sm space-y-3"
+                                        class="flex max-w-sm flex-col items-start space-y-3"
                                     >
                                         <SingleTimeForm
                                             class="w-full"
@@ -709,7 +1086,7 @@ onMounted(() => {
                                         v-if="
                                             critere.type_champ_form === 'times'
                                         "
-                                        class="flex flex-col items-start max-w-sm space-y-3"
+                                        class="flex max-w-sm flex-col items-start space-y-3"
                                     >
                                         <OpenTimesForm
                                             class="w-full"
@@ -725,7 +1102,7 @@ onMounted(() => {
                                         v-if="
                                             critere.type_champ_form === 'date'
                                         "
-                                        class="flex flex-col items-start max-w-sm space-y-3"
+                                        class="flex max-w-sm flex-col items-start space-y-3"
                                     >
                                         <SingleDateForm
                                             class="w-full"
@@ -741,7 +1118,7 @@ onMounted(() => {
                                         v-if="
                                             critere.type_champ_form === 'dates'
                                         "
-                                        class="flex flex-col items-start max-w-sm space-y-3"
+                                        class="flex max-w-sm flex-col items-start space-y-3"
                                     >
                                         <OpenDaysForm
                                             class="w-full"
@@ -759,7 +1136,7 @@ onMounted(() => {
                                         "
                                     >
                                         <div
-                                            class="flex flex-col items-start max-w-sm space-y-3"
+                                            class="flex max-w-sm flex-col items-start space-y-3"
                                         >
                                             <OpenMonthsForm
                                                 class="w-full"
@@ -778,7 +1155,7 @@ onMounted(() => {
                                         v-if="
                                             critere.type_champ_form === 'rayon'
                                         "
-                                        class="flex flex-col items-start w-full max-w-sm space-y-3"
+                                        class="flex w-full max-w-sm flex-col items-start space-y-3"
                                     >
                                         <RangeInputForm
                                             class="w-full max-w-sm"
@@ -897,7 +1274,7 @@ onMounted(() => {
                             </div>
                             <div
                                 ref="listToAnimate"
-                                class="grid h-auto grid-cols-1 gap-4 place-content-stretch place-items-stretch lg:grid-cols-2"
+                                class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
                             >
                                 <ProduitFormuleCard
                                     v-for="produit in filteredProduits"
@@ -912,34 +1289,34 @@ onMounted(() => {
             </section>
             <section class="bg-white">
                 <div
-                    class="max-w-full px-4 py-16 mx-auto sm:px-6 sm:py-24 lg:px-8"
+                    class="mx-auto max-w-full px-4 py-16 sm:px-6 sm:py-24 lg:px-8"
                 >
                     <h2
-                        class="text-2xl font-semibold tracking-tight text-center text-gray-700 sm:text-3xl"
+                        class="text-center text-2xl font-semibold tracking-tight text-gray-700 sm:text-3xl"
                     >
                         Les derniers avis sur cette activité
                     </h2>
 
                     <div
-                        class="grid grid-cols-1 gap-4 mt-12 md:grid-cols-3 md:gap-8"
+                        class="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-8"
                     >
-                        <blockquote class="p-8 bg-gray-100 rounded-lg">
+                        <blockquote class="rounded-lg bg-gray-100 p-8">
                             <div class="flex items-center gap-4">
                                 <img
                                     alt="Man"
                                     src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
-                                    class="object-cover w-16 h-16 rounded-full"
+                                    class="h-16 w-16 rounded-full object-cover"
                                 />
 
                                 <div>
                                     <div
                                         class="flex justify-center gap-0.5 text-yellow-500"
                                     >
-                                        <StarIcon class="w-4 h-4" />
-                                        <StarIcon class="w-4 h-4 text-white" />
-                                        <StarIcon class="w-4 h-4 text-white" />
-                                        <StarIcon class="w-4 h-4 text-white" />
-                                        <StarIcon class="w-4 h-4 text-white" />
+                                        <StarIcon class="h-4 w-4" />
+                                        <StarIcon class="h-4 w-4 text-white" />
+                                        <StarIcon class="h-4 w-4 text-white" />
+                                        <StarIcon class="h-4 w-4 text-white" />
+                                        <StarIcon class="h-4 w-4 text-white" />
                                     </div>
 
                                     <p
@@ -951,29 +1328,29 @@ onMounted(() => {
                             </div>
 
                             <p
-                                class="mt-4 text-gray-500 line-clamp-2 sm:line-clamp-none"
+                                class="mt-4 line-clamp-2 text-gray-500 sm:line-clamp-none"
                             >
                                 Très mauvaise expérience! A fuir!
                             </p>
                         </blockquote>
 
-                        <blockquote class="p-8 bg-gray-100 rounded-lg">
+                        <blockquote class="rounded-lg bg-gray-100 p-8">
                             <div class="flex items-center gap-4">
                                 <img
                                     alt="Man"
                                     src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
-                                    class="object-cover w-16 h-16 rounded-full"
+                                    class="h-16 w-16 rounded-full object-cover"
                                 />
 
                                 <div>
                                     <div
                                         class="flex justify-center gap-0.5 text-yellow-500"
                                     >
-                                        <StarIcon class="w-4 h-4" />
-                                        <StarIcon class="w-4 h-4" />
-                                        <StarIcon class="w-4 h-4" />
-                                        <StarIcon class="w-4 h-4" />
-                                        <StarIcon class="w-4 h-4" />
+                                        <StarIcon class="h-4 w-4" />
+                                        <StarIcon class="h-4 w-4" />
+                                        <StarIcon class="h-4 w-4" />
+                                        <StarIcon class="h-4 w-4" />
+                                        <StarIcon class="h-4 w-4" />
                                     </div>
 
                                     <p
@@ -985,30 +1362,30 @@ onMounted(() => {
                             </div>
 
                             <p
-                                class="mt-4 text-gray-500 line-clamp-2 sm:line-clamp-none"
+                                class="mt-4 line-clamp-2 text-gray-500 sm:line-clamp-none"
                             >
                                 C'était à chier, mais je mets 5 étoiles pour le
                                 sourire de Roberta.
                             </p>
                         </blockquote>
 
-                        <blockquote class="p-8 bg-gray-100 rounded-lg">
+                        <blockquote class="rounded-lg bg-gray-100 p-8">
                             <div class="flex items-center gap-4">
                                 <img
                                     alt="Man"
                                     src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
-                                    class="object-cover w-16 h-16 rounded-full"
+                                    class="h-16 w-16 rounded-full object-cover"
                                 />
 
                                 <div>
                                     <div
                                         class="flex justify-center gap-0.5 text-yellow-500"
                                     >
-                                        <StarIcon class="w-4 h-4" />
-                                        <StarIcon class="w-4 h-4" />
-                                        <StarIcon class="w-4 h-4" />
-                                        <StarIcon class="w-4 h-4" />
-                                        <StarIcon class="w-4 h-4 text-white" />
+                                        <StarIcon class="h-4 w-4" />
+                                        <StarIcon class="h-4 w-4" />
+                                        <StarIcon class="h-4 w-4" />
+                                        <StarIcon class="h-4 w-4" />
+                                        <StarIcon class="h-4 w-4 text-white" />
                                     </div>
 
                                     <p
@@ -1020,7 +1397,7 @@ onMounted(() => {
                             </div>
 
                             <p
-                                class="mt-4 text-gray-500 line-clamp-2 sm:line-clamp-none"
+                                class="mt-4 line-clamp-2 text-gray-500 sm:line-clamp-none"
                             >
                                 C'était vraiment sensationnel.
                             </p>
@@ -1030,15 +1407,15 @@ onMounted(() => {
             </section>
             <section v-if="activiteSimilaires.length > 0" class="bg-white">
                 <div
-                    class="max-w-full px-4 py-16 mx-auto sm:px-6 sm:py-24 lg:px-8"
+                    class="mx-auto max-w-full px-4 py-16 sm:px-6 sm:py-24 lg:px-8"
                 >
                     <h2
-                        class="text-2xl font-semibold tracking-tight text-center text-gray-700 sm:text-3xl"
+                        class="text-center text-2xl font-semibold tracking-tight text-gray-700 sm:text-3xl"
                     >
                         Les activités similaires
                     </h2>
                     <div
-                        class="grid grid-cols-1 gap-4 mt-12 md:grid-cols-3 md:gap-8"
+                        class="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-8"
                     >
                         <ActiviteCard
                             v-for="activite in activiteSimilaires"
