@@ -19,7 +19,7 @@ use App\Models\LienDisciplineCategorieCritere;
 
 class DepartementDisciplineStructuretypeActiviteController extends Controller
 {
-    public function show(Departement $departement, ListDiscipline $discipline,StructureType $structuretype, StructureActivite $activite, ?string $produit = null): Response
+    public function show(Departement $departement, ListDiscipline $discipline, StructureType $structuretype, StructureActivite $activite, ?string $produit = null): Response
     {
         $selectedProduit = StructureProduit::withRelations()->find(request()->produit);
 
@@ -70,7 +70,6 @@ class DepartementDisciplineStructuretypeActiviteController extends Controller
                 ->where('discipline_id', $requestDiscipline->id)
                 ->where('categorie_id', $activite->categorie_id)
                 ->where('visible_front', true)
-                ->where('visible_block', true)
                 ->get();
 
         $activiteSimilaires = StructureActivite::withRelations()->whereNot('id', $activite->id)

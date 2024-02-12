@@ -74,7 +74,6 @@ class CityDisciplineActiviteController extends Controller
                 ->where('discipline_id', $requestDiscipline->id)
                 ->where('categorie_id', $activite->categorie_id)
                 ->where('visible_front', true)
-                ->where('visible_block', true)
                 ->get();
 
         $activiteSimilaires = StructureActivite::withRelations()->whereNot('id', $activite->id)
