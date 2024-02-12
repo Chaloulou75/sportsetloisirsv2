@@ -835,18 +835,17 @@ const resetFormCriteres = () => {
 };
 
 const reservationForm = useForm({
-    produit: null,
+    produit: props.selectedProduit.id ?? null,
     formule: null,
     planning: null,
     remember: false,
 });
 
 const submitReservation = () => {
-    reservationForm.post("/product_reservations", {
+    reservationForm.post(route("reservations.store"), {
         preserveScroll: true,
         onSuccess: () => {
             reservationForm.reset();
-            displayPlanning.value = false;
         },
     });
 };
@@ -1298,17 +1297,20 @@ onMounted(() => {
                                     </div>
                                 </div>
                             </div>
-                            <div
-                                ref="listToAnimate"
-                                class="grid h-auto grid-cols-1 gap-4 place-content-stretch place-items-stretch lg:grid-cols-2"
-                            >
-                                <ProduitFormuleCard
-                                    v-for="produit in filteredProduits"
-                                    :key="produit.id"
-                                    :produit="produit"
-                                    :discipline="produit.discipline"
-                                />
-                            </div>
+                            <form @submit.prevent="submitReservation()">
+                                <div
+                                    ref="listToAnimate"
+                                    class="grid h-auto grid-cols-1 gap-4 place-content-stretch place-items-stretch lg:grid-cols-2"
+                                >
+                                    <ProduitFormuleCard
+                                        v-for="produit in filteredProduits"
+                                        :key="produit.id"
+                                        v-model="reservationForm.produit"
+                                        :produit="produit"
+                                        :discipline="produit.discipline"
+                                    />
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

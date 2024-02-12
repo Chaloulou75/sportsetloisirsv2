@@ -178,6 +178,7 @@ class ProductReservationController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        dd($request->all());
         request()->validate([
             'produit' => ['required', Rule::exists('structures_produits', 'id')],
             'formule' => ['required', Rule::exists('structures_tarifs', 'id')],
@@ -269,7 +270,7 @@ class ProductReservationController extends Controller
             ]);
             return to_route('structures.gestion.reservations.index', $structure)->with('success', 'Réservation refusée.');
 
-        // email refusée
+            // email refusée
         } elseif($request->status === "finished") {
             $code = $reservation->code;
 

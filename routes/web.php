@@ -105,9 +105,8 @@ Route::get('/activites-{activite}', [ActiviteController::class, 'show'])->name('
 // Departements routes
 require __DIR__ . '/departement.php';
 
-Route::resource('product_reservations', ProductReservationController::class)->only([
-    'store'
-]);
+Route::post('/reservations', [ProductReservationController::class, 'store'])->name('reservations.store');
+
 
 Route::middleware(['auth', 'verified'])->group(function () {
     //blog create, conflits routes avec slug && disciplines

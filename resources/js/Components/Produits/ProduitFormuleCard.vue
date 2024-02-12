@@ -1,9 +1,7 @@
 <script setup>
-import { ref, nextTick, watch, onMounted, computed } from "vue";
-import { useCookies } from "@vueuse/integrations/useCookies";
+import { ref, computed } from "vue";
 import { classMapping } from "@/Utils/classMapping.js";
 import { MapPinIcon } from "@heroicons/vue/24/outline";
-import { HeartIcon } from "@heroicons/vue/24/solid";
 import { TransitionRoot } from "@headlessui/vue";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
@@ -11,12 +9,14 @@ import localeData from "dayjs/plugin/localeData";
 dayjs.locale("fr");
 dayjs.extend(localeData);
 
-const emit = defineEmits(["card-hover", "card-out"]);
+const model = defineModel();
 
 const props = defineProps({
     produit: Object,
     discipline: Object,
 });
+
+const isSelected = computed(() => props.produit.id === model.value);
 
 const isShowing = ref(true);
 
@@ -60,11 +60,20 @@ const formatCurrency = (value) => {
     >
         <div
             class="flex flex-col h-full transition duration-300 ease-in-out rounded-lg shadow-sm shadow-indigo-200 hover:shadow-2xl md:px-0"
+            :class="{ 'ring-2 ring-blue-500 ring-offset-2': isSelected }"
         >
             <div
                 class="relative w-full h-56 bg-center bg-no-repeat bg-cover rounded-md bg-slate-100/20 bg-blend-soft-light"
                 :class="headerClass"
-            ></div>
+            >
+                <input
+                    class="absolute z-30 p-2 bg-white rounded-full right-3 top-3"
+                    type="radio"
+                    :id="produit.id"
+                    :value="produit.id"
+                    v-model="model"
+                />
+            </div>
 
             <div class="flex flex-col flex-1 mt-2">
                 <div
@@ -167,6 +176,63 @@ const formatCurrency = (value) => {
                     </template>
                 </div>
             </div>
+            <template v-if="isSelected && produit.cat_tarifs.length > 0">
+                <ul v-for="catTarif in produit.cat_tarifs" :key="catTarif.id">
+                    <li>{{ catTarif.cat_tarif_type.nom }}</li>
+                    <li>{{ catTarif.titre }}</li>
+                    <li>{{ catTarif.description }}</li>
+                    <template v-if="catTarif.attributs">
+                        <ul class="list-disc list-inside">
+                            <li
+                                v-for="attribut in catTarif.attributs"
+                                :key="attribut.id"
+                                class="mb-2"
+                            >
+                                <span>
+                                    {{ attribut.tarif_attribut.nom }}:
+                                    <span class="font-semibold">{{
+                                        attribut.valeur
+                                    }}</span></span
+                                >
+                                <template v-if="attribut.sous_attributs">
+                                    <ul class="list-disc list-inside">
+                                        <li
+                                            v-for="sousattr in attribut.sous_attributs"
+                                            :key="sousattr.id"
+                                            class="pl-4"
+                                        >
+                                            <span
+                                                v-if="
+                                                    sousattr.sous_attribut_valeur
+                                                "
+                                            >
+                                                {{
+                                                    sousattr.sous_attribut.nom
+                                                }}:
+                                                <span class="font-semibold">{{
+                                                    sousattr
+                                                        .sous_attribut_valeur
+                                                        .valeur
+                                                }}</span>
+                                            </span>
+                                            <span v-else
+                                                >{{
+                                                    sousattr.sous_attribut.nom
+                                                }}:
+                                                <span class="font-semibold">{{
+                                                    sousattr.valeur
+                                                }}</span>
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </template>
+                            </li>
+                        </ul>
+                    </template>
+
+                    <li>{{ formatCurrency(catTarif.amount) }}</li>
+                </ul>
+            </template>
         </div>
     </TransitionRoot>
 </template>
