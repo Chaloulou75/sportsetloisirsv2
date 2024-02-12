@@ -14,6 +14,11 @@ import SelectForm from "@/Components/Forms/SelectForm.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
 import InputLabel from "@/Components/Forms/InputLabel.vue";
 import RangeInputForm from "@/Components/Forms/RangeInputForm.vue";
+import OpenDaysForm from "@/Components/Forms/DayTime/OpenDaysForm.vue";
+import SingleDateForm from "@/Components/Forms/DayTime/SingleDateForm.vue";
+import SingleTimeForm from "@/Components/Forms/DayTime/SingleTimeForm.vue";
+import OpenTimesForm from "@/Components/Forms/DayTime/OpenTimesForm.vue";
+import OpenMonthsForm from "@/Components/Forms/DayTime/OpenMonthsForm.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
 import autoAnimate from "@formkit/auto-animate";
@@ -33,7 +38,6 @@ import {
     parse,
     isValid,
     isSameDay,
-    set,
     endOfMonth,
     isWithinInterval,
 } from "date-fns";
@@ -822,7 +826,7 @@ onMounted(() => {
 
                 <div
                     v-if="criteres"
-                    class="flex-col items-start justify-center w-full px-2 py-2 mx-auto space-x-0 space-y-2 bg-transparent rounded backdrop-blur-md md:flex-row md:items-center md:space-x-6 md:space-y-0 md:px-6"
+                    class="flex-col items-start justify-center w-full gap-4 px-2 py-2 mx-auto overflow-x-auto bg-transparent rounded backdrop-blur-md md:flex-row md:items-center md:justify-between md:space-y-0 md:px-6"
                     :class="{
                         flex: showCriteres,
                         hidden: !showCriteres,
@@ -833,11 +837,11 @@ onMounted(() => {
                     <div
                         v-for="critere in filteredCriteresByChamp"
                         :key="critere.id"
-                        class="w-full max-w-full md:w-auto"
+                        class="w-full max-w-sm shrink-0 md:w-auto"
                     >
                         <!-- select -->
                         <SelectForm
-                            :classes="'flex items-center space-x-4'"
+                            :classes="'flex items-center space-x-2'"
                             class="max-w-sm"
                             v-if="critere.type_champ_form === 'select'"
                             :name="critere.nom"
@@ -847,7 +851,7 @@ onMounted(() => {
 
                         <!-- checkbox -->
                         <CheckboxForm
-                            :classes="'flex items-center space-x-4'"
+                            :classes="'flex items-center space-x-2'"
                             class="max-w-sm"
                             v-if="critere.type_champ_form === 'checkbox'"
                             :critere="critere"
@@ -861,7 +865,7 @@ onMounted(() => {
                         />
                         <!-- radio -->
                         <div v-if="critere.type_champ_form === 'radio'">
-                            <div class="flex items-center space-x-4">
+                            <div class="flex items-center space-x-2">
                                 <label
                                     :for="critere.nom"
                                     class="block text-sm font-medium text-gray-700"
@@ -901,7 +905,7 @@ onMounted(() => {
                         <!-- input text -->
                         <div
                             v-if="critere.type_champ_form === 'text'"
-                            class="flex items-center space-x-4"
+                            class="flex items-center space-x-2"
                         >
                             <label
                                 :for="critere.nom"
@@ -921,7 +925,7 @@ onMounted(() => {
                         <!-- input Number -->
                         <div
                             v-if="critere.type_champ_form === 'number'"
-                            class="flex items-center space-x-4"
+                            class="flex items-center space-x-2"
                         >
                             <label
                                 :for="critere.nom"
@@ -946,6 +950,66 @@ onMounted(() => {
                             :name="critere.nom"
                             :metric="`Km`"
                         />
+                        <!-- Heure seule -->
+                        <div
+                            v-if="critere.type_champ_form === 'time'"
+                            class="flex flex-col items-start max-w-sm"
+                        >
+                            <SingleTimeForm
+                                class="w-full"
+                                v-model="formCriteres.criteres[critere.id]"
+                                :name="critere.nom"
+                            />
+                        </div>
+
+                        <!-- Heures x2 ouverture / fermeture -->
+                        <div
+                            v-if="critere.type_champ_form === 'times'"
+                            class="flex flex-col items-start max-w-sm space-y-3"
+                        >
+                            <OpenTimesForm
+                                class="w-full"
+                                v-model="formCriteres.criteres[critere.id]"
+                                :name="critere.nom"
+                            />
+                        </div>
+
+                        <!-- Date seule -->
+                        <div
+                            v-if="critere.type_champ_form === 'date'"
+                            class="flex flex-col items-start max-w-sm space-y-3"
+                        >
+                            <SingleDateForm
+                                class="w-full"
+                                v-model="formCriteres.criteres[critere.id]"
+                                :name="critere.nom"
+                            />
+                        </div>
+
+                        <!-- Dates x 2 -->
+                        <div
+                            v-if="critere.type_champ_form === 'dates'"
+                            class="flex flex-col items-start max-w-sm space-y-3"
+                        >
+                            <OpenDaysForm
+                                class="w-full"
+                                v-model="formCriteres.criteres[critere.id]"
+                                :name="critere.nom"
+                            />
+                        </div>
+
+                        <!-- Mois -->
+                        <div v-if="critere.type_champ_form === 'mois'">
+                            <div
+                                class="flex flex-col items-start max-w-sm space-y-3"
+                            >
+                                <OpenMonthsForm
+                                    class="w-full"
+                                    v-model="formCriteres.criteres[critere.id]"
+                                    :name="critere.nom"
+                                />
+                            </div>
+                        </div>
 
                         <!-- sous criteres -->
                         <div v-for="valeur in critere.valeurs" :key="valeur.id">

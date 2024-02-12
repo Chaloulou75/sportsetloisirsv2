@@ -852,7 +852,7 @@ onMounted(() => {
                 </div>
                 <div
                     v-if="criteres"
-                    class="flex-col items-start justify-center w-full px-2 py-2 mx-auto space-x-0 space-y-2 bg-transparent rounded backdrop-blur-md md:flex-row md:items-center md:space-x-6 md:space-y-0 md:px-6"
+                    class="flex-col items-start justify-center w-full px-2 py-2 mx-auto space-x-0 space-y-2 bg-transparent rounded backdrop-blur-md md:flex-row md:items-center md:justify-start md:space-x-6 md:space-y-0 md:px-6"
                     :class="{
                         flex: showCriteres,
                         hidden: !showCriteres,
@@ -863,7 +863,7 @@ onMounted(() => {
                     <div
                         v-for="critere in filteredCriteresByChamp"
                         :key="critere.id"
-                        class="w-full max-w-full md:w-auto"
+                        class="w-full max-w-full shrink-0 md:w-auto"
                     >
                         <!-- select -->
                         <SelectForm

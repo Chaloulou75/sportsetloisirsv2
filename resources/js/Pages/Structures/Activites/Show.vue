@@ -1,6 +1,6 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
+import { Head, useForm } from "@inertiajs/vue3";
 import { ref, computed, watch, onMounted } from "vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
@@ -21,13 +21,12 @@ import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import autoAnimate from "@formkit/auto-animate";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
-import { HomeIcon, ArrowPathIcon } from "@heroicons/vue/24/outline";
+import { ArrowPathIcon } from "@heroicons/vue/24/outline";
 import { StarIcon } from "@heroicons/vue/24/solid";
 import {
     parse,
     isValid,
     isSameDay,
-    set,
     endOfMonth,
     isWithinInterval,
 } from "date-fns";

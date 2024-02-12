@@ -1,8 +1,12 @@
 <script setup>
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import { ref, onMounted } from "vue";
+import { usePage } from "@inertiajs/vue3";
+import { ref, onMounted, computed } from "vue";
 import { TransitionRoot } from "@headlessui/vue";
+
+const page = usePage();
+const currentComponent = computed(() => page.component);
 
 const model = defineModel();
 const props = defineProps({
