@@ -27,6 +27,16 @@ import {
     XMarkIcon,
 } from "@heroicons/vue/24/outline";
 import { useElementVisibility } from "@vueuse/core";
+import {
+    parse,
+    isValid,
+    isSameDay,
+    set,
+    endOfMonth,
+    isWithinInterval,
+} from "date-fns";
+import { fr } from "date-fns/locale";
+dayjs.locale("fr");
 
 const props = defineProps({
     familles: Object,
@@ -519,11 +529,11 @@ const filterProducts = () => {
                                         "hours" in selectedCritere &&
                                         "minutes" in selectedCritere
                                     ) {
-                                        const timeSelectedCritere = `${
+                                        const timeSelectedCritere = `${String(
                                             selectedCritere.hours
-                                        }h${selectedCritere.minutes
-                                            .toString()
-                                            .padStart(2, "0")}`;
+                                        ).padStart(2, "0")}h${String(
+                                            selectedCritere.minutes
+                                        ).padStart(2, "0")}`;
                                         return (
                                             produitCritere.valeur ===
                                             timeSelectedCritere
@@ -559,28 +569,38 @@ const filterProducts = () => {
                                         return false;
                                     }
                                 } else if (
-                                    //NUMBER
                                     typeof selectedCritere === "number" &&
-                                    selectedCritere !== null &&
-                                    numericCritereId ===
-                                        produitCritere.critere_id
+                                    selectedCritere !== null
                                 ) {
-                                    return (
-                                        produitCritere.valeur ===
-                                        selectedCritere
+                                    // NUMBER
+                                    const prodValeurAsNumber = parseFloat(
+                                        produitCritere.valeur
                                     );
+                                    if (!isNaN(prodValeurAsNumber)) {
+                                        return (
+                                            numericCritereId ===
+                                                produitCritere.critere_id &&
+                                            prodValeurAsNumber ===
+                                                selectedCritere
+                                        );
+                                    } else {
+                                        return false;
+                                    }
                                 } else if (
-                                    // STRING
                                     typeof selectedCritere === "string" &&
-                                    selectedCritere !== null &&
-                                    produitCritere.valeur !== null &&
-                                    numericCritereId ===
-                                        produitCritere.critere_id
+                                    selectedCritere !== null
                                 ) {
-                                    return (
-                                        produitCritere.valeur ===
-                                        selectedCritere
-                                    );
+                                    if (selectedCritere.trim() === "") {
+                                        return true;
+                                    } else {
+                                        return (
+                                            numericCritereId ===
+                                                produitCritere.critere_id &&
+                                            produitCritere.valeur !== null &&
+                                            produitCritere.valeur ===
+                                                selectedCritere
+                                        );
+                                    }
                                 } else {
                                     return false;
                                 }
@@ -604,20 +624,34 @@ const filterProducts = () => {
                                     numericSousCritereId ===
                                         sousCritere.sous_critere_id
                                 ) {
-                                    return (
-                                        produitCritere.valeur ===
-                                        selectedSousCritere
+                                    const prodValeurAsNumber = parseFloat(
+                                        sousCritere.valeur
                                     );
+                                    if (!isNaN(prodValeurAsNumber)) {
+                                        return (
+                                            numericSousCritereId ===
+                                                sousCritere.sous_critere_id &&
+                                            prodValeurAsNumber ===
+                                                selectedSousCritere
+                                        );
+                                    } else {
+                                        return false;
+                                    }
                                 } else if (
                                     typeof selectedSousCritere === "string" &&
-                                    selectedSousCritere !== null &&
-                                    numericSousCritereId ===
-                                        sousCritere.sous_critere_id
+                                    selectedSousCritere !== null
                                 ) {
-                                    return (
-                                        sousCritere.valeur ===
-                                        selectedSousCritere
-                                    );
+                                    if (selectedSousCritere.trim() === "") {
+                                        return true;
+                                    } else {
+                                        return (
+                                            numericSousCritereId ===
+                                                sousCritere.sous_critere_id &&
+                                            sousCritere.valeur !== null &&
+                                            sousCritere.valeur ===
+                                                selectedSousCritere
+                                        );
+                                    }
                                 } else if (
                                     numericSousCritereId ===
                                     sousCritere.sous_critere_id
@@ -648,7 +682,7 @@ watch(
 );
 
 watch(
-    () => formCriteres.value.souscriteres,
+    () => formCriteres.value.sousCriteres,
     (newSousCriteres) => {
         selectedSousCriteres.value = Object.entries(newSousCriteres);
         filterProducts();
