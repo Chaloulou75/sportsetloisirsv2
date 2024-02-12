@@ -26,6 +26,8 @@ import {
     XMarkIcon,
 } from "@heroicons/vue/24/outline";
 import { useElementVisibility } from "@vueuse/core";
+import dayjs from "dayjs";
+import "dayjs/locale/fr";
 import {
     parse,
     isValid,
