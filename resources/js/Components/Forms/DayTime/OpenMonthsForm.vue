@@ -13,15 +13,15 @@ const isShowing = ref(true);
 
 onMounted(() => {
     if (!model.value) {
-        const currentDate = {
-            month: new Date().getMonth(),
-            year: new Date().getFullYear(),
-        };
-        const endMonth = {
-            month: currentDate.month,
-            year: currentDate.year,
-        };
-        model.value = [currentDate, endMonth];
+        // const currentDate = {
+        //     month: new Date().getMonth(),
+        //     year: new Date().getFullYear(),
+        // };
+        // const endMonth = {
+        //     month: currentDate.month,
+        //     year: currentDate.year,
+        // };
+        // model.value = [currentDate, endMonth];
     }
 });
 </script>

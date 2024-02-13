@@ -12,15 +12,15 @@ const isShowing = ref(true);
 
 onMounted(() => {
     if (!model.value) {
-        const startTime = {
-            hours: 10,
-            minutes: 0,
-        };
-        const endTime = {
-            hours: 19,
-            minutes: 0,
-        };
-        model.value = [startTime, endTime];
+        // const startTime = {
+        //     hours: 10,
+        //     minutes: 0,
+        // };
+        // const endTime = {
+        //     hours: 19,
+        //     minutes: 0,
+        // };
+        // model.value = [startTime, endTime];
     }
 });
 </script>

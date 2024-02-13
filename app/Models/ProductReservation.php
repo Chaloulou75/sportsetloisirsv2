@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\StructureCatTarif;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -25,9 +26,9 @@ class ProductReservation extends Model
         return $this->belongsTo(StructureProduit::class, 'produit_id');
     }
 
-    public function tarif(): BelongsTo
+    public function catTarif(): BelongsTo
     {
-        return $this->belongsTo(StructureTarif::class, 'tarif_id');
+        return $this->belongsTo(StructureCatTarif::class, 'tarif_id');
     }
 
     public function planning(): BelongsTo
@@ -38,16 +39,28 @@ class ProductReservation extends Model
     public function scopeWithRelations(Builder $query): void
     {
         $query->with([
-                'user',
-                'produit',
-                'produit.criteres',
-                'produit.criteres.critere',
-                'produit.activite',
-                'tarif',
-                'tarif.tarifType',
-                'tarif.structureTarifTypeInfos',
-                'tarif.structureTarifTypeInfos.tarifTypeAttribut',
-                'planning'
+            'user',
+            'produit.criteres',
+            'produit.criteres.critere',
+            'produit.criteres.critere_valeur',
+            'produit.criteres.critere_valeur.sous_criteres.prodSousCritValeurs.sous_critere_valeur',
+            'produit.criteres.sous_criteres',
+            'produit.criteres.sous_criteres.sous_critere_valeur',
+            'produit.activite',
+            'catTarif',
+            'catTarif.produits:id',
+            'catTarif.categorie',
+            'catTarif.cat_tarif_type',
+            'catTarif.cat_tarif_type.tarif_attributs',
+            'catTarif.cat_tarif_type.tarif_attributs.valeurs',
+            'catTarif.cat_tarif_type.tarif_attributs.sous_attributs',
+            'catTarif.cat_tarif_type.tarif_attributs.sous_attributs.valeurs',
+            'catTarif.attributs',
+            'catTarif.attributs.tarif_attribut',
+            'catTarif.attributs.sous_attributs',
+            'catTarif.attributs.sous_attributs.sous_attribut',
+            'catTarif.attributs.sous_attributs.sous_attribut_valeur',
+            'planning'
         ]);
     }
 }

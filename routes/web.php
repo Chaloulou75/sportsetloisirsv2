@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\PanierController;
 use App\Http\Controllers\CritereController;
 use App\Http\Controllers\MentionController;
 use App\Http\Controllers\ProfileController;
@@ -73,6 +74,10 @@ Route::get('/faq', [FaqController::class, 'index'])->name('faq.index');
 
 Route::get('/favoris', [FavoritesController::class, 'index'])->name(
     'favoris.index'
+);
+
+Route::get('/panier', [PanierController::class, 'index'])->name(
+    'panier.index'
 );
 
 //Blog

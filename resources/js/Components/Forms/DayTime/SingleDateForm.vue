@@ -13,8 +13,8 @@ const isShowing = ref(true);
 
 onMounted(() => {
     if (!model.value) {
-        const date_debut = new Date();
-        model.value = date_debut;
+        // const date_debut = new Date();
+        // model.value = date_debut;
     }
 });
 </script>

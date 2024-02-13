@@ -42,6 +42,11 @@ class StructureCatTarif extends Model
         return $this->hasMany(StructureCatTarAttribut::class, 'str_cat_tar_id');
     }
 
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(ProductReservation::class, 'tarif_id');
+    }
+
     public function produits(): BelongsToMany
     {
         return $this->belongsToMany(StructureProduit::class, 'produit_cat_tarif', 'cat_tarif_id', 'produit_id');

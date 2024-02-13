@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Models\Structure;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use App\Models\StructureTarif;
+use App\Models\StructureCatTarif;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Models\StructurePlanning;
@@ -30,7 +30,7 @@ class ReservationAsked extends Mailable
         protected StructureActivite $activite,
         protected StructureProduit $produit,
         protected StructurePlanning $planning,
-        protected StructureTarif $tarif,
+        protected StructureCatTarif $tarif,
         protected User $user,
     ) {
     }

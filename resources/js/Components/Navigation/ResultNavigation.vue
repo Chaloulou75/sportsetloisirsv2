@@ -27,6 +27,10 @@ const props = defineProps({
 });
 const page = usePage();
 const user = computed(() => page.props.auth.user);
+
+const productsInSession = computed(() => page.props.productsReservations);
+const productCountInSession = computed(() => productsInSession.value.length);
+
 const showingNavigationDropdown = ref(false);
 const showingSearchForm = ref(false);
 
@@ -164,12 +168,19 @@ const submitForm = async () => {
                     </div>
                     <Link
                         preserve-scroll
-                        :href="route('welcome')"
-                        :active="route().current('welcome')"
+                        :href="route('panier.index')"
+                        :active="route().current('panier.index')"
+                        class="relative"
                     >
                         <ShoppingCartIcon
                             class="h-8 w-8 text-white hover:text-indigo-500 focus:text-indigo-500"
                         />
+                        <span
+                            v-if="productCountInSession"
+                            class="absolute right-0 top-0 -mr-1 -mt-1 rounded-full bg-red-500 px-1 text-xs text-white"
+                        >
+                            {{ productCountInSession }}
+                        </span>
                     </Link>
                     <!-- Settings Dropdown User -->
                     <div class="relative" v-if="user">

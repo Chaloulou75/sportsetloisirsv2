@@ -176,7 +176,9 @@ const updateReservation = (reservation) => {
                                     class="ml-5 font-semibold text-indigo-500"
                                 >
                                     {{
-                                        formatCurrency(reservation.tarif.amount)
+                                        formatCurrency(
+                                            reservation.cat_tarif.amount
+                                        )
                                     }}
                                 </span>
                             </p>

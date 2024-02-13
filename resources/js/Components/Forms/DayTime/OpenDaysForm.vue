@@ -13,9 +13,9 @@ const isShowing = ref(true);
 
 onMounted(() => {
     if (!model.value) {
-        const startDate = new Date();
-        const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
-        model.value = [startDate, endDate];
+        // const startDate = new Date();
+        // const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
+        // model.value = [startDate, endDate];
     }
 });
 </script>

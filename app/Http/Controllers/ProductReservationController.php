@@ -13,6 +13,7 @@ use App\Models\StructureTarif;
 use Illuminate\Validation\Rule;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
+use App\Models\StructureCatTarif;
 use App\Models\StructurePlanning;
 use App\Mail\ReservationConfirmed;
 use App\Models\ProductReservation;
@@ -26,88 +27,32 @@ class ProductReservationController extends Controller
     public function index(Structure $structure): Response
     {
 
-        $allReservations = ProductReservation::with([
-                    'user',
-                    'produit',
-                    'produit.criteres',
-                    'produit.criteres.critere',
-                    'produit.activite',
-                    'tarif',
-                    'tarif.tarifType',
-                    'tarif.structureTarifTypeInfos',
-                    'tarif.structureTarifTypeInfos.tarifTypeAttribut',
-                    'planning'
-                ])->get();
+        $allReservations = ProductReservation::withRelations()->get();
 
         $allReservationsCount = $allReservations->count();
 
-        $pendingReservations = ProductReservation::with([
-                'user',
-                'produit',
-                'produit.criteres',
-                'produit.criteres.critere',
-                'produit.activite',
-                'tarif',
-                'tarif.tarifType',
-                'tarif.structureTarifTypeInfos',
-                'tarif.structureTarifTypeInfos.tarifTypeAttribut',
-                'planning'
-            ])
+        $pendingReservations = ProductReservation::withRelations()
             ->where('pending', true)
             ->latest()
             ->get();
 
         $pendingReservationsCount = $pendingReservations->count();
 
-        $confirmedReservations = ProductReservation::with([
-                'user',
-                'produit',
-                'produit.criteres',
-                'produit.criteres.critere',
-                'produit.activite',
-                'tarif',
-                'tarif.tarifType',
-                'tarif.structureTarifTypeInfos',
-                'tarif.structureTarifTypeInfos.tarifTypeAttribut',
-                'planning'
-            ])
+        $confirmedReservations = ProductReservation::withRelations()
             ->where('confirmed', true)
             ->latest()
             ->get();
 
         $confirmedReservationsCount = $confirmedReservations->count();
 
-        $finishedReservations = ProductReservation::with([
-                        'user',
-                        'produit',
-                        'produit.criteres',
-                        'produit.criteres.critere',
-                        'produit.activite',
-                        'tarif',
-                        'tarif.tarifType',
-                        'tarif.structureTarifTypeInfos',
-                        'tarif.structureTarifTypeInfos.tarifTypeAttribut',
-                        'planning'
-                    ])
+        $finishedReservations = ProductReservation::withRelations()
                     ->where('finished', true)
                     ->latest()
                     ->get();
 
         $finishedReservationsCount = $finishedReservations->count();
 
-
-        $cancelledReservations = ProductReservation::with([
-                                'user',
-                                'produit',
-                                'produit.criteres',
-                                'produit.criteres.critere',
-                                'produit.activite',
-                                'tarif',
-                                'tarif.tarifType',
-                                'tarif.structureTarifTypeInfos',
-                                'tarif.structureTarifTypeInfos.tarifTypeAttribut',
-                                'planning'
-                            ])
+        $cancelledReservations = ProductReservation::withRelations()
                             ->where('cancelled', true)
                             ->latest()
                             ->get();
@@ -123,96 +68,93 @@ class ProductReservationController extends Controller
             return $reservation->tarif->amount;
         });
 
-        $structure = Structure::with([
-                    'adresses'  => function ($query) {
-                        $query->latest();
-                    },
-                    'creator:id,name,email',
-                    'users:id,name',
-                    'cities:id,ville,ville_formatee',
-                    'departement:id,departement,numero',
-                    'structuretype:id,name,slug',
-                    'disciplines',
-                    'disciplines.discipline:id,name,slug',
-                    'categories',
-                    'activites' => function ($query) {
+        $structure = Structure::withRelations()
+                    ->with(['activites' => function ($query) {
                         $query->latest()->limit(3);
-                    },
-                    'activites.discipline',
-                    'activites.categorie',
-                    'activites.produits',
-                    'activites.produits.adresse',
-                    'activites.produits.criteres',
-                    'activites.produits.criteres.critere',
-                    'activites.produits.tarifs',
-                    'activites.produits.tarifs.tarifType',
-                    'activites.produits.tarifs.structureTarifTypeInfos',
-                    'activites.produits.plannings',
-                    ])
-                    ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'abo_news', 'abo_promo', 'logo'])
+                    }])
                     ->where('slug', $structure->slug)
                     ->firstOrFail();
 
         return Inertia::render('Structures/Gestion/Reservations/Index', [
-                    'structure' => $structure,
-                    'allReservations' => $allReservations,
-                    'allReservationsCount' => $allReservationsCount,
-                    'confirmedReservations' => $confirmedReservations,
-                    'confirmedReservationsCount' => $confirmedReservationsCount,
-                    'finishedReservations' => $finishedReservations,
-                    'finishedReservationsCount' => $finishedReservationsCount,
-                    'cancelledReservations' => $cancelledReservations,
-                    'cancelledReservationsCount' => $cancelledReservationsCount,
-                    'pendingReservations' => $pendingReservations,
-                    'pendingReservationsCount' => $pendingReservationsCount,
-                    'totalAmountPending' => $totalAmountPending,
-                    'totalAmountConfirmed' => $totalAmountConfirmed,
-                    'can' => [
-                        'update' => optional(Auth::user())->can('update', $structure),
-                        'delete' => optional(Auth::user())->can('delete', $structure),
-                    ]
-                ]);
+            'structure' => $structure,
+            'allReservations' => $allReservations,
+            'allReservationsCount' => $allReservationsCount,
+            'confirmedReservations' => $confirmedReservations,
+            'confirmedReservationsCount' => $confirmedReservationsCount,
+            'finishedReservations' => $finishedReservations,
+            'finishedReservationsCount' => $finishedReservationsCount,
+            'cancelledReservations' => $cancelledReservations,
+            'cancelledReservationsCount' => $cancelledReservationsCount,
+            'pendingReservations' => $pendingReservations,
+            'pendingReservationsCount' => $pendingReservationsCount,
+            'totalAmountPending' => $totalAmountPending,
+            'totalAmountConfirmed' => $totalAmountConfirmed,
+            'can' => [
+                'update' => optional(Auth::user())->can('update', $structure),
+                'delete' => optional(Auth::user())->can('delete', $structure),
+            ]
+        ]);
     }
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request): RedirectResponse
     {
-        dd($request->all());
         request()->validate([
-            'produit' => ['required', Rule::exists('structures_produits', 'id')],
-            'formule' => ['required', Rule::exists('structures_tarifs', 'id')],
-            'planning' => ['nullable', Rule::exists('structure_produits_planning', 'id')],
+            'produit' => ['required', Rule::exists(StructureProduit::class, 'id')],
+            'formule' => ['nullable', Rule::exists(StructureCatTarif::class, 'id')],
+            'planning' => ['nullable', Rule::exists(StructurePlanning::class, 'id')],
         ]);
-        if(!auth()->user()) {
-            return to_route('login')->with('error', 'Vous devez vous authentifier pour effectuer la demande');
-        }
 
-        $user = auth()->user();
-        $produit = StructureProduit::where('id', $request->produit)->first();
-        $tarif = StructureTarif::where('id', $request->formule)->first();
-        $planning = StructurePlanning::where('id', $request->planning)->first();
+        $produit = StructureProduit::find($request->produit);
+        $tarif = StructureCatTarif::find($request->formule);
+        $planning = StructurePlanning::find($request->planning);
 
         $structure = $produit->structure;
         $email = $produit->structure->email;
 
         $activiteId = $produit->activite->id;
-        $activite = StructureActivite::where('id', $activiteId)->first();
+        $activite = StructureActivite::find($activiteId);
 
-        $newReservation = ProductReservation::create([
-            'user_id' => $user->id,
-            'produit_id' => $produit->id,
-            'tarif_id' => $tarif->id,
-            'planning_id' => $planning->id,
-            'pending' => true,
-            'confirmed' => false,
-            'finished' => false,
-            'cancelled' => false,
-        ]);
+        if(!auth()->user()) {
+            $sessionPanierProducts = session()->get('panierProducts', []);
+            $sessionPanierProducts[] = [
+                'produit_id' => $produit->id,
+                'tarif_id' => $tarif->id ?? null
+            ];
+            session()->put('panierProducts', $sessionPanierProducts);
 
-        Mail::to($email)->send(new ReservationAsked($structure, $activite, $produit, $planning, $tarif, $user));
+            return to_route('structures.activites.show', ['activite' => $activite])->with('success', 'Produit ajouté à votre panier');
+        }
 
-        return to_route('structures.activites.show', ['activite' => $activite])->with('success', "La demande d'information a été envoyée à la structure");
+        $user = auth()->user();
+
+        if($user){
+            $sessionPanierProducts = session()->get('panierProducts', []);
+            $sessionPanierProducts[] = [
+                'user_id' => $user->id,
+                'produit_id' => $produit->id,
+                'tarif_id' => $tarif->id ?? null
+            ];
+            session()->put('panierProducts', $sessionPanierProducts);
+
+            if($planning){
+                $newReservation = ProductReservation::create([
+                    'user_id' => $user->id,
+                    'produit_id' => $produit->id,
+                    'tarif_id' => $tarif->id,
+                    'planning_id' => $planning->id,
+                    'pending' => true,
+                    'confirmed' => false,
+                    'finished' => false,
+                    'cancelled' => false,
+                ]);
+
+                Mail::to($email)->send(new ReservationAsked($structure, $activite, $produit, $planning, $tarif, $user));
+            }
+        }
+
+        return to_route('structures.activites.show', ['activite' => $activite])->with('success', "Produit ajouté à votre panier");
     }
 
     /**
