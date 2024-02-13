@@ -31,10 +31,8 @@ class PanierController extends Controller
 
         $sessionReservations = $this->getSessionReservations();
 
-        if(auth()->user()){
-            // Retrieve ProductReservations from the database for the authenticated user
-            $userReservations = auth()->user()->productReservations()->withRelations()->get();
-            $reservations = $userReservations->merge($sessionReservations);
+        if(auth()->user()) {
+            $reservations = auth()->user()->productReservations()->withRelations()->get();
         }
 
         $produitsDesired = StructureProduit::withRelations()

@@ -27,7 +27,7 @@ const props = defineProps({
                 <template v-slot:ariane>
                     <nav aria-label="Breadcrumb" class="flex">
                         <ol
-                            class="flex rounded-lg border border-gray-200 text-gray-600"
+                            class="flex text-gray-600 border border-gray-200 rounded-lg"
                         >
                             <li class="flex items-center">
                                 <Link
@@ -35,7 +35,7 @@ const props = defineProps({
                                     :href="route('welcome')"
                                     class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
                                 >
-                                    <HomeIcon class="h-4 w-4" />
+                                    <HomeIcon class="w-4 h-4" />
 
                                     <span
                                         class="ms-1.5 hidden text-xs font-medium md:block"
@@ -54,7 +54,7 @@ const props = defineProps({
                                 <Link
                                     preserve-scroll
                                     :href="route('favoris.index')"
-                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                                    class="flex items-center h-10 text-xs font-medium transition bg-white pe-4 ps-8 hover:text-gray-900"
                                 >
                                     Favoris
                                 </Link>
@@ -65,9 +65,17 @@ const props = defineProps({
             </ResultsHeader>
         </template>
 
-        <div class="container mx-auto py-6">
-            <div v-for="produit in produitsDesired" :key="produit.id">
-                {{ produit.activite.titre }}
+        <div class="container py-6 mx-auto">
+            <h2 class="text-base">
+                Votre panier avec produits, tarif lié, formulaire avant
+                check-out
+            </h2>
+            <div
+                class="text-sm"
+                v-for="produit in produitsDesired"
+                :key="produit.id"
+            >
+                Produit numero {{ produit.id }} - {{ produit.activite.titre }}
             </div>
         </div>
     </ResultLayout>

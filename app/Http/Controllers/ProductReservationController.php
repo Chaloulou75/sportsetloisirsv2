@@ -119,6 +119,7 @@ class ProductReservationController extends Controller
         if(!auth()->user()) {
             $sessionPanierProducts = session()->get('panierProducts', []);
             $sessionPanierProducts[] = [
+                'ip_address' => $request->ip(),
                 'produit_id' => $produit->id,
                 'tarif_id' => $tarif->id ?? null
             ];
@@ -129,16 +130,17 @@ class ProductReservationController extends Controller
 
         $user = auth()->user();
 
-        if($user){
+        if($user) {
             $sessionPanierProducts = session()->get('panierProducts', []);
             $sessionPanierProducts[] = [
                 'user_id' => $user->id,
+                'ip_address' => $request->ip(),
                 'produit_id' => $produit->id,
                 'tarif_id' => $tarif->id ?? null
             ];
             session()->put('panierProducts', $sessionPanierProducts);
 
-            if($planning){
+            if($planning) {
                 $newReservation = ProductReservation::create([
                     'user_id' => $user->id,
                     'produit_id' => $produit->id,
@@ -178,13 +180,13 @@ class ProductReservationController extends Controller
      */
     public function update(Request $request, Structure $structure, ProductReservation $reservation): RedirectResponse
     {
-        $user = User::where('id', $reservation->user_id)->first();
+        $user = User::find($reservation->user_id);
         $userEmail = $user->email;
-        $produit = StructureProduit::where('id', $reservation->produit_id)->first();
-        $tarif = StructureTarif::where('id', $reservation->tarif_id)->first();
-        $planning = StructurePlanning::where('id', $reservation->planning_id)->first();
+        $produit = StructureProduit::find($reservation->produit_id);
+        $tarif = StructureCatTarif::find($reservation->tarif_id);
+        $planning = StructurePlanning::find($reservation->planning_id);
         $activiteId = $produit->activite->id;
-        $activite = StructureActivite::where('id', $activiteId)->first();
+        $activite = StructureActivite::find($activiteId);
 
 
         if($request->status === "confirmed") {
@@ -245,12 +247,12 @@ class ProductReservationController extends Controller
 
         } elseif($request->status === "cancelled") {
             $reservation->update([
-                            'confirmed' => false,
-                            'pending' => false,
-                            'finished' => false,
-                            'cancelled' => true,
-                            'code' => null,
-                        ]);
+                'confirmed' => false,
+                'pending' => false,
+                'finished' => false,
+                'cancelled' => true,
+                'code' => null,
+            ]);
             //email annulée
             return to_route('structures.gestion.reservations.index', $structure)->with('success', 'Réservation annulée.');
         }
