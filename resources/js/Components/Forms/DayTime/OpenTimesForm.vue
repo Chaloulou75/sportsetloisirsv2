@@ -47,7 +47,7 @@ onMounted(() => {
                 locale="fr"
                 cancelText="annuler"
                 selectText="confirmer"
-                placeholder="Selectionnez vos horaires"
+                :placeholder="name"
             >
             </VueDatePicker>
         </div>

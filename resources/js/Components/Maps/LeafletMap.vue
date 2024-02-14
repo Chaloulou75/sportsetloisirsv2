@@ -6,7 +6,6 @@ const props = defineProps({
     item: Object,
 });
 
-// a computed ref to get lat & lng
 const lat = computed(() => {
     return parseFloat(props.item.address_lat);
 });

@@ -1,11 +1,12 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { Head, useForm } from "@inertiajs/vue3";
+import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, computed, watch, onMounted } from "vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
 import ActiviteCard from "@/Components/Structures/ActiviteCard.vue";
 import ProduitFormuleCard from "@/Components/Produits/ProduitFormuleCard.vue";
+import LeafletMap from "@/Components/Maps/LeafletMap.vue";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
 import RadioForm from "@/Components/Forms/RadioForm.vue";
@@ -902,443 +903,444 @@ onMounted(() => {
 
             <section class="mx-auto my-4 max-w-full px-0 py-6 sm:px-4 lg:px-8">
                 <div
-                    class="flex flex-col justify-between rounded-lg bg-white px-4 py-6 text-slate-600 shadow md:flex-row md:items-start md:space-x-6"
+                    class="flex flex-col-reverse justify-between space-y-8 rounded-lg text-slate-600 md:flex-row md:items-start md:space-x-6 md:space-y-0"
                 >
-                    <div class="w-full">
-                        <div class="relative space-y-12">
-                            <!-- titre -->
-                            <div
-                                class="my-4 flex flex-col items-center justify-center"
+                    <!-- Structure -->
+                    <div class="basis-full space-y-6 md:basis-1/4">
+                        <img
+                            v-if="activite.image"
+                            alt="image"
+                            :src="activite.image_url"
+                            class="h-56 w-auto max-w-xs object-cover"
+                        />
+                        <img
+                            v-else
+                            alt="image"
+                            src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                            class="h-full w-full object-cover"
+                        />
+                        <div class="w-full space-y-2 bg-gray-200 pt-4">
+                            <p class="px-2 text-sm text-gray-800">
+                                Activité proposée par:
+                            </p>
+                            <Link
+                                class="flex w-full justify-center px-2 text-lg text-indigo-600 hover:text-indigo-800"
+                                :href="
+                                    route('structures.show', activite.structure)
+                                "
+                                >{{ activite.structure.name }}</Link
                             >
-                                <h1
-                                    class="inline-block w-full text-center text-xl font-semibold sm:text-2xl sm:leading-7 md:text-3xl"
-                                >
-                                    {{ activite.titre }}
-                                </h1>
-                                <h2
-                                    class="inline-block w-full text-center text-xl font-semibold text-gray-500 sm:leading-5 md:text-xl"
-                                >
-                                    {{ activite.structure.name }}
-                                </h2>
-                            </div>
-                            <!-- Resume -->
                             <div>
-                                <p
-                                    v-if="activite.description"
-                                    class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
-                                >
-                                    {{ activite.description }}
-                                </p>
-                                <p
-                                    v-else-if="
-                                        activite.structure.presentation_longue
-                                    "
-                                    class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
-                                >
-                                    {{ activite.structure.presentation_longue }}
-                                </p>
-                                <p
-                                    v-else
-                                    class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
-                                >
-                                    {{ activite.structure.presentation_courte }}
-                                </p>
+                                <h3 class="px-2 pb-1 text-base">
+                                    Localisation:
+                                    <span class="font-semibold">
+                                        {{
+                                            activite.structure.adresses[0].city
+                                        }},
+                                        {{
+                                            activite.structure.adresses[0]
+                                                .zip_code
+                                        }}
+                                    </span>
+                                </h3>
+                                <LeafletMap :item="activite.structure" />
                             </div>
-                            <!-- instructeurs -->
-                            <div v-if="activite.instructeurs.length > 0">
-                                <p class="text-base font-medium text-gray-700">
-                                    Vos instructeurs:
-                                </p>
-                                <ul>
-                                    <li
-                                        v-for="instructeur in activite.instructeurs"
-                                        class="list-inside list-disc text-base font-semibold text-gray-600"
+                        </div>
+                    </div>
+                    <div class="basis-full space-y-12 md:basis-3/4">
+                        <!-- titre -->
+                        <div
+                            class="my-4 flex flex-col items-center justify-center"
+                        >
+                            <h1
+                                class="inline-block w-full text-center text-xl font-semibold sm:text-2xl sm:leading-7 md:text-3xl"
+                            >
+                                {{ activite.titre }}
+                            </h1>
+                            <h2
+                                class="inline-block w-full text-center text-xl font-semibold text-gray-500 sm:leading-5 md:text-xl"
+                            >
+                                {{ activite.structure.name }}
+                            </h2>
+                        </div>
+                        <!-- Resume -->
+                        <div>
+                            <p
+                                v-if="activite.description"
+                                class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
+                            >
+                                {{ activite.description }}
+                            </p>
+                            <p
+                                v-else-if="
+                                    activite.structure.presentation_longue
+                                "
+                                class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
+                            >
+                                {{ activite.structure.presentation_longue }}
+                            </p>
+                            <p
+                                v-else
+                                class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
+                            >
+                                {{ activite.structure.presentation_courte }}
+                            </p>
+                        </div>
+                        <!-- instructeurs -->
+                        <div v-if="activite.instructeurs.length > 0">
+                            <p class="text-base font-medium text-gray-700">
+                                Vos instructeurs:
+                            </p>
+                            <ul>
+                                <li
+                                    v-for="instructeur in activite.instructeurs"
+                                    class="list-inside list-disc text-base font-semibold text-gray-600"
+                                >
+                                    {{ instructeur.pivot.contact }} -
+                                    {{ instructeur.pivot.email }}
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="flex w-full items-center justify-between">
+                            <h3 class="text-xl text-gray-700">
+                                Selectionner une formule en fonction de vos
+                                critères:
+                            </h3>
+                            <button
+                                class="flex w-full justify-center md:w-auto"
+                                type="button"
+                                @click="resetFormCriteres"
+                            >
+                                <ArrowPathIcon
+                                    class="h-6 w-6 text-gray-500 transition duration-200 hover:-rotate-90 hover:text-gray-700 md:h-8 md:w-8"
+                                />
+                            </button>
+                        </div>
+
+                        <div
+                            v-if="criteres.length > 0"
+                            class="mx-auto grid w-full grid-cols-1 gap-4 bg-gray-50 p-2 shadow md:grid-cols-3"
+                        >
+                            <div
+                                v-for="critere in criteres"
+                                :key="critere.id"
+                                class="col-span-1"
+                            >
+                                <!-- select -->
+                                <SelectForm
+                                    :classes="'block'"
+                                    class="max-w-sm"
+                                    v-if="critere.type_champ_form === 'select'"
+                                    :name="critere.nom"
+                                    v-model="critereForm.criteres[critere.id]"
+                                    :options="critere.valeurs"
+                                />
+
+                                <!-- checkbox -->
+                                <CheckboxForm
+                                    class="max-w-sm"
+                                    v-if="
+                                        critere.type_champ_form === 'checkbox'
+                                    "
+                                    :critere="critere"
+                                    :name="critere.nom"
+                                    v-model="critereForm.criteres[critere.id]"
+                                    :options="critere.valeurs"
+                                    :is-checkbox-selected="isCheckboxSelected"
+                                    @update-selected-checkboxes="
+                                        updateSelectedCheckboxes
+                                    "
+                                />
+
+                                <!-- radio -->
+                                <RadioForm
+                                    class="max-w-sm"
+                                    v-if="critere.type_champ_form === 'radio'"
+                                    :name="critere.nom"
+                                    v-model="critereForm.criteres[critere.id]"
+                                    :options="critere.valeurs"
+                                />
+
+                                <!-- input text  -->
+                                <div
+                                    class="max-w-sm"
+                                    v-if="critere.type_champ_form === 'text'"
+                                >
+                                    <label
+                                        :for="critere.nom"
+                                        class="block text-sm font-medium text-gray-700"
                                     >
-                                        {{ instructeur.pivot.contact }} -
-                                        {{ instructeur.pivot.email }}
-                                    </li>
-                                </ul>
+                                        {{ critere.nom }}
+                                    </label>
+                                    <div class="mt-1 flex rounded-md">
+                                        <TextInput
+                                            type="text"
+                                            v-model="
+                                                critereForm.criteres[critere.id]
+                                            "
+                                            :name="critere.nom"
+                                            :id="critere.nom"
+                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                            placeholder=""
+                                            autocomplete="none"
+                                        />
+                                    </div>
+                                </div>
+
+                                <!-- number text -->
+                                <div
+                                    class="max-w-sm"
+                                    v-if="critere.type_champ_form === 'number'"
+                                >
+                                    <label
+                                        :for="critere.nom"
+                                        class="block text-sm font-medium text-gray-700"
+                                    >
+                                        {{ critere.nom }}
+                                    </label>
+                                    <div class="mt-1 flex rounded-md">
+                                        <TextInput
+                                            type="number"
+                                            v-model="
+                                                critereForm.criteres[critere.id]
+                                            "
+                                            :name="critere.nom"
+                                            :id="critere.nom"
+                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                            placeholder=""
+                                            autocomplete="none"
+                                        />
+                                    </div>
+                                </div>
+
+                                <!-- Heure seule -->
+                                <div
+                                    v-if="critere.type_champ_form === 'time'"
+                                    class="flex max-w-sm flex-col items-start space-y-3"
+                                >
+                                    <SingleTimeForm
+                                        class="w-full"
+                                        v-model="
+                                            critereForm.criteres[critere.id]
+                                        "
+                                        :name="critere.nom"
+                                    />
+                                </div>
+
+                                <!-- Heures x2 ouverture / fermeture -->
+                                <div
+                                    v-if="critere.type_champ_form === 'times'"
+                                    class="flex max-w-sm flex-col items-start space-y-3"
+                                >
+                                    <OpenTimesForm
+                                        class="w-full"
+                                        v-model="
+                                            critereForm.criteres[critere.id]
+                                        "
+                                        :name="critere.nom"
+                                    />
+                                </div>
+
+                                <!-- Date seule -->
+                                <div
+                                    v-if="critere.type_champ_form === 'date'"
+                                    class="flex max-w-sm flex-col items-start space-y-3"
+                                >
+                                    <SingleDateForm
+                                        class="w-full"
+                                        v-model="
+                                            critereForm.criteres[critere.id]
+                                        "
+                                        :name="critere.nom"
+                                    />
+                                </div>
+
+                                <!-- Dates x 2 -->
+                                <div
+                                    v-if="critere.type_champ_form === 'dates'"
+                                    class="flex max-w-sm flex-col items-start space-y-3"
+                                >
+                                    <OpenDaysForm
+                                        class="w-full"
+                                        v-model="
+                                            critereForm.criteres[critere.id]
+                                        "
+                                        :name="critere.nom"
+                                    />
+                                </div>
+
+                                <!-- Mois -->
+                                <div v-if="critere.type_champ_form === 'mois'">
+                                    <div
+                                        class="flex max-w-sm flex-col items-start space-y-3"
+                                    >
+                                        <OpenMonthsForm
+                                            class="w-full"
+                                            v-model="
+                                                critereForm.criteres[critere.id]
+                                            "
+                                            :name="critere.nom"
+                                        />
+                                    </div>
+                                </div>
+
+                                <!-- Range km  -->
+                                <div
+                                    v-if="critere.type_champ_form === 'rayon'"
+                                    class="flex w-full max-w-sm flex-col items-start space-y-3"
+                                >
+                                    <RangeInputForm
+                                        class="w-full max-w-sm"
+                                        v-model="
+                                            critereForm.criteres[critere.id]
+                                        "
+                                        :name="critere.nom"
+                                        :metric="`Km`"
+                                    />
+                                </div>
+                                <!-- sous criteres -->
+                                <div
+                                    v-for="valeur in critere.valeurs"
+                                    :key="valeur.id"
+                                >
+                                    <div
+                                        v-for="souscritere in valeur.sous_criteres"
+                                        :key="souscritere.id"
+                                    >
+                                        <!-- sous crit select -->
+                                        <SelectForm
+                                            :classes="'block'"
+                                            class="max-w-sm py-2"
+                                            v-if="
+                                                critereForm.criteres[
+                                                    critere.id
+                                                ] === valeur &&
+                                                souscritere.type_champ_form ===
+                                                    'select' &&
+                                                souscritere.dis_cat_crit_val_id ===
+                                                    valeur.id
+                                            "
+                                            :name="souscritere.nom"
+                                            v-model="
+                                                critereForm.souscriteres[
+                                                    souscritere.id
+                                                ]
+                                            "
+                                            :options="
+                                                souscritere.sous_criteres_valeurs
+                                            "
+                                        />
+                                        <!-- sous crit number -->
+                                        <InputLabel
+                                            class="py-2"
+                                            :for="souscritere.nom"
+                                            :value="souscritere.nom"
+                                            v-if="
+                                                critereForm.criteres[
+                                                    critere.id
+                                                ] === valeur &&
+                                                souscritere.type_champ_form ===
+                                                    'number' &&
+                                                souscritere.dis_cat_crit_val_id ===
+                                                    valeur.id
+                                            "
+                                        />
+                                        <TextInput
+                                            class="w-full max-w-sm"
+                                            type="number"
+                                            :id="souscritere.nom"
+                                            :name="souscritere.nom"
+                                            v-if="
+                                                critereForm.criteres[
+                                                    critere.id
+                                                ] === valeur &&
+                                                souscritere.type_champ_form ===
+                                                    'number' &&
+                                                souscritere.dis_cat_crit_val_id ===
+                                                    valeur.id
+                                            "
+                                            v-model="
+                                                critereForm.souscriteres[
+                                                    souscritere.id
+                                                ]
+                                            "
+                                        />
+                                        <!-- sous crit text -->
+                                        <InputLabel
+                                            class="py-2"
+                                            :for="souscritere.nom"
+                                            :value="souscritere.nom"
+                                            v-if="
+                                                critereForm.criteres[
+                                                    critere.id
+                                                ] === valeur &&
+                                                souscritere.type_champ_form ===
+                                                    'text' &&
+                                                souscritere.dis_cat_crit_val_id ===
+                                                    valeur.id
+                                            "
+                                        />
+                                        <TextInput
+                                            class="w-full max-w-sm"
+                                            type="text"
+                                            :id="souscritere.nom"
+                                            :name="souscritere.nom"
+                                            v-if="
+                                                critereForm.criteres[
+                                                    critere.id
+                                                ] === valeur &&
+                                                souscritere.type_champ_form ===
+                                                    'text' &&
+                                                souscritere.dis_cat_crit_val_id ===
+                                                    valeur.id
+                                            "
+                                            v-model="
+                                                critereForm.souscriteres[
+                                                    souscritere.id
+                                                ]
+                                            "
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <form @submit.prevent="submitReservation()">
+                            <div
+                                ref="listToAnimate"
+                                class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
+                            >
+                                <ProduitFormuleCard
+                                    v-for="produit in filteredProduits"
+                                    :key="produit.id"
+                                    v-model:reservationProduit="
+                                        reservationForm.produit
+                                    "
+                                    v-model:reservationFormule="
+                                        reservationForm.formule
+                                    "
+                                    :produit="produit"
+                                    :discipline="produit.discipline"
+                                />
                             </div>
                             <div
-                                class="flex w-full items-center justify-between"
+                                class="my-4 flex w-full items-center justify-end"
                             >
-                                <h3 class="text-xl text-gray-700">
-                                    Selectionner une formule en fonction de vos
-                                    critères:
-                                </h3>
                                 <button
-                                    class="flex w-full justify-center md:w-auto"
-                                    type="button"
-                                    @click="resetFormCriteres"
+                                    :disabled="reservationForm.processing"
+                                    :class="{
+                                        'opacity-25':
+                                            reservationForm.processing,
+                                    }"
+                                    type="submit"
+                                    class="inline-flex justify-between rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-normal text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                 >
-                                    <ArrowPathIcon
-                                        class="h-6 w-6 text-gray-500 transition duration-200 hover:-rotate-90 hover:text-gray-700 md:h-8 md:w-8"
+                                    <LoadingSVG
+                                        v-if="reservationForm.processing"
                                     />
+                                    Ajouter au panier
                                 </button>
                             </div>
-
-                            <div
-                                v-if="criteres.length > 0"
-                                class="mx-auto grid w-full grid-cols-1 gap-4 bg-gray-50 p-2 shadow md:grid-cols-3"
-                            >
-                                <div
-                                    v-for="critere in criteres"
-                                    :key="critere.id"
-                                    class="col-span-1"
-                                >
-                                    <!-- select -->
-                                    <SelectForm
-                                        :classes="'block'"
-                                        class="max-w-sm"
-                                        v-if="
-                                            critere.type_champ_form === 'select'
-                                        "
-                                        :name="critere.nom"
-                                        v-model="
-                                            critereForm.criteres[critere.id]
-                                        "
-                                        :options="critere.valeurs"
-                                    />
-
-                                    <!-- checkbox -->
-                                    <CheckboxForm
-                                        class="max-w-sm"
-                                        v-if="
-                                            critere.type_champ_form ===
-                                            'checkbox'
-                                        "
-                                        :critere="critere"
-                                        :name="critere.nom"
-                                        v-model="
-                                            critereForm.criteres[critere.id]
-                                        "
-                                        :options="critere.valeurs"
-                                        :is-checkbox-selected="
-                                            isCheckboxSelected
-                                        "
-                                        @update-selected-checkboxes="
-                                            updateSelectedCheckboxes
-                                        "
-                                    />
-
-                                    <!-- radio -->
-                                    <RadioForm
-                                        class="max-w-sm"
-                                        v-if="
-                                            critere.type_champ_form === 'radio'
-                                        "
-                                        :name="critere.nom"
-                                        v-model="
-                                            critereForm.criteres[critere.id]
-                                        "
-                                        :options="critere.valeurs"
-                                    />
-
-                                    <!-- input text  -->
-                                    <div
-                                        class="max-w-sm"
-                                        v-if="
-                                            critere.type_champ_form === 'text'
-                                        "
-                                    >
-                                        <label
-                                            :for="critere.nom"
-                                            class="block text-sm font-medium text-gray-700"
-                                        >
-                                            {{ critere.nom }}
-                                        </label>
-                                        <div class="mt-1 flex rounded-md">
-                                            <TextInput
-                                                type="text"
-                                                v-model="
-                                                    critereForm.criteres[
-                                                        critere.id
-                                                    ]
-                                                "
-                                                :name="critere.nom"
-                                                :id="critere.nom"
-                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                placeholder=""
-                                                autocomplete="none"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <!-- number text -->
-                                    <div
-                                        class="max-w-sm"
-                                        v-if="
-                                            critere.type_champ_form === 'number'
-                                        "
-                                    >
-                                        <label
-                                            :for="critere.nom"
-                                            class="block text-sm font-medium text-gray-700"
-                                        >
-                                            {{ critere.nom }}
-                                        </label>
-                                        <div class="mt-1 flex rounded-md">
-                                            <TextInput
-                                                type="number"
-                                                v-model="
-                                                    critereForm.criteres[
-                                                        critere.id
-                                                    ]
-                                                "
-                                                :name="critere.nom"
-                                                :id="critere.nom"
-                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                placeholder=""
-                                                autocomplete="none"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <!-- Heure seule -->
-                                    <div
-                                        v-if="
-                                            critere.type_champ_form === 'time'
-                                        "
-                                        class="flex max-w-sm flex-col items-start space-y-3"
-                                    >
-                                        <SingleTimeForm
-                                            class="w-full"
-                                            v-model="
-                                                critereForm.criteres[critere.id]
-                                            "
-                                            :name="critere.nom"
-                                        />
-                                    </div>
-
-                                    <!-- Heures x2 ouverture / fermeture -->
-                                    <div
-                                        v-if="
-                                            critere.type_champ_form === 'times'
-                                        "
-                                        class="flex max-w-sm flex-col items-start space-y-3"
-                                    >
-                                        <OpenTimesForm
-                                            class="w-full"
-                                            v-model="
-                                                critereForm.criteres[critere.id]
-                                            "
-                                            :name="critere.nom"
-                                        />
-                                    </div>
-
-                                    <!-- Date seule -->
-                                    <div
-                                        v-if="
-                                            critere.type_champ_form === 'date'
-                                        "
-                                        class="flex max-w-sm flex-col items-start space-y-3"
-                                    >
-                                        <SingleDateForm
-                                            class="w-full"
-                                            v-model="
-                                                critereForm.criteres[critere.id]
-                                            "
-                                            :name="critere.nom"
-                                        />
-                                    </div>
-
-                                    <!-- Dates x 2 -->
-                                    <div
-                                        v-if="
-                                            critere.type_champ_form === 'dates'
-                                        "
-                                        class="flex max-w-sm flex-col items-start space-y-3"
-                                    >
-                                        <OpenDaysForm
-                                            class="w-full"
-                                            v-model="
-                                                critereForm.criteres[critere.id]
-                                            "
-                                            :name="critere.nom"
-                                        />
-                                    </div>
-
-                                    <!-- Mois -->
-                                    <div
-                                        v-if="
-                                            critere.type_champ_form === 'mois'
-                                        "
-                                    >
-                                        <div
-                                            class="flex max-w-sm flex-col items-start space-y-3"
-                                        >
-                                            <OpenMonthsForm
-                                                class="w-full"
-                                                v-model="
-                                                    critereForm.criteres[
-                                                        critere.id
-                                                    ]
-                                                "
-                                                :name="critere.nom"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <!-- Range km  -->
-                                    <div
-                                        v-if="
-                                            critere.type_champ_form === 'rayon'
-                                        "
-                                        class="flex w-full max-w-sm flex-col items-start space-y-3"
-                                    >
-                                        <RangeInputForm
-                                            class="w-full max-w-sm"
-                                            v-model="
-                                                critereForm.criteres[critere.id]
-                                            "
-                                            :name="critere.nom"
-                                            :metric="`Km`"
-                                        />
-                                    </div>
-                                    <!-- sous criteres -->
-                                    <div
-                                        v-for="valeur in critere.valeurs"
-                                        :key="valeur.id"
-                                    >
-                                        <div
-                                            v-for="souscritere in valeur.sous_criteres"
-                                            :key="souscritere.id"
-                                        >
-                                            <!-- sous crit select -->
-                                            <SelectForm
-                                                :classes="'block'"
-                                                class="max-w-sm py-2"
-                                                v-if="
-                                                    critereForm.criteres[
-                                                        critere.id
-                                                    ] === valeur &&
-                                                    souscritere.type_champ_form ===
-                                                        'select' &&
-                                                    souscritere.dis_cat_crit_val_id ===
-                                                        valeur.id
-                                                "
-                                                :name="souscritere.nom"
-                                                v-model="
-                                                    critereForm.souscriteres[
-                                                        souscritere.id
-                                                    ]
-                                                "
-                                                :options="
-                                                    souscritere.sous_criteres_valeurs
-                                                "
-                                            />
-                                            <!-- sous crit number -->
-                                            <InputLabel
-                                                class="py-2"
-                                                :for="souscritere.nom"
-                                                :value="souscritere.nom"
-                                                v-if="
-                                                    critereForm.criteres[
-                                                        critere.id
-                                                    ] === valeur &&
-                                                    souscritere.type_champ_form ===
-                                                        'number' &&
-                                                    souscritere.dis_cat_crit_val_id ===
-                                                        valeur.id
-                                                "
-                                            />
-                                            <TextInput
-                                                class="w-full max-w-sm"
-                                                type="number"
-                                                :id="souscritere.nom"
-                                                :name="souscritere.nom"
-                                                v-if="
-                                                    critereForm.criteres[
-                                                        critere.id
-                                                    ] === valeur &&
-                                                    souscritere.type_champ_form ===
-                                                        'number' &&
-                                                    souscritere.dis_cat_crit_val_id ===
-                                                        valeur.id
-                                                "
-                                                v-model="
-                                                    critereForm.souscriteres[
-                                                        souscritere.id
-                                                    ]
-                                                "
-                                            />
-                                            <!-- sous crit text -->
-                                            <InputLabel
-                                                class="py-2"
-                                                :for="souscritere.nom"
-                                                :value="souscritere.nom"
-                                                v-if="
-                                                    critereForm.criteres[
-                                                        critere.id
-                                                    ] === valeur &&
-                                                    souscritere.type_champ_form ===
-                                                        'text' &&
-                                                    souscritere.dis_cat_crit_val_id ===
-                                                        valeur.id
-                                                "
-                                            />
-                                            <TextInput
-                                                class="w-full max-w-sm"
-                                                type="text"
-                                                :id="souscritere.nom"
-                                                :name="souscritere.nom"
-                                                v-if="
-                                                    critereForm.criteres[
-                                                        critere.id
-                                                    ] === valeur &&
-                                                    souscritere.type_champ_form ===
-                                                        'text' &&
-                                                    souscritere.dis_cat_crit_val_id ===
-                                                        valeur.id
-                                                "
-                                                v-model="
-                                                    critereForm.souscriteres[
-                                                        souscritere.id
-                                                    ]
-                                                "
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <form @submit.prevent="submitReservation()">
-                                <div
-                                    ref="listToAnimate"
-                                    class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
-                                >
-                                    <ProduitFormuleCard
-                                        v-for="produit in filteredProduits"
-                                        :key="produit.id"
-                                        v-model:reservationProduit="
-                                            reservationForm.produit
-                                        "
-                                        v-model:reservationFormule="
-                                            reservationForm.formule
-                                        "
-                                        :produit="produit"
-                                        :discipline="produit.discipline"
-                                    />
-                                </div>
-                                <div
-                                    class="my-4 flex w-full items-center justify-end"
-                                >
-                                    <button
-                                        :disabled="reservationForm.processing"
-                                        :class="{
-                                            'opacity-25':
-                                                reservationForm.processing,
-                                        }"
-                                        type="submit"
-                                        class="inline-flex justify-between rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-normal text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
-                                    >
-                                        <LoadingSVG
-                                            v-if="reservationForm.processing"
-                                        />
-                                        Ajouter au panier
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </section>

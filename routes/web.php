@@ -46,6 +46,7 @@ use App\Http\Controllers\AdminCategorieDisciplineController;
 use App\Http\Controllers\StructureActiviteProduitController;
 use App\Http\Controllers\CategoryDisciplineCritereController;
 use App\Http\Controllers\LienDisCatTarAttrSousAttrController;
+use App\Http\Controllers\StructurePlanningMultipleController;
 use App\Http\Controllers\LienDisCatTariftypeAttributController;
 use App\Http\Controllers\AdminTarifTypeDisCatAttributController;
 use App\Http\Controllers\Discipline\CategoryDisciplineController;
@@ -156,6 +157,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('structures/{structure:slug}/plannings', [StructurePlanningController::class, 'store'])->name('structures.plannings.store');
     Route::put('structures/{structure:slug}/plannings/{planning}', [StructurePlanningController::class, 'update'])->name('structures.plannings.update');
     Route::delete('structures/{structure:slug}/plannings/{planning}', [StructurePlanningController::class, 'destroy'])->name('structures.plannings.destroy');
+
+    Route::post('structures/{structure:slug}/plannings/multiples', [StructurePlanningMultipleController::class, 'store'])->name('structures.plannings.multiples.store');
 
     Route::get('str-{structure:slug}/disciplines', [StructureDisciplineController::class, 'index'])->name('structures.disciplines.index');
     Route::get('str-{structure:slug}/dis-{discipline:slug}', [StructureDisciplineController::class, 'show'])->name('structures.disciplines.show');

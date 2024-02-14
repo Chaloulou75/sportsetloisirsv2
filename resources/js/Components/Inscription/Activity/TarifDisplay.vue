@@ -230,7 +230,9 @@ const formatCurrency = (value) => {
                         class="whitespace-nowrap border border-slate-300 px-4 py-2 font-semibold"
                     >
                         <template v-if="catTarif.produits">
-                            <ul class="list-inside list-disc">
+                            <ul
+                                class="grid list-inside list-disc grid-cols-2 gap-1"
+                            >
                                 <li
                                     v-for="produit in catTarif.produits"
                                     :key="produit.id"
@@ -289,7 +291,7 @@ const formatCurrency = (value) => {
             tarifsList.length === 0 &&
         "
     >
-        <p class="font-semibold italic text-gray-600">
+        <p class="italic font-semibold text-gray-600">
             Pas de tarif associé à cette structure
         </p>
     </div> -->
@@ -299,18 +301,18 @@ const formatCurrency = (value) => {
             structure.tarifs.length > 0 &&
             route().current('structures.disciplines.index', structure)
         "
-        class="mt-6 w-full overflow-x-auto rounded-xl shadow-lg"
+        class="w-full mt-6 overflow-x-auto shadow-lg rounded-xl"
     >
         <table
-            class="w-full table-fixed border-collapse text-sm font-semibold text-gray-700 md:table-auto"
+            class="w-full text-sm font-semibold text-gray-700 border-collapse table-fixed md:table-auto"
         >
             <caption
-                class="caption-top bg-slate-50 py-6 text-sm font-semibold text-slate-600"
+                class="py-6 text-sm font-semibold caption-top bg-slate-50 text-slate-600"
             >
                 Liste des tarifs de la structure:
             </caption>
             <thead class="bg-slate-50">
-                <tr class="border-b text-center font-medium text-slate-400">
+                <tr class="font-medium text-center border-b text-slate-400">
                     <th class="p-5">Infos</th>
                     <th class="p-5">Titre</th>
                     <th class="p-5">Type</th>
@@ -321,7 +323,7 @@ const formatCurrency = (value) => {
             </thead>
             <tbody>
                 <tr
-                    class="border-b border-slate-100 text-center text-slate-500"
+                    class="text-center border-b border-slate-100 text-slate-500"
                     v-for="tarif in structure.tarifs"
                     :key="tarif.id"
                 >
@@ -333,18 +335,18 @@ const formatCurrency = (value) => {
                         >
                             <ClockIcon
                                 v-if="[1, 2, 5, 7].includes(info.attribut_id)"
-                                class="mr-1 h-5 w-5"
+                                class="w-5 h-5 mr-1"
                             />
                             <UserGroupIcon
                                 v-else-if="[3, 6].includes(info.attribut_id)"
-                                class="mr-1 h-5 w-5 text-slate-500"
+                                class="w-5 h-5 mr-1 text-slate-500"
                             />
                             <UsersIcon
                                 v-else-if="[4].includes(info.attribut_id)"
-                                class="mr-1 h-5 w-5"
+                                class="w-5 h-5 mr-1"
                             />
 
-                            <UsersIcon v-else class="mr-1 h-5 w-5" />
+                            <UsersIcon v-else class="w-5 h-5 mr-1" />
 
                             <span v-if="info.valeur" class="text-sm font-thin">
                                 {{ info.tarif_type_attribut.attribut }}:
@@ -360,7 +362,7 @@ const formatCurrency = (value) => {
                     <td class="p-5">{{ tarif.tarif_type.type }}</td>
                     <td class="p-5">
                         <p
-                            class="line-clamp-1 w-36 overflow-hidden text-ellipsis"
+                            class="overflow-hidden line-clamp-1 w-36 text-ellipsis"
                         >
                             {{ tarif.description }}
                         </p>
@@ -372,7 +374,7 @@ const formatCurrency = (value) => {
                             @click="openEditTarifModal(tarif)"
                         >
                             <ArrowPathIcon
-                                class="mr-1 h-6 w-6 text-slate-400 transition-all duration-200 hover:-rotate-90 hover:text-slate-600"
+                                class="w-6 h-6 mr-1 transition-all duration-200 text-slate-400 hover:-rotate-90 hover:text-slate-600"
                             />
                         </button>
 
@@ -381,7 +383,7 @@ const formatCurrency = (value) => {
                             @click="() => destroyTarif(tarif)"
                         >
                             <TrashIcon
-                                class="mr-1 h-6 w-6 text-slate-400 hover:text-slate-600"
+                                class="w-6 h-6 mr-1 text-slate-400 hover:text-slate-600"
                             />
                         </button>
                     </td>
@@ -391,18 +393,18 @@ const formatCurrency = (value) => {
     </div>
     <div
         v-if="tarifsList.length > 0"
-        class="mt-12 w-full overflow-x-auto rounded-xl shadow-lg"
+        class="w-full mt-12 overflow-x-auto shadow-lg rounded-xl"
     >
         <table
-            class="w-full table-fixed border-collapse text-sm font-semibold text-gray-700 md:table-auto"
+            class="w-full text-sm font-semibold text-gray-700 border-collapse table-fixed md:table-auto"
         >
             <caption
-                class="caption-top bg-slate-50 py-6 text-sm font-semibold text-slate-600"
+                class="py-6 text-sm font-semibold caption-top bg-slate-50 text-slate-600"
             >
                 Liste des tarifs par produit de votre activité:
             </caption>
             <thead class="bg-slate-50">
-                <tr class="border-b text-center font-medium text-slate-400">
+                <tr class="font-medium text-center border-b text-slate-400">
                     <th class="p-5">Infos</th>
                     <th class="p-5">Titre</th>
                     <th class="p-5">Produit associé</th>
@@ -414,7 +416,7 @@ const formatCurrency = (value) => {
             </thead>
             <tbody>
                 <tr
-                    class="border-b border-slate-100 text-center text-slate-500"
+                    class="text-center border-b border-slate-100 text-slate-500"
                     v-for="tarif in tarifsList"
                     :key="tarif.id"
                 >
@@ -426,18 +428,18 @@ const formatCurrency = (value) => {
                         >
                             <ClockIcon
                                 v-if="[1, 2, 5, 7].includes(info.attribut_id)"
-                                class="mr-1 h-5 w-5"
+                                class="w-5 h-5 mr-1"
                             />
                             <UserGroupIcon
                                 v-else-if="[3, 6].includes(info.attribut_id)"
-                                class="mr-1 h-5 w-5 text-slate-500"
+                                class="w-5 h-5 mr-1 text-slate-500"
                             />
                             <UsersIcon
                                 v-else-if="[4].includes(info.attribut_id)"
-                                class="mr-1 h-5 w-5"
+                                class="w-5 h-5 mr-1"
                             />
 
-                            <UsersIcon v-else class="mr-1 h-5 w-5" />
+                            <UsersIcon v-else class="w-5 h-5 mr-1" />
 
                             <span v-if="info.valeur" class="text-sm font-thin">
                                 {{ info.tarif_type_attribut.attribut }}:
@@ -454,7 +456,7 @@ const formatCurrency = (value) => {
                     <td class="p-5">{{ tarif.tarif_type.type }}</td>
                     <td class="p-5">
                         <p
-                            class="line-clamp-1 w-36 overflow-hidden text-ellipsis"
+                            class="overflow-hidden line-clamp-1 w-36 text-ellipsis"
                         >
                             {{ tarif.description }}
                         </p>
@@ -466,7 +468,7 @@ const formatCurrency = (value) => {
                             @click="openEditTarifModal(tarif)"
                         >
                             <ArrowPathIcon
-                                class="mr-1 h-6 w-6 text-slate-400 transition-all duration-200 hover:-rotate-90 hover:text-slate-600"
+                                class="w-6 h-6 mr-1 transition-all duration-200 text-slate-400 hover:-rotate-90 hover:text-slate-600"
                             />
                         </button>
 
@@ -475,7 +477,7 @@ const formatCurrency = (value) => {
                             @click="() => destroyTarif(tarif)"
                         >
                             <TrashIcon
-                                class="mr-1 h-6 w-6 text-slate-400 hover:text-slate-600"
+                                class="w-6 h-6 mr-1 text-slate-400 hover:text-slate-600"
                             />
                         </button>
                     </td>

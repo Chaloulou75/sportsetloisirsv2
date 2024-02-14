@@ -306,12 +306,20 @@ const submitForm = async () => {
                         <MagnifyingGlassIcon class="h-6 w-6" />
                         <span class="sr-only">Rechercher</span>
                     </button>
-                    <button
-                        type="button"
-                        class="items-center justify-center rounded bg-transparent px-2 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    <Link
+                        preserve-scroll
+                        :href="route('panier.index')"
+                        :active="route().current('panier.index')"
+                        class="relative items-center justify-center rounded bg-transparent px-2 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                         <ShoppingCartIcon class="h-6 w-6" />
-                    </button>
+                        <span
+                            v-if="productCountInSession"
+                            class="absolute right-0 top-0 rounded-full bg-red-500 px-1 text-xs text-white"
+                        >
+                            {{ productCountInSession }}
+                        </span>
+                    </Link>
                     <button
                         @click="
                             showingNavigationDropdown =
