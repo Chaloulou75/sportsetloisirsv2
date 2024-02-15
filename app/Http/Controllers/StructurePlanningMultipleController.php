@@ -19,29 +19,28 @@ class StructurePlanningMultipleController extends Controller
     {
         $request->validate([
             'title' => ['nullable', 'string'],
-            'activite_id' => ['required', Rule::exists(StructureActivite::class, 'id')],
-            'produit_id' => ['required', Rule::exists(StructureProduit::class, 'id')],
-            'horaires' => ['required'],
-            'dates' => ['required'],
+            'activite' => ['required', Rule::exists(StructureActivite::class, 'id')],
+            'produit' => ['required', Rule::exists(StructureProduit::class, 'id')],
+            'horaires' => 'required|array',
+            'horaires.*' => 'required|array',
+            'horaires.*.hours' => 'required|integer|min:0|max:23',
+            'horaires.*.minutes' => 'required|integer|min:0|max:59',
+            'dates' => 'required|array',
         ]);
-        dd($request->all());
 
         $activite = StructureActivite::findOrFail($request->activite);
         $produit = StructureProduit::findOrFail($request->produit);
         $horaires = array_map(function ($horaire) {
             return Carbon::createFromTime($horaire['hours'], $horaire['minutes'])->format('H:i');
         }, $request->horaires);
-
         $dates = array_map(function ($date) {
             return Carbon::parse($date)->setTimezone('Europe/Paris')->format('Y-m-d');
         }, $request->dates);
 
-        dd($dates, $horaires);
-        // Create Carbon instances
-        $startDate = createCarbonInstance($dates[0], 'j F Y');
-        $endDate = createCarbonInstance($dates[1], 'j F Y');
-        $startTime = Carbon::createFromFormat('H\hi', $horaires[0]);
-        $endTime = Carbon::createFromFormat('H\hi', $horaires[1]);
+        $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $dates[0]);
+        $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $dates[1]);
+        $startTime = \Carbon\Carbon::createFromFormat('H:i', $horaires[0]);
+        $endTime = \Carbon\Carbon::createFromFormat('H:i', $horaires[1]);
 
         $combinedDatePairs = [];
         $currentDate = $startDate->copy();
@@ -57,7 +56,7 @@ class StructurePlanningMultipleController extends Controller
 
             $currentDate->addDay();
         }
-        dd($combinedDatePairs);
+        // dd($combinedDatePairs);
         foreach ($combinedDatePairs as $combinedDatePair) {
             StructurePlanning::create([
                 'structure_id' => $structure->id,

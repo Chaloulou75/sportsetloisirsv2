@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import OpenDaysForm from "@/Components/Forms/DayTime/OpenDaysForm.vue";
 import OpenTimesForm from "@/Components/Forms/DayTime/OpenTimesForm.vue";
@@ -23,17 +23,15 @@ const props = defineProps({
     show: Boolean,
 });
 
-const selectedActivite = ref(props.structureActivites[0]);
-const selectedTitle = ref(props.structureActivites[0]?.titre ?? "");
-const filteredProducts = ref(null);
-
 const addPlanningForm = useForm({
-    title: selectedTitle,
-    activite: selectedActivite,
+    title: null,
+    activite: null,
     produit: null,
-    horaires: null,
     dates: null,
+    horaires: null,
 });
+
+const filteredProducts = ref([]);
 
 watch(
     () => addPlanningForm.activite,
@@ -43,7 +41,10 @@ watch(
                 (activite) => activite.id === newVal
             );
             filteredProducts.value = activite ? activite.produits ?? [] : [];
-            addPlanningForm.produit = activite.produits[0]?.id ?? null;
+            addPlanningForm.title = activite ? activite.titre ?? null : null;
+            addPlanningForm.produit = activite
+                ? activite.produits[0].id ?? null
+                : null;
         } else {
             filteredProducts.value = null;
         }
@@ -138,7 +139,7 @@ const onSubmit = () => {
                                             "
                                         />
 
-                                        <div class="mt-2">
+                                        <div class="my-2">
                                             <p class="text-sm text-gray-500">
                                                 Exemple:
                                                 <span class="font-semibold">
@@ -158,7 +159,7 @@ const onSubmit = () => {
                                             id="hs-select-label"
                                             class="block w-full max-w-sm px-4 py-3 text-sm border-gray-200 rounded-lg pe-9 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400 dark:focus:ring-gray-600"
                                         >
-                                            <option disabled selected>
+                                            <option disabled>
                                                 Sélectionner une activité
                                             </option>
                                             <option
@@ -189,7 +190,7 @@ const onSubmit = () => {
                                             id="hs-select-label"
                                             class="block w-full max-w-sm px-4 py-3 text-sm border-gray-200 rounded-lg pe-9 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400 dark:focus:ring-gray-600"
                                         >
-                                            <option disabled selected>
+                                            <option disabled>
                                                 Sélectionner un produit
                                             </option>
                                             <option
