@@ -89,13 +89,12 @@ class LienDisCatTariftypeController extends Controller
         $this->authorize('viewAdmin', $user);
 
         $discipline = ListDiscipline::with('familles')->findOrFail($discipline->id);
+        $tarifType = LienDisCatTariftype::with('tarif_booking_fields')->find($tarifType->id);
 
         $categorie = LienDisciplineCategorie::with([
             'discipline',
             'categorie',
             'tarif_types',
-            'tarif_types.tarif_attributs.sous_attributs.valeurs',
-            'tarif_types.tarif_attributs.valeurs',
         ])
         ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
         ->findOrFail($categorie->id);
@@ -104,8 +103,6 @@ class LienDisCatTariftypeController extends Controller
             'discipline',
             'categorie',
             'tarif_types',
-            'tarif_types.tarif_attributs.sous_attributs.valeurs',
-            'tarif_types.tarif_attributs.valeurs',
         ])->where('discipline_id', $discipline->id)
             ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
             ->get();

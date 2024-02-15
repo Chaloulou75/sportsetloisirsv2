@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\LienDisCatTarBookingField;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LienDisCatTariftype extends Model
 {
@@ -38,5 +39,10 @@ class LienDisCatTariftype extends Model
     public function tarif_attributs(): HasMany
     {
         return $this->hasMany(LienDisCatTartypAttribut::class, 'cat_tarif_id');
+    }
+
+    public function tarif_booking_fields(): HasMany
+    {
+        return $this->hasMany(LienDisCatTarBookingField::class, 'cat_tarif_id');
     }
 }

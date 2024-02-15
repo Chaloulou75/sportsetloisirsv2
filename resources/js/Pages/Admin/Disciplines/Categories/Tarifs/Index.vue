@@ -534,17 +534,17 @@ onMounted(() => {
     />
     <AdminLayout>
         <template #header>
-            <div class="flex h-full items-center justify-start">
+            <div class="flex items-center justify-start h-full">
                 <Link
                     :href="
                         route('admin.disciplines.categories.edit', discipline)
                     "
                     class="h-full bg-blue-600 py-2.5 md:px-4 md:py-4"
                 >
-                    <ChevronLeftIcon class="h-10 w-10 text-white" />
+                    <ChevronLeftIcon class="w-10 h-10 text-white" />
                 </Link>
                 <h1
-                    class="px-3 text-center text-base font-semibold text-gray-600 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
+                    class="px-3 text-base font-semibold text-center text-gray-600 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
                     Tarifs associées à la catégorie
                     <span class="text-indigo-600">{{
@@ -571,12 +571,12 @@ onMounted(() => {
             :tarif-types="categorie.tarif_types"
         />
 
-        <div class="space-y-16 px-2 py-6 md:px-6">
+        <div class="px-2 py-6 space-y-16 md:px-6">
             <div
-                class="rounded-md border border-indigo-300 bg-gray-50 px-1 py-6 shadow-lg md:px-3"
+                class="px-1 py-6 border border-indigo-300 rounded-md shadow-lg bg-gray-50 md:px-3"
             >
                 <p
-                    class="px-2 text-center text-lg text-slate-600 underline decoration-yellow-400 decoration-4 underline-offset-4"
+                    class="px-2 text-lg text-center underline text-slate-600 decoration-yellow-400 decoration-4 underline-offset-4"
                 >
                     <span class="font-semibold">Types de tarifs </span>pour la
                     catégorie:
@@ -591,18 +591,18 @@ onMounted(() => {
                 <template v-if="categorie.tarif_types.length > 0">
                     <ul
                         ref="toAnimateOne"
-                        class="list-inside list-disc space-y-4 py-4 text-sm text-slate-600 marker:text-indigo-600"
+                        class="py-4 space-y-4 text-sm list-disc list-inside text-slate-600 marker:text-indigo-600"
                     >
                         <li
                             v-for="tarifType in categorie.tarif_types"
                             :key="tarifType.id"
-                            class="flex flex-col space-y-4 border-b-8 border-white py-4 text-base text-slate-600"
+                            class="flex flex-col py-4 space-y-4 text-base border-b-8 border-white text-slate-600"
                         >
                             <div
-                                class="w-full flex-col items-start justify-between"
+                                class="flex-col items-start justify-between w-full"
                             >
                                 <div
-                                    class="flex w-full flex-col items-start justify-between space-y-3 pb-2 md:flex-row md:space-x-6 md:space-y-0"
+                                    class="flex flex-col items-start justify-between w-full pb-2 space-y-3 md:flex-row md:space-x-6 md:space-y-0"
                                 >
                                     <div
                                         class="underline decoration-blue-500 decoration-2 underline-offset-2"
@@ -623,7 +623,7 @@ onMounted(() => {
                                                     tarifType.id
                                                 )
                                             "
-                                            class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                            class="inline-flex items-center justify-center px-4 py-3 text-sm font-medium text-center text-gray-600 bg-white border border-gray-300 rounded-lg shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                                             type="button"
                                         >
                                             <div>
@@ -642,7 +642,7 @@ onMounted(() => {
                                                     tarifType.id
                                                 )
                                             "
-                                            class="mt-1 flex flex-col rounded-md"
+                                            class="flex flex-col mt-1 rounded-md"
                                         >
                                             <label
                                                 for="nom tarif"
@@ -672,7 +672,7 @@ onMounted(() => {
                                                     type="text"
                                                     name="nom_type_tarif"
                                                     id="nom_type_tarif"
-                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                     placeholder=""
                                                     autocomplete="none"
                                                 />
@@ -684,10 +684,10 @@ onMounted(() => {
                                                         ].processing
                                                     "
                                                     type="submit"
-                                                    class="ml-4 inline-flex items-center"
+                                                    class="inline-flex items-center ml-4"
                                                 >
                                                     <ArrowPathIcon
-                                                        class="h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
+                                                        class="w-6 h-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
                                                     />
                                                 </button>
                                                 <button
@@ -697,10 +697,10 @@ onMounted(() => {
                                                         )
                                                     "
                                                     type="button"
-                                                    class="ml-4 inline-flex items-center"
+                                                    class="inline-flex items-center ml-4"
                                                 >
                                                     <XCircleIcon
-                                                        class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                        class="w-6 h-6 text-red-500 hover:text-red-700"
                                                     />
                                                 </button>
                                             </div>
@@ -719,7 +719,7 @@ onMounted(() => {
                                             @click="deleteTarifType(tarifType)"
                                         >
                                             <TrashIcon
-                                                class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                class="w-6 h-6 text-red-500 hover:text-red-700"
                                             />
                                         </button>
                                     </div>
@@ -727,7 +727,7 @@ onMounted(() => {
                                 <!-- liste attributs -->
                                 <ul
                                     v-if="tarifType.tarif_attributs.length > 0"
-                                    class="ml-6 list-inside list-disc space-y-4 py-4 text-sm text-slate-600 marker:text-indigo-600"
+                                    class="py-4 ml-6 space-y-4 text-sm list-disc list-inside text-slate-600 marker:text-indigo-600"
                                 >
                                     <li
                                         v-for="attribut in tarifType.tarif_attributs"
@@ -759,7 +759,7 @@ onMounted(() => {
                                                     type="text"
                                                     :name="attribut.nom"
                                                     :id="attribut.nom"
-                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                     placeholder=""
                                                     autocomplete="none"
                                                 />
@@ -787,7 +787,7 @@ onMounted(() => {
                                             >
                                                 <button type="submit">
                                                     <ArrowPathIcon
-                                                        class="mr-1 h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
+                                                        class="w-6 h-6 mr-1 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
                                                     />
                                                     <span class="sr-only"
                                                         >Mettre à jour l'
@@ -805,7 +805,7 @@ onMounted(() => {
                                                     "
                                                 >
                                                     <TrashIcon
-                                                        class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                        class="w-6 h-6 text-red-500 hover:text-red-700"
                                                     />
                                                 </button>
                                             </div>
@@ -813,7 +813,7 @@ onMounted(() => {
                                         <!-- liste des valeurs-->
                                         <ul
                                             v-if="attribut.valeurs.length > 0"
-                                            class="ml-6 list-inside list-disc space-y-4 py-2 text-sm text-slate-600 marker:text-indigo-600"
+                                            class="py-2 ml-6 space-y-4 text-sm list-disc list-inside text-slate-600 marker:text-indigo-600"
                                         >
                                             <li
                                                 v-for="valeur in attribut.valeurs"
@@ -848,7 +848,7 @@ onMounted(() => {
                                                                 valeur.valeur
                                                             "
                                                             :id="valeur.valeur"
-                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                             placeholder=""
                                                             autocomplete="none"
                                                         />
@@ -871,7 +871,7 @@ onMounted(() => {
                                                     >
                                                         <button type="submit">
                                                             <ArrowPathIcon
-                                                                class="mr-1 h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
+                                                                class="w-6 h-6 mr-1 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
                                                             />
                                                             <span
                                                                 class="sr-only"
@@ -892,7 +892,7 @@ onMounted(() => {
                                                             "
                                                         >
                                                             <TrashIcon
-                                                                class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                                class="w-6 h-6 text-red-500 hover:text-red-700"
                                                             />
                                                         </button>
                                                     </div>
@@ -901,7 +901,7 @@ onMounted(() => {
                                         </ul>
                                         <!-- liste des sous attributs -->
                                         <ul
-                                            class="ml-6 list-inside list-disc space-y-4 py-2 text-sm text-slate-600 marker:text-indigo-600"
+                                            class="py-2 ml-6 space-y-4 text-sm list-disc list-inside text-slate-600 marker:text-indigo-600"
                                         >
                                             <li
                                                 v-for="sousAttribut in attribut.sous_attributs"
@@ -940,7 +940,7 @@ onMounted(() => {
                                                             :id="
                                                                 sousAttribut.nom
                                                             "
-                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                             placeholder=""
                                                             autocomplete="none"
                                                         />
@@ -971,7 +971,7 @@ onMounted(() => {
                                                     >
                                                         <button type="submit">
                                                             <ArrowPathIcon
-                                                                class="mr-1 h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
+                                                                class="w-6 h-6 mr-1 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
                                                             />
                                                             <span
                                                                 class="sr-only"
@@ -992,7 +992,7 @@ onMounted(() => {
                                                             "
                                                         >
                                                             <TrashIcon
-                                                                class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                                class="w-6 h-6 text-red-500 hover:text-red-700"
                                                             />
                                                         </button>
                                                     </div>
@@ -1003,7 +1003,7 @@ onMounted(() => {
                                                         sousAttribut.valeurs
                                                             .length > 0
                                                     "
-                                                    class="ml-6 list-inside list-disc space-y-4 py-2 text-sm text-slate-600 marker:text-indigo-600"
+                                                    class="py-2 ml-6 space-y-4 text-sm list-disc list-inside text-slate-600 marker:text-indigo-600"
                                                 >
                                                     <li
                                                         v-for="valeur in sousAttribut.valeurs"
@@ -1045,7 +1045,7 @@ onMounted(() => {
                                                                     :id="
                                                                         valeur.valeur
                                                                     "
-                                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                                     placeholder=""
                                                                     autocomplete="none"
                                                                 />
@@ -1070,7 +1070,7 @@ onMounted(() => {
                                                                     type="submit"
                                                                 >
                                                                     <ArrowPathIcon
-                                                                        class="mr-1 h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
+                                                                        class="w-6 h-6 mr-1 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
                                                                     />
                                                                     <span
                                                                         class="sr-only"
@@ -1095,7 +1095,7 @@ onMounted(() => {
                                                                     "
                                                                 >
                                                                     <TrashIcon
-                                                                        class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                                        class="w-6 h-6 text-red-500 hover:text-red-700"
                                                                     />
                                                                 </button>
                                                             </div>
@@ -1120,7 +1120,7 @@ onMounted(() => {
                                                                 sousAttribut
                                                             )
                                                         "
-                                                        class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                                        class="inline-flex items-center justify-center px-4 py-3 text-sm font-medium text-center text-gray-600 bg-white border border-gray-300 rounded-lg shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                                                         type="button"
                                                     >
                                                         <div>
@@ -1144,7 +1144,7 @@ onMounted(() => {
                                                     "
                                                 >
                                                     <form
-                                                        class="inline-flex flex-grow items-end justify-between text-center text-xs font-medium text-gray-600"
+                                                        class="inline-flex items-end justify-between flex-grow text-xs font-medium text-center text-gray-600"
                                                         @submit.prevent="
                                                             addTarifAttributSousAttributValeur(
                                                                 tarifType,
@@ -1168,7 +1168,7 @@ onMounted(() => {
                                                                 >:</label
                                                             >
                                                             <div
-                                                                class="mt-1 flex rounded-md"
+                                                                class="flex mt-1 rounded-md"
                                                             >
                                                                 <input
                                                                     v-model="
@@ -1177,7 +1177,7 @@ onMounted(() => {
                                                                     type="text"
                                                                     name="newSousAttributValeur"
                                                                     id="newSousAttributValeur"
-                                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                                     placeholder=""
                                                                     autocomplete="none"
                                                                 />
@@ -1197,10 +1197,10 @@ onMounted(() => {
                                                         </div>
                                                         <button
                                                             type="submit"
-                                                            class="ml-4 inline-flex items-end"
+                                                            class="inline-flex items-end ml-4"
                                                         >
                                                             <PlusCircleIcon
-                                                                class="h-6 w-6 text-indigo-500 hover:text-indigo-700"
+                                                                class="w-6 h-6 text-indigo-500 hover:text-indigo-700"
                                                             />
                                                         </button>
                                                         <button
@@ -1210,10 +1210,10 @@ onMounted(() => {
                                                                 )
                                                             "
                                                             type="button"
-                                                            class="ml-4 inline-flex items-center"
+                                                            class="inline-flex items-center ml-4"
                                                         >
                                                             <XCircleIcon
-                                                                class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                                class="w-6 h-6 text-red-500 hover:text-red-700"
                                                             />
                                                         </button>
                                                     </form>
@@ -1235,7 +1235,7 @@ onMounted(() => {
                                                         attribut
                                                     )
                                                 "
-                                                class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                                class="inline-flex items-center justify-center px-4 py-3 text-sm font-medium text-center text-gray-600 bg-white border border-gray-300 rounded-lg shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                                                 type="button"
                                             >
                                                 <div>
@@ -1254,7 +1254,7 @@ onMounted(() => {
                                                 "
                                             >
                                                 <form
-                                                    class="inline-flex flex-grow items-end justify-between text-center text-xs font-medium text-gray-600"
+                                                    class="inline-flex items-end justify-between flex-grow text-xs font-medium text-center text-gray-600"
                                                     @submit.prevent="
                                                         addTarifAttributValeur(
                                                             tarifType,
@@ -1277,7 +1277,7 @@ onMounted(() => {
                                                             >:</label
                                                         >
                                                         <div
-                                                            class="mt-1 flex rounded-md"
+                                                            class="flex mt-1 rounded-md"
                                                         >
                                                             <input
                                                                 v-model="
@@ -1286,7 +1286,7 @@ onMounted(() => {
                                                                 type="text"
                                                                 name="newSousAttributValeur"
                                                                 id="newSousAttributValeur"
-                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                                 placeholder=""
                                                                 autocomplete="none"
                                                             />
@@ -1306,10 +1306,10 @@ onMounted(() => {
                                                     </div>
                                                     <button
                                                         type="submit"
-                                                        class="ml-4 inline-flex items-end"
+                                                        class="inline-flex items-end ml-4"
                                                     >
                                                         <PlusCircleIcon
-                                                            class="h-6 w-6 text-indigo-500 hover:text-indigo-700"
+                                                            class="w-6 h-6 text-indigo-500 hover:text-indigo-700"
                                                         />
                                                     </button>
                                                     <button
@@ -1319,10 +1319,10 @@ onMounted(() => {
                                                             )
                                                         "
                                                         type="button"
-                                                        class="ml-4 inline-flex items-center"
+                                                        class="inline-flex items-center ml-4"
                                                     >
                                                         <XCircleIcon
-                                                            class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                            class="w-6 h-6 text-red-500 hover:text-red-700"
                                                         />
                                                     </button>
                                                 </form>
@@ -1344,7 +1344,7 @@ onMounted(() => {
                                                     attribut
                                                 )
                                             "
-                                            class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                            class="inline-flex items-center justify-center px-4 py-3 text-sm font-medium text-center text-gray-600 bg-white border border-gray-300 rounded-lg shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                                             type="button"
                                         >
                                             <div>
@@ -1362,7 +1362,7 @@ onMounted(() => {
                                             "
                                         >
                                             <form
-                                                class="ml-6 inline-flex flex-grow items-end justify-between text-center text-xs font-medium text-gray-600"
+                                                class="inline-flex items-end justify-between flex-grow ml-6 text-xs font-medium text-center text-gray-600"
                                                 @submit.prevent="
                                                     addTarifAttributSousAttribut(
                                                         tarifType,
@@ -1384,7 +1384,7 @@ onMounted(() => {
                                                         >:</label
                                                     >
                                                     <div
-                                                        class="mt-1 flex rounded-md"
+                                                        class="flex mt-1 rounded-md"
                                                     >
                                                         <input
                                                             v-model="
@@ -1393,7 +1393,7 @@ onMounted(() => {
                                                             type="text"
                                                             name="newSousAttribut"
                                                             id="newSousAttribut"
-                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                             placeholder=""
                                                             autocomplete="none"
                                                         />
@@ -1411,7 +1411,7 @@ onMounted(() => {
                                                         }}
                                                     </div>
                                                     <Listbox
-                                                        class="w-full flex-grow"
+                                                        class="flex-grow w-full"
                                                         v-model="
                                                             addSousAttributForm.type_champ
                                                         "
@@ -1420,7 +1420,7 @@ onMounted(() => {
                                                             class="relative mt-1"
                                                         >
                                                             <ListboxButton
-                                                                class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                                                                class="relative w-full py-2 pl-3 pr-10 mt-1 text-left bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
                                                             >
                                                                 <span
                                                                     class="block truncate"
@@ -1431,10 +1431,10 @@ onMounted(() => {
                                                                     }}</span
                                                                 >
                                                                 <span
-                                                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+                                                                    class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
                                                                 >
                                                                     <ChevronUpDownIcon
-                                                                        class="h-5 w-5 text-gray-400"
+                                                                        class="w-5 h-5 text-gray-400"
                                                                         aria-hidden="true"
                                                                     />
                                                                 </span>
@@ -1446,7 +1446,7 @@ onMounted(() => {
                                                                 leave-to-class="opacity-0"
                                                             >
                                                                 <ListboxOptions
-                                                                    class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-left text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                                                                    class="absolute z-40 w-full py-1 mt-1 overflow-auto text-base text-left bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
                                                                 >
                                                                     <ListboxOption
                                                                         v-slot="{
@@ -1491,7 +1491,7 @@ onMounted(() => {
                                                                                 class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
                                                                             >
                                                                                 <CheckCircleIcon
-                                                                                    class="h-5 w-5"
+                                                                                    class="w-5 h-5"
                                                                                     aria-hidden="true"
                                                                                 />
                                                                             </span>
@@ -1504,10 +1504,10 @@ onMounted(() => {
                                                 </div>
                                                 <button
                                                     type="submit"
-                                                    class="ml-4 inline-flex items-end"
+                                                    class="inline-flex items-end ml-4"
                                                 >
                                                     <PlusCircleIcon
-                                                        class="h-6 w-6 text-indigo-500 hover:text-indigo-700"
+                                                        class="w-6 h-6 text-indigo-500 hover:text-indigo-700"
                                                     />
                                                 </button>
                                                 <button
@@ -1517,10 +1517,10 @@ onMounted(() => {
                                                         )
                                                     "
                                                     type="button"
-                                                    class="ml-4 inline-flex items-center"
+                                                    class="inline-flex items-center ml-4"
                                                 >
                                                     <XCircleIcon
-                                                        class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                        class="w-6 h-6 text-red-500 hover:text-red-700"
                                                     />
                                                 </button>
                                             </form>
@@ -1534,7 +1534,7 @@ onMounted(() => {
                                 <button
                                     v-if="!showAddAttributForm(tarifType)"
                                     @click="toggleAddAttributForm(tarifType)"
-                                    class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                    class="inline-flex items-center justify-center px-4 py-3 text-sm font-medium text-center text-gray-600 bg-white border border-gray-300 rounded-lg shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                                     type="button"
                                 >
                                     <div>
@@ -1546,7 +1546,7 @@ onMounted(() => {
                                 </button>
                                 <form
                                     v-if="showAddAttributForm(tarifType)"
-                                    class="ml-6 inline-flex flex-grow items-end justify-between text-center text-xs font-medium text-gray-600"
+                                    class="inline-flex items-end justify-between flex-grow ml-6 text-xs font-medium text-center text-gray-600"
                                     @submit.prevent="
                                         addTarifAttribut(tarifType)
                                     "
@@ -1559,13 +1559,13 @@ onMounted(() => {
                                             }}</span
                                             >:</label
                                         >
-                                        <div class="mt-1 flex rounded-md">
+                                        <div class="flex mt-1 rounded-md">
                                             <input
                                                 v-model="addAttributForm.nom"
                                                 type="text"
                                                 name="newAttribut"
                                                 id="newAttribut"
-                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                 placeholder=""
                                                 autocomplete="none"
                                             />
@@ -1577,12 +1577,12 @@ onMounted(() => {
                                             {{ errors.addAttributForm.nom }}
                                         </div>
                                         <Listbox
-                                            class="w-full flex-grow"
+                                            class="flex-grow w-full"
                                             v-model="addAttributForm.type_champ"
                                         >
                                             <div class="relative mt-1">
                                                 <ListboxButton
-                                                    class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                                                    class="relative w-full py-2 pl-3 pr-10 mt-1 text-left bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
                                                 >
                                                     <span
                                                         class="block truncate"
@@ -1592,10 +1592,10 @@ onMounted(() => {
                                                         }}</span
                                                     >
                                                     <span
-                                                        class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+                                                        class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
                                                     >
                                                         <ChevronUpDownIcon
-                                                            class="h-5 w-5 text-gray-400"
+                                                            class="w-5 h-5 text-gray-400"
                                                             aria-hidden="true"
                                                         />
                                                     </span>
@@ -1607,7 +1607,7 @@ onMounted(() => {
                                                     leave-to-class="opacity-0"
                                                 >
                                                     <ListboxOptions
-                                                        class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                                                        class="absolute z-40 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
                                                     >
                                                         <ListboxOption
                                                             v-slot="{
@@ -1648,7 +1648,7 @@ onMounted(() => {
                                                                     class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
                                                                 >
                                                                     <CheckCircleIcon
-                                                                        class="h-5 w-5"
+                                                                        class="w-5 h-5"
                                                                         aria-hidden="true"
                                                                     />
                                                                 </span>
@@ -1661,10 +1661,10 @@ onMounted(() => {
                                     </div>
                                     <button
                                         type="submit"
-                                        class="ml-4 inline-flex items-end"
+                                        class="inline-flex items-end ml-4"
                                     >
                                         <PlusCircleIcon
-                                            class="h-6 w-6 text-indigo-500 hover:text-indigo-700"
+                                            class="w-6 h-6 text-indigo-500 hover:text-indigo-700"
                                         />
                                     </button>
                                     <button
@@ -1672,10 +1672,10 @@ onMounted(() => {
                                             toggleAddAttributForm(tarifType)
                                         "
                                         type="button"
-                                        class="ml-4 inline-flex items-center"
+                                        class="inline-flex items-center ml-4"
                                     >
                                         <XCircleIcon
-                                            class="h-6 w-6 text-red-500 hover:text-red-700"
+                                            class="w-6 h-6 text-red-500 hover:text-red-700"
                                         />
                                     </button>
                                 </form>
@@ -1684,9 +1684,9 @@ onMounted(() => {
                     </ul>
                 </template>
                 <!-- Ajout Tarif type -->
-                <div class="flex w-full items-center justify-start">
+                <div class="flex items-center justify-start w-full">
                     <button
-                        class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                        class="inline-flex items-center justify-center px-4 py-3 text-sm font-medium text-center text-gray-600 bg-white border border-gray-300 rounded-lg shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                         v-if="!showAddTarifTypeForm(categorie)"
                         type="button"
                         @click="toggleAddTarifTypeForm(categorie)"
@@ -1700,26 +1700,26 @@ onMounted(() => {
                     </button>
                     <form
                         v-if="showAddTarifTypeForm(categorie)"
-                        class="inline-flex max-w-md flex-grow items-center justify-between"
+                        class="inline-flex items-center justify-between flex-grow max-w-md"
                         @submit.prevent="addTarifType(categorie)"
                     >
-                        <div class="flex w-full flex-grow flex-col space-y-3">
+                        <div class="flex flex-col flex-grow w-full space-y-3">
                             <Listbox
-                                class="w-full flex-grow"
+                                class="flex-grow w-full"
                                 v-model="addTarifTypeForm.type"
                             >
                                 <div class="relative mt-1">
                                     <ListboxButton
-                                        class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                                        class="relative w-full py-2 pl-3 pr-10 mt-1 text-left bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
                                     >
                                         <span class="block truncate">{{
                                             addTarifTypeForm.type.type
                                         }}</span>
                                         <span
-                                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+                                            class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
                                         >
                                             <ChevronUpDownIcon
-                                                class="h-5 w-5 text-gray-400"
+                                                class="w-5 h-5 text-gray-400"
                                                 aria-hidden="true"
                                             />
                                         </span>
@@ -1731,7 +1731,7 @@ onMounted(() => {
                                         leave-to-class="opacity-0"
                                     >
                                         <ListboxOptions
-                                            class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                                            class="absolute z-40 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
                                         >
                                             <ListboxOption
                                                 v-slot="{ active, selected }"
@@ -1764,7 +1764,7 @@ onMounted(() => {
                                                         class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
                                                     >
                                                         <CheckCircleIcon
-                                                            class="h-5 w-5"
+                                                            class="w-5 h-5"
                                                             aria-hidden="true"
                                                         />
                                                     </span>
@@ -1777,7 +1777,7 @@ onMounted(() => {
 
                             <div
                                 v-if="addTarifTypeForm.type"
-                                class="mt-1 flex flex-col rounded-md"
+                                class="flex flex-col mt-1 rounded-md"
                             >
                                 <label
                                     for="tarif_type_nom"
@@ -1789,7 +1789,7 @@ onMounted(() => {
                                     type="text"
                                     name="tarif_type_nom"
                                     id="tarif_type_nom"
-                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                     placeholder=""
                                     autocomplete="none"
                                 />
@@ -1803,19 +1803,19 @@ onMounted(() => {
                         </div>
                         <button
                             type="submit"
-                            class="ml-4 inline-flex items-center"
+                            class="inline-flex items-center ml-4"
                         >
                             <PlusCircleIcon
-                                class="h-6 w-6 text-indigo-500 hover:text-indigo-700"
+                                class="w-6 h-6 text-indigo-500 hover:text-indigo-700"
                             />
                         </button>
                         <button
                             @click="toggleAddTarifTypeForm(categorie)"
                             type="button"
-                            class="ml-4 inline-flex items-center"
+                            class="inline-flex items-center ml-4"
                         >
                             <XCircleIcon
-                                class="h-6 w-6 text-red-500 hover:text-red-700"
+                                class="w-6 h-6 text-red-500 hover:text-red-700"
                             />
                         </button>
                     </form>

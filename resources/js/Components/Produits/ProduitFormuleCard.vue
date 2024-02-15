@@ -242,7 +242,7 @@ const formatCurrency = (value) => {
                                                 />
                                             </td>
                                             <td
-                                                class="px-3 py-4 text-sm text-gray-800 whitespace-nowrap"
+                                                class="px-3 py-4 text-sm font-semibold text-gray-800 whitespace-nowrap"
                                             >
                                                 {{
                                                     catTarif.cat_tarif_type.nom

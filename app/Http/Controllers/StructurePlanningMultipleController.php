@@ -9,13 +9,14 @@ use Illuminate\Validation\Rule;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Models\StructurePlanning;
+use Illuminate\Http\RedirectResponse;
 
 class StructurePlanningMultipleController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Structure $structure)
+    public function store(Request $request, Structure $structure): RedirectResponse
     {
         $request->validate([
             'title' => ['nullable', 'string'],

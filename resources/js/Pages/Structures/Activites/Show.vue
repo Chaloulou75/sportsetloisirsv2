@@ -24,7 +24,13 @@ import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import autoAnimate from "@formkit/auto-animate";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
-import { ArrowPathIcon, ShareIcon } from "@heroicons/vue/24/outline";
+import {
+    ArrowPathIcon,
+    AtSymbolIcon,
+    MapPinIcon,
+    PhoneIcon,
+    ShareIcon,
+} from "@heroicons/vue/24/outline";
 import { StarIcon } from "@heroicons/vue/24/solid";
 import {
     parse,
@@ -948,11 +954,23 @@ onMounted(() => {
                                 "
                                 >{{ activite.structure.name }}</Link
                             >
-                            <p>{{ activite.structure.email }}</p>
-                            <p>{{ activite.structure.phone1 }}</p>
+                            <p
+                                class="flex items-center px-2 space-x-2 text-sm text-gray-800"
+                            >
+                                <AtSymbolIcon class="w-4 h-4" />
+                                {{ activite.structure.email }}
+                            </p>
+                            <p
+                                class="flex items-center px-2 space-x-2 text-sm text-gray-800"
+                            >
+                                <PhoneIcon class="w-4 h-4" />
+                                {{ activite.structure.phone1 }}
+                            </p>
                             <div>
-                                <h3 class="px-2 pb-1 text-base">
-                                    Localisation:
+                                <h3
+                                    class="flex items-center px-2 mb-2 space-x-2 text-sm text-gray-800"
+                                >
+                                    <MapPinIcon class="w-4 h-4" /> Localisation:
                                     <span class="font-semibold">
                                         {{
                                             activite.structure.adresses[0].city
