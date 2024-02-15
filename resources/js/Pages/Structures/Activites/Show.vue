@@ -18,11 +18,13 @@ import SingleDateForm from "@/Components/Forms/DayTime/SingleDateForm.vue";
 import SingleTimeForm from "@/Components/Forms/DayTime/SingleTimeForm.vue";
 import OpenTimesForm from "@/Components/Forms/DayTime/OpenTimesForm.vue";
 import OpenMonthsForm from "@/Components/Forms/DayTime/OpenMonthsForm.vue";
+import { isClient } from "@vueuse/shared";
+import { useShare } from "@vueuse/core";
 import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import autoAnimate from "@formkit/auto-animate";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
-import { ArrowPathIcon } from "@heroicons/vue/24/outline";
+import { ArrowPathIcon, ShareIcon } from "@heroicons/vue/24/outline";
 import { StarIcon } from "@heroicons/vue/24/solid";
 import {
     parse,
@@ -54,6 +56,20 @@ const props = defineProps({
     structuretypeElected: Object,
     produits: Object,
 });
+
+const options = ref({
+    title: props.activite.titre,
+    url: isClient ? location.href : "",
+});
+const { share, isSupported } = useShare(options);
+
+async function startShare() {
+    try {
+        return await share();
+    } catch (err) {
+        return err;
+    }
+}
 
 const listToAnimate = ref();
 const filteredProduits = ref(props.produits);
@@ -901,35 +917,39 @@ onMounted(() => {
                 />
             </div>
 
-            <section class="mx-auto my-4 max-w-full px-0 py-6 sm:px-4 lg:px-8">
+            <section
+                class="max-w-full px-2 mx-auto my-4 sm:px-4 md:py-6 lg:px-8"
+            >
                 <div
                     class="flex flex-col-reverse justify-between space-y-8 rounded-lg text-slate-600 md:flex-row md:items-start md:space-x-6 md:space-y-0"
                 >
                     <!-- Structure -->
-                    <div class="basis-full space-y-6 md:basis-1/4">
+                    <div class="space-y-6 basis-full md:basis-1/4">
                         <img
                             v-if="activite.image"
                             alt="image"
                             :src="activite.image_url"
-                            class="h-56 w-auto max-w-xs object-cover"
+                            class="object-cover w-auto h-56 max-w-xs"
                         />
                         <img
                             v-else
                             alt="image"
                             src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                            class="h-full w-full object-cover"
+                            class="object-cover w-full h-full"
                         />
-                        <div class="w-full space-y-2 bg-gray-200 pt-4">
+                        <div class="w-full pt-4 space-y-2 bg-gray-200">
                             <p class="px-2 text-sm text-gray-800">
                                 Activité proposée par:
                             </p>
                             <Link
-                                class="flex w-full justify-center px-2 text-lg text-indigo-600 hover:text-indigo-800"
+                                class="flex justify-center w-full px-2 text-lg text-indigo-600 hover:text-indigo-800"
                                 :href="
                                     route('structures.show', activite.structure)
                                 "
                                 >{{ activite.structure.name }}</Link
                             >
+                            <p>{{ activite.structure.email }}</p>
+                            <p>{{ activite.structure.phone1 }}</p>
                             <div>
                                 <h3 class="px-2 pb-1 text-base">
                                     Localisation:
@@ -947,27 +967,53 @@ onMounted(() => {
                             </div>
                         </div>
                     </div>
-                    <div class="basis-full space-y-12 md:basis-3/4">
+                    <div class="space-y-12 basis-full md:basis-3/4">
                         <!-- titre -->
                         <div
-                            class="my-4 flex flex-col items-center justify-center"
+                            class="flex flex-col items-center justify-center mb-4"
                         >
-                            <h1
-                                class="inline-block w-full text-center text-xl font-semibold sm:text-2xl sm:leading-7 md:text-3xl"
-                            >
-                                {{ activite.titre }}
-                            </h1>
+                            <div class="flex items-center w-full">
+                                <h1
+                                    class="inline-block w-full text-xl font-semibold text-center sm:text-2xl sm:leading-7 md:text-3xl"
+                                >
+                                    {{ activite.titre }}
+                                </h1>
+                                <div
+                                    v-if="isSupported"
+                                    class="items-center self-end justify-center hidden mt-4 text-sm md:flex"
+                                >
+                                    <button
+                                        class="flex items-center p-2 text-gray-700 bg-white border border-gray-200 rounded hover:bg-blue-600 hover:text-white"
+                                        @click="startShare"
+                                    >
+                                        <ShareIcon class="w-5 h-5" />
+                                    </button>
+                                </div>
+                            </div>
+
                             <h2
-                                class="inline-block w-full text-center text-xl font-semibold text-gray-500 sm:leading-5 md:text-xl"
+                                class="inline-block w-full text-xl font-semibold text-center text-gray-500 sm:leading-5 md:text-xl"
                             >
                                 {{ activite.structure.name }}
                             </h2>
+
+                            <div
+                                v-if="isSupported"
+                                class="flex items-center self-end justify-center mt-4 text-sm md:hidden"
+                            >
+                                <button
+                                    class="flex items-center p-2 text-gray-700 bg-white border border-gray-200 rounded hover:bg-blue-600 hover:text-white"
+                                    @click="startShare"
+                                >
+                                    <ShareIcon class="w-5 h-5" />
+                                </button>
+                            </div>
                         </div>
                         <!-- Resume -->
                         <div>
                             <p
                                 v-if="activite.description"
-                                class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
+                                class="text-base font-medium leading-5 text-gray-700 whitespace-pre-line"
                             >
                                 {{ activite.description }}
                             </p>
@@ -975,13 +1021,13 @@ onMounted(() => {
                                 v-else-if="
                                     activite.structure.presentation_longue
                                 "
-                                class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
+                                class="text-base font-medium leading-5 text-gray-700 whitespace-pre-line"
                             >
                                 {{ activite.structure.presentation_longue }}
                             </p>
                             <p
                                 v-else
-                                class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
+                                class="text-base font-medium leading-5 text-gray-700 whitespace-pre-line"
                             >
                                 {{ activite.structure.presentation_courte }}
                             </p>
@@ -994,32 +1040,32 @@ onMounted(() => {
                             <ul>
                                 <li
                                     v-for="instructeur in activite.instructeurs"
-                                    class="list-inside list-disc text-base font-semibold text-gray-600"
+                                    class="text-base font-semibold text-gray-600 list-disc list-inside"
                                 >
                                     {{ instructeur.pivot.contact }} -
                                     {{ instructeur.pivot.email }}
                                 </li>
                             </ul>
                         </div>
-                        <div class="flex w-full items-center justify-between">
+                        <div class="flex items-center justify-between w-full">
                             <h3 class="text-xl text-gray-700">
                                 Selectionner une formule en fonction de vos
                                 critères:
                             </h3>
                             <button
-                                class="flex w-full justify-center md:w-auto"
+                                class="flex justify-center w-full md:w-auto"
                                 type="button"
                                 @click="resetFormCriteres"
                             >
                                 <ArrowPathIcon
-                                    class="h-6 w-6 text-gray-500 transition duration-200 hover:-rotate-90 hover:text-gray-700 md:h-8 md:w-8"
+                                    class="w-6 h-6 text-gray-500 transition duration-200 hover:-rotate-90 hover:text-gray-700 md:h-8 md:w-8"
                                 />
                             </button>
                         </div>
 
                         <div
                             v-if="criteres.length > 0"
-                            class="mx-auto grid w-full grid-cols-1 gap-4 bg-gray-50 p-2 shadow md:grid-cols-3"
+                            class="grid w-full grid-cols-1 gap-4 p-2 mx-auto shadow bg-gray-50 md:grid-cols-3"
                         >
                             <div
                                 v-for="critere in criteres"
@@ -1072,7 +1118,7 @@ onMounted(() => {
                                     >
                                         {{ critere.nom }}
                                     </label>
-                                    <div class="mt-1 flex rounded-md">
+                                    <div class="flex mt-1 rounded-md">
                                         <TextInput
                                             type="text"
                                             v-model="
@@ -1080,7 +1126,7 @@ onMounted(() => {
                                             "
                                             :name="critere.nom"
                                             :id="critere.nom"
-                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                             placeholder=""
                                             autocomplete="none"
                                         />
@@ -1098,7 +1144,7 @@ onMounted(() => {
                                     >
                                         {{ critere.nom }}
                                     </label>
-                                    <div class="mt-1 flex rounded-md">
+                                    <div class="flex mt-1 rounded-md">
                                         <TextInput
                                             type="number"
                                             v-model="
@@ -1106,7 +1152,7 @@ onMounted(() => {
                                             "
                                             :name="critere.nom"
                                             :id="critere.nom"
-                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                             placeholder=""
                                             autocomplete="none"
                                         />
@@ -1116,7 +1162,7 @@ onMounted(() => {
                                 <!-- Heure seule -->
                                 <div
                                     v-if="critere.type_champ_form === 'time'"
-                                    class="flex max-w-sm flex-col items-start space-y-3"
+                                    class="flex flex-col items-start max-w-sm space-y-3"
                                 >
                                     <SingleTimeForm
                                         class="w-full"
@@ -1130,7 +1176,7 @@ onMounted(() => {
                                 <!-- Heures x2 ouverture / fermeture -->
                                 <div
                                     v-if="critere.type_champ_form === 'times'"
-                                    class="flex max-w-sm flex-col items-start space-y-3"
+                                    class="flex flex-col items-start max-w-sm space-y-3"
                                 >
                                     <OpenTimesForm
                                         class="w-full"
@@ -1144,7 +1190,7 @@ onMounted(() => {
                                 <!-- Date seule -->
                                 <div
                                     v-if="critere.type_champ_form === 'date'"
-                                    class="flex max-w-sm flex-col items-start space-y-3"
+                                    class="flex flex-col items-start max-w-sm space-y-3"
                                 >
                                     <SingleDateForm
                                         class="w-full"
@@ -1158,7 +1204,7 @@ onMounted(() => {
                                 <!-- Dates x 2 -->
                                 <div
                                     v-if="critere.type_champ_form === 'dates'"
-                                    class="flex max-w-sm flex-col items-start space-y-3"
+                                    class="flex flex-col items-start max-w-sm space-y-3"
                                 >
                                     <OpenDaysForm
                                         class="w-full"
@@ -1172,7 +1218,7 @@ onMounted(() => {
                                 <!-- Mois -->
                                 <div v-if="critere.type_champ_form === 'mois'">
                                     <div
-                                        class="flex max-w-sm flex-col items-start space-y-3"
+                                        class="flex flex-col items-start max-w-sm space-y-3"
                                     >
                                         <OpenMonthsForm
                                             class="w-full"
@@ -1187,7 +1233,7 @@ onMounted(() => {
                                 <!-- Range km  -->
                                 <div
                                     v-if="critere.type_champ_form === 'rayon'"
-                                    class="flex w-full max-w-sm flex-col items-start space-y-3"
+                                    class="flex flex-col items-start w-full max-w-sm space-y-3"
                                 >
                                     <RangeInputForm
                                         class="w-full max-w-sm"
@@ -1307,7 +1353,7 @@ onMounted(() => {
                         <form @submit.prevent="submitReservation()">
                             <div
                                 ref="listToAnimate"
-                                class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
+                                class="grid h-auto grid-cols-1 gap-4 place-content-stretch place-items-stretch lg:grid-cols-2"
                             >
                                 <ProduitFormuleCard
                                     v-for="produit in filteredProduits"
@@ -1323,7 +1369,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div
-                                class="my-4 flex w-full items-center justify-end"
+                                class="flex items-center justify-end w-full my-4"
                             >
                                 <button
                                     :disabled="reservationForm.processing"
@@ -1332,7 +1378,7 @@ onMounted(() => {
                                             reservationForm.processing,
                                     }"
                                     type="submit"
-                                    class="inline-flex justify-between rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-normal text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                                    class="inline-flex justify-between px-4 py-2 text-sm font-normal text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                 >
                                     <LoadingSVG
                                         v-if="reservationForm.processing"
@@ -1346,34 +1392,34 @@ onMounted(() => {
             </section>
             <section class="bg-white">
                 <div
-                    class="mx-auto max-w-full px-4 py-16 sm:px-6 sm:py-24 lg:px-8"
+                    class="max-w-full px-4 py-16 mx-auto sm:px-6 sm:py-24 lg:px-8"
                 >
                     <h2
-                        class="text-center text-2xl font-semibold tracking-tight text-gray-700 sm:text-3xl"
+                        class="text-2xl font-semibold tracking-tight text-center text-gray-700 sm:text-3xl"
                     >
                         Les derniers avis sur cette activité
                     </h2>
 
                     <div
-                        class="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-8"
+                        class="grid grid-cols-1 gap-4 mt-12 md:grid-cols-3 md:gap-8"
                     >
-                        <blockquote class="rounded-lg bg-gray-100 p-8">
+                        <blockquote class="p-8 bg-gray-100 rounded-lg">
                             <div class="flex items-center gap-4">
                                 <img
                                     alt="Man"
                                     src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
-                                    class="h-16 w-16 rounded-full object-cover"
+                                    class="object-cover w-16 h-16 rounded-full"
                                 />
 
                                 <div>
                                     <div
                                         class="flex justify-center gap-0.5 text-yellow-500"
                                     >
-                                        <StarIcon class="h-4 w-4" />
-                                        <StarIcon class="h-4 w-4 text-white" />
-                                        <StarIcon class="h-4 w-4 text-white" />
-                                        <StarIcon class="h-4 w-4 text-white" />
-                                        <StarIcon class="h-4 w-4 text-white" />
+                                        <StarIcon class="w-4 h-4" />
+                                        <StarIcon class="w-4 h-4 text-white" />
+                                        <StarIcon class="w-4 h-4 text-white" />
+                                        <StarIcon class="w-4 h-4 text-white" />
+                                        <StarIcon class="w-4 h-4 text-white" />
                                     </div>
 
                                     <p
@@ -1385,29 +1431,29 @@ onMounted(() => {
                             </div>
 
                             <p
-                                class="mt-4 line-clamp-2 text-gray-500 sm:line-clamp-none"
+                                class="mt-4 text-gray-500 line-clamp-2 sm:line-clamp-none"
                             >
                                 Très mauvaise expérience! A fuir!
                             </p>
                         </blockquote>
 
-                        <blockquote class="rounded-lg bg-gray-100 p-8">
+                        <blockquote class="p-8 bg-gray-100 rounded-lg">
                             <div class="flex items-center gap-4">
                                 <img
                                     alt="Man"
                                     src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
-                                    class="h-16 w-16 rounded-full object-cover"
+                                    class="object-cover w-16 h-16 rounded-full"
                                 />
 
                                 <div>
                                     <div
                                         class="flex justify-center gap-0.5 text-yellow-500"
                                     >
-                                        <StarIcon class="h-4 w-4" />
-                                        <StarIcon class="h-4 w-4" />
-                                        <StarIcon class="h-4 w-4" />
-                                        <StarIcon class="h-4 w-4" />
-                                        <StarIcon class="h-4 w-4" />
+                                        <StarIcon class="w-4 h-4" />
+                                        <StarIcon class="w-4 h-4" />
+                                        <StarIcon class="w-4 h-4" />
+                                        <StarIcon class="w-4 h-4" />
+                                        <StarIcon class="w-4 h-4" />
                                     </div>
 
                                     <p
@@ -1419,30 +1465,30 @@ onMounted(() => {
                             </div>
 
                             <p
-                                class="mt-4 line-clamp-2 text-gray-500 sm:line-clamp-none"
+                                class="mt-4 text-gray-500 line-clamp-2 sm:line-clamp-none"
                             >
                                 C'était à chier, mais je mets 5 étoiles pour le
                                 sourire de Roberta.
                             </p>
                         </blockquote>
 
-                        <blockquote class="rounded-lg bg-gray-100 p-8">
+                        <blockquote class="p-8 bg-gray-100 rounded-lg">
                             <div class="flex items-center gap-4">
                                 <img
                                     alt="Man"
                                     src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
-                                    class="h-16 w-16 rounded-full object-cover"
+                                    class="object-cover w-16 h-16 rounded-full"
                                 />
 
                                 <div>
                                     <div
                                         class="flex justify-center gap-0.5 text-yellow-500"
                                     >
-                                        <StarIcon class="h-4 w-4" />
-                                        <StarIcon class="h-4 w-4" />
-                                        <StarIcon class="h-4 w-4" />
-                                        <StarIcon class="h-4 w-4" />
-                                        <StarIcon class="h-4 w-4 text-white" />
+                                        <StarIcon class="w-4 h-4" />
+                                        <StarIcon class="w-4 h-4" />
+                                        <StarIcon class="w-4 h-4" />
+                                        <StarIcon class="w-4 h-4" />
+                                        <StarIcon class="w-4 h-4 text-white" />
                                     </div>
 
                                     <p
@@ -1454,7 +1500,7 @@ onMounted(() => {
                             </div>
 
                             <p
-                                class="mt-4 line-clamp-2 text-gray-500 sm:line-clamp-none"
+                                class="mt-4 text-gray-500 line-clamp-2 sm:line-clamp-none"
                             >
                                 C'était vraiment sensationnel.
                             </p>
@@ -1464,15 +1510,15 @@ onMounted(() => {
             </section>
             <section v-if="activiteSimilaires.length > 0" class="bg-white">
                 <div
-                    class="mx-auto max-w-full px-4 py-16 sm:px-6 sm:py-24 lg:px-8"
+                    class="max-w-full px-4 py-16 mx-auto sm:px-6 sm:py-24 lg:px-8"
                 >
                     <h2
-                        class="text-center text-2xl font-semibold tracking-tight text-gray-700 sm:text-3xl"
+                        class="text-2xl font-semibold tracking-tight text-center text-gray-700 sm:text-3xl"
                     >
                         Les activités similaires
                     </h2>
                     <div
-                        class="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-8"
+                        class="grid grid-cols-1 gap-4 mt-12 md:grid-cols-3 md:gap-8"
                     >
                         <ActiviteCard
                             v-for="activite in activiteSimilaires"
