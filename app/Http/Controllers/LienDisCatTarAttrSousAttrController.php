@@ -12,21 +12,6 @@ use App\Models\LienDisCatTarAttrSousAttr;
 
 class LienDisCatTarAttrSousAttrController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -48,22 +33,6 @@ class LienDisCatTarAttrSousAttrController extends Controller
 
         return to_route('admin.disciplines.categories.tarifs.index', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Sous Attribut ajouté');
 
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(LienDisCatTarAttrSousAttr $lienDisCatTarAttrSousAttr)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(LienDisCatTarAttrSousAttr $lienDisCatTarAttrSousAttr)
-    {
-        //
     }
 
     /**

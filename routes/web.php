@@ -54,6 +54,8 @@ use App\Http\Controllers\Discipline\CategoryDisciplineController;
 use App\Http\Controllers\LienDisCatCritValSsCritValeurController;
 use App\Http\Controllers\CategoryDisciplineCritereValeurController;
 use App\Http\Controllers\LienDisCatTarAttrSousAttrValeurController;
+use App\Http\Controllers\LienDisCatTarBookingFieldValeurController;
+use App\Http\Controllers\LienDisCatTarBookingFieldSousFieldController;
 
 /*
 |--------------------------------------------------------------------------
@@ -290,6 +292,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/bookingfields', [LienDisCatTarBookingFieldController::class, 'store'])->name('admin.disciplines.categories.tarifs.bookingfields.store');
         Route::patch('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/bookingfields/{bookingfield}', [LienDisCatTarBookingFieldController::class, 'update'])->name('admin.disciplines.categories.tarifs.bookingfields.update');
         Route::delete('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/bookingfields/{bookingfield}', [LienDisCatTarBookingFieldController::class, 'destroy'])->name('admin.disciplines.categories.tarifs.bookingfields.destroy');
+
+        // Tarifs Booking fields valeurs
+        Route::post('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/bookingfields/{bookingfield}/valeurs', [LienDisCatTarBookingFieldValeurController::class, 'store'])->name('admin.disciplines.categories.tarifs.bookingfields.valeurs.store');
+        Route::patch('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/bookingfields/{bookingfield}/valeurs/{valeur}', [LienDisCatTarBookingFieldValeurController::class, 'update'])->name('admin.disciplines.categories.tarifs.bookingfields.valeurs.update');
+        Route::delete('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/bookingfields/{bookingfield}/valeurs/{valeur}', [LienDisCatTarBookingFieldValeurController::class, 'destroy'])->name('admin.disciplines.categories.tarifs.bookingfields.valeurs.destroy');
+
+        // Tarifs Booking fields sous fields
+        Route::post('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/bookingfields/{bookingfield}/sous_fields', [LienDisCatTarBookingFieldSousFieldController::class, 'store'])->name('admin.disciplines.categories.tarifs.bookingfields.sous_fields.store');
+        Route::patch('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/bookingfields/{bookingfield}/sous_fields/{sousField}', [LienDisCatTarBookingFieldSousFieldController::class, 'update'])->name('admin.disciplines.categories.tarifs.bookingfields.sous_fields.update');
+        Route::delete('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/bookingfields/{bookingfield}/sous_fields/{sousField}', [LienDisCatTarBookingFieldSousFieldController::class, 'destroy'])->name('admin.disciplines.categories.tarifs.bookingfields.sous_fields.destroy');
 
     });
 });
