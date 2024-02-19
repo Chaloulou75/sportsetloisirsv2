@@ -124,7 +124,7 @@ const onSubmit = () => {
                                     <div>
                                         <label
                                             for="titre"
-                                            class="mb-2 block text-sm font-medium text-gray-700"
+                                            class="mb-1 block text-sm font-medium text-gray-700"
                                             >Titre</label
                                         >
                                         <TextInput
@@ -140,7 +140,7 @@ const onSubmit = () => {
                                             "
                                         />
 
-                                        <div class="my-2">
+                                        <!-- <div class="my-2">
                                             <p class="text-sm text-gray-500">
                                                 Exemple:
                                                 <span class="font-semibold">
@@ -149,10 +149,12 @@ const onSubmit = () => {
                                                     }}</span
                                                 >.
                                             </p>
-                                        </div>
+                                        </div> -->
+                                    </div>
+                                    <div>
                                         <label
                                             for="hs-select-label"
-                                            class="mb-2 block text-sm font-medium text-gray-700"
+                                            class="mb-1 block text-sm font-medium text-gray-700"
                                             >Activité liée</label
                                         >
                                         <select
@@ -179,7 +181,7 @@ const onSubmit = () => {
                                                 filteredProducts.length > 0
                                             "
                                             for="hs-select-label"
-                                            class="mb-2 block text-sm font-medium text-gray-700"
+                                            class="mb-1 block text-sm font-medium text-gray-700"
                                             >Produit lié</label
                                         >
                                         <select
