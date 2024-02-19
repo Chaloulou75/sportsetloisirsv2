@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -24,5 +25,8 @@ class LienDisCatTarBookingFieldSousField extends Model
         return $this->belongsTo(LienDisCatTarBookingField::class, 'booking_field_id');
     }
 
-    //valeurs
+    public function valeurs(): HasMany
+    {
+        return $this->hasMany(LienDisCatTarBookingFieldSsFieldValeur::class, 'sousfield_id');
+    }
 }
