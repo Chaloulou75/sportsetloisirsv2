@@ -14,7 +14,7 @@ import {
 } from "@headlessui/vue";
 import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 
-const emit = defineEmits(["close"]);
+const emit = defineEmits(["close", "showDisplay"]);
 
 const props = defineProps({
     errors: Object,
@@ -62,6 +62,7 @@ const onSubmit = () => {
             onSuccess: () => {
                 addPlanningForm.reset();
                 emit("close");
+                emit("showDisplay");
             },
         }
     );
@@ -84,7 +85,7 @@ const onSubmit = () => {
 
             <div class="fixed inset-0 overflow-y-auto">
                 <div
-                    class="flex items-center justify-center min-h-full p-4 text-center"
+                    class="flex min-h-full items-center justify-center p-4 text-center"
                 >
                     <TransitionChild
                         as="template"
@@ -96,11 +97,11 @@ const onSubmit = () => {
                         leave-to="opacity-0 scale-95"
                     >
                         <DialogPanel
-                            class="w-full max-w-4xl p-6 space-y-10 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl minh-full rounded-2xl"
+                            class="minh-full w-full max-w-4xl transform space-y-10 overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
                         >
                             <DialogTitle
                                 as="div"
-                                class="flex items-center justify-between w-full"
+                                class="flex w-full items-center justify-between"
                             >
                                 <h3
                                     class="text-lg font-medium leading-6 text-gray-800"
@@ -110,7 +111,7 @@ const onSubmit = () => {
                                 <button type="button">
                                     <XCircleIcon
                                         @click="emit('close')"
-                                        class="w-6 h-6 text-gray-600 hover:text-red-600"
+                                        class="h-6 w-6 text-gray-600 hover:text-red-600"
                                     />
                                 </button>
                             </DialogTitle>
@@ -123,7 +124,7 @@ const onSubmit = () => {
                                     <div>
                                         <label
                                             for="titre"
-                                            class="block mb-2 text-sm font-medium text-gray-700"
+                                            class="mb-2 block text-sm font-medium text-gray-700"
                                             >Titre</label
                                         >
                                         <TextInput
@@ -151,13 +152,13 @@ const onSubmit = () => {
                                         </div>
                                         <label
                                             for="hs-select-label"
-                                            class="block mb-2 text-sm font-medium text-gray-700"
+                                            class="mb-2 block text-sm font-medium text-gray-700"
                                             >Activité liée</label
                                         >
                                         <select
                                             v-model="addPlanningForm.activite"
                                             id="hs-select-label"
-                                            class="block w-full max-w-sm px-4 py-3 text-sm border-gray-200 rounded-lg pe-9 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400 dark:focus:ring-gray-600"
+                                            class="block w-full max-w-sm rounded-lg border-gray-200 px-4 py-3 pe-9 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400 dark:focus:ring-gray-600"
                                         >
                                             <option disabled>
                                                 Sélectionner une activité
@@ -178,7 +179,7 @@ const onSubmit = () => {
                                                 filteredProducts.length > 0
                                             "
                                             for="hs-select-label"
-                                            class="block mb-2 text-sm font-medium text-gray-700"
+                                            class="mb-2 block text-sm font-medium text-gray-700"
                                             >Produit lié</label
                                         >
                                         <select
@@ -188,7 +189,7 @@ const onSubmit = () => {
                                             "
                                             v-model="addPlanningForm.produit"
                                             id="hs-select-label"
-                                            class="block w-full max-w-sm px-4 py-3 text-sm border-gray-200 rounded-lg pe-9 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400 dark:focus:ring-gray-600"
+                                            class="block w-full max-w-sm rounded-lg border-gray-200 px-4 py-3 pe-9 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-400 dark:focus:ring-gray-600"
                                         >
                                             <option disabled>
                                                 Sélectionner un produit
@@ -216,7 +217,7 @@ const onSubmit = () => {
 
                                     <!-- Heures x2 ouverture / fermeture -->
                                     <div
-                                        class="flex flex-col items-start max-w-sm space-y-3"
+                                        class="flex max-w-sm flex-col items-start space-y-3"
                                     >
                                         <OpenTimesForm
                                             class="w-full"
@@ -226,7 +227,7 @@ const onSubmit = () => {
                                     </div>
                                     <!-- Dates x 2 -->
                                     <div
-                                        class="flex flex-col items-start max-w-sm space-y-3"
+                                        class="flex max-w-sm flex-col items-start space-y-3"
                                     >
                                         <OpenDaysForm
                                             class="w-full"
@@ -236,11 +237,11 @@ const onSubmit = () => {
                                     </div>
                                 </div>
                                 <div
-                                    class="flex items-center justify-between w-full mt-4"
+                                    class="mt-4 flex w-full items-center justify-between"
                                 >
                                     <button
                                         type="button"
-                                        class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                                        class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
                                         @click.prevent="emit('close')"
                                     >
                                         Annuler
@@ -252,7 +253,7 @@ const onSubmit = () => {
                                                 addPlanningForm.processing,
                                         }"
                                         type="submit"
-                                        class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                                        class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                     >
                                         <LoadingSVG
                                             v-if="addPlanningForm.processing"

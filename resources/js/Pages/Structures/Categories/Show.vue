@@ -37,6 +37,10 @@ const ModalAddTarif = defineAsyncComponent(() =>
     import("@/Components/Modals/ModalAddTarif.vue")
 );
 
+const ModalAddPlanning = defineAsyncComponent(() =>
+    import("@/Components/Modals/ModalAddPlanning.vue")
+);
+
 const ActivityDisplay = defineAsyncComponent(() =>
     import("@/Components/Inscription/Activity/ActivityDisplay.vue")
 );
@@ -81,6 +85,11 @@ const openAddActiviteModal = () => {
 const showAddTarifModal = ref(false);
 const openAddTarifModal = () => {
     showAddTarifModal.value = true;
+};
+
+const showAddPlanningModal = ref(false);
+const openAddPlanningModal = () => {
+    showAddPlanningModal.value = true;
 };
 
 const filteredCriteres = computed(() => {
@@ -215,7 +224,7 @@ const latestAdresseId = computed(() => {
                             Ajouter
                             <span v-if="displayActivites">une activité</span
                             ><span v-if="displayTarifs">un tarif</span
-                            ><span v-if="displayPlanning">un planning</span> à
+                            ><span v-if="displayPlanning">un créneau</span> à
                             <span class="text-indigo-500">{{
                                 discipline.name
                             }}</span>
@@ -229,12 +238,20 @@ const latestAdresseId = computed(() => {
                             <PlusIcon class="h-6 w-6" />
                         </button>
                         <button
+                            v-if="displayPlanning"
+                            type="button"
+                            @click="openAddPlanningModal()"
+                            class="inline-flex w-auto items-center justify-between bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
+                        >
+                            <PlusIcon class="h-6 w-6" />
+                        </button>
+                        <button
                             v-if="displayTarifs"
                             type="button"
                             @click="openAddTarifModal()"
                             class="inline-flex w-auto items-center justify-between bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
                         >
-                            <PlusIcon class="h-6 w-6" />
+                            <PlusIcon class="h-5 w-5" />
                         </button>
                     </div>
 
@@ -301,6 +318,15 @@ const latestAdresseId = computed(() => {
                 :structure-activites="structureActivites"
                 :show="showAddTarifModal"
                 @close="showAddTarifModal = false"
+                @show-display="handleButtonEvent('Mes tarifs')"
+            />
+            <ModalAddPlanning
+                :errors="errors"
+                :structure="structure"
+                :structure-activites="structureActivites"
+                :show="showAddPlanningModal"
+                @close="showAddPlanningModal = false"
+                @show-display="handleButtonEvent('Planning')"
             />
         </template>
     </ProLayout>
