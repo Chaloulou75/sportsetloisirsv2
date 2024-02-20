@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed } from "vue";
-import { classMapping } from "@/Utils/classMapping.js";
 import { MapPinIcon } from "@heroicons/vue/24/outline";
 import { TransitionRoot } from "@headlessui/vue";
 import dayjs from "dayjs";
@@ -22,20 +21,6 @@ const isSelected = computed(
 );
 
 const isShowing = ref(true);
-
-const headerClass = computed(() => {
-    const defaultClass = "bg-la-base";
-    if (props.discipline && props.discipline.id) {
-        const disciplineId = props.discipline.id;
-        if (classMapping[disciplineId]) {
-            return classMapping[disciplineId];
-        } else {
-            return defaultClass;
-        }
-    } else {
-        return defaultClass;
-    }
-});
 
 const formatCurrency = (value) => {
     const numericValue = Number(value.replace(/[^0-9.-]+/g, ""));
@@ -62,8 +47,11 @@ const formatCurrency = (value) => {
         leave-to="opacity-0"
     >
         <div
-            class="flex h-full flex-col rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:shadow-2xl md:px-0"
-            :class="{ 'ring-2 ring-blue-500 ring-offset-2': isSelected }"
+            class="flex h-full flex-col rounded-lg shadow-sm ring ring-gray-300 ring-offset-1 transition duration-300 ease-in-out hover:shadow-lg md:px-0"
+            :class="{
+                'ring-3 shadow-indigo-400 ring-indigo-500 ring-offset-2':
+                    isSelected,
+            }"
         >
             <div class="relative w-full">
                 <input
@@ -93,7 +81,7 @@ const formatCurrency = (value) => {
                     </div>
                     <template v-if="produit.criteres.length > 0">
                         <div
-                            class="mt-auto grid w-full grid-cols-3 justify-items-center gap-1 text-xs text-gray-900"
+                            class="mt-auto grid w-full grid-cols-3 justify-items-center gap-1 text-xs text-gray-900 md:grid-cols-6"
                         >
                             <template
                                 v-for="critere in produit.criteres"
@@ -151,179 +139,213 @@ const formatCurrency = (value) => {
                     </template>
                 </div>
             </div>
-            <template v-if="isSelected && produit.cat_tarifs.length > 0">
-                <h3 class="px-3 py-4 text-base font-semibold text-slate-700">
-                    Choisissez votre tarif:
-                </h3>
-                <div class="flex flex-col">
-                    <div class="-m-1.5 overflow-x-auto">
-                        <div class="inline-block min-w-full p-1.5 align-middle">
-                            <div class="overflow-hidden">
-                                <table
-                                    class="min-w-full divide-y divide-gray-200 dark:divide-gray-700"
+
+            <TransitionRoot
+                :show="isSelected"
+                enter="transition-opacity ease-linear duration-500"
+                enter-from="opacity-0"
+                enter-to="opacity-100"
+                leave="transition-opacity ease-linear duration-200"
+                leave-from="opacity-100"
+                leave-to="opacity-0"
+            >
+                <template v-if="isSelected && produit.cat_tarifs.length > 0">
+                    <div>
+                        <h3
+                            class="px-3 py-4 text-base font-semibold text-blue-700"
+                        >
+                            Choisissez votre formule:
+                        </h3>
+                        <div class="flex flex-col">
+                            <div class="-m-1.5 overflow-x-auto">
+                                <div
+                                    class="inline-block min-w-full p-1.5 align-middle"
                                 >
-                                    <thead>
-                                        <tr>
-                                            <th
-                                                scope="col"
-                                                class="px-3 py-3 text-start text-xs font-medium uppercase text-gray-500"
-                                            ></th>
-                                            <th
-                                                scope="col"
-                                                class="px-3 py-3 text-start text-xs font-medium uppercase text-gray-500"
-                                            >
-                                                Type de tarif
-                                            </th>
-                                            <th
-                                                scope="col"
-                                                class="px-3 py-3 text-start text-xs font-medium uppercase text-gray-500"
-                                            >
-                                                Montant
-                                            </th>
-                                            <th
-                                                scope="col"
-                                                class="px-3 py-3 text-start text-xs font-medium uppercase text-gray-500"
-                                            >
-                                                Titre
-                                            </th>
-                                            <th
-                                                scope="col"
-                                                class="px-3 py-3 text-start text-xs font-medium uppercase text-gray-500"
-                                            >
-                                                Attributs
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody
-                                        class="divide-y divide-gray-200 dark:divide-gray-700"
-                                    >
-                                        <tr
-                                            v-for="catTarif in produit.cat_tarifs"
-                                            :key="catTarif.id"
-                                            class="hover:bg-gray-100 dark:hover:bg-gray-700"
+                                    <div class="overflow-hidden">
+                                        <table
+                                            class="min-w-full divide-y divide-gray-200"
                                         >
-                                            <td
-                                                class="whitespace-nowrap px-3 py-4 text-sm font-medium text-gray-800 dark:text-gray-200"
-                                            >
-                                                <input
-                                                    type="radio"
-                                                    v-model="reservationFormule"
-                                                    :id="catTarif.id"
-                                                    :value="catTarif.id"
-                                                    class="justify-self-start"
-                                                />
-                                            </td>
-                                            <td
-                                                class="whitespace-nowrap px-3 py-4 text-sm font-semibold text-gray-800"
-                                            >
-                                                {{
-                                                    catTarif.cat_tarif_type.nom
-                                                }}
-                                            </td>
-                                            <td
-                                                class="whitespace-nowrap px-3 py-4 text-sm font-semibold text-gray-800"
-                                            >
-                                                {{
-                                                    formatCurrency(
-                                                        catTarif.amount
-                                                    )
-                                                }}
-                                            </td>
-                                            <td
-                                                class="whitespace-nowrap px-3 py-4 text-sm text-gray-800 dark:text-gray-200"
-                                            >
-                                                {{ catTarif.titre }}
-                                            </td>
-                                            <td
-                                                class="whitespace-nowrap px-3 py-4 text-sm text-gray-800 dark:text-gray-200"
-                                            >
-                                                <template
-                                                    v-if="catTarif.attributs"
-                                                >
-                                                    <ul
-                                                        class="list-inside list-disc justify-self-end"
+                                            <thead>
+                                                <tr>
+                                                    <th
+                                                        scope="col"
+                                                        class="px-3 py-3 text-start text-xs font-medium uppercase text-gray-500"
+                                                    ></th>
+                                                    <th
+                                                        scope="col"
+                                                        class="px-3 py-3 text-start text-xs font-medium uppercase text-gray-500"
                                                     >
-                                                        <li
-                                                            v-for="attribut in catTarif.attributs"
-                                                            :key="attribut.id"
-                                                            class="mb-2"
+                                                        Type de tarif
+                                                    </th>
+                                                    <th
+                                                        scope="col"
+                                                        class="px-3 py-3 text-start text-xs font-medium uppercase text-gray-500"
+                                                    >
+                                                        Montant
+                                                    </th>
+                                                    <th
+                                                        scope="col"
+                                                        class="px-3 py-3 text-start text-xs font-medium uppercase text-gray-500"
+                                                    >
+                                                        Titre
+                                                    </th>
+                                                    <th
+                                                        scope="col"
+                                                        class="px-3 py-3 text-start text-xs font-medium uppercase text-gray-500"
+                                                    >
+                                                        Attributs
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody
+                                                class="divide-y divide-gray-200"
+                                            >
+                                                <tr
+                                                    v-for="catTarif in produit.cat_tarifs"
+                                                    :key="catTarif.id"
+                                                    class="hover:bg-gray-50"
+                                                    :class="{
+                                                        'bg-sky-200':
+                                                            catTarif.id ===
+                                                            reservationFormule,
+                                                    }"
+                                                >
+                                                    <td
+                                                        class="whitespace-nowrap px-3 py-4 text-sm font-medium text-gray-800"
+                                                    >
+                                                        <input
+                                                            type="radio"
+                                                            v-model="
+                                                                reservationFormule
+                                                            "
+                                                            :id="catTarif.id"
+                                                            :value="catTarif.id"
+                                                            class="justify-self-start"
+                                                        />
+                                                    </td>
+                                                    <td
+                                                        class="whitespace-nowrap px-3 py-4 text-sm font-semibold text-gray-800 md:text-base"
+                                                    >
+                                                        {{
+                                                            catTarif
+                                                                .cat_tarif_type
+                                                                .nom
+                                                        }}
+                                                    </td>
+                                                    <td
+                                                        class="whitespace-nowrap px-3 py-4 text-sm font-semibold text-gray-800 md:text-base"
+                                                    >
+                                                        {{
+                                                            formatCurrency(
+                                                                catTarif.amount
+                                                            )
+                                                        }}
+                                                    </td>
+                                                    <td
+                                                        class="whitespace-nowrap px-3 py-4 text-sm text-gray-800"
+                                                    >
+                                                        {{ catTarif.titre }}
+                                                    </td>
+                                                    <td
+                                                        class="whitespace-nowrap px-3 py-4 text-sm text-gray-800"
+                                                    >
+                                                        <template
+                                                            v-if="
+                                                                catTarif.attributs
+                                                            "
                                                         >
-                                                            <span>
-                                                                {{
-                                                                    attribut
-                                                                        .tarif_attribut
-                                                                        .nom
-                                                                }}:
-                                                                <span
-                                                                    class="font-semibold"
-                                                                    >{{
-                                                                        attribut.valeur
-                                                                    }}</span
-                                                                ></span
+                                                            <ul
+                                                                class="list-inside list-disc justify-self-end"
                                                             >
-                                                            <template
-                                                                v-if="
-                                                                    attribut.sous_attributs
-                                                                "
-                                                            >
-                                                                <ul
-                                                                    class="list-inside list-disc"
+                                                                <li
+                                                                    v-for="attribut in catTarif.attributs"
+                                                                    :key="
+                                                                        attribut.id
+                                                                    "
+                                                                    class="mb-2"
                                                                 >
-                                                                    <li
-                                                                        v-for="sousattr in attribut.sous_attributs"
-                                                                        :key="
-                                                                            sousattr.id
+                                                                    <span
+                                                                        v-if="
+                                                                            attribut.tarif_attribut
                                                                         "
-                                                                        class="pl-4"
                                                                     >
+                                                                        {{
+                                                                            attribut
+                                                                                .tarif_attribut
+                                                                                .nom
+                                                                        }}:
                                                                         <span
-                                                                            v-if="
-                                                                                sousattr.sous_attribut_valeur
-                                                                            "
-                                                                        >
-                                                                            {{
-                                                                                sousattr
-                                                                                    .sous_attribut
-                                                                                    .nom
-                                                                            }}:
-                                                                            <span
-                                                                                class="font-semibold"
-                                                                                >{{
-                                                                                    sousattr
-                                                                                        .sous_attribut_valeur
-                                                                                        .valeur
-                                                                                }}</span
-                                                                            >
-                                                                        </span>
-                                                                        <span
-                                                                            v-else
+                                                                            class="font-semibold"
                                                                             >{{
-                                                                                sousattr
-                                                                                    .sous_attribut
-                                                                                    .nom
-                                                                            }}:
-                                                                            <span
-                                                                                class="font-semibold"
-                                                                                >{{
-                                                                                    sousattr.valeur
-                                                                                }}</span
+                                                                                attribut.valeur
+                                                                            }}</span
+                                                                        ></span
+                                                                    >
+                                                                    <template
+                                                                        v-if="
+                                                                            attribut.sous_attributs
+                                                                        "
+                                                                    >
+                                                                        <ul
+                                                                            class="list-inside list-disc"
+                                                                        >
+                                                                            <li
+                                                                                v-for="sousattr in attribut.sous_attributs"
+                                                                                :key="
+                                                                                    sousattr.id
+                                                                                "
+                                                                                class="pl-4"
                                                                             >
-                                                                        </span>
-                                                                    </li>
-                                                                </ul>
-                                                            </template>
-                                                        </li>
-                                                    </ul>
-                                                </template>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                                                                <span
+                                                                                    v-if="
+                                                                                        sousattr.sous_attribut_valeur
+                                                                                    "
+                                                                                >
+                                                                                    {{
+                                                                                        sousattr
+                                                                                            .sous_attribut
+                                                                                            .nom
+                                                                                    }}:
+                                                                                    <span
+                                                                                        class="font-semibold"
+                                                                                        >{{
+                                                                                            sousattr
+                                                                                                .sous_attribut_valeur
+                                                                                                .valeur
+                                                                                        }}</span
+                                                                                    >
+                                                                                </span>
+                                                                                <span
+                                                                                    v-else
+                                                                                    >{{
+                                                                                        sousattr
+                                                                                            .sous_attribut
+                                                                                            .nom
+                                                                                    }}:
+                                                                                    <span
+                                                                                        class="font-semibold"
+                                                                                        >{{
+                                                                                            sousattr.valeur
+                                                                                        }}</span
+                                                                                    >
+                                                                                </span>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </template>
+                                                                </li>
+                                                            </ul>
+                                                        </template>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </template>
+                </template>
+            </TransitionRoot>
         </div>
     </TransitionRoot>
 </template>

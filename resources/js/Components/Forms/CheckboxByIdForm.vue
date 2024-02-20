@@ -63,7 +63,7 @@ const updateSelectedCheckboxes = (id, valeur, checked) => {
                             :value="option.id"
                             :name="option.valeur"
                             type="checkbox"
-                            class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600"
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
                         />
                         <span class="ml-2 text-sm font-medium text-gray-700">{{
                             option.valeur

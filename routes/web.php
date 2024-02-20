@@ -269,6 +269,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         //Tarifs
         Route::post('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs', [LienDisCatTariftypeController::class, 'store'])->name('admin.disciplines.categories.tarifs.store');
         Route::patch('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}', [LienDisCatTariftypeController::class, 'update'])->name('admin.disciplines.categories.tarifs.update');
+        Route::patch('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/toggle_show_planning', [LienDisCatTariftypeController::class, 'update_show_planning'])->name('admin.disciplines.categories.tarifs.update_show_planning');
         Route::delete('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}', [LienDisCatTariftypeController::class, 'destroy'])->name('admin.disciplines.categories.tarifs.destroy');
         // Tarifs attributs
         Route::post('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/attributs', [LienDisCatTariftypeAttributController::class, 'store'])->name('admin.disciplines.categories.tarifs.attributs.store');

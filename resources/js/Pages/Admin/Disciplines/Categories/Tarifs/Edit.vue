@@ -6,6 +6,7 @@ import NavAdminDiscipline from "@/Components/Admin/NavAdminDiscipline.vue";
 import NavAdminDisciplineCategorie from "@/Components/Admin/NavAdminDisciplineCategorie.vue";
 import NavAdminDisCatParametres from "@/Components/Admin/NavAdminDisCatParametres.vue";
 import NavAdminDisCatTarifsForm from "@/Components/Admin/NavAdminDisCatTarifsForm.vue";
+import Checkbox from "@/Components/Forms/Checkbox.vue";
 import autoAnimate from "@formkit/auto-animate";
 import {
     XCircleIcon,
@@ -31,6 +32,25 @@ const props = defineProps({
     tarifType: Object,
     user_can: Object,
 });
+
+const toggleShowPlanningForm = useForm({
+    show_planning: true,
+});
+
+const postShowPlanning = () => {
+    toggleShowPlanningForm.patch(
+        route("admin.disciplines.categories.tarifs.update_show_planning", {
+            discipline: props.discipline,
+            categorie: props.categorie,
+            tarifType: props.tarifType,
+        }),
+        {
+            errorBag: "toggleShowPlanningForm",
+            preserveScroll: true,
+            onSuccess: () => {},
+        }
+    );
+};
 
 const showAddBookingFieldForm = ref(false);
 const toggleAddBookingFieldForm = () => {
@@ -400,6 +420,7 @@ const deleteSousFieldValeur = (field, sousField, valeur) => {
 };
 
 onMounted(() => {
+    toggleShowPlanningForm.show_planning = ref(props.tarifType.show_planning);
     initializeBookingFieldForm();
 });
 </script>
@@ -422,7 +443,7 @@ onMounted(() => {
                 <h1
                     class="px-3 text-center text-base font-semibold text-gray-600 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
-                    Formulaire de réservation pour
+                    Gestion du formulaire de réservation pour
                     <span class="text-indigo-600">{{ tarifType.nom }}</span>
                     de
                     <span class="text-indigo-600"
@@ -457,6 +478,15 @@ onMounted(() => {
                     <span class="font-semibold">{{ tarifType.nom }} </span>
                 </p>
                 <!-- liste BookingFields -->
+                <label class="my-4 flex items-center">
+                    <Checkbox
+                        v-model:checked="toggleShowPlanningForm.show_planning"
+                        @change="postShowPlanning"
+                    />
+                    <span class="ml-2 text-sm text-gray-600"
+                        >Montrer le planning de l'activité</span
+                    ></label
+                >
                 <ul
                     v-if="
                         tarifType.tarif_booking_fields &&

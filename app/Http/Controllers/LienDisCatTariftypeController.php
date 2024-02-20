@@ -156,4 +156,24 @@ class LienDisCatTariftypeController extends Controller
         return to_route('admin.disciplines.categories.tarifs.index', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Type de tarif supprimé');
 
     }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update_show_planning(Request $request, ListDiscipline $discipline, LienDisciplineCategorie $categorie, LienDisCatTariftype $tarifType)
+    {
+        dd($request->all());
+        $user = auth()->user();
+        $this->authorize('viewAdmin', $user);
+
+        $request->validate([
+            'show_planning' => 'boolean',
+        ]);
+
+        $tarifType->update([
+            'show_planning' => $request->show_planning,
+        ]);
+
+        return to_route('admin.disciplines.categories.tarifs.edit', ['discipline' => $discipline, 'categorie' => $categorie, 'tarifType' => $tarifType])->with('success', 'champ ajouté au tarif');
+    }
 }

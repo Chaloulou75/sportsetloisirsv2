@@ -21,6 +21,15 @@ class LienDisCatTariftype extends Model
      */
     protected $guarded = [];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'show_planning' => 'boolean',
+    ];
+
     public function discipline(): BelongsTo
     {
         return $this->belongsTo(ListDiscipline::class, 'discipline_id');

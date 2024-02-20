@@ -106,7 +106,7 @@ onMounted(() => {
                             v-model="tagForm.disciplines"
                             id="disciplines"
                             type="checkbox"
-                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600"
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 "
                         />
                         <label
                             for="disciplines"
@@ -119,7 +119,7 @@ onMounted(() => {
                             v-model="tagForm.categories"
                             id="categories"
                             type="checkbox"
-                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600"
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
                         />
                         <label
                             for="categories"
@@ -132,7 +132,7 @@ onMounted(() => {
                             v-model="tagForm.cities"
                             id="cities"
                             type="checkbox"
-                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600"
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 "
                         />
                         <label
                             for="cities"
