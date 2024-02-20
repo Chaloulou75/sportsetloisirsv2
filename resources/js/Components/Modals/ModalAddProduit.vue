@@ -139,12 +139,14 @@ const onSubmitAddProduitForm = () => {
                 leave-from="opacity-100"
                 leave-to="opacity-0"
             >
-                <div class="fixed inset-0 bg-gray-800 bg-opacity-50" />
+                <div
+                    class="fixed inset-0 transition-opacity bg-black bg-opacity-50"
+                />
             </TransitionChild>
 
             <div class="fixed inset-0 overflow-auto">
                 <div
-                    class="flex min-h-full items-center justify-center p-4 text-center"
+                    class="flex items-center justify-center min-h-full p-4 text-center"
                 >
                     <TransitionChild
                         as="template"
@@ -156,7 +158,7 @@ const onSubmitAddProduitForm = () => {
                         leave-to="opacity-0 scale-95"
                     >
                         <DialogPanel
-                            class="w-full max-w-6xl transform rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                            class="w-full max-w-6xl p-6 text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
                         >
                             <form
                                 @submit.prevent="onSubmitAddProduitForm()"
@@ -165,7 +167,7 @@ const onSubmitAddProduitForm = () => {
                             >
                                 <DialogTitle
                                     as="div"
-                                    class="flex w-full items-center justify-between"
+                                    class="flex items-center justify-between w-full"
                                 >
                                     <h3
                                         class="text-lg font-medium leading-6 text-gray-800"
@@ -179,11 +181,11 @@ const onSubmitAddProduitForm = () => {
                                     <button type="button">
                                         <XCircleIcon
                                             @click="emit('close')"
-                                            class="h-6 w-6 text-gray-600 hover:text-red-600"
+                                            class="w-6 h-6 text-gray-600 hover:text-red-600"
                                         />
                                     </button>
                                 </DialogTitle>
-                                <div class="mt-2 w-full">
+                                <div class="w-full mt-2">
                                     <div class="flex flex-col space-y-3">
                                         <div class="flex flex-col space-y-3">
                                             <!-- Criteres -->
@@ -191,7 +193,7 @@ const onSubmitAddProduitForm = () => {
                                                 v-if="
                                                     filteredCriteres.length > 0
                                                 "
-                                                class="mx-auto grid w-full grid-cols-1 gap-4 md:grid-cols-3"
+                                                class="grid w-full grid-cols-1 gap-4 mx-auto md:grid-cols-3"
                                             >
                                                 <div
                                                     v-for="critere in filteredCriteres"
@@ -278,7 +280,7 @@ const onSubmitAddProduitForm = () => {
                                                             {{ critere.nom }}
                                                         </label>
                                                         <div
-                                                            class="mt-1 flex rounded-md"
+                                                            class="flex mt-1 rounded-md"
                                                         >
                                                             <TextInput
                                                                 type="text"
@@ -295,7 +297,7 @@ const onSubmitAddProduitForm = () => {
                                                                 :id="
                                                                     critere.nom
                                                                 "
-                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                                 placeholder=""
                                                                 autocomplete="none"
                                                             />
@@ -317,7 +319,7 @@ const onSubmitAddProduitForm = () => {
                                                             {{ critere.nom }}
                                                         </label>
                                                         <div
-                                                            class="mt-1 flex rounded-md"
+                                                            class="flex mt-1 rounded-md"
                                                         >
                                                             <TextInput
                                                                 type="number"
@@ -334,7 +336,7 @@ const onSubmitAddProduitForm = () => {
                                                                 :id="
                                                                     critere.nom
                                                                 "
-                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                                 placeholder=""
                                                                 autocomplete="none"
                                                             />
@@ -347,7 +349,7 @@ const onSubmitAddProduitForm = () => {
                                                             critere.type_champ_form ===
                                                             'time'
                                                         "
-                                                        class="flex max-w-sm flex-col items-start space-y-3"
+                                                        class="flex flex-col items-start max-w-sm space-y-3"
                                                     >
                                                         <SingleTimeForm
                                                             class="w-full"
@@ -367,7 +369,7 @@ const onSubmitAddProduitForm = () => {
                                                             critere.type_champ_form ===
                                                             'times'
                                                         "
-                                                        class="flex max-w-sm flex-col items-start space-y-3"
+                                                        class="flex flex-col items-start max-w-sm space-y-3"
                                                     >
                                                         <OpenTimesForm
                                                             class="w-full"
@@ -387,7 +389,7 @@ const onSubmitAddProduitForm = () => {
                                                             critere.type_champ_form ===
                                                             'date'
                                                         "
-                                                        class="flex max-w-sm flex-col items-start space-y-3"
+                                                        class="flex flex-col items-start max-w-sm space-y-3"
                                                     >
                                                         <SingleDateForm
                                                             class="w-full"
@@ -407,7 +409,7 @@ const onSubmitAddProduitForm = () => {
                                                             critere.type_champ_form ===
                                                             'dates'
                                                         "
-                                                        class="flex max-w-sm flex-col items-start space-y-3"
+                                                        class="flex flex-col items-start max-w-sm space-y-3"
                                                     >
                                                         <OpenDaysForm
                                                             class="w-full"
@@ -429,7 +431,7 @@ const onSubmitAddProduitForm = () => {
                                                         "
                                                     >
                                                         <div
-                                                            class="flex max-w-sm flex-col items-start space-y-3"
+                                                            class="flex flex-col items-start max-w-sm space-y-3"
                                                         >
                                                             <OpenMonthsForm
                                                                 class="w-full"
@@ -463,7 +465,7 @@ const onSubmitAddProduitForm = () => {
                                                             critere.type_champ_form ===
                                                             'adresse'
                                                         "
-                                                        class="flex w-full max-w-sm flex-col space-y-2"
+                                                        class="flex flex-col w-full max-w-sm space-y-2"
                                                     >
                                                         <div
                                                             v-if="!addAddress"
@@ -478,7 +480,7 @@ const onSubmitAddProduitForm = () => {
                                                                 Adresse
                                                             </label>
                                                             <div
-                                                                class="mt-1 flex rounded-md"
+                                                                class="flex mt-1 rounded-md"
                                                             >
                                                                 <select
                                                                     name="
@@ -490,7 +492,7 @@ const onSubmitAddProduitForm = () => {
                                                                     v-model="
                                                                         formAddProduit.adresse
                                                                     "
-                                                                    class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                                    class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
                                                                 >
                                                                     <option
                                                                         v-for="adresse in structure.adresses"
@@ -524,7 +526,7 @@ const onSubmitAddProduitForm = () => {
                                                                 "
                                                                 id="addAddress"
                                                                 type="checkbox"
-                                                                class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded form-checkbox focus:ring-blue-500"
                                                             />
                                                             <label
                                                                 for="addAddress"
@@ -541,7 +543,7 @@ const onSubmitAddProduitForm = () => {
                                                             critere.type_champ_form ===
                                                             'rayon'
                                                         "
-                                                        class="flex w-full max-w-sm flex-col items-start space-y-3"
+                                                        class="flex flex-col items-start w-full max-w-sm space-y-3"
                                                     >
                                                         <RangeInputForm
                                                             class="w-full max-w-sm"
@@ -562,7 +564,7 @@ const onSubmitAddProduitForm = () => {
                                                             critere.type_champ_form ===
                                                             'instructeur'
                                                         "
-                                                        class="flex w-full items-start"
+                                                        class="flex items-start w-full"
                                                     >
                                                         <input
                                                             v-model="
@@ -570,7 +572,7 @@ const onSubmitAddProduitForm = () => {
                                                             "
                                                             id="addInstructeur"
                                                             type="checkbox"
-                                                            class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded form-checkbox focus:ring-blue-500"
                                                         />
                                                         <label
                                                             for="addInstructeur"
@@ -776,11 +778,11 @@ const onSubmitAddProduitForm = () => {
                                 </div>
 
                                 <div
-                                    class="mt-4 flex w-full items-center justify-between"
+                                    class="flex items-center justify-between w-full mt-4"
                                 >
                                     <button
                                         type="button"
-                                        class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                                        class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
                                         @click="emit('close')"
                                     >
                                         Annuler
@@ -792,7 +794,7 @@ const onSubmitAddProduitForm = () => {
                                                 formAddProduit.processing,
                                         }"
                                         type="submit"
-                                        class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                                        class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                     >
                                         <LoadingSVG
                                             v-if="formAddProduit.processing"

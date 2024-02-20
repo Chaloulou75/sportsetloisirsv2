@@ -80,42 +80,42 @@ const onSubmit = () => {
                 leave-from="opacity-100"
                 leave-to="opacity-0"
             >
-                <div class="fixed inset-0 bg-gray-800 bg-opacity-50" />
-            </TransitionChild>
-
-            <div class="fixed inset-0 overflow-y-auto">
                 <div
-                    class="flex items-center justify-center min-h-full p-4 text-center"
+                    class="fixed inset-0 transition-opacity bg-black bg-opacity-50"
+                />
+            </TransitionChild>
+            <div
+                class="fixed inset-0 flex items-center justify-center w-screen p-4 text-center"
+            >
+                <TransitionChild
+                    as="template"
+                    enter="duration-300 ease-out"
+                    enter-from="opacity-0 scale-95"
+                    enter-to="opacity-100 scale-100"
+                    leave="duration-200 ease-in"
+                    leave-from="opacity-100 scale-100"
+                    leave-to="opacity-0 scale-95"
                 >
-                    <TransitionChild
-                        as="template"
-                        enter="duration-300 ease-out"
-                        enter-from="opacity-0 scale-95"
-                        enter-to="opacity-100 scale-100"
-                        leave="duration-200 ease-in"
-                        leave-from="opacity-100 scale-100"
-                        leave-to="opacity-0 scale-95"
+                    <DialogPanel
+                        class="w-full max-w-5xl p-6 space-y-5 overflow-visible text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
                     >
-                        <DialogPanel
-                            class="w-full max-w-4xl p-6 space-y-10 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl minh-full rounded-2xl"
+                        <DialogTitle
+                            as="div"
+                            class="flex items-center justify-between w-full"
                         >
-                            <DialogTitle
-                                as="div"
-                                class="flex items-center justify-between w-full"
+                            <h3
+                                class="text-lg font-medium leading-6 text-gray-800"
                             >
-                                <h3
-                                    class="text-lg font-medium leading-6 text-gray-800"
-                                >
-                                    Ajouter un créneau
-                                </h3>
-                                <button type="button">
-                                    <XCircleIcon
-                                        @click="emit('close')"
-                                        class="w-6 h-6 text-gray-600 hover:text-red-600"
-                                    />
-                                </button>
-                            </DialogTitle>
-
+                                Ajouter un créneau
+                            </h3>
+                            <button type="button">
+                                <XCircleIcon
+                                    @click="emit('close')"
+                                    class="w-6 h-6 text-gray-600 hover:text-red-600"
+                                />
+                            </button>
+                        </DialogTitle>
+                        <div>
                             <form
                                 @submit.prevent="onSubmit()"
                                 autocomplete="off"
@@ -139,17 +139,6 @@ const onSubmit = () => {
                                                     : 'Titre'
                                             "
                                         />
-
-                                        <!-- <div class="my-2">
-                                            <p class="text-sm text-gray-500">
-                                                Exemple:
-                                                <span class="font-semibold">
-                                                    {{
-                                                        addPlanningForm.title
-                                                    }}</span
-                                                >.
-                                            </p>
-                                        </div> -->
                                     </div>
                                     <div>
                                         <label
@@ -160,7 +149,7 @@ const onSubmit = () => {
                                         <select
                                             v-model="addPlanningForm.activite"
                                             id="hs-select-label"
-                                            class="block w-full max-w-sm px-4 py-3 text-sm border-gray-200 rounded-lg pe-9 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
+                                            class="block w-full max-w-sm rounded-lg border-gray-200 px-4 py-2.5 pe-9 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                                         >
                                             <option disabled>
                                                 Sélectionner une activité
@@ -191,7 +180,7 @@ const onSubmit = () => {
                                             "
                                             v-model="addPlanningForm.produit"
                                             id="hs-select-label"
-                                            class="block w-full max-w-sm px-4 py-3 text-sm border-gray-200 rounded-lg pe-9 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
+                                            class="block w-full max-w-sm rounded-lg border-gray-200 px-4 py-2.5 pe-9 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                                         >
                                             <option disabled>
                                                 Sélectionner un produit
@@ -264,9 +253,9 @@ const onSubmit = () => {
                                     </button>
                                 </div>
                             </form>
-                        </DialogPanel>
-                    </TransitionChild>
-                </div>
+                        </div>
+                    </DialogPanel>
+                </TransitionChild>
             </div>
         </Dialog>
     </TransitionRoot>

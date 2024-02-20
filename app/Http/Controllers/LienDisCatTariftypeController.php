@@ -162,7 +162,6 @@ class LienDisCatTariftypeController extends Controller
      */
     public function update_show_planning(Request $request, ListDiscipline $discipline, LienDisciplineCategorie $categorie, LienDisCatTariftype $tarifType)
     {
-        dd($request->all());
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 
