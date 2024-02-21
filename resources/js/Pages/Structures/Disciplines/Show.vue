@@ -111,15 +111,15 @@ const latestAdresseId = computed(() => {
         :confirmed-reservations-count="confirmedReservationsCount"
     >
         <template #header>
-            <div class="flex h-full items-center justify-start">
+            <div class="flex items-center justify-start h-full">
                 <Link
                     class="hidden h-full bg-blue-600 py-2.5 md:flex md:px-4 md:py-4"
                     :href="route('structures.disciplines.index', structure)"
                 >
-                    <ChevronLeftIcon class="h-10 w-10 text-white" />
+                    <ChevronLeftIcon class="w-10 h-10 text-white" />
                 </Link>
                 <div
-                    class="flex h-full w-full flex-col items-center md:flex-row"
+                    class="flex flex-col items-center w-full h-full md:flex-row"
                 >
                     <Link
                         :href="
@@ -146,7 +146,7 @@ const latestAdresseId = computed(() => {
                         class="flex h-full w-full flex-col items-center border border-gray-200 bg-white py-2.5 text-xs text-slate-500 hover:bg-gray-100 hover:text-slate-700 md:py-4"
                     >
                         <AcademicCapIcon
-                            class="hidden h-6 w-6 md:inline-flex"
+                            class="hidden w-6 h-6 md:inline-flex"
                         />
                         <div class="">
                             {{ category.nom_categorie_pro }}
@@ -156,14 +156,14 @@ const latestAdresseId = computed(() => {
                         <BreezeDropdown align="right" width="48">
                             <template #trigger>
                                 <span
-                                    class="inline-flex w-full items-center justify-center rounded-md"
+                                    class="inline-flex items-center justify-center w-full rounded-md"
                                 >
                                     <button
                                         type="button"
                                         class="inline-flex w-full items-center justify-center border border-transparent bg-green-500 px-3 py-2.5 text-gray-50 transition duration-150 ease-in-out hover:bg-green-600 hover:text-white focus:outline-none md:py-4"
                                     >
                                         <PlusIcon
-                                            class="h-3 w-3 md:h-10 md:w-8"
+                                            class="w-3 h-3 md:h-10 md:w-8"
                                         />
                                     </button>
                                 </span>
@@ -195,11 +195,11 @@ const latestAdresseId = computed(() => {
                 @eventFromChild="handleButtonEvent"
             />
             <div
-                class="relative flex flex-col space-y-6 py-2 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
+                class="relative flex flex-col py-2 space-y-6 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
             >
-                <div class="mx-auto max-w-full flex-1 space-y-8 px-1 lg:px-4">
+                <div class="flex-1 max-w-full px-1 mx-auto space-y-8 lg:px-4">
                     <div
-                        class="flex w-full flex-col items-center justify-start space-y-2 px-2 py-3 md:h-20 md:flex-row md:space-x-4 md:space-y-0 md:px-0 md:py-6"
+                        class="flex flex-col items-center justify-start w-full px-2 py-3 space-y-2 md:h-20 md:flex-row md:space-x-4 md:space-y-0 md:px-0 md:py-6"
                     >
                         <p class="text-lg font-medium leading-6 text-gray-800">
                             Ajouter
@@ -214,25 +214,25 @@ const latestAdresseId = computed(() => {
                             v-if="displayActivites"
                             type="button"
                             @click="openAddActiviteModal()"
-                            class="inline-flex w-auto items-center justify-between bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
+                            class="inline-flex items-center justify-between w-auto px-4 py-3 text-lg text-white transition duration-150 bg-green-600 shadow-lg hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
                         >
-                            <PlusIcon class="h-6 w-6" />
+                            <PlusIcon class="w-6 h-6" />
                         </button>
                         <button
                             v-if="displayPlanning"
                             type="button"
                             @click="openAddPlanningModal()"
-                            class="inline-flex w-auto items-center justify-between bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
+                            class="inline-flex items-center justify-between w-auto px-4 py-3 text-lg text-white transition duration-150 bg-green-600 shadow-lg hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
                         >
-                            <PlusIcon class="h-6 w-6" />
+                            <PlusIcon class="w-6 h-6" />
                         </button>
                         <button
                             v-if="displayTarifs"
                             type="button"
                             @click="openAddTarifModal()"
-                            class="inline-flex w-auto items-center justify-between bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
+                            class="inline-flex items-center justify-between w-auto px-4 py-3 text-lg text-white transition duration-150 bg-green-600 shadow-lg hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
                         >
-                            <PlusIcon class="h-5 w-5" />
+                            <PlusIcon class="w-5 h-5" />
                         </button>
                     </div>
                     <template v-if="displayActivites">
@@ -252,7 +252,7 @@ const latestAdresseId = computed(() => {
                             @add-tarif="openAddTarifModal"
                         />
                         <div v-if="structureActivites.length === 0">
-                            <p class="font-semibold italic text-gray-600">
+                            <p class="italic font-semibold text-gray-600">
                                 Pas d'activité dans cette catégorie
                             </p>
                         </div>

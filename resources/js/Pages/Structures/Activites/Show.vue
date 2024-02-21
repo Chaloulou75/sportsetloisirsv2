@@ -1,7 +1,7 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, watch, onMounted, defineAsyncComponent } from "vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
 import ActiviteCard from "@/Components/Structures/ActiviteCard.vue";
@@ -62,6 +62,15 @@ const props = defineProps({
     structuretypeElected: Object,
     produits: Object,
 });
+
+const ModalReservationForm = defineAsyncComponent(() =>
+    import("@/Components/Modals/ModalReservationForm.vue")
+);
+
+const showReservationModal = ref(false);
+const openReservationModal = () => {
+    showReservationModal.value = true;
+};
 
 const options = ref({
     title: props.activite.titre,
@@ -872,9 +881,6 @@ const submitReservation = () => {
         },
     });
 };
-const formatCityName = (ville) => {
-    return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
-};
 
 onMounted(() => {
     autoAnimate(listToAnimate.value);
@@ -1386,7 +1392,26 @@ onMounted(() => {
                                     :discipline="produit.discipline"
                                 />
                             </div>
+
                             <div
+                                class="flex items-center justify-end w-full my-4"
+                            >
+                                <button
+                                    v-if="
+                                        selectedProduit &&
+                                        reservationForm.formule
+                                    "
+                                    @click.prevent="openReservationModal"
+                                    type="button"
+                                    class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-blue-600 border border-transparent rounded-lg gap-x-2 hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
+                                >
+                                    Sélectionner
+                                </button>
+                            </div>
+                            <div
+                                v-if="
+                                    selectedProduit && reservationForm.formule
+                                "
                                 class="flex items-center justify-end w-full my-4"
                             >
                                 <button
@@ -1551,6 +1576,12 @@ onMounted(() => {
                     </div>
                 </div>
             </section>
+            <ModalReservationForm
+                :produit="selectedProduit"
+                :cat-tarif-id="reservationForm.formule"
+                :show="showReservationModal"
+                @close="showReservationModal = false"
+            />
         </template>
     </ResultLayout>
 </template>

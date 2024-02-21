@@ -144,6 +144,17 @@ class StructureProduit extends Model
         ]);
     }
 
+    public function scopeWithCatTarifReservations(Builder $query): void
+    {
+        $query->with([
+            'catTarifs.cat_tarif_type.tarif_booking_fields',
+            'catTarifs.cat_tarif_type.tarif_booking_fields.valeurs',
+            'catTarifs.cat_tarif_type.tarif_booking_fields.sous_fields',
+            'catTarifs.cat_tarif_type.tarif_booking_fields.sous_fields.valeurs',
+            'plannings',
+        ]);
+    }
+
 
 
 }
