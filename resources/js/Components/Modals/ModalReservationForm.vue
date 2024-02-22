@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useForm } from "@inertiajs/vue3";
+import SelectForm from "@/Components/Forms/SelectForm.vue";
+import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
 import { XCircleIcon } from "@heroicons/vue/24/outline";
 import {
@@ -15,25 +17,72 @@ import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 const emit = defineEmits(["close"]);
 
 const props = defineProps({
-    produit: Object,
-    catTarifId: String,
+    produits: Object,
+    produitId: Number,
+    catTarifId: Number,
     show: Boolean,
 });
 
 const filteredCatTarif = computed(() => {
-    if (!props.catTarifId || !props.produit || !props.produit.catTarifs) {
+    if (!props.catTarifId || !props.produitId || !props.produits) {
         return [];
     }
-    return props.produit.catTarifs.filter(
+
+    const produit = props.produits.find(
+        (produit) => produit.id === props.produitId
+    );
+
+    if (!produit || !produit.cat_tarifs) {
+        console.log("yooooo");
+        return [];
+    }
+
+    console.log(produit);
+
+    // Filter catTarifs of the found produit based on catTarifId
+    return produit.cat_tarifs.filter(
         (catTarif) => catTarif.id === props.catTarifId
     );
+});
+
+const formReservation = useForm({
+    attributs: [],
+    sousattributs: [],
+});
+
+const updateSelectedCheckboxes = (fieldId, optionValue, checked) => {
+    const selectedValue = formReservation.attributs[fieldId];
+
+    if (checked) {
+        if (!Array.isArray(selectedValue)) {
+            formReservation.attributs[fieldId] = ref([optionValue]);
+        } else {
+            selectedValue.push(optionValue);
+        }
+    } else {
+        if (Array.isArray(selectedValue)) {
+            const index = selectedValue.indexOf(optionValue);
+            if (index !== -1) {
+                selectedValue.splice(index, 1);
+            }
+        }
+    }
+};
+
+const isCheckboxSelected = computed(() => {
+    return (fieldId, optionValue) => {
+        return (
+            formReservation.attributs[fieldId] &&
+            formReservation.attributs[fieldId].includes(optionValue)
+        );
+    };
 });
 
 const onSubmit = () => {};
 </script>
 <template>
     <TransitionRoot appear :show="show" as="template">
-        <Dialog as="div" @close="open = false" class="relative z-[1099]">
+        <Dialog as="div" @close="open = false" class="relative z-[1199]">
             <TransitionChild
                 as="template"
                 enter="duration-300 ease-out"
@@ -83,16 +132,135 @@ const onSubmit = () => {};
                                 @submit.prevent="onSubmit()"
                                 autocomplete="off"
                             >
-                                <div class="flex flex-col space-y-3">
-                                    Hello
-                                    <!-- <div
-                                        v-for="field in filteredCatTarif
-                                            .cat_tarif_type
-                                            .tarif_booking_fields"
-                                        :key="field.id"
+                                <div v-if="filteredCatTarif.length > 0">
+                                    <div
+                                        v-for="catTarif in filteredCatTarif"
+                                        :key="catTarif.id"
+                                        class="flex flex-col space-y-3"
                                     >
+                                        <div
+                                            v-if="
+                                                catTarif.cat_tarif_type
+                                                    .tarif_booking_fields &&
+                                                catTarif.cat_tarif_type
+                                                    .tarif_booking_fields
+                                                    .length > 0
+                                            "
+                                            class="grid w-full grid-cols-1 gap-4 mx-auto md:grid-cols-3"
+                                        >
+                                            <div
+                                                v-for="field in catTarif
+                                                    .cat_tarif_type
+                                                    .tarif_booking_fields"
+                                                :key="field.id"
+                                                class="col-span-1"
+                                            >
+                                                <!-- select  -->
+                                                <SelectForm
+                                                    :classes="'block'"
+                                                    class="max-w-sm"
+                                                    v-if="
+                                                        field.type_champ_form ===
+                                                        'select'
+                                                    "
+                                                    :name="field.nom"
+                                                    v-model="
+                                                        formReservation
+                                                            .attributs[field.id]
+                                                    "
+                                                    :options="field.valeurs"
+                                                />
+                                                <!-- checkbox -->
+                                                <CheckboxForm
+                                                    class="max-w-sm"
+                                                    v-if="
+                                                        field.type_champ_form ===
+                                                        'checkbox'
+                                                    "
+                                                    :name="field.nom"
+                                                    v-model="
+                                                        formReservation
+                                                            .attributs[field.id]
+                                                    "
+                                                    :options="field.valeurs"
+                                                    :is-checkbox-selected="
+                                                        isCheckboxSelected
+                                                    "
+                                                    @update-selected-checkboxes="
+                                                        updateSelectedCheckboxes
+                                                    "
+                                                />
+                                                <!-- input text -->
+                                                <div
+                                                    class="max-w-sm"
+                                                    v-if="
+                                                        field.type_champ_form ===
+                                                        'text'
+                                                    "
+                                                >
+                                                    <label
+                                                        :for="field.nom"
+                                                        class="block text-sm font-medium text-gray-700"
+                                                    >
+                                                        {{ field.nom }}
+                                                    </label>
+                                                    <div
+                                                        class="flex mt-1 rounded-md"
+                                                    >
+                                                        <TextInput
+                                                            type="text"
+                                                            v-model="
+                                                                formReservation
+                                                                    .attributs[
+                                                                    field.id
+                                                                ]
+                                                            "
+                                                            :name="field.nom"
+                                                            :id="field.nom"
+                                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                            placeholder=""
+                                                            autocomplete="none"
+                                                        />
+                                                    </div>
+                                                </div>
 
-                                    </div> -->
+                                                <!-- number text -->
+                                                <div
+                                                    class="max-w-sm"
+                                                    v-if="
+                                                        field.type_champ_form ===
+                                                        'number'
+                                                    "
+                                                >
+                                                    <label
+                                                        :for="field.nom"
+                                                        class="block text-sm font-medium text-gray-700"
+                                                    >
+                                                        {{ field.nom }}
+                                                    </label>
+                                                    <div
+                                                        class="flex mt-1 rounded-md"
+                                                    >
+                                                        <TextInput
+                                                            type="number"
+                                                            v-model="
+                                                                formReservation
+                                                                    .attributs[
+                                                                    field.id
+                                                                ]
+                                                            "
+                                                            :name="field.nom"
+                                                            :id="field.nom"
+                                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                            placeholder=""
+                                                            autocomplete="none"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <!-- sous fields -->
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div
                                     class="flex items-center justify-between w-full mt-4"

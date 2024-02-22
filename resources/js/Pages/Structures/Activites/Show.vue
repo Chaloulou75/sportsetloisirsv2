@@ -1577,8 +1577,9 @@ onMounted(() => {
                 </div>
             </section>
             <ModalReservationForm
-                :produit="selectedProduit"
+                :produit-id="reservationForm.produit"
                 :cat-tarif-id="reservationForm.formule"
+                :produits="produits"
                 :show="showReservationModal"
                 @close="showReservationModal = false"
             />

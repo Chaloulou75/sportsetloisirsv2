@@ -93,10 +93,10 @@ const formatCurrency = (value) => {
 <template>
     <div v-if="strCatTarifs.length > 0" class="overflow-x-auto">
         <table
-            class="min-w-full table-auto border-collapse divide-y divide-gray-200 border border-slate-300"
+            class="min-w-full border border-collapse divide-y divide-gray-200 table-auto border-slate-300"
         >
             <thead
-                class="bg-gray-700 text-xs font-medium uppercase tracking-wider text-gray-50"
+                class="text-xs font-medium tracking-wider uppercase bg-gray-700 text-gray-50"
             >
                 <tr>
                     <th class="hidden px-4 py-2 text-left lg:table-cell">
@@ -117,7 +117,7 @@ const formatCurrency = (value) => {
                 </tr>
             </thead>
             <tbody
-                class="divide-y divide-gray-200 bg-white text-xs text-slate-800"
+                class="text-xs bg-white divide-y divide-gray-200 text-slate-800"
             >
                 <tr
                     v-for="catTarif in strCatTarifs"
@@ -125,12 +125,12 @@ const formatCurrency = (value) => {
                     class="odd:bg-white even:bg-gray-50"
                 >
                     <td
-                        class="hidden max-w-0 truncate whitespace-nowrap border border-slate-300 px-4 py-2 font-semibold lg:table-cell"
+                        class="hidden px-4 py-2 font-semibold truncate border max-w-0 whitespace-nowrap border-slate-300 lg:table-cell"
                     >
                         {{ catTarif.categorie.discipline.name }}
                     </td>
                     <td
-                        class="whitespace-nowrap border border-slate-300 px-4 py-2 font-semibold"
+                        class="px-4 py-2 font-semibold border whitespace-nowrap border-slate-300"
                     >
                         <dl class="lg:hidden">
                             <dt class="sr-only">Discipline</dt>
@@ -147,43 +147,43 @@ const formatCurrency = (value) => {
                         </dl>
                     </td>
                     <td
-                        class="hidden max-w-0 truncate whitespace-nowrap border border-slate-300 px-4 py-2 font-semibold lg:table-cell"
+                        class="hidden px-4 py-2 font-semibold truncate border max-w-0 whitespace-nowrap border-slate-300 lg:table-cell"
                     >
                         {{ catTarif.cat_tarif_type.nom }}
                     </td>
                     <td
-                        class="max-w-0 truncate whitespace-nowrap border border-slate-300 px-4 py-2"
+                        class="px-4 py-2 truncate border max-w-0 whitespace-nowrap border-slate-300"
                     >
                         {{ catTarif.titre }}
                     </td>
                     <td
-                        class="hidden max-w-0 truncate whitespace-nowrap border border-slate-300 px-4 py-2 lg:table-cell"
+                        class="hidden px-4 py-2 truncate border max-w-0 whitespace-nowrap border-slate-300 lg:table-cell"
                     >
                         {{ catTarif.description }}
                     </td>
                     <td
-                        class="whitespace-nowrap border border-slate-300 px-4 py-2 font-semibold"
+                        class="px-4 py-2 font-semibold border whitespace-nowrap border-slate-300"
                     >
                         {{ formatCurrency(catTarif.amount) }}
                     </td>
                     <td
-                        class="whitespace-normal border border-slate-300 px-4 py-2"
+                        class="px-4 py-2 whitespace-normal border border-slate-300"
                     >
                         <template v-if="catTarif.attributs">
-                            <ul class="list-inside list-disc">
+                            <ul class="list-disc list-inside">
                                 <li
                                     v-for="attribut in catTarif.attributs"
                                     :key="attribut.id"
                                     class="mb-2"
                                 >
-                                    <span>
+                                    <span v-if="attribut.tarif_attribut">
                                         {{ attribut.tarif_attribut.nom }}:
                                         <span class="font-semibold">{{
                                             attribut.valeur
                                         }}</span></span
                                     >
                                     <template v-if="attribut.sous_attributs">
-                                        <ul class="list-inside list-disc">
+                                        <ul class="list-disc list-inside">
                                             <li
                                                 v-for="sousattr in attribut.sous_attributs"
                                                 :key="sousattr.id"
@@ -227,11 +227,11 @@ const formatCurrency = (value) => {
                         </template>
                     </td>
                     <td
-                        class="whitespace-nowrap border border-slate-300 px-4 py-2 font-semibold"
+                        class="px-4 py-2 font-semibold border whitespace-nowrap border-slate-300"
                     >
                         <template v-if="catTarif.produits">
                             <ul
-                                class="grid list-inside list-disc grid-cols-2 gap-1"
+                                class="grid grid-cols-2 gap-1 list-disc list-inside"
                             >
                                 <li
                                     v-for="produit in catTarif.produits"
@@ -244,14 +244,14 @@ const formatCurrency = (value) => {
                         </template>
                     </td>
                     <td
-                        class="whitespace-nowrap border border-slate-300 px-4 py-2"
+                        class="px-4 py-2 border whitespace-nowrap border-slate-300"
                     >
                         <button
                             type="button"
                             @click="openEditCatTarifModal(catTarif)"
                         >
                             <PencilSquareIcon
-                                class="mr-1 h-6 w-6 text-slate-500 hover:text-slate-700"
+                                class="w-6 h-6 mr-1 text-slate-500 hover:text-slate-700"
                             />
                         </button>
 
@@ -260,7 +260,7 @@ const formatCurrency = (value) => {
                             @click="() => destroyCatTarif(catTarif)"
                         >
                             <TrashIcon
-                                class="mr-1 h-6 w-6 text-red-400 hover:text-red-600"
+                                class="w-6 h-6 mr-1 text-red-400 hover:text-red-600"
                             />
                         </button>
                     </td>
@@ -269,7 +269,7 @@ const formatCurrency = (value) => {
         </table>
     </div>
     <div v-if="!strCatTarifs.length > 0">
-        <p class="font-semibold italic text-gray-600">
+        <p class="italic font-semibold text-gray-600">
             Pas de tarif associé à cette structure
         </p>
     </div>

@@ -99,23 +99,19 @@ class StructureActivite extends Model
             'instructeurs',
             'discipline:id,name,slug',
             'categorie:id,categorie_id,discipline_id,nom_categorie_client,nom_categorie_pro',
-            'plannings',
+            'plannings' => function ($query) {
+                $query->endNotPassed();
+            },
             'produits' => function ($query) {
                 $query->latest();
             },
             'produits.adresse',
-            // 'produits.dates',
-            // 'produits.horaire',
             'produits.criteres',
             'produits.criteres.critere',
             'produits.criteres.critere_valeur',
             'produits.criteres.critere_valeur.sous_criteres.prodSousCritValeurs.sous_critere_valeur',
             'produits.criteres.sous_criteres',
             'produits.criteres.sous_criteres.sous_critere_valeur',
-            // 'produits.tarifs',
-            // 'produits.tarifs.tarifType',
-            // 'produits.tarifs.structureTarifTypeInfos',
-            // 'produits.tarifs.structureTarifTypeInfos.tarifTypeAttribut',
             'produits.catTarifs',
             'produits.catTarifs.produits:id',
             'produits.catTarifs.categorie',
@@ -129,7 +125,9 @@ class StructureActivite extends Model
             'produits.catTarifs.attributs.sous_attributs',
             'produits.catTarifs.attributs.sous_attributs.sous_attribut',
             'produits.catTarifs.attributs.sous_attributs.sous_attribut_valeur',
-            'produits.plannings',
+            'produits.plannings' => function ($query) {
+                $query->endNotPassed();
+            },
         ]);
     }
 

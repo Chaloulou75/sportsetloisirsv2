@@ -12,6 +12,7 @@ class StructureProduitSousCritere extends Model
 
     protected $table = 'structure_produit_sous_criteres';
 
+
     /**
      * The attributes that are mass assignable.
      *

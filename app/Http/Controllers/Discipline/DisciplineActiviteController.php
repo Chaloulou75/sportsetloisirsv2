@@ -54,7 +54,7 @@ class DisciplineActiviteController extends Controller
 
         $activite = StructureActivite::withRelations()->find($activite->id);
 
-        $produits = $activite->produits()->withRelations()->withCatTarifReservations()->get();
+        $produits = $activite->produits()->withRelations()->get();
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
                 ->where('discipline_id', $requestDiscipline->id)
