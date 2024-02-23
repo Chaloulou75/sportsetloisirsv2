@@ -140,6 +140,7 @@ class StructureProduit extends Model
             'catTarifs.cat_tarif_type.tarif_booking_fields.sous_fields.valeurs',
             'catTarifs.attributs',
             'catTarifs.attributs.tarif_attribut',
+            'catTarifs.attributs.tarif_attribut.valeurs',
             'catTarifs.attributs.sous_attributs',
             'catTarifs.attributs.sous_attributs.sous_attribut',
             'catTarifs.attributs.sous_attributs.sous_attribut_valeur',

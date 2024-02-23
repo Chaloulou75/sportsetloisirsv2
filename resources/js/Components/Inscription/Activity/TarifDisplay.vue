@@ -93,10 +93,10 @@ const formatCurrency = (value) => {
 <template>
     <div v-if="strCatTarifs.length > 0" class="overflow-x-auto">
         <table
-            class="min-w-full border border-collapse divide-y divide-gray-200 table-auto border-slate-300"
+            class="min-w-full table-auto border-collapse divide-y divide-gray-200 border border-slate-300"
         >
             <thead
-                class="text-xs font-medium tracking-wider uppercase bg-gray-700 text-gray-50"
+                class="bg-gray-700 text-xs font-medium uppercase tracking-wider text-gray-50"
             >
                 <tr>
                     <th class="hidden px-4 py-2 text-left lg:table-cell">
@@ -117,7 +117,7 @@ const formatCurrency = (value) => {
                 </tr>
             </thead>
             <tbody
-                class="text-xs bg-white divide-y divide-gray-200 text-slate-800"
+                class="divide-y divide-gray-200 bg-white text-xs text-slate-800"
             >
                 <tr
                     v-for="catTarif in strCatTarifs"
@@ -125,12 +125,12 @@ const formatCurrency = (value) => {
                     class="odd:bg-white even:bg-gray-50"
                 >
                     <td
-                        class="hidden px-4 py-2 font-semibold truncate border max-w-0 whitespace-nowrap border-slate-300 lg:table-cell"
+                        class="hidden max-w-0 truncate whitespace-nowrap border border-slate-300 px-4 py-2 font-semibold lg:table-cell"
                     >
                         {{ catTarif.categorie.discipline.name }}
                     </td>
                     <td
-                        class="px-4 py-2 font-semibold border whitespace-nowrap border-slate-300"
+                        class="whitespace-nowrap border border-slate-300 px-4 py-2 font-semibold"
                     >
                         <dl class="lg:hidden">
                             <dt class="sr-only">Discipline</dt>
@@ -147,30 +147,30 @@ const formatCurrency = (value) => {
                         </dl>
                     </td>
                     <td
-                        class="hidden px-4 py-2 font-semibold truncate border max-w-0 whitespace-nowrap border-slate-300 lg:table-cell"
+                        class="hidden max-w-0 truncate whitespace-nowrap border border-slate-300 px-4 py-2 font-semibold lg:table-cell"
                     >
                         {{ catTarif.cat_tarif_type.nom }}
                     </td>
                     <td
-                        class="px-4 py-2 truncate border max-w-0 whitespace-nowrap border-slate-300"
+                        class="max-w-0 truncate whitespace-nowrap border border-slate-300 px-4 py-2"
                     >
                         {{ catTarif.titre }}
                     </td>
                     <td
-                        class="hidden px-4 py-2 truncate border max-w-0 whitespace-nowrap border-slate-300 lg:table-cell"
+                        class="hidden max-w-0 truncate whitespace-nowrap border border-slate-300 px-4 py-2 lg:table-cell"
                     >
                         {{ catTarif.description }}
                     </td>
                     <td
-                        class="px-4 py-2 font-semibold border whitespace-nowrap border-slate-300"
+                        class="whitespace-nowrap border border-slate-300 px-4 py-2 font-semibold"
                     >
                         {{ formatCurrency(catTarif.amount) }}
                     </td>
                     <td
-                        class="px-4 py-2 whitespace-normal border border-slate-300"
+                        class="whitespace-normal border border-slate-300 px-4 py-2"
                     >
                         <template v-if="catTarif.attributs">
-                            <ul class="list-disc list-inside">
+                            <ul class="list-inside list-disc">
                                 <li
                                     v-for="attribut in catTarif.attributs"
                                     :key="attribut.id"
@@ -183,7 +183,7 @@ const formatCurrency = (value) => {
                                         }}</span></span
                                     >
                                     <template v-if="attribut.sous_attributs">
-                                        <ul class="list-disc list-inside">
+                                        <ul class="list-inside list-disc">
                                             <li
                                                 v-for="sousattr in attribut.sous_attributs"
                                                 :key="sousattr.id"
@@ -227,11 +227,11 @@ const formatCurrency = (value) => {
                         </template>
                     </td>
                     <td
-                        class="px-4 py-2 font-semibold border whitespace-nowrap border-slate-300"
+                        class="whitespace-nowrap border border-slate-300 px-4 py-2 font-semibold"
                     >
                         <template v-if="catTarif.produits">
                             <ul
-                                class="grid grid-cols-2 gap-1 list-disc list-inside"
+                                class="grid list-inside list-disc grid-cols-2 gap-1"
                             >
                                 <li
                                     v-for="produit in catTarif.produits"
@@ -244,14 +244,14 @@ const formatCurrency = (value) => {
                         </template>
                     </td>
                     <td
-                        class="px-4 py-2 border whitespace-nowrap border-slate-300"
+                        class="whitespace-nowrap border border-slate-300 px-4 py-2"
                     >
                         <button
                             type="button"
                             @click="openEditCatTarifModal(catTarif)"
                         >
                             <PencilSquareIcon
-                                class="w-6 h-6 mr-1 text-slate-500 hover:text-slate-700"
+                                class="mr-1 h-6 w-6 text-slate-500 hover:text-slate-700"
                             />
                         </button>
 
@@ -260,7 +260,7 @@ const formatCurrency = (value) => {
                             @click="() => destroyCatTarif(catTarif)"
                         >
                             <TrashIcon
-                                class="w-6 h-6 mr-1 text-red-400 hover:text-red-600"
+                                class="mr-1 h-6 w-6 text-red-400 hover:text-red-600"
                             />
                         </button>
                     </td>
@@ -269,7 +269,7 @@ const formatCurrency = (value) => {
         </table>
     </div>
     <div v-if="!strCatTarifs.length > 0">
-        <p class="italic font-semibold text-gray-600">
+        <p class="font-semibold italic text-gray-600">
             Pas de tarif associé à cette structure
         </p>
     </div>
@@ -285,214 +285,3 @@ const formatCurrency = (value) => {
         @close="showEditCatTarifModal = false"
     />
 </template>
-<!-- <div
-        v-if="
-            structure.tarifs.length === 0 &&
-            tarifsList.length === 0 &&
-        "
-    >
-        <p class="italic font-semibold text-gray-600">
-            Pas de tarif associé à cette structure
-        </p>
-    </div> -->
-
-<!-- <div
-        v-if="
-            structure.tarifs.length > 0 &&
-            route().current('structures.disciplines.index', structure)
-        "
-        class="w-full mt-6 overflow-x-auto shadow-lg rounded-xl"
-    >
-        <table
-            class="w-full text-sm font-semibold text-gray-700 border-collapse table-fixed md:table-auto"
-        >
-            <caption
-                class="py-6 text-sm font-semibold caption-top bg-slate-50 text-slate-600"
-            >
-                Liste des tarifs de la structure:
-            </caption>
-            <thead class="bg-slate-50">
-                <tr class="font-medium text-center border-b text-slate-400">
-                    <th class="p-5">Infos</th>
-                    <th class="p-5">Titre</th>
-                    <th class="p-5">Type</th>
-                    <th class="p-5">Description</th>
-                    <th class="p-5">Montant</th>
-                    <th class="p-5">Gestion</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr
-                    class="text-center border-b border-slate-100 text-slate-500"
-                    v-for="tarif in structure.tarifs"
-                    :key="tarif.id"
-                >
-                    <td class="flex flex-col items-center justify-center p-5">
-                        <div
-                            v-for="info in tarif.structure_tarif_type_infos"
-                            :key="info.id"
-                            class="inline-flex items-center justify-center space-y-2"
-                        >
-                            <ClockIcon
-                                v-if="[1, 2, 5, 7].includes(info.attribut_id)"
-                                class="w-5 h-5 mr-1"
-                            />
-                            <UserGroupIcon
-                                v-else-if="[3, 6].includes(info.attribut_id)"
-                                class="w-5 h-5 mr-1 text-slate-500"
-                            />
-                            <UsersIcon
-                                v-else-if="[4].includes(info.attribut_id)"
-                                class="w-5 h-5 mr-1"
-                            />
-
-                            <UsersIcon v-else class="w-5 h-5 mr-1" />
-
-                            <span v-if="info.valeur" class="text-sm font-thin">
-                                {{ info.tarif_type_attribut.attribut }}:
-                                {{ info.valeur }}
-                                <span v-if="info.unite">{{ info.unite }}</span>
-                            </span>
-                            <span v-else class="text-sm font-thin"
-                                >Pas de valeur</span
-                            >
-                        </div>
-                    </td>
-                    <td class="p-5">{{ tarif.titre }}</td>
-                    <td class="p-5">{{ tarif.tarif_type.type }}</td>
-                    <td class="p-5">
-                        <p
-                            class="overflow-hidden line-clamp-1 w-36 text-ellipsis"
-                        >
-                            {{ tarif.description }}
-                        </p>
-                    </td>
-                    <td class="p-5">{{ formatCurrency(tarif.amount) }}</td>
-                    <td class="flex p-5">
-                        <button
-                            type="button"
-                            @click="openEditTarifModal(tarif)"
-                        >
-                            <ArrowPathIcon
-                                class="w-6 h-6 mr-1 transition-all duration-200 text-slate-400 hover:-rotate-90 hover:text-slate-600"
-                            />
-                        </button>
-
-                        <button
-                            type="button"
-                            @click="() => destroyTarif(tarif)"
-                        >
-                            <TrashIcon
-                                class="w-6 h-6 mr-1 text-slate-400 hover:text-slate-600"
-                            />
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div
-        v-if="tarifsList.length > 0"
-        class="w-full mt-12 overflow-x-auto shadow-lg rounded-xl"
-    >
-        <table
-            class="w-full text-sm font-semibold text-gray-700 border-collapse table-fixed md:table-auto"
-        >
-            <caption
-                class="py-6 text-sm font-semibold caption-top bg-slate-50 text-slate-600"
-            >
-                Liste des tarifs par produit de votre activité:
-            </caption>
-            <thead class="bg-slate-50">
-                <tr class="font-medium text-center border-b text-slate-400">
-                    <th class="p-5">Infos</th>
-                    <th class="p-5">Titre</th>
-                    <th class="p-5">Produit associé</th>
-                    <th class="p-5">Type</th>
-                    <th class="p-5">Description</th>
-                    <th class="p-5">Montant</th>
-                    <th class="p-5">Gestion</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr
-                    class="text-center border-b border-slate-100 text-slate-500"
-                    v-for="tarif in tarifsList"
-                    :key="tarif.id"
-                >
-                    <td class="flex flex-col items-center justify-center p-5">
-                        <div
-                            v-for="info in tarif.structure_tarif_type_infos"
-                            :key="info.id"
-                            class="inline-flex items-center justify-center space-y-2"
-                        >
-                            <ClockIcon
-                                v-if="[1, 2, 5, 7].includes(info.attribut_id)"
-                                class="w-5 h-5 mr-1"
-                            />
-                            <UserGroupIcon
-                                v-else-if="[3, 6].includes(info.attribut_id)"
-                                class="w-5 h-5 mr-1 text-slate-500"
-                            />
-                            <UsersIcon
-                                v-else-if="[4].includes(info.attribut_id)"
-                                class="w-5 h-5 mr-1"
-                            />
-
-                            <UsersIcon v-else class="w-5 h-5 mr-1" />
-
-                            <span v-if="info.valeur" class="text-sm font-thin">
-                                {{ info.tarif_type_attribut.attribut }}:
-                                {{ info.valeur }}
-                                <span v-if="info.unite">{{ info.unite }}</span>
-                            </span>
-                            <span v-else class="text-sm font-thin"
-                                >Pas de valeur</span
-                            >
-                        </div>
-                    </td>
-                    <td class="p-5">{{ tarif.titre }}</td>
-                    <td class="p-5">N° {{ tarif.pivot.produit_id }}</td>
-                    <td class="p-5">{{ tarif.tarif_type.type }}</td>
-                    <td class="p-5">
-                        <p
-                            class="overflow-hidden line-clamp-1 w-36 text-ellipsis"
-                        >
-                            {{ tarif.description }}
-                        </p>
-                    </td>
-                    <td class="p-5">{{ formatCurrency(tarif.amount) }}</td>
-                    <td class="p-5">
-                        <button
-                            type="button"
-                            @click="openEditTarifModal(tarif)"
-                        >
-                            <ArrowPathIcon
-                                class="w-6 h-6 mr-1 transition-all duration-200 text-slate-400 hover:-rotate-90 hover:text-slate-600"
-                            />
-                        </button>
-
-                        <button
-                            type="button"
-                            @click="() => destroyTarif(tarif)"
-                        >
-                            <TrashIcon
-                                class="w-6 h-6 mr-1 text-slate-400 hover:text-slate-600"
-                            />
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div> -->
-
-<!-- <ModalEditTarif
-        :errors="errors"
-        :structure="structure"
-        :tarif="currentTarif"
-        :all-categories="allCategories"
-        :tarif-types="tarifTypes"
-        :activite-for-tarifs="activiteForTarifs"
-        :show="showEditTarifModal"
-        @close="showEditTarifModal = false"
-    /> -->

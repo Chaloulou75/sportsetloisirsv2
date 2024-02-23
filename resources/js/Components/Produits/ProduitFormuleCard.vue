@@ -47,19 +47,19 @@ const formatCurrency = (value) => {
         leave-to="opacity-0"
     >
         <div
-            class="flex flex-col h-full transition duration-300 ease-in-out rounded-lg shadow-sm ring ring-gray-300 ring-offset-1 hover:shadow-lg md:px-0"
+            class="flex h-full flex-col rounded-lg shadow-sm ring ring-gray-300 ring-offset-1 transition duration-300 ease-in-out hover:shadow-lg md:px-0"
             :class="{
                 'ring-3 shadow-indigo-400 ring-indigo-500 ring-offset-2':
                     isSelected,
             }"
         >
-            <div class="flex flex-col flex-1 mt-2">
+            <div class="mt-2 flex flex-1 flex-col">
                 <div
-                    class="flex flex-col justify-between flex-1 justify-items-end text-slate-700"
+                    class="flex flex-1 flex-col justify-between justify-items-end text-slate-700"
                 >
                     <div class="flex items-center justify-between px-4 py-2">
                         <input
-                            class="p-2 bg-white rounded-full"
+                            class="rounded-full bg-white p-2"
                             type="radio"
                             :id="produit.id"
                             :value="produit.id"
@@ -70,7 +70,7 @@ const formatCurrency = (value) => {
                             class="flex items-center px-4 py-2 text-base"
                         >
                             <dt class="sr-only">Ville</dt>
-                            <MapPinIcon class="w-4 h-4 mr-1 text-indigo-700" />
+                            <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
                             <p class="font-semibold">
                                 {{ produit.adresse.city }} ({{
                                     produit.adresse.zip_code
@@ -80,7 +80,7 @@ const formatCurrency = (value) => {
                     </div>
                     <template v-if="produit.criteres.length > 0">
                         <div
-                            class="grid w-full grid-cols-3 gap-1 mt-auto text-xs text-gray-900 justify-items-center md:grid-cols-6"
+                            class="mt-auto grid w-full grid-cols-3 justify-items-center gap-1 text-xs text-gray-900 md:grid-cols-6"
                         >
                             <template
                                 v-for="critere in produit.criteres"
@@ -91,7 +91,7 @@ const formatCurrency = (value) => {
                                         critere.valeur &&
                                         !!critere.critere.visible_block === true
                                     "
-                                    class="flex flex-col items-center justify-center w-full px-1 py-3 font-medium"
+                                    class="flex w-full flex-col items-center justify-center px-1 py-3 font-medium"
                                     :class="
                                         [
                                             'date',
@@ -107,13 +107,13 @@ const formatCurrency = (value) => {
                                     "
                                 >
                                     <div
-                                        class="text-xs text-center uppercase text-slate-500"
+                                        class="text-center text-xs uppercase text-slate-500"
                                     >
                                         {{ critere.critere.nom }}
                                     </div>
                                     <div
                                         v-if="critere.valeur"
-                                        class="text-sm text-center"
+                                        class="text-center text-sm"
                                     >
                                         {{ critere.valeur }}
                                         <span
@@ -168,29 +168,29 @@ const formatCurrency = (value) => {
                                                 <tr>
                                                     <th
                                                         scope="col"
-                                                        class="px-3 py-3 text-xs font-medium text-gray-500 uppercase text-start"
+                                                        class="px-3 py-3 text-start text-xs font-medium uppercase text-gray-500"
                                                     ></th>
                                                     <th
                                                         scope="col"
-                                                        class="px-3 py-3 text-xs font-medium text-gray-500 uppercase text-start"
+                                                        class="px-3 py-3 text-start text-xs font-medium uppercase text-gray-500"
                                                     >
                                                         Type de tarif
                                                     </th>
                                                     <th
                                                         scope="col"
-                                                        class="px-3 py-3 text-xs font-medium text-gray-500 uppercase text-start"
+                                                        class="px-3 py-3 text-start text-xs font-medium uppercase text-gray-500"
                                                     >
                                                         Montant
                                                     </th>
                                                     <th
                                                         scope="col"
-                                                        class="px-3 py-3 text-xs font-medium text-gray-500 uppercase text-start"
+                                                        class="px-3 py-3 text-start text-xs font-medium uppercase text-gray-500"
                                                     >
                                                         Titre
                                                     </th>
                                                     <th
                                                         scope="col"
-                                                        class="px-3 py-3 text-xs font-medium text-gray-500 uppercase text-start"
+                                                        class="px-3 py-3 text-start text-xs font-medium uppercase text-gray-500"
                                                     >
                                                         Attributs
                                                     </th>
@@ -210,7 +210,7 @@ const formatCurrency = (value) => {
                                                     }"
                                                 >
                                                     <td
-                                                        class="px-3 py-4 text-sm font-medium text-gray-800 whitespace-nowrap"
+                                                        class="whitespace-nowrap px-3 py-4 text-sm font-medium text-gray-800"
                                                     >
                                                         <input
                                                             type="radio"
@@ -223,7 +223,7 @@ const formatCurrency = (value) => {
                                                         />
                                                     </td>
                                                     <td
-                                                        class="px-3 py-4 text-sm font-semibold text-gray-800 whitespace-nowrap md:text-base"
+                                                        class="whitespace-nowrap px-3 py-4 text-sm font-semibold text-gray-800 md:text-base"
                                                     >
                                                         {{
                                                             catTarif
@@ -232,7 +232,7 @@ const formatCurrency = (value) => {
                                                         }}
                                                     </td>
                                                     <td
-                                                        class="px-3 py-4 text-sm font-semibold text-gray-800 whitespace-nowrap md:text-base"
+                                                        class="whitespace-nowrap px-3 py-4 text-sm font-semibold text-gray-800 md:text-base"
                                                     >
                                                         {{
                                                             formatCurrency(
@@ -241,12 +241,12 @@ const formatCurrency = (value) => {
                                                         }}
                                                     </td>
                                                     <td
-                                                        class="px-3 py-4 text-sm text-gray-800 whitespace-nowrap"
+                                                        class="whitespace-nowrap px-3 py-4 text-sm text-gray-800"
                                                     >
                                                         {{ catTarif.titre }}
                                                     </td>
                                                     <td
-                                                        class="px-3 py-4 text-sm text-gray-800 whitespace-nowrap"
+                                                        class="whitespace-nowrap px-3 py-4 text-sm text-gray-800"
                                                     >
                                                         <template
                                                             v-if="
@@ -254,7 +254,7 @@ const formatCurrency = (value) => {
                                                             "
                                                         >
                                                             <ul
-                                                                class="list-disc list-inside justify-self-end"
+                                                                class="list-inside list-disc"
                                                             >
                                                                 <li
                                                                     v-for="attribut in catTarif.attributs"
@@ -286,7 +286,7 @@ const formatCurrency = (value) => {
                                                                         "
                                                                     >
                                                                         <ul
-                                                                            class="list-disc list-inside"
+                                                                            class="list-inside list-disc"
                                                                         >
                                                                             <li
                                                                                 v-for="sousattr in attribut.sous_attributs"

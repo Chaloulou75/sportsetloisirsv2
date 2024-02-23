@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, computed, onMounted } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
@@ -54,6 +54,68 @@ const addTarifForm = useForm({
     categories: {},
     activites: {},
     produits: {},
+});
+
+const updateSelectedCheckboxes = (attributId, optionValue, checked) => {
+    const selectedAttribut = addTarifForm.attributs[attributId];
+
+    if (checked) {
+        if (!Array.isArray(selectedAttribut)) {
+            // Use ref() to ensure reactivity when modifying arrays
+            addTarifForm.attributs[attributId] = ref([optionValue]);
+        } else {
+            selectedAttribut.push(optionValue);
+        }
+    } else {
+        if (Array.isArray(selectedAttribut)) {
+            const index = selectedAttribut.indexOf(optionValue);
+            if (index !== -1) {
+                selectedAttribut.splice(index, 1);
+            }
+        }
+    }
+};
+
+const isCheckboxSelected = computed(() => {
+    return (attributId, optionValue) => {
+        return (
+            addTarifForm.attributs[attributId] &&
+            addTarifForm.attributs[attributId].includes(optionValue)
+        );
+    };
+});
+
+const updateSousAttrSelectedCheckboxes = (
+    sousattributId,
+    optionValue,
+    checked
+) => {
+    const selectedSousAttribut = addTarifForm.sousattributs[sousattributId];
+
+    if (checked) {
+        if (!Array.isArray(selectedSousAttribut)) {
+            // Use ref() to ensure reactivity when modifying arrays
+            addTarifForm.sousattributs[sousattributId] = ref([optionValue]);
+        } else {
+            selectedSousAttribut.push(optionValue);
+        }
+    } else {
+        if (Array.isArray(selectedSousAttribut)) {
+            const index = selectedSousAttribut.indexOf(optionValue);
+            if (index !== -1) {
+                selectedSousAttribut.splice(index, 1);
+            }
+        }
+    }
+};
+
+const isCheckboxSousAttrSelected = computed(() => {
+    return (sousattributId, optionValue) => {
+        return (
+            addTarifForm.sousattributs[sousattributId] &&
+            addTarifForm.sousattributs[sousattributId].includes(optionValue)
+        );
+    };
 });
 
 watch(
@@ -494,13 +556,13 @@ onMounted(() => {
                 leave-to="opacity-0"
             >
                 <div
-                    class="fixed inset-0 transition-opacity bg-black bg-opacity-50"
+                    class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
                 />
             </TransitionChild>
 
             <div class="fixed inset-0 overflow-y-auto">
                 <div
-                    class="flex items-center justify-center min-h-full p-4 text-center"
+                    class="flex min-h-full items-center justify-center p-4 text-center"
                 >
                     <TransitionChild
                         as="template"
@@ -512,11 +574,11 @@ onMounted(() => {
                         leave-to="opacity-0 scale-95"
                     >
                         <DialogPanel
-                            class="w-full max-w-6xl min-h-full p-6 space-y-10 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
+                            class="min-h-full w-full max-w-6xl transform space-y-10 overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
                         >
                             <DialogTitle
                                 as="div"
-                                class="flex items-center justify-between w-full"
+                                class="flex w-full items-center justify-between"
                             >
                                 <h3
                                     class="text-lg font-medium leading-6 text-gray-800"
@@ -555,7 +617,7 @@ onMounted(() => {
                                 <button type="button">
                                     <XCircleIcon
                                         @click="emit('close')"
-                                        class="w-6 h-6 text-gray-600 hover:text-red-600"
+                                        class="h-6 w-6 text-gray-600 hover:text-red-600"
                                     />
                                 </button>
                             </DialogTitle>
@@ -568,7 +630,7 @@ onMounted(() => {
                                     <!-- disciplines -->
                                     <div
                                         v-if="!discipline"
-                                        class="flex flex-col items-start justify-start w-full space-y-2"
+                                        class="flex w-full flex-col items-start justify-start space-y-2"
                                     >
                                         <label
                                             for="discipline"
@@ -577,7 +639,7 @@ onMounted(() => {
                                             Discipline
                                         </label>
                                         <div
-                                            class="flex w-full mt-1 rounded-md md:w-1/2"
+                                            class="mt-1 flex w-full rounded-md md:w-1/2"
                                         >
                                             <select
                                                 name="discipline"
@@ -585,7 +647,7 @@ onMounted(() => {
                                                 v-model="
                                                     addTarifForm.discipline_id
                                                 "
-                                                class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
+                                                class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                             >
                                                 <option
                                                     v-for="discipline in props.activiteForTarifs"
@@ -606,7 +668,7 @@ onMounted(() => {
                                                 addTarifForm.discipline_id) &&
                                             allCategories
                                         "
-                                        class="flex flex-col items-start justify-start w-full space-y-2"
+                                        class="flex w-full flex-col items-start justify-start space-y-2"
                                     >
                                         <label
                                             for="categorie"
@@ -615,7 +677,7 @@ onMounted(() => {
                                             Categorie
                                         </label>
                                         <div
-                                            class="flex w-full mt-1 rounded-md md:w-1/2"
+                                            class="mt-1 flex w-full rounded-md md:w-1/2"
                                         >
                                             <select
                                                 name="categorie"
@@ -623,7 +685,7 @@ onMounted(() => {
                                                 v-model="
                                                     addTarifForm.categorie_id
                                                 "
-                                                class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
+                                                class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                             >
                                                 <option
                                                     v-for="categorie in filteredCategories"
@@ -645,7 +707,7 @@ onMounted(() => {
                                     </div>
                                     <!-- tarif_types -->
                                     <div
-                                        class="flex flex-col items-center justify-start w-full space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
+                                        class="flex w-full flex-col items-center justify-start space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
                                     >
                                         <Listbox
                                             v-if="
@@ -664,7 +726,7 @@ onMounted(() => {
                                                     Type de tarif
                                                 </label>
                                                 <ListboxButton
-                                                    class="relative w-full py-2 pl-3 pr-10 mt-1 text-left bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                                                    class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
                                                 >
                                                     <span
                                                         class="block truncate"
@@ -674,10 +736,10 @@ onMounted(() => {
                                                         }}</span
                                                     >
                                                     <span
-                                                        class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
+                                                        class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
                                                     >
                                                         <ChevronUpDownIcon
-                                                            class="w-5 h-5 text-gray-400"
+                                                            class="h-5 w-5 text-gray-400"
                                                             aria-hidden="true"
                                                         />
                                                     </span>
@@ -689,7 +751,7 @@ onMounted(() => {
                                                     leave-to-class="opacity-0"
                                                 >
                                                     <ListboxOptions
-                                                        class="absolute z-40 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                                                        class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
                                                     >
                                                         <ListboxOption
                                                             v-slot="{
@@ -727,7 +789,7 @@ onMounted(() => {
                                                                     class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
                                                                 >
                                                                     <CheckCircleIcon
-                                                                        class="w-5 h-5"
+                                                                        class="h-5 w-5"
                                                                         aria-hidden="true"
                                                                     />
                                                                 </span>
@@ -748,13 +810,13 @@ onMounted(() => {
                                             >
                                                 Titre
                                             </label>
-                                            <div class="flex mt-1 rounded-md">
+                                            <div class="mt-1 flex rounded-md">
                                                 <input
                                                     v-model="addTarifForm.titre"
                                                     type="text"
                                                     name="titre"
                                                     id="titre"
-                                                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                     placeholder=""
                                                     autocomplete="none"
                                                 />
@@ -787,7 +849,7 @@ onMounted(() => {
                                                 id="description"
                                                 name="description"
                                                 rows="2"
-                                                class="block w-full h-32 min-h-full mt-1 placeholder-gray-400 placeholder-opacity-50 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                class="mt-1 block h-32 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                 :class="{
                                                     errors: 'border-red-500 focus:ring focus:ring-red-200',
                                                 }"
@@ -804,18 +866,19 @@ onMounted(() => {
                                             }}
                                         </div>
                                     </div>
-                                    <template
+                                    <div
                                         v-if="
                                             addTarifForm.tarif_type &&
                                             addTarifForm.tarif_type
                                                 .tarif_attributs.length > 0
                                         "
+                                        class="mx-auto grid w-full grid-cols-1 gap-4 md:grid-cols-3"
                                     >
                                         <div
                                             v-for="attribut in addTarifForm
                                                 .tarif_type.tarif_attributs"
                                             :key="attribut.id"
-                                            class="flex flex-col items-center w-full space-y-2 md:flex-row md:space-x-2 md:space-y-0"
+                                            class="col-span-1"
                                         >
                                             <!-- select  -->
                                             <SelectForm
@@ -849,13 +912,13 @@ onMounted(() => {
                                                     ]
                                                 "
                                                 :options="attribut.valeurs"
+                                                :is-checkbox-selected="
+                                                    isCheckboxSelected
+                                                "
+                                                @update-selected-checkboxes="
+                                                    updateSelectedCheckboxes
+                                                "
                                             />
-                                            <!-- :is-checkbox-selected="
-                                                            isCheckboxSelected
-                                                        "
-                                                        @update-selected-checkboxes="
-                                                            updateSelectedCheckboxes
-                                                        " -->
 
                                             <!-- input text -->
                                             <div
@@ -872,7 +935,7 @@ onMounted(() => {
                                                     {{ attribut.nom }}
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md"
+                                                    class="mt-1 flex rounded-md"
                                                 >
                                                     <TextInput
                                                         type="text"
@@ -884,7 +947,7 @@ onMounted(() => {
                                                         "
                                                         :name="attribut.nom"
                                                         :id="attribut.nom"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -906,7 +969,7 @@ onMounted(() => {
                                                     {{ attribut.nom }}
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md"
+                                                    class="mt-1 flex rounded-md"
                                                 >
                                                     <TextInput
                                                         type="number"
@@ -918,17 +981,16 @@ onMounted(() => {
                                                         "
                                                         :name="attribut.nom"
                                                         :id="attribut.nom"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
                                                 </div>
                                             </div>
                                             <!-- sous attributs -->
-                                            <div
+                                            <template
                                                 v-for="sousattribut in attribut.sous_attributs"
                                                 :key="sousattribut.id"
-                                                class="flex flex-col items-center w-full space-y-2 md:flex-row md:space-x-2 md:space-y-0"
                                             >
                                                 <SelectForm
                                                     :classes="'block '"
@@ -948,6 +1010,32 @@ onMounted(() => {
                                                         sousattribut.valeurs
                                                     "
                                                 />
+
+                                                <!-- checkbox -->
+                                                <CheckboxForm
+                                                    class="max-w-sm"
+                                                    v-if="
+                                                        sousattribut.type_champ_form ===
+                                                        'checkbox'
+                                                    "
+                                                    :critere="sousattribut"
+                                                    :name="sousattribut.nom"
+                                                    v-model="
+                                                        addTarifForm
+                                                            .sousattributs[
+                                                            sousattribut.id
+                                                        ]
+                                                    "
+                                                    :options="
+                                                        sousattribut.valeurs
+                                                    "
+                                                    :is-checkbox-selected="
+                                                        isCheckboxSousAttrSelected
+                                                    "
+                                                    @update-selected-checkboxes="
+                                                        updateSousAttrSelectedCheckboxes
+                                                    "
+                                                />
                                                 <!-- input text -->
                                                 <div
                                                     class="w-full max-w-sm"
@@ -963,7 +1051,7 @@ onMounted(() => {
                                                         {{ sousattribut.nom }}
                                                     </label>
                                                     <div
-                                                        class="flex mt-1 rounded-md"
+                                                        class="mt-1 flex rounded-md"
                                                     >
                                                         <TextInput
                                                             type="text"
@@ -980,7 +1068,7 @@ onMounted(() => {
                                                             :id="
                                                                 sousattribut.nom
                                                             "
-                                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                             placeholder=""
                                                             autocomplete="none"
                                                         />
@@ -1002,7 +1090,7 @@ onMounted(() => {
                                                         {{ sousattribut.nom }}
                                                     </label>
                                                     <div
-                                                        class="flex mt-1 rounded-md"
+                                                        class="mt-1 flex rounded-md"
                                                     >
                                                         <TextInput
                                                             type="number"
@@ -1019,15 +1107,15 @@ onMounted(() => {
                                                             :id="
                                                                 sousattribut.nom
                                                             "
-                                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                             placeholder=""
                                                             autocomplete="none"
                                                         />
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </template>
                                         </div>
-                                    </template>
+                                    </div>
 
                                     <div
                                         v-if="addTarifForm.tarif_type"
@@ -1040,19 +1128,19 @@ onMounted(() => {
                                             Montant
                                         </label>
                                         <div
-                                            class="flex items-center mt-1 rounded-md"
+                                            class="mt-1 flex items-center rounded-md"
                                         >
                                             <input
                                                 v-model="addTarifForm.amount"
                                                 type="number"
                                                 name="amount"
                                                 id="amount"
-                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                 placeholder=""
                                                 autocomplete="none"
                                             />
                                             <CurrencyEuroIcon
-                                                class="w-6 h-6 ml-2"
+                                                class="ml-2 h-6 w-6"
                                             />
                                         </div>
                                         <div
@@ -1083,7 +1171,7 @@ onMounted(() => {
                                                     v-model="
                                                         addTarifForm.checkAll
                                                     "
-                                                    class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500"
+                                                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                                                 />
                                                 <span
                                                     class="ml-2 text-sm text-gray-600"
@@ -1124,7 +1212,7 @@ onMounted(() => {
                                                                         .id
                                                                 ]
                                                             "
-                                                            class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500"
+                                                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                                                         />
 
                                                         <span
@@ -1166,7 +1254,7 @@ onMounted(() => {
                                                                                 .id
                                                                         ]
                                                                     "
-                                                                    class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500"
+                                                                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                                                                 />
                                                                 <span
                                                                     class="ml-2 text-sm text-gray-600"
@@ -1204,7 +1292,7 @@ onMounted(() => {
                                                                                     .id
                                                                             ]
                                                                         "
-                                                                        class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500"
+                                                                        class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                                                                     />
                                                                     <span
                                                                         class="ml-2 text-sm text-gray-600"
@@ -1215,7 +1303,7 @@ onMounted(() => {
                                                                 </label>
 
                                                                 <div
-                                                                    class="flex flex-col items-center ml-8 space-x-0 space-y-3 md:ml-16 md:flex-row md:space-x-8 md:space-y-0"
+                                                                    class="ml-8 flex flex-col items-center space-x-0 space-y-3 md:ml-16 md:flex-row md:space-x-8 md:space-y-0"
                                                                 >
                                                                     <label
                                                                         v-for="produit in activite.produits"
@@ -1242,7 +1330,7 @@ onMounted(() => {
                                                                                         .id
                                                                                 ]
                                                                             "
-                                                                            class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500"
+                                                                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                                                                         />
                                                                         <span
                                                                             class="ml-2 text-sm text-gray-600"
@@ -1263,11 +1351,11 @@ onMounted(() => {
                                     </template>
                                 </div>
                                 <div
-                                    class="flex items-center justify-between w-full mt-4"
+                                    class="mt-4 flex w-full items-center justify-between"
                                 >
                                     <button
                                         type="button"
-                                        class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                                        class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
                                         @click.prevent="emit('close')"
                                     >
                                         Annuler
@@ -1280,7 +1368,7 @@ onMounted(() => {
                                                 addTarifForm.processing,
                                         }"
                                         type="submit"
-                                        class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                                        class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                     >
                                         <LoadingSVG
                                             v-if="addTarifForm.processing"
@@ -1289,518 +1377,6 @@ onMounted(() => {
                                     </button>
                                 </div>
                             </form>
-                            <!-- Tarif form classic -->
-                            <!-- <form
-                                @submit.prevent="onSubmitAddTarifForm()"
-                                autocomplete="off"
-                            >
-                                <div class="w-full mt-2">
-                                    <div class="flex flex-col space-y-3">
-                                        <div
-                                            class="flex flex-col items-center justify-start w-full space-x-0 space-y-2 md:flex-row md:space-x-2 md:space-y-0"
-                                        >
-                                            <div class="w-full md:w-1/2">
-                                                <label
-                                                    for="titre"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Titre
-                                                </label>
-                                                <div
-                                                    class="flex mt-1 rounded-md"
-                                                >
-                                                    <input
-                                                        v-model="
-                                                            formAddTarif.titre
-                                                        "
-                                                        type="text"
-                                                        name="titre"
-                                                        id="titre"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
-                                                        placeholder=""
-                                                        autocomplete="none"
-                                                    />
-                                                </div>
-                                                <div
-                                                    v-if="errors"
-                                                    class="mt-2 text-xs text-red-500"
-                                                >
-                                                    {{ errors.titre }}
-                                                </div>
-                                            </div>
-                                            <Listbox
-                                                class="w-full md:w-1/2"
-                                                v-model="selectedTarifType"
-                                            >
-                                                <div class="relative mt-1">
-                                                    <label
-                                                        for="tarifType"
-                                                        class="block text-sm font-medium text-gray-700"
-                                                    >
-                                                        Type de tarif
-                                                    </label>
-                                                    <ListboxButton
-                                                        class="relative w-full py-2 pl-3 pr-10 mt-1 text-left bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
-                                                    >
-                                                        <span
-                                                            class="block truncate"
-                                                            >{{
-                                                                selectedTarifType.type
-                                                            }}</span
-                                                        >
-                                                        <span
-                                                            class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
-                                                        >
-                                                            <ChevronUpDownIcon
-                                                                class="w-5 h-5 text-gray-400"
-                                                                aria-hidden="true"
-                                                            />
-                                                        </span>
-                                                    </ListboxButton>
-
-                                                    <transition
-                                                        leave-active-class="transition duration-100 ease-in"
-                                                        leave-from-class="opacity-100"
-                                                        leave-to-class="opacity-0"
-                                                    >
-                                                        <ListboxOptions
-                                                            class="absolute z-40 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-                                                        >
-                                                            <ListboxOption
-                                                                v-slot="{
-                                                                    active,
-                                                                    selected,
-                                                                }"
-                                                                v-for="tarifType in props.tarifTypes"
-                                                                :key="
-                                                                    tarifType.id
-                                                                "
-                                                                :value="
-                                                                    tarifType
-                                                                "
-                                                                as="template"
-                                                            >
-                                                                <li
-                                                                    :class="[
-                                                                        active
-                                                                            ? 'bg-amber-100 text-amber-900'
-                                                                            : 'text-gray-900',
-                                                                        'relative cursor-default select-none py-2 pl-10 pr-4',
-                                                                    ]"
-                                                                >
-                                                                    <span
-                                                                        :class="[
-                                                                            selected
-                                                                                ? 'font-medium'
-                                                                                : 'font-normal',
-                                                                            'block truncate',
-                                                                        ]"
-                                                                        >{{
-                                                                            tarifType.type
-                                                                        }}</span
-                                                                    >
-                                                                    <span
-                                                                        v-if="
-                                                                            selected
-                                                                        "
-                                                                        class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
-                                                                    >
-                                                                        <CheckCircleIcon
-                                                                            class="w-5 h-5"
-                                                                            aria-hidden="true"
-                                                                        />
-                                                                    </span>
-                                                                </li>
-                                                            </ListboxOption>
-                                                        </ListboxOptions>
-                                                    </transition>
-                                                </div>
-                                            </Listbox>
-                                        </div>
-                                        <div>
-                                            <label
-                                                for="description"
-                                                class="block text-sm font-medium text-gray-700"
-                                            >
-                                                Description
-                                            </label>
-                                            <div class="mt-1">
-                                                <textarea
-                                                    v-model="
-                                                        formAddTarif.description
-                                                    "
-                                                    id="description"
-                                                    name="description"
-                                                    rows="2"
-                                                    class="block w-full h-32 min-h-full mt-1 placeholder-gray-400 placeholder-opacity-50 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                    :class="{
-                                                        errors: 'border-red-500 focus:ring focus:ring-red-200',
-                                                    }"
-                                                    placeholder=""
-                                                    autocomplete="none"
-                                                />
-                                            </div>
-                                            <div
-                                                v-if="errors.description"
-                                                class="mt-2 text-xs text-red-500"
-                                            >
-                                                {{ errors.description }}
-                                            </div>
-                                        </div>
-                                        <div
-                                            v-if="selectedTarifType"
-                                            class="flex flex-col items-center justify-start w-full space-x-0 space-y-2 md:flex-row md:space-x-2 md:space-y-0"
-                                        >
-                                            <div
-                                                v-for="attribut in selectedTarifType.tariftypeattributs"
-                                                :key="attribut.id"
-                                                class="flex items-center w-1/2 space-x-2 md:w-auto"
-                                            >
-                                                <div>
-                                                    <label
-                                                        :for="attribut.attribut"
-                                                        class="block text-sm font-medium text-gray-700"
-                                                    >
-                                                        {{ attribut.attribut }}
-                                                    </label>
-                                                    <div
-                                                        class="flex mt-1 rounded-md"
-                                                    >
-                                                        <input
-                                                            v-model="
-                                                                formAddTarif
-                                                                    .attributs[
-                                                                    attribut.id
-                                                                ]
-                                                            "
-                                                            type="text"
-                                                            :name="
-                                                                attribut.attribut
-                                                            "
-                                                            :id="
-                                                                attribut.attribut
-                                                            "
-                                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
-                                                            placeholder=""
-                                                            autocomplete="none"
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                <Listbox
-                                                    v-if="
-                                                        attribut.attribut ===
-                                                        'Duree'
-                                                    "
-                                                    v-model="
-                                                        selectedUniteeDuree
-                                                    "
-                                                    class="w-56"
-                                                >
-                                                    <div class="relative">
-                                                        <label
-                                                            for="unite de duree"
-                                                            class="block text-sm font-medium text-gray-700"
-                                                        >
-                                                            Unité de durée
-                                                        </label>
-                                                        <ListboxButton
-                                                            class="relative w-full py-2 pl-3 pr-10 mt-1 text-left bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
-                                                        >
-                                                            <span
-                                                                class="block truncate"
-                                                            >
-                                                                {{
-                                                                    selectedUniteeDuree.name
-                                                                }}
-                                                            </span>
-                                                            <span
-                                                                class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
-                                                            >
-                                                                <ChevronUpDownIcon
-                                                                    class="w-5 h-5 text-gray-400"
-                                                                    aria-hidden="true"
-                                                                />
-                                                            </span>
-                                                        </ListboxButton>
-
-                                                        <transition
-                                                            leave-active-class="transition duration-100 ease-in"
-                                                            leave-from-class="opacity-100"
-                                                            leave-to-class="opacity-0"
-                                                        >
-                                                            <ListboxOptions
-                                                                class="absolute z-40 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-                                                            >
-                                                                <ListboxOption
-                                                                    v-slot="{
-                                                                        active,
-                                                                        selected,
-                                                                    }"
-                                                                    v-for="unite in uniteDurees"
-                                                                    :key="
-                                                                        unite.id
-                                                                    "
-                                                                    :value="
-                                                                        unite
-                                                                    "
-                                                                    as="template"
-                                                                >
-                                                                    <li
-                                                                        :class="[
-                                                                            active
-                                                                                ? 'bg-amber-100 text-amber-900'
-                                                                                : 'text-gray-900',
-                                                                            'relative cursor-default select-none py-2 pl-10 pr-4',
-                                                                        ]"
-                                                                    >
-                                                                        <span
-                                                                            :class="[
-                                                                                selected
-                                                                                    ? 'font-medium'
-                                                                                    : 'font-normal',
-                                                                                'block truncate',
-                                                                            ]"
-                                                                            >{{
-                                                                                unite.name
-                                                                            }}</span
-                                                                        >
-                                                                        <span
-                                                                            v-if="
-                                                                                selected
-                                                                            "
-                                                                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
-                                                                        >
-                                                                            <CheckCircleIcon
-                                                                                class="w-5 h-5"
-                                                                                aria-hidden="true"
-                                                                            />
-                                                                        </span>
-                                                                    </li>
-                                                                </ListboxOption>
-                                                            </ListboxOptions>
-                                                        </transition>
-                                                    </div>
-                                                </Listbox>
-                                            </div>
-                                        </div>
-                                        <div class="w-full md:w-1/2">
-                                            <label
-                                                for="amount"
-                                                class="block text-sm font-medium text-gray-700"
-                                            >
-                                                Montant
-                                            </label>
-                                            <div
-                                                class="flex items-center mt-1 rounded-md"
-                                            >
-                                                <input
-                                                    v-model="
-                                                        formAddTarif.amount
-                                                    "
-                                                    type="number"
-                                                    name="amount"
-                                                    id="amount"
-                                                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
-                                                    placeholder=""
-                                                    autocomplete="none"
-                                                />
-                                                <CurrencyEuroIcon
-                                                    class="w-6 h-6 ml-2"
-                                                />
-                                            </div>
-                                            <div
-                                                v-if="errors.amount"
-                                                class="mt-2 text-xs text-red-500"
-                                            >
-                                                {{ errors.amount }}
-                                            </div>
-                                        </div>
-                                        <div class="flex flex-col space-y-2">
-                                            <p
-                                                class="text-base font-medium text-gray-700"
-                                            >
-                                                Ce tarif est valable pour:
-                                            </p>
-
-                                            <label class="flex items-center">
-                                                <input
-                                                    type="checkbox"
-                                                    name="Tout"
-                                                    v-model="checkAll"
-                                                    class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500"
-                                                />
-                                                <span
-                                                    class="ml-2 text-sm text-gray-600"
-                                                    >Tout sélectionner</span
-                                                >
-                                            </label>
-
-                                            <div
-                                                v-for="discipline in props.activiteForTarifs"
-                                                :key="discipline.id"
-                                                class="ml-2 md:ml-4"
-                                            >
-                                                <label
-                                                    class="flex items-center"
-                                                >
-                                                    <input
-                                                        type="checkbox"
-                                                        :id="discipline.id"
-                                                        :value="discipline.id"
-                                                        :name="
-                                                            discipline.disciplineName
-                                                        "
-                                                        v-model="
-                                                            formAddTarif
-                                                                .disciplines[
-                                                                discipline.id
-                                                            ]
-                                                        "
-                                                        class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500"
-                                                    />
-
-                                                    <span
-                                                        class="ml-2 text-sm text-gray-600"
-                                                        >{{
-                                                            discipline.disciplineName
-                                                        }}</span
-                                                    >
-                                                </label>
-                                                <div
-                                                    v-for="category in discipline.categories"
-                                                    :key="category.id"
-                                                    class="ml-4 md:ml-8"
-                                                >
-                                                    <label
-                                                        class="flex items-center"
-                                                    >
-                                                        <input
-                                                            type="checkbox"
-                                                            :id="category.id"
-                                                            :value="category.id"
-                                                            :name="
-                                                                category.name
-                                                            "
-                                                            v-model="
-                                                                formAddTarif
-                                                                    .categories[
-                                                                    category.id
-                                                                ]
-                                                            "
-                                                            class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500"
-                                                        />
-                                                        <span
-                                                            class="ml-2 text-sm text-gray-600"
-                                                            >{{
-                                                                category.name
-                                                            }}</span
-                                                        >
-                                                    </label>
-
-                                                    <div
-                                                        v-for="activite in category.activites"
-                                                        :key="activite.id"
-                                                        class="ml-6 md:ml-12"
-                                                    >
-                                                        <label
-                                                            class="flex items-center"
-                                                        >
-                                                            <input
-                                                                type="checkbox"
-                                                                :id="
-                                                                    activite.id
-                                                                "
-                                                                :value="
-                                                                    activite.id
-                                                                "
-                                                                :name="
-                                                                    activite.titre
-                                                                "
-                                                                v-model="
-                                                                    formAddTarif
-                                                                        .activites[
-                                                                        activite
-                                                                            .id
-                                                                    ]
-                                                                "
-                                                                class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500"
-                                                            />
-                                                            <span
-                                                                class="ml-2 text-sm text-gray-600"
-                                                                >{{
-                                                                    activite.titre
-                                                                }}</span
-                                                            >
-                                                        </label>
-
-                                                        <div
-                                                            class="flex flex-col items-center ml-8 space-x-0 space-y-3 md:ml-16 md:flex-row md:space-x-8 md:space-y-0"
-                                                        >
-                                                            <label
-                                                                v-for="produit in activite.produits"
-                                                                :key="
-                                                                    produit.id
-                                                                "
-                                                                class="flex items-center"
-                                                            >
-                                                                <input
-                                                                    type="checkbox"
-                                                                    :id="
-                                                                        produit.id
-                                                                    "
-                                                                    :value="
-                                                                        produit.id
-                                                                    "
-                                                                    :name="
-                                                                        produit.id
-                                                                    "
-                                                                    v-model="
-                                                                        formAddTarif
-                                                                            .produits[
-                                                                            produit
-                                                                                .id
-                                                                        ]
-                                                                    "
-                                                                    class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500"
-                                                                />
-                                                                <span
-                                                                    class="ml-2 text-sm text-gray-600"
-                                                                    >Produit n°
-                                                                    {{
-                                                                        produit.id
-                                                                    }}</span
-                                                                >
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div
-                                    class="flex items-center justify-between w-full mt-4"
-                                >
-                                    <button
-                                        type="button"
-                                        class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
-                                        @click="emit('close')"
-                                    >
-                                        Annuler
-                                    </button>
-                                    <button
-                                        :disabled="formAddTarif.processing"
-                                        type="submit"
-                                        class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
-                                    >
-                                        <LoadingSVG
-                                            v-if="formAddTarif.processing"
-                                        />
-                                        Enregistrer
-                                    </button>
-                                </div>
-                            </form> -->
                         </DialogPanel>
                     </TransitionChild>
                 </div>
