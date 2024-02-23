@@ -22,7 +22,7 @@ class LienDisCatTarBookingFieldSsFieldValeurController extends Controller
         $this->authorize('viewAdmin', $user);
 
         $request->validate([
-            'valeur' => ['required', 'string', 'min:3', 'max:255'],
+            'valeur' => ['required', 'string', 'min:1', 'max:255'],
         ]);
 
         $sousField->valeurs()->create([
@@ -34,22 +34,6 @@ class LienDisCatTarBookingFieldSsFieldValeurController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(LienDisCatTarBookingFieldSsFieldValeur $lienDisCatTarBookingFieldSsFieldValeur)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(LienDisCatTarBookingFieldSsFieldValeur $lienDisCatTarBookingFieldSsFieldValeur)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, ListDiscipline $discipline, LienDisciplineCategorie $categorie, LienDisCatTariftype $tarifType, LienDisCatTarBookingField $bookingfield, LienDisCatTarBookingFieldSousField $sousField, LienDisCatTarBookingFieldSsFieldValeur $valeur): RedirectResponse
@@ -58,7 +42,7 @@ class LienDisCatTarBookingFieldSsFieldValeurController extends Controller
         $this->authorize('viewAdmin', $user);
 
         $request->validate([
-            'valeur' => ['required', 'string', 'min:3', 'max:255'],
+            'valeur' => ['required', 'string', 'min:1', 'max:255'],
         ]);
 
         $valeur->update([

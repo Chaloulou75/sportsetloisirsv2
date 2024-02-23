@@ -22,7 +22,7 @@ class LienDisCatTarBookingFieldSousFieldController extends Controller
         $this->authorize('viewAdmin', $user);
 
         $request->validate([
-            'nom' => ['required', 'string', 'min:3', 'max:255'],
+            'nom' => ['required', 'string', 'min:1', 'max:255'],
             'type_champ' => ['required'],
         ]);
 
@@ -45,7 +45,7 @@ class LienDisCatTarBookingFieldSousFieldController extends Controller
         $this->authorize('viewAdmin', $user);
 
         $request->validate([
-            'nom' => ['required', 'string', 'min:3', 'max:255'],
+            'nom' => ['required', 'string', 'min:1', 'max:255'],
         ]);
 
         $sousField->update([

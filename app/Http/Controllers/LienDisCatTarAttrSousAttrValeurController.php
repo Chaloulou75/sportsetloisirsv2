@@ -23,7 +23,7 @@ class LienDisCatTarAttrSousAttrValeurController extends Controller
         $this->authorize('viewAdmin', $user);
 
         $request->validate([
-            'valeur' => ['required', 'string', 'min:3', 'max:255'],
+            'valeur' => ['required', 'string', 'min:1', 'max:255'],
         ]);
 
         $sousAttribut->valeurs()->create([
@@ -44,7 +44,7 @@ class LienDisCatTarAttrSousAttrValeurController extends Controller
         $this->authorize('viewAdmin', $user);
 
         $request->validate([
-            'valeur' => ['required', 'string', 'min:3', 'max:255'],
+            'valeur' => ['required', 'string', 'min:1', 'max:255'],
         ]);
 
         $valeur->update([
