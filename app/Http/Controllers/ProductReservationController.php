@@ -100,13 +100,16 @@ class ProductReservationController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        request()->validate([
-            'produit' => ['required', Rule::exists(StructureProduit::class, 'id')],
-            'formule' => ['nullable', Rule::exists(StructureCatTarif::class, 'id')],
-            'planning' => ['nullable', Rule::exists(StructurePlanning::class, 'id')],
-        ]);
 
-        $produit = StructureProduit::find($request->produit);
+        request()->validate([
+            'produitId' => ['required', Rule::exists(StructureProduit::class, 'id')],
+            'tarifId' => ['nullable', Rule::exists(StructureCatTarif::class, 'id')],
+            'attributs' => ['nullable', 'array'],
+            'sousattributs' => ['nullable', 'array'],
+            'plannings' => ['nullable', 'array'],
+        ]);
+        dd($request->all());
+        $produit = StructureProduit::find($request->produitId);
         $tarif = StructureCatTarif::find($request->formule);
         $planning = StructurePlanning::find($request->planning);
 
