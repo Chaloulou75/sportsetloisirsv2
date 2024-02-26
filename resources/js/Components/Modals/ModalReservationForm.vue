@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
@@ -13,6 +13,8 @@ import {
     DialogTitle,
 } from "@headlessui/vue";
 import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
+import dayjs from "dayjs";
+import "dayjs/locale/fr";
 
 const emit = defineEmits(["close"]);
 
@@ -21,6 +23,10 @@ const props = defineProps({
     produitId: Number,
     catTarifId: Number,
     show: Boolean,
+});
+
+const selectedProduit = computed(() => {
+    return props.produits.find((produit) => produit.id === props.produitId);
 });
 
 const filteredCatTarif = computed(() => {
@@ -41,24 +47,26 @@ const filteredCatTarif = computed(() => {
     );
 });
 
-const selectedProduit = computed(() => {
-    return props.produits.find((produit) => produit.id === props.produitId);
-});
+const formatDate = (dateTimeString) => {
+    return dayjs(dateTimeString)
+        .locale("fr")
+        .format("dddd D MMMM YYYY, [de] HH:mm");
+};
 
-const formReservation = useForm({
+const bookingForm = useForm({
     produitId: props.produitId,
-    tarifId: props.catTarifId,
+    catTarifId: props.catTarifId,
     attributs: {},
     sousattributs: {},
     plannings: [],
 });
 
 const updateSelectedCheckboxes = (fieldId, optionValue, checked) => {
-    const selectedValue = formReservation.attributs[fieldId];
+    const selectedValue = bookingForm.attributs[fieldId];
 
     if (checked) {
         if (!Array.isArray(selectedValue)) {
-            formReservation.attributs[fieldId] = ref([optionValue]);
+            bookingForm.attributs[fieldId] = ref([optionValue]);
         } else {
             selectedValue.push(optionValue);
         }
@@ -75,8 +83,8 @@ const updateSelectedCheckboxes = (fieldId, optionValue, checked) => {
 const isCheckboxSelected = computed(() => {
     return (fieldId, optionValue) => {
         return (
-            formReservation.attributs[fieldId] &&
-            formReservation.attributs[fieldId].includes(optionValue)
+            bookingForm.attributs[fieldId] &&
+            bookingForm.attributs[fieldId].includes(optionValue)
         );
     };
 });
@@ -86,12 +94,12 @@ const updateSousAttrSelectedCheckboxes = (
     optionValue,
     checked
 ) => {
-    const selectedSousField = formReservation.sousattributs[sousFieldId];
+    const selectedSousField = bookingForm.sousattributs[sousFieldId];
 
     if (checked) {
         if (!Array.isArray(selectedSousField)) {
             // Use ref() to ensure reactivity when modifying arrays
-            formReservation.sousattributs[sousFieldId] = ref([optionValue]);
+            bookingForm.sousattributs[sousFieldId] = ref([optionValue]);
         } else {
             selectedSousField.push(optionValue);
         }
@@ -108,18 +116,18 @@ const updateSousAttrSelectedCheckboxes = (
 const isCheckboxSousAttrSelected = computed(() => {
     return (sousFieldId, optionValue) => {
         return (
-            formReservation.sousattributs[sousFieldId] &&
-            formReservation.sousattributs[sousFieldId].includes(optionValue)
+            bookingForm.sousattributs[sousFieldId] &&
+            bookingForm.sousattributs[sousFieldId].includes(optionValue)
         );
     };
 });
 
 const onSubmit = () => {
-    formReservation.post(route("reservations.store"), {
+    bookingForm.post(route("reservations.store"), {
         preserveScroll: true,
         remember: false,
         onSuccess: () => {
-            formReservation.reset();
+            bookingForm.reset();
             emit("close");
         },
     });
@@ -127,7 +135,7 @@ const onSubmit = () => {
 </script>
 <template>
     <TransitionRoot appear :show="show" as="template">
-        <Dialog as="div" @close="open = false" class="relative z-[1199]">
+        <Dialog as="div" @close="open = false" class="relative z-[9999]">
             <TransitionChild
                 as="template"
                 enter="duration-300 ease-out"
@@ -138,11 +146,11 @@ const onSubmit = () => {
                 leave-to="opacity-0"
             >
                 <div
-                    class="fixed inset-0 transition-opacity bg-black bg-opacity-50"
+                    class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
                 />
             </TransitionChild>
             <div
-                class="fixed inset-0 flex items-center justify-center w-screen p-4 text-center"
+                class="fixed inset-0 flex w-full items-center justify-center p-4 text-center"
             >
                 <TransitionChild
                     as="template"
@@ -154,11 +162,11 @@ const onSubmit = () => {
                     leave-to="opacity-0 scale-95"
                 >
                     <DialogPanel
-                        class="w-full max-w-5xl p-6 space-y-5 overflow-visible text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
+                        class="max-h-full w-full max-w-6xl transform space-y-5 overflow-y-auto rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
                     >
                         <DialogTitle
                             as="div"
-                            class="flex items-center justify-between w-full"
+                            class="flex w-full items-center justify-between"
                         >
                             <h3
                                 class="text-lg font-medium leading-6 text-gray-800"
@@ -168,7 +176,7 @@ const onSubmit = () => {
                             <button type="button">
                                 <XCircleIcon
                                     @click="emit('close')"
-                                    class="w-6 h-6 text-gray-600 hover:text-red-600"
+                                    class="h-6 w-6 text-gray-600 hover:text-red-600"
                                 />
                             </button>
                         </DialogTitle>
@@ -191,7 +199,7 @@ const onSubmit = () => {
                                                     .tarif_booking_fields
                                                     .length > 0
                                             "
-                                            class="grid w-full grid-cols-1 gap-4 mx-auto md:grid-cols-3"
+                                            class="mx-auto grid w-full grid-cols-1 gap-4 md:grid-cols-3"
                                         >
                                             <div
                                                 v-for="field in catTarif
@@ -210,8 +218,9 @@ const onSubmit = () => {
                                                     "
                                                     :name="field.nom"
                                                     v-model="
-                                                        formReservation
-                                                            .attributs[field.id]
+                                                        bookingForm.attributs[
+                                                            field.id
+                                                        ]
                                                     "
                                                     :options="field.valeurs"
                                                 />
@@ -225,8 +234,9 @@ const onSubmit = () => {
                                                     :critere="field"
                                                     :name="field.nom"
                                                     v-model="
-                                                        formReservation
-                                                            .attributs[field.id]
+                                                        bookingForm.attributs[
+                                                            field.id
+                                                        ]
                                                     "
                                                     :options="field.valeurs"
                                                     :is-checkbox-selected="
@@ -251,19 +261,19 @@ const onSubmit = () => {
                                                         {{ field.nom }}
                                                     </label>
                                                     <div
-                                                        class="flex mt-1 rounded-md"
+                                                        class="mt-1 flex rounded-md"
                                                     >
                                                         <TextInput
                                                             type="text"
                                                             v-model="
-                                                                formReservation
+                                                                bookingForm
                                                                     .attributs[
                                                                     field.id
                                                                 ]
                                                             "
                                                             :name="field.nom"
                                                             :id="field.nom"
-                                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                             placeholder=""
                                                             autocomplete="none"
                                                         />
@@ -285,19 +295,19 @@ const onSubmit = () => {
                                                         {{ field.nom }}
                                                     </label>
                                                     <div
-                                                        class="flex mt-1 rounded-md"
+                                                        class="mt-1 flex rounded-md"
                                                     >
                                                         <TextInput
                                                             type="number"
                                                             v-model="
-                                                                formReservation
+                                                                bookingForm
                                                                     .attributs[
                                                                     field.id
                                                                 ]
                                                             "
                                                             :name="field.nom"
                                                             :id="field.nom"
-                                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                             placeholder=""
                                                             autocomplete="none"
                                                         />
@@ -318,7 +328,7 @@ const onSubmit = () => {
                                                         "
                                                         :name="sousField.nom"
                                                         v-model="
-                                                            formReservation
+                                                            bookingForm
                                                                 .sousattributs[
                                                                 sousField.id
                                                             ]
@@ -338,7 +348,7 @@ const onSubmit = () => {
                                                         :critere="sousField"
                                                         :name="sousField.nom"
                                                         v-model="
-                                                            formReservation
+                                                            bookingForm
                                                                 .sousattributs[
                                                                 sousField.id
                                                             ]
@@ -368,12 +378,12 @@ const onSubmit = () => {
                                                             {{ sousField.nom }}
                                                         </label>
                                                         <div
-                                                            class="flex mt-1 rounded-md"
+                                                            class="mt-1 flex rounded-md"
                                                         >
                                                             <TextInput
                                                                 type="text"
                                                                 v-model="
-                                                                    formReservation
+                                                                    bookingForm
                                                                         .sousattributs[
                                                                         sousField
                                                                             .id
@@ -385,7 +395,7 @@ const onSubmit = () => {
                                                                 :id="
                                                                     sousField.nom
                                                                 "
-                                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                                 placeholder=""
                                                                 autocomplete="none"
                                                             />
@@ -407,12 +417,12 @@ const onSubmit = () => {
                                                             {{ sousField.nom }}
                                                         </label>
                                                         <div
-                                                            class="flex mt-1 rounded-md"
+                                                            class="mt-1 flex rounded-md"
                                                         >
                                                             <TextInput
                                                                 type="number"
                                                                 v-model="
-                                                                    formReservation
+                                                                    bookingForm
                                                                         .sousattributs[
                                                                         sousField
                                                                             .id
@@ -424,7 +434,7 @@ const onSubmit = () => {
                                                                 :id="
                                                                     sousField.nom
                                                                 "
-                                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                                 placeholder=""
                                                                 autocomplete="none"
                                                             />
@@ -450,16 +460,19 @@ const onSubmit = () => {
                                             v-for="planning in selectedProduit.plannings"
                                             :key="planning.id"
                                             :for="planning.id"
-                                            class="flex w-full p-3 text-sm border border-gray-400 rounded-lg shadow-sm bg-blue-50 focus:border-blue-500 focus:ring-blue-500"
+                                            class="flex w-full rounded-lg border border-gray-400 bg-blue-50 p-3 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500"
                                         >
                                             <span class="text-sm text-gray-700"
-                                                >{{ planning.start }} -
-                                                {{ planning.end }}</span
+                                                >{{
+                                                    formatDate(planning.start)
+                                                }}
+                                                -
+                                                {{
+                                                    formatDate(planning.end)
+                                                }}</span
                                             >
                                             <input
-                                                v-model="
-                                                    formReservation.plannings
-                                                "
+                                                v-model="bookingForm.plannings"
                                                 :id="planning.id"
                                                 :name="planning.id"
                                                 :value="planning.id"
@@ -470,26 +483,26 @@ const onSubmit = () => {
                                     </div>
                                 </div>
                                 <div
-                                    class="flex items-center justify-between w-full mt-4"
+                                    class="mt-4 flex w-full items-center justify-between"
                                 >
                                     <button
                                         type="button"
-                                        class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                                        class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
                                         @click.prevent="emit('close')"
                                     >
                                         Annuler
                                     </button>
                                     <button
-                                        :disabled="formReservation.processing"
+                                        :disabled="bookingForm.processing"
                                         :class="{
                                             'opacity-25':
-                                                formReservation.processing,
+                                                bookingForm.processing,
                                         }"
                                         type="submit"
-                                        class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                                        class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                     >
                                         <LoadingSVG
-                                            v-if="formReservation.processing"
+                                            v-if="bookingForm.processing"
                                         />
                                         Envoyer
                                     </button>

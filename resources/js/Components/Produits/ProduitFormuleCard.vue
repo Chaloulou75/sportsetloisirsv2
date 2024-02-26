@@ -13,7 +13,6 @@ const reservationFormule = defineModel("reservationFormule");
 
 const props = defineProps({
     produit: Object,
-    discipline: Object,
 });
 
 const isSelected = computed(
