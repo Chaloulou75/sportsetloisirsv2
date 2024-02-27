@@ -47,10 +47,16 @@ const filteredCatTarif = computed(() => {
     );
 });
 
-const formatDate = (dateTimeString) => {
+const formatDateStart = (dateTimeString) => {
     return dayjs(dateTimeString)
         .locale("fr")
-        .format("dddd D MMMM YYYY, [de] HH:mm");
+        .format("dddd D MMMM YYYY, [de] HH[h]mm");
+};
+
+const formatDateEnd = (dateTimeString) => {
+    return dayjs(dateTimeString)
+        .locale("fr")
+        .format("[au] dddd D MMMM YYYY, HH[h]mm");
 };
 
 const bookingForm = useForm({
@@ -464,11 +470,13 @@ const onSubmit = () => {
                                         >
                                             <span class="text-sm text-gray-700"
                                                 >{{
-                                                    formatDate(planning.start)
+                                                    formatDateStart(
+                                                        planning.start
+                                                    )
                                                 }}
-                                                -
+
                                                 {{
-                                                    formatDate(planning.end)
+                                                    formatDateEnd(planning.end)
                                                 }}</span
                                             >
                                             <input

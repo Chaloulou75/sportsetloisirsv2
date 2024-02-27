@@ -26,6 +26,11 @@ class StructurePlanning extends Model
         $query->where('end', '>', Carbon::now());
     }
 
+    public function scopeOrderByDateStart(Builder $query): void
+    {
+        $query->orderBy('start');
+    }
+
     public function structure(): BelongsTo
     {
         return $this->belongsTo(Structure::class);

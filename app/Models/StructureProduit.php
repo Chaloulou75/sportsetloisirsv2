@@ -145,7 +145,7 @@ class StructureProduit extends Model
             'catTarifs.attributs.sous_attributs.sous_attribut',
             'catTarifs.attributs.sous_attributs.sous_attribut_valeur',
             'plannings' => function ($query) {
-                $query->endNotPassed();
+                $query->endNotPassed()->orderByDateStart();
             },
         ]);
     }

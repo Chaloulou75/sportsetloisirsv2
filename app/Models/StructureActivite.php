@@ -127,7 +127,7 @@ class StructureActivite extends Model
             'produits.catTarifs.attributs.sous_attributs.sous_attribut',
             'produits.catTarifs.attributs.sous_attributs.sous_attribut_valeur',
             'produits.plannings' => function ($query) {
-                $query->endNotPassed();
+                $query->endNotPassed()->orderByDateStart();
             },
         ]);
     }
