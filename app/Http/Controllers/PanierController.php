@@ -8,7 +8,9 @@ use Inertia\Response;
 use App\Models\Famille;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
+use Illuminate\Validation\Rule;
 use App\Models\StructureProduit;
+use App\Models\StructureCatTarif;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
@@ -61,7 +63,23 @@ class PanierController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        dd($request->all());
+
+        request()->validate([
+            'produitId' => ['required', Rule::exists(StructureProduit::class, 'id')],
+            'catTarifId' => ['nullable', Rule::exists(StructureCatTarif::class, 'id')],
+            'attributs' => ['nullable', 'array'],
+            'sousattributs' => ['nullable', 'array'],
+            'plannings' => ['nullable', 'array'],
+        ]);
+
+        // ajouter les produits au panier en session
+        // Sauver une premiere version de la reservation avec attributs et sous attributs
+        // table reservation_planning many to many
+
+        return to_route('panier.index')->with('success', 'Produit ajouté à votre panier');
+
     }
 
     /**

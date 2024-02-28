@@ -47,16 +47,10 @@ const filteredCatTarif = computed(() => {
     );
 });
 
-const formatDateStart = (dateTimeString) => {
+const formatDate = (dateTimeString) => {
     return dayjs(dateTimeString)
         .locale("fr")
-        .format("dddd D MMMM YYYY, [de] HH[h]mm");
-};
-
-const formatDateEnd = (dateTimeString) => {
-    return dayjs(dateTimeString)
-        .locale("fr")
-        .format("[au] dddd D MMMM YYYY, HH[h]mm");
+        .format("dddd D MMMM YYYY, HH[h]mm");
 };
 
 const bookingForm = useForm({
@@ -129,7 +123,7 @@ const isCheckboxSousAttrSelected = computed(() => {
 });
 
 const onSubmit = () => {
-    bookingForm.post(route("reservations.store"), {
+    bookingForm.post(route("panier.store"), {
         preserveScroll: true,
         remember: false,
         onSuccess: () => {
@@ -470,13 +464,11 @@ const onSubmit = () => {
                                         >
                                             <span class="text-sm text-gray-700"
                                                 >{{
-                                                    formatDateStart(
-                                                        planning.start
-                                                    )
+                                                    formatDate(planning.start)
                                                 }}
-
+                                                au
                                                 {{
-                                                    formatDateEnd(planning.end)
+                                                    formatDate(planning.end)
                                                 }}</span
                                             >
                                             <input

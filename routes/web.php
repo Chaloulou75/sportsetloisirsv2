@@ -85,6 +85,9 @@ Route::get('/favoris', [FavoritesController::class, 'index'])->name(
 Route::get('/panier', [PanierController::class, 'index'])->name(
     'panier.index'
 );
+Route::post('/panier', [PanierController::class, 'store'])->name(
+    'panier.store'
+);
 
 //Blog
 Route::get('/blog/articles/{discipline?}', [PostController::class, 'index'])->name('posts.index');

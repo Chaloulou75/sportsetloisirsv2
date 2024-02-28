@@ -100,10 +100,9 @@ class ProductReservationController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-
         request()->validate([
             'produitId' => ['required', Rule::exists(StructureProduit::class, 'id')],
-            'tarifId' => ['nullable', Rule::exists(StructureCatTarif::class, 'id')],
+            'catTarifId' => ['nullable', Rule::exists(StructureCatTarif::class, 'id')],
             'attributs' => ['nullable', 'array'],
             'sousattributs' => ['nullable', 'array'],
             'plannings' => ['nullable', 'array'],
