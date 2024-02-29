@@ -16,9 +16,40 @@ class ProductReservation extends Model
 
     protected $guarded = [];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'paid' => 'boolean',
+        'client_confirmed' => 'boolean',
+        'client_cancelled' => 'boolean',
+        'pending' => 'boolean',
+        'confirmed' => 'boolean',
+        'finished' => 'boolean',
+        'cancelled' => 'boolean',
+        'code_confirmed' => 'boolean',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function discipline(): BelongsTo
+    {
+        return $this->belongsTo(ListDiscipline::class, 'discipline_id');
+    }
+
+    public function categorie(): BelongsTo
+    {
+        return $this->belongsTo(LienDisciplineCategorie::class, 'categorie_id');
+    }
+
+    public function structure(): BelongsTo
+    {
+        return $this->belongsTo(Structure::class, 'structure_id');
     }
 
     public function produit(): BelongsTo
@@ -26,20 +57,23 @@ class ProductReservation extends Model
         return $this->belongsTo(StructureProduit::class, 'produit_id');
     }
 
-    public function catTarif(): BelongsTo
+    public function cat_tarif(): BelongsTo
     {
-        return $this->belongsTo(StructureCatTarif::class, 'tarif_id');
+        return $this->belongsTo(StructureCatTarif::class, 'cat_tarif_id');
     }
 
-    public function planning(): BelongsTo
-    {
-        return $this->belongsTo(StructurePlanning::class, 'planning_id');
-    }
+    // public function planning(): BelongsToMany
+    // {
+    //     return $this->belongsToMany(StructurePlanning::class, 'planning_id');
+    // }
 
     public function scopeWithRelations(Builder $query): void
     {
         $query->with([
             'user',
+            'structure',
+            'activite',
+            'produit',
             'produit.criteres',
             'produit.criteres.critere',
             'produit.criteres.critere_valeur',
@@ -48,19 +82,19 @@ class ProductReservation extends Model
             'produit.criteres.sous_criteres.sous_critere_valeur',
             'produit.activite',
             'catTarif',
-            'catTarif.produits:id',
-            'catTarif.categorie',
-            'catTarif.cat_tarif_type',
-            'catTarif.cat_tarif_type.tarif_attributs',
-            'catTarif.cat_tarif_type.tarif_attributs.valeurs',
-            'catTarif.cat_tarif_type.tarif_attributs.sous_attributs',
-            'catTarif.cat_tarif_type.tarif_attributs.sous_attributs.valeurs',
-            'catTarif.attributs',
-            'catTarif.attributs.tarif_attribut',
-            'catTarif.attributs.sous_attributs',
-            'catTarif.attributs.sous_attributs.sous_attribut',
-            'catTarif.attributs.sous_attributs.sous_attribut_valeur',
-            'planning'
+            // 'cat_tarif.produits:id',
+            // 'cat_tarif.categorie',
+            // 'cat_tarif.cat_tarif_type',
+            // 'cat_tarif.cat_tarif_type.tarif_attributs',
+            // 'cat_tarif.cat_tarif_type.tarif_attributs.valeurs',
+            // 'cat_tarif.cat_tarif_type.tarif_attributs.sous_attributs',
+            // 'cat_tarif.cat_tarif_type.tarif_attributs.sous_attributs.valeurs',
+            // 'cat_tarif.attributs',
+            // 'cat_tarif.attributs.tarif_attribut',
+            // 'cat_tarif.attributs.sous_attributs',
+            // 'cat_tarif.attributs.sous_attributs.sous_attribut',
+            // 'cat_tarif.attributs.sous_attributs.sous_attribut_valeur',
+            // 'planning'
         ]);
     }
 }

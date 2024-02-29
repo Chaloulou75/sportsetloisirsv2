@@ -22,6 +22,8 @@ class DisciplineActiviteController extends Controller
     {
         $selectedProduit = StructureProduit::withRelations()->find(request()->produit);
 
+        dd($selectedProduit);
+
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });

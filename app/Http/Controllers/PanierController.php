@@ -6,6 +6,7 @@ use App\Models\City;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Famille;
+use App\Models\LienDisCatTariftype;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use Illuminate\Validation\Rule;
@@ -63,20 +64,21 @@ class PanierController extends Controller
      */
     public function store(Request $request)
     {
-
-        dd($request->all());
-
         request()->validate([
             'produitId' => ['required', Rule::exists(StructureProduit::class, 'id')],
-            'catTarifId' => ['nullable', Rule::exists(StructureCatTarif::class, 'id')],
+            'catTarifId' => ['nullable', Rule::exists(LienDisCatTariftype::class, 'id')],
             'attributs' => ['nullable', 'array'],
             'sousattributs' => ['nullable', 'array'],
             'plannings' => ['nullable', 'array'],
         ]);
+        dd($request->all());
 
         // ajouter les produits au panier en session
+        //$sessionId = $request->session()->getId();
+
         // Sauver une premiere version de la reservation avec attributs et sous attributs
-        // table reservation_planning many to many
+
+        // table planning_reservation many to many pour les plannings
 
         return to_route('panier.index')->with('success', 'Produit ajouté à votre panier');
 
