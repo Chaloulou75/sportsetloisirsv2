@@ -5,8 +5,10 @@ namespace App\Models;
 use App\Models\StructureCatTarif;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ProductReservation extends Model
 {
@@ -62,10 +64,20 @@ class ProductReservation extends Model
         return $this->belongsTo(StructureCatTarif::class, 'cat_tarif_id');
     }
 
-    // public function planning(): BelongsToMany
-    // {
-    //     return $this->belongsToMany(StructurePlanning::class, 'planning_id');
-    // }
+    public function attributs(): HasMany
+    {
+        return $this->hasMany(ReservationAttribut::class, 'reservation_id');
+    }
+
+    public function sous_attributs(): HasMany
+    {
+        return $this->hasMany(ReservationSousAttribut::class, 'reservation_id');
+    }
+
+    public function plannings(): BelongsToMany
+    {
+        return $this->belongsToMany(StructurePlanning::class, 'reservation_structure_planning', 'reservation_id', 'planning_id');
+    }
 
     public function scopeWithRelations(Builder $query): void
     {
@@ -80,8 +92,7 @@ class ProductReservation extends Model
             'produit.criteres.critere_valeur.sous_criteres.prodSousCritValeurs.sous_critere_valeur',
             'produit.criteres.sous_criteres',
             'produit.criteres.sous_criteres.sous_critere_valeur',
-            'produit.activite',
-            'catTarif',
+            'cat_tarif',
             // 'cat_tarif.produits:id',
             // 'cat_tarif.categorie',
             // 'cat_tarif.cat_tarif_type',
@@ -94,7 +105,9 @@ class ProductReservation extends Model
             // 'cat_tarif.attributs.sous_attributs',
             // 'cat_tarif.attributs.sous_attributs.sous_attribut',
             // 'cat_tarif.attributs.sous_attributs.sous_attribut_valeur',
-            // 'planning'
+            'plannings',
+            'attributs',
+            'attributs.reservation_sous_attributs',
         ]);
     }
 }

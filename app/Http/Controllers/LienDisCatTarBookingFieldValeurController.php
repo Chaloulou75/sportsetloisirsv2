@@ -21,7 +21,7 @@ class LienDisCatTarBookingFieldValeurController extends Controller
         $this->authorize('viewAdmin', $user);
 
         $request->validate([
-            'valeur' => ['required', 'string', 'min:3', 'max:255'],
+            'valeur' => ['required', 'string', 'min:1', 'max:255'],
         ]);
 
         $bookingfield->valeurs()->create([
@@ -34,13 +34,13 @@ class LienDisCatTarBookingFieldValeurController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ListDiscipline $discipline, LienDisciplineCategorie $categorie, LienDisCatTariftype $tarifType, LienDisCatTarBookingField $bookingfield,LienDisCatTarBookingFieldValeur $valeur): RedirectResponse
+    public function update(Request $request, ListDiscipline $discipline, LienDisciplineCategorie $categorie, LienDisCatTariftype $tarifType, LienDisCatTarBookingField $bookingfield, LienDisCatTarBookingFieldValeur $valeur): RedirectResponse
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 
         $request->validate([
-            'valeur' => ['required', 'string', 'min:3', 'max:255'],
+            'valeur' => ['required', 'string', 'min:1', 'max:255'],
         ]);
 
         $valeur->update([

@@ -34,4 +34,9 @@ class LienDisCatTarBookingField extends Model
     {
         return $this->hasMany(LienDisCatTarBookingFieldSousField::class, 'booking_field_id');
     }
+
+    public function reservation_attributs(): HasMany
+    {
+        return $this->hasMany(ReservationAttribut::class, 'booking_field_id');
+    }
 }

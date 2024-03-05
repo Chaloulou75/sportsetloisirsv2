@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class StructurePlanning extends Model
 {
@@ -54,5 +55,10 @@ class StructurePlanning extends Model
     public function produit(): BelongsTo
     {
         return $this->belongsTo(StructureProduit::class, 'produit_id');
+    }
+
+    public function reservations(): BelongsToMany
+    {
+        return $this->belongsToMany(ProductReservation::class, 'reservation_structure_planning', 'planning_id', 'reservation_id');
     }
 }

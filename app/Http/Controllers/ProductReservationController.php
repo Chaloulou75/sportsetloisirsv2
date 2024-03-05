@@ -107,7 +107,7 @@ class ProductReservationController extends Controller
             'sousattributs' => ['nullable', 'array'],
             'plannings' => ['nullable', 'array'],
         ]);
-        dd($request->all());
+        dd($request->all(), "à la confirmation du panier!");
         $produit = StructureProduit::find($request->produitId);
         $tarif = StructureCatTarif::find($request->formule);
         $planning = StructurePlanning::find($request->planning);
@@ -118,9 +118,15 @@ class ProductReservationController extends Controller
         $activiteId = $produit->activite->id;
         $activite = StructureActivite::find($activiteId);
 
+
+        $sessionId = session()->getId();
+
+
         if(!auth()->user()) {
+
             $sessionPanierProducts = session()->get('panierProducts', []);
             $sessionPanierProducts[] = [
+                'id' => $sessionId,
                 'ip_address' => $request->ip(),
                 'produit_id' => $produit->id,
                 'tarif_id' => $tarif->id ?? null
@@ -135,6 +141,7 @@ class ProductReservationController extends Controller
         if($user) {
             $sessionPanierProducts = session()->get('panierProducts', []);
             $sessionPanierProducts[] = [
+                'id' => $sessionId,
                 'user_id' => $user->id,
                 'ip_address' => $request->ip(),
                 'produit_id' => $produit->id,
@@ -142,20 +149,19 @@ class ProductReservationController extends Controller
             ];
             session()->put('panierProducts', $sessionPanierProducts);
 
-            if($planning) {
-                $newReservation = ProductReservation::create([
-                    'user_id' => $user->id,
-                    'produit_id' => $produit->id,
-                    'tarif_id' => $tarif->id,
-                    'planning_id' => $planning->id,
-                    'pending' => true,
-                    'confirmed' => false,
-                    'finished' => false,
-                    'cancelled' => false,
-                ]);
+            $newReservation = ProductReservation::create([
+                'session_id' => $sessionId,
+                'user_id' => $user->id,
+                'produit_id' => $produit->id,
+                'tarif_id' => $tarif->id,
+                'pending' => true,
+                'confirmed' => false,
+                'finished' => false,
+                'cancelled' => false,
+            ]);
 
-                Mail::to($email)->send(new ReservationAsked($structure, $activite, $produit, $planning, $tarif, $user));
-            }
+            // Mail::to($email)->send(new ReservationAsked($structure, $activite, $produit, $planning, $tarif, $user));
+
         }
 
         return to_route('structures.activites.show', ['activite' => $activite])->with('success', "Produit ajouté à votre panier");
