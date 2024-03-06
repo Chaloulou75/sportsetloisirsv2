@@ -54,6 +54,11 @@ class ProductReservation extends Model
         return $this->belongsTo(Structure::class, 'structure_id');
     }
 
+    public function activite(): BelongsTo
+    {
+        return $this->belongsTo(StructureActivite::class, 'activite_id');
+    }
+
     public function produit(): BelongsTo
     {
         return $this->belongsTo(StructureProduit::class, 'produit_id');
@@ -82,9 +87,10 @@ class ProductReservation extends Model
     public function scopeWithRelations(Builder $query): void
     {
         $query->with([
-            'user',
-            'structure',
-            'activite',
+            'user:id,name,email',
+            'discipline:id,name',
+            'structure:id,name,slug',
+            'activite:id,titre',
             'produit',
             'produit.criteres',
             'produit.criteres.critere',
@@ -94,17 +100,17 @@ class ProductReservation extends Model
             'produit.criteres.sous_criteres.sous_critere_valeur',
             'cat_tarif',
             // 'cat_tarif.produits:id',
-            // 'cat_tarif.categorie',
-            // 'cat_tarif.cat_tarif_type',
-            // 'cat_tarif.cat_tarif_type.tarif_attributs',
-            // 'cat_tarif.cat_tarif_type.tarif_attributs.valeurs',
-            // 'cat_tarif.cat_tarif_type.tarif_attributs.sous_attributs',
-            // 'cat_tarif.cat_tarif_type.tarif_attributs.sous_attributs.valeurs',
-            // 'cat_tarif.attributs',
-            // 'cat_tarif.attributs.tarif_attribut',
-            // 'cat_tarif.attributs.sous_attributs',
-            // 'cat_tarif.attributs.sous_attributs.sous_attribut',
-            // 'cat_tarif.attributs.sous_attributs.sous_attribut_valeur',
+            'cat_tarif.categorie',
+            'cat_tarif.cat_tarif_type',
+            'cat_tarif.cat_tarif_type.tarif_attributs',
+            'cat_tarif.cat_tarif_type.tarif_attributs.valeurs',
+            'cat_tarif.cat_tarif_type.tarif_attributs.sous_attributs',
+            'cat_tarif.cat_tarif_type.tarif_attributs.sous_attributs.valeurs',
+            'cat_tarif.attributs',
+            'cat_tarif.attributs.tarif_attribut',
+            'cat_tarif.attributs.sous_attributs',
+            'cat_tarif.attributs.sous_attributs.sous_attribut',
+            'cat_tarif.attributs.sous_attributs.sous_attribut_valeur',
             'plannings',
             'attributs',
             'attributs.reservation_sous_attributs',

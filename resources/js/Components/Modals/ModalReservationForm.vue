@@ -146,11 +146,11 @@ const onSubmit = () => {
                 leave-to="opacity-0"
             >
                 <div
-                    class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+                    class="fixed inset-0 transition-opacity bg-black bg-opacity-50"
                 />
             </TransitionChild>
             <div
-                class="fixed inset-0 flex w-full items-center justify-center p-4 text-center"
+                class="fixed inset-0 flex items-center justify-center w-full p-4 text-center"
             >
                 <TransitionChild
                     as="template"
@@ -162,11 +162,11 @@ const onSubmit = () => {
                     leave-to="opacity-0 scale-95"
                 >
                     <DialogPanel
-                        class="max-h-full w-full max-w-6xl transform space-y-5 overflow-y-auto rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                        class="w-full max-w-6xl max-h-full p-6 space-y-5 overflow-y-auto text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
                     >
                         <DialogTitle
                             as="div"
-                            class="flex w-full items-center justify-between"
+                            class="flex items-center justify-between w-full"
                         >
                             <h3
                                 class="text-lg font-medium leading-6 text-gray-800"
@@ -176,7 +176,7 @@ const onSubmit = () => {
                             <button type="button">
                                 <XCircleIcon
                                     @click="emit('close')"
-                                    class="h-6 w-6 text-gray-600 hover:text-red-600"
+                                    class="w-6 h-6 text-gray-600 hover:text-red-600"
                                 />
                             </button>
                         </DialogTitle>
@@ -199,7 +199,7 @@ const onSubmit = () => {
                                                     .tarif_booking_fields
                                                     .length > 0
                                             "
-                                            class="mx-auto grid w-full grid-cols-1 gap-4 md:grid-cols-3"
+                                            class="grid w-full grid-cols-1 gap-4 mx-auto md:grid-cols-3"
                                         >
                                             <div
                                                 v-for="field in catTarif
@@ -261,7 +261,7 @@ const onSubmit = () => {
                                                         {{ field.nom }}
                                                     </label>
                                                     <div
-                                                        class="mt-1 flex rounded-md"
+                                                        class="flex mt-1 rounded-md"
                                                     >
                                                         <TextInput
                                                             type="text"
@@ -273,7 +273,7 @@ const onSubmit = () => {
                                                             "
                                                             :name="field.nom"
                                                             :id="field.nom"
-                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                             placeholder=""
                                                             autocomplete="none"
                                                         />
@@ -295,7 +295,7 @@ const onSubmit = () => {
                                                         {{ field.nom }}
                                                     </label>
                                                     <div
-                                                        class="mt-1 flex rounded-md"
+                                                        class="flex mt-1 rounded-md"
                                                     >
                                                         <TextInput
                                                             type="number"
@@ -307,7 +307,7 @@ const onSubmit = () => {
                                                             "
                                                             :name="field.nom"
                                                             :id="field.nom"
-                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                             placeholder=""
                                                             autocomplete="none"
                                                         />
@@ -320,7 +320,7 @@ const onSubmit = () => {
                                                 >
                                                     <SelectForm
                                                         :classes="'block '"
-                                                        class="w-full max-w-sm"
+                                                        class="w-full max-w-sm mt-2"
                                                         v-if="
                                                             sousField.type_champ_form ===
                                                             'select'
@@ -339,7 +339,7 @@ const onSubmit = () => {
 
                                                     <!-- checkbox -->
                                                     <CheckboxForm
-                                                        class="max-w-sm"
+                                                        class="max-w-sm mt-2"
                                                         v-if="
                                                             sousField.type_champ_form ===
                                                             'checkbox'
@@ -364,7 +364,7 @@ const onSubmit = () => {
                                                     />
                                                     <!-- input text -->
                                                     <div
-                                                        class="w-full max-w-sm"
+                                                        class="w-full max-w-sm mt-2"
                                                         v-if="
                                                             sousField.type_champ_form ===
                                                             'text'
@@ -377,7 +377,7 @@ const onSubmit = () => {
                                                             {{ sousField.nom }}
                                                         </label>
                                                         <div
-                                                            class="mt-1 flex rounded-md"
+                                                            class="flex mt-1 rounded-md"
                                                         >
                                                             <TextInput
                                                                 type="text"
@@ -394,7 +394,7 @@ const onSubmit = () => {
                                                                 :id="
                                                                     sousField.nom
                                                                 "
-                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                                 placeholder=""
                                                                 autocomplete="none"
                                                             />
@@ -403,7 +403,7 @@ const onSubmit = () => {
 
                                                     <!-- number text -->
                                                     <div
-                                                        class="w-full min-w-max"
+                                                        class="w-full mt-2 min-w-max"
                                                         v-if="
                                                             sousField.type_champ_form ===
                                                             'number'
@@ -416,7 +416,7 @@ const onSubmit = () => {
                                                             {{ sousField.nom }}
                                                         </label>
                                                         <div
-                                                            class="mt-1 flex rounded-md"
+                                                            class="flex mt-1 rounded-md"
                                                         >
                                                             <TextInput
                                                                 type="number"
@@ -433,7 +433,7 @@ const onSubmit = () => {
                                                                 :id="
                                                                     sousField.nom
                                                                 "
-                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                                 placeholder=""
                                                                 autocomplete="none"
                                                             />
@@ -459,7 +459,7 @@ const onSubmit = () => {
                                             v-for="planning in selectedProduit.plannings"
                                             :key="planning.id"
                                             :for="planning.id"
-                                            class="flex w-full rounded-lg border border-gray-400 bg-blue-50 p-3 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                            class="flex w-full p-3 text-sm border border-gray-400 rounded-lg shadow-sm bg-blue-50 focus:border-blue-500 focus:ring-blue-500"
                                         >
                                             <span class="text-sm text-gray-700"
                                                 >{{
@@ -482,11 +482,11 @@ const onSubmit = () => {
                                     </div>
                                 </div>
                                 <div
-                                    class="mt-4 flex w-full items-center justify-between"
+                                    class="flex items-center justify-between w-full mt-4"
                                 >
                                     <button
                                         type="button"
-                                        class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                                        class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
                                         @click.prevent="emit('close')"
                                     >
                                         Annuler
@@ -498,7 +498,7 @@ const onSubmit = () => {
                                                 bookingForm.processing,
                                         }"
                                         type="submit"
-                                        class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                                        class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                     >
                                         <LoadingSVG
                                             v-if="bookingForm.processing"

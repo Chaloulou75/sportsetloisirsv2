@@ -37,21 +37,17 @@ class PanierController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $sessionReservations = $this->getSessionReservations();
+        $sessionId = session()->getId();
+        $user = auth()->user();
 
-        if(auth()->user()) {
-            $reservations = auth()->user()->productReservations()->withRelations()->get();
-        }
+        // $sessionReservations = $this->getSessionReservations();
 
-        $produitsDesired = StructureProduit::withRelations()
-        ->whereIn('structures_produits.id', $sessionReservations->pluck('produit_id'))
-        ->get();
+        $reservations = ProductReservation::withRelations()->withCount('plannings')->where('user_id', $user->id)->orWhere('session_id', $sessionId)->get();
 
         return Inertia::render('Panier/Index', [
             'familles' => $familles,
             'listDisciplines' => $listDisciplines,
             'allCities' => $allCities,
-            'produitsDesired' => $produitsDesired,
             'reservations' => $reservations ?? null
         ]);
     }
@@ -76,6 +72,7 @@ class PanierController extends Controller
             'sousattributs' => ['nullable', 'array'],
             'plannings' => ['nullable', 'array'],
         ]);
+        // dd($request->all());
 
         $user = auth()->user();
         $produit = StructureProduit::withRelations()->find($request->produitId);
@@ -161,8 +158,9 @@ class PanierController extends Controller
                 if($request->sousattributs) {
                     foreach ($request->sousattributs as $k => $sousattribut) {
                         $bookingSousField = LienDisCatTarBookingFieldSousField::with(['booking_field','valeurs'])->find($k);
-                        //SOMETHING WRONG HERE
-                        if($bookingSousField->sousfield_id === $k) {
+
+                        if($bookingSousField->booking_field->id === $reservationAttribut->booking_field_id) {
+
                             if (is_array($sousattribut) && isset($sousattribut[0]) && is_array($sousattribut[0])) {
                                 foreach ($sousattribut as $subAttribut) {
                                     $reservationSsAttribut = $reservationAttribut->reservation_sous_attributs()->create([
@@ -183,7 +181,7 @@ class PanierController extends Controller
                             } elseif (is_string($sousattribut) || is_numeric($sousattribut)) {
                                 $reservationSsAttribut = $reservationAttribut->reservation_sous_attributs()->create([
                                     'reservation_id' => $newReservation->id,
-                                    'booking_field_id' => $k,
+                                    'booking_field_ss_field_id' => $k,
                                     'valeur' => $sousattribut
                                 ]);
                             }
@@ -238,14 +236,15 @@ class PanierController extends Controller
     {
         $sessionReservations = collect();
         $sessionProducts = session()->get('panierProducts', []);
-        dd($sessionProducts);
-        foreach ($sessionProducts as $panierProduct) {
 
+        foreach ($sessionProducts as $panierProduct) {
             $sessionReservations->push([
                 'session_id' => $panierProduct['session_id'],
-                'user_id' => null,
+                'user_id' => $panierProduct['user_id'] ?? null,
                 'produit_id' => $panierProduct['produit_id'],
                 'cat_tarif_id' => $panierProduct['cat_tarif_id'],
+                'planning_ids' => $panierProduct['planning_ids'],
+                'ip_address' => $panierProduct['ip_address'],
             ]);
         }
 
