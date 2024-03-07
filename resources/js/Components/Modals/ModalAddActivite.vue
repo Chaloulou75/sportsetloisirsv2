@@ -163,13 +163,13 @@ onMounted(() => {
                 leave-to="opacity-0"
             >
                 <div
-                    class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+                    class="fixed inset-0 transition-opacity bg-black bg-opacity-50"
                 />
             </TransitionChild>
 
             <div class="fixed inset-0 overflow-auto">
                 <div
-                    class="flex min-h-full items-center justify-center p-4 text-center"
+                    class="flex items-center justify-center min-h-full p-4 text-center"
                 >
                     <TransitionChild
                         as="template"
@@ -181,7 +181,7 @@ onMounted(() => {
                         leave-to="opacity-0 scale-95"
                     >
                         <DialogPanel
-                            class="max-h-full w-full max-w-6xl transform rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                            class="w-full max-w-6xl max-h-full p-6 text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
                         >
                             <form
                                 @submit.prevent="onSubmit"
@@ -190,7 +190,7 @@ onMounted(() => {
                             >
                                 <DialogTitle
                                     as="div"
-                                    class="flex w-full items-center justify-between"
+                                    class="flex items-center justify-between w-full"
                                 >
                                     <h3
                                         class="text-lg font-medium leading-6 text-gray-800"
@@ -203,16 +203,16 @@ onMounted(() => {
                                     <button type="button">
                                         <XCircleIcon
                                             @click="emit('close')"
-                                            class="h-6 w-6 text-gray-600 hover:text-red-600"
+                                            class="w-6 h-6 text-gray-600 hover:text-red-600"
                                         />
                                     </button>
                                 </DialogTitle>
-                                <div class="mt-2 w-full">
+                                <div class="w-full mt-2">
                                     <div class="flex flex-col space-y-3">
                                         <!-- categories -->
                                         <div
                                             v-if="categories"
-                                            class="flex w-full flex-col items-center justify-start space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
+                                            class="flex flex-col items-center justify-start w-full space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
                                         >
                                             <label
                                                 for="categorie"
@@ -221,13 +221,13 @@ onMounted(() => {
                                                 Categorie
                                             </label>
                                             <div
-                                                class="mt-1 flex w-full rounded-md md:w-1/2"
+                                                class="flex w-full mt-1 rounded-md md:w-1/2"
                                             >
                                                 <select
                                                     name="categorie"
                                                     id="categorie"
                                                     v-model="form.categorie_id"
-                                                    class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                    class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
                                                 >
                                                     <option
                                                         v-for="categorie in categories"
@@ -278,13 +278,13 @@ onMounted(() => {
                                             >
                                                 Titre de l'activité
                                             </label>
-                                            <div class="mt-1 flex rounded-md">
+                                            <div class="flex mt-1 rounded-md">
                                                 <input
                                                     v-model="form.titre"
                                                     type="text"
                                                     name="titre"
                                                     id="titre"
-                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                     :placeholder="`Tournois de ${discipline.name}`"
                                                     autocomplete="none"
                                                 />
@@ -312,7 +312,7 @@ onMounted(() => {
                                                     id="description"
                                                     name="description"
                                                     rows="2"
-                                                    class="mt-1 block h-32 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                    class="block w-full h-32 min-h-full mt-1 placeholder-gray-400 placeholder-opacity-50 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                     :class="{
                                                         errors: 'border-red-500 focus:ring focus:ring-red-200',
                                                     }"
@@ -343,7 +343,7 @@ onMounted(() => {
 
                                         <div
                                             v-if="filteredCriteres.length > 0"
-                                            class="mx-auto grid w-full grid-cols-1 gap-4 bg-gray-50 p-2 shadow md:grid-cols-3"
+                                            class="grid w-full grid-cols-1 gap-4 p-2 mx-auto shadow bg-gray-50 md:grid-cols-3"
                                         >
                                             <div
                                                 v-for="critere in filteredCriteres"
@@ -421,7 +421,7 @@ onMounted(() => {
                                                         {{ critere.nom }}
                                                     </label>
                                                     <div
-                                                        class="mt-1 flex rounded-md"
+                                                        class="flex mt-1 rounded-md"
                                                     >
                                                         <TextInput
                                                             type="text"
@@ -432,7 +432,7 @@ onMounted(() => {
                                                             "
                                                             :name="critere.nom"
                                                             :id="critere.nom"
-                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                             placeholder=""
                                                             autocomplete="none"
                                                         />
@@ -454,10 +454,11 @@ onMounted(() => {
                                                         {{ critere.nom }}
                                                     </label>
                                                     <div
-                                                        class="mt-1 flex rounded-md"
+                                                        class="flex mt-1 rounded-md"
                                                     >
                                                         <TextInput
                                                             type="number"
+                                                            min="0"
                                                             v-model="
                                                                 form.criteres[
                                                                     critere.id
@@ -465,7 +466,7 @@ onMounted(() => {
                                                             "
                                                             :name="critere.nom"
                                                             :id="critere.nom"
-                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
                                                             placeholder=""
                                                             autocomplete="none"
                                                         />
@@ -478,7 +479,7 @@ onMounted(() => {
                                                         critere.type_champ_form ===
                                                         'time'
                                                     "
-                                                    class="flex max-w-sm flex-col items-start space-y-3"
+                                                    class="flex flex-col items-start max-w-sm space-y-3"
                                                 >
                                                     <SingleTimeForm
                                                         class="w-full"
@@ -497,7 +498,7 @@ onMounted(() => {
                                                         critere.type_champ_form ===
                                                         'times'
                                                     "
-                                                    class="flex max-w-sm flex-col items-start space-y-3"
+                                                    class="flex flex-col items-start max-w-sm space-y-3"
                                                 >
                                                     <OpenTimesForm
                                                         class="w-full"
@@ -516,7 +517,7 @@ onMounted(() => {
                                                         critere.type_champ_form ===
                                                         'date'
                                                     "
-                                                    class="flex max-w-sm flex-col items-start space-y-3"
+                                                    class="flex flex-col items-start max-w-sm space-y-3"
                                                 >
                                                     <SingleDateForm
                                                         class="w-full"
@@ -535,7 +536,7 @@ onMounted(() => {
                                                         critere.type_champ_form ===
                                                         'dates'
                                                     "
-                                                    class="flex max-w-sm flex-col items-start space-y-3"
+                                                    class="flex flex-col items-start max-w-sm space-y-3"
                                                 >
                                                     <OpenDaysForm
                                                         class="w-full"
@@ -556,7 +557,7 @@ onMounted(() => {
                                                     "
                                                 >
                                                     <div
-                                                        class="flex max-w-sm flex-col items-start space-y-3"
+                                                        class="flex flex-col items-start max-w-sm space-y-3"
                                                     >
                                                         <OpenMonthsForm
                                                             class="w-full"
@@ -582,7 +583,7 @@ onMounted(() => {
                                                         critere.type_champ_form ===
                                                         'adresse'
                                                     "
-                                                    class="flex w-full max-w-sm flex-col space-y-2"
+                                                    class="flex flex-col w-full max-w-sm space-y-2"
                                                 >
                                                     <div
                                                         v-if="!addAddress"
@@ -597,7 +598,7 @@ onMounted(() => {
                                                             Adresse
                                                         </label>
                                                         <div
-                                                            class="mt-1 flex rounded-md"
+                                                            class="flex mt-1 rounded-md"
                                                         >
                                                             <select
                                                                 name="
@@ -609,7 +610,7 @@ onMounted(() => {
                                                                 v-model="
                                                                     form.adresse
                                                                 "
-                                                                class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
+                                                                class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
                                                             >
                                                                 <option
                                                                     v-for="adresse in structure.adresses"
@@ -641,7 +642,7 @@ onMounted(() => {
                                                             v-model="addAddress"
                                                             id="addAddress"
                                                             type="checkbox"
-                                                            class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded form-checkbox focus:ring-blue-500"
                                                         />
                                                         <label
                                                             for="addAddress"
@@ -658,7 +659,7 @@ onMounted(() => {
                                                         critere.type_champ_form ===
                                                         'rayon'
                                                     "
-                                                    class="flex w-full max-w-sm flex-col items-start space-y-3"
+                                                    class="flex flex-col items-start w-full max-w-sm space-y-3"
                                                 >
                                                     <RangeInputForm
                                                         class="w-full max-w-sm"
@@ -678,13 +679,13 @@ onMounted(() => {
                                                         critere.type_champ_form ===
                                                         'instructeur'
                                                     "
-                                                    class="flex w-full items-start"
+                                                    class="flex items-start w-full"
                                                 >
                                                     <input
                                                         v-model="addInstructeur"
                                                         id="addInstructeur"
                                                         type="checkbox"
-                                                        class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded form-checkbox focus:ring-blue-500"
                                                     />
                                                     <label
                                                         for="addInstructeur"
@@ -758,6 +759,7 @@ onMounted(() => {
                                                         <TextInput
                                                             class="w-full"
                                                             type="number"
+                                                            min="0"
                                                             :id="
                                                                 souscritere.nom
                                                             "
@@ -862,11 +864,11 @@ onMounted(() => {
                                     </div>
                                 </div>
                                 <div
-                                    class="mt-4 flex w-full items-center justify-between"
+                                    class="flex items-center justify-between w-full mt-4"
                                 >
                                     <button
                                         type="button"
-                                        class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-normal text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                                        class="inline-flex justify-center px-4 py-2 text-sm font-normal text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
                                         @click="emit('close')"
                                     >
                                         Annuler
@@ -877,7 +879,7 @@ onMounted(() => {
                                             'opacity-25': form.processing,
                                         }"
                                         type="submit"
-                                        class="inline-flex justify-between rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-normal text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                                        class="inline-flex justify-between px-4 py-2 text-sm font-normal text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                     >
                                         <LoadingSVG v-if="form.processing" />
                                         Enregistrer

@@ -18,7 +18,7 @@ import OpenTimesForm from "@/Components/Forms/DayTime/OpenTimesForm.vue";
 import OpenMonthsForm from "@/Components/Forms/DayTime/OpenMonthsForm.vue";
 import { isClient } from "@vueuse/shared";
 import { useShare } from "@vueuse/core";
-import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
+// import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import autoAnimate from "@formkit/auto-animate";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
@@ -878,14 +878,14 @@ const reservationForm = useForm({
     remember: false,
 });
 
-const submitReservation = () => {
-    reservationForm.post(route("reservations.store"), {
-        preserveScroll: true,
-        onSuccess: () => {
-            reservationForm.reset();
-        },
-    });
-};
+// const submitReservation = () => {
+//     reservationForm.post(route("reservations.store"), {
+//         preserveScroll: true,
+//         onSuccess: () => {
+//             reservationForm.reset();
+//         },
+//     });
+// };
 
 onMounted(() => {
     autoAnimate(listToAnimate.value);
@@ -1176,6 +1176,7 @@ onMounted(() => {
                                     <div class="flex mt-1 rounded-md">
                                         <TextInput
                                             type="number"
+                                            min="0"
                                             v-model="
                                                 critereForm.criteres[critere.id]
                                             "
@@ -1323,6 +1324,7 @@ onMounted(() => {
                                         <TextInput
                                             class="w-full max-w-sm"
                                             type="number"
+                                            min="0"
                                             :id="souscritere.nom"
                                             :name="souscritere.nom"
                                             v-if="
@@ -1379,40 +1381,38 @@ onMounted(() => {
                                 </div>
                             </div>
                         </div>
-                        <form @submit.prevent="submitReservation()">
-                            <div
-                                ref="listToAnimate"
-                                class="grid h-auto grid-cols-1 gap-4 place-content-stretch place-items-stretch md:gap-8"
-                            >
-                                <ProduitFormuleCard
-                                    v-for="produit in filteredProduits"
-                                    :key="produit.id"
-                                    v-model:reservationProduit="
-                                        reservationForm.produit
-                                    "
-                                    v-model:reservationFormule="
-                                        reservationForm.formule
-                                    "
-                                    :produit="produit"
-                                />
-                            </div>
+                        <!-- <form @submit.prevent="submitReservation()"> -->
+                        <div
+                            ref="listToAnimate"
+                            class="grid h-auto grid-cols-1 gap-4 place-content-stretch place-items-stretch md:gap-8"
+                        >
+                            <ProduitFormuleCard
+                                v-for="produit in filteredProduits"
+                                :key="produit.id"
+                                v-model:reservationProduit="
+                                    reservationForm.produit
+                                "
+                                v-model:reservationFormule="
+                                    reservationForm.formule
+                                "
+                                :produit="produit"
+                            />
+                        </div>
 
-                            <div
-                                class="flex items-center justify-end w-full my-4"
+                        <div class="flex items-center justify-end w-full my-4">
+                            <button
+                                v-if="
+                                    reservationForm.produit &&
+                                    reservationForm.formule
+                                "
+                                @click.prevent="openReservationModal"
+                                type="button"
+                                class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white duration-300 bg-blue-600 border border-transparent rounded-lg gap-x-2 hover:-translate-y-1 hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
                             >
-                                <button
-                                    v-if="
-                                        reservationForm.produit &&
-                                        reservationForm.formule
-                                    "
-                                    @click.prevent="openReservationModal"
-                                    type="button"
-                                    class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white duration-300 bg-blue-600 border border-transparent rounded-lg gap-x-2 hover:-translate-y-1 hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
-                                >
-                                    Sélectionner
-                                </button>
-                            </div>
-                            <div
+                                Sélectionner
+                            </button>
+                        </div>
+                        <!-- <div
                                 v-if="
                                     reservationForm.produit &&
                                     reservationForm.formule
@@ -1433,8 +1433,8 @@ onMounted(() => {
                                     />
                                     Ajouter au panier
                                 </button>
-                            </div>
-                        </form>
+                            </div> -->
+                        <!-- </form> -->
                     </div>
                 </div>
             </section>

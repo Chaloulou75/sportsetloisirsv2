@@ -591,6 +591,7 @@ const onSubmitEditProduitForm = () => {
                                                         >
                                                             <TextInput
                                                                 type="number"
+                                                                min="0"
                                                                 v-model="
                                                                     formEditProduit
                                                                         .criteres[
@@ -912,6 +913,7 @@ const onSubmitEditProduitForm = () => {
                                                             <TextInput
                                                                 class="w-full"
                                                                 type="number"
+                                                                min="0"
                                                                 :id="
                                                                     souscritere.nom
                                                                 "

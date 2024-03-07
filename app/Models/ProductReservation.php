@@ -25,13 +25,20 @@ class ProductReservation extends Model
      */
     protected $casts = [
         'paid' => 'boolean',
+        'paiement_datetime' => 'datetime',
         'client_confirmed' => 'boolean',
+        'datetime_client_confirmed' => 'datetime',
         'client_cancelled' => 'boolean',
+        'datetime_client_cancelled' => 'datetime',
         'pending' => 'boolean',
         'confirmed' => 'boolean',
+        'datetime_structure_confirmed' => 'datetime',
         'finished' => 'boolean',
+        'datetime_structure_finished' => 'datetime',
         'cancelled' => 'boolean',
+        'datetime_structure_cancelled' => 'datetime',
         'code_confirmed' => 'boolean',
+        'datetime_code_confirmed' => 'datetime',
     ];
 
     public function user(): BelongsTo
@@ -81,7 +88,8 @@ class ProductReservation extends Model
 
     public function plannings(): BelongsToMany
     {
-        return $this->belongsToMany(StructurePlanning::class, 'reservation_structure_planning', 'reservation_id', 'planning_id');
+        return $this->belongsToMany(StructurePlanning::class, 'reservation_structure_planning', 'reservation_id', 'planning_id')
+        ->withPivot('quantity');
     }
 
     public function scopeWithRelations(Builder $query): void
@@ -92,6 +100,7 @@ class ProductReservation extends Model
             'structure:id,name,slug',
             'activite:id,titre',
             'produit',
+            'produit.adresse',
             'produit.criteres',
             'produit.criteres.critere',
             'produit.criteres.critere_valeur',
@@ -113,7 +122,9 @@ class ProductReservation extends Model
             'cat_tarif.attributs.sous_attributs.sous_attribut_valeur',
             'plannings',
             'attributs',
+            'attributs.booking_field',
             'attributs.reservation_sous_attributs',
+            'attributs.reservation_sous_attributs.booking_sous_field'
         ]);
     }
 }

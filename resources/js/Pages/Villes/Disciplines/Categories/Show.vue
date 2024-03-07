@@ -962,6 +962,7 @@ onMounted(() => {
                                 <div class="flex-1">
                                     <TextInput
                                         type="number"
+                                        min="0"
                                         v-model="
                                             formCriteres.criteres[critere.id]
                                         "
@@ -1022,14 +1023,43 @@ onMounted(() => {
                                 >
                                     <InputLabel
                                         class="py-2"
-                                        for="Quantité"
-                                        value="Quantité"
+                                        :for="souscritere.nom"
+                                        :value="souscritere.nom"
                                     />
                                     <TextInput
                                         class="w-full"
                                         type="number"
-                                        id="Nombre"
-                                        name="Nombre"
+                                        min="0"
+                                        :id="souscritere.nom"
+                                        :name="souscritere.nom"
+                                        v-model="
+                                            formCriteres.sousCriteres[
+                                                souscritere.id
+                                            ]
+                                        "
+                                    />
+                                </div>
+                                <div
+                                    v-if="
+                                        formCriteres.criteres[critere.id] ===
+                                            valeur &&
+                                        souscritere.type_champ_form ===
+                                            'text' &&
+                                        souscritere.dis_cat_crit_val_id ===
+                                            valeur.id
+                                    "
+                                    class="flex items-center mt-2 space-x-4"
+                                >
+                                    <InputLabel
+                                        class="py-2"
+                                        :for="souscritere.nom"
+                                        :value="souscritere.nom"
+                                    />
+                                    <TextInput
+                                        class="w-full"
+                                        type="text"
+                                        :id="souscritere.nom"
+                                        :name="souscritere.nom"
                                         v-model="
                                             formCriteres.sousCriteres[
                                                 souscritere.id

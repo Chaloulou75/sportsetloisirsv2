@@ -35,6 +35,7 @@ use App\Http\Controllers\StructureCategorieController;
 use App\Models\LienDisCatTarBookingFieldSsFieldValeur;
 use App\Http\Controllers\DisciplineSimilaireController;
 use App\Http\Controllers\LienDisCatTariftypeController;
+use App\Http\Controllers\ReservationPlanningController;
 use App\Http\Controllers\StructureDisciplineController;
 use App\Http\Controllers\AdminTarifTypeDisCatController;
 use App\Http\Controllers\StructureStatistiqueController;
@@ -88,6 +89,20 @@ Route::get('/panier', [PanierController::class, 'index'])->name(
 Route::post('/panier', [PanierController::class, 'store'])->name(
     'panier.store'
 );
+
+Route::delete('/panier/{reservation}', [PanierController::class, 'destroy'])->name(
+    'panier.destroy'
+);
+
+Route::delete('/panier/{reservation}/plannings/{planning}', [ReservationPlanningController::class, 'update'])->name(
+    'reservations.plannings.update'
+);
+
+Route::delete('/panier/{reservation}/plannings/{planning}', [ReservationPlanningController::class, 'destroy'])->name(
+    'reservations.plannings.destroy'
+);
+
+
 
 //Blog
 Route::get('/blog/articles/{discipline?}', [PostController::class, 'index'])->name('posts.index');

@@ -832,8 +832,7 @@ const events = getEvents();
                                         <div class="flex mt-1 rounded-md">
                                             <TextInput
                                                 type="number"
-                                                min="1"
-                                                max="59"
+                                                min="0"
                                                 v-model="
                                                     formCriteres.criteres[
                                                         critere.id
@@ -1061,6 +1060,7 @@ const events = getEvents();
                                                 <TextInput
                                                     class="w-full"
                                                     type="number"
+                                                    min="0"
                                                     :id="souscritere.nom"
                                                     :name="souscritere.nom"
                                                     v-model="

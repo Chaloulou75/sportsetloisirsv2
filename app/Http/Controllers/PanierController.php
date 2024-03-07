@@ -19,6 +19,7 @@ use App\Models\LienDisCatTariftype;
 use Illuminate\Support\Facades\Cache;
 use App\Models\LienDisCatTarBookingField;
 use App\Models\LienDisCatTarBookingFieldSousField;
+use Illuminate\Http\RedirectResponse;
 
 class PanierController extends Controller
 {
@@ -63,7 +64,7 @@ class PanierController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         request()->validate([
             'produitId' => ['required', Rule::exists(StructureProduit::class, 'id')],
@@ -72,7 +73,6 @@ class PanierController extends Controller
             'sousattributs' => ['nullable', 'array'],
             'plannings' => ['nullable', 'array'],
         ]);
-        // dd($request->all());
 
         $user = auth()->user();
         $produit = StructureProduit::withRelations()->find($request->produitId);
@@ -83,16 +83,7 @@ class PanierController extends Controller
         $produitCriteres = $produit->criteres()->pluck('valeur')->toJson();
         //ajout produit au panier
         $sessionId = session()->getId();
-        $sessionPanierProducts = session()->get('panierProducts', []);
-        $sessionPanierProducts[] = [
-            'session_id' => $sessionId,
-            'ip_address' => $request->ip(),
-            'user_id' => $user->id ?? null,
-            'produit_id' => $produit->id,
-            'cat_tarif_id' => $catTarif->id ?? null,
-            'planning_ids' => $creneaux->pluck('id')->toArray()
-        ];
-        session()->put('panierProducts', $sessionPanierProducts);
+
 
         $newReservation = ProductReservation::create([
             'session_id' => $sessionId,
@@ -132,7 +123,7 @@ class PanierController extends Controller
         if($request->attributs) {
             foreach ($request->attributs as $key => $attribut) {
 
-                $bookingField = LienDisCatTarBookingField::with(['valeurs', 'sous_fields', 'sous_fields.valeurs'])->find($key);
+                // $bookingField = LienDisCatTarBookingField::with(['valeurs', 'sous_fields', 'sous_fields.valeurs'])->find($key);
 
                 if (is_array($attribut) && isset($attribut[0]) && is_array($attribut[0])) {
                     foreach ($attribut as $attr) {
@@ -192,9 +183,21 @@ class PanierController extends Controller
         }
         if($request->plannings) {
             foreach($request->plannings as $creneau) {
-                $newReservation->plannings()->attach($creneau);
+                $newReservation->plannings()->attach($creneau, ['quantity' => 1]);
             }
         }
+
+        $sessionPanierProducts = session()->get('panierProducts', []);
+        $sessionPanierProducts[] = [
+            'session_id' => $sessionId,
+            'ip_address' => $request->ip(),
+            'user_id' => $user->id ?? null,
+            'produit_id' => $produit->id,
+            'cat_tarif_id' => $catTarif->id ?? null,
+            'planning_ids' => $creneaux->pluck('id')->toArray(),
+            'reservation_id' => $newReservation->id,
+        ];
+        session()->put('panierProducts', $sessionPanierProducts);
 
         return to_route('structures.activites.show', ['activite' => $activite])->with('success', 'Produit ajouté à votre panier');
 
@@ -227,9 +230,18 @@ class PanierController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(ProductReservation $reservation): RedirectResponse
     {
-        //
+        $sessionPanierProducts = session()->get('panierProducts', []);
+        $sessionPanierProducts = array_filter($sessionPanierProducts, function ($item) use ($reservation) {
+            return $item['reservation_id'] !== $reservation->id;
+        });
+        session()->put('panierProducts', $sessionPanierProducts);
+
+        $reservation->delete();
+
+        return to_route('panier.index')->with('success', 'Produit supprimé de votre panier');
+
     }
 
     private function getSessionReservations(): Collection
@@ -245,6 +257,7 @@ class PanierController extends Controller
                 'cat_tarif_id' => $panierProduct['cat_tarif_id'],
                 'planning_ids' => $panierProduct['planning_ids'],
                 'ip_address' => $panierProduct['ip_address'],
+                'reservation_id' => $panierProduct['reservation_id'],
             ]);
         }
 

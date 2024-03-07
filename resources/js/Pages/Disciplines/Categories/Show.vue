@@ -936,6 +936,7 @@ onMounted(() => {
                             <div class="flex-1">
                                 <TextInput
                                     type="number"
+                                    min="0"
                                     v-model="formCriteres.criteres[critere.id]"
                                     :name="critere.nom"
                                     :id="critere.nom"
@@ -1057,6 +1058,7 @@ onMounted(() => {
                                     <TextInput
                                         class="w-full"
                                         type="number"
+                                        min="0"
                                         :id="souscritere.nom"
                                         :name="souscritere.nom"
                                         v-model="

@@ -299,6 +299,7 @@ const onSubmit = () => {
                                                     >
                                                         <TextInput
                                                             type="number"
+                                                            min="0"
                                                             v-model="
                                                                 bookingForm
                                                                     .attributs[
@@ -420,6 +421,7 @@ const onSubmit = () => {
                                                         >
                                                             <TextInput
                                                                 type="number"
+                                                                min="0"
                                                                 v-model="
                                                                     bookingForm
                                                                         .sousattributs[
@@ -503,7 +505,7 @@ const onSubmit = () => {
                                         <LoadingSVG
                                             v-if="bookingForm.processing"
                                         />
-                                        Envoyer
+                                        Ajouter au panier
                                     </button>
                                 </div>
                             </form>
