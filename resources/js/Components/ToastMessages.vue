@@ -1,5 +1,6 @@
 <script setup>
 import { usePage } from "@inertiajs/vue3";
+import { computed } from "vue";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
@@ -7,8 +8,8 @@ const props = defineProps({
     type: String,
     message: String,
 });
-
-const flash = usePage().props.flash;
+const page = usePage();
+const flash = computed(() => page.props.flash);
 
 const options = {
     autoClose: 4000,

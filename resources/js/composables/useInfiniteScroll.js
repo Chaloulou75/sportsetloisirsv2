@@ -3,11 +3,12 @@ import { router, usePage } from "@inertiajs/vue3";
 import { useIntersect } from "@/composables/useIntersect";
 
 export function useInfiniteScroll(propName, landmark = null) {
-    const value = () => usePage().props[propName];
+    const page = usePage();
+    const value = () => page.props[propName];
 
     const items = ref(value().data);
 
-    const initialUrl = usePage().url;
+    const initialUrl = page.url;
 
     const canLoadMoreItems = computed(() => value().next_page_url !== null);
 

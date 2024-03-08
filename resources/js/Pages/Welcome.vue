@@ -6,6 +6,7 @@ import ResultsHeader from "@/Components/ResultsHeader.vue";
 import AutocompleteDiscipline from "@/Components/Home/AutocompleteDiscipline.vue";
 import AutocompleteCity from "@/Components/Home/AutocompleteCity.vue";
 import DisciplineSmallCard from "@/Components/Disciplines/DisciplineSmallCard.vue";
+import CookieBanner from "@/Components/Cookie/CookieBanner.vue";
 import { ArrowRightIcon, CheckIcon } from "@heroicons/vue/24/solid";
 import { MagnifyingGlassIcon } from "@heroicons/vue/24/outline";
 const StructureCard = defineAsyncComponent(() =>
@@ -34,6 +35,7 @@ const props = defineProps({
 const search = ref(null);
 const localite = ref(null);
 const processing = ref(false);
+const isCookieOpen = ref(true);
 
 const submitForm = async () => {
     processing.value = true;
@@ -419,6 +421,10 @@ const formatCityName = (ville) => {
                     </Link>
                 </div>
             </section>
+            <CookieBanner
+                v-if="isCookieOpen === true"
+                @close="isCookieOpen === false"
+            />
         </template>
     </ResultLayout>
 </template>

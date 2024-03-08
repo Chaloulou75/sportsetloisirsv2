@@ -1,6 +1,6 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, watch, onMounted, onBeforeMount } from "vue";
 import { router, useForm } from "@inertiajs/vue3";
 import { Head, Link } from "@inertiajs/vue3";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
@@ -30,6 +30,22 @@ const formatDate = (dateTimeString) => {
         .format("dddd D MMMM YYYY [à] HH[h]mm");
 };
 
+const reservationPlanningQtyForm = useForm({
+    quantity: {},
+});
+
+const decrementQuantity = (reservationId, creneauId) => {
+    const quantity =
+        reservationPlanningQtyForm.quantity[reservationId][creneauId];
+    if (quantity.value > 0) {
+        quantity.value--;
+    }
+};
+
+const incrementQuantity = (reservationId, creneauId) => {
+    reservationPlanningQtyForm.quantity[reservationId][creneauId]++;
+};
+
 const formatCurrency = (value) => {
     const numericValue = Number(value.replace(/[^0-9.-]+/g, ""));
     if (!isNaN(numericValue)) {
@@ -42,6 +58,12 @@ const formatCurrency = (value) => {
     return value;
 };
 // Changer les comptes
+const getCreneauAmount = (reservation, creneauId) => {
+    const tarifAmount = reservation.tarif_amount;
+    const quantity = reservationPlanningQtyForm.quantity[creneauId];
+    return tarifAmount * quantity;
+};
+
 const totalReservationAmount = computed(() => {
     return props.reservations.reduce((acc, reservation) => {
         acc[reservation.id] =
@@ -58,32 +80,21 @@ const totalAmount = computed(() => {
     return sum;
 });
 
-const reservationPlanningQtyForm = useForm({
-    quantity: {},
-});
+// const updateReservationPlanningQty = (reservation, creneau) => {
+//     reservationPlanningQtyForm.update(
+//         route("reservations.plannings.update", {
+//             reservation: reservation,
+//             planning: creneau,
+//         }),
+//         { preserveScroll: true }
+//     );
+// };
 
-const creneauQty = props.reservations.forEach((reservation) => {
-    reservation.plannings.forEach((creneau) => {
-        reservationPlanningQtyForm.quantity[creneau.id] =
-            creneau.pivot.quantity;
-    });
-});
-
-const updateReservationPlanningQty = (reservation, creneau) => {
-    reservationPlanningQtyForm.update(
-        route("reservations.plannings.update", {
-            reservation: reservation,
-            planning: creneau,
-        }),
-        { preserveScroll: true }
-    );
-};
-
-const getCreneauAmount = (reservation, creneauId) => {
-    const tarifAmount = reservation.tarif_amount;
-    const quantity = reservationPlanningQtyForm.quantity[creneauId];
-    return tarifAmount * quantity;
-};
+// const getCreneauAmount = (reservation, creneauId) => {
+//     const tarifAmount = reservation.tarif_amount;
+//     const quantity = reservationPlanningQtyForm.quantity[creneauId];
+//     return tarifAmount * quantity;
+// };
 
 const deleteReservationPlanning = (reservation, creneau) => {
     router.delete(
@@ -107,9 +118,25 @@ const panierForm = useForm({
     codePromo: null,
     totalAmount: ref(totalAmount.value),
 });
+
 const listToAnimate = ref();
+
 onMounted(() => {
     autoAnimate(listToAnimate.value);
+});
+onBeforeMount(() => {
+    props.reservations.forEach((reservation) => {
+        if (!reservationPlanningQtyForm.quantity[reservation.id]) {
+            reservationPlanningQtyForm.quantity[reservation.id] = {};
+        }
+
+        reservation.plannings.forEach((creneau) => {
+            const quantity = ref(creneau.pivot.quantity || 1);
+            console.log(quantity.value);
+            reservationPlanningQtyForm.quantity[reservation.id][creneau.id] =
+                quantity.value;
+        });
+    });
 });
 </script>
 <template>
@@ -252,34 +279,97 @@ onMounted(() => {
                                     }}</span>
                                 </p>
                             </div>
+
                             <div class="flex items-center self-end space-x-1">
-                                <label
+                                <!-- <label
                                     for="Quantité"
                                     class="text-xs text-gray-600"
                                     >Qté</label
                                 >
                                 <TextInput
-                                    class="w-auto max-w-xs"
+                                    class="w-6 max-w-xs p-0 text-center text-gray-800 bg-transparent border-0 focus:ring-0"
                                     type="number"
                                     name="Quantité"
-                                    v-model="
-                                        reservationPlanningQtyForm.quantity[
-                                            creneau.id
-                                        ]
-                                    "
-                                    min="0"
+                                    min="1"
                                 >
-                                </TextInput>
+                                </TextInput> -->
+                                <!-- Input Number -->
+                                <div
+                                    class="inline-block px-3 py-2 bg-white border border-gray-200 rounded-lg dark:border-gray-700"
+                                    data-hs-input-number
+                                >
+                                    <div class="flex items-center gap-x-1.5">
+                                        <button
+                                            type="button"
+                                            class="inline-flex items-center justify-center text-sm font-medium text-gray-800 bg-white border border-gray-200 rounded-md shadow-sm size-6 gap-x-2 hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50"
+                                            @click="
+                                                decrementQuantity(
+                                                    reservation.id,
+                                                    creneau.id
+                                                )
+                                            "
+                                        >
+                                            <svg
+                                                class="size-3.5 flex-shrink-0"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            >
+                                                <path d="M5 12h14" />
+                                            </svg>
+                                        </button>
+                                        <input
+                                            class="w-6 p-0 text-center text-gray-800 bg-transparent border-0 focus:ring-0"
+                                            type="text"
+                                            v-model="
+                                                reservationPlanningQtyForm
+                                                    .quantity[reservation.id][
+                                                    creneau.id
+                                                ]
+                                            "
+                                            data-hs-input-number-input
+                                        />
+                                        <button
+                                            type="button"
+                                            class="inline-flex items-center justify-center text-sm font-medium text-gray-800 bg-white border border-gray-200 rounded-md shadow-sm size-6 gap-x-2 hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50"
+                                            @click="
+                                                incrementQuantity(
+                                                    reservation.id,
+                                                    creneau.id
+                                                )
+                                            "
+                                        >
+                                            <svg
+                                                class="size-3.5 flex-shrink-0"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            >
+                                                <path d="M5 12h14" />
+                                                <path d="M12 5v14" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- End Input Number -->
                             </div>
                             <div class="flex items-center space-x-2">
                                 <p class="text-lg font-bold text-green-700">
                                     {{
-                                        getCreneauAmount(
-                                            reservation,
-                                            creneau.id
-                                        )
+                                        formatCurrency(reservation.tarif_amount)
                                     }}
-                                    €
                                 </p>
                                 <button
                                     class="ml-4"
@@ -315,12 +405,12 @@ onMounted(() => {
                                     v-for="attribut in reservation.attributs"
                                     :key="attribut.id"
                                 >
-                                    <span
-                                        class="font-semibold"
-                                        v-if="attribut.booking_field"
+                                    <span v-if="attribut.booking_field"
                                         >{{ attribut.booking_field.nom }}:</span
-                                    >
-                                    {{ attribut.valeur }}
+                                    ><span class="font-semibold">{{
+                                        attribut.valeur
+                                    }}</span>
+
                                     <ul
                                         v-if="
                                             attribut.reservation_sous_attributs &&
@@ -334,7 +424,6 @@ onMounted(() => {
                                             :key="sousattribut.id"
                                         >
                                             <span
-                                                class="font-semibold"
                                                 v-if="
                                                     sousattribut.booking_sous_field
                                                 "
@@ -342,8 +431,9 @@ onMounted(() => {
                                                     sousattribut
                                                         .booking_sous_field.nom
                                                 }}:</span
-                                            >
-                                            {{ sousattribut.valeur }}
+                                            ><span class="font-semibold">{{
+                                                sousattribut.valeur
+                                            }}</span>
                                         </li>
                                     </ul>
                                 </li>

@@ -4,13 +4,15 @@ import InputLabel from "@/Components/Forms/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
 import { Link, useForm, usePage } from "@inertiajs/vue3";
+import { computed } from "vue";
 
 const props = defineProps({
     mustVerifyEmail: Boolean,
     status: String,
 });
 
-const user = usePage().props.auth.user;
+const page = usePage();
+const user = computed(() => page.props.auth.user);
 
 const form = useForm({
     name: user.name,
@@ -41,7 +43,7 @@ const form = useForm({
                 <TextInput
                     id="name"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="block w-full mt-1"
                     v-model="form.name"
                     required
                     autofocus
@@ -57,7 +59,7 @@ const form = useForm({
                 <TextInput
                     id="email"
                     type="email"
-                    class="mt-1 block w-full"
+                    class="block w-full mt-1"
                     v-model="form.email"
                     required
                     autocomplete="username"
@@ -75,7 +77,7 @@ const form = useForm({
                         :href="route('verification.send')"
                         method="post"
                         as="button"
-                        class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        class="text-sm text-gray-600 underline rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                         Cliquez ici pour renvoyer l'e-mail de vérification.
                     </Link>
