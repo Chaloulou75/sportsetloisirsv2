@@ -29,7 +29,9 @@ const page = usePage();
 const user = computed(() => page.props.auth.user);
 
 const productsInSession = computed(() => page.props.productsReservations);
-const productCountInSession = computed(() => productsInSession.value.length);
+const productCountInSession = computed(
+    () => Object.keys(productsInSession.value).length
+);
 
 const showingNavigationDropdown = ref(false);
 const showingSearchForm = ref(false);

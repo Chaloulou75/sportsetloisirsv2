@@ -81,9 +81,9 @@ class PanierController extends Controller
         $activite = StructureActivite::find($activiteId);
         $creneaux = StructurePlanning::whereIn('id', $request->plannings)->get();
         $produitCriteres = $produit->criteres()->pluck('valeur')->toJson();
-        //ajout produit au panier
-        $sessionId = session()->getId();
 
+        $sessionId = session()->getId();
+        $sessionPanierProducts = session()->get('panierProducts');
 
         $newReservation = ProductReservation::create([
             'session_id' => $sessionId,
@@ -187,7 +187,6 @@ class PanierController extends Controller
             }
         }
 
-        $sessionPanierProducts = session()->get('panierProducts', []);
         $sessionPanierProducts[] = [
             'session_id' => $sessionId,
             'ip_address' => $request->ip(),

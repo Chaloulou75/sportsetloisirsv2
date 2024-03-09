@@ -34,6 +34,13 @@ class StructureProduit extends Model
     ];
 
     /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['catTarifs'];
+
+    /**
      * The accessors to append to the model's array form.
      *
      * @var array
@@ -149,4 +156,5 @@ class StructureProduit extends Model
             },
         ]);
     }
+
 }

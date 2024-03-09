@@ -128,7 +128,11 @@ class ActiviteController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $activite = StructureActivite::withRelations()->find($activite->id);
+        $activite = StructureActivite::with([
+            'structure',
+            'structure.adresses',
+            'instructeurs'
+        ])->find($activite->id); //withRelations()->
 
         $produits = $activite->produits()->withRelations()->get();
 
@@ -138,8 +142,13 @@ class ActiviteController extends Controller
                 ->where('visible_front', true)
                 ->get();
 
-        $activiteSimilaires = StructureActivite::withRelations()
-            ->whereNot('id', $activite->id)
+        $activiteSimilaires = StructureActivite::with([
+                'produits',
+                'produits.criteres',
+                'produits.criteres.sous_criteres',
+                'produits.adresse'
+            ])
+            ->isNot($activite)
             ->where('discipline_id', $activite->discipline_id)
             ->inRandomOrder()
             ->take(3)
@@ -160,7 +169,9 @@ class ActiviteController extends Controller
     /**
      * Show the form for editing a resource.
      */
-    public function edit(Structure $structure, $activite) {}
+    public function edit(Structure $structure, $activite)
+    {
+    }
 
     /**
      * Store a newly created resource in storage.

@@ -38,7 +38,11 @@ class CityActiviteController extends Controller
 
         $citiesAround = City::withCitiesAround($city)->get();
 
-        $activite = StructureActivite::withRelations()->find($activite->id);
+        $activite = StructureActivite::with([
+            'structure',
+            'structure.adresses',
+            'instructeurs'
+        ])->find($activite->id);
 
         $produits = $activite->produits()->withRelations()->get();
 
@@ -48,8 +52,13 @@ class CityActiviteController extends Controller
                 ->where('visible_front', true)
                 ->get();
 
-        $activiteSimilaires = StructureActivite::withRelations()
-            ->whereNot('id', $activite->id)
+        $activiteSimilaires = StructureActivite::with([
+                'produits',
+                'produits.criteres',
+                'produits.criteres.sous_criteres',
+                'produits.adresse'
+            ])
+            ->isNot($activite)
             ->where('discipline_id', $activite->discipline_id)
             ->inRandomOrder()
             ->take(3)
