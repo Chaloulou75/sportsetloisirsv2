@@ -35,10 +35,8 @@ const reservationPlanningQtyForm = useForm({
 });
 
 const decrementQuantity = (reservationId, creneauId) => {
-    const quantity =
-        reservationPlanningQtyForm.quantity[reservationId][creneauId];
-    if (quantity.value > 0) {
-        quantity.value--;
+    if (reservationPlanningQtyForm.quantity[reservationId][creneauId] > 1) {
+        reservationPlanningQtyForm.quantity[reservationId][creneauId]--;
     }
 };
 
@@ -57,28 +55,31 @@ const formatCurrency = (value) => {
     }
     return value;
 };
-// Changer les comptes
-const getCreneauAmount = (reservation, creneauId) => {
+
+const getCreneauAmount = (reservation, creneau) => {
     const tarifAmount = reservation.tarif_amount;
-    const quantity = reservationPlanningQtyForm.quantity[creneauId];
+    const quantity =
+        reservationPlanningQtyForm.quantity[reservation.id][creneau.id];
     return tarifAmount * quantity;
 };
 
-const totalReservationAmount = computed(() => {
-    return props.reservations.reduce((acc, reservation) => {
-        acc[reservation.id] =
-            reservation.tarif_amount * reservation.plannings_count;
-        return acc;
-    }, {});
-});
+const totalReservationAmount = (reservation) => {
+    let totalResaAmount = 0;
 
-const totalAmount = computed(() => {
-    let sum = 0;
-    for (const reservationId in totalReservationAmount.value) {
-        sum += totalReservationAmount.value[reservationId];
-    }
-    return sum;
-});
+    reservation.plannings.forEach((creneau) => {
+        totalResaAmount += getCreneauAmount(reservation, creneau);
+    });
+
+    return totalResaAmount;
+};
+
+const totalAmount = () => {
+    let total = 0;
+    props.reservations.forEach((reservation) => {
+        total += totalReservationAmount(reservation);
+    });
+    return total;
+};
 
 // const updateReservationPlanningQty = (reservation, creneau) => {
 //     reservationPlanningQtyForm.update(
@@ -88,12 +89,6 @@ const totalAmount = computed(() => {
 //         }),
 //         { preserveScroll: true }
 //     );
-// };
-
-// const getCreneauAmount = (reservation, creneauId) => {
-//     const tarifAmount = reservation.tarif_amount;
-//     const quantity = reservationPlanningQtyForm.quantity[creneauId];
-//     return tarifAmount * quantity;
 // };
 
 const deleteReservationPlanning = (reservation, creneau) => {
@@ -124,6 +119,7 @@ const listToAnimate = ref();
 onMounted(() => {
     autoAnimate(listToAnimate.value);
 });
+
 onBeforeMount(() => {
     props.reservations.forEach((reservation) => {
         if (!reservationPlanningQtyForm.quantity[reservation.id]) {
@@ -132,7 +128,6 @@ onBeforeMount(() => {
 
         reservation.plannings.forEach((creneau) => {
             const quantity = ref(creneau.pivot.quantity || 1);
-            console.log(quantity.value);
             reservationPlanningQtyForm.quantity[reservation.id][creneau.id] =
                 quantity.value;
         });
@@ -281,19 +276,6 @@ onBeforeMount(() => {
                             </div>
 
                             <div class="flex items-center self-end space-x-1">
-                                <!-- <label
-                                    for="Quantité"
-                                    class="text-xs text-gray-600"
-                                    >Qté</label
-                                >
-                                <TextInput
-                                    class="w-6 max-w-xs p-0 text-center text-gray-800 bg-transparent border-0 focus:ring-0"
-                                    type="number"
-                                    name="Quantité"
-                                    min="1"
-                                >
-                                </TextInput> -->
-                                <!-- Input Number -->
                                 <div
                                     class="inline-block px-3 py-2 bg-white border border-gray-200 rounded-lg dark:border-gray-700"
                                     data-hs-input-number
@@ -367,9 +349,8 @@ onBeforeMount(() => {
                             </div>
                             <div class="flex items-center space-x-2">
                                 <p class="text-lg font-bold text-green-700">
-                                    {{
-                                        formatCurrency(reservation.tarif_amount)
-                                    }}
+                                    {{ getCreneauAmount(reservation, creneau) }}
+                                    €
                                 </p>
                                 <button
                                     class="ml-4"
@@ -444,7 +425,7 @@ onBeforeMount(() => {
                         >
                             <div>Montant:</div>
                             <div>
-                                {{ totalReservationAmount[reservation.id] }} €
+                                {{ totalReservationAmount(reservation) }} €
                             </div>
                         </div>
                     </div>
@@ -475,13 +456,13 @@ onBeforeMount(() => {
                     <p class="text-lg font-bold">Montant TTC</p>
                     <div class="">
                         <p class="mb-1 text-lg font-bold text-green-600">
-                            {{ totalAmount }} €
+                            {{ totalAmount() }} €
                         </p>
                     </div>
                 </div>
 
                 <div
-                    class="w-full px-4 py-3 my-4 text-lg font-semibold text-right text-blue-800 bg-blue-200 rounded"
+                    class="w-full px-4 py-3 my-4 text-lg font-semibold text-blue-800 bg-blue-200 rounded"
                 >
                     Vous ne serez débité que lorsque la structure aura validé
                     votre réservation.
