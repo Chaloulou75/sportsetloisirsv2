@@ -4,7 +4,7 @@ const emit = defineEmits(["close"]);
 <template>
     <div
         id="cookies-simple-with-icon-and-dismiss-button"
-        class="fixed bottom-0 end-0 z-[60] mx-auto w-full p-6 sm:max-w-sm"
+        class="hidden fixed bottom-0 end-0 z-[60] mx-auto w-full p-6 sm:max-w-sm"
     >
         <!-- Card -->
         <div class="p-4 bg-white border border-gray-200 shadow-sm rounded-xl">

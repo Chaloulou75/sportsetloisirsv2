@@ -79,7 +79,7 @@ class DepartementDisciplineActiviteController extends Controller
                 'produits.criteres',
                 'produits.criteres.sous_criteres',
                 'produits.adresse'
-            ])->isNot($activite)
+            ])->whereNot('id', $activite->id)
             ->where('discipline_id', $activite->discipline_id)
             ->inRandomOrder()
             ->take(3)
