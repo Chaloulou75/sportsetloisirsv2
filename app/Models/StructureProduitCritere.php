@@ -23,6 +23,13 @@ class StructureProduitCritere extends Model
      */
     protected $guarded = [];
 
+    /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['critere'];
+
     protected function valeur(): Attribute
     {
         return Attribute::make(

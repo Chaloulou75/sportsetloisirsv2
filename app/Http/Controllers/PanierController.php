@@ -41,9 +41,14 @@ class PanierController extends Controller
         $sessionId = session()->getId();
         $user = auth()->user();
 
-        // $sessionReservations = $this->getSessionReservations();
-
-        $reservations = ProductReservation::withRelations()->withCount('plannings')->where('user_id', $user->id)->orWhere('session_id', $sessionId)->get();
+        $query = ProductReservation::withRelations()->withCount('plannings');
+        if ($user) {
+            $query->where('user_id', $user->id);
+        }
+        if ($sessionId) {
+            $query->orWhere('session_id', $sessionId);
+        }
+        $reservations = $query->get();
 
         return Inertia::render('Panier/Index', [
             'familles' => $familles,

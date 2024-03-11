@@ -47,20 +47,35 @@ const reservationPlanningQtyForm = useForm({
 });
 
 const decrementQuantity = (reservationId, creneauId) => {
-    if (reservationPlanningQtyForm.quantity[reservationId][creneauId] > 1) {
-        reservationPlanningQtyForm.quantity[reservationId][creneauId]--;
+    if (creneauId) {
+        if (reservationPlanningQtyForm.quantity[reservationId][creneauId] > 1) {
+            reservationPlanningQtyForm.quantity[reservationId][creneauId]--;
+        }
+    } else {
+        if (reservationPlanningQtyForm.quantity[reservationId] > 1) {
+            reservationPlanningQtyForm.quantity[reservationId]--;
+        }
     }
 };
 
 const incrementQuantity = (reservationId, creneauId) => {
-    reservationPlanningQtyForm.quantity[reservationId][creneauId]++;
+    if (creneauId) {
+        reservationPlanningQtyForm.quantity[reservationId][creneauId]++;
+    } else {
+        reservationPlanningQtyForm.quantity[reservationId]++;
+    }
 };
 
 const getCreneauAmount = computed(() => {
     return (reservation, creneau) => {
         const tarifAmount = reservation.tarif_amount;
-        const quantity =
-            reservationPlanningQtyForm.quantity[reservation.id][creneau.id];
+        let quantity;
+        if (creneau) {
+            quantity =
+                reservationPlanningQtyForm.quantity[reservation.id][creneau.id];
+        } else {
+            quantity = reservationPlanningQtyForm.quantity[reservation.id];
+        }
         return tarifAmount * quantity;
     };
 });
@@ -68,11 +83,13 @@ const getCreneauAmount = computed(() => {
 const totalReservationAmount = computed(() => {
     return (reservation) => {
         let totalResaAmount = 0;
-
-        reservation.plannings.forEach((creneau) => {
-            totalResaAmount += getCreneauAmount.value(reservation, creneau);
-        });
-
+        if (reservation.plannings && reservation.plannings.length > 0) {
+            reservation.plannings.forEach((creneau) => {
+                totalResaAmount += getCreneauAmount.value(reservation, creneau);
+            });
+        } else {
+            totalResaAmount += getCreneauAmount.value(reservation);
+        }
         return totalResaAmount;
     };
 });
@@ -101,7 +118,10 @@ const deleteReservationPlanning = (reservation, creneau) => {
             reservation: reservation,
             planning: creneau,
         }),
-        { preserveScroll: true }
+        {
+            preserveScroll: true,
+            onSuccess: () => router.reload({ only: ["reservations"] }),
+        }
     );
 };
 const deleteReservation = (reservation) => {
@@ -109,7 +129,10 @@ const deleteReservation = (reservation) => {
         route("panier.destroy", {
             reservation: reservation,
         }),
-        { preserveScroll: true }
+        {
+            preserveScroll: true,
+            onSuccess: () => router.reload({ only: ["reservations"] }),
+        }
     );
 };
 
@@ -120,6 +143,30 @@ const panierForm = useForm({
 
 const listToAnimate = ref();
 
+watch(
+    () => props.reservations,
+    (newReservations, oldReservations) => {
+        newReservations.forEach((reservation) => {
+            if (!reservationPlanningQtyForm.quantity[reservation.id]) {
+                reservationPlanningQtyForm.quantity[reservation.id] = {};
+            }
+            if (reservation.plannings && reservation.plannings.length > 0) {
+                reservation.plannings.forEach((creneau) => {
+                    const quantity = ref(creneau.pivot.quantity || 1);
+                    reservationPlanningQtyForm.quantity[reservation.id][
+                        creneau.id
+                    ] = quantity.value;
+                });
+            } else {
+                const quantity = ref(reservation.quantity || 1);
+                reservationPlanningQtyForm.quantity[reservation.id] =
+                    quantity.value;
+            }
+        });
+    },
+    { deep: true }
+);
+
 onMounted(() => {
     autoAnimate(listToAnimate.value);
 });
@@ -129,12 +176,18 @@ onBeforeMount(() => {
         if (!reservationPlanningQtyForm.quantity[reservation.id]) {
             reservationPlanningQtyForm.quantity[reservation.id] = {};
         }
-
-        reservation.plannings.forEach((creneau) => {
-            const quantity = ref(creneau.pivot.quantity || 1);
-            reservationPlanningQtyForm.quantity[reservation.id][creneau.id] =
+        if (reservation.plannings && reservation.plannings.length > 0) {
+            reservation.plannings.forEach((creneau) => {
+                const quantity = ref(creneau.pivot.quantity || 1);
+                reservationPlanningQtyForm.quantity[reservation.id][
+                    creneau.id
+                ] = quantity.value;
+            });
+        } else {
+            const quantity = ref(reservation.quantity || 1);
+            reservationPlanningQtyForm.quantity[reservation.id] =
                 quantity.value;
-        });
+        }
     });
 });
 </script>
@@ -204,12 +257,11 @@ onBeforeMount(() => {
                     :key="reservation.id"
                 >
                     <div
-                        class="space-y-2 rounded border border-gray-200 bg-gray-50 shadow"
+                        class="space-y-2 rounded border border-blue-400 bg-gray-50 shadow"
                     >
                         <div class="flex w-full items-start justify-between">
                             <div class="space-y-3 px-4 py-1.5">
                                 <h3 class="text-lg">
-                                    Demande:
                                     <span class="font-semibold">{{
                                         reservation.cat_tarif.cat_tarif_type.nom
                                     }}</span>
@@ -234,7 +286,10 @@ onBeforeMount(() => {
                                         }})
                                     </p>
                                 </div>
-                                <p class="text-sm font-normal">
+                                <p
+                                    v-if="reservation.plannings_count > 0"
+                                    class="text-sm font-normal"
+                                >
                                     Vous avez
                                     <span class="font-semibold"
                                         >{{ reservation.plannings_count }}
@@ -255,7 +310,7 @@ onBeforeMount(() => {
                             <button
                                 class="bg-red-400 p-2 hover:bg-red-500"
                                 type="button"
-                                @click="deleteReservation(reservation)"
+                                @click.prevent="deleteReservation(reservation)"
                             >
                                 <span class="sr-only"
                                     >Supprimer la réservation du panier</span
@@ -263,27 +318,142 @@ onBeforeMount(() => {
                                 <XMarkIcon class="h-6 w-6 text-white" />
                             </button>
                         </div>
-                        <div
-                            class="flex items-center justify-between space-x-2 px-2"
-                            v-for="creneau in reservation.plannings"
-                            :key="creneau.id"
+                        <template
+                            v-if="
+                                reservation.plannings &&
+                                reservation.plannings.length > 0
+                            "
                         >
-                            <div class="flex flex-1 items-center">
-                                <CalendarDaysIcon
-                                    class="me-3 size-4 flex-shrink-0 text-gray-700"
-                                />
-                                <p class="text-sm text-gray-700">
-                                    <span class="text-sm font-semibold">{{
-                                        formatDate(creneau.start)
-                                    }}</span>
-                                    au
-                                    <span class="text-sm font-semibold">{{
-                                        formatDate(creneau.end)
-                                    }}</span>
-                                </p>
-                            </div>
+                            <div
+                                class="flex items-center justify-between space-x-2 px-2"
+                                v-for="creneau in reservation.plannings"
+                                :key="creneau.id"
+                            >
+                                <div class="flex flex-1 items-center">
+                                    <CalendarDaysIcon
+                                        class="me-3 size-4 flex-shrink-0 text-gray-700"
+                                    />
+                                    <p class="text-sm text-gray-700">
+                                        <span class="text-sm font-semibold">{{
+                                            formatDate(creneau.start)
+                                        }}</span>
+                                        au
+                                        <span class="text-sm font-semibold">{{
+                                            formatDate(creneau.end)
+                                        }}</span>
+                                    </p>
+                                </div>
 
-                            <div class="flex items-center space-x-1 self-end">
+                                <div
+                                    class="flex items-center space-x-1 self-end"
+                                >
+                                    <div
+                                        class="inline-block rounded-lg border border-gray-200 bg-white px-3 py-2 dark:border-gray-700"
+                                        data-hs-input-number
+                                    >
+                                        <div
+                                            class="flex items-center gap-x-1.5"
+                                        >
+                                            <button
+                                                type="button"
+                                                class="inline-flex size-6 items-center justify-center gap-x-2 rounded-md border border-gray-200 bg-white text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50"
+                                                @click="
+                                                    decrementQuantity(
+                                                        reservation.id,
+                                                        creneau.id
+                                                    )
+                                                "
+                                            >
+                                                <svg
+                                                    class="size-3.5 flex-shrink-0"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="24"
+                                                    height="24"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    stroke-width="2"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                >
+                                                    <path d="M5 12h14" />
+                                                </svg>
+                                            </button>
+                                            <input
+                                                class="w-6 border-0 bg-transparent p-0 text-center text-gray-800 focus:ring-0"
+                                                type="text"
+                                                v-model="
+                                                    reservationPlanningQtyForm
+                                                        .quantity[
+                                                        reservation.id
+                                                    ][creneau.id]
+                                                "
+                                                data-hs-input-number-input
+                                            />
+                                            <button
+                                                type="button"
+                                                class="inline-flex size-6 items-center justify-center gap-x-2 rounded-md border border-gray-200 bg-white text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50"
+                                                @click="
+                                                    incrementQuantity(
+                                                        reservation.id,
+                                                        creneau.id
+                                                    )
+                                                "
+                                            >
+                                                <svg
+                                                    class="size-3.5 flex-shrink-0"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="24"
+                                                    height="24"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    stroke-width="2"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                >
+                                                    <path d="M5 12h14" />
+                                                    <path d="M12 5v14" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- End Input Number -->
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <p class="text-lg font-bold text-green-700">
+                                        {{
+                                            getCreneauAmount(
+                                                reservation,
+                                                creneau
+                                            )
+                                        }}
+                                        €
+                                    </p>
+                                    <button
+                                        class="ml-4"
+                                        type="button"
+                                        @click.prevent="
+                                            deleteReservationPlanning(
+                                                reservation,
+                                                creneau
+                                            )
+                                        "
+                                    >
+                                        <span class="sr-only"
+                                            >Supprimer le créneau</span
+                                        >
+                                        <TrashIcon
+                                            class="h-5 w-5 text-gray-400 hover:text-red-500"
+                                        />
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div
+                                class="flex w-full items-center justify-end space-x-2 px-2"
+                            >
                                 <div
                                     class="inline-block rounded-lg border border-gray-200 bg-white px-3 py-2 dark:border-gray-700"
                                     data-hs-input-number
@@ -294,8 +464,7 @@ onBeforeMount(() => {
                                             class="inline-flex size-6 items-center justify-center gap-x-2 rounded-md border border-gray-200 bg-white text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50"
                                             @click="
                                                 decrementQuantity(
-                                                    reservation.id,
-                                                    creneau.id
+                                                    reservation.id
                                                 )
                                             "
                                         >
@@ -319,9 +488,7 @@ onBeforeMount(() => {
                                             type="text"
                                             v-model="
                                                 reservationPlanningQtyForm
-                                                    .quantity[reservation.id][
-                                                    creneau.id
-                                                ]
+                                                    .quantity[reservation.id]
                                             "
                                             data-hs-input-number-input
                                         />
@@ -330,8 +497,7 @@ onBeforeMount(() => {
                                             class="inline-flex size-6 items-center justify-center gap-x-2 rounded-md border border-gray-200 bg-white text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50"
                                             @click="
                                                 incrementQuantity(
-                                                    reservation.id,
-                                                    creneau.id
+                                                    reservation.id
                                                 )
                                             "
                                         >
@@ -353,34 +519,13 @@ onBeforeMount(() => {
                                         </button>
                                     </div>
                                 </div>
-                                <!-- End Input Number -->
-                            </div>
-                            <div class="flex items-center space-x-2">
                                 <p class="text-lg font-bold text-green-700">
-                                    {{ getCreneauAmount(reservation, creneau) }}
-                                    €
+                                    {{ getCreneauAmount(reservation) }} €
                                 </p>
-                                <button
-                                    class="ml-4"
-                                    type="button"
-                                    @click="
-                                        deleteReservationPlanning(
-                                            reservation,
-                                            creneau
-                                        )
-                                    "
-                                >
-                                    <span class="sr-only"
-                                        >Supprimer le créneau</span
-                                    >
-                                    <TrashIcon
-                                        class="h-5 w-5 text-gray-400 hover:text-red-500"
-                                    />
-                                </button>
                             </div>
-                        </div>
+                        </template>
                         <div
-                            class="px-4 py-1.5"
+                            class="px-4 py-1.5 text-gray-700"
                             v-if="
                                 reservation.attributs &&
                                 reservation.attributs.length > 0
@@ -395,10 +540,12 @@ onBeforeMount(() => {
                                     :key="attribut.id"
                                 >
                                     <span v-if="attribut.booking_field"
-                                        >{{ attribut.booking_field.nom }}:</span
-                                    ><span class="font-semibold">{{
-                                        attribut.valeur
-                                    }}</span>
+                                        >{{
+                                            attribut.booking_field.nom
+                                        }}: </span
+                                    ><span class="font-semibold">
+                                        {{ attribut.valeur }}</span
+                                    >
 
                                     <ul
                                         v-if="
@@ -419,7 +566,7 @@ onBeforeMount(() => {
                                                 >{{
                                                     sousattribut
                                                         .booking_sous_field.nom
-                                                }}:</span
+                                                }}: </span
                                             ><span class="font-semibold">{{
                                                 sousattribut.valeur
                                             }}</span>
@@ -429,10 +576,10 @@ onBeforeMount(() => {
                             </ul>
                         </div>
                         <div
-                            class="flex w-full justify-between px-4 py-2 text-lg font-bold text-green-700"
+                            class="flex w-full justify-between border-t border-gray-200 bg-white px-4 py-2 text-lg font-bold"
                         >
-                            <div>Montant:</div>
-                            <div>
+                            <div class="text-gray-700">Montant:</div>
+                            <div class="text-green-700">
                                 {{ totalReservationAmount(reservation) }}
                                 €
                             </div>
@@ -440,12 +587,12 @@ onBeforeMount(() => {
                     </div>
                 </div>
             </div>
-            <div v-else>
+            <div v-else class="flex-1">
                 <p class="text-lg text-gray-700">Votre panier est vide.</p>
             </div>
 
             <div
-                class="mt-6 h-full w-full rounded-lg border border-gray-200 bg-gray-50 p-6 text-xl font-bold text-gray-700 shadow-md md:mt-0 md:w-1/3"
+                class="mt-6 h-full w-full rounded-lg border border-blue-400 bg-gray-50 p-6 text-xl font-bold text-gray-700 shadow-md md:mt-0 md:w-1/3"
             >
                 <div class="my-4 w-full">
                     <label
