@@ -88,7 +88,7 @@ class PanierController extends Controller
         $produitCriteres = $produit->criteres()->pluck('valeur')->toJson();
 
         $sessionId = session()->getId();
-        $sessionPanierProducts = session()->get('panierProducts');
+        $sessionPanierProducts = session()->get('panierProducts', []);
 
         $newReservation = ProductReservation::create([
             'session_id' => $sessionId,
@@ -193,7 +193,7 @@ class PanierController extends Controller
         }
 
         $sessionPanierProducts[] = [
-            'session_id' => $sessionId,
+            'session_id' => $sessionId ?? null,
             'ip_address' => $request->ip(),
             'user_id' => $user->id ?? null,
             'produit_id' => $produit->id,
