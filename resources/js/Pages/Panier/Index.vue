@@ -30,6 +30,18 @@ const formatDate = (dateTimeString) => {
         .format("dddd D MMMM YYYY [à] HH[h]mm");
 };
 
+const formatCurrency = (value) => {
+    const numericValue = Number(value.replace(/[^0-9.-]+/g, ""));
+    if (!isNaN(numericValue)) {
+        if (numericValue % 1 === 0) {
+            return numericValue.toLocaleString() + " €";
+        } else {
+            return numericValue.toFixed(2) + " €";
+        }
+    }
+    return value;
+};
+
 const reservationPlanningQtyForm = useForm({
     quantity: {},
 });
@@ -44,42 +56,34 @@ const incrementQuantity = (reservationId, creneauId) => {
     reservationPlanningQtyForm.quantity[reservationId][creneauId]++;
 };
 
-const formatCurrency = (value) => {
-    const numericValue = Number(value.replace(/[^0-9.-]+/g, ""));
-    if (!isNaN(numericValue)) {
-        if (numericValue % 1 === 0) {
-            return numericValue.toLocaleString() + " €";
-        } else {
-            return numericValue.toFixed(2) + " €";
-        }
-    }
-    return value;
-};
+const getCreneauAmount = computed(() => {
+    return (reservation, creneau) => {
+        const tarifAmount = reservation.tarif_amount;
+        const quantity =
+            reservationPlanningQtyForm.quantity[reservation.id][creneau.id];
+        return tarifAmount * quantity;
+    };
+});
 
-const getCreneauAmount = (reservation, creneau) => {
-    const tarifAmount = reservation.tarif_amount;
-    const quantity =
-        reservationPlanningQtyForm.quantity[reservation.id][creneau.id];
-    return tarifAmount * quantity;
-};
+const totalReservationAmount = computed(() => {
+    return (reservation) => {
+        let totalResaAmount = 0;
 
-const totalReservationAmount = (reservation) => {
-    let totalResaAmount = 0;
+        reservation.plannings.forEach((creneau) => {
+            totalResaAmount += getCreneauAmount.value(reservation, creneau);
+        });
 
-    reservation.plannings.forEach((creneau) => {
-        totalResaAmount += getCreneauAmount(reservation, creneau);
-    });
+        return totalResaAmount;
+    };
+});
 
-    return totalResaAmount;
-};
-
-const totalAmount = () => {
+const totalAmount = computed(() => {
     let total = 0;
     props.reservations.forEach((reservation) => {
-        total += totalReservationAmount(reservation);
+        total += totalReservationAmount.value(reservation);
     });
     return total;
-};
+});
 
 // const updateReservationPlanningQty = (reservation, creneau) => {
 //     reservationPlanningQtyForm.update(
@@ -111,7 +115,7 @@ const deleteReservation = (reservation) => {
 
 const panierForm = useForm({
     codePromo: null,
-    totalAmount: ref(totalAmount.value),
+    // totalAmount: totalAmount.value,
 });
 
 const listToAnimate = ref();
@@ -148,7 +152,7 @@ onBeforeMount(() => {
                 <template v-slot:ariane>
                     <nav aria-label="Breadcrumb" class="flex">
                         <ol
-                            class="flex text-gray-600 border border-gray-200 rounded-lg"
+                            class="flex rounded-lg border border-gray-200 text-gray-600"
                         >
                             <li class="flex items-center">
                                 <Link
@@ -156,7 +160,7 @@ onBeforeMount(() => {
                                     :href="route('welcome')"
                                     class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
                                 >
-                                    <HomeIcon class="w-4 h-4" />
+                                    <HomeIcon class="h-4 w-4" />
 
                                     <span
                                         class="ms-1.5 hidden text-xs font-medium md:block"
@@ -175,7 +179,7 @@ onBeforeMount(() => {
                                 <Link
                                     preserve-scroll
                                     :href="route('favoris.index')"
-                                    class="flex items-center h-10 text-xs font-medium transition bg-white pe-4 ps-8 hover:text-gray-900"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     Favoris
                                 </Link>
@@ -188,17 +192,21 @@ onBeforeMount(() => {
 
         <Breadcrumb />
 
-        <div class="container flex gap-4 py-6 mx-auto">
-            <div ref="listToAnimate" class="flex flex-col flex-1 gap-4">
+        <div class="container mx-auto flex flex-col gap-4 py-6 md:flex-row">
+            <div
+                v-if="reservations && reservations.length > 0"
+                ref="listToAnimate"
+                class="flex flex-1 flex-col gap-4"
+            >
                 <div
                     class="space-y-4 text-sm"
                     v-for="reservation in reservations"
                     :key="reservation.id"
                 >
                     <div
-                        class="space-y-2 border border-gray-200 rounded shadow bg-gray-50"
+                        class="space-y-2 rounded border border-gray-200 bg-gray-50 shadow"
                     >
-                        <div class="flex items-start justify-between w-full">
+                        <div class="flex w-full items-start justify-between">
                             <div class="space-y-3 px-4 py-1.5">
                                 <h3 class="text-lg">
                                     Demande:
@@ -216,7 +224,7 @@ onBeforeMount(() => {
                                 >
                                     <dt class="sr-only">Ville</dt>
                                     <MapPinIcon
-                                        class="mr-1 text-gray-600 size-4"
+                                        class="mr-1 size-4 text-gray-600"
                                     />
                                     <p class="font-semibold">
                                         {{ reservation.produit.adresse.city }}
@@ -245,24 +253,24 @@ onBeforeMount(() => {
                             </div>
 
                             <button
-                                class="p-2 bg-red-400 hover:bg-red-500"
+                                class="bg-red-400 p-2 hover:bg-red-500"
                                 type="button"
                                 @click="deleteReservation(reservation)"
                             >
                                 <span class="sr-only"
                                     >Supprimer la réservation du panier</span
                                 >
-                                <XMarkIcon class="w-6 h-6 text-white" />
+                                <XMarkIcon class="h-6 w-6 text-white" />
                             </button>
                         </div>
                         <div
-                            class="flex items-center justify-between px-2 space-x-2"
+                            class="flex items-center justify-between space-x-2 px-2"
                             v-for="creneau in reservation.plannings"
                             :key="creneau.id"
                         >
-                            <div class="flex items-center flex-1">
+                            <div class="flex flex-1 items-center">
                                 <CalendarDaysIcon
-                                    class="flex-shrink-0 text-gray-700 me-3 size-4"
+                                    class="me-3 size-4 flex-shrink-0 text-gray-700"
                                 />
                                 <p class="text-sm text-gray-700">
                                     <span class="text-sm font-semibold">{{
@@ -275,15 +283,15 @@ onBeforeMount(() => {
                                 </p>
                             </div>
 
-                            <div class="flex items-center self-end space-x-1">
+                            <div class="flex items-center space-x-1 self-end">
                                 <div
-                                    class="inline-block px-3 py-2 bg-white border border-gray-200 rounded-lg dark:border-gray-700"
+                                    class="inline-block rounded-lg border border-gray-200 bg-white px-3 py-2 dark:border-gray-700"
                                     data-hs-input-number
                                 >
                                     <div class="flex items-center gap-x-1.5">
                                         <button
                                             type="button"
-                                            class="inline-flex items-center justify-center text-sm font-medium text-gray-800 bg-white border border-gray-200 rounded-md shadow-sm size-6 gap-x-2 hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50"
+                                            class="inline-flex size-6 items-center justify-center gap-x-2 rounded-md border border-gray-200 bg-white text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50"
                                             @click="
                                                 decrementQuantity(
                                                     reservation.id,
@@ -307,7 +315,7 @@ onBeforeMount(() => {
                                             </svg>
                                         </button>
                                         <input
-                                            class="w-6 p-0 text-center text-gray-800 bg-transparent border-0 focus:ring-0"
+                                            class="w-6 border-0 bg-transparent p-0 text-center text-gray-800 focus:ring-0"
                                             type="text"
                                             v-model="
                                                 reservationPlanningQtyForm
@@ -319,7 +327,7 @@ onBeforeMount(() => {
                                         />
                                         <button
                                             type="button"
-                                            class="inline-flex items-center justify-center text-sm font-medium text-gray-800 bg-white border border-gray-200 rounded-md shadow-sm size-6 gap-x-2 hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50"
+                                            class="inline-flex size-6 items-center justify-center gap-x-2 rounded-md border border-gray-200 bg-white text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50"
                                             @click="
                                                 incrementQuantity(
                                                     reservation.id,
@@ -366,7 +374,7 @@ onBeforeMount(() => {
                                         >Supprimer le créneau</span
                                     >
                                     <TrashIcon
-                                        class="w-5 h-5 text-gray-400 hover:text-red-500"
+                                        class="h-5 w-5 text-gray-400 hover:text-red-500"
                                     />
                                 </button>
                             </div>
@@ -381,7 +389,7 @@ onBeforeMount(() => {
                             <p class="text-xs">
                                 Les attributs liés à votre réservation:
                             </p>
-                            <ul class="text-xs list-disc list-inside">
+                            <ul class="list-inside list-disc text-xs">
                                 <li
                                     v-for="attribut in reservation.attributs"
                                     :key="attribut.id"
@@ -398,7 +406,7 @@ onBeforeMount(() => {
                                             attribut.reservation_sous_attributs
                                                 .length > 0
                                         "
-                                        class="text-xs list-disc list-inside indent-4"
+                                        class="list-inside list-disc indent-4 text-xs"
                                     >
                                         <li
                                             v-for="sousattribut in attribut.reservation_sous_attributs"
@@ -421,24 +429,28 @@ onBeforeMount(() => {
                             </ul>
                         </div>
                         <div
-                            class="flex justify-between w-full px-4 py-2 text-lg font-bold text-green-700"
+                            class="flex w-full justify-between px-4 py-2 text-lg font-bold text-green-700"
                         >
                             <div>Montant:</div>
                             <div>
-                                {{ totalReservationAmount(reservation) }} €
+                                {{ totalReservationAmount(reservation) }}
+                                €
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div v-else>
+                <p class="text-lg text-gray-700">Votre panier est vide.</p>
+            </div>
 
             <div
-                class="w-full h-full p-6 mt-6 text-xl font-bold text-gray-700 border border-gray-200 rounded-lg shadow-md bg-gray-50 md:mt-0 md:w-1/3"
+                class="mt-6 h-full w-full rounded-lg border border-gray-200 bg-gray-50 p-6 text-xl font-bold text-gray-700 shadow-md md:mt-0 md:w-1/3"
             >
-                <div class="w-full my-4">
+                <div class="my-4 w-full">
                     <label
                         for="codePromo"
-                        class="block mb-2 text-sm font-medium text-gray-700"
+                        class="mb-2 block text-sm font-medium text-gray-700"
                     >
                         Code Promo
                     </label>
@@ -447,22 +459,22 @@ onBeforeMount(() => {
                         v-model="panierForm.codePromo"
                         name="codePromo"
                         id="codePromo"
-                        class="block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                        class="block w-full rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                         placeholder="Code Promo"
                         autocomplete="none"
                     />
                 </div>
                 <div class="flex justify-between">
                     <p class="text-lg font-bold">Montant TTC</p>
-                    <div class="">
+                    <div>
                         <p class="mb-1 text-lg font-bold text-green-600">
-                            {{ totalAmount() }} €
+                            {{ totalAmount }} €
                         </p>
                     </div>
                 </div>
 
                 <div
-                    class="w-full px-4 py-3 my-4 text-lg font-semibold text-blue-800 bg-blue-200 rounded"
+                    class="my-4 w-full rounded bg-blue-200 px-4 py-3 text-lg font-semibold text-blue-800"
                 >
                     Vous ne serez débité que lorsque la structure aura validé
                     votre réservation.
