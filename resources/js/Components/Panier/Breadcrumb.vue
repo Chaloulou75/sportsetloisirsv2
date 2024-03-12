@@ -8,7 +8,7 @@ import {
 } from "@heroicons/vue/24/outline";
 </script>
 <template>
-    <div class="mx-auto w-full border-y border-gray-200 px-4 py-5 md:px-8">
+    <div class="mx-auto w-full border-y border-gray-200 px-2 py-5 md:px-8">
         <ol
             class="container mx-auto flex items-center whitespace-nowrap"
             aria-label="Breadcrumb"

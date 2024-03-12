@@ -587,7 +587,7 @@ onBeforeMount(() => {
                     </div>
                 </div>
             </div>
-            <div v-else class="flex-1">
+            <div v-else class="flex-1 px-2">
                 <p class="text-lg text-gray-700">Votre panier est vide.</p>
             </div>
 

@@ -41,14 +41,17 @@ class PanierController extends Controller
         $sessionId = session()->getId();
         $user = auth()->user();
 
-        $query = ProductReservation::withRelations()->withCount('plannings');
-        if ($user) {
-            $query->where('user_id', $user->id);
+        if ($user || $sessionId) {
+            $query = ProductReservation::withRelations()->withCount('plannings');
+            if ($user && $sessionId) {
+                $query->where('user_id', $user->id)->orWhere('session_id', $sessionId);
+            } elseif ($sessionId) {
+                $query->orWhere('session_id', $sessionId);
+            } elseif ($user) {
+                $query->where('user_id', $user->id);
+            }
+            $reservations = $query->get();
         }
-        if ($sessionId) {
-            $query->orWhere('session_id', $sessionId);
-        }
-        $reservations = $query->get();
 
         return Inertia::render('Panier/Index', [
             'familles' => $familles,
@@ -78,14 +81,21 @@ class PanierController extends Controller
             'sousattributs' => ['nullable', 'array'],
             'plannings' => ['nullable', 'array'],
         ]);
-
+        // $request->all();
         $user = auth()->user();
         $produit = StructureProduit::withRelations()->find($request->produitId);
-        $catTarif = StructureCatTarif::find($request->catTarifId);
+        if($request->catTarifId) {
+            $catTarif = StructureCatTarif::find($request->catTarifId);
+        }
+
         $activiteId = $produit->activite->id;
         $activite = StructureActivite::find($activiteId);
-        $creneaux = StructurePlanning::whereIn('id', $request->plannings)->get();
-        $produitCriteres = $produit->criteres()->pluck('valeur')->toJson();
+        if($request->plannings) {
+            $creneaux = StructurePlanning::whereIn('id', $request->plannings)->get();
+        }
+        if($produit->criteres) {
+            $produitCriteres = $produit->criteres()->pluck('valeur')->toJson();
+        }
 
         $sessionId = session()->getId();
         $sessionPanierProducts = session()->get('panierProducts', []);
@@ -99,7 +109,7 @@ class PanierController extends Controller
             'activite_id' => $activiteId,
             'activite_title' => $activite->titre,
             'produit_id' => $produit->id,
-            'produit_criteres' => $produitCriteres,
+            'produit_criteres' => $produitCriteres ?? null,
             'cat_tarif_id' => $catTarif->id ?? null,
             'tarif_title' => $catTarif->titre ?? null,
             'tarif_amount' => $catTarif->amount ?? null,
@@ -194,12 +204,12 @@ class PanierController extends Controller
 
         $sessionPanierProducts[] = [
             'session_id' => $sessionId ?? null,
-            'ip_address' => $request->ip(),
+            'ip_address' => $request->ip() ?? null,
             'user_id' => $user->id ?? null,
             'produit_id' => $produit->id,
             'cat_tarif_id' => $catTarif->id ?? null,
-            'planning_ids' => $creneaux->pluck('id')->toArray(),
-            'reservation_id' => $newReservation->id,
+            'planning_ids' => $creneaux->pluck('id')->toArray() ?? null,
+            'reservation_id' => $newReservation->id ?? null,
         ];
         session()->put('panierProducts', $sessionPanierProducts);
 
