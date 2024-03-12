@@ -76,11 +76,11 @@ class StructureController extends Controller
                         ->withQueryString();
 
         return Inertia::render('Structures/Index', [
-            'structures' => $structures,
+            'structures' => fn () => $structures,
             'filters' => request()->all(['search']),
-            'familles' => $familles,
-            'allCities' => $allCities,
-            'listDisciplines' => $listDisciplines,
+            'familles' => fn () => $familles,
+            'allCities' => fn () => $allCities,
+            'listDisciplines' => fn () => $listDisciplines,
         ]);
     }
 
@@ -104,11 +104,11 @@ class StructureController extends Controller
         $disciplines = ListDiscipline::select(['id', 'name', 'slug'])->get();
 
         return Inertia::render('Structures/Create', [
-            'structurestypes' => $structurestypes,
-            'disciplines' => $disciplines,
-            'familles' => $familles,
-            'allCities' => $allCities,
-            'listDisciplines' => $listDisciplines,
+            'structurestypes' => fn () => $structurestypes,
+            'disciplines' => fn () => $disciplines,
+            'familles' => fn () => $familles,
+            'allCities' => fn () => $allCities,
+            'listDisciplines' => fn () => $listDisciplines,
         ]);
     }
 
@@ -323,24 +323,24 @@ class StructureController extends Controller
         $structure->increment('view_count');
 
         return Inertia::render('Structures/Show', [
-            'structure' => $structure,
-            'familles' => $familles,
-            'allCities' => $allCities,
-            'listDisciplines' => $listDisciplines,
-            'criteres' => $criteres,
+            'structure' => fn () => $structure,
+            'familles' => fn () => $familles,
+            'allCities' => fn () => $allCities,
+            'listDisciplines' => fn () => $listDisciplines,
+            'criteres' => fn () => $criteres,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),
             ],
-            'requestCategory' => $requestCategory,
-            'categories' => $categories,
-            'categoriesWithoutProduit' => $categoriesWithoutProduit,
-            'allStructureTypes' => $allStructureTypes,
-            'structuretypeElected' => $structuretypeElected,
-            'city' => $city,
-            'citiesAround' => $citiesAround,
-            'departement' => $departement,
-            'requestDiscipline' => $requestDiscipline,
+            'requestCategory' => fn () => $requestCategory,
+            'categories' => fn () => $categories,
+            'categoriesWithoutProduit' => fn () => $categoriesWithoutProduit,
+            'allStructureTypes' => fn () => $allStructureTypes,
+            'structuretypeElected' => fn () => $structuretypeElected,
+            'city' => fn () => $city,
+            'citiesAround' => fn () => $citiesAround,
+            'departement' => fn () => $departement,
+            'requestDiscipline' => fn () => $requestDiscipline,
         ]);
     }
 
@@ -392,12 +392,12 @@ class StructureController extends Controller
             ->firstOrFail();
 
         return Inertia::render('Structures/Edit', [
-            'structurestypes' => $structurestypes,
-            'disciplines' => $disciplines,
-            'structure' => $structure,
-            'allReservationsCount' => $allReservationsCount,
-            'confirmedReservationsCount' => $confirmedReservationsCount,
-            'pendingReservationsCount' => $pendingReservationsCount,
+            'structurestypes' => fn () => $structurestypes,
+            'disciplines' => fn () => $disciplines,
+            'structure' => fn () => $structure,
+            'allReservationsCount' => fn () => $allReservationsCount,
+            'confirmedReservationsCount' => fn () => $confirmedReservationsCount,
+            'pendingReservationsCount' => fn () => $pendingReservationsCount,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),

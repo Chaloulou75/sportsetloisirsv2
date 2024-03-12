@@ -38,7 +38,7 @@ class AdminTarifTypeController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'tarifs' => $tarifs,
+            'tarifs' => fn () => $tarifs,
         ]);
 
     }

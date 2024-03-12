@@ -102,20 +102,20 @@ class DepartementDisciplineStructuretypeController extends Controller
         $departement->increment('view_count');
 
         return Inertia::render('Departements/Disciplines/Structuretypes/Show', [
-            'familles' => $familles,
-            'structuretypeElected' => $structuretypeElected,
-            'allStructureTypes' => $allStructureTypes,
-            'categories' => $categories,
-            'firstCategories' => $firstCategories,
-            'categoriesNotInFirst' => $categoriesNotInFirst,
-            'departement' => $departement,
-            'citiesAround' => $citiesAround,
-            'produits' => $produits,
-            'structures' => $structures,
-            'discipline' => $discipline,
-            'listDisciplines' => $listDisciplines,
-            'allCities' => $allCities,
-            'posts' => $posts,
+            'familles' => fn () => $familles,
+            'structuretypeElected' => fn () => $structuretypeElected,
+            'allStructureTypes' => fn () => $allStructureTypes,
+            'categories' => fn () => $categories,
+            'firstCategories' => fn () => $firstCategories,
+            'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
+            'departement' => fn () => $departement,
+            'citiesAround' => fn () => $citiesAround,
+            'produits' => fn () => $produits,
+            'structures' => fn () => $structures,
+            'discipline' => fn () => $discipline,
+            'listDisciplines' => fn () => $listDisciplines,
+            'allCities' => fn () => $allCities,
+            'posts' => fn () => $posts,
         ]);
 
     }

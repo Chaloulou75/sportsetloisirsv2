@@ -54,10 +54,10 @@ class PanierController extends Controller
         }
 
         return Inertia::render('Panier/Index', [
-            'familles' => $familles,
-            'listDisciplines' => $listDisciplines,
-            'allCities' => $allCities,
-            'reservations' => $reservations ?? null
+            'familles' => fn () => $familles,
+            'listDisciplines' => fn () => $listDisciplines,
+            'allCities' => fn () => $allCities,
+            'reservations' => fn () => $reservations ?? null
         ]);
     }
 

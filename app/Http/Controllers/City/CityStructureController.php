@@ -112,25 +112,25 @@ class CityStructureController extends Controller
         $structure->increment('view_count');
 
         return Inertia::render('Structures/Show', [
-            'structure' => $structure,
-            'familles' => $familles,
-            'allCities' => $allCities,
-            'listDisciplines' => $listDisciplines,
-            'criteres' => $criteres,
+            'structure' => fn () => $structure,
+            'familles' => fn () => $familles,
+            'allCities' => fn () => $allCities,
+            'listDisciplines' => fn () => $listDisciplines,
+            'criteres' => fn () => $criteres,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),
             ],
-            'requestCategory' => $requestCategory,
-            'categories' => $categories,
-            'categoriesWithoutProduit' => $categoriesWithoutProduit,
-            'allStructureTypes' => $allStructureTypes,
-            'structuretypeElected' => $structuretypeElected,
-            'city' => $city,
-            'citiesAround' => $citiesAround,
-            'departement' => $departement,
-            'requestDiscipline' => $requestDiscipline,
-            'disciplinesSimilaires' => $disciplinesSimilaires,
+            'requestCategory' => fn () => $requestCategory,
+            'categories' => fn () => $categories,
+            'categoriesWithoutProduit' => fn () => $categoriesWithoutProduit,
+            'allStructureTypes' => fn () => $allStructureTypes,
+            'structuretypeElected' => fn () => $structuretypeElected,
+            'city' => fn () => $city,
+            'citiesAround' => fn () => $citiesAround,
+            'departement' => fn () => $departement,
+            'requestDiscipline' => fn () => $requestDiscipline,
+            'disciplinesSimilaires' => fn () => $disciplinesSimilaires,
         ]);
     }
 }

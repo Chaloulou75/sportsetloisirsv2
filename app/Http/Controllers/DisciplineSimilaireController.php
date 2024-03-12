@@ -50,9 +50,9 @@ class DisciplineSimilaireController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'discipline' => $discipline,
-            'listDisciplines' => $listDisciplines,
-            'disciplinesSimilaires' => $disciplinesSimilaires,
+            'discipline' => fn () => $discipline,
+            'listDisciplines' => fn () => $listDisciplines,
+            'disciplinesSimilaires' => fn () => $disciplinesSimilaires,
         ]);
     }
 

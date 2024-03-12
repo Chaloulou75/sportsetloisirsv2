@@ -34,11 +34,11 @@ class AdminController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'categories' => $categories,
-            'listDisciplines' => $listDisciplines,
-            'structures' => $structures,
-            'users' => $users,
-            'criteres' => $criteres,
+            'categories' => fn () => $categories,
+            'listDisciplines' => fn () => $listDisciplines,
+            'structures' => fn () => $structures,
+            'users' => fn () => $users,
+            'criteres' => fn () => $criteres,
         ]);
     }
 
@@ -69,7 +69,9 @@ class AdminController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit() {}
+    public function edit()
+    {
+    }
 
     /**
      * Update the specified resource in storage.

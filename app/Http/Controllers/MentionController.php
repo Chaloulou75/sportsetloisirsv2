@@ -26,9 +26,9 @@ class MentionController extends Controller
         });
 
         return Inertia::render('Mentions/Index', [
-            'familles' => $familles,
-            'listDisciplines' => $listDisciplines,
-            'allCities' => $allCities,
+            'familles' => fn () => $familles,
+            'listDisciplines' => fn () => $listDisciplines,
+            'allCities' => fn () => $allCities,
         ]);
     }
 }

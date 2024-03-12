@@ -50,12 +50,12 @@ class CityController extends Controller
                         ->withQueryString();
 
         return Inertia::render('Villes/Index', [
-            'cities' => $cities,
-            'familles' => $familles,
-            'listDisciplines' => $listDisciplines,
-            'allCities' => $allCities,
-            'structuresCount' => $structuresCount,
-            'produitsCount' => $produitsCount,
+            'cities' => fn () => $cities,
+            'familles' => fn () => $familles,
+            'listDisciplines' => fn () => $listDisciplines,
+            'allCities' => fn () => $allCities,
+            'structuresCount' => fn () => $structuresCount,
+            'produitsCount' => fn () => $produitsCount,
             'filters' => request()->all(['search']),
         ]);
     }
@@ -127,15 +127,15 @@ class CityController extends Controller
         $city->increment('view_count');
 
         return Inertia::render('Villes/Show', [
-            'familles' => $familles,
-            'listDisciplines' => $listDisciplines,
-            'allCities' => $allCities,
-            'city' => $city,
-            'citiesAround' => $citiesAround,
-            'produits' => $produits,
-            'flattenedDisciplines' => $flattenedDisciplines,
-            'structures' => $structures,
-            'posts' => $posts,
+            'familles' => fn () => $familles,
+            'listDisciplines' => fn () => $listDisciplines,
+            'allCities' => fn () => $allCities,
+            'city' => fn () => $city,
+            'citiesAround' => fn () => $citiesAround,
+            'produits' => fn () => $produits,
+            'flattenedDisciplines' => fn () => $flattenedDisciplines,
+            'structures' => fn () => $structures,
+            'posts' => fn () => $posts,
             'filters' => request()->all(['discipline']),
         ]);
     }

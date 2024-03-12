@@ -24,7 +24,7 @@ class UserController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'users' => $users,
+            'users' => fn () => $users,
         ]);
     }
 

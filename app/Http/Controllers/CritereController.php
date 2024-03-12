@@ -26,7 +26,7 @@ class CritereController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'criteres' => $criteres,
+            'criteres' => fn () => $criteres,
         ]);
 
     }

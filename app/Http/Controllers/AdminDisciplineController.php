@@ -24,7 +24,7 @@ class AdminDisciplineController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'listDisciplines' => $listDisciplines,
+            'listDisciplines' => fn () => $listDisciplines,
         ]);
     }
 
@@ -60,13 +60,11 @@ class AdminDisciplineController extends Controller
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 
-        $discipline = ListDiscipline::findOrFail($discipline->id);
-
         return Inertia::render('Admin/Disciplines/Edit', [
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'discipline' => $discipline,
+            'discipline' => fn () => $discipline,
         ]);
 
     }

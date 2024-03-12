@@ -110,14 +110,14 @@ class DepartementController extends Controller
         $departement->increment('view_count');
 
         return Inertia::render('Departements/Show', [
-            'familles' => $familles,
-            'listDisciplines' => $listDisciplines,
-            'flattenedDisciplines' => $flattenedDisciplines,
-            'allCities' => $allCities,
-            'departement' => $departement,
-            'produits' => $produits,
-            'structures' => $structures,
-            'posts' => $posts,
+            'familles' => fn () => $familles,
+            'listDisciplines' => fn () => $listDisciplines,
+            'flattenedDisciplines' => fn () => $flattenedDisciplines,
+            'allCities' => fn () => $allCities,
+            'departement' => fn () => $departement,
+            'produits' => fn () => $produits,
+            'structures' => fn () => $structures,
+            'posts' => fn () => $posts,
         ]);
     }
 

@@ -25,9 +25,9 @@ class FaqController extends Controller
         });
 
         return Inertia::render('Faq/Index', [
-            'familles' => $familles,
-            'listDisciplines' => $listDisciplines,
-            'allCities' => $allCities,
+            'familles' => fn () => $familles,
+            'listDisciplines' => fn () => $listDisciplines,
+            'allCities' => fn () => $allCities,
         ]);
     }
 }

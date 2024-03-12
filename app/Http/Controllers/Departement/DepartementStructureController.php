@@ -50,16 +50,16 @@ class DepartementStructureController extends Controller
         $structure->increment('view_count');
 
         return Inertia::render('Structures/Show', [
-            'structure' => $structure,
-            'familles' => $familles,
-            'allCities' => $allCities,
-            'listDisciplines' => $listDisciplines,
-            'criteres' => $criteres,
+            'structure' => fn () => $structure,
+            'familles' => fn () => $familles,
+            'allCities' => fn () => $allCities,
+            'listDisciplines' => fn () => $listDisciplines,
+            'criteres' => fn () => $criteres,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),
             ],
-            'departement' => $departement,
+            'departement' => fn () => $departement,
         ]);
     }
 

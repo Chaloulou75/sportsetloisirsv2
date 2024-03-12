@@ -76,23 +76,23 @@ class DepartementDisciplineStructuretypeStructureController extends Controller
         $structure->increment('view_count');
 
         return Inertia::render('Structures/Show', [
-            'structure' => $structure,
-            'familles' => $familles,
-            'allCities' => $allCities,
-            'listDisciplines' => $listDisciplines,
-            'criteres' => $criteres,
+            'structure' => fn () => $structure,
+            'familles' => fn () => $familles,
+            'allCities' => fn () => $allCities,
+            'listDisciplines' => fn () => $listDisciplines,
+            'criteres' => fn () => $criteres,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),
             ],
 
-            'categories' => $categories,
-            'firstCategories' => $firstCategories,
-            'categoriesNotInFirst' => $categoriesNotInFirst,
-            'allStructureTypes' => $allStructureTypes,
-            'structuretypeElected' => $structuretypeElected,
-            'departement' => $departement,
-            'requestDiscipline' => $requestDiscipline,
+            'categories' => fn () => $categories,
+            'firstCategories' => fn () => $firstCategories,
+            'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
+            'allStructureTypes' => fn () => $allStructureTypes,
+            'structuretypeElected' => fn () => $structuretypeElected,
+            'departement' => fn () => $departement,
+            'requestDiscipline' => fn () => $requestDiscipline,
         ]);
     }
 }

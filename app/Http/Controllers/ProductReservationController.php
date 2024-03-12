@@ -26,7 +26,6 @@ class ProductReservationController extends Controller
 {
     public function index(Structure $structure): Response
     {
-
         $allReservations = ProductReservation::withRelations()->get();
 
         $allReservationsCount = $allReservations->count();
@@ -76,19 +75,19 @@ class ProductReservationController extends Controller
                     ->firstOrFail();
 
         return Inertia::render('Structures/Gestion/Reservations/Index', [
-            'structure' => $structure,
-            'allReservations' => $allReservations,
-            'allReservationsCount' => $allReservationsCount,
-            'confirmedReservations' => $confirmedReservations,
-            'confirmedReservationsCount' => $confirmedReservationsCount,
-            'finishedReservations' => $finishedReservations,
-            'finishedReservationsCount' => $finishedReservationsCount,
-            'cancelledReservations' => $cancelledReservations,
-            'cancelledReservationsCount' => $cancelledReservationsCount,
-            'pendingReservations' => $pendingReservations,
-            'pendingReservationsCount' => $pendingReservationsCount,
-            'totalAmountPending' => $totalAmountPending,
-            'totalAmountConfirmed' => $totalAmountConfirmed,
+            'structure' => fn () => $structure,
+            'allReservations' => fn () => $allReservations,
+            'allReservationsCount' => fn () => $allReservationsCount,
+            'confirmedReservations' => fn () => $confirmedReservations,
+            'confirmedReservationsCount' => fn () => $confirmedReservationsCount,
+            'finishedReservations' => fn () => $finishedReservations,
+            'finishedReservationsCount' => fn () => $finishedReservationsCount,
+            'cancelledReservations' => fn () => $cancelledReservations,
+            'cancelledReservationsCount' => fn () => $cancelledReservationsCount,
+            'pendingReservations' => fn () => $pendingReservations,
+            'pendingReservationsCount' => fn () => $pendingReservationsCount,
+            'totalAmountPending' => fn () => $totalAmountPending,
+            'totalAmountConfirmed' => fn () => $totalAmountConfirmed,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),
@@ -98,73 +97,80 @@ class ProductReservationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         request()->validate([
-            'produitId' => ['required', Rule::exists(StructureProduit::class, 'id')],
-            'catTarifId' => ['nullable', Rule::exists(StructureCatTarif::class, 'id')],
-            'attributs' => ['nullable', 'array'],
-            'sousattributs' => ['nullable', 'array'],
-            'plannings' => ['nullable', 'array'],
+            'reservations' => ['required'],
+            'quantity' => ['nullable'],
+            'codePromo' => ['nullable'],
         ]);
-        dd($request->all(), "à la confirmation du panier!");
-        $produit = StructureProduit::find($request->produitId);
+        $reservations = $request->reservations;
+
+        foreach($reservations as $reservation) {
+            $resa = ProductReservation::withRelations()->find($reservation['id']);
+            $resa->update([
+                'pending' => true
+            ]);
+        }
+        dd($request->quantity);
+
+
         $tarif = StructureCatTarif::find($request->formule);
         $planning = StructurePlanning::find($request->planning);
 
-        $structure = $produit->structure;
-        $email = $produit->structure->email;
+        // $structure = $produit->structure;
+        // $email = $produit->structure->email;
 
-        $activiteId = $produit->activite->id;
-        $activite = StructureActivite::find($activiteId);
-
-
-        $sessionId = session()->getId();
+        // $activiteId = $produit->activite->id;
+        // $activite = StructureActivite::find($activiteId);
 
 
-        if(!auth()->user()) {
+        // $sessionId = session()->getId();
 
-            $sessionPanierProducts = session()->get('panierProducts', []);
-            $sessionPanierProducts[] = [
-                'id' => $sessionId,
-                'ip_address' => $request->ip(),
-                'produit_id' => $produit->id,
-                'tarif_id' => $tarif->id ?? null
-            ];
-            session()->put('panierProducts', $sessionPanierProducts);
 
-            return to_route('structures.activites.show', ['activite' => $activite])->with('success', 'Produit ajouté à votre panier');
-        }
+        // if(!auth()->user()) {
 
-        $user = auth()->user();
+        //     $sessionPanierProducts = session()->get('panierProducts', []);
+        //     $sessionPanierProducts[] = [
+        //         'id' => $sessionId,
+        //         'ip_address' => $request->ip(),
+        //         'produit_id' => $produit->id,
+        //         'tarif_id' => $tarif->id ?? null
+        //     ];
+        //     session()->put('panierProducts', $sessionPanierProducts);
 
-        if($user) {
-            $sessionPanierProducts = session()->get('panierProducts', []);
-            $sessionPanierProducts[] = [
-                'id' => $sessionId,
-                'user_id' => $user->id,
-                'ip_address' => $request->ip(),
-                'produit_id' => $produit->id,
-                'tarif_id' => $tarif->id ?? null
-            ];
-            session()->put('panierProducts', $sessionPanierProducts);
+        //     return to_route('structures.activites.show', ['activite' => $activite])->with('success', 'Produit ajouté à votre panier');
+        // }
 
-            $newReservation = ProductReservation::create([
-                'session_id' => $sessionId,
-                'user_id' => $user->id,
-                'produit_id' => $produit->id,
-                'tarif_id' => $tarif->id,
-                'pending' => true,
-                'confirmed' => false,
-                'finished' => false,
-                'cancelled' => false,
-            ]);
+        // $user = auth()->user();
 
-            // Mail::to($email)->send(new ReservationAsked($structure, $activite, $produit, $planning, $tarif, $user));
+        // if($user) {
+        //     $sessionPanierProducts = session()->get('panierProducts', []);
+        //     $sessionPanierProducts[] = [
+        //         'id' => $sessionId,
+        //         'user_id' => $user->id,
+        //         'ip_address' => $request->ip(),
+        //         'produit_id' => $produit->id,
+        //         'tarif_id' => $tarif->id ?? null
+        //     ];
+        //     session()->put('panierProducts', $sessionPanierProducts);
 
-        }
+        //     $newReservation = ProductReservation::create([
+        //         'session_id' => $sessionId,
+        //         'user_id' => $user->id,
+        //         'produit_id' => $produit->id,
+        //         'tarif_id' => $tarif->id,
+        //         'pending' => true,
+        //         'confirmed' => false,
+        //         'finished' => false,
+        //         'cancelled' => false,
+        //     ]);
 
-        return to_route('structures.activites.show', ['activite' => $activite])->with('success', "Produit ajouté à votre panier");
+        //     // Mail::to($email)->send(new ReservationAsked($structure, $activite, $produit, $planning, $tarif, $user));
+
+        // }
+
+        // return to_route('structures.activites.show', ['activite' => $activite])->with('success', "Produit ajouté à votre panier");
     }
 
     /**

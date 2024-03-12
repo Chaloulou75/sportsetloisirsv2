@@ -65,17 +65,17 @@ class CityActiviteController extends Controller
             ->get();
 
         return Inertia::render('Structures/Activites/Show', [
-            'produits' => $produits,
-            'familles' => $familles,
-            'listDisciplines' => $listDisciplines,
-            'allCities' => $allCities,
-            'activite' => $activite,
-            'criteres' => $criteres,
-            'city' => $city,
-            'citiesAround' => $citiesAround,
-            'activiteSimilaires' => $activiteSimilaires,
-            'selectedProduit' => $selectedProduit,
-            'produits' => $produits,
+            'produits' => fn () => $produits,
+            'familles' => fn () => $familles,
+            'listDisciplines' => fn () => $listDisciplines,
+            'allCities' => fn () => $allCities,
+            'activite' => fn () => $activite,
+            'criteres' => fn () => $criteres,
+            'city' => fn () => $city,
+            'citiesAround' => fn () => $citiesAround,
+            'activiteSimilaires' => fn () => $activiteSimilaires,
+            'selectedProduit' => fn () => $selectedProduit,
+            'produits' => fn () => $produits,
         ]);
     }
 }

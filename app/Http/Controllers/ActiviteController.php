@@ -155,14 +155,14 @@ class ActiviteController extends Controller
             ->get();
 
         return Inertia::render('Structures/Activites/Show', [
-            'familles' => $familles,
-            'listDisciplines' => $listDisciplines,
-            'allCities' => $allCities,
-            'activite' => $activite,
-            'produits' => $produits,
-            'criteres' => $criteres,
-            'selectedProduit' => $selectedProduit,
-            'activiteSimilaires' => $activiteSimilaires
+            'familles' => fn () => $familles,
+            'listDisciplines' => fn () => $listDisciplines,
+            'allCities' => fn () => $allCities,
+            'activite' => fn () => $activite,
+            'produits' => fn () => $produits,
+            'criteres' => fn () => $criteres,
+            'selectedProduit' => fn () => $selectedProduit,
+            'activiteSimilaires' => fn () => $activiteSimilaires
         ]);
     }
 

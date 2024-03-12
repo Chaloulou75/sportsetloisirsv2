@@ -47,15 +47,15 @@ class StructureStatistiqueController extends Controller
                     ->firstOrFail();
 
         return Inertia::render('Structures/Gestion/Statistiques/Index', [
-            'structure' => $structure,
-            'allReservations' => $allReservations,
-            'allReservationsCount' => $allReservationsCount,
-            'confirmedReservations' => $confirmedReservations,
-            'confirmedReservationsCount' => $confirmedReservationsCount,
-            'pendingReservations' => $pendingReservations,
-            'pendingReservationsCount' => $pendingReservationsCount,
-            'totalAmountPending' => $totalAmountPending,
-            'totalAmountConfirmed' => $totalAmountConfirmed,
+            'structure' => fn () => $structure,
+            'allReservations' => fn () => $allReservations,
+            'allReservationsCount' => fn () => $allReservationsCount,
+            'confirmedReservations' => fn () => $confirmedReservations,
+            'confirmedReservationsCount' => fn () => $confirmedReservationsCount,
+            'pendingReservations' => fn () => $pendingReservations,
+            'pendingReservationsCount' => fn () => $pendingReservationsCount,
+            'totalAmountPending' => fn () => $totalAmountPending,
+            'totalAmountConfirmed' => fn () => $totalAmountConfirmed,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),

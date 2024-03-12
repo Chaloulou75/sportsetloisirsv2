@@ -54,12 +54,12 @@ class FavoritesController extends Controller
         }
 
         return Inertia::render('Favorites/Index', [
-                    'familles' => $familles,
-                    'structures' => $structures ?? [],
-                    'activites' => $activites ?? [],
-                    'produits' => $produits ?? [],
-                    'allCities' => $allCities,
-                    'listDisciplines' => $listDisciplines,
+                    'familles' => fn () => $familles,
+                    'structures' => fn () => $structures ?? [],
+                    'activites' => fn () => $activites ?? [],
+                    'produits' => fn () => $produits ?? [],
+                    'allCities' => fn () => $allCities,
+                    'listDisciplines' => fn () => $listDisciplines,
         ]);
 
     }

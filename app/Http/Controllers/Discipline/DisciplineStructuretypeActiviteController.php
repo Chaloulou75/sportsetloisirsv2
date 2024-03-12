@@ -80,20 +80,20 @@ class DisciplineStructuretypeActiviteController extends Controller
             ->get();
 
         return Inertia::render('Structures/Activites/Show', [
-            'discipline' => $requestDiscipline,
-            'produits' => $produits,
-            'familles' => $familles,
-            'listDisciplines' => $listDisciplines,
-            'allCities' => $allCities,
-            'activite' => $activite,
-            'criteres' => $criteres,
-            'activiteSimilaires' => $activiteSimilaires,
-            'selectedProduit' => $selectedProduit,
-            'categories' => $categories,
-            'firstCategories' => $firstCategories,
-            'categoriesNotInFirst' => $categoriesNotInFirst,
-            'allStructureTypes' => $allStructureTypes,
-            'structuretypeElected' => $structuretypeElected,
+            'discipline' => fn () => $requestDiscipline,
+            'produits' => fn () => $produits,
+            'familles' => fn () => $familles,
+            'listDisciplines' => fn () => $listDisciplines,
+            'allCities' => fn () => $allCities,
+            'activite' => fn () => $activite,
+            'criteres' => fn () => $criteres,
+            'activiteSimilaires' => fn () => $activiteSimilaires,
+            'selectedProduit' => fn () => $selectedProduit,
+            'categories' => fn () => $categories,
+            'firstCategories' => fn () => $firstCategories,
+            'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
+            'allStructureTypes' => fn () => $allStructureTypes,
+            'structuretypeElected' => fn () => $structuretypeElected,
         ]);
     }
 }

@@ -44,8 +44,8 @@ class FamilleDisciplineController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'discipline' => $discipline,
-            'familles' => $familles,
+            'discipline' => fn () => $discipline,
+            'familles' => fn () => $familles,
         ]);
     }
 

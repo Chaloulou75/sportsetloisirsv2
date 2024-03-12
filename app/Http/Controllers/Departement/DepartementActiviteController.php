@@ -60,15 +60,15 @@ class DepartementActiviteController extends Controller
             ->get();
 
         return Inertia::render('Structures/Activites/Show', [
-                    'departement' => $departement,
-                    'produits' => $produits,
-                    'familles' => $familles,
-                    'listDisciplines' => $listDisciplines,
-                    'allCities' => $allCities,
-                    'activite' => $activite,
-                    'criteres' => $criteres,
-                    'activiteSimilaires' => $activiteSimilaires,
-                    'selectedProduit' => $selectedProduit,
+                    'departement' => fn () => $departement,
+                    'produits' => fn () => $produits,
+                    'familles' => fn () => $familles,
+                    'listDisciplines' => fn () => $listDisciplines,
+                    'allCities' => fn () => $allCities,
+                    'activite' => fn () => $activite,
+                    'criteres' => fn () => $criteres,
+                    'activiteSimilaires' => fn () => $activiteSimilaires,
+                    'selectedProduit' => fn () => $selectedProduit,
         ]);
     }
 }

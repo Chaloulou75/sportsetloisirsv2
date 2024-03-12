@@ -25,7 +25,7 @@ class AdminStructureController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'structures' => $structures,
+            'structures' => fn () => $structures,
         ]);
 
     }

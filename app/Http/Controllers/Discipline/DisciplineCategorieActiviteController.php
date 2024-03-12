@@ -82,20 +82,20 @@ class DisciplineCategorieActiviteController extends Controller
             ->get();
 
         return Inertia::render('Structures/Activites/Show', [
-            'discipline' => $requestDiscipline,
-            'familles' => $familles,
-            'listDisciplines' => $listDisciplines,
-            'allCities' => $allCities,
-            'activite' => $activite,
-            'criteres' => $criteres,
-            'activiteSimilaires' => $activiteSimilaires,
-            'selectedProduit' => $selectedProduit,
-            'categories' => $categories,
-            'firstCategories' => $firstCategories,
-            'categoriesNotInFirst' => $categoriesNotInFirst,
-            'allStructureTypes' => $allStructureTypes,
-            'requestCategory' => $requestCategory,
-            'produits' => $produits,
+            'discipline' => fn () => $requestDiscipline,
+            'familles' => fn () => $familles,
+            'listDisciplines' => fn () => $listDisciplines,
+            'allCities' => fn () => $allCities,
+            'activite' => fn () => $activite,
+            'criteres' => fn () => $criteres,
+            'activiteSimilaires' => fn () => $activiteSimilaires,
+            'selectedProduit' => fn () => $selectedProduit,
+            'categories' => fn () => $categories,
+            'firstCategories' => fn () => $firstCategories,
+            'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
+            'allStructureTypes' => fn () => $allStructureTypes,
+            'requestCategory' => fn () => $requestCategory,
+            'produits' => fn () => $produits,
         ]);
     }
 }

@@ -43,12 +43,12 @@ class FamilleController extends Controller
         });
 
         return Inertia::render('Familles/Index', [
-            'familles' => $familles,
-            'allCities' => $allCities,
-            'listDisciplines' => $listDisciplines,
-            'familleCount' => $familleCount,
-            'disciplinesCount' => $disciplinesCount,
-            'structuresCount' => $structuresCount,
+            'familles' => fn () => $familles,
+            'allCities' => fn () => $allCities,
+            'listDisciplines' => fn () => $listDisciplines,
+            'familleCount' => fn () => $familleCount,
+            'disciplinesCount' => fn () => $disciplinesCount,
+            'structuresCount' => fn () => $structuresCount,
         ]);
     }
 
@@ -87,10 +87,10 @@ class FamilleController extends Controller
         $famille->increment('view_count');
 
         return Inertia::render('Familles/Show', [
-            'familles' => $familles,
-            'allCities' => $allCities,
-            'listDisciplines' => $listDisciplines,
-            'famille' => $famille,
+            'familles' => fn () => $familles,
+            'allCities' => fn () => $allCities,
+            'listDisciplines' => fn () => $listDisciplines,
+            'famille' => fn () => $famille,
         ]);
     }
 

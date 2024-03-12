@@ -51,10 +51,10 @@ class LienDisCatTariftypeController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'categorie' => $categorie,
-            'categories' => $categories,
-            'discipline' => $discipline,
-            'listeTarifsTypes' => $listeTarifsTypes,
+            'categorie' => fn () => $categorie,
+            'categories' => fn () => $categories,
+            'discipline' => fn () => $discipline,
+            'listeTarifsTypes' => fn () => $listeTarifsTypes,
         ]);
 
     }
@@ -117,10 +117,10 @@ class LienDisCatTariftypeController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'categorie' => $categorie,
-            'categories' => $categories,
-            'discipline' => $discipline,
-            'tarifType' => $tarifType,
+            'categorie' => fn () => $categorie,
+            'categories' => fn () => $categories,
+            'discipline' => fn () => $discipline,
+            'tarifType' => fn () => $tarifType,
         ]);
     }
 

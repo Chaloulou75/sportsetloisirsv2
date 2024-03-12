@@ -91,19 +91,19 @@ class CategoryDisciplineController extends Controller
         $discipline->increment('view_count');
 
         return Inertia::render('Disciplines/Categories/Show', [
-            'familles' => $familles,
-            'category' => $category,
-            'categories' => $categories,
-            'firstCategories' => $firstCategories,
-            'categoriesNotInFirst' => $categoriesNotInFirst,
-            'allStructureTypes' => $allStructureTypes,
-            'discipline' => $discipline,
-            'criteres' => $criteres,
-            'listDisciplines' => $listDisciplines,
-            'allCities' => $allCities,
-            'produits' => $produits,
-            'structures' => $structures,
-            'posts' => $posts,
+            'familles' => fn () => $familles,
+            'category' => fn () => $category,
+            'categories' => fn () => $categories,
+            'firstCategories' => fn () => $firstCategories,
+            'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
+            'allStructureTypes' => fn () => $allStructureTypes,
+            'discipline' => fn () => $discipline,
+            'criteres' => fn () => $criteres,
+            'listDisciplines' => fn () => $listDisciplines,
+            'allCities' => fn () => $allCities,
+            'produits' => fn () => $produits,
+            'structures' => fn () => $structures,
+            'posts' => fn () => $posts,
         ]);
 
     }

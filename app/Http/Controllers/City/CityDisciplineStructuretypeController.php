@@ -130,20 +130,20 @@ class CityDisciplineStructuretypeController extends Controller
         $city->increment('view_count');
 
         return Inertia::render('Villes/Disciplines/Structuretypes/Show', [
-            'familles' => $familles,
-            'structuretypeElected' => $structuretypeElected,
-            'allStructureTypes' => $allStructureTypes,
-            'categories' => $categories,
-            'firstCategories' => $firstCategories,
-            'categoriesNotInFirst' => $categoriesNotInFirst,
-            'city' => $city,
-            'citiesAround' => $citiesAround,
-            'produits' => $produits,
-            'structures' => $structures,
-            'discipline' => $discipline,
-            'listDisciplines' => $listDisciplines,
-            'allCities' => $allCities,
-            'posts' => $posts,
+            'familles' => fn () => $familles,
+            'structuretypeElected' => fn () => $structuretypeElected,
+            'allStructureTypes' => fn () => $allStructureTypes,
+            'categories' => fn () => $categories,
+            'firstCategories' => fn () => $firstCategories,
+            'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
+            'city' => fn () => $city,
+            'citiesAround' => fn () => $citiesAround,
+            'produits' => fn () => $produits,
+            'structures' => fn () => $structures,
+            'discipline' => fn () => $discipline,
+            'listDisciplines' => fn () => $listDisciplines,
+            'allCities' => fn () => $allCities,
+            'posts' => fn () => $posts,
         ]);
 
     }

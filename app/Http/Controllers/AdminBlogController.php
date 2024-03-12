@@ -33,8 +33,8 @@ class AdminBlogController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'posts' => $posts,
-            'tags' => $tags,
+            'posts' => fn () => $posts,
+            'tags' => fn () => $tags,
             'filters' => request()->all(['search', 'author']),
         ]);
 

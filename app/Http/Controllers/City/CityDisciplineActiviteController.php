@@ -92,21 +92,21 @@ class CityDisciplineActiviteController extends Controller
             ->get();
 
         return Inertia::render('Structures/Activites/Show', [
-            'produits' => $produits,
-            'familles' => $familles,
-            'listDisciplines' => $listDisciplines,
-            'allCities' => $allCities,
-            'activite' => $activite,
-            'criteres' => $criteres,
-            'city' => $city,
-            'citiesAround' => $citiesAround,
-            'discipline' => $requestDiscipline,
-            'activiteSimilaires' => $activiteSimilaires,
-            'selectedProduit' => $selectedProduit,
-            'categories' => $categories,
-            'firstCategories' => $firstCategories,
-            'categoriesNotInFirst' => $categoriesNotInFirst,
-            'allStructureTypes' => $allStructureTypes,
+            'produits' => fn () => $produits,
+            'familles' => fn () => $familles,
+            'listDisciplines' => fn () => $listDisciplines,
+            'allCities' => fn () => $allCities,
+            'activite' => fn () => $activite,
+            'criteres' => fn () => $criteres,
+            'city' => fn () => $city,
+            'citiesAround' => fn () => $citiesAround,
+            'discipline' => fn () => $requestDiscipline,
+            'activiteSimilaires' => fn () => $activiteSimilaires,
+            'selectedProduit' => fn () => $selectedProduit,
+            'categories' => fn () => $categories,
+            'firstCategories' => fn () => $firstCategories,
+            'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
+            'allStructureTypes' => fn () => $allStructureTypes,
         ]);
     }
 }

@@ -52,11 +52,11 @@ class DisciplineController extends Controller
                         ->withQueryString();
 
         return Inertia::render('Disciplines/Index', [
-            'disciplines' => $disciplines,
-            'familles' => $familles,
-            'listDisciplines' => $listDisciplines,
-            'allCities' => $allCities,
-            'structuresCount' => $structuresCount,
+            'disciplines' => fn () => $disciplines,
+            'familles' => fn () => $familles,
+            'listDisciplines' => fn () => $listDisciplines,
+            'allCities' => fn () => $allCities,
+            'structuresCount' => fn () => $structuresCount,
             'filters' => request()->all(['search']),
         ]);
     }
@@ -112,17 +112,17 @@ class DisciplineController extends Controller
         $discipline->increment('view_count');
 
         return Inertia::render('Disciplines/Show', [
-            'familles' => $familles,
-            'discipline' => $discipline,
-            'categories' => $categories,
-            'firstCategories' => $firstCategories,
-            'categoriesNotInFirst' => $categoriesNotInFirst,
-            'allStructureTypes' => $allStructureTypes,
-            'listDisciplines' => $listDisciplines,
-            'allCities' => $allCities,
-            'produits' => $produits,
-            'structures' => $structures,
-            'posts' => $posts,
+            'familles' => fn () => $familles,
+            'discipline' => fn () => $discipline,
+            'categories' => fn () => $categories,
+            'firstCategories' => fn () => $firstCategories,
+            'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
+            'allStructureTypes' => fn () => $allStructureTypes,
+            'listDisciplines' => fn () => $listDisciplines,
+            'allCities' => fn () => $allCities,
+            'produits' => fn () => $produits,
+            'structures' => fn () => $structures,
+            'posts' => fn () => $posts,
         ]);
     }
     /**
@@ -164,7 +164,7 @@ class DisciplineController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'discipline' => $discipline,
+            'discipline' => fn () => $discipline,
         ]);
     }
     /**

@@ -93,10 +93,10 @@ class CategoryDisciplineCritereController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'categorie' => $categorie,
-            'categories' => $categories,
-            'discipline' => $discipline,
-            'listeCriteres' => $listeCriteres,
+            'categorie' => fn () => $categorie,
+            'categories' => fn () => $categories,
+            'discipline' => fn () => $discipline,
+            'listeCriteres' => fn () => $listeCriteres,
         ]);
 
     }

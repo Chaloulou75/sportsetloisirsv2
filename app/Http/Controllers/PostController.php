@@ -48,11 +48,11 @@ class PostController extends Controller
         $posts = $postsQuery->paginate(18)->withQueryString();
 
         return Inertia::render('Posts/Index', [
-            'familles' => $familles,
-            'listDisciplines' => $listDisciplines,
-            'allCities' => $allCities,
-            'posts' => $posts,
-            'discipline' => $discipline ?? null,
+            'familles' => fn () => $familles,
+            'listDisciplines' => fn () => $listDisciplines,
+            'allCities' => fn () => $allCities,
+            'posts' => fn () => $posts,
+            'discipline' => fn () => $discipline ?? null,
             'filters' => request()->all(['search', 'author']),
         ]);
 
@@ -77,11 +77,11 @@ class PostController extends Controller
         $disciplines = ListDiscipline::select('id', 'name')->get();
 
         return Inertia::render('Posts/Create', [
-            'familles' => $familles,
-            'listDisciplines' => $listDisciplines,
-            'allCities' => $allCities,
-            'disciplines' => $disciplines,
-            'tags' => $tags,
+            'familles' => fn () => $familles,
+            'listDisciplines' => fn () => $listDisciplines,
+            'allCities' => fn () => $allCities,
+            'disciplines' => fn () => $disciplines,
+            'tags' => fn () => $tags,
         ]);
     }
 
@@ -155,10 +155,10 @@ class PostController extends Controller
         $post->increment('views_count');
 
         return Inertia::render('Posts/Show', [
-            'familles' => $familles,
-            'listDisciplines' => $listDisciplines,
-            'allCities' => $allCities,
-            'post' => $post,
+            'familles' => fn () => $familles,
+            'listDisciplines' => fn () => $listDisciplines,
+            'allCities' => fn () => $allCities,
+            'post' => fn () => $post,
         ]);
     }
 
