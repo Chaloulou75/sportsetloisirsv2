@@ -149,10 +149,10 @@ const formatCityName = (ville) => {
             :data="data"
             @mouseover="emit('card-hover', produit)"
             @mouseout="emit('card-out')"
-            class="flex flex-col h-full transition duration-300 ease-in-out rounded-lg shadow-sm shadow-indigo-200 hover:shadow-2xl md:px-0 md:hover:scale-105"
+            class="flex h-full flex-col rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:shadow-2xl md:px-0 md:hover:scale-105"
         >
             <div
-                class="relative w-full h-56 bg-center bg-no-repeat bg-cover rounded-md bg-slate-100/20 bg-blend-soft-light"
+                class="relative h-56 w-full rounded-md bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-soft-light"
                 :class="headerClass"
             >
                 <button
@@ -161,7 +161,7 @@ const formatCityName = (ville) => {
                     @click.prevent="() => toggleFavorite(produit.id)"
                 >
                     <HeartIcon
-                        class="w-6 h-6"
+                        class="h-6 w-6"
                         :class="
                             isFavorite
                                 ? 'text-red-500'
@@ -171,7 +171,7 @@ const formatCityName = (ville) => {
                 </button>
             </div>
 
-            <div class="flex flex-col flex-1 mt-2">
+            <div class="mt-2 flex flex-1 flex-col">
                 <div
                     v-if="produit.activite"
                     class="inline-flex flex-col items-center justify-center px-2 py-1.5 text-center text-lg font-semibold tracking-wide text-gray-600"
@@ -183,14 +183,14 @@ const formatCityName = (ville) => {
                 </div>
 
                 <div
-                    class="flex flex-col justify-between flex-1 justify-items-end text-slate-700"
+                    class="flex flex-1 flex-col justify-between justify-items-end text-slate-700"
                 >
                     <div
                         v-if="produit.adresse"
                         class="flex items-center px-4 py-2 text-base"
                     >
                         <dt class="sr-only">Ville</dt>
-                        <MapPinIcon class="w-4 h-4 mr-1 text-indigo-700" />
+                        <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
                         <p class="font-semibold">
                             {{ produit.adresse.city }} ({{
                                 produit.adresse.zip_code
@@ -199,12 +199,12 @@ const formatCityName = (ville) => {
                     </div>
 
                     <div
-                        class="px-4 my-4"
+                        class="my-4 px-4"
                         v-if="
                             produit.cat_tarifs && produit.cat_tarifs.length > 0
                         "
                     >
-                        <p class="text-lg font-bold text-right text-green-700">
+                        <p class="text-right text-lg font-bold text-green-700">
                             <span class="text-sm font-medium text-gray-600"
                                 >à partir de</span
                             >
@@ -219,7 +219,7 @@ const formatCityName = (ville) => {
                         "
                     >
                         <div
-                            class="grid w-full grid-cols-3 gap-1 mt-auto text-xs text-gray-900 justify-items-center"
+                            class="mt-auto grid w-full grid-cols-3 justify-items-center gap-1 text-xs text-gray-900"
                         >
                             <template
                                 v-for="critere in produit.criteres"
@@ -230,7 +230,7 @@ const formatCityName = (ville) => {
                                         critere.valeur &&
                                         !!critere.critere.visible_block === true
                                     "
-                                    class="flex flex-col items-center justify-center w-full px-1 py-3 font-medium"
+                                    class="flex w-full flex-col items-center justify-center px-1 py-3 font-medium"
                                     :class="
                                         [
                                             'date',
@@ -246,13 +246,13 @@ const formatCityName = (ville) => {
                                     "
                                 >
                                     <div
-                                        class="text-xs text-center uppercase text-slate-500"
+                                        class="text-center text-xs uppercase text-slate-500"
                                     >
                                         {{ critere.critere.nom }}
                                     </div>
                                     <div
                                         v-if="critere.valeur"
-                                        class="text-sm text-center"
+                                        class="text-center text-xs"
                                     >
                                         {{ critere.valeur }}
                                         <span
@@ -260,12 +260,10 @@ const formatCityName = (ville) => {
                                                 critere.sous_criteres &&
                                                 critere.sous_criteres.length > 0
                                             "
-                                            class="text-xs"
                                         >
                                             <span
                                                 v-for="sousCriteres in critere.sous_criteres"
                                                 :key="sousCriteres.id"
-                                                class="text-sm"
                                             >
                                                 ({{ sousCriteres.valeur }})
                                             </span>

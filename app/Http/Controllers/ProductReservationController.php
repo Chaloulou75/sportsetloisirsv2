@@ -112,65 +112,21 @@ class ProductReservationController extends Controller
                 'pending' => true
             ]);
         }
-        dd($request->quantity);
+        if($request->quantity) {
+            foreach($request->quantity as $prod => $quantite) {
+                $resa = ProductReservation::withRelations()->find($prod);
+                if(is_array($quantite)) {
+                    foreach($quantite as $creneau => $quantDeCreneau) {
 
-
-        $tarif = StructureCatTarif::find($request->formule);
-        $planning = StructurePlanning::find($request->planning);
-
-        // $structure = $produit->structure;
-        // $email = $produit->structure->email;
-
-        // $activiteId = $produit->activite->id;
-        // $activite = StructureActivite::find($activiteId);
-
-
-        // $sessionId = session()->getId();
-
-
-        // if(!auth()->user()) {
-
-        //     $sessionPanierProducts = session()->get('panierProducts', []);
-        //     $sessionPanierProducts[] = [
-        //         'id' => $sessionId,
-        //         'ip_address' => $request->ip(),
-        //         'produit_id' => $produit->id,
-        //         'tarif_id' => $tarif->id ?? null
-        //     ];
-        //     session()->put('panierProducts', $sessionPanierProducts);
-
-        //     return to_route('structures.activites.show', ['activite' => $activite])->with('success', 'Produit ajouté à votre panier');
-        // }
-
-        // $user = auth()->user();
-
-        // if($user) {
-        //     $sessionPanierProducts = session()->get('panierProducts', []);
-        //     $sessionPanierProducts[] = [
-        //         'id' => $sessionId,
-        //         'user_id' => $user->id,
-        //         'ip_address' => $request->ip(),
-        //         'produit_id' => $produit->id,
-        //         'tarif_id' => $tarif->id ?? null
-        //     ];
-        //     session()->put('panierProducts', $sessionPanierProducts);
-
-        //     $newReservation = ProductReservation::create([
-        //         'session_id' => $sessionId,
-        //         'user_id' => $user->id,
-        //         'produit_id' => $produit->id,
-        //         'tarif_id' => $tarif->id,
-        //         'pending' => true,
-        //         'confirmed' => false,
-        //         'finished' => false,
-        //         'cancelled' => false,
-        //     ]);
-
-        //     // Mail::to($email)->send(new ReservationAsked($structure, $activite, $produit, $planning, $tarif, $user));
-
-        // }
-
-        // return to_route('structures.activites.show', ['activite' => $activite])->with('success', "Produit ajouté à votre panier");
+                        $resa->plannings()->updateExistingPivot($creneau, ['quantity' => $quantDeCreneau]);
+                    }
+                } else {
+                    $resa->update(['quantity' => $quantite]);
+                }
+            }
+        }
+        // changer pour la vue coordonées.
+        return to_route('panier.index')->with('success', "Quantité et produits mis de votre panier mis à jour");
     }
 
     /**
