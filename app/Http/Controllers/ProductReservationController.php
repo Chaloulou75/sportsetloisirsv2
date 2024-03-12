@@ -60,11 +60,11 @@ class ProductReservationController extends Controller
 
 
         $totalAmountConfirmed = $confirmedReservations->sum(function ($reservation) {
-            return $reservation->tarif->amount;
+            return $reservation->tarif_amount * $reservation->quantity;
         });
 
         $totalAmountPending = $pendingReservations->sum(function ($reservation) {
-            return $reservation->tarif->amount;
+            return $reservation->tarif_amount * $reservation->quantity;
         });
 
         $structure = Structure::withRelations()
@@ -126,7 +126,7 @@ class ProductReservationController extends Controller
             }
         }
         // changer pour la vue coordonées.
-        return to_route('panier.index')->with('success', "Quantité et produits mis de votre panier mis à jour");
+        return to_route('panier.index')->with('success', "Quantités et produits de votre panier mis à jour");
     }
 
     /**

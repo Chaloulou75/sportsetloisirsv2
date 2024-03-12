@@ -37,7 +37,7 @@ class StructureGestionController extends Controller
         });
 
         $totalAmountPending = $pendingReservations->sum(function ($reservation) {
-            return $reservation->tarif->amount;
+            return $reservation->amount * $reservation->quantity;
         });
 
         $structure = Structure::withRelations()
