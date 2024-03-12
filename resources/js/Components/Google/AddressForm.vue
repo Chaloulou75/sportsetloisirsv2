@@ -36,7 +36,7 @@ onMounted(async () => {
     await useScript(
         `https://maps.googleapis.com/maps/api/js?key=${
             import.meta.env.VITE_GOOGLE_MAP_API_KEY
-        }&libraries=places`
+        }&libraries=places&callback=Function.prototype`
     );
 
     autocomplete = new google.maps.places.Autocomplete(streetRef.value, {

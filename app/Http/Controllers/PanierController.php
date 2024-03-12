@@ -90,6 +90,8 @@ class PanierController extends Controller
 
         $activiteId = $produit->activite->id;
         $activite = StructureActivite::find($activiteId);
+
+        $creneaux = null;
         if($request->plannings) {
             $creneaux = StructurePlanning::whereIn('id', $request->plannings)->get();
         }
@@ -208,7 +210,7 @@ class PanierController extends Controller
             'user_id' => $user->id ?? null,
             'produit_id' => $produit->id,
             'cat_tarif_id' => $catTarif->id ?? null,
-            'planning_ids' => $creneaux->pluck('id')->toArray() ?? null,
+            'planning_ids' => $creneaux ? $creneaux->pluck('id')->toArray() : null,
             'reservation_id' => $newReservation->id ?? null,
         ];
         session()->put('panierProducts', $sessionPanierProducts);

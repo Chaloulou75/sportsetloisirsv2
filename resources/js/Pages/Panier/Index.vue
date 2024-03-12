@@ -288,6 +288,77 @@ onBeforeMount(() => {
                                         }})
                                     </p>
                                 </div>
+                                <template
+                                    v-if="
+                                        reservation.produit.criteres.length > 0
+                                    "
+                                >
+                                    <div
+                                        class="mt-auto grid w-full grid-cols-3 justify-items-center gap-1 text-xs text-gray-900 md:grid-cols-6"
+                                    >
+                                        <template
+                                            v-for="critere in reservation
+                                                .produit.criteres"
+                                            :key="critere.id"
+                                        >
+                                            <div
+                                                v-if="
+                                                    critere.valeur &&
+                                                    !!critere.critere
+                                                        .visible_block === true
+                                                "
+                                                class="flex w-full flex-col items-center justify-center px-1 py-1 font-medium"
+                                                :class="
+                                                    [
+                                                        'date',
+                                                        'dates',
+                                                        'time',
+                                                        'mois',
+                                                        'times',
+                                                    ].includes(
+                                                        critere.critere
+                                                            .type_champ_form
+                                                    )
+                                                        ? 'bg-slate-100'
+                                                        : 'bg-slate-200'
+                                                "
+                                            >
+                                                <div
+                                                    class="text-center text-xs uppercase text-slate-500"
+                                                >
+                                                    {{ critere.critere.nom }}
+                                                </div>
+                                                <div
+                                                    v-if="critere.valeur"
+                                                    class="text-center text-xs"
+                                                >
+                                                    {{ critere.valeur }}
+                                                    <span
+                                                        v-if="
+                                                            critere.sous_criteres &&
+                                                            critere
+                                                                .sous_criteres
+                                                                .length > 0
+                                                        "
+                                                        class="text-xs"
+                                                    >
+                                                        <span
+                                                            v-for="sousCriteres in critere.sous_criteres"
+                                                            :key="
+                                                                sousCriteres.id
+                                                            "
+                                                            class="text-sm"
+                                                        >
+                                                            ({{
+                                                                sousCriteres.valeur
+                                                            }})
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
                                 <p
                                     v-if="reservation.plannings_count > 0"
                                     class="text-sm font-normal"
@@ -327,7 +398,7 @@ onBeforeMount(() => {
                             "
                         >
                             <div
-                                class="flex items-center justify-between space-x-2 px-2"
+                                class="flex items-center justify-between space-x-2 px-4"
                                 v-for="creneau in reservation.plannings"
                                 :key="creneau.id"
                             >
@@ -526,57 +597,67 @@ onBeforeMount(() => {
                                 </p>
                             </div>
                         </template>
-                        <div
-                            class="px-4 py-1.5 text-gray-700"
+                        <template
                             v-if="
                                 reservation.attributs &&
                                 reservation.attributs.length > 0
                             "
-                        >
-                            <p class="text-xs">
-                                Les attributs liés à votre réservation:
-                            </p>
-                            <ul class="list-inside list-disc text-xs">
-                                <li
+                            ><h3 class="px-4 text-sm text-gray-700">
+                                Les attributs liés à cette réservation:
+                            </h3>
+                            <div
+                                class="mt-auto grid w-full grid-cols-3 justify-items-center gap-1 px-4 text-xs text-gray-900 md:grid-cols-6"
+                            >
+                                <template
                                     v-for="attribut in reservation.attributs"
                                     :key="attribut.id"
                                 >
-                                    <span v-if="attribut.booking_field"
-                                        >{{
-                                            attribut.booking_field.nom
-                                        }}: </span
-                                    ><span class="font-semibold">
-                                        {{ attribut.valeur }}</span
+                                    <div
+                                        v-if="attribut.booking_field"
+                                        class="flex w-full flex-col items-center justify-center bg-gray-100 px-1 py-1 font-medium"
                                     >
-
-                                    <ul
-                                        v-if="
-                                            attribut.reservation_sous_attributs &&
-                                            attribut.reservation_sous_attributs
-                                                .length > 0
-                                        "
-                                        class="list-inside list-disc indent-4 text-xs"
-                                    >
-                                        <li
-                                            v-for="sousattribut in attribut.reservation_sous_attributs"
-                                            :key="sousattribut.id"
+                                        <div
+                                            class="text-center text-xs uppercase text-slate-500"
                                         >
-                                            <span
+                                            {{ attribut.booking_field.nom }}
+                                        </div>
+                                        <div
+                                            v-if="attribut.valeur"
+                                            class="text-center text-xs"
+                                        >
+                                            {{ attribut.valeur }}
+                                            <div
                                                 v-if="
-                                                    sousattribut.booking_sous_field
+                                                    attribut.reservation_sous_attributs &&
+                                                    attribut
+                                                        .reservation_sous_attributs
+                                                        .length > 0
                                                 "
-                                                >{{
-                                                    sousattribut
-                                                        .booking_sous_field.nom
-                                                }}: </span
-                                            ><span class="font-semibold">{{
-                                                sousattribut.valeur
-                                            }}</span>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
+                                                class="text-xs"
+                                            >
+                                                <span
+                                                    v-for="sousattribut in attribut.reservation_sous_attributs"
+                                                    :key="sousattribut.id"
+                                                    class="text-xs text-gray-700"
+                                                    ><span
+                                                        class="text-slate-500"
+                                                        v-if="
+                                                            sousattribut.booking_sous_field
+                                                        "
+                                                        >{{
+                                                            sousattribut
+                                                                .booking_sous_field
+                                                                .nom
+                                                        }}:
+                                                    </span>
+                                                    {{ sousattribut.valeur }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
                         <div
                             class="flex w-full justify-between border-t border-gray-200 bg-white px-4 py-2 text-lg font-bold"
                         >

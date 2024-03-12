@@ -25,7 +25,7 @@ const lng = computed(() => {
 useScriptTag(
     `https://maps.googleapis.com/maps/api/js?key=${
         import.meta.env.VITE_GOOGLE_MAP_API_KEY
-    }`,
+    }&callback=Function.prototype`,
     // on script tag loaded.
     () => {
         map.value = new google.maps.Map(mapDivRef.value, {
