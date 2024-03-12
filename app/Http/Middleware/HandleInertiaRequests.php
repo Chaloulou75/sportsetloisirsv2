@@ -6,6 +6,7 @@ use App\Models\User;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
 use Illuminate\Http\Request;
+use App\Models\ProductReservation;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -31,12 +32,35 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+
+        // Retrieve user and session information
+        $user = $request->user();
+        $sessionId = $request->session()->get('sessionId');
+
+        // Initialize reservations array
+        $reservations = [];
+
+        // If either user or session exists, fetch reservations
+        if ($user || $sessionId) {
+            $query = ProductReservation::withRelations()->withCount('plannings');
+
+            if ($user && $sessionId) {
+                $query->where('user_id', $user->id)->orWhere('session_id', $sessionId);
+            } elseif ($sessionId) {
+                $query->where('session_id', $sessionId);
+            } elseif ($user) {
+                $query->where('user_id', $user->id);
+            }
+
+            $reservations = $query->get();
+        }
+
         return array_merge(parent::share($request), [
             'auth' => [
-                'user' => fn() => $request->user() ? $request->user()->load('structures:id,name,slug')->only('id', 'name', 'email', 'structures') : null,
+                'user' => fn () => $user ? $user->load('structures:id,name,slug')->only('id', 'name', 'email', 'structures') : null,
             ],
             'user_can' => [
-                'view_admin' => fn() => $request->user() ? $request->user()->can('viewAdmin', User::class) : false,
+                'view_admin' => fn () => $user ? $user->can('viewAdmin', User::class) : false,
             ],
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy())->toArray(), [
@@ -50,7 +74,7 @@ class HandleInertiaRequests extends Middleware
                     'message' => $request->session()->get('message'),
                 ];
             },
-            'productsReservations' => fn () => $request->session()->get('panierProducts', []),
+            'productsReservations' => $reservations,
         ]);
     }
 }

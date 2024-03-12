@@ -888,7 +888,9 @@ const reservationForm = useForm({
 // };
 
 onMounted(() => {
-    autoAnimate(listToAnimate.value);
+    if (listToAnimate.value) {
+        autoAnimate(listToAnimate.value);
+    }
     selectedProduct.value = props.selectedProduit ?? null;
     filterProducts();
 });
@@ -935,53 +937,53 @@ onMounted(() => {
             </div>
 
             <section
-                class="max-w-full px-2 mx-auto my-4 sm:px-4 md:py-6 lg:px-8"
+                class="mx-auto my-4 max-w-full px-2 sm:px-4 md:py-6 lg:px-8"
             >
                 <div
                     class="flex flex-col-reverse justify-between space-y-8 rounded-lg text-slate-600 md:flex-row md:items-start md:space-x-6 md:space-y-0"
                 >
                     <!-- Structure -->
-                    <div class="space-y-6 basis-full md:basis-1/4">
+                    <div class="basis-full space-y-6 md:basis-1/4">
                         <img
                             v-if="activite.image"
                             alt="image"
                             :src="activite.image_url"
-                            class="object-cover w-full h-56 max-w-sm md:w-auto"
+                            class="h-56 w-full max-w-sm object-cover md:w-auto"
                         />
                         <img
                             v-else
                             alt="image"
                             src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                            class="object-cover w-full h-full"
+                            class="h-full w-full object-cover"
                         />
-                        <div class="w-full pt-4 space-y-2 bg-gray-200">
+                        <div class="w-full space-y-2 bg-gray-200 pt-4">
                             <p class="px-2 text-sm text-gray-800">
                                 Activité proposée par:
                             </p>
                             <Link
-                                class="flex justify-center w-full px-2 text-lg text-indigo-600 hover:text-indigo-800"
+                                class="flex w-full justify-center px-2 text-lg text-indigo-600 hover:text-indigo-800"
                                 :href="
                                     route('structures.show', activite.structure)
                                 "
                                 >{{ activite.structure.name }}</Link
                             >
                             <p
-                                class="flex items-center px-2 space-x-2 text-sm text-gray-800"
+                                class="flex items-center space-x-2 px-2 text-sm text-gray-800"
                             >
-                                <AtSymbolIcon class="w-4 h-4" />
+                                <AtSymbolIcon class="h-4 w-4" />
                                 {{ activite.structure.email }}
                             </p>
                             <p
-                                class="flex items-center px-2 space-x-2 text-sm text-gray-800"
+                                class="flex items-center space-x-2 px-2 text-sm text-gray-800"
                             >
-                                <PhoneIcon class="w-4 h-4" />
+                                <PhoneIcon class="h-4 w-4" />
                                 {{ activite.structure.phone1 }}
                             </p>
                             <div>
                                 <h3
-                                    class="flex items-center px-2 mb-2 space-x-2 text-sm text-gray-800"
+                                    class="mb-2 flex items-center space-x-2 px-2 text-sm text-gray-800"
                                 >
-                                    <MapPinIcon class="w-4 h-4" /> Localisation:
+                                    <MapPinIcon class="h-4 w-4" /> Localisation:
                                     <span class="font-semibold">
                                         {{
                                             activite.structure.adresses[0].city
@@ -996,45 +998,45 @@ onMounted(() => {
                             </div>
                         </div>
                     </div>
-                    <div class="space-y-12 basis-full md:basis-3/4">
+                    <div class="basis-full space-y-12 md:basis-3/4">
                         <!-- titre -->
                         <div
-                            class="flex flex-col items-center justify-center mb-4"
+                            class="mb-4 flex flex-col items-center justify-center"
                         >
-                            <div class="flex items-center w-full">
+                            <div class="flex w-full items-center">
                                 <h1
-                                    class="inline-block w-full text-xl font-semibold text-center sm:text-2xl sm:leading-7 md:text-3xl"
+                                    class="inline-block w-full text-center text-xl font-semibold sm:text-2xl sm:leading-7 md:text-3xl"
                                 >
                                     {{ activite.titre }}
                                 </h1>
                                 <div
                                     v-if="isSupported"
-                                    class="items-center self-end justify-center hidden mt-4 text-sm md:flex"
+                                    class="mt-4 hidden items-center justify-center self-end text-sm md:flex"
                                 >
                                     <button
-                                        class="flex items-center p-2 text-gray-700 bg-white border border-gray-200 rounded hover:bg-blue-600 hover:text-white"
+                                        class="flex items-center rounded border border-gray-200 bg-white p-2 text-gray-700 hover:bg-blue-600 hover:text-white"
                                         @click="startShare"
                                     >
-                                        <ShareIcon class="w-5 h-5" />
+                                        <ShareIcon class="h-5 w-5" />
                                     </button>
                                 </div>
                             </div>
 
                             <h2
-                                class="inline-block w-full text-xl font-semibold text-center text-gray-500 sm:leading-5 md:text-xl"
+                                class="inline-block w-full text-center text-xl font-semibold text-gray-500 sm:leading-5 md:text-xl"
                             >
                                 {{ activite.structure.name }}
                             </h2>
 
                             <div
                                 v-if="isSupported"
-                                class="flex items-center self-end justify-center mt-4 text-sm md:hidden"
+                                class="mt-4 flex items-center justify-center self-end text-sm md:hidden"
                             >
                                 <button
-                                    class="flex items-center p-2 text-gray-700 bg-white border border-gray-200 rounded hover:bg-blue-600 hover:text-white"
+                                    class="flex items-center rounded border border-gray-200 bg-white p-2 text-gray-700 hover:bg-blue-600 hover:text-white"
                                     @click="startShare"
                                 >
-                                    <ShareIcon class="w-5 h-5" />
+                                    <ShareIcon class="h-5 w-5" />
                                 </button>
                             </div>
                         </div>
@@ -1042,7 +1044,7 @@ onMounted(() => {
                         <div>
                             <p
                                 v-if="activite.description"
-                                class="text-base font-medium leading-5 text-gray-700 whitespace-pre-line"
+                                class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
                             >
                                 {{ activite.description }}
                             </p>
@@ -1050,13 +1052,13 @@ onMounted(() => {
                                 v-else-if="
                                     activite.structure.presentation_longue
                                 "
-                                class="text-base font-medium leading-5 text-gray-700 whitespace-pre-line"
+                                class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
                             >
                                 {{ activite.structure.presentation_longue }}
                             </p>
                             <p
                                 v-else
-                                class="text-base font-medium leading-5 text-gray-700 whitespace-pre-line"
+                                class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
                             >
                                 {{ activite.structure.presentation_courte }}
                             </p>
@@ -1069,32 +1071,32 @@ onMounted(() => {
                             <ul>
                                 <li
                                     v-for="instructeur in activite.instructeurs"
-                                    class="text-base font-semibold text-gray-600 list-disc list-inside"
+                                    class="list-inside list-disc text-base font-semibold text-gray-600"
                                 >
                                     {{ instructeur.pivot.contact }} -
                                     {{ instructeur.pivot.email }}
                                 </li>
                             </ul>
                         </div>
-                        <div class="flex items-center justify-between w-full">
+                        <div class="flex w-full items-center justify-between">
                             <h3 class="text-xl text-gray-700">
                                 Selectionner une formule en fonction de vos
                                 critères:
                             </h3>
                             <button
-                                class="flex justify-center w-full md:w-auto"
+                                class="flex w-full justify-center md:w-auto"
                                 type="button"
                                 @click="resetFormCriteres"
                             >
                                 <ArrowPathIcon
-                                    class="w-6 h-6 text-gray-500 transition duration-200 hover:-rotate-90 hover:text-gray-700 md:h-8 md:w-8"
+                                    class="h-6 w-6 text-gray-500 transition duration-200 hover:-rotate-90 hover:text-gray-700 md:h-8 md:w-8"
                                 />
                             </button>
                         </div>
 
                         <div
                             v-if="criteres.length > 0"
-                            class="grid w-full grid-cols-1 gap-4 p-2 mx-auto shadow bg-gray-50 md:grid-cols-3"
+                            class="mx-auto grid w-full grid-cols-1 gap-4 bg-gray-50 p-2 shadow md:grid-cols-3"
                         >
                             <div
                                 v-for="critere in criteres"
@@ -1147,7 +1149,7 @@ onMounted(() => {
                                     >
                                         {{ critere.nom }}
                                     </label>
-                                    <div class="flex mt-1 rounded-md">
+                                    <div class="mt-1 flex rounded-md">
                                         <TextInput
                                             type="text"
                                             v-model="
@@ -1155,7 +1157,7 @@ onMounted(() => {
                                             "
                                             :name="critere.nom"
                                             :id="critere.nom"
-                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                             placeholder=""
                                             autocomplete="none"
                                         />
@@ -1173,7 +1175,7 @@ onMounted(() => {
                                     >
                                         {{ critere.nom }}
                                     </label>
-                                    <div class="flex mt-1 rounded-md">
+                                    <div class="mt-1 flex rounded-md">
                                         <TextInput
                                             type="number"
                                             min="0"
@@ -1182,7 +1184,7 @@ onMounted(() => {
                                             "
                                             :name="critere.nom"
                                             :id="critere.nom"
-                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                             placeholder=""
                                             autocomplete="none"
                                         />
@@ -1192,7 +1194,7 @@ onMounted(() => {
                                 <!-- Heure seule -->
                                 <div
                                     v-if="critere.type_champ_form === 'time'"
-                                    class="flex flex-col items-start max-w-sm space-y-3"
+                                    class="flex max-w-sm flex-col items-start space-y-3"
                                 >
                                     <SingleTimeForm
                                         class="w-full"
@@ -1206,7 +1208,7 @@ onMounted(() => {
                                 <!-- Heures x2 ouverture / fermeture -->
                                 <div
                                     v-if="critere.type_champ_form === 'times'"
-                                    class="flex flex-col items-start max-w-sm space-y-3"
+                                    class="flex max-w-sm flex-col items-start space-y-3"
                                 >
                                     <OpenTimesForm
                                         class="w-full"
@@ -1220,7 +1222,7 @@ onMounted(() => {
                                 <!-- Date seule -->
                                 <div
                                     v-if="critere.type_champ_form === 'date'"
-                                    class="flex flex-col items-start max-w-sm space-y-3"
+                                    class="flex max-w-sm flex-col items-start space-y-3"
                                 >
                                     <SingleDateForm
                                         class="w-full"
@@ -1234,7 +1236,7 @@ onMounted(() => {
                                 <!-- Dates x 2 -->
                                 <div
                                     v-if="critere.type_champ_form === 'dates'"
-                                    class="flex flex-col items-start max-w-sm space-y-3"
+                                    class="flex max-w-sm flex-col items-start space-y-3"
                                 >
                                     <OpenDaysForm
                                         class="w-full"
@@ -1248,7 +1250,7 @@ onMounted(() => {
                                 <!-- Mois -->
                                 <div v-if="critere.type_champ_form === 'mois'">
                                     <div
-                                        class="flex flex-col items-start max-w-sm space-y-3"
+                                        class="flex max-w-sm flex-col items-start space-y-3"
                                     >
                                         <OpenMonthsForm
                                             class="w-full"
@@ -1263,7 +1265,7 @@ onMounted(() => {
                                 <!-- Range km  -->
                                 <div
                                     v-if="critere.type_champ_form === 'rayon'"
-                                    class="flex flex-col items-start w-full max-w-sm space-y-3"
+                                    class="flex w-full max-w-sm flex-col items-start space-y-3"
                                 >
                                     <RangeInputForm
                                         class="w-full max-w-sm"
@@ -1384,7 +1386,7 @@ onMounted(() => {
                         <!-- <form @submit.prevent="submitReservation()"> -->
                         <div
                             ref="listToAnimate"
-                            class="grid h-auto grid-cols-1 gap-4 place-content-stretch place-items-stretch md:gap-8"
+                            class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:gap-8"
                         >
                             <ProduitFormuleCard
                                 v-for="produit in filteredProduits"
@@ -1399,7 +1401,7 @@ onMounted(() => {
                             />
                         </div>
 
-                        <div class="flex items-center justify-end w-full my-4">
+                        <div class="my-4 flex w-full items-center justify-end">
                             <button
                                 v-if="
                                     reservationForm.produit &&
@@ -1407,7 +1409,7 @@ onMounted(() => {
                                 "
                                 @click.prevent="openReservationModal"
                                 type="button"
-                                class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white duration-300 bg-blue-600 border border-transparent rounded-lg gap-x-2 hover:-translate-y-1 hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
+                                class="inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-4 py-2 text-sm font-semibold text-white duration-300 hover:-translate-y-1 hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
                             >
                                 Sélectionner
                             </button>
@@ -1440,20 +1442,20 @@ onMounted(() => {
             </section>
             <section class="bg-white">
                 <div
-                    class="max-w-full px-4 py-16 mx-auto sm:px-6 sm:py-24 lg:px-8"
+                    class="mx-auto max-w-full px-4 py-16 sm:px-6 sm:py-24 lg:px-8"
                 >
                     <h2
-                        class="text-2xl font-semibold tracking-tight text-center text-gray-700 sm:text-3xl"
+                        class="text-center text-2xl font-semibold tracking-tight text-gray-700 sm:text-3xl"
                     >
                         Les derniers avis sur cette activité
                     </h2>
 
                     <div
-                        class="grid w-full grid-cols-1 gap-4 mx-auto mt-12 md:grid-cols-3 md:gap-12"
+                        class="mx-auto mt-12 grid w-full grid-cols-1 gap-4 md:grid-cols-3 md:gap-12"
                     >
                         <blockquote class="relative">
                             <svg
-                                class="absolute text-yellow-400 -start-8 -top-6 size-16"
+                                class="absolute -start-8 -top-6 size-16 text-yellow-400"
                                 width="16"
                                 height="16"
                                 viewBox="0 0 16 16"
@@ -1494,7 +1496,7 @@ onMounted(() => {
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0">
                                         <img
-                                            class="rounded-full size-10"
+                                            class="size-10 rounded-full"
                                             src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
                                             alt="Image Description"
                                         />
@@ -1514,7 +1516,7 @@ onMounted(() => {
                         </blockquote>
                         <blockquote class="relative">
                             <svg
-                                class="absolute text-yellow-400 -start-8 -top-6 size-16"
+                                class="absolute -start-8 -top-6 size-16 text-yellow-400"
                                 width="16"
                                 height="16"
                                 viewBox="0 0 16 16"
@@ -1556,7 +1558,7 @@ onMounted(() => {
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0">
                                         <img
-                                            class="rounded-full size-10"
+                                            class="size-10 rounded-full"
                                             src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
                                             alt="Image Description"
                                         />
@@ -1576,7 +1578,7 @@ onMounted(() => {
                         </blockquote>
                         <blockquote class="relative">
                             <svg
-                                class="absolute text-yellow-400 -start-8 -top-6 size-16"
+                                class="absolute -start-8 -top-6 size-16 text-yellow-400"
                                 width="16"
                                 height="16"
                                 viewBox="0 0 16 16"
@@ -1603,7 +1605,7 @@ onMounted(() => {
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0">
                                         <img
-                                            class="rounded-full size-10"
+                                            class="size-10 rounded-full"
                                             src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
                                             alt="Image Description"
                                         />
@@ -1626,15 +1628,15 @@ onMounted(() => {
             </section>
             <section v-if="activiteSimilaires.length > 0" class="bg-white">
                 <div
-                    class="max-w-full px-4 py-16 mx-auto sm:px-6 sm:py-24 lg:px-8"
+                    class="mx-auto max-w-full px-4 py-16 sm:px-6 sm:py-24 lg:px-8"
                 >
                     <h2
-                        class="text-2xl font-semibold tracking-tight text-center text-gray-700 sm:text-3xl"
+                        class="text-center text-2xl font-semibold tracking-tight text-gray-700 sm:text-3xl"
                     >
                         Les activités similaires
                     </h2>
                     <div
-                        class="grid grid-cols-1 gap-4 mt-12 md:grid-cols-3 md:gap-8"
+                        class="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-8"
                     >
                         <ActiviteCard
                             v-for="activite in activiteSimilaires"

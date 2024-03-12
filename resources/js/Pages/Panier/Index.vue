@@ -168,7 +168,9 @@ watch(
 );
 
 onMounted(() => {
-    autoAnimate(listToAnimate.value);
+    if (listToAnimate.value) {
+        autoAnimate(listToAnimate.value);
+    }
 });
 
 onBeforeMount(() => {

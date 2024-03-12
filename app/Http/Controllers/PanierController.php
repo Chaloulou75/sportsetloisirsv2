@@ -46,7 +46,7 @@ class PanierController extends Controller
             if ($user && $sessionId) {
                 $query->where('user_id', $user->id)->orWhere('session_id', $sessionId);
             } elseif ($sessionId) {
-                $query->orWhere('session_id', $sessionId);
+                $query->where('session_id', $sessionId);
             } elseif ($user) {
                 $query->where('user_id', $user->id);
             }
