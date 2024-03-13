@@ -38,13 +38,12 @@ class HandleInertiaRequests extends Middleware
         if ($user || $sessionId) {
             $query = ProductReservation::withRelations()->withCount('plannings');
             if (isset($user) && $sessionId) {
-                $query->where('user_id', $user->id)->orWhere('session_id', $sessionId);
+                $reservations = ProductReservation::withRelations()->withCount('plannings')->where('user_id', $user->id)->orWhere('session_id', $sessionId)->get();
             } elseif ($sessionId) {
-                $query->where('session_id', $sessionId);
+                $reservations = ProductReservation::withRelations()->withCount('plannings')->where('session_id', $sessionId)->get();
             } elseif ($user) {
-                $query->where('user_id', $user->id);
+                $reservations = ProductReservation::withRelations()->withCount('plannings')->where('user_id', $user->id)->get();
             }
-            $reservations = $query->get();
         }
 
         return array_merge(parent::share($request), [
@@ -66,7 +65,7 @@ class HandleInertiaRequests extends Middleware
                     'message' => $request->session()->get('message'),
                 ];
             },
-            'productsReservations' => $reservations,
+            'productsReservations' => $reservations ?? null,
         ]);
     }
 }
