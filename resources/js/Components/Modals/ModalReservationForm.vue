@@ -47,10 +47,8 @@ const filteredCatTarif = computed(() => {
     );
 });
 
-const formatDate = (dateTimeString) => {
-    return dayjs(dateTimeString)
-        .locale("fr")
-        .format("dddd D MMMM YYYY, HH[h]mm");
+const formatDate = (dateTime) => {
+    return dayjs(dateTime).locale("fr").format("dddd D MMMM YYYY, HH[h]mm");
 };
 
 const bookingForm = useForm({

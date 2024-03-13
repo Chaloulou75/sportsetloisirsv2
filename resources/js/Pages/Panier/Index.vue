@@ -191,44 +191,6 @@ onBeforeMount(() => {
         <template #header>
             <ResultsHeader>
                 <template v-slot:title> Mon Panier</template>
-                <template v-slot:ariane>
-                    <nav aria-label="Breadcrumb" class="flex">
-                        <ol
-                            class="flex rounded-lg border border-gray-200 text-gray-600"
-                        >
-                            <li class="flex items-center">
-                                <Link
-                                    preserve-scroll
-                                    :href="route('welcome')"
-                                    class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
-                                >
-                                    <HomeIcon class="h-4 w-4" />
-
-                                    <span
-                                        class="ms-1.5 hidden text-xs font-medium md:block"
-                                    >
-                                        Accueil
-                                    </span>
-                                </Link>
-                            </li>
-
-                            <li class="relative flex items-center">
-                                <span
-                                    class="absolute inset-y-0 -start-px h-10 w-4 bg-gray-100 [clip-path:_polygon(0_0,_0%_100%,_100%_50%)] rtl:rotate-180"
-                                >
-                                </span>
-
-                                <Link
-                                    preserve-scroll
-                                    :href="route('favoris.index')"
-                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
-                                >
-                                    Favoris
-                                </Link>
-                            </li>
-                        </ol>
-                    </nav>
-                </template>
             </ResultsHeader>
         </template>
 
@@ -253,17 +215,24 @@ onBeforeMount(() => {
                             >
                                 <div class="space-y-3 px-4 py-1.5">
                                     <h3 class="text-lg">
-                                        <span class="font-semibold">{{
-                                            reservation.cat_tarif.cat_tarif_type
-                                                .nom
-                                        }}</span>
+                                        <span
+                                            v-if="reservation.cat_tarif"
+                                            class="font-semibold"
+                                            >{{
+                                                reservation.cat_tarif
+                                                    .cat_tarif_type.nom
+                                            }}</span
+                                        >
                                         pour
                                         <span class="font-semibold">{{
                                             reservation.activite_title
                                         }}</span>
                                     </h3>
                                     <div
-                                        v-if="reservation.produit.adresse"
+                                        v-if="
+                                            reservation.produit &&
+                                            reservation.produit.adresse
+                                        "
                                         class="flex items-center text-base"
                                     >
                                         <dt class="sr-only">Ville</dt>
@@ -282,6 +251,8 @@ onBeforeMount(() => {
                                     </div>
                                     <template
                                         v-if="
+                                            reservation.produit &&
+                                            reservation.produit.criteres &&
                                             reservation.produit.criteres
                                                 .length > 0
                                         "
