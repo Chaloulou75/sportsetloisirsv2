@@ -75,13 +75,15 @@ class PanierController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        request()->validate([
+        $request->validate([
             'produitId' => ['required', Rule::exists(StructureProduit::class, 'id')],
-            'catTarifId' => ['nullable', Rule::exists(LienDisCatTariftype::class, 'id')],
+            'catTarifId' => ['nullable', Rule::exists(StructureCatTarif::class, 'id')],
             'attributs' => ['nullable'],
             'sousattributs' => ['nullable'],
             'plannings' => ['nullable'],
         ]);
+
+        dd($request->all());
 
         $user = auth()->user();
         $produit = StructureProduit::withRelations()->find($request->produitId);
