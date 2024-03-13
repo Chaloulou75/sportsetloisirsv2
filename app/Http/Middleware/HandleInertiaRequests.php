@@ -32,26 +32,18 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-
-        // Retrieve user and session information
         $user = $request->user();
-        $sessionId = $request->session()->get('sessionId');
-
-        // Initialize reservations array
+        $sessionId = $request->session()->getId();
         $reservations = [];
-
-        // If either user or session exists, fetch reservations
         if ($user || $sessionId) {
             $query = ProductReservation::withRelations()->withCount('plannings');
-
-            if ($user && $sessionId) {
+            if (isset($user) && $sessionId) {
                 $query->where('user_id', $user->id)->orWhere('session_id', $sessionId);
             } elseif ($sessionId) {
                 $query->where('session_id', $sessionId);
             } elseif ($user) {
                 $query->where('user_id', $user->id);
             }
-
             $reservations = $query->get();
         }
 

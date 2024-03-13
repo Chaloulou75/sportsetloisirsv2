@@ -43,7 +43,8 @@ class PanierController extends Controller
 
         if ($user || $sessionId) {
             $query = ProductReservation::withRelations()->withCount('plannings');
-            if ($user && $sessionId) {
+
+            if (isset($user) && $sessionId) {
                 $query->where('user_id', $user->id)->orWhere('session_id', $sessionId);
             } elseif ($sessionId) {
                 $query->where('session_id', $sessionId);

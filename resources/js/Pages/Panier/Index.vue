@@ -6,6 +6,7 @@ import { Head, Link } from "@inertiajs/vue3";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
 import Breadcrumb from "@/Components/Panier/Breadcrumb.vue";
+import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import autoAnimate from "@formkit/auto-animate";
 import {
     HomeIcon,
@@ -722,9 +723,14 @@ onBeforeMount(() => {
                         validé votre réservation.
                     </div>
                     <button
+                        :disabled="panierForm.processing"
+                        :class="{
+                            'opacity-25': panierForm.processing,
+                        }"
                         type="submit"
-                        class="mt-4 w-full rounded-md bg-blue-500 py-2.5 font-medium text-blue-50 hover:bg-blue-600"
+                        class="mt-4 inline-flex w-full items-center justify-center rounded-md bg-blue-500 px-4 py-2.5 font-medium text-blue-50 hover:bg-blue-600"
                     >
+                        <LoadingSVG v-if="panierForm.processing" />
                         Payer et réserver
                     </button>
                 </div>
