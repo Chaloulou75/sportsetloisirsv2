@@ -36,7 +36,6 @@ class HandleInertiaRequests extends Middleware
         $sessionId = $request->session()->getId();
         $reservations = [];
         if ($user || $sessionId) {
-            $query = ProductReservation::withRelations()->withCount('plannings');
             if (isset($user) && $sessionId) {
                 $reservations = ProductReservation::withRelations()->withCount('plannings')->where('user_id', $user->id)->orWhere('session_id', $sessionId)->get();
             } elseif ($sessionId) {
