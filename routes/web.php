@@ -85,13 +85,14 @@ Route::get('/favoris', [FavoritesController::class, 'index'])->name(
 );
 
 
-//Panier
+// Panier et réservations
 Route::get('/panier', [PanierController::class, 'index'])->name(
     'panier.index'
 );
 Route::post('/panier', [PanierController::class, 'store'])->name(
     'panier.store'
 );
+Route::post('/reservations', [ProductReservationController::class, 'store'])->name('reservations.store');
 Route::delete('/panier/{reservation}', [PanierController::class, 'destroy'])->name(
     'panier.destroy'
 );
@@ -101,11 +102,9 @@ Route::delete('/panier/{reservation}/plannings/{planning}', [ReservationPlanning
 Route::delete('/panier/{reservation}/plannings/{planning}', [ReservationPlanningController::class, 'destroy'])->name(
     'reservations.plannings.destroy'
 );
-
 Route::get('/panier/coordonnees', [PanierCoordonneesController::class, 'index'])->name(
     'panier.coordonnees.index'
 );
-
 Route::post('/panier/coordonnees/store', [PanierCoordonneesController::class, 'store'])->name(
     'panier.coordonnees.store'
 );
@@ -140,7 +139,7 @@ Route::get('/activites-{activite}', [ActiviteController::class, 'show'])->name('
 // Departements routes
 require __DIR__ . '/departement.php';
 
-Route::post('/reservations', [ProductReservationController::class, 'store'])->name('reservations.store');
+
 
 
 Route::middleware(['auth', 'verified'])->group(function () {

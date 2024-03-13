@@ -123,7 +123,6 @@ const isCheckboxSousAttrSelected = computed(() => {
 const onSubmit = () => {
     bookingForm.post(route("panier.store"), {
         preserveScroll: true,
-        remember: false,
         onSuccess: () => {
             bookingForm.reset();
             emit("close");

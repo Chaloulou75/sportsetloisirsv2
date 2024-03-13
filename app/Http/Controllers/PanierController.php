@@ -78,11 +78,11 @@ class PanierController extends Controller
         request()->validate([
             'produitId' => ['required', Rule::exists(StructureProduit::class, 'id')],
             'catTarifId' => ['nullable', Rule::exists(LienDisCatTariftype::class, 'id')],
-            'attributs' => ['nullable', 'array'],
-            'sousattributs' => ['nullable', 'array'],
-            'plannings' => ['nullable', 'array'],
+            'attributs' => ['nullable'],
+            'sousattributs' => ['nullable'],
+            'plannings' => ['nullable'],
         ]);
-        // $request->all();
+
         $user = auth()->user();
         $produit = StructureProduit::withRelations()->find($request->produitId);
         if($request->catTarifId) {
