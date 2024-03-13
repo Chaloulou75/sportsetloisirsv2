@@ -83,8 +83,6 @@ class PanierController extends Controller
             'plannings' => ['nullable'],
         ]);
 
-        dd($request->all());
-
         $user = auth()->user();
         $produit = StructureProduit::withRelations()->find($request->produitId);
         if($request->catTarifId) {
