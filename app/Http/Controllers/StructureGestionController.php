@@ -17,33 +17,29 @@ class StructureGestionController extends Controller
     public function index(Structure $structure): Response
     {
         $allReservations = ProductReservation::withRelations()->get();
-
         $allReservationsCount = $allReservations->count();
 
         $pendingReservations = ProductReservation::withRelations()
             ->where('pending', true)
             ->get();
-
         $pendingReservationsCount = $pendingReservations->count();
 
         $confirmedReservations = ProductReservation::withRelations()
             ->where('confirmed', true)
             ->get();
-
         $confirmedReservationsCount = $confirmedReservations->count();
 
         $totalAmountConfirmed = $confirmedReservations->sum(function ($reservation) {
-            return $reservation->tarif->amount;
+            return $reservation->tarif_amount * $reservation->quantity;
         });
 
         $totalAmountPending = $pendingReservations->sum(function ($reservation) {
-            return $reservation->amount * $reservation->quantity;
+            return $reservation->tarif_amount * $reservation->quantity;
         });
 
         $structure = Structure::withRelations()
                     ->where('slug', $structure->slug)
                     ->firstOrFail();
-
 
         return Inertia::render('Structures/Gestion/Index', [
             'structure' => fn () => $structure,

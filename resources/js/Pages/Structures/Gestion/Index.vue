@@ -66,7 +66,7 @@ const formatCurrency = (value) => {
         </template>
 
         <template #default>
-            <div class="px-2 py-6 space-y-10 text-gray-700 md:px-4">
+            <div class="space-y-10 px-2 py-6 text-gray-700 md:px-4">
                 <h3 class="text-2xl">
                     Bienvenue
                     <span class="text-indigo-700">{{ user.name }}</span>
@@ -74,7 +74,7 @@ const formatCurrency = (value) => {
 
                 <!-- réservations en attente -->
                 <div
-                    class="px-4 py-6 space-y-10 border border-gray-200 rounded-md shadow-md bg-gray-50"
+                    class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
                 >
                     <div class="flex items-center justify-between">
                         <p class="text-xl font-semibold">
@@ -92,37 +92,42 @@ const formatCurrency = (value) => {
                             {{ totalAmountPending }} €
                         </div>
                     </div>
-                    <ul class="list-disc list-inside">
+                    <ul class="list-inside list-disc">
                         <li
                             v-for="reservation in pendingReservations"
                             :key="reservation.id"
                         >
+                            {{ reservation.activite_title }}
                             <template
                                 v-for="planning in reservation.plannings"
                                 :key="planning.id"
                             >
-                                <span class="font-semibold text-indigo-500">{{
-                                    planning.title
-                                }}</span
-                                >: du
-                                <span class="font-semibold">{{
-                                    formatDate(planning.start)
-                                }}</span>
-                                au
-                                <span class="font-semibold">{{
-                                    formatDate(planning.end)
-                                }}</span>
-                                <span
-                                    class="ml-5 font-semibold text-indigo-500"
-                                >
-                                    {{
-                                        formatCurrency(reservation.tarif_amount)
-                                    }}
-                                </span>
+                                <div>
+                                    <span class="font-semibold text-indigo-500">
+                                        {{ planning.title }}
+                                    </span>
+                                    : du
+                                    <span class="font-semibold">{{
+                                        formatDate(planning.start)
+                                    }}</span>
+                                    au
+                                    <span class="font-semibold">{{
+                                        formatDate(planning.end)
+                                    }}</span>
+                                    <span
+                                        class="ml-5 font-semibold text-indigo-500"
+                                    >
+                                        {{
+                                            formatCurrency(
+                                                reservation.tarif_amount
+                                            )
+                                        }}
+                                    </span>
+                                </div>
                             </template>
                         </li>
                     </ul>
-                    <div class="flex items-center justify-end w-full">
+                    <div class="flex w-full items-center justify-end">
                         <Link
                             preserve-scroll
                             :href="
@@ -131,7 +136,7 @@ const formatCurrency = (value) => {
                                     structure
                                 )
                             "
-                            class="px-4 py-2 text-lg text-indigo-500 bg-white border border-gray-200 rounded-md shadow hover:bg-gray-100 hover:text-indigo-800"
+                            class="rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-indigo-500 shadow hover:bg-gray-100 hover:text-indigo-800"
                         >
                             Voir mes réservations
                         </Link>
@@ -140,7 +145,7 @@ const formatCurrency = (value) => {
 
                 <!-- réservations en cours -->
                 <div
-                    class="px-4 py-6 space-y-10 border border-gray-200 rounded-md shadow-md bg-gray-50"
+                    class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
                 >
                     <div class="flex items-center justify-between">
                         <p class="text-xl font-semibold">
@@ -157,28 +162,42 @@ const formatCurrency = (value) => {
                             {{ totalAmountConfirmed }} €
                         </div>
                     </div>
-                    <ul class="list-disc list-inside">
-                        <!-- <li
+                    <ul class="list-inside list-disc">
+                        <li
                             v-for="reservation in confirmedReservations"
                             :key="reservation.id"
                         >
-                            <span class="font-semibold text-indigo-500">{{
-                                reservation.planning.title
-                            }}</span
-                            >:<span class="font-normal"> du </span
-                            ><span class="font-semibold">{{
-                                formatDate(reservation.planning.start)
-                            }}</span
-                            ><span class="font-normal"> au </span
-                            ><span class="font-semibold">{{
-                                formatDate(reservation.planning.end)
-                            }}</span>
-                            <span class="ml-5 font-semibold text-indigo-500">{{
-                                formatCurrency(reservation.tarif.amount)
-                            }}</span>
-                        </li> -->
+                            {{ reservation.activite_title }}
+                            <template
+                                v-for="planning in reservation.plannings"
+                                :key="planning.id"
+                            >
+                                <div>
+                                    <span class="font-semibold text-indigo-500">
+                                        {{ planning.title }}
+                                    </span>
+                                    : du
+                                    <span class="font-semibold">{{
+                                        formatDate(planning.start)
+                                    }}</span>
+                                    au
+                                    <span class="font-semibold">{{
+                                        formatDate(planning.end)
+                                    }}</span>
+                                    <span
+                                        class="ml-5 font-semibold text-indigo-500"
+                                    >
+                                        {{
+                                            formatCurrency(
+                                                reservation.tarif_amount
+                                            )
+                                        }}
+                                    </span>
+                                </div>
+                            </template>
+                        </li>
                     </ul>
-                    <div class="flex items-center justify-end w-full">
+                    <div class="flex w-full items-center justify-end">
                         <Link
                             preserve-scroll
                             :href="
@@ -187,7 +206,7 @@ const formatCurrency = (value) => {
                                     structure
                                 )
                             "
-                            class="px-4 py-2 text-lg text-indigo-500 bg-white border border-gray-200 rounded-md shadow hover:bg-gray-100 hover:text-indigo-800"
+                            class="rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-indigo-500 shadow hover:bg-gray-100 hover:text-indigo-800"
                         >
                             Voir mes réservations
                         </Link>
@@ -196,13 +215,13 @@ const formatCurrency = (value) => {
 
                 <!-- Statistiques -->
                 <div
-                    class="px-4 py-6 space-y-10 border border-gray-200 rounded-md shadow-md bg-gray-50"
+                    class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
                 >
                     <h2 class="text-2xl font-semibold">
                         Vos statistiques de {{ currentMonth }}:
                     </h2>
                     <div
-                        class="grid w-full grid-cols-1 gap-4 justify-items-center md:grid-cols-4"
+                        class="grid w-full grid-cols-1 justify-items-center gap-4 md:grid-cols-4"
                     >
                         <div
                             class="flex flex-col items-center justify-center space-y-4"
@@ -237,7 +256,7 @@ const formatCurrency = (value) => {
                             <div class="font-semibold">messages</div>
                         </div>
                     </div>
-                    <div class="flex items-center justify-end w-full">
+                    <div class="flex w-full items-center justify-end">
                         <Link
                             :href="
                                 route(
@@ -245,7 +264,7 @@ const formatCurrency = (value) => {
                                     structure
                                 )
                             "
-                            class="px-4 py-2 text-lg text-indigo-500 bg-white border border-gray-200 rounded-md shadow hover:bg-gray-100 hover:text-indigo-800"
+                            class="rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-indigo-500 shadow hover:bg-gray-100 hover:text-indigo-800"
                         >
                             Voir mes statistiques
                         </Link>
@@ -254,13 +273,13 @@ const formatCurrency = (value) => {
 
                 <!-- activités populaires -->
                 <div
-                    class="px-4 py-6 space-y-10 border border-gray-200 rounded-md shadow-md bg-gray-50"
+                    class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
                 >
                     <h2 class="text-2xl font-semibold">
                         Vos activités les plus populaires:
                     </h2>
                     <div
-                        class="grid w-full grid-cols-1 gap-4 justify-items-center md:grid-cols-3"
+                        class="grid w-full grid-cols-1 justify-items-center gap-4 md:grid-cols-3"
                     >
                         <ActiviteCard
                             v-for="(activite, index) in structure.activites"
@@ -274,12 +293,12 @@ const formatCurrency = (value) => {
                             "
                         />
                     </div>
-                    <div class="flex items-center justify-end w-full">
+                    <div class="flex w-full items-center justify-end">
                         <Link
                             :href="
                                 route('structures.disciplines.index', structure)
                             "
-                            class="px-4 py-2 text-lg text-indigo-500 bg-white border border-gray-200 rounded-md shadow hover:bg-gray-100 hover:text-indigo-800"
+                            class="rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-indigo-500 shadow hover:bg-gray-100 hover:text-indigo-800"
                         >
                             Voir mes activités
                         </Link>

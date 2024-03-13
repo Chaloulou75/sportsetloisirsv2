@@ -160,28 +160,37 @@ const updateReservation = (reservation) => {
                                     reservation.user.name
                                 }}</span>
                             </p>
-                            <p>
-                                <span class="font-semibold text-indigo-500">{{
-                                    reservation.planning.title
-                                }}</span
-                                >: du
-                                <span class="font-semibold">{{
-                                    formatDate(reservation.planning.start)
-                                }}</span>
-                                au
-                                <span class="font-semibold">{{
-                                    formatDate(reservation.planning.end)
-                                }}</span>
-                                <span
-                                    class="ml-5 font-semibold text-indigo-500"
-                                >
-                                    {{
-                                        formatCurrency(
-                                            reservation.cat_tarif.amount
-                                        )
-                                    }}
-                                </span>
+                            <p class="font-semibold text-indigo-500">
+                                {{ reservation.activite_title }}
                             </p>
+
+                            <template
+                                v-for="planning in reservation.plannings"
+                                :key="planning.id"
+                            >
+                                <div>
+                                    <span class="font-semibold text-indigo-500">
+                                        {{ planning.title }}
+                                    </span>
+                                    : du
+                                    <span class="font-semibold">{{
+                                        formatDate(planning.start)
+                                    }}</span>
+                                    au
+                                    <span class="font-semibold">{{
+                                        formatDate(planning.end)
+                                    }}</span>
+                                    <span
+                                        class="ml-5 font-semibold text-indigo-500"
+                                    >
+                                        {{
+                                            formatCurrency(
+                                                reservation.tarif_amount
+                                            )
+                                        }}
+                                    </span>
+                                </div>
+                            </template>
 
                             <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
                                 <button

@@ -54,8 +54,7 @@ class ReservationPlanningController extends Controller
      */
     public function update(Request $request, ProductReservation $reservation, StructurePlanning $planning)
     {
-        dd($request->all());
-        //update quantity on pivot table
+
     }
 
     /**
