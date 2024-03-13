@@ -77,7 +77,6 @@ onMounted(() => {
 
             <input
                 type="text"
-                id="localite"
                 v-model="searchTerm"
                 @focus="isInputFocused = true"
                 placeholder="Toulouse"

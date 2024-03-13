@@ -74,7 +74,6 @@ onMounted(() => {
             </span>
             <input
                 type="text"
-                id="search"
                 v-model="searchTerm"
                 @focus="isInputFocused = true"
                 placeholder="rugby, randonnées..."
