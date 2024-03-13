@@ -524,8 +524,6 @@ class StructureController extends Controller
 
         $criteres = StructureProduitCritere::where('structure_id', $structure->id)->get();
 
-        $souscriteres = StructureProduitSousCritere::where('structure_id', $structure->id)->get();
-
         $plannings = StructurePlanning::where('structure_id', $structure->id)->get();
 
         $tarifs = StructureTarif::with('structureTarifTypeInfos')->where('structure_id', $structure->id)->get();
@@ -550,12 +548,6 @@ class StructureController extends Controller
         if($plannings->isNotEmpty()) {
             foreach($plannings as $planning) {
                 $planning->delete();
-            }
-        }
-
-        if($souscriteres->isNotEmpty()) {
-            foreach($souscriteres as $souscritere) {
-                $souscritere->delete();
             }
         }
 
