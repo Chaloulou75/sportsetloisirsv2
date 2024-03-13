@@ -16,7 +16,8 @@ import {
             <li class="inline-flex items-center">
                 <Link
                     :href="route('panier.index')"
-                    class="flex items-center text-sm font-bold text-gray-600 hover:text-blue-600 focus:text-blue-600 focus:outline-none"
+                    :class="{ 'font-bold': route().current('panier.index') }"
+                    class="flex items-center text-sm text-gray-600 hover:text-blue-600 focus:text-blue-600 focus:outline-none"
                 >
                     <QueueListIcon
                         class="me-3 size-4 flex-shrink-0 text-current"
@@ -29,7 +30,12 @@ import {
             </li>
             <li class="inline-flex items-center">
                 <Link
-                    :href="route('panier.index')"
+                    :href="route('panier.coordonnees.index')"
+                    :class="{
+                        'font-bold': route().current(
+                            'panier.coordonnees.index'
+                        ),
+                    }"
                     class="flex items-center text-sm text-gray-500 hover:text-blue-600 focus:text-blue-600 focus:outline-none"
                 >
                     <IdentificationIcon

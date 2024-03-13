@@ -125,8 +125,8 @@ class ProductReservationController extends Controller
                 }
             }
         }
-        // changer pour la vue coordonées.
-        return to_route('panier.index')->with('success', "Quantités et produits de votre panier mis à jour");
+
+        return to_route('panier.coordonnees.index')->with('success', "Insérée vos coordonnées");
     }
 
     /**

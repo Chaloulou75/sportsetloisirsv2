@@ -27,6 +27,7 @@ use App\Http\Controllers\StructureTarifController;
 use App\Http\Controllers\AdminDisciplineController;
 use App\Http\Controllers\StructureGestionController;
 use App\Http\Controllers\FamilleDisciplineController;
+use App\Http\Controllers\PanierCoordonneesController;
 use App\Http\Controllers\StructureAddresseController;
 use App\Http\Controllers\StructureCatTarifController;
 use App\Http\Controllers\StructurePlanningController;
@@ -83,26 +84,31 @@ Route::get('/favoris', [FavoritesController::class, 'index'])->name(
     'favoris.index'
 );
 
+
+//Panier
 Route::get('/panier', [PanierController::class, 'index'])->name(
     'panier.index'
 );
 Route::post('/panier', [PanierController::class, 'store'])->name(
     'panier.store'
 );
-
 Route::delete('/panier/{reservation}', [PanierController::class, 'destroy'])->name(
     'panier.destroy'
 );
-
 Route::delete('/panier/{reservation}/plannings/{planning}', [ReservationPlanningController::class, 'update'])->name(
     'reservations.plannings.update'
 );
-
 Route::delete('/panier/{reservation}/plannings/{planning}', [ReservationPlanningController::class, 'destroy'])->name(
     'reservations.plannings.destroy'
 );
 
+Route::get('/panier/coordonnees', [PanierCoordonneesController::class, 'index'])->name(
+    'panier.coordonnees.index'
+);
 
+Route::post('/panier/coordonnees/store', [PanierCoordonneesController::class, 'store'])->name(
+    'panier.coordonnees.store'
+);
 
 //Blog
 Route::get('/blog/articles/{discipline?}', [PostController::class, 'index'])->name('posts.index');
