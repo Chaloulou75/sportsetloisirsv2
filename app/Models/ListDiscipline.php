@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class ListDiscipline extends Model
 {
@@ -51,9 +50,9 @@ class ListDiscipline extends Model
     {
         $query->when(
             $filters['search'] ?? false,
-            fn($query, $search) =>
+            fn ($query, $search) =>
             $query->where(
-                fn($query) =>
+                fn ($query) =>
                 $query->where('name', 'like', '%' . $search . '%')
                     ->orWhere('slug', 'like', '%' . $search . '%')
             )

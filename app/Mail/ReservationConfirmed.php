@@ -33,7 +33,8 @@ class ReservationConfirmed extends Mailable
         protected StructureTarif $tarif,
         protected ProductReservation $reservation,
         protected User $user,
-    ) {}
+    ) {
+    }
 
     /**
      * Get the message envelope.
@@ -60,7 +61,10 @@ class ReservationConfirmed extends Mailable
         return new Content(
             markdown: 'emails.reservations.confirmed',
             with: [
-                'url' => route('structures.activites.show', ['activite' => $this->activite->id]),
+                'url' => route('structures.activites.show', [
+                    'activite' => $this->activite->id,
+                    'slug' => $this->activite->slug_title
+                ]),
                 'activiteName' => $this->activite->titre,
                 'tarifAmount' => $this->tarif->amount,
                 'planningStart' => $formattedStart,

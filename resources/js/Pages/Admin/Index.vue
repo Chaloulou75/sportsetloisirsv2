@@ -1,7 +1,13 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import { Head, Link } from "@inertiajs/vue3";
+import { Head, Link, usePage } from "@inertiajs/vue3";
 import { ChevronLeftIcon } from "@heroicons/vue/24/outline";
+import { computed } from "vue";
+
+const page = usePage();
+
+const user = computed(() => page.props.auth.user);
+const appName = computed(() => page.props.appName);
 </script>
 <template>
     <Head title="Gestion du site" :description="'Administration du site.'" />
@@ -22,6 +28,13 @@ import { ChevronLeftIcon } from "@heroicons/vue/24/outline";
             </div>
         </template>
 
-        <div class="w-full space-y-16 px-2 py-6 text-slate-700 md:px-6"></div>
+        <div class="w-full space-y-16 px-2 py-6 text-slate-700 md:px-6">
+            <p class="text-lg text-gray-700">
+                Bienvenue
+                <span class="font-semibold">{{ user.name }}</span> dans le panel
+                d'administration de
+                <span class="font-semibold">{{ appName }}</span>
+            </p>
+        </div>
     </AdminLayout>
 </template>

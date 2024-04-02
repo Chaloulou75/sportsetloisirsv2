@@ -50,7 +50,16 @@ class PanierCoordonneesController extends Controller
      */
     public function store(Request $request)
     {
+
+        $request->validate([
+            'name' => 'required|string|min:3',
+            'email' => 'required|email',
+            'name_receiver' => 'nullable|string|min:3',
+            'email_receiver' => 'nullable|email',
+        ]);
+
         dd($request->all());
+
     }
 
     /**

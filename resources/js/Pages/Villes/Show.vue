@@ -246,6 +246,8 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                             route('villes.activites.show', {
                                                 city: city,
                                                 activite: produit.activite,
+                                                slug: produit.activite
+                                                    .slug_title,
                                                 produit: produit.id,
                                             })
                                         "

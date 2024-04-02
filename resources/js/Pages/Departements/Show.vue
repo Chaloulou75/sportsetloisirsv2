@@ -241,6 +241,8 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                                 {
                                                     departement: departement,
                                                     activite: produit.activite,
+                                                    slug: produit.activite
+                                                        .slug_title,
                                                     produit: produit.id,
                                                 }
                                             )

@@ -296,6 +296,8 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                                     structuretype:
                                                         structuretypeElected,
                                                     activite: produit.activite,
+                                                    slug: produit.activite
+                                                        .slug_title,
                                                     produit: produit.id,
                                                 }
                                             )

@@ -32,7 +32,7 @@ class PostController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $postsQuery = Post::with('author', 'comments', 'tags', 'disciplines')
+        $postsQuery = Post::with('author:id,name', 'comments', 'tags:id,name', 'disciplines:id,name')
                 ->withCount('comments')
                 ->latest()
                 ->filter(
@@ -132,7 +132,7 @@ class PostController extends Controller
             }
         }
 
-        return to_route('posts.show', ['post' => $post->slug ])->with('success', 'Article publié.');
+        return to_route('posts.show', $post)->with('success', 'Article publié.');
     }
 
     /**
@@ -150,7 +150,7 @@ class PostController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $post = Post::with('author', 'author.structures', 'comments', 'comments.author', 'tags', 'disciplines')->findOrFail($post->id);
+        $post = Post::with('author:id,name', 'author.structures:id,name,slug', 'comments', 'comments.author:id,name', 'tags:id,name', 'disciplines:id,name')->findOrFail($post->id);
 
         $post->increment('views_count');
 

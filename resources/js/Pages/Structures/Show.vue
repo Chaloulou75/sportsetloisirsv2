@@ -1124,6 +1124,7 @@ const events = getEvents();
                                                     'structures.activites.show',
                                                     {
                                                         activite: activite,
+                                                        slug: activite.slug_title
                                                     }
                                                 )
                                             "

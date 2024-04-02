@@ -1158,6 +1158,8 @@ onMounted(() => {
                                                     discipline: discipline,
                                                     category: category.slug,
                                                     activite: produit.activite,
+                                                    slug: produit.activite
+                                                        .slug_title,
                                                     produit: produit.id,
                                                 }
                                             )

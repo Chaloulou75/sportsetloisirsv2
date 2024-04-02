@@ -216,7 +216,7 @@ class PanierController extends Controller
         ];
         session()->put('panierProducts', $sessionPanierProducts);
 
-        return to_route('structures.activites.show', ['activite' => $activite])->with('success', 'Produit ajouté à votre panier');
+        return to_route('structures.activites.show', ['activite' => $activite, 'slug' => $activite->slug_title ])->with('success', 'Produit ajouté à votre panier');
 
     }
 

@@ -289,6 +289,7 @@ const formatCurrency = (value) => {
                             :link="
                                 route('structures.activites.show', {
                                     activite: activite,
+                                    slug: activite.slug_title,
                                 })
                             "
                         />

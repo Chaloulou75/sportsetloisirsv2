@@ -10,22 +10,6 @@ use Illuminate\Http\Request;
 class PostCommentController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request, Post $post): RedirectResponse
@@ -39,31 +23,7 @@ class PostCommentController extends Controller
             'body' => request('body')
         ]);
 
-        return to_route('posts.show', ['post' => $post->slug ])->with('success', 'Commentaire ajouté.');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Comment $comment)
-    {
-        //
+        return to_route('posts.show', $post)->with('success', 'Commentaire ajouté.');
     }
 
     /**
@@ -72,7 +32,7 @@ class PostCommentController extends Controller
     public function destroy(Post $post, Comment $comment): RedirectResponse
     {
         $comment->delete();
-        return to_route('posts.show', ['post' => $post])->with('success', 'Commentaire supprimé.');
+        return to_route('posts.show', $post)->with('success', 'Commentaire supprimé.');
 
     }
 }

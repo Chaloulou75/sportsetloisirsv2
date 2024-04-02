@@ -34,7 +34,7 @@ const props = defineProps({
                 <template v-slot:ariane>
                     <nav aria-label="Breadcrumb" class="flex">
                         <ol
-                            class="flex text-gray-600 border border-gray-200 rounded-lg"
+                            class="flex rounded-lg border border-gray-200 text-gray-600"
                         >
                             <li class="flex items-center">
                                 <Link
@@ -42,7 +42,7 @@ const props = defineProps({
                                     :href="route('welcome')"
                                     class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
                                 >
-                                    <HomeIcon class="w-4 h-4" />
+                                    <HomeIcon class="h-4 w-4" />
 
                                     <span
                                         class="ms-1.5 hidden text-xs font-medium md:block"
@@ -61,7 +61,7 @@ const props = defineProps({
                                 <Link
                                     preserve-scroll
                                     :href="route('favoris.index')"
-                                    class="flex items-center h-10 text-xs font-medium transition bg-white pe-4 ps-8 hover:text-gray-900"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     Favoris
                                 </Link>
@@ -75,13 +75,13 @@ const props = defineProps({
         <div class="py-6">
             <template v-if="produits.length > 0">
                 <h2
-                    class="w-full my-8 text-2xl font-semibold text-center text-slate-800"
+                    class="my-8 w-full text-center text-2xl font-semibold text-slate-800"
                 >
                     Vos produits favoris:
                 </h2>
-                <div class="w-full px-2 mx-auto sm:px-6 lg:px-8">
+                <div class="mx-auto w-full px-2 sm:px-6 lg:px-8">
                     <div
-                        class="grid h-auto grid-cols-1 gap-4 place-content-stretch place-items-stretch md:grid-cols-3"
+                        class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-3"
                     >
                         <ProduitCard
                             v-for="(produit, index) in produits"
@@ -92,6 +92,7 @@ const props = defineProps({
                             :link="
                                 route('structures.activites.show', {
                                     activite: produit.activite,
+                                    slug: produit.activite.slug_title,
                                 })
                             "
                             :data="{
@@ -104,13 +105,13 @@ const props = defineProps({
 
             <template v-if="activites.length > 0">
                 <h2
-                    class="w-full my-8 text-2xl font-semibold text-center text-slate-800"
+                    class="my-8 w-full text-center text-2xl font-semibold text-slate-800"
                 >
                     Vos activités favorites:
                 </h2>
-                <div class="w-full px-2 mx-auto sm:px-6 lg:px-8">
+                <div class="mx-auto w-full px-2 sm:px-6 lg:px-8">
                     <div
-                        class="grid h-auto grid-cols-1 gap-4 place-content-stretch place-items-stretch md:grid-cols-3"
+                        class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-3"
                     >
                         <ActiviteCard
                             v-for="(activite, index) in activites"
@@ -120,6 +121,7 @@ const props = defineProps({
                             :link="
                                 route('structures.activites.show', {
                                     activite: activite,
+                                    slug: activite.slug_title,
                                 })
                             "
                         />
@@ -129,13 +131,13 @@ const props = defineProps({
 
             <template v-if="structures.length > 0">
                 <h2
-                    class="w-full my-8 text-2xl font-semibold text-center text-slate-800"
+                    class="my-8 w-full text-center text-2xl font-semibold text-slate-800"
                 >
                     Vos structures favorites:
                 </h2>
-                <div class="w-full px-2 mx-auto sm:px-6 lg:px-8">
+                <div class="mx-auto w-full px-2 sm:px-6 lg:px-8">
                     <div
-                        class="grid h-auto grid-cols-1 gap-4 place-content-stretch place-items-stretch md:grid-cols-3"
+                        class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-3"
                     >
                         <StructureCard
                             v-for="(structure, index) in structures"
@@ -159,7 +161,7 @@ const props = defineProps({
                     produits.length === 0
                 "
             >
-                <div class="max-w-full px-2 mx-auto sm:px-6 lg:px-8">
+                <div class="mx-auto max-w-full px-2 sm:px-6 lg:px-8">
                     <p class="font-medium text-gray-700">
                         Il n'y a pas encore d'activités dans vos favoris.
                     </p>
@@ -167,7 +169,7 @@ const props = defineProps({
             </template>
             <template v-if="!$page.props.auth.user">
                 <div
-                    class="w-full px-2 py-4 mx-auto my-6 bg-blue-200 border border-gray-200 rounded-md md:w-4/5 md:px-6 lg:px-8"
+                    class="mx-auto my-6 w-full rounded-md border border-gray-200 bg-blue-200 px-2 py-4 md:w-4/5 md:px-6 lg:px-8"
                 >
                     <p
                         class="py-2 text-base font-medium leading-relaxed text-gray-800"

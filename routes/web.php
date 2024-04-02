@@ -2,7 +2,6 @@
 
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Application;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
@@ -42,7 +41,6 @@ use App\Http\Controllers\AdminTarifTypeDisCatController;
 use App\Http\Controllers\StructureStatistiqueController;
 use App\Http\Controllers\Discipline\DisciplineController;
 use App\Http\Controllers\AdminTarifTypeAttributController;
-use App\Http\Controllers\Departement\DepartementController;
 use App\Http\Controllers\LienDisCatCritValSsCritController;
 use App\Http\Controllers\LienDisCatTarAttrValeurController;
 use App\Http\Controllers\AdminCategorieDisciplineController;
@@ -114,10 +112,7 @@ Route::get('/blog/articles/{discipline?}', [PostController::class, 'index'])->na
 Route::get('/blog/{post:slug}', [PostController::class, 'show'])->name('posts.show');
 Route::post('/blog/{post:slug}/likes', [PostLikeController::class, 'store'])->name('posts.likes.store');
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
+// structures route
 Route::get('/structures', [StructureController::class, 'index'])
         ->name('structures.index');
 
@@ -130,17 +125,11 @@ require __DIR__ . '/famille.php';
 // disciplines routes
 require __DIR__ . '/discipline.php';
 
-// structures route
-
-
 // activites route
-Route::get('/activites-{activite}', [ActiviteController::class, 'show'])->name('structures.activites.show');
+Route::get('/activites-{activite}-{slug}', [ActiviteController::class, 'show'])->name('structures.activites.show');
 
 // Departements routes
 require __DIR__ . '/departement.php';
-
-
-
 
 Route::middleware(['auth', 'verified'])->group(function () {
     //blog create, conflits routes avec slug && disciplines

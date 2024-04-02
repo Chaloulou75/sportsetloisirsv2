@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
@@ -25,7 +26,8 @@ class StructureActivite extends Model
     protected $guarded = [];
 
     protected $appends = [
-        'image_url'
+        'image_url',
+        'slug_title'
     ];
 
     /**
@@ -36,6 +38,7 @@ class StructureActivite extends Model
     protected $casts = [
         'actif' => 'boolean',
     ];
+
 
     public function structure(): BelongsTo
     {
@@ -80,7 +83,17 @@ class StructureActivite extends Model
     protected function imageUrl(): Attribute
     {
         return Attribute::make(
-            get: fn() => Storage::url($this->image),
+            get: fn () => Storage::url($this->image),
+        );
+    }
+
+    /**
+     * Get the slug from the title.
+     */
+    protected function slugTitle(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => Str::slug($this->titre)
         );
     }
 

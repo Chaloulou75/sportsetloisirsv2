@@ -21,7 +21,14 @@ const coordonneesForm = useForm({
     user: props.user ?? null,
     name: props.user?.name ?? null,
     email: props.user?.email ?? null,
+    name_receiver: null,
+    email_receiver: null,
 });
+
+const showGiftFields = ref(false);
+const openGiftFields = () => {
+    showGiftFields.value = !showGiftFields.value;
+};
 
 const onSubmit = () => {
     coordonneesForm.post(route("panier.coordonnees.store"), {
@@ -47,9 +54,11 @@ const onSubmit = () => {
         <form @submit.prevent="onSubmit" autocomplete="off">
             <div class="container mx-auto flex flex-col gap-4 py-6">
                 <div class="w-full space-y-4">
-                    <h2 class="text-lg font-semibold">Coordonnées:</h2>
+                    <h2 class="text-lg font-semibold">
+                        Remplissez vos informations:
+                    </h2>
                     <div>
-                        <InputLabel for="name" value="Nom" />
+                        <InputLabel for="name" value="Nom complet:" />
 
                         <TextInput
                             id="name"
@@ -67,7 +76,7 @@ const onSubmit = () => {
                         />
                     </div>
                     <div>
-                        <InputLabel for="email" value="Email" />
+                        <InputLabel for="email" value="Email:" />
 
                         <TextInput
                             id="email"
@@ -81,6 +90,60 @@ const onSubmit = () => {
                         <InputError
                             class="mt-2"
                             :message="coordonneesForm.errors.email"
+                        />
+                    </div>
+                    <button
+                        class="rounded-sm bg-blue-700 px-3 py-2 text-sm text-white hover:bg-blue-600"
+                        type="button"
+                        @click.prevent="openGiftFields"
+                    >
+                        <span v-if="!showGiftFields">C'est pour offrir ?</span
+                        ><span v-else>C'est pour vous?</span>
+                    </button>
+                    <template v-if="showGiftFields">
+                        <p class="text-sm font-semibold text-gray-700">
+                            Coordonnées de la personne qui reçoit votre cadeau:
+                        </p>
+                    </template>
+                    <div v-if="showGiftFields">
+                        <InputLabel
+                            for="name_receiver"
+                            value="Nom complet du recevant:"
+                        />
+
+                        <TextInput
+                            id="name_receiver"
+                            type="text"
+                            class="mt-1 block w-full max-w-sm"
+                            v-model="coordonneesForm.name_receiver"
+                            required
+                            autofocus
+                            autocomplete="name"
+                        />
+
+                        <InputError
+                            class="mt-2"
+                            :message="coordonneesForm.errors.name_receiver"
+                        />
+                    </div>
+                    <div v-if="showGiftFields">
+                        <InputLabel
+                            for="email_receiver"
+                            value="Email du recevant:"
+                        />
+
+                        <TextInput
+                            id="email_receiver"
+                            type="email"
+                            class="mt-1 block w-full max-w-sm"
+                            v-model="coordonneesForm.email_receiver"
+                            required
+                            autocomplete="email"
+                        />
+
+                        <InputError
+                            class="mt-2"
+                            :message="coordonneesForm.errors.email_receiver"
                         />
                     </div>
                 </div>
