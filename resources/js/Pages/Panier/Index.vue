@@ -370,7 +370,7 @@ onBeforeMount(() => {
                                 "
                             >
                                 <div
-                                    class="flex items-center justify-between space-x-2 px-4"
+                                    class="flex items-center justify-between space-x-2 px-1 md:px-4"
                                     v-for="creneau in reservation.plannings"
                                     :key="creneau.id"
                                 >
@@ -378,20 +378,16 @@ onBeforeMount(() => {
                                         <CalendarDaysIcon
                                             class="me-3 size-4 flex-shrink-0 text-gray-700"
                                         />
-                                        <p class="text-sm text-gray-700">
-                                            <span
-                                                class="text-sm font-semibold"
-                                                >{{
-                                                    formatDate(creneau.start)
-                                                }}</span
-                                            >
+                                        <p
+                                            class="text-xs text-gray-700 md:text-sm"
+                                        >
+                                            <span class="font-semibold">{{
+                                                formatDate(creneau.start)
+                                            }}</span>
                                             au
-                                            <span
-                                                class="text-sm font-semibold"
-                                                >{{
-                                                    formatDate(creneau.end)
-                                                }}</span
-                                            >
+                                            <span class="font-semibold">{{
+                                                formatDate(creneau.end)
+                                            }}</span>
                                         </p>
                                     </div>
 

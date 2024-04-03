@@ -62,7 +62,7 @@ onMounted(() => {
                 <template v-slot:ariane>
                     <nav aria-label="Breadcrumb" class="flex">
                         <ol
-                            class="flex overflow-hidden text-gray-600 border border-gray-200 rounded-lg"
+                            class="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600"
                         >
                             <li class="flex items-center">
                                 <Link
@@ -72,7 +72,7 @@ onMounted(() => {
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
-                                        class="w-4 h-4"
+                                        class="h-4 w-4"
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         stroke="currentColor"
@@ -99,7 +99,7 @@ onMounted(() => {
                                 <Link
                                     preserve-scroll
                                     :href="route('posts.index')"
-                                    class="flex items-center h-10 text-xs font-medium transition bg-white pe-4 ps-8 hover:text-gray-900"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     Blog
                                 </Link>
@@ -111,41 +111,41 @@ onMounted(() => {
         </template>
 
         <div class="py-6 md:py-12">
-            <div class="max-w-full px-2 mx-auto sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-full px-2 sm:px-6 lg:px-8">
                 <div class="flex justify-center md:justify-end">
                     <Link
                         v-if="user"
                         :href="route('posts.create')"
-                        class="flex items-center text-sm text-gray-800 group hover:text-gray-900 md:text-base"
+                        class="group flex items-center text-sm text-gray-800 hover:text-gray-900 md:text-base"
                     >
                         Ecrire un article
                         <ArrowRightIcon
-                            class="w-5 ml-2 group-hover:text-gray-900"
+                            class="ml-2 w-5 group-hover:text-gray-900"
                         />
                     </Link>
                 </div>
                 <!-- search box -->
                 <div
-                    class="flex flex-col items-center justify-center w-full max-w-3xl px-2 mx-auto mt-4 mb-8 md:flex-row md:items-center"
+                    class="mx-auto mb-8 mt-4 flex w-full max-w-3xl flex-col items-center justify-center px-2 md:flex-row md:items-center"
                 >
                     <label
                         for="search"
                         value="Rechercher un article"
-                        class="pr-2 mb-1 text-sm font-medium text-gray-800"
+                        class="mb-1 pr-2 text-sm font-medium text-gray-800"
                         >Rechercher un article:</label
                     >
 
                     <TextInput
                         id="search"
                         type="text"
-                        class="flex-1 block w-full px-2 mt-1 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
+                        class="mt-1 block w-full flex-1 px-2 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
                         v-model="search"
                         placeholder="mots clés, tag, discipline..."
                     />
 
                     <button type="button" @click="resetSearch">
                         <svg
-                            class="w-6 h-6 my-3 ml-2 text-gray-400 hover:text-gray-700 lg:my-0 lg:h-8 lg:w-8"
+                            class="my-3 ml-2 h-6 w-6 text-gray-400 hover:text-gray-700 lg:my-0 lg:h-8 lg:w-8"
                             viewBox="0 0 20 20"
                             fill="currentColor"
                         >
@@ -160,7 +160,7 @@ onMounted(() => {
                 <div
                     ref="toAnimateOne"
                     v-if="posts.data.length > 0"
-                    class="grid h-auto grid-cols-1 gap-4 place-items-stretch sm:grid-cols-2 md:grid-cols-3"
+                    class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                 >
                     <PostFeaturedCard
                         v-for="post in posts.data"
@@ -174,7 +174,7 @@ onMounted(() => {
                 <template v-else>
                     <div class="py-6 md:py-12">
                         <div
-                            class="max-w-full min-h-full px-2 mx-auto sm:px-6 lg:px-8"
+                            class="mx-auto min-h-full max-w-full px-2 sm:px-6 lg:px-8"
                         >
                             <p class="font-medium text-gray-700">
                                 Pas encore d'article

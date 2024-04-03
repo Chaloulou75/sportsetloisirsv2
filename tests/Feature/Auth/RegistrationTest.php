@@ -1,8 +1,9 @@
 <?php
 
 use App\Providers\RouteServiceProvider;
+use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+// uses(LazilyRefreshDatabase::class);
 
 test('registration screen can be rendered', function () {
     $response = $this->get('/register');

@@ -35,8 +35,6 @@ use App\Models\LienDisciplineCategorie;
 use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Database\Eloquent\Builder;
-use App\Models\StructureProduitSousCritere;
 use App\Models\LienDisciplineCategorieCritere;
 
 class StructureController extends Controller

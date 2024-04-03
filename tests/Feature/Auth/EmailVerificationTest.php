@@ -1,12 +1,13 @@
 <?php
 
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\URL;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+// uses(LazilyRefreshDatabase::class);
 
 test('email verification screen can be rendered', function () {
     $user = User::factory()->create([

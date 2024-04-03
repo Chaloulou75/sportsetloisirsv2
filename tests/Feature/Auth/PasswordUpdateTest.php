@@ -2,8 +2,10 @@
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+// uses(LazilyRefreshDatabase::class);
 
 test('password can be updated', function () {
     $user = User::factory()->create();

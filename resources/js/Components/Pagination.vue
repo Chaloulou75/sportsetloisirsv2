@@ -18,7 +18,7 @@ const props = defineProps({
                 <Link
                     v-else
                     class="mb-1 mr-1 rounded border px-4 py-3 text-sm leading-4 text-gray-300 hover:bg-white hover:text-gray-700 focus:border-gray-500 focus:text-gray-500"
-                    :class="{ 'bg-white text-gray-700': link.active }"
+                    :class="{ 'bg-blue-700 text-white': link.active }"
                     :href="link.url"
                     v-html="link.label"
                     preserve-scroll

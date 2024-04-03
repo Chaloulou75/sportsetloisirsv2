@@ -45,7 +45,7 @@ class PostController extends Controller
             });
         }
 
-        $posts = $postsQuery->paginate(18)->withQueryString();
+        $posts = $postsQuery->paginate(12)->withQueryString();
 
         return Inertia::render('Posts/Index', [
             'familles' => fn () => $familles,

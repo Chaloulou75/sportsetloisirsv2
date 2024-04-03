@@ -54,11 +54,18 @@ class PanierCoordonneesController extends Controller
         $request->validate([
             'name' => 'required|string|min:3',
             'email' => 'required|email',
+            'phone' => 'required|phone:FR',
+            'address' => 'required',
+            'city' => 'required',
+            'zip_code' => 'required',
+            'country' => 'required',
+            'to_offer' => 'boolean',
             'name_receiver' => 'nullable|string|min:3',
             'email_receiver' => 'nullable|email',
         ]);
 
         dd($request->all());
+        // création compte client (+1 si client receveur)
 
     }
 

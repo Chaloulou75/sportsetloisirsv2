@@ -2,11 +2,15 @@
 
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+use function Pest\Laravel\get;
+
+// uses(LazilyRefreshDatabase::class);
 
 test('login screen can be rendered', function () {
-    $response = $this->get('/login');
+    $response = get(route('login'));
 
     $response->assertStatus(200);
 });

@@ -18,7 +18,6 @@ import OpenTimesForm from "@/Components/Forms/DayTime/OpenTimesForm.vue";
 import OpenMonthsForm from "@/Components/Forms/DayTime/OpenMonthsForm.vue";
 import { isClient } from "@vueuse/shared";
 import { useShare } from "@vueuse/core";
-// import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import autoAnimate from "@formkit/auto-animate";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
@@ -878,15 +877,6 @@ const reservationForm = useForm({
     remember: false,
 });
 
-// const submitReservation = () => {
-//     reservationForm.post(route("reservations.store"), {
-//         preserveScroll: true,
-//         onSuccess: () => {
-//             reservationForm.reset();
-//         },
-//     });
-// };
-
 onMounted(() => {
     if (listToAnimate.value) {
         autoAnimate(listToAnimate.value);
@@ -940,10 +930,12 @@ onMounted(() => {
                 class="mx-auto my-4 max-w-full px-2 sm:px-4 md:py-6 lg:px-8"
             >
                 <div
-                    class="flex flex-col-reverse justify-between space-y-8 rounded-lg text-slate-600 md:flex-row md:items-start md:space-x-6 md:space-y-0"
+                    class="flex flex-col-reverse rounded-lg text-slate-600 md:flex-row md:items-start md:justify-between md:space-x-6"
                 >
                     <!-- Structure -->
-                    <div class="basis-full space-y-6 md:basis-1/4">
+                    <div
+                        class="mt-10 basis-full space-y-6 md:mt-0 md:basis-1/4"
+                    >
                         <img
                             v-if="activite.image"
                             alt="image"
@@ -998,6 +990,7 @@ onMounted(() => {
                             </div>
                         </div>
                     </div>
+                    <!-- Activité -->
                     <div class="basis-full space-y-12 md:basis-3/4">
                         <!-- titre -->
                         <div
@@ -1383,7 +1376,7 @@ onMounted(() => {
                                 </div>
                             </div>
                         </div>
-                        <!-- <form @submit.prevent="submitReservation()"> -->
+
                         <div
                             ref="listToAnimate"
                             class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:gap-8"
@@ -1401,7 +1394,9 @@ onMounted(() => {
                             />
                         </div>
 
-                        <div class="my-4 flex w-full items-center justify-end">
+                        <div
+                            class="flex w-full items-center justify-center md:justify-end"
+                        >
                             <button
                                 v-if="
                                     reservationForm.produit &&
@@ -1409,34 +1404,11 @@ onMounted(() => {
                                 "
                                 @click.prevent="openReservationModal"
                                 type="button"
-                                class="inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-4 py-2 text-sm font-semibold text-white duration-300 hover:-translate-y-1 hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
+                                class="inline-flex w-full items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm text-white duration-300 hover:-translate-y-1 hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50 md:w-auto"
                             >
                                 Sélectionner
                             </button>
                         </div>
-                        <!-- <div
-                                v-if="
-                                    reservationForm.produit &&
-                                    reservationForm.formule
-                                "
-                                class="flex items-center justify-end w-full my-4"
-                            >
-                                <button
-                                    :disabled="reservationForm.processing"
-                                    :class="{
-                                        'opacity-25':
-                                            reservationForm.processing,
-                                    }"
-                                    type="submit"
-                                    class="inline-flex justify-between px-4 py-2 text-sm font-normal text-white duration-300 bg-green-600 border border-transparent rounded-md hover:-translate-y-1 hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
-                                >
-                                    <LoadingSVG
-                                        v-if="reservationForm.processing"
-                                    />
-                                    Ajouter au panier
-                                </button>
-                            </div> -->
-                        <!-- </form> -->
                     </div>
                 </div>
             </section>
