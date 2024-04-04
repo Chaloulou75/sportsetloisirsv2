@@ -43,7 +43,7 @@ const headerClass = computed(() => {
         leave-to="opacity-0"
     >
         <div
-            class="block rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:shadow-2xl"
+            class="block h-full rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:shadow-2xl"
         >
             <div
                 class="relative h-56 w-full rounded-md bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-soft-light"

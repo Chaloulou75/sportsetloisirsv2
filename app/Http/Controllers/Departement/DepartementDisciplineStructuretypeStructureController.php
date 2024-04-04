@@ -14,6 +14,7 @@ use App\Models\ListDiscipline;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Resources\FamilleResource;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
 
@@ -77,7 +78,7 @@ class DepartementDisciplineStructuretypeStructureController extends Controller
 
         return Inertia::render('Structures/Show', [
             'structure' => fn () => $structure,
-            'familles' => fn () => $familles,
+            'familles' => fn () => FamilleResource::collection($familles),
             'allCities' => fn () => $allCities,
             'listDisciplines' => fn () => $listDisciplines,
             'criteres' => fn () => $criteres,

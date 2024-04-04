@@ -12,7 +12,9 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Resources\FamilleResource;
 use App\Models\LienDisciplineCategorie;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
@@ -93,7 +95,7 @@ class DepartementDisciplineController extends Controller
         $departement->increment('view_count');
 
         return Inertia::render('Departements/Disciplines/Show', [
-            'familles' => fn () => $familles,
+            'familles' => fn () => FamilleResource::collection($familles),
             'categories' => fn () => $categories,
             'firstCategories' => fn () => $firstCategories,
             'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
@@ -104,7 +106,7 @@ class DepartementDisciplineController extends Controller
             'discipline' => fn () => $discipline,
             'listDisciplines' => fn () => $listDisciplines,
             'allCities' => fn () => $allCities,
-            'posts' => fn () => $posts,
+            'posts' => fn () => PostResource::collection($posts),
         ]);
 
     }

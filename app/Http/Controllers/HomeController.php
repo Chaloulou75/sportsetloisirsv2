@@ -11,8 +11,11 @@ use App\Models\Structure;
 use App\Models\Departement;
 use App\Models\ListDiscipline;
 use App\Models\StructureProduit;
+use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
+use App\Http\Resources\FamilleResource;
+use App\Http\Resources\ListDisciplineResource;
 
 class HomeController extends Controller
 {
@@ -98,9 +101,9 @@ class HomeController extends Controller
         });
 
         return Inertia::render('Welcome', [
-            'familles' => fn () => $familles,
-            'listDisciplines' => fn () => $listDisciplines,
-            'disciplines' => fn () => $disciplines,
+            'familles' => fn () => FamilleResource::collection($familles),
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
+            'disciplines' => fn () => ListDisciplineResource::collection($disciplines),
             'disciplinesCount' => fn () => $disciplinesCount,
             'structuresCount' => fn () => $structuresCount,
             'produitsCount' => fn () => $produitsCount,
@@ -109,7 +112,7 @@ class HomeController extends Controller
             'allCities' => fn () => $allCities,
             'topVilles' => fn () => $topVilles,
             'topDepartements' => fn () => $topDepartements,
-            'posts' => fn () => $posts,
+            'posts' => fn () => PostResource::collection($posts),
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             'filters' => request()->all(['search', 'localite']),

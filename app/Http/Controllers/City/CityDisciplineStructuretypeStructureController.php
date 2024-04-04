@@ -14,6 +14,7 @@ use App\Models\ListDiscipline;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Resources\FamilleResource;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -81,13 +82,12 @@ class CityDisciplineStructuretypeStructureController extends Controller
                         ->where('visible_front', true)
                         ->get();
 
-
         $structure->timestamps = false;
         $structure->increment('view_count');
 
         return Inertia::render('Structures/Show', [
             'structure' => fn () => $structure,
-            'familles' => fn () => $familles,
+            'familles' => fn () => FamilleResource::collection($familles),
             'allCities' => fn () => $allCities,
             'listDisciplines' => fn () => $listDisciplines,
             'criteres' => fn () => $criteres,

@@ -8,6 +8,7 @@ use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\Request;
+use App\Http\Resources\PostResource;
 
 class AdminBlogController extends Controller
 {
@@ -33,7 +34,7 @@ class AdminBlogController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'posts' => fn () => $posts,
+            'posts' => fn () => PostResource::collection($posts),
             'tags' => fn () => $tags,
             'filters' => request()->all(['search', 'author']),
         ]);

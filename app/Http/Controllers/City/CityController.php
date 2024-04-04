@@ -13,7 +13,9 @@ use App\Models\ListDiscipline;
 use App\Models\StructureProduit;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Resources\FamilleResource;
 
 class CityController extends Controller
 {
@@ -51,7 +53,7 @@ class CityController extends Controller
 
         return Inertia::render('Villes/Index', [
             'cities' => fn () => $cities,
-            'familles' => fn () => $familles,
+            'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => $listDisciplines,
             'allCities' => fn () => $allCities,
             'structuresCount' => fn () => $structuresCount,
@@ -127,7 +129,7 @@ class CityController extends Controller
         $city->increment('view_count');
 
         return Inertia::render('Villes/Show', [
-            'familles' => fn () => $familles,
+            'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => $listDisciplines,
             'allCities' => fn () => $allCities,
             'city' => fn () => $city,
@@ -135,7 +137,7 @@ class CityController extends Controller
             'produits' => fn () => $produits,
             'flattenedDisciplines' => fn () => $flattenedDisciplines,
             'structures' => fn () => $structures,
-            'posts' => fn () => $posts,
+            'posts' => fn () => PostResource::collection($posts),
             'filters' => request()->all(['discipline']),
         ]);
     }

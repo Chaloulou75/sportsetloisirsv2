@@ -115,7 +115,7 @@ watch(
             axios
                 .get("/api/listdisciplines/" + newDisciplineID)
                 .then((response) => {
-                    categoriesList.value = response.data.data;
+                    categoriesList.value = response.data;
                 })
                 .catch((e) => {
                     console.log(e);
@@ -123,7 +123,8 @@ watch(
             axios
                 .get("/api/listdisciplines_similaires/" + newDisciplineID)
                 .then((response) => {
-                    activiteSimilairesList.value = response.data.data;
+                    activiteSimilairesList.value = response.data;
+                    console.log(activiteSimilairesList.value);
                 })
                 .catch((e) => {
                     console.log(e);

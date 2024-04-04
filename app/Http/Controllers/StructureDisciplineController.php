@@ -11,6 +11,7 @@ use App\Models\ListDiscipline;
 use App\Models\ListeTarifType;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
+use App\Models\StructureCatTarif;
 use App\Models\StructurePlanning;
 use App\Models\ProductReservation;
 use App\Models\StructureCategorie;
@@ -20,8 +21,8 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\RedirectResponse;
 use App\Models\LienDisciplineCategorie;
 use App\Models\StructureProduitCritere;
+use App\Http\Resources\ListDisciplineResource;
 use App\Models\LienDisciplineCategorieCritere;
-use App\Models\StructureCatTarif;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class StructureDisciplineController extends Controller
@@ -39,8 +40,7 @@ class StructureDisciplineController extends Controller
             },
             'produits',
         ])->select(['id', 'name', 'slug'])
-        ->where('id', $structure->id)
-        ->first();
+        ->find($structure->id);
 
         $allReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {
             $query->where('structure_id', $structure->id);
@@ -146,7 +146,7 @@ class StructureDisciplineController extends Controller
             'structure' => fn () => $structure,
             'categories' => fn () => $categories,
             'dejaUsedDisciplines' => fn () => $dejaUsedDisciplines,
-            'listDisciplines' => fn () => $listDisciplines,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'activites' => fn () => $activites,
             'actByDiscAndCategorie' => fn () => $actByDiscAndCategorie,
             'categoriesListByDiscipline' => fn () => $categoriesListByDiscipline,

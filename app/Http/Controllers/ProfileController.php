@@ -11,6 +11,7 @@ use App\Models\ListDiscipline;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Resources\FamilleResource;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -35,7 +36,7 @@ class ProfileController extends Controller
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
-            'familles' => fn () => $familles,
+            'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => $listDisciplines,
             'allCities' => fn () => $allCities,
         ]);

@@ -11,8 +11,11 @@ use App\Models\Famille;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
+use App\Http\Resources\PostResource;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Resources\FamilleResource;
+use App\Http\Resources\ListDisciplineResource;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
@@ -32,7 +35,12 @@ class PostController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $postsQuery = Post::with('author:id,name', 'comments', 'tags:id,name', 'disciplines:id,name')
+        $postsQuery = Post::with([
+                'author:id,name',
+                'comments',
+                'tags:id,name',
+                'disciplines:id,name'
+            ])
                 ->withCount('comments')
                 ->latest()
                 ->filter(
@@ -48,10 +56,10 @@ class PostController extends Controller
         $posts = $postsQuery->paginate(12)->withQueryString();
 
         return Inertia::render('Posts/Index', [
-            'familles' => fn () => $familles,
+            'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => $listDisciplines,
             'allCities' => fn () => $allCities,
-            'posts' => fn () => $posts,
+            'posts' => fn () => PostResource::collection($posts),
             'discipline' => fn () => $discipline ?? null,
             'filters' => request()->all(['search', 'author']),
         ]);
@@ -77,10 +85,10 @@ class PostController extends Controller
         $disciplines = ListDiscipline::select('id', 'name')->get();
 
         return Inertia::render('Posts/Create', [
-            'familles' => fn () => $familles,
-            'listDisciplines' => fn () => $listDisciplines,
+            'familles' => fn () => FamilleResource::collection($familles),
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => $allCities,
-            'disciplines' => fn () => $disciplines,
+            'disciplines' => fn () => ListDisciplineResource::collection($disciplines),
             'tags' => fn () => $tags,
         ]);
     }
@@ -150,15 +158,24 @@ class PostController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $post = Post::with('author:id,name', 'author.structures:id,name,slug', 'comments', 'comments.author:id,name', 'tags:id,name', 'disciplines:id,name')->findOrFail($post->id);
+        $post = Post::with([
+            'author:id,name',
+            'author.structures:id,name,slug',
+            'comments' => function ($query) {
+                $query->latest();
+            },
+            'comments.author:id,name',
+            'tags:id,name',
+            'disciplines:id,name'
+        ])->findOrFail($post->id);
 
         $post->increment('views_count');
 
         return Inertia::render('Posts/Show', [
-            'familles' => fn () => $familles,
-            'listDisciplines' => fn () => $listDisciplines,
+            'familles' => fn () => FamilleResource::collection($familles),
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => $allCities,
-            'post' => fn () => $post,
+            'post' => fn () => PostResource::make($post),
         ]);
     }
 

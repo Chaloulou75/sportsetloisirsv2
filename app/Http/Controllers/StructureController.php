@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use App\Models\StructureTarifTypeInfo;
+use App\Http\Resources\FamilleResource;
 use App\Models\LienDisciplineCategorie;
 use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Storage;
@@ -76,7 +77,7 @@ class StructureController extends Controller
         return Inertia::render('Structures/Index', [
             'structures' => fn () => $structures,
             'filters' => request()->all(['search']),
-            'familles' => fn () => $familles,
+            'familles' => fn () => FamilleResource::collection($familles),
             'allCities' => fn () => $allCities,
             'listDisciplines' => fn () => $listDisciplines,
         ]);
@@ -104,7 +105,7 @@ class StructureController extends Controller
         return Inertia::render('Structures/Create', [
             'structurestypes' => fn () => $structurestypes,
             'disciplines' => fn () => $disciplines,
-            'familles' => fn () => $familles,
+            'familles' => fn () => FamilleResource::collection($familles),
             'allCities' => fn () => $allCities,
             'listDisciplines' => fn () => $listDisciplines,
         ]);
@@ -322,7 +323,7 @@ class StructureController extends Controller
 
         return Inertia::render('Structures/Show', [
             'structure' => fn () => $structure,
-            'familles' => fn () => $familles,
+            'familles' => fn () => FamilleResource::collection($familles),
             'allCities' => fn () => $allCities,
             'listDisciplines' => fn () => $listDisciplines,
             'criteres' => fn () => $criteres,

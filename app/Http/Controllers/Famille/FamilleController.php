@@ -43,7 +43,7 @@ class FamilleController extends Controller
         });
 
         return Inertia::render('Familles/Index', [
-            'familles' => fn () => $familles,
+            'familles' => fn () => FamilleResource::collection($familles),
             'allCities' => fn () => $allCities,
             'listDisciplines' => fn () => $listDisciplines,
             'familleCount' => fn () => $familleCount,
@@ -87,7 +87,7 @@ class FamilleController extends Controller
         $famille->increment('view_count');
 
         return Inertia::render('Familles/Show', [
-            'familles' => fn () => $familles,
+            'familles' => fn () => FamilleResource::collection($familles),
             'allCities' => fn () => $allCities,
             'listDisciplines' => fn () => $listDisciplines,
             'famille' => fn () => $famille,

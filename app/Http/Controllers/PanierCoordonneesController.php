@@ -8,6 +8,7 @@ use App\Models\Famille;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Resources\FamilleResource;
 
 class PanierCoordonneesController extends Controller
 {
@@ -30,7 +31,7 @@ class PanierCoordonneesController extends Controller
 
         return Inertia::render('Panier/Coordonnees/Index', [
             'user' => fn () => $user ?? null,
-            'familles' => fn () => $familles,
+            'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => $listDisciplines,
             'allCities' => fn () => $allCities,
         ]);

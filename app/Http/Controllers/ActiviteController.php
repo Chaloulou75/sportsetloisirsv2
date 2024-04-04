@@ -22,6 +22,7 @@ use App\Models\StructureDiscipline;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Resources\FamilleResource;
 use App\Models\LienDisciplineCategorie;
 use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Storage;
@@ -155,7 +156,7 @@ class ActiviteController extends Controller
             ->get();
 
         return Inertia::render('Structures/Activites/Show', [
-            'familles' => fn () => $familles,
+            'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => $listDisciplines,
             'allCities' => fn () => $allCities,
             'activite' => fn () => $activite,

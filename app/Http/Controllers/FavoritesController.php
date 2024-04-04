@@ -12,6 +12,7 @@ use App\Models\ListDiscipline;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Resources\FamilleResource;
 
 class FavoritesController extends Controller
 {
@@ -54,7 +55,7 @@ class FavoritesController extends Controller
         }
 
         return Inertia::render('Favorites/Index', [
-                    'familles' => fn () => $familles,
+                    'familles' => fn () => FamilleResource::collection($familles),
                     'structures' => fn () => $structures ?? [],
                     'activites' => fn () => $activites ?? [],
                     'produits' => fn () => $produits ?? [],

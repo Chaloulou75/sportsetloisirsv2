@@ -12,6 +12,7 @@ use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Resources\FamilleResource;
 use App\Models\LienDisciplineCategorieCritere;
 
 class DepartementActiviteController extends Controller
@@ -62,7 +63,7 @@ class DepartementActiviteController extends Controller
         return Inertia::render('Structures/Activites/Show', [
                     'departement' => fn () => $departement,
                     'produits' => fn () => $produits,
-                    'familles' => fn () => $familles,
+                    'familles' => fn () => FamilleResource::collection($familles),
                     'listDisciplines' => fn () => $listDisciplines,
                     'allCities' => fn () => $allCities,
                     'activite' => fn () => $activite,

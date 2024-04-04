@@ -9,6 +9,7 @@ use App\Models\Famille;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use Illuminate\Http\RedirectResponse;
+use App\Http\Resources\FamilleResource;
 
 class FamilleDisciplineController extends Controller
 {
@@ -45,7 +46,7 @@ class FamilleDisciplineController extends Controller
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
             'discipline' => fn () => $discipline,
-            'familles' => fn () => $familles,
+            'familles' => fn () => FamilleResource::collection($familles),
         ]);
     }
 

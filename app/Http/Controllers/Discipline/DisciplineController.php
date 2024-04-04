@@ -14,8 +14,10 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PostResource;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Resources\FamilleResource;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineSimilaire;
 use App\Http\Resources\CategorieResource;
@@ -53,7 +55,7 @@ class DisciplineController extends Controller
 
         return Inertia::render('Disciplines/Index', [
             'disciplines' => fn () => $disciplines,
-            'familles' => fn () => $familles,
+            'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => $listDisciplines,
             'allCities' => fn () => $allCities,
             'structuresCount' => fn () => $structuresCount,
@@ -112,7 +114,7 @@ class DisciplineController extends Controller
         $discipline->increment('view_count');
 
         return Inertia::render('Disciplines/Show', [
-            'familles' => fn () => $familles,
+            'familles' => fn () => FamilleResource::collection($familles),
             'discipline' => fn () => $discipline,
             'categories' => fn () => $categories,
             'firstCategories' => fn () => $firstCategories,
@@ -122,7 +124,7 @@ class DisciplineController extends Controller
             'allCities' => fn () => $allCities,
             'produits' => fn () => $produits,
             'structures' => fn () => $structures,
-            'posts' => fn () => $posts,
+            'posts' => fn () => PostResource::collection($posts),
         ]);
     }
     /**

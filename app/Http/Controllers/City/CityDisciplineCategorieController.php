@@ -11,7 +11,9 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Resources\FamilleResource;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -135,7 +137,7 @@ class CityDisciplineCategorieController extends Controller
         $city->increment('view_count');
 
         return Inertia::render('Villes/Disciplines/Categories/Show', [
-            'familles' => fn () => $familles,
+            'familles' => fn () => FamilleResource::collection($familles),
             'category' => fn () => $category,
             'categories' => fn () => $categories,
             'firstCategories' => fn () => $firstCategories,
@@ -149,7 +151,7 @@ class CityDisciplineCategorieController extends Controller
             'criteres' => fn () => $criteres,
             'listDisciplines' => fn () => $listDisciplines,
             'allCities' => fn () => $allCities,
-            'posts' => fn () => $posts
+            'posts' => fn () => PostResource::collection($posts),
         ]);
 
     }

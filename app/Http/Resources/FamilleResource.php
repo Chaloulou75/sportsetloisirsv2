@@ -14,6 +14,11 @@ class FamilleResource extends JsonResource
 
     public function toArray($request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'slug' => $this->slug,
+            'disciplines' => $this->whenLoaded('disciplines', fn () => $this->disciplines),
+        ];
     }
 }

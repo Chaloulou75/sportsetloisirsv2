@@ -13,6 +13,7 @@ use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Resources\FamilleResource;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
 
@@ -83,7 +84,7 @@ class DisciplineCategorieActiviteController extends Controller
 
         return Inertia::render('Structures/Activites/Show', [
             'discipline' => fn () => $requestDiscipline,
-            'familles' => fn () => $familles,
+            'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => $listDisciplines,
             'allCities' => fn () => $allCities,
             'activite' => fn () => $activite,
