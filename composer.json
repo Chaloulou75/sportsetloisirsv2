@@ -21,6 +21,7 @@
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.8",
+        "brianium/paratest": "*",
         "fakerphp/faker": "^1.21.0",
         "kitloong/laravel-migrations-generator": "^6.10",
         "ladumor/laravel-pwa": "^0.0.4",
