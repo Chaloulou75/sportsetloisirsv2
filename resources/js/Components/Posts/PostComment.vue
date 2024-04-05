@@ -27,6 +27,7 @@ const deleteComment = () => {
         }),
         {
             preserveScroll: true,
+            only: ["comments"],
         }
     );
 };
@@ -54,17 +55,17 @@ const deleteComment = () => {
             </header>
 
             <p v-html="comment.body" class="text-justify"></p>
-            <footer class="mt-2 flex w-full items-end justify-end">
+            <footer class="flex items-end justify-end w-full mt-2">
                 <button
                     v-if="
                         (user && comment.user_id === user.id) ||
                         (admin && admin === true)
                     "
-                    class="rounded bg-red-400 p-2 hover:bg-red-600"
+                    class="p-2 bg-red-400 rounded hover:bg-red-600"
                     @click="deleteComment()"
                     type="button"
                 >
-                    <TrashIcon class="h-4 w-4 text-white" />
+                    <TrashIcon class="w-4 h-4 text-white" />
                 </button>
             </footer>
         </div>

@@ -18,6 +18,7 @@ const addComment = () => {
         }),
         {
             preserveScroll: true,
+            only: ["comments"],
             onSuccess: () => commentForm.reset(),
         }
     );

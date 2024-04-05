@@ -118,6 +118,7 @@ const onSubmitAddProduitForm = () => {
         }),
         {
             preserveScroll: true,
+            only: ["structureActivites"],
             remember: false,
             onSuccess: () => {
                 formAddProduit.reset();

@@ -138,6 +138,7 @@ const onSubmit = () => {
         }),
         {
             preserveScroll: true,
+            only: ["structureActivites"],
             onSuccess: () => {
                 form.reset();
                 emit("close");

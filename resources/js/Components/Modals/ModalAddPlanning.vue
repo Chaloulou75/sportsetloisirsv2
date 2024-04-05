@@ -59,6 +59,7 @@ const onSubmit = () => {
         {
             errorBag: "addPlanningForm",
             preserveScroll: true,
+            only: ["structureActivites"],
             onSuccess: () => {
                 addPlanningForm.reset();
                 emit("close");
