@@ -36,9 +36,9 @@ watch(
     search,
     debounce(function (value) {
         router.get(
-            "/departements",
+            route("departements.index"),
             { search: value },
-            { preserveState: true, replace: true }
+            { preserveState: true, replace: true, only: ["departements"] }
         );
     }, 400)
 );
@@ -177,7 +177,10 @@ watch(
                     </Link>
                 </div>
                 <div class="flex justify-end p-10">
-                    <Pagination :links="departements.links" />
+                    <Pagination
+                        :links="departements.links"
+                        :only="['departements']"
+                    />
                 </div>
             </div>
         </div>

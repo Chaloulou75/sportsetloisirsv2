@@ -185,6 +185,7 @@ const submitForm = (id) => {
         {
             forceFormData: true,
             preserveScroll: true,
+            only: ["structureActivites"],
             onSuccess: () => {
                 formEdit.reset();
                 closeEditModal();
@@ -207,6 +208,7 @@ async function toggleActif(structureActivite) {
         },
         {
             preserveScroll: true,
+            only: ["structureActivites"],
         }
     );
 }
@@ -220,6 +222,7 @@ const duplicate = (structureActivite, produit) => {
         }),
         {
             preserveScroll: true,
+            only: ["structureActivites"],
         }
     );
 };
@@ -233,6 +236,7 @@ const destroy = (structureActivite, produit) => {
         }),
         {
             preserveScroll: true,
+            only: ["structureActivites"],
         }
     );
 };

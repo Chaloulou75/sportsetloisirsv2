@@ -67,15 +67,15 @@ onMounted(() => {
     />
     <AdminLayout>
         <template #header>
-            <div class="flex items-center justify-start h-full">
+            <div class="flex h-full items-center justify-start">
                 <Link
                     :href="route('admin.index')"
                     class="h-full bg-blue-600 py-2.5 md:px-4 md:py-4"
                 >
-                    <ChevronLeftIcon class="w-10 h-10 text-white" />
+                    <ChevronLeftIcon class="h-10 w-10 text-white" />
                 </Link>
                 <h1
-                    class="px-3 text-base font-semibold text-center text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
+                    class="px-3 text-center text-base font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
                     Gestion du Blog
                 </h1>
@@ -84,7 +84,7 @@ onMounted(() => {
         <NavAdminBlog />
 
         <div class="py-6 md:py-12">
-            <div class="max-w-full px-2 mx-auto sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-full px-2 sm:px-6 lg:px-8">
                 <form @submit.prevent="addTag" class="max-w-sm space-y-3">
                     <h3 class="mt-4 text-lg font-semibold text-gray-700">
                         Ajouter des tags:
@@ -92,7 +92,7 @@ onMounted(() => {
                     <TextInput
                         type="text"
                         name="tag"
-                        class="block w-full mt-1"
+                        class="mt-1 block w-full"
                         v-model="tagForm.name"
                         placeholder="Ajouter un tag"
                     />
@@ -119,7 +119,7 @@ onMounted(() => {
                             v-model="tagForm.categories"
                             id="categories"
                             type="checkbox"
-                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                            class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
                         />
                         <label
                             for="categories"
@@ -141,7 +141,7 @@ onMounted(() => {
                         >
                     </div> -->
                     <button
-                        class="flex items-center justify-center w-full max-w-xs px-4 py-2 text-base text-white bg-indigo-800 border border-gray-200 rounded-md shadow hover:bg-indigo-900"
+                        class="flex w-full max-w-xs items-center justify-center rounded-md border border-gray-200 bg-indigo-800 px-4 py-2 text-base text-white shadow hover:bg-indigo-900"
                         :disabled="tagForm.processing"
                         :class="{
                             'opacity-25': tagForm.processing,
@@ -158,21 +158,21 @@ onMounted(() => {
                 <TextInput
                     type="text"
                     name="tags"
-                    class="block w-full max-w-sm mt-1"
+                    class="mt-1 block w-full max-w-sm"
                     v-model="filterInput"
                     placeholder="Rechercher un tag"
                 />
                 <div
                     ref="toAnimateOne"
                     v-if="tags.data && tags.data.length > 0"
-                    class="flex flex-wrap items-center mt-2"
+                    class="mt-2 flex flex-wrap items-center"
                 >
                     <button
                         type="button"
                         v-for="tag in filteredTags"
                         :key="tag.id"
                         @click.prevent="deleteTag(tag)"
-                        class="flex items-center p-1 m-px text-sm bg-white border group hover:bg-blue-600 hover:text-white"
+                        class="group m-px flex items-center border bg-white p-1 text-sm hover:bg-blue-600 hover:text-white"
                     >
                         <div class="flex items-center space-x-1">
                             <span>{{ tag.name }}</span>
@@ -187,12 +187,12 @@ onMounted(() => {
                         </div>
 
                         <XCircleIcon
-                            class="w-4 h-4 ml-2 text-red-500 group-hover:text-white"
+                            class="ml-2 h-4 w-4 text-red-500 group-hover:text-white"
                         />
                     </button>
                 </div>
                 <div v-if="tags.data" class="flex justify-end p-10">
-                    <Pagination :links="tags.links" />
+                    <Pagination :links="tags.links" :only="['tags']" />
                 </div>
                 <div v-else>
                     <p class="text-base text-gray-700">Pas encore de tags.</p>

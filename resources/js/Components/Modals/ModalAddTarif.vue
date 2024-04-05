@@ -556,13 +556,13 @@ onMounted(() => {
                 leave-to="opacity-0"
             >
                 <div
-                    class="fixed inset-0 transition-opacity bg-black bg-opacity-50"
+                    class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
                 />
             </TransitionChild>
 
             <div class="fixed inset-0 overflow-y-auto">
                 <div
-                    class="flex items-center justify-center min-h-full p-4 text-center"
+                    class="flex min-h-full items-center justify-center p-4 text-center"
                 >
                     <TransitionChild
                         as="template"
@@ -574,11 +574,11 @@ onMounted(() => {
                         leave-to="opacity-0 scale-95"
                     >
                         <DialogPanel
-                            class="w-full max-w-6xl min-h-full p-6 space-y-10 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
+                            class="min-h-full w-full max-w-6xl transform space-y-10 overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
                         >
                             <DialogTitle
                                 as="div"
-                                class="flex items-center justify-between w-full"
+                                class="flex w-full items-center justify-between"
                             >
                                 <h3
                                     class="text-lg font-medium leading-6 text-gray-800"
@@ -617,7 +617,7 @@ onMounted(() => {
                                 <button type="button">
                                     <XCircleIcon
                                         @click="emit('close')"
-                                        class="w-6 h-6 text-gray-600 hover:text-red-600"
+                                        class="h-6 w-6 text-gray-600 hover:text-red-600"
                                     />
                                 </button>
                             </DialogTitle>
@@ -630,7 +630,7 @@ onMounted(() => {
                                     <!-- disciplines -->
                                     <div
                                         v-if="!discipline"
-                                        class="flex flex-col items-start justify-start w-full space-y-2"
+                                        class="flex w-full flex-col items-start justify-start space-y-2"
                                     >
                                         <label
                                             for="discipline"
@@ -639,7 +639,7 @@ onMounted(() => {
                                             Discipline
                                         </label>
                                         <div
-                                            class="flex w-full mt-1 rounded-md md:w-1/2"
+                                            class="mt-1 flex w-full rounded-md md:w-1/2"
                                         >
                                             <select
                                                 name="discipline"
@@ -647,7 +647,7 @@ onMounted(() => {
                                                 v-model="
                                                     addTarifForm.discipline_id
                                                 "
-                                                class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
+                                                class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                             >
                                                 <option
                                                     v-for="discipline in props.activiteForTarifs"
@@ -668,7 +668,7 @@ onMounted(() => {
                                                 addTarifForm.discipline_id) &&
                                             allCategories
                                         "
-                                        class="flex flex-col items-start justify-start w-full space-y-2"
+                                        class="flex w-full flex-col items-start justify-start space-y-2"
                                     >
                                         <label
                                             for="categorie"
@@ -677,7 +677,7 @@ onMounted(() => {
                                             Categorie
                                         </label>
                                         <div
-                                            class="flex w-full mt-1 rounded-md md:w-1/2"
+                                            class="mt-1 flex w-full rounded-md md:w-1/2"
                                         >
                                             <select
                                                 name="categorie"
@@ -685,7 +685,7 @@ onMounted(() => {
                                                 v-model="
                                                     addTarifForm.categorie_id
                                                 "
-                                                class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
+                                                class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                             >
                                                 <option
                                                     v-for="categorie in filteredCategories"
@@ -707,7 +707,7 @@ onMounted(() => {
                                     </div>
                                     <!-- tarif_types -->
                                     <div
-                                        class="flex flex-col items-center justify-start w-full space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
+                                        class="flex w-full flex-col items-center justify-start space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
                                     >
                                         <Listbox
                                             v-if="
@@ -726,7 +726,7 @@ onMounted(() => {
                                                     Type de tarif
                                                 </label>
                                                 <ListboxButton
-                                                    class="relative w-full py-2 pl-3 pr-10 mt-1 text-left bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                                                    class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
                                                 >
                                                     <span
                                                         class="block truncate"
@@ -736,10 +736,10 @@ onMounted(() => {
                                                         }}</span
                                                     >
                                                     <span
-                                                        class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
+                                                        class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
                                                     >
                                                         <ChevronUpDownIcon
-                                                            class="w-5 h-5 text-gray-400"
+                                                            class="h-5 w-5 text-gray-400"
                                                             aria-hidden="true"
                                                         />
                                                     </span>
@@ -751,7 +751,7 @@ onMounted(() => {
                                                     leave-to-class="opacity-0"
                                                 >
                                                     <ListboxOptions
-                                                        class="absolute z-40 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                                                        class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
                                                     >
                                                         <ListboxOption
                                                             v-slot="{
@@ -789,7 +789,7 @@ onMounted(() => {
                                                                     class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
                                                                 >
                                                                     <CheckCircleIcon
-                                                                        class="w-5 h-5"
+                                                                        class="h-5 w-5"
                                                                         aria-hidden="true"
                                                                     />
                                                                 </span>
@@ -810,13 +810,13 @@ onMounted(() => {
                                             >
                                                 Titre
                                             </label>
-                                            <div class="flex mt-1 rounded-md">
+                                            <div class="mt-1 flex rounded-md">
                                                 <input
                                                     v-model="addTarifForm.titre"
                                                     type="text"
                                                     name="titre"
                                                     id="titre"
-                                                    class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                     placeholder=""
                                                     autocomplete="none"
                                                 />
@@ -849,7 +849,7 @@ onMounted(() => {
                                                 id="description"
                                                 name="description"
                                                 rows="2"
-                                                class="block w-full h-32 min-h-full mt-1 placeholder-gray-400 placeholder-opacity-50 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                class="mt-1 block h-32 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                 :class="{
                                                     errors: 'border-red-500 focus:ring focus:ring-red-200',
                                                 }"
@@ -872,7 +872,7 @@ onMounted(() => {
                                             addTarifForm.tarif_type
                                                 .tarif_attributs.length > 0
                                         "
-                                        class="grid w-full grid-cols-1 gap-4 mx-auto md:grid-cols-3"
+                                        class="mx-auto grid w-full grid-cols-1 gap-4 md:grid-cols-3"
                                     >
                                         <div
                                             v-for="attribut in addTarifForm
@@ -935,7 +935,7 @@ onMounted(() => {
                                                     {{ attribut.nom }}
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md"
+                                                    class="mt-1 flex rounded-md"
                                                 >
                                                     <TextInput
                                                         type="text"
@@ -947,7 +947,7 @@ onMounted(() => {
                                                         "
                                                         :name="attribut.nom"
                                                         :id="attribut.nom"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -969,7 +969,7 @@ onMounted(() => {
                                                     {{ attribut.nom }}
                                                 </label>
                                                 <div
-                                                    class="flex mt-1 rounded-md"
+                                                    class="mt-1 flex rounded-md"
                                                 >
                                                     <TextInput
                                                         type="number"
@@ -982,7 +982,7 @@ onMounted(() => {
                                                         "
                                                         :name="attribut.nom"
                                                         :id="attribut.nom"
-                                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                         placeholder=""
                                                         autocomplete="none"
                                                     />
@@ -1052,7 +1052,7 @@ onMounted(() => {
                                                         {{ sousattribut.nom }}
                                                     </label>
                                                     <div
-                                                        class="flex mt-1 rounded-md"
+                                                        class="mt-1 flex rounded-md"
                                                     >
                                                         <TextInput
                                                             type="text"
@@ -1069,7 +1069,7 @@ onMounted(() => {
                                                             :id="
                                                                 sousattribut.nom
                                                             "
-                                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                             placeholder=""
                                                             autocomplete="none"
                                                         />
@@ -1091,7 +1091,7 @@ onMounted(() => {
                                                         {{ sousattribut.nom }}
                                                     </label>
                                                     <div
-                                                        class="flex mt-1 rounded-md"
+                                                        class="mt-1 flex rounded-md"
                                                     >
                                                         <TextInput
                                                             type="number"
@@ -1109,7 +1109,7 @@ onMounted(() => {
                                                             :id="
                                                                 sousattribut.nom
                                                             "
-                                                            class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                             placeholder=""
                                                             autocomplete="none"
                                                         />
@@ -1130,19 +1130,19 @@ onMounted(() => {
                                             Montant
                                         </label>
                                         <div
-                                            class="flex items-center mt-1 rounded-md"
+                                            class="mt-1 flex items-center rounded-md"
                                         >
                                             <input
                                                 v-model="addTarifForm.amount"
                                                 type="number"
                                                 name="amount"
                                                 id="amount"
-                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                 placeholder=""
                                                 autocomplete="none"
                                             />
                                             <CurrencyEuroIcon
-                                                class="w-6 h-6 ml-2"
+                                                class="ml-2 h-6 w-6"
                                             />
                                         </div>
                                         <div
@@ -1173,7 +1173,7 @@ onMounted(() => {
                                                     v-model="
                                                         addTarifForm.checkAll
                                                     "
-                                                    class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500"
+                                                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                                                 />
                                                 <span
                                                     class="ml-2 text-sm text-gray-600"
@@ -1214,7 +1214,7 @@ onMounted(() => {
                                                                         .id
                                                                 ]
                                                             "
-                                                            class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500"
+                                                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                                                         />
 
                                                         <span
@@ -1256,7 +1256,7 @@ onMounted(() => {
                                                                                 .id
                                                                         ]
                                                                     "
-                                                                    class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500"
+                                                                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                                                                 />
                                                                 <span
                                                                     class="ml-2 text-sm text-gray-600"
@@ -1294,7 +1294,7 @@ onMounted(() => {
                                                                                     .id
                                                                             ]
                                                                         "
-                                                                        class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500"
+                                                                        class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                                                                     />
                                                                     <span
                                                                         class="ml-2 text-sm text-gray-600"
@@ -1305,7 +1305,7 @@ onMounted(() => {
                                                                 </label>
 
                                                                 <div
-                                                                    class="flex flex-col items-center ml-8 space-x-0 space-y-3 md:ml-16 md:flex-row md:space-x-8 md:space-y-0"
+                                                                    class="ml-8 flex flex-col items-center space-x-0 space-y-3 md:ml-16 md:flex-row md:flex-wrap md:space-x-8 md:space-y-0"
                                                                 >
                                                                     <label
                                                                         v-for="produit in activite.produits"
@@ -1332,7 +1332,7 @@ onMounted(() => {
                                                                                         .id
                                                                                 ]
                                                                             "
-                                                                            class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500"
+                                                                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                                                                         />
                                                                         <span
                                                                             class="ml-2 text-sm text-gray-600"
@@ -1353,11 +1353,11 @@ onMounted(() => {
                                     </template>
                                 </div>
                                 <div
-                                    class="flex items-center justify-between w-full mt-4"
+                                    class="mt-4 flex w-full items-center justify-between"
                                 >
                                     <button
                                         type="button"
-                                        class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                                        class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
                                         @click.prevent="emit('close')"
                                     >
                                         Annuler
@@ -1370,7 +1370,7 @@ onMounted(() => {
                                                 addTarifForm.processing,
                                         }"
                                         type="submit"
-                                        class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                                        class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                     >
                                         <LoadingSVG
                                             v-if="addTarifForm.processing"

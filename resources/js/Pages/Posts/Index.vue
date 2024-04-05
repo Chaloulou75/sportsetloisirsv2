@@ -35,7 +35,7 @@ watch(
         router.get(
             route("posts.index"),
             { search: value },
-            { preserveState: true, replace: true }
+            { preserveState: true, replace: true, only: ["posts"] }
         );
     }, 300)
 );
@@ -169,7 +169,7 @@ onMounted(() => {
                     />
                 </div>
                 <div v-if="posts.data.length > 0" class="flex justify-end p-10">
-                    <Pagination :links="posts.links" />
+                    <Pagination :links="posts.links" :only="['posts']" />
                 </div>
                 <template v-else>
                     <div class="py-6 md:py-12">

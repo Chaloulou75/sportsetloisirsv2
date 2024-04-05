@@ -20,7 +20,7 @@ const props = defineProps({
 <template>
     <Head
         title="Mes Favoris"
-        :description="'Vos structures et activités favorites.'"
+        description="Vos structures et activités favorites."
     />
 
     <ResultLayout

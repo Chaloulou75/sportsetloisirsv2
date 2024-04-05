@@ -51,15 +51,15 @@ onMounted(() => {
     <Head title="Gestion du blog" :description="'Administration du blog.'" />
     <AdminLayout>
         <template #header>
-            <div class="flex items-center justify-start h-full">
+            <div class="flex h-full items-center justify-start">
                 <Link
                     :href="route('admin.index')"
                     class="h-full bg-blue-600 py-2.5 md:px-4 md:py-4"
                 >
-                    <ChevronLeftIcon class="w-10 h-10 text-white" />
+                    <ChevronLeftIcon class="h-10 w-10 text-white" />
                 </Link>
                 <h1
-                    class="px-3 text-base font-semibold text-center text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
+                    class="px-3 text-center text-base font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
                     Gestion du blog
                 </h1>
@@ -68,38 +68,38 @@ onMounted(() => {
         <NavAdminBlog />
 
         <div class="py-6 md:py-12">
-            <div class="max-w-full px-2 mx-auto sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-full px-2 sm:px-6 lg:px-8">
                 <div class="flex justify-center md:justify-end">
                     <Link
                         v-if="user"
                         :href="route('posts.create')"
-                        class="flex items-center justify-center w-full max-w-xs px-4 py-2 text-base text-white bg-indigo-800 border border-gray-200 rounded-md shadow hover:bg-indigo-900"
+                        class="flex w-full max-w-xs items-center justify-center rounded-md border border-gray-200 bg-indigo-800 px-4 py-2 text-base text-white shadow hover:bg-indigo-900"
                     >
                         Ecrire un article
                     </Link>
                 </div>
                 <!-- search box -->
                 <div
-                    class="flex flex-col items-center justify-center w-full max-w-3xl px-2 mx-auto mt-4 mb-8 md:flex-row md:items-center"
+                    class="mx-auto mb-8 mt-4 flex w-full max-w-3xl flex-col items-center justify-center px-2 md:flex-row md:items-center"
                 >
                     <label
                         for="search"
                         value="Rechercher un article"
-                        class="pr-2 mb-1 text-sm font-medium text-gray-800"
+                        class="mb-1 pr-2 text-sm font-medium text-gray-800"
                         >Rechercher un article:</label
                     >
 
                     <TextInput
                         id="search"
                         type="text"
-                        class="flex-1 block w-full px-2 mt-1 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
+                        class="mt-1 block w-full flex-1 px-2 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
                         v-model="search"
                         placeholder="mots clés..."
                     />
 
                     <button type="button" @click="resetSearch">
                         <svg
-                            class="w-6 h-6 my-3 ml-2 text-gray-400 hover:text-gray-700 lg:my-0 lg:h-8 lg:w-8"
+                            class="my-3 ml-2 h-6 w-6 text-gray-400 hover:text-gray-700 lg:my-0 lg:h-8 lg:w-8"
                             viewBox="0 0 20 20"
                             fill="currentColor"
                         >
@@ -114,7 +114,7 @@ onMounted(() => {
                 <div
                     ref="toAnimateOne"
                     v-if="posts.data"
-                    class="grid h-auto grid-cols-1 gap-4 place-items-stretch sm:grid-cols-2 md:grid-cols-3"
+                    class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                 >
                     <PostFeaturedCard
                         v-for="post in posts.data"
@@ -123,12 +123,12 @@ onMounted(() => {
                     />
                 </div>
                 <div v-if="posts.data" class="flex justify-end p-10">
-                    <Pagination :links="posts.links" />
+                    <Pagination :links="posts.links" :only="['posts']" />
                 </div>
                 <template v-else>
                     <div class="py-6 md:py-12">
                         <div
-                            class="max-w-full min-h-screen px-2 mx-auto sm:px-6 lg:px-8"
+                            class="mx-auto min-h-screen max-w-full px-2 sm:px-6 lg:px-8"
                         >
                             <p class="font-medium text-gray-700">
                                 Pas encore d'article. Revenez plus tard.

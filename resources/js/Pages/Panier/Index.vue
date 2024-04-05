@@ -181,7 +181,10 @@ onBeforeMount(() => {
 });
 </script>
 <template>
-    <Head title="Panier" description="Mon panier" />
+    <Head
+        title="Récapitulatif de mon panier"
+        description="Récapitulatif de mon mon panier"
+    />
 
     <ResultLayout
         :familles="familles"

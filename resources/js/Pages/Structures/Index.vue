@@ -55,9 +55,9 @@ watch(
     search,
     debounce(function (value) {
         router.get(
-            "/structures",
+            route("structures.index"),
             { search: value },
-            { preserveState: true, replace: true }
+            { preserveState: true, replace: true, only: ["structures"] }
         );
     }, 300)
 );
@@ -86,7 +86,7 @@ watch(
                 <template v-slot:ariane>
                     <nav aria-label="Breadcrumb" class="flex">
                         <ol
-                            class="flex text-gray-600 border border-gray-200 rounded-lg"
+                            class="flex rounded-lg border border-gray-200 text-gray-600"
                         >
                             <li class="flex items-center">
                                 <Link
@@ -94,7 +94,7 @@ watch(
                                     :href="route('welcome')"
                                     class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
                                 >
-                                    <HomeIcon class="w-4 h-4" />
+                                    <HomeIcon class="h-4 w-4" />
 
                                     <span
                                         class="ms-1.5 hidden text-xs font-medium md:block"
@@ -113,7 +113,7 @@ watch(
                                 <Link
                                     preserve-scroll
                                     :href="route('structures.index')"
-                                    class="flex items-center h-10 text-xs font-medium transition bg-white pe-4 ps-8 hover:text-gray-900"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     Structures
                                 </Link>
@@ -126,26 +126,26 @@ watch(
         <div class="py-6 md:py-12">
             <!-- search box -->
             <div
-                class="flex flex-col items-center justify-center w-full max-w-3xl px-2 mx-auto mt-4 mb-8 md:flex-row"
+                class="mx-auto mb-8 mt-4 flex w-full max-w-3xl flex-col items-center justify-center px-2 md:flex-row"
             >
                 <label
                     for="search"
                     value="Rechercher une structure"
-                    class="pr-2 mb-1 text-sm font-medium text-gray-800"
+                    class="mb-1 pr-2 text-sm font-medium text-gray-800"
                     >Rechercher une structure:</label
                 >
 
                 <TextInput
                     id="search"
                     type="text"
-                    class="flex-1 block w-full px-2 mt-1 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
+                    class="mt-1 block w-full flex-1 px-2 placeholder-gray-500 placeholder-opacity-50 focus:ring-2 focus:ring-midnight"
                     v-model="search"
                     placeholder="structure, discipline, ville..."
                 />
 
                 <button type="button" @click="resetSearch">
                     <svg
-                        class="w-6 h-6 my-3 ml-2 text-gray-400 hover:text-gray-700 lg:my-0 lg:h-8 lg:w-8"
+                        class="my-3 ml-2 h-6 w-6 text-gray-400 hover:text-gray-700 lg:my-0 lg:h-8 lg:w-8"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                     >
@@ -159,11 +159,11 @@ watch(
             </div>
             <template v-if="structures.data.length > 0">
                 <div
-                    class="flex flex-col max-w-full min-h-screen px-2 mx-auto sm:px-6 md:flex-row md:space-x-4 lg:px-8"
+                    class="mx-auto flex min-h-screen max-w-full flex-col px-2 sm:px-6 md:flex-row md:space-x-4 lg:px-8"
                 >
                     <div ref="listeStructure" class="md:w-1/2">
                         <div
-                            class="grid h-auto grid-cols-1 gap-4 place-content-stretch place-items-stretch md:grid-cols-2"
+                            class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:grid-cols-2"
                         >
                             <StructureCard
                                 v-for="(structure, index) in structures.data"
@@ -175,7 +175,10 @@ watch(
                             />
                         </div>
                         <div class="flex justify-end p-10">
-                            <Pagination :links="structures.links" />
+                            <Pagination
+                                :links="structures.links"
+                                :only="['structures']"
+                            />
                         </div>
                         <button
                             v-if="!mapIsVisible && listeIsVisible"
@@ -183,7 +186,7 @@ watch(
                             class="fixed inset-x-2 bottom-4 z-[9999] mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:hidden"
                             @click="goToMap"
                         >
-                            <MapIcon class="w-5 h-5 mr-2" />
+                            <MapIcon class="mr-2 h-5 w-5" />
                             Carte
                         </button>
                     </div>
@@ -200,7 +203,7 @@ watch(
                             class="fixed inset-x-2 bottom-4 z-[9999] mx-auto flex w-1/2 items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-white hover:bg-gray-800 md:hidden"
                             @click="goToListe"
                         >
-                            <ListBulletIcon class="w-5 h-5 mr-2" />
+                            <ListBulletIcon class="mr-2 h-5 w-5" />
                             Liste
                         </button>
                     </div>
@@ -208,7 +211,7 @@ watch(
             </template>
             <template v-else>
                 <div
-                    class="max-w-full min-h-screen px-2 mx-auto sm:px-6 lg:px-8"
+                    class="mx-auto min-h-screen max-w-full px-2 sm:px-6 lg:px-8"
                 >
                     <p class="font-medium text-gray-700">
                         Il n'y a pas encore de structures inscrites pour cette

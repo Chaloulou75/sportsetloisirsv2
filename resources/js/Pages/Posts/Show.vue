@@ -24,6 +24,9 @@ const PostComment = defineAsyncComponent(() =>
 const AddPostComment = defineAsyncComponent(() =>
     import("@/Components/Posts/AddPostComment.vue")
 );
+const Pagination = defineAsyncComponent(() =>
+    import("@/Components/Pagination.vue")
+);
 dayjs.extend(localeData);
 dayjs.extend(relativeTime);
 
@@ -32,6 +35,7 @@ const props = defineProps({
     listDisciplines: Object,
     allCities: Object,
     post: Object,
+    comments: Object,
 });
 
 const page = usePage();
@@ -418,13 +422,19 @@ const incrementPostLike = () => {
                             pour ajouter un commentaire.
                         </p>
                         <PostComment
-                            v-for="comment in post.comments"
+                            v-for="comment in comments.data"
                             :key="comment.id"
                             :post="post"
                             :comment="comment"
                             :user="user"
                             :admin="admin"
                         />
+                        <div v-if="comments.meta" class="flex justify-end py-6">
+                            <Pagination
+                                :links="comments.meta.links"
+                                :only="['comments']"
+                            />
+                        </div>
                     </section>
                     <div
                         class="mt-6 flex items-center justify-end text-sm lg:hidden"

@@ -1,6 +1,6 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { ref, computed, defineAsyncComponent } from "vue";
+import { ref, watch, computed, defineAsyncComponent } from "vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import InputError from "@/Components/Forms/InputError.vue";
@@ -22,10 +22,7 @@ const props = defineProps({
     allCities: Object,
 });
 
-const showGiftFields = ref(false);
-const openGiftFields = () => {
-    showGiftFields.value = !showGiftFields.value;
-};
+const results = ref();
 
 const coordonneesForm = useForm({
     user: props.user ?? null,
@@ -36,10 +33,23 @@ const coordonneesForm = useForm({
     zip_code: null,
     country: null,
     phone: null,
-    to_offer: computed(() => showGiftFields.value),
+    to_offer: false,
     name_receiver: null,
     email_receiver: null,
+    phone_receiver: null,
 });
+
+watch(
+    () => coordonneesForm.to_offer,
+    (newValue) => {
+        console.log(newValue);
+        if (newValue === false) {
+            coordonneesForm.name_receiver = null;
+            coordonneesForm.email_receiver = null;
+            coordonneesForm.phone_receiver = null;
+        }
+    }
+);
 
 const onSubmit = () => {
     coordonneesForm.post(route("panier.coordonnees.store"), {
@@ -48,7 +58,10 @@ const onSubmit = () => {
 };
 </script>
 <template>
-    <Head title="Coordonnées" description="Mes Coordonnées" />
+    <Head
+        title="Coordonnées de facturation"
+        description="Mes Coordonnées de facturation"
+    />
 
     <ResultLayout
         :familles="familles"
@@ -144,21 +157,25 @@ const onSubmit = () => {
                         v-model:zip_code="coordonneesForm.zip_code"
                         v-model:country="coordonneesForm.country"
                     />
-
-                    <button
-                        class="rounded-sm bg-blue-700 px-3 py-2 text-sm text-white hover:bg-blue-600"
-                        type="button"
-                        @click.prevent="openGiftFields"
-                    >
-                        <span v-if="!showGiftFields">C'est pour offrir ?</span
-                        ><span v-else>C'est pour vous?</span>
-                    </button>
-                    <template v-if="showGiftFields">
+                    <div class="flex">
+                        <input
+                            v-model="coordonneesForm.to_offer"
+                            type="checkbox"
+                            class="mt-0.5 shrink-0 rounded border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
+                            id="hs-default-checkbox"
+                        />
+                        <label
+                            for="hs-default-checkbox"
+                            class="ms-3 text-sm text-gray-500"
+                            >C'est pour offrir ?</label
+                        >
+                    </div>
+                    <template v-if="coordonneesForm.to_offer">
                         <p class="text-sm font-semibold text-gray-700">
                             Coordonnées de la personne qui reçoit votre cadeau:
                         </p>
                     </template>
-                    <div v-if="showGiftFields">
+                    <div v-if="coordonneesForm.to_offer === true">
                         <InputLabel
                             for="name_receiver"
                             value="Nom complet du recevant"
@@ -180,7 +197,7 @@ const onSubmit = () => {
                         />
                     </div>
 
-                    <div v-if="showGiftFields">
+                    <div v-if="coordonneesForm.to_offer">
                         <InputLabel
                             for="email_receiver"
                             value="Email du recevant"
@@ -199,6 +216,43 @@ const onSubmit = () => {
                             class="mt-2"
                             :message="coordonneesForm.errors.email_receiver"
                         />
+                    </div>
+                    <div v-if="coordonneesForm.to_offer">
+                        <InputLabel
+                            for="phone_receiver"
+                            value="Numéro de téléphone du recevant*"
+                        />
+                        <div class="mt-1 flex w-full max-w-sm">
+                            <MazPhoneNumberInput
+                                class="w-full rounded-md border-gray-300 shadow-sm"
+                                v-model="coordonneesForm.phone_receiver"
+                                color="primary"
+                                size="sm"
+                                country-locale="fr-FR"
+                                @update="results = $event"
+                                :success="results?.isValid"
+                                :noSearch="true"
+                                :noFlags="true"
+                                :noCountrySelector="true"
+                                :noExample="true"
+                                :translations="{
+                                    countrySelector: {
+                                        placeholder: '',
+                                        error: 'Choisir un pays',
+                                    },
+                                    phoneInput: {
+                                        placeholder: '',
+                                        example: '',
+                                    },
+                                }"
+                            />
+                        </div>
+                        <div
+                            v-if="coordonneesForm.errors.phone_receiver"
+                            class="mt-2 text-xs text-red-500"
+                        >
+                            {{ coordonneesForm.errors.phone_receiver }}
+                        </div>
                     </div>
                 </div>
 

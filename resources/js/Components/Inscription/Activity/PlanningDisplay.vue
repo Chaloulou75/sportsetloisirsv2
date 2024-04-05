@@ -138,6 +138,7 @@ const onSubmitEventForm = () => {
         },
         {
             preserveScroll: true,
+            only: ["structureActivites"],
             remember: true,
             onSuccess: () => {
                 formPlanning.reset();
@@ -156,6 +157,7 @@ const handleEventDeleted = (event) => {
         }),
         {
             preserveScroll: true,
+            only: ["structureActivites"],
             onSuccess: () => {
                 closeModal();
             },
@@ -176,17 +178,18 @@ const handleEventChanged = (event) => {
         },
         {
             preserveScroll: true,
+            only: ["structureActivites"],
         }
     );
 };
 </script>
 <template>
     <div v-if="structureActivites.length === 0">
-        <p class="italic font-semibold text-gray-600">
+        <p class="font-semibold italic text-gray-600">
             Pas d'activité liée. Créer d'abord une activité.
         </p>
     </div>
-    <div v-else class="flex items-center justify-between w-full mb-4">
+    <div v-else class="mb-4 flex w-full items-center justify-between">
         <h2 class="text-lg font-medium leading-6 text-gray-800">
             Planning de vos activités
             <span class="text-xs text-blue-700">
@@ -197,7 +200,7 @@ const handleEventChanged = (event) => {
     </div>
     <div
         v-show="structureActivites.length > 0"
-        class="w-full min-h-full mt-6 overflow-x-auto rounded-sm shadow-lg"
+        class="mt-6 min-h-full w-full overflow-x-auto rounded-sm shadow-lg"
     >
         <vue-cal
             small
@@ -242,7 +245,7 @@ const handleEventChanged = (event) => {
             </TransitionChild>
             <div class="fixed inset-0 overflow-y-auto">
                 <div
-                    class="flex items-center justify-center min-h-full p-4 text-center"
+                    class="flex min-h-full items-center justify-center p-4 text-center"
                 >
                     <TransitionChild
                         as="template"
@@ -254,7 +257,7 @@ const handleEventChanged = (event) => {
                         leave-to="opacity-0 scale-95"
                     >
                         <DialogPanel
-                            class="w-full max-w-md p-6 text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
+                            class="w-full max-w-md transform rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
                         >
                             <form
                                 @submit.prevent="onSubmitEventForm()"
@@ -268,7 +271,7 @@ const handleEventChanged = (event) => {
                                         type="text"
                                         name="title"
                                         id="title"
-                                        class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                         v-model="formPlanning.title"
                                         :placeholder="
                                             formPlanning.title
@@ -287,7 +290,7 @@ const handleEventChanged = (event) => {
                                 </div>
 
                                 <Listbox
-                                    class="w-full mt-4"
+                                    class="mt-4 w-full"
                                     v-model="formPlanning.activite"
                                 >
                                     <div class="relative mt-1">
@@ -298,16 +301,16 @@ const handleEventChanged = (event) => {
                                             Activité liée:
                                         </label>
                                         <ListboxButton
-                                            class="relative w-full py-2 pl-3 pr-10 mt-1 text-left bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                                            class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
                                         >
                                             <span class="block truncate">{{
                                                 formPlanning.activite.titre
                                             }}</span>
                                             <span
-                                                class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
+                                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
                                             >
                                                 <ChevronUpDownIcon
-                                                    class="w-5 h-5 text-gray-400"
+                                                    class="h-5 w-5 text-gray-400"
                                                     aria-hidden="true"
                                                 />
                                             </span>
@@ -319,7 +322,7 @@ const handleEventChanged = (event) => {
                                             leave-to-class="opacity-0"
                                         >
                                             <ListboxOptions
-                                                class="absolute z-20 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                                                class="absolute z-20 mt-1 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
                                             >
                                                 <ListboxOption
                                                     v-slot="{
@@ -355,7 +358,7 @@ const handleEventChanged = (event) => {
                                                             class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
                                                         >
                                                             <CheckCircleIcon
-                                                                class="w-5 h-5"
+                                                                class="h-5 w-5"
                                                                 aria-hidden="true"
                                                             />
                                                         </span>
@@ -371,7 +374,7 @@ const handleEventChanged = (event) => {
                                         selectedActivite &&
                                         filteredProducts.length > 0
                                     "
-                                    class="w-full mt-4"
+                                    class="mt-4 w-full"
                                     v-model="formPlanning.produit"
                                 >
                                     <div class="relative mt-1">
@@ -382,16 +385,16 @@ const handleEventChanged = (event) => {
                                             Produit lié:
                                         </label>
                                         <ListboxButton
-                                            class="relative w-full py-2 pl-3 pr-10 mt-1 text-left bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                                            class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
                                         >
                                             <span class="block truncate">{{
                                                 formPlanning.produit.id
                                             }}</span>
                                             <span
-                                                class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
+                                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
                                             >
                                                 <ChevronUpDownIcon
-                                                    class="w-5 h-5 text-gray-400"
+                                                    class="h-5 w-5 text-gray-400"
                                                     aria-hidden="true"
                                                 />
                                             </span>
@@ -403,7 +406,7 @@ const handleEventChanged = (event) => {
                                             leave-to-class="opacity-0"
                                         >
                                             <ListboxOptions
-                                                class="absolute w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                                                class="absolute mt-1 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
                                             >
                                                 <ListboxOption
                                                     v-slot="{
@@ -439,7 +442,7 @@ const handleEventChanged = (event) => {
                                                             class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
                                                         >
                                                             <CheckCircleIcon
-                                                                class="w-5 h-5"
+                                                                class="h-5 w-5"
                                                                 aria-hidden="true"
                                                             />
                                                         </span>
@@ -461,10 +464,10 @@ const handleEventChanged = (event) => {
                                     produit à l'activité.
                                 </p>
 
-                                <div class="flex justify-between mt-4">
+                                <div class="mt-4 flex justify-between">
                                     <button
                                         type="button"
-                                        class="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                        class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                                         @click="closeModal"
                                     >
                                         Annuler
@@ -475,7 +478,7 @@ const handleEventChanged = (event) => {
                                             filteredProducts.length > 0
                                         "
                                         type="submit"
-                                        class="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                        class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                                     >
                                         Enregister
                                     </button>

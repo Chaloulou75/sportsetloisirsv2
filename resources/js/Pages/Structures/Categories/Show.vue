@@ -294,6 +294,7 @@ const latestAdresseId = computed(() => {
                             :all-categories="categoriesListByDiscipline"
                             :structure-activites="structureActivites"
                             :activite-for-tarifs="activiteForTarifs"
+                            @show-display="handleButtonEvent('Mes tarifs')"
                         />
                     </template>
                 </div>

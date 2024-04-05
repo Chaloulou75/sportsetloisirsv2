@@ -3,6 +3,8 @@ import { ref, defineAsyncComponent } from "vue";
 import { router } from "@inertiajs/vue3";
 import { TrashIcon, PencilSquareIcon } from "@heroicons/vue/24/outline";
 
+const emit = defineEmits(["showDisplay"]);
+
 const ModalEditCatTarif = defineAsyncComponent(() =>
     import("@/Components/Modals/ModalEditCatTarif.vue")
 );
@@ -36,6 +38,10 @@ const destroyCatTarif = (catTarif) => {
         }),
         {
             preserveScroll: true,
+            only: ["strCatTarifs"],
+            onSuccess: () => {
+                emit("showDisplay");
+            },
         }
     );
 };
@@ -50,6 +56,10 @@ const formatCurrency = (value) => {
         }
     }
     return value;
+};
+
+const emitShowDisplay = () => {
+    emit("showDisplay");
 };
 
 // Old version
@@ -283,5 +293,6 @@ const formatCurrency = (value) => {
         :activite-for-tarifs="activiteForTarifs"
         :show="showEditCatTarifModal"
         @close="showEditCatTarifModal = false"
+        @show-display="emitShowDisplay"
     />
 </template>

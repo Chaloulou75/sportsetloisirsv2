@@ -14,9 +14,10 @@ use App\Models\ListDiscipline;
 use App\Http\Resources\PostResource;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Resources\CommentResource;
 use App\Http\Resources\FamilleResource;
-use App\Http\Resources\ListDisciplineResource;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Resources\ListDisciplineResource;
 
 class PostController extends Controller
 {
@@ -161,10 +162,6 @@ class PostController extends Controller
         $post = Post::with([
             'author:id,name',
             'author.structures:id,name,slug',
-            'comments' => function ($query) {
-                $query->latest();
-            },
-            'comments.author:id,name',
             'tags:id,name',
             'disciplines:id,name'
         ])->findOrFail($post->id);
@@ -176,6 +173,7 @@ class PostController extends Controller
             'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => $allCities,
             'post' => fn () => PostResource::make($post),
+            'comments' => CommentResource::collection($post->comments()->with('author')->latest()->latest('id')->paginate(10)),
         ]);
     }
 

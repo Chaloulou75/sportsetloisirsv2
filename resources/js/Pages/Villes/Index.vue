@@ -34,9 +34,9 @@ watch(
     search,
     debounce(function (value) {
         router.get(
-            "/villes",
+            route("villes.index"),
             { search: value },
-            { preserveState: true, replace: true }
+            { preserveState: true, replace: true, only: ["cities"] }
         );
     }, 400)
 );
@@ -168,7 +168,7 @@ watch(
                     </Link>
                 </div>
                 <div class="flex justify-end p-10">
-                    <Pagination :links="cities.links" />
+                    <Pagination :links="cities.links" :only="['cities']" />
                 </div>
             </div>
         </div>

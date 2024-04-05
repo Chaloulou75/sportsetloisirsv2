@@ -64,7 +64,10 @@ const props = defineProps({
                                 <span class="text-xs">{{ user.email }}</span>
                             </Link>
 
-                            <Pagination :links="users.links" />
+                            <Pagination
+                                :links="users.links"
+                                :only="['users']"
+                            />
                         </div>
                     </div>
 

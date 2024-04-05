@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Models\Famille;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
 
@@ -30,7 +31,7 @@ class PanierCoordonneesController extends Controller
         $user = auth()->user();
 
         return Inertia::render('Panier/Coordonnees/Index', [
-            'user' => fn () => $user ?? null,
+            'user' => fn () => UserResource::make($user) ?? null,
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => $listDisciplines,
             'allCities' => fn () => $allCities,
@@ -63,6 +64,7 @@ class PanierCoordonneesController extends Controller
             'to_offer' => 'boolean',
             'name_receiver' => 'nullable|string|min:3',
             'email_receiver' => 'nullable|email',
+            'phone_receiver' => 'nullable|phone:FR',
         ]);
 
         dd($request->all());

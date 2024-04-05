@@ -141,7 +141,7 @@ const removeDiscipline = (disciplineId) => {
 };
 
 const refreshPage = () => {
-    router.reload({ only: [props.dejaUsedDisciplines] });
+    router.reload({ only: ["dejaUsedDisciplines"] });
     selectedDiscipline.value = null;
 };
 
@@ -191,7 +191,7 @@ const openAddPlanningModal = () => {
             </div>
         </template>
         <template #default>
-            <MicroNavActiviteBackPro @eventFromChild="handleButtonEvent" />
+            <MicroNavActiviteBackPro @event-from-child="handleButtonEvent" />
             <div class="relative my-4 flex flex-col md:flex-row md:space-y-0">
                 <div class="mx-auto max-w-full flex-1 lg:px-4">
                     <template v-if="displayActivites">
@@ -405,6 +405,7 @@ const openAddPlanningModal = () => {
                             :str-cat-tarifs="strCatTarifs"
                             :structure-activites="activites"
                             :activite-for-tarifs="activiteForTarifs"
+                            @show-display="handleButtonEvent('Mes tarifs')"
                         />
                     </template>
                 </div>
