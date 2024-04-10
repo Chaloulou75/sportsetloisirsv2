@@ -53,7 +53,10 @@ import {
                 aria-current="page"
             >
                 <Link
-                    :href="route('panier.index')"
+                    :href="route('panier.paiement.index')"
+                    :class="{
+                        'font-bold': route().current('panier.paiement.index'),
+                    }"
                     class="flex items-center text-sm text-gray-500 hover:text-blue-600 focus:text-blue-600 focus:outline-none"
                     ><CreditCardIcon class="me-3 size-4 flex-shrink-0" />
                     Paiement

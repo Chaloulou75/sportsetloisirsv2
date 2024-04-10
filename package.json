@@ -33,6 +33,7 @@
         "@fortawesome/vue-fontawesome": "^3.0.6",
         "@headlessui/vue": "^1.7.13",
         "@heroicons/vue": "^2.0.18",
+        "@stripe/stripe-js": "^3.3.0",
         "@vuepic/vue-datepicker": "^5.1.2",
         "@vueup/vue-quill": "^1.2.0",
         "@vueuse/core": "^10.1.2",

@@ -69,6 +69,8 @@ class PanierCoordonneesController extends Controller
 
         dd($request->all());
         // création compte client (+1 si client receveur)
+        // table client / reservation ? many to many?
+        // Notification compte client
 
     }
 

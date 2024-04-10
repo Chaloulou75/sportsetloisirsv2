@@ -19,6 +19,7 @@ use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\AdminBlogTagController;
+use App\Http\Controllers\PanierPaymentController;
 use App\Http\Controllers\StructureUserController;
 use App\Http\Controllers\AdminStructureController;
 use App\Http\Controllers\AdminTarifTypeController;
@@ -106,6 +107,14 @@ Route::get('/panier/coordonnees', [PanierCoordonneesController::class, 'index'])
 Route::post('/panier/coordonnees/store', [PanierCoordonneesController::class, 'store'])->name(
     'panier.coordonnees.store'
 );
+
+Route::get('/panier/paiement', [PanierPaymentController::class, 'index'])->name('panier.paiement.index');
+Route::post('/create-checkout-session', [PanierPaymentController::class, 'createCheckoutSession']);
+Route::get('/panier/paiement/success', [PanierPaymentController::class, 'success'])->name('panier.paiement.success');
+Route::get('/panier/paiement/cancel', [PanierPaymentController::class, 'cancel'])->name('panier.paiement.cancel');
+
+
+
 
 //Blog
 Route::get('/blog/articles/{discipline?}', [PostController::class, 'index'])->name('posts.index');

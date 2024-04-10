@@ -166,7 +166,7 @@ const onSubmit = () => {
                         />
                         <label
                             for="hs-default-checkbox"
-                            class="ms-3 text-sm text-gray-500"
+                            class="ms-3 text-sm text-gray-700"
                             >C'est pour offrir ?</label
                         >
                     </div>
