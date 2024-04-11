@@ -43,7 +43,7 @@ class PanierController extends Controller
         $user = auth()->user();
 
         if ($user || $sessionId) {
-            $query = ProductReservation::withRelations()->withCount('plannings');
+            $query = ProductReservation::withRelations()->withCount('plannings')->where('paid', false);
 
             if (isset($user) && $sessionId) {
                 $query->where('user_id', $user->id)->orWhere('session_id', $sessionId);
@@ -61,14 +61,6 @@ class PanierController extends Controller
             'allCities' => fn () => $allCities,
             'reservations' => fn () => $reservations ?? null
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -219,30 +211,6 @@ class PanierController extends Controller
 
         return to_route('structures.activites.show', ['activite' => $activite, 'slug' => $activite->slug_title ])->with('success', 'Produit ajouté à votre panier');
 
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
     }
 
     /**

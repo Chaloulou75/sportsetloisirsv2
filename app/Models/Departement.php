@@ -65,7 +65,7 @@ class Departement extends Model
             'cities.produits.activite:id,titre',
             'cities.produits.criteres:id,activite_id,produit_id,critere_id,valeur_id,valeur',
             'cities.produits.criteres.critere',
-            'cities.produits.criteres.critere_valeur.sous_criteres.prodSousCritValeurs',
+            'cities.produits.criteres.critere_valeur.sous_criteres.prod_sous_crit_valeurs',
             'cities.produits.criteres.sous_criteres',
             // 'cities.produits.tarifs',
             // 'cities.produits.tarifs.tarifType',

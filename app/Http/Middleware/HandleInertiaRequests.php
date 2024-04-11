@@ -37,11 +37,11 @@ class HandleInertiaRequests extends Middleware
         $reservations = [];
         if ($user || $sessionId) {
             if (isset($user) && $sessionId) {
-                $reservations = ProductReservation::withRelations()->withCount('plannings')->where('user_id', $user->id)->orWhere('session_id', $sessionId)->get();
+                $reservations = ProductReservation::withRelations()->withCount('plannings')->where('user_id', $user->id)->orWhere('session_id', $sessionId)->where('paid', false)->get();
             } elseif ($sessionId) {
-                $reservations = ProductReservation::withRelations()->withCount('plannings')->where('session_id', $sessionId)->get();
+                $reservations = ProductReservation::withRelations()->withCount('plannings')->where('session_id', $sessionId)->where('paid', false)->get();
             } elseif ($user) {
-                $reservations = ProductReservation::withRelations()->withCount('plannings')->where('user_id', $user->id)->get();
+                $reservations = ProductReservation::withRelations()->withCount('plannings')->where('user_id', $user->id)->where('paid', false)->get();
             }
         }
 

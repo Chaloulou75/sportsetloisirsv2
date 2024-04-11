@@ -109,11 +109,10 @@ Route::post('/panier/coordonnees/store', [PanierCoordonneesController::class, 's
 );
 
 Route::get('/panier/paiement', [PanierPaymentController::class, 'index'])->name('panier.paiement.index');
-Route::post('/create-checkout-session', [PanierPaymentController::class, 'createCheckoutSession']);
+Route::post('/panier/paiement/create-checkout-session', [PanierPaymentController::class, 'createCheckoutSession'])->name('create.checkout.session');
 Route::get('/panier/paiement/success', [PanierPaymentController::class, 'success'])->name('panier.paiement.success');
 Route::get('/panier/paiement/cancel', [PanierPaymentController::class, 'cancel'])->name('panier.paiement.cancel');
-
-
+Route::post('/panier/paiement/webhook', [PanierPaymentController::class, 'webhook'])->name('create.checkout.webhook');
 
 
 //Blog

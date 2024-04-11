@@ -122,7 +122,7 @@ class StructureActivite extends Model
             'produits.criteres',
             'produits.criteres.critere',
             'produits.criteres.critere_valeur',
-            'produits.criteres.critere_valeur.sous_criteres.prodSousCritValeurs.sous_critere_valeur',
+            'produits.criteres.critere_valeur.sous_criteres.prod_sous_crit_valeurs.sous_critere_valeur',
             'produits.criteres.sous_criteres',
             'produits.criteres.sous_criteres.sous_critere_valeur',
             'produits.catTarifs',

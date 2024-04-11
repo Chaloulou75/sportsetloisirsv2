@@ -13,6 +13,7 @@ use App\Models\ListDiscipline;
 use App\Models\ProductReservation;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
+use Inertia\Response;
 use Stripe\Exception\ApiErrorException;
 
 class PanierPaymentController extends Controller
@@ -20,7 +21,7 @@ class PanierPaymentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -32,16 +33,16 @@ class PanierPaymentController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $sessionId = session()->getId();
+        $currentSessionId = session()->getId();
         $user = auth()->user();
 
-        if ($user || $sessionId) {
+        if ($user || $currentSessionId) {
             $query = ProductReservation::withRelations()->withCount('plannings');
 
-            if (isset($user) && $sessionId) {
-                $query->where('user_id', $user->id)->orWhere('session_id', $sessionId);
-            } elseif ($sessionId) {
-                $query->where('session_id', $sessionId);
+            if (isset($user) && $currentSessionId) {
+                $query->where('user_id', $user->id)->orWhere('session_id', $currentSessionId);
+            } elseif ($currentSessionId) {
+                $query->where('session_id', $currentSessionId);
             } elseif ($user) {
                 $query->where('user_id', $user->id);
             }
@@ -61,8 +62,8 @@ class PanierPaymentController extends Controller
             }
         }
 
-
         $stripe = new StripeClient(env('VITE_STRIPE_SECRET'));
+
         $paymentIntent = $stripe->paymentIntents->create([
                 'amount' => $totalPrice * 100,
                 'currency' => 'eur',
@@ -135,50 +136,120 @@ class PanierPaymentController extends Controller
 
     public function createCheckoutSession(Request $request)
     {
-        dd($request->all());
+        Stripe::setApiKey(env('VITE_STRIPE_SECRET'));
 
-        // $stripeCharge = (new User())->charge(100, $paymentMethod);
+        $currentSessionId = session()->getId();
+        $user = auth()->user();
 
-        $totalPrice = $request->input('totalPrice');
-        try {
-            Stripe::setApiKey(env('VITE_STRIPE_SECRET'));
+        if ($user || $currentSessionId) {
+            $query = ProductReservation::withRelations()->withCount('plannings');
 
-            $session = Session::create([
-                'payment_method_types' => ['card'],
-                'line_items' => [
-                    [
+            if (isset($user) && $currentSessionId) {
+                $query->where('user_id', $user->id)->orWhere('session_id', $currentSessionId);
+            } elseif ($currentSessionId) {
+                $query->where('session_id', $currentSessionId);
+            } elseif ($user) {
+                $query->where('user_id', $user->id);
+            }
+            $reservations = $query->get();
+        }
+
+        $lineItems = [];
+        $totalPrice = 0;
+
+        foreach ($reservations as $reservation) {
+            // dd($reservation);
+            if ($reservation->plannings) {
+                foreach ($reservation->plannings as $planning) {
+                    $price = $planning->pivot->quantity * $reservation->tarif_amount;
+                    $totalPrice += $price;
+                    $lineItems[] = [
                         'price_data' => [
                             'currency' => 'eur',
                             'product_data' => [
-                                'name' => 'Réservations de Produits',
+                                'name' => $reservation->activite_title,
+                                'description' => $reservation->activite->description,
                             ],
-                            'unit_amount' => $totalPrice * 100,
+                            'unit_amount' => $reservation->tarif_amount * 100,
                         ],
-                        'quantity' => 1,
+                        'quantity' => $planning->pivot->quantity,
+                    ];
+                }
+            } else {
+                $price = $reservation->tarif_amount * $reservation->quantity;
+                $totalPrice += $price;
+                $lineItems[] = [
+                    'price_data' => [
+                        'currency' => 'eur',
+                        'product_data' => [
+                            'name' => $reservation->activite_title,
+
+                        ],
+                        'unit_amount' => $reservation->tarif_amount * 100,
                     ],
-                ],
-                'mode' => 'payment',
-                'success_url' => route('panier.paiement.success'),
-                'cancel_url' => route('panier.paiement.cancel'),
-            ]);
-
-            // Return the session ID
-            return response()->json(['sessionId' => $session->id]);
-        } catch (ApiErrorException $e) {
-            // Handle Stripe API error
-            return response()->json(['error' => $e->getMessage()], 500);
+                    'quantity' => $reservation->quantity,
+                ];
+            }
         }
+
+        $session = Session::create([
+            'line_items' => $lineItems,
+            'mode' => 'payment',
+            'success_url' => route('panier.paiement.success'),
+            'cancel_url' => route('panier.paiement.cancel'),
+        ]);
+
+        return Inertia::location($session->url);
     }
 
-    public function success(Request $request)
+    public function success(): Response
     {
+        $familles = Cache::remember('familles', 600, function () {
+            return Famille::withProducts()->get();
+        });
+        $allCities = Cache::remember('allCities', 600, function () {
+            return City::withProducts()->get();
+        });
+        $listDisciplines = Cache::remember('listDisciplines', 600, function () {
+            return ListDiscipline::withProducts()->get();
+        });
 
-        dd($request->all());
+        //reservations payées! et update status
+        // webhooks stripe
+        // emails et notifications
+
+        return Inertia::render('Panier/Payment/Success', [
+            'familles' => fn () => FamilleResource::collection($familles),
+            'listDisciplines' => fn () => $listDisciplines,
+            'allCities' => fn () => $allCities,
+        ]);
+    }
+
+    public function cancel(Request $request): Response
+    {
+        $familles = Cache::remember('familles', 600, function () {
+            return Famille::withProducts()->get();
+        });
+        $allCities = Cache::remember('allCities', 600, function () {
+            return City::withProducts()->get();
+        });
+        $listDisciplines = Cache::remember('listDisciplines', 600, function () {
+            return ListDiscipline::withProducts()->get();
+        });
+
+        return Inertia::render('Panier/Payment/Cancel', [
+            'familles' => fn () => FamilleResource::collection($familles),
+            'listDisciplines' => fn () => $listDisciplines,
+            'allCities' => fn () => $allCities,
+        ]);
 
     }
 
-    public function cancel()
+    public function webhook()
     {
-        dd('payment cancelled');
+        return 'ok';
+
+        // $stripe = new \Stripe\StripeClient(env('VITE_STRIPE_SECRET'));
+
     }
 }
