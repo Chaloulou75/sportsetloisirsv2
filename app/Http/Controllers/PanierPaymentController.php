@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Error;
 use Stripe\Stripe;
 use App\Models\City;
 use Inertia\Inertia;
+use Stripe\Customer;
+use Inertia\Response;
 use App\Models\Famille;
 use Stripe\StripeClient;
 use Illuminate\Http\Request;
@@ -13,8 +16,8 @@ use App\Models\ListDiscipline;
 use App\Models\ProductReservation;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
-use Inertia\Response;
 use Stripe\Exception\ApiErrorException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PanierPaymentController extends Controller
 {
@@ -192,17 +195,21 @@ class PanierPaymentController extends Controller
             }
         }
 
+        $successUrl = route('panier.paiement.success');
+        $successUrl .= '?session_id={CHECKOUT_SESSION_ID}';
         $session = Session::create([
             'line_items' => $lineItems,
             'mode' => 'payment',
-            'success_url' => route('panier.paiement.success'),
+            'billing_address_collection' => 'required',
+            'phone_number_collection' => ['enabled' => true],
+            'success_url' => $successUrl,
             'cancel_url' => route('panier.paiement.cancel'),
         ]);
 
         return Inertia::location($session->url);
     }
 
-    public function success(): Response
+    public function success(Request $request)
     {
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -214,15 +221,34 @@ class PanierPaymentController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
+        $stripe = Stripe::setApiKey(env('VITE_STRIPE_SECRET'));
+
+        $sessionId = $request->get('session_id');
+        try {
+            $session = Session::retrieve($sessionId);
+
+            if (!$session) {
+                throw new NotFoundHttpException();
+            }
+
+            $customer = $session->customer_details;
+
+            return Inertia::render('Panier/Payment/Success', [
+            'familles' => fn () => FamilleResource::collection($familles),
+            'listDisciplines' => fn () => $listDisciplines,
+            'allCities' => fn () => $allCities,
+            'customer' => $customer ?? null,
+        ]);
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            throw new NotFoundHttpException();
+        }
+
         //reservations payées! et update status
         // webhooks stripe
         // emails et notifications
 
-        return Inertia::render('Panier/Payment/Success', [
-            'familles' => fn () => FamilleResource::collection($familles),
-            'listDisciplines' => fn () => $listDisciplines,
-            'allCities' => fn () => $allCities,
-        ]);
+
+
     }
 
     public function cancel(Request $request): Response

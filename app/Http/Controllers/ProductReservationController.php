@@ -105,12 +105,16 @@ class ProductReservationController extends Controller
             'codePromo' => ['nullable'],
         ]);
         $reservations = $request->reservations;
-
+        // dd($reservations);
         foreach($reservations as $reservation) {
             $resa = ProductReservation::withRelations()->find($reservation['id']);
-            $resa->update([
-                'pending' => true
-            ]);
+
+            if ($resa) {
+                $resa->update([
+                    'pending' => true
+                ]);
+            }
+
         }
         if($request->quantity) {
             foreach($request->quantity as $prod => $quantite) {
