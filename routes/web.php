@@ -104,15 +104,6 @@ Route::delete('/panier/{reservation}/plannings/{planning}', [ReservationPlanning
 Route::get('/panier/coordonnees', [PanierCoordonneesController::class, 'index'])->name(
     'panier.coordonnees.index'
 );
-Route::post('/panier/coordonnees/store', [PanierCoordonneesController::class, 'store'])->name(
-    'panier.coordonnees.store'
-);
-
-Route::get('/panier/paiement', [PanierPaymentController::class, 'index'])->name('panier.paiement.index');
-Route::post('/panier/paiement/create-checkout-session', [PanierPaymentController::class, 'createCheckoutSession'])->name('create.checkout.session');
-Route::get('/panier/paiement/success', [PanierPaymentController::class, 'success'])->name('panier.paiement.success');
-Route::get('/panier/paiement/cancel', [PanierPaymentController::class, 'cancel'])->name('panier.paiement.cancel');
-Route::post('/panier/paiement/webhook', [PanierPaymentController::class, 'webhook'])->name('create.checkout.webhook');
 
 
 //Blog
@@ -146,6 +137,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/blog/{post:slug}', [PostController::class, 'destroy'])->name('posts.destroy');
     Route::post('/blog/{post:slug}/comments', [PostCommentController::class, 'store'])->name('posts.comments.store');
     Route::delete('/blog/{post:slug}/comments/{comment}', [PostCommentController::class, 'destroy'])->name('posts.comments.destroy');
+
+    //Panier et paiement
+    Route::post('/panier/coordonnees/store', [PanierCoordonneesController::class, 'store'])->name(
+        'panier.coordonnees.store'
+    );
+
+    Route::get('/panier/paiement', [PanierPaymentController::class, 'index'])->name('panier.paiement.index');
+    Route::post('/panier/paiement/create-checkout-session', [PanierPaymentController::class, 'createCheckoutSession'])->name('create.checkout.session');
+    Route::get('/panier/paiement/success', [PanierPaymentController::class, 'success'])->name('panier.paiement.success');
+    Route::get('/panier/paiement/cancel', [PanierPaymentController::class, 'cancel'])->name('panier.paiement.cancel');
+    Route::post('/panier/paiement/webhook', [PanierPaymentController::class, 'webhook'])->name('create.checkout.webhook');
 
     //structures
     Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');

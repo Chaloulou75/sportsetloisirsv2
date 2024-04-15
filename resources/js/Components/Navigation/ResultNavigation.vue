@@ -28,9 +28,8 @@ const props = defineProps({
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 
-const productsInSession = computed(() => page.props.productsReservations);
 const productCountInSession = computed(
-    () => Object.keys(productsInSession.value).length
+    () => page.props.productsReservationsCount
 );
 
 const showingNavigationDropdown = ref(false);

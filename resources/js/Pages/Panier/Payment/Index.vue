@@ -15,67 +15,7 @@ const props = defineProps({
     allCities: Object,
     reservations: Object,
     totalPrice: Number,
-    clientSecret: String,
 });
-
-// const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
-
-// const isLoading = ref(false);
-// const messages = ref([]);
-// const cardError = ref(null);
-// let stripe;
-// let elements;
-
-// onMounted(async () => {
-//     stripe = await stripePromise;
-//     const clientSecret = props.clientSecret;
-//     const appearance = {
-//         theme: "stripe",
-//         labels: "floating",
-//     };
-//     const options = { mode: "billing" };
-//     elements = stripe.elements({ clientSecret, appearance });
-//     const addressElement = elements.create("address", options);
-//     const paymentElement = elements.create("payment");
-
-//     addressElement.mount("#address-element");
-//     paymentElement.mount("#payment-element");
-
-//     isLoading.value = false;
-// });
-
-// const processPayment = async () => {
-//     if (isLoading.value) {
-//         return;
-//     }
-
-//     isLoading.value = true;
-//     if (!stripe) {
-//         return;
-//     }
-
-//     // Trigger form validation and wallet collection
-//     const { error } = await stripe.confirmPayment({
-//         elements,
-//         confirmParams: {
-//             return_url: route("panier.paiement.success"),
-//             payment_method_data: {
-//                 billing_details: {
-//                     name: props.user.name,
-//                     email: props.user.email,
-//                 },
-//             },
-//         },
-//     });
-
-//     if (error.type === "card_error" || error.type === "validation_error") {
-//         messages.value.push(error.message);
-//     } else {
-//         messages.value.push("An unexpected error occured.");
-//     }
-
-//     isLoading.value = false;
-// };
 
 const goToCheckout = () => {
     router.post(route("create.checkout.session"));
@@ -97,17 +37,17 @@ const goToCheckout = () => {
         </template>
 
         <Breadcrumb />
-        <div class="container flex flex-col gap-4 py-6 mx-auto">
-            <div class="w-full px-2 space-y-4 md:px-0">
-                <h2 class="text-lg font-semibold text-center md:text-left">
+        <div class="container mx-auto flex flex-col gap-4 py-6">
+            <div class="w-full space-y-4 px-2 md:px-0">
+                <h2 class="text-center text-lg font-semibold md:text-left">
                     Remplissez vos informations:
                 </h2>
             </div>
             <div
-                class="w-full max-w-lg p-3 mx-auto border border-gray-200 shadow-sm bg-gray-50"
+                class="mx-auto w-full max-w-lg border border-gray-200 bg-gray-50 p-3 shadow-sm"
             >
                 <button
-                    class="flex items-center justify-center w-full max-w-full px-4 py-3 mx-auto text-base text-white bg-indigo-800 border border-gray-200 rounded-md shadow hover:bg-indigo-900"
+                    class="mx-auto flex w-full max-w-full items-center justify-center rounded-md border border-gray-200 bg-indigo-800 px-4 py-3 text-base text-white shadow hover:bg-indigo-900"
                     type="submit"
                     @click.prevent="goToCheckout"
                 >

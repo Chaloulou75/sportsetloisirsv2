@@ -1,6 +1,5 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { ref, onMounted } from "vue";
 import { Head } from "@inertiajs/vue3";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import Breadcrumb from "@/Components/Panier/Breadcrumb.vue";

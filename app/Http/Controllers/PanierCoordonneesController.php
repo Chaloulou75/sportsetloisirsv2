@@ -18,6 +18,8 @@ class PanierCoordonneesController extends Controller
      */
     public function index()
     {
+        $user = auth()->user();
+
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
@@ -27,8 +29,6 @@ class PanierCoordonneesController extends Controller
         $listDisciplines = Cache::remember('listDisciplines', 600, function () {
             return ListDiscipline::withProducts()->get();
         });
-
-        $user = auth()->user();
 
         return Inertia::render('Panier/Coordonnees/Index', [
             'user' => fn () => UserResource::make($user) ?? null,

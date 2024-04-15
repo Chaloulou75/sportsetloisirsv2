@@ -32,26 +32,27 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $user = $request->user();
-        $sessionId = $request->session()->getId();
-        $reservations = [];
-        if ($user || $sessionId) {
-            if (isset($user) && $sessionId) {
-                $reservations = ProductReservation::withRelations()->withCount('plannings')->where('user_id', $user->id)->orWhere('session_id', $sessionId)->where('paid', false)->get();
-            } elseif ($sessionId) {
-                $reservations = ProductReservation::withRelations()->withCount('plannings')->where('session_id', $sessionId)->where('paid', false)->get();
-            } elseif ($user) {
-                $reservations = ProductReservation::withRelations()->withCount('plannings')->where('user_id', $user->id)->where('paid', false)->get();
-            }
+        $panierProductsInSession = $request->session()->get('panierProducts');
+        $panierProdCount = count($panierProductsInSession ?? []);
+        $reservationsCount = 0;
+        if($panierProdCount > 0 && $request->user()) {
+            $reservationIds = array_column($panierProductsInSession, 'reservation_id');
+            $reservationsCount = ProductReservation::whereIn('id', $reservationIds)->orWhere('user_id', $request->user()->id)->where('paid', false)->count();
+        } elseif($panierProdCount > 0) {
+            $reservationIds = array_column($panierProductsInSession, 'reservation_id');
+            $reservationsCount = ProductReservation::whereIn('id', $reservationIds)->where('paid', false)->count();
+        } elseif($request->user()) {
+            $reservationsCount = ProductReservation::where('user_id', $request->user()->id)->where('paid', false)->count();
         }
+
 
         return array_merge(parent::share($request), [
             'appName' => config('app.name'),
             'auth' => [
-                'user' => fn () => $user ? $user->load('structures:id,name,slug')->only('id', 'name', 'email', 'structures') : null,
+                'user' => fn () => $request->user() ? $request->user()->load('structures:id,name,slug')->only('id', 'name', 'email', 'structures') : null,
             ],
             'user_can' => [
-                'view_admin' => fn () => $user ? $user->can('viewAdmin', User::class) : false,
+                'view_admin' => fn () => $request->user() ? $request->user()->can('viewAdmin', User::class) : false,
             ],
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy())->toArray(), [
@@ -65,7 +66,7 @@ class HandleInertiaRequests extends Middleware
                     'message' => $request->session()->get('message'),
                 ];
             },
-            'productsReservations' => $reservations ?? null,
+            'productsReservationsCount' => $reservationsCount ?? null,
         ]);
     }
 }

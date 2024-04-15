@@ -6,11 +6,8 @@ use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Structure;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Mail\ReservationAsked;
-use App\Models\StructureTarif;
-use Illuminate\Validation\Rule;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Models\StructureCatTarif;
@@ -20,7 +17,6 @@ use App\Models\ProductReservation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Redirect;
 
 class ProductReservationController extends Controller
 {
@@ -99,23 +95,28 @@ class ProductReservationController extends Controller
      */
     public function store(Request $request)
     {
+        $user = auth()->user();
+        if(!$user) {
+            return to_route('login')->with('message', 'Connectez vous pour effectuer vos réservations');
+        }
         request()->validate([
             'reservations' => ['required'],
             'quantity' => ['nullable'],
             'codePromo' => ['nullable'],
         ]);
         $reservations = $request->reservations;
-        // dd($reservations);
-        foreach($reservations as $reservation) {
-            $resa = ProductReservation::withRelations()->find($reservation['id']);
+        if($reservations) {
+            foreach($reservations as $reservation) {
+                $resa = ProductReservation::withRelations()->find($reservation['id']);
 
-            if ($resa) {
-                $resa->update([
-                    'pending' => true
-                ]);
+                if ($resa) {
+                    $resa->pending = true;
+                    $resa->user_id = $user->id;
+                    $resa->save();
+                }
             }
-
         }
+
         if($request->quantity) {
             foreach($request->quantity as $prod => $quantite) {
                 $resa = ProductReservation::withRelations()->find($prod);

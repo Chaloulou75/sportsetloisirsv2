@@ -49,7 +49,11 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
+        $data = session()->get('panierProducts');
+
         $request->session()->regenerate();
+
+        session()->put('panierProducts', $data);
 
         return redirect()->intended(RouteServiceProvider::HOME);
     }

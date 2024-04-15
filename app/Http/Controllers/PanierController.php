@@ -39,20 +39,18 @@ class PanierController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $sessionId = session()->getId();
         $user = auth()->user();
+        $panierProductsInSession = session()->get('panierProducts');
+        $panierProdCount = count($panierProductsInSession ?? []);
 
-        if ($user || $sessionId) {
-            $query = ProductReservation::withRelations()->withCount('plannings')->where('paid', false);
-
-            if (isset($user) && $sessionId) {
-                $query->where('user_id', $user->id)->orWhere('session_id', $sessionId);
-            } elseif ($sessionId) {
-                $query->where('session_id', $sessionId);
-            } elseif ($user) {
-                $query->where('user_id', $user->id);
-            }
-            $reservations = $query->get();
+        if($panierProdCount > 0 && $user) {
+            $reservationIds = array_column($panierProductsInSession, 'reservation_id');
+            $reservations = ProductReservation::whereIn('id', $reservationIds)->orWhere('user_id', $user->id)->where('paid', false)->get();
+        } elseif($panierProdCount > 0) {
+            $reservationIds = array_column($panierProductsInSession, 'reservation_id');
+            $reservations = ProductReservation::whereIn('id', $reservationIds)->where('paid', false)->get();
+        } elseif($user) {
+            $reservations = ProductReservation::where('user_id', $user->id)->where('paid', false)->get();
         }
 
         return Inertia::render('Panier/Index', [

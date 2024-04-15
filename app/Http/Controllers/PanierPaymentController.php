@@ -36,25 +36,13 @@ class PanierPaymentController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $currentSessionId = session()->getId();
         $user = auth()->user();
 
-        if ($user || $currentSessionId) {
-            $query = ProductReservation::withRelations()->withCount('plannings');
-
-            if (isset($user) && $currentSessionId) {
-                $query->where('user_id', $user->id)->orWhere('session_id', $currentSessionId);
-            } elseif ($currentSessionId) {
-                $query->where('session_id', $currentSessionId);
-            } elseif ($user) {
-                $query->where('user_id', $user->id);
-            }
-            $reservations = $query->get();
-        }
+        $reservations = ProductReservation::withRelations()->withCount('plannings')->where('user_id', $user->id)->where('paid', false)->get();
 
         $totalPrice = 0;
         foreach($reservations as $reservation) {
-            if($reservation->plannings) {
+            if($reservation->plannings_count > 0) {
                 foreach($reservation->plannings as $planning) {
                     $price = $planning->pivot->quantity * $reservation->tarif_amount;
                     $totalPrice += $price;
@@ -63,19 +51,8 @@ class PanierPaymentController extends Controller
                 $price = $reservation->tarif_amount * $reservation->quantity;
                 $totalPrice += $price;
             }
+
         }
-
-        $stripe = new StripeClient(env('VITE_STRIPE_SECRET'));
-
-        $paymentIntent = $stripe->paymentIntents->create([
-                'amount' => $totalPrice * 100,
-                'currency' => 'eur',
-                'automatic_payment_methods' => [
-                    'enabled' => true,
-                ],
-            ]);
-        $clientSecret = $paymentIntent->client_secret;
-
         return Inertia::render('Panier/Payment/Index', [
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => $listDisciplines,
@@ -83,7 +60,6 @@ class PanierPaymentController extends Controller
             'reservations' => fn () => $reservations ?? null,
             'user' => fn () =>  $user ?? null,
             'totalPrice' => fn () => $totalPrice ?? null,
-            'clientSecret' => fn () => $clientSecret ?? null,
         ]);
     }
 
@@ -141,28 +117,17 @@ class PanierPaymentController extends Controller
     {
         Stripe::setApiKey(env('VITE_STRIPE_SECRET'));
 
-        $currentSessionId = session()->getId();
         $user = auth()->user();
 
-        if ($user || $currentSessionId) {
-            $query = ProductReservation::withRelations()->withCount('plannings');
 
-            if (isset($user) && $currentSessionId) {
-                $query->where('user_id', $user->id)->orWhere('session_id', $currentSessionId);
-            } elseif ($currentSessionId) {
-                $query->where('session_id', $currentSessionId);
-            } elseif ($user) {
-                $query->where('user_id', $user->id);
-            }
-            $reservations = $query->get();
-        }
+        $reservations = ProductReservation::withRelations()->withCount('plannings')->where('user_id', $user->id)->where('paid', false)->get();
 
         $lineItems = [];
         $totalPrice = 0;
 
         foreach ($reservations as $reservation) {
             // dd($reservation);
-            if ($reservation->plannings) {
+            if ($reservation->plannings_count > 0) {
                 foreach ($reservation->plannings as $planning) {
                     $price = $planning->pivot->quantity * $reservation->tarif_amount;
                     $totalPrice += $price;
@@ -197,7 +162,7 @@ class PanierPaymentController extends Controller
 
         $successUrl = route('panier.paiement.success');
         $successUrl .= '?session_id={CHECKOUT_SESSION_ID}';
-        $session = Session::create([
+        $sessionStripe = Session::create([
             'line_items' => $lineItems,
             'mode' => 'payment',
             'billing_address_collection' => 'required',
@@ -206,7 +171,12 @@ class PanierPaymentController extends Controller
             'cancel_url' => route('panier.paiement.cancel'),
         ]);
 
-        return Inertia::location($session->url);
+        foreach ($reservations as $reservation) {
+            $reservation->stripe_session_id = $sessionStripe->id;
+            $reservation->save();
+        }
+
+        return Inertia::location($sessionStripe->url);
     }
 
     public function success(Request $request)
@@ -225,30 +195,41 @@ class PanierPaymentController extends Controller
 
         $sessionId = $request->get('session_id');
         try {
-            $session = Session::retrieve($sessionId);
+            $sessionStripe = Session::retrieve($sessionId);
 
-            if (!$session) {
+            if (!$sessionStripe) {
                 throw new NotFoundHttpException();
             }
 
-            $customer = $session->customer_details;
+            $reservations = ProductReservation::withRelations()->where('stripe_session_id', $sessionStripe->id)->get();
 
+            foreach ($reservations as $reservation) {
+                $reservation->user_payeur_id = auth()->user()->id;
+                $reservation->paid = true;
+                $reservation->paiement_method = $sessionStripe->payment_method_types[0];
+                $reservation->paiement_datetime = now();
+                $reservation->save();
+            }
+
+            // paiement en database pour chaque resas
+
+            // notifier la structure des résas + paiement
+            // mail à l'auteur de la résa
+            // notifier l'admin du site
+
+            // supprimer le panier en session
+            $panier = $request->session()->get('panierProducts');
+
+            $customer = $sessionStripe->customer_details;
             return Inertia::render('Panier/Payment/Success', [
-            'familles' => fn () => FamilleResource::collection($familles),
-            'listDisciplines' => fn () => $listDisciplines,
-            'allCities' => fn () => $allCities,
-            'customer' => $customer ?? null,
-        ]);
+                'familles' => fn () => FamilleResource::collection($familles),
+                'listDisciplines' => fn () => $listDisciplines,
+                'allCities' => fn () => $allCities,
+                'customer' => $customer ?? null,
+            ]);
         } catch (\Stripe\Exception\ApiErrorException $e) {
             throw new NotFoundHttpException();
         }
-
-        //reservations payées! et update status
-        // webhooks stripe
-        // emails et notifications
-
-
-
     }
 
     public function cancel(Request $request): Response
