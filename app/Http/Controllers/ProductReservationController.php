@@ -131,7 +131,7 @@ class ProductReservationController extends Controller
             }
         }
 
-        return to_route('panier.coordonnees.index')->with('success', "Insérée vos coordonnées");
+        return to_route('panier.paiement.index')->with('success', 'Finalisez vos réservations');
     }
 
     /**

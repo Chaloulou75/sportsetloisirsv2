@@ -15,6 +15,7 @@ use Stripe\Checkout\Session;
 use App\Models\ListDiscipline;
 use App\Models\ProductReservation;
 use Illuminate\Support\Facades\Cache;
+use App\Notifications\ReservationPaid;
 use App\Http\Resources\FamilleResource;
 use Stripe\Exception\ApiErrorException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -116,17 +117,13 @@ class PanierPaymentController extends Controller
     public function createCheckoutSession(Request $request)
     {
         Stripe::setApiKey(env('VITE_STRIPE_SECRET'));
-
         $user = auth()->user();
-
-
         $reservations = ProductReservation::withRelations()->withCount('plannings')->where('user_id', $user->id)->where('paid', false)->get();
 
         $lineItems = [];
         $totalPrice = 0;
 
         foreach ($reservations as $reservation) {
-            // dd($reservation);
             if ($reservation->plannings_count > 0) {
                 foreach ($reservation->plannings as $planning) {
                     $price = $planning->pivot->quantity * $reservation->tarif_amount;
@@ -167,6 +164,7 @@ class PanierPaymentController extends Controller
             'mode' => 'payment',
             'billing_address_collection' => 'required',
             'phone_number_collection' => ['enabled' => true],
+            'invoice_creation' => ['enabled' => true],
             'success_url' => $successUrl,
             'cancel_url' => route('panier.paiement.cancel'),
         ]);
@@ -201,25 +199,24 @@ class PanierPaymentController extends Controller
                 throw new NotFoundHttpException();
             }
 
-            $reservations = ProductReservation::withRelations()->where('stripe_session_id', $sessionStripe->id)->get();
+            $reservations = ProductReservation::where('stripe_session_id', $sessionStripe->id)
+            ->where('paid', false)
+            ->get();
 
-            foreach ($reservations as $reservation) {
-                $reservation->user_payeur_id = auth()->user()->id;
-                $reservation->paid = true;
-                $reservation->paiement_method = $sessionStripe->payment_method_types[0];
-                $reservation->paiement_datetime = now();
-                $reservation->save();
+            if ($reservations->isNotEmpty()) {
+                $user = auth()->user();
+                // Update all matching reservations at once
+                foreach ($reservations as $reservation) {
+                    $reservation->update([
+                        'user_payeur_id' => $user->id,
+                        'paid' => true,
+                        'paiement_method' => $sessionStripe->payment_method_types[0],
+                        'paiement_datetime' => now(),
+                    ]);
+                    $user->notify(new ReservationPaid($reservation, $sessionStripe));
+                }
             }
-
-            // paiement en database pour chaque resas
-
-            // notifier la structure des résas + paiement
-            // mail à l'auteur de la résa
-            // notifier l'admin du site
-
-            // supprimer le panier en session
-            $panier = $request->session()->get('panierProducts');
-
+            $request->session()->forget('panierProducts');
             $customer = $sessionStripe->customer_details;
             return Inertia::render('Panier/Payment/Success', [
                 'familles' => fn () => FamilleResource::collection($familles),
@@ -254,9 +251,57 @@ class PanierPaymentController extends Controller
 
     public function webhook()
     {
-        return 'ok';
+        // This is your Stripe CLI webhook secret for testing your endpoint locally.
+        $endpoint_secret = env('VITE_STRIPE_WEBHOOK_SECRET');
 
-        // $stripe = new \Stripe\StripeClient(env('VITE_STRIPE_SECRET'));
+        $payload = @file_get_contents('php://input');
+        $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
+        $event = null;
 
+        try {
+            $event = \Stripe\Webhook::constructEvent(
+                $payload,
+                $sig_header,
+                $endpoint_secret
+            );
+        } catch (\UnexpectedValueException $e) {
+            // Invalid payload
+            return response('', 400);
+        } catch (\Stripe\Exception\SignatureVerificationException $e) {
+            // Invalid signature
+            return response('', 400);
+        }
+
+        // Handle the event
+        switch ($event->type) {
+            case 'checkout.session.completed':
+                $sessionStripe = $event->data->object;
+
+                $reservations = ProductReservation::withRelations()
+                ->where('stripe_session_id', $sessionStripe->id)
+                ->where('paid', false)
+                ->get();
+
+                if ($reservations->isNotEmpty()) {
+                    $user = auth()->user();
+                    // Update all matching reservations at once
+                    foreach ($reservations as $reservation) {
+                        $reservation->update([
+                            'user_payeur_id' => $user->id,
+                            'paid' => true,
+                            'paiement_method' => $sessionStripe->payment_method_types[0],
+                            'paiement_datetime' => now(),
+                        ]);
+                        $user->notify(new ReservationPaid($reservation, $sessionStripe));
+                    }
+                }
+
+
+                // ... handle other event types
+                // no break
+            default:
+                echo 'Received unknown event type ' . $event->type;
+        }
+        return response('');
     }
 }

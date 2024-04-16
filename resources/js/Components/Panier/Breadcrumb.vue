@@ -28,26 +28,6 @@ import {
                     class="mx-2 size-4 flex-shrink-0 overflow-visible text-gray-400"
                 />
             </li>
-            <li class="inline-flex items-center">
-                <Link
-                    :href="route('panier.coordonnees.index')"
-                    :class="{
-                        'font-bold': route().current(
-                            'panier.coordonnees.index'
-                        ),
-                    }"
-                    class="flex items-center text-sm text-gray-500 hover:text-blue-600 focus:text-blue-600 focus:outline-none"
-                >
-                    <IdentificationIcon
-                        class="me-3 size-4 flex-shrink-0 text-current"
-                    />
-
-                    Coordonnées
-                    <ChevronRightIcon
-                        class="mx-2 size-4 flex-shrink-0 overflow-visible text-gray-400"
-                    />
-                </Link>
-            </li>
             <li
                 class="inline-flex items-center truncate text-sm text-gray-800"
                 aria-current="page"
@@ -58,7 +38,8 @@ import {
                         'font-bold': route().current('panier.paiement.index'),
                     }"
                     class="flex items-center text-sm text-gray-500 hover:text-blue-600 focus:text-blue-600 focus:outline-none"
-                    ><CreditCardIcon class="me-3 size-4 flex-shrink-0" />
+                >
+                    <CreditCardIcon class="me-3 size-4 flex-shrink-0" />
                     Paiement
                 </Link>
             </li>

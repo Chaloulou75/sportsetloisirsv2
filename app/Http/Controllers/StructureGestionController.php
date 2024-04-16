@@ -16,15 +16,19 @@ class StructureGestionController extends Controller
      */
     public function index(Structure $structure): Response
     {
-        $allReservations = ProductReservation::withRelations()->get();
+        $allReservations = ProductReservation::withRelations()
+                        ->where('structure_id', $structure->id)
+                        ->get();
         $allReservationsCount = $allReservations->count();
 
         $pendingReservations = ProductReservation::withRelations()
+            ->where('structure_id', $structure->id)
             ->where('pending', true)
             ->get();
         $pendingReservationsCount = $pendingReservations->count();
 
         $confirmedReservations = ProductReservation::withRelations()
+            ->where('structure_id', $structure->id)
             ->where('confirmed', true)
             ->get();
         $confirmedReservationsCount = $confirmedReservations->count();
@@ -37,9 +41,7 @@ class StructureGestionController extends Controller
             return $reservation->tarif_amount * $reservation->quantity;
         });
 
-        $structure = Structure::withRelations()
-                    ->where('slug', $structure->slug)
-                    ->firstOrFail();
+        $structure = Structure::withRelations()->findOrFail($structure->id);
 
         return Inertia::render('Structures/Gestion/Index', [
             'structure' => fn () => $structure,

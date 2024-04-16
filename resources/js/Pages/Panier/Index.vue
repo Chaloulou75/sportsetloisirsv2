@@ -1,7 +1,7 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { ref, computed, watch, onMounted, onBeforeMount } from "vue";
-import { router, useForm } from "@inertiajs/vue3";
+import { router, useForm, usePage } from "@inertiajs/vue3";
 import { Head, Link } from "@inertiajs/vue3";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
@@ -17,6 +17,10 @@ import {
 } from "@heroicons/vue/24/outline";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
+
+const page = usePage();
+
+const user = computed(() => page.props.auth.user);
 
 const props = defineProps({
     reservations: Object,
@@ -199,11 +203,11 @@ onBeforeMount(() => {
 
         <Breadcrumb />
         <form @submit.prevent="onSubmit" autocomplete="off">
-            <div class="container flex flex-col gap-4 py-6 mx-auto md:flex-row">
+            <div class="container mx-auto flex flex-col gap-4 py-6 md:flex-row">
                 <div
                     v-if="reservations && reservations.length > 0"
                     ref="listToAnimate"
-                    class="flex flex-col flex-1 gap-4"
+                    class="flex flex-1 flex-col gap-4"
                 >
                     <div
                         class="space-y-4 text-sm"
@@ -211,10 +215,10 @@ onBeforeMount(() => {
                         :key="reservation.id"
                     >
                         <div
-                            class="space-y-2 border border-blue-400 rounded shadow bg-gray-50"
+                            class="space-y-2 rounded border border-blue-400 bg-gray-50 shadow"
                         >
                             <div
-                                class="flex items-start justify-between w-full"
+                                class="flex w-full items-start justify-between"
                             >
                                 <div class="space-y-3 px-4 py-1.5">
                                     <h3 class="text-lg">
@@ -240,7 +244,7 @@ onBeforeMount(() => {
                                     >
                                         <dt class="sr-only">Ville</dt>
                                         <MapPinIcon
-                                            class="mr-1 text-gray-600 size-4"
+                                            class="mr-1 size-4 text-gray-600"
                                         />
                                         <p class="font-semibold">
                                             {{
@@ -261,7 +265,7 @@ onBeforeMount(() => {
                                         "
                                     >
                                         <div
-                                            class="grid w-full grid-cols-3 gap-1 mt-auto text-xs text-gray-900 justify-items-center md:grid-cols-6"
+                                            class="mt-auto grid w-full grid-cols-3 justify-items-center gap-1 text-xs text-gray-900 md:grid-cols-6"
                                         >
                                             <template
                                                 v-for="critere in reservation
@@ -275,7 +279,7 @@ onBeforeMount(() => {
                                                             .visible_block ===
                                                             true
                                                     "
-                                                    class="flex flex-col items-center justify-center w-full px-1 py-1 font-medium"
+                                                    class="flex w-full flex-col items-center justify-center px-1 py-1 font-medium"
                                                     :class="
                                                         [
                                                             'date',
@@ -292,7 +296,7 @@ onBeforeMount(() => {
                                                     "
                                                 >
                                                     <div
-                                                        class="text-xs text-center uppercase text-slate-500"
+                                                        class="text-center text-xs uppercase text-slate-500"
                                                     >
                                                         {{
                                                             critere.critere.nom
@@ -300,7 +304,7 @@ onBeforeMount(() => {
                                                     </div>
                                                     <div
                                                         v-if="critere.valeur"
-                                                        class="text-xs text-center"
+                                                        class="text-center text-xs"
                                                     >
                                                         {{ critere.valeur }}
                                                         <span
@@ -353,7 +357,7 @@ onBeforeMount(() => {
                                 </div>
 
                                 <button
-                                    class="p-2 bg-red-400 hover:bg-red-500"
+                                    class="bg-red-400 p-2 hover:bg-red-500"
                                     type="button"
                                     @click.prevent="
                                         deleteReservation(reservation)
@@ -363,7 +367,7 @@ onBeforeMount(() => {
                                         >Supprimer la réservation du
                                         panier</span
                                     >
-                                    <XMarkIcon class="w-6 h-6 text-white" />
+                                    <XMarkIcon class="h-6 w-6 text-white" />
                                 </button>
                             </div>
                             <template
@@ -373,13 +377,13 @@ onBeforeMount(() => {
                                 "
                             >
                                 <div
-                                    class="flex items-center justify-between px-1 space-x-2 md:px-4"
+                                    class="flex items-center justify-between space-x-2 px-1 md:px-4"
                                     v-for="creneau in reservation.plannings"
                                     :key="creneau.id"
                                 >
-                                    <div class="flex items-center flex-1">
+                                    <div class="flex flex-1 items-center">
                                         <CalendarDaysIcon
-                                            class="flex-shrink-0 text-gray-700 me-3 size-4"
+                                            class="me-3 size-4 flex-shrink-0 text-gray-700"
                                         />
                                         <p
                                             class="text-xs text-gray-700 md:text-sm"
@@ -395,10 +399,10 @@ onBeforeMount(() => {
                                     </div>
 
                                     <div
-                                        class="flex items-center self-end space-x-1"
+                                        class="flex items-center space-x-1 self-end"
                                     >
                                         <div
-                                            class="inline-block px-3 py-2 bg-white border border-gray-200 rounded-lg dark:border-gray-700"
+                                            class="inline-block rounded-lg border border-gray-200 bg-white px-3 py-2 dark:border-gray-700"
                                             data-hs-input-number
                                         >
                                             <div
@@ -406,7 +410,7 @@ onBeforeMount(() => {
                                             >
                                                 <button
                                                     type="button"
-                                                    class="inline-flex items-center justify-center text-sm font-medium text-gray-800 bg-white border border-gray-200 rounded-md shadow-sm size-6 gap-x-2 hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50"
+                                                    class="inline-flex size-6 items-center justify-center gap-x-2 rounded-md border border-gray-200 bg-white text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50"
                                                     @click="
                                                         decrementQuantity(
                                                             reservation.id,
@@ -430,7 +434,7 @@ onBeforeMount(() => {
                                                     </svg>
                                                 </button>
                                                 <input
-                                                    class="w-6 p-0 text-center text-gray-800 bg-transparent border-0 focus:ring-0"
+                                                    class="w-6 border-0 bg-transparent p-0 text-center text-gray-800 focus:ring-0"
                                                     type="text"
                                                     v-model="
                                                         panierForm.quantity[
@@ -441,7 +445,7 @@ onBeforeMount(() => {
                                                 />
                                                 <button
                                                     type="button"
-                                                    class="inline-flex items-center justify-center text-sm font-medium text-gray-800 bg-white border border-gray-200 rounded-md shadow-sm size-6 gap-x-2 hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50"
+                                                    class="inline-flex size-6 items-center justify-center gap-x-2 rounded-md border border-gray-200 bg-white text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50"
                                                     @click="
                                                         incrementQuantity(
                                                             reservation.id,
@@ -495,7 +499,7 @@ onBeforeMount(() => {
                                                 >Supprimer le créneau</span
                                             >
                                             <TrashIcon
-                                                class="w-5 h-5 text-gray-400 hover:text-red-500"
+                                                class="h-5 w-5 text-gray-400 hover:text-red-500"
                                             />
                                         </button>
                                     </div>
@@ -503,10 +507,10 @@ onBeforeMount(() => {
                             </template>
                             <template v-else>
                                 <div
-                                    class="flex items-center justify-end w-full px-2 space-x-2"
+                                    class="flex w-full items-center justify-end space-x-2 px-2"
                                 >
                                     <div
-                                        class="inline-block px-3 py-2 bg-white border border-gray-200 rounded-lg dark:border-gray-700"
+                                        class="inline-block rounded-lg border border-gray-200 bg-white px-3 py-2 dark:border-gray-700"
                                         data-hs-input-number
                                     >
                                         <div
@@ -514,7 +518,7 @@ onBeforeMount(() => {
                                         >
                                             <button
                                                 type="button"
-                                                class="inline-flex items-center justify-center text-sm font-medium text-gray-800 bg-white border border-gray-200 rounded-md shadow-sm size-6 gap-x-2 hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50"
+                                                class="inline-flex size-6 items-center justify-center gap-x-2 rounded-md border border-gray-200 bg-white text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50"
                                                 @click="
                                                     decrementQuantity(
                                                         reservation.id
@@ -537,7 +541,7 @@ onBeforeMount(() => {
                                                 </svg>
                                             </button>
                                             <input
-                                                class="w-6 p-0 text-center text-gray-800 bg-transparent border-0 focus:ring-0"
+                                                class="w-6 border-0 bg-transparent p-0 text-center text-gray-800 focus:ring-0"
                                                 type="text"
                                                 v-model="
                                                     panierForm.quantity[
@@ -548,7 +552,7 @@ onBeforeMount(() => {
                                             />
                                             <button
                                                 type="button"
-                                                class="inline-flex items-center justify-center text-sm font-medium text-gray-800 bg-white border border-gray-200 rounded-md shadow-sm size-6 gap-x-2 hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50"
+                                                class="inline-flex size-6 items-center justify-center gap-x-2 rounded-md border border-gray-200 bg-white text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50"
                                                 @click="
                                                     incrementQuantity(
                                                         reservation.id
@@ -587,7 +591,7 @@ onBeforeMount(() => {
                                     Les attributs liés à cette réservation:
                                 </h3>
                                 <div
-                                    class="grid w-full grid-cols-3 gap-1 px-4 mt-auto text-xs text-gray-900 justify-items-center md:grid-cols-6"
+                                    class="mt-auto grid w-full grid-cols-3 justify-items-center gap-1 px-4 text-xs text-gray-900 md:grid-cols-6"
                                 >
                                     <template
                                         v-for="attribut in reservation.attributs"
@@ -595,16 +599,16 @@ onBeforeMount(() => {
                                     >
                                         <div
                                             v-if="attribut.booking_field"
-                                            class="flex flex-col items-center justify-center w-full px-1 py-1 font-medium bg-gray-100"
+                                            class="flex w-full flex-col items-center justify-center bg-gray-100 px-1 py-1 font-medium"
                                         >
                                             <div
-                                                class="text-xs text-center uppercase text-slate-500"
+                                                class="text-center text-xs uppercase text-slate-500"
                                             >
                                                 {{ attribut.booking_field.nom }}
                                             </div>
                                             <div
                                                 v-if="attribut.valeur"
-                                                class="text-xs text-center"
+                                                class="text-center text-xs"
                                             >
                                                 {{ attribut.valeur }}
                                                 <div
@@ -642,7 +646,7 @@ onBeforeMount(() => {
                                 </div>
                             </template>
                             <div
-                                class="flex justify-between w-full px-4 py-2 text-lg font-bold bg-white border-t border-gray-200"
+                                class="flex w-full justify-between border-t border-gray-200 bg-white px-4 py-2 text-lg font-bold"
                             >
                                 <div class="text-gray-700">Montant:</div>
                                 <div class="text-green-700">
@@ -658,12 +662,12 @@ onBeforeMount(() => {
                 </div>
 
                 <div
-                    class="w-full h-full p-6 mt-6 text-xl font-bold text-gray-700 border border-blue-400 rounded-lg shadow-md bg-gray-50 md:mt-0 md:w-1/3"
+                    class="mt-6 h-full w-full rounded-lg border border-blue-400 bg-gray-50 p-6 text-xl font-bold text-gray-700 shadow-md md:mt-0 md:w-1/3"
                 >
-                    <div class="w-full my-4">
+                    <div class="my-4 w-full">
                         <label
                             for="codePromo"
-                            class="block mb-2 text-sm font-medium text-gray-700"
+                            class="mb-2 block text-sm font-medium text-gray-700"
                         >
                             Code Promo
                         </label>
@@ -672,7 +676,7 @@ onBeforeMount(() => {
                             v-model="panierForm.codePromo"
                             name="codePromo"
                             id="codePromo"
-                            class="block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                            class="block w-full rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                             placeholder="Code Promo"
                             autocomplete="none"
                         />
@@ -687,12 +691,13 @@ onBeforeMount(() => {
                     </div>
 
                     <div
-                        class="w-full px-4 py-3 my-4 text-lg font-semibold text-blue-800 bg-blue-200 rounded"
+                        class="my-4 w-full rounded bg-blue-200 px-4 py-3 text-lg font-semibold text-blue-800"
                     >
                         Vous ne serez débité que lorsque la structure aura
                         validé votre réservation.
                     </div>
                     <button
+                        v-if="user"
                         :disabled="panierForm.processing"
                         :class="{
                             'opacity-25': panierForm.processing,
@@ -703,6 +708,13 @@ onBeforeMount(() => {
                         <LoadingSVG v-if="panierForm.processing" />
                         Continuer
                     </button>
+                    <Link
+                        v-else
+                        :href="route('login')"
+                        class="mt-4 inline-flex w-full items-center justify-center rounded-md bg-blue-500 px-4 py-2.5 font-medium text-blue-50 hover:bg-blue-600"
+                    >
+                        Connectez vous pour continuer
+                    </Link>
                 </div>
             </div>
         </form>

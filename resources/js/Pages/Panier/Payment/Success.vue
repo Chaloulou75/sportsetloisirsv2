@@ -1,14 +1,18 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { Head } from "@inertiajs/vue3";
+import { computed } from "vue";
+import { Head, usePage } from "@inertiajs/vue3";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import Breadcrumb from "@/Components/Panier/Breadcrumb.vue";
+
+const page = usePage();
+const user = computed(() => page.props.auth.user);
 
 const props = defineProps({
     familles: Object,
     listDisciplines: Object,
     allCities: Object,
-    customer: Array,
+    customer: Object,
 });
 </script>
 
@@ -29,11 +33,16 @@ const props = defineProps({
         <Breadcrumb />
         <div class="container mx-auto flex flex-col gap-4 py-6">
             <div class="w-full space-y-4 px-2 md:px-0">
-                <h2 class="text-center text-lg font-semibold md:text-left">
-                    Merci <span v-if="customer">{{ customer.name }}</span
+                <h2 class="text-center text-lg font-normal md:text-left">
+                    Merci
+                    <span v-if="user" class="font-semibold text-indigo-500">{{
+                        user.name
+                    }}</span
                     >, le paiement est réussi!
                 </h2>
-                <p>Un email de confirmation vous a été envoyé.</p>
+                <p class="text-base font-normal">
+                    Un email de confirmation vous a été envoyé.
+                </p>
             </div>
         </div>
     </ResultLayout>

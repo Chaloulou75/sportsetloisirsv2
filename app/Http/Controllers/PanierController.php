@@ -45,12 +45,12 @@ class PanierController extends Controller
 
         if($panierProdCount > 0 && $user) {
             $reservationIds = array_column($panierProductsInSession, 'reservation_id');
-            $reservations = ProductReservation::whereIn('id', $reservationIds)->orWhere('user_id', $user->id)->where('paid', false)->get();
+            $reservations = ProductReservation::withRelations()->whereIn('id', $reservationIds)->orWhere('user_id', $user->id)->where('paid', false)->get();
         } elseif($panierProdCount > 0) {
             $reservationIds = array_column($panierProductsInSession, 'reservation_id');
-            $reservations = ProductReservation::whereIn('id', $reservationIds)->where('paid', false)->get();
+            $reservations = ProductReservation::withRelations()->whereIn('id', $reservationIds)->where('paid', false)->get();
         } elseif($user) {
-            $reservations = ProductReservation::where('user_id', $user->id)->where('paid', false)->get();
+            $reservations = ProductReservation::withRelations()->where('user_id', $user->id)->where('paid', false)->get();
         }
 
         return Inertia::render('Panier/Index', [
@@ -91,8 +91,7 @@ class PanierController extends Controller
             $produitCriteres = $produit->criteres()->pluck('valeur')->toJson();
         }
 
-        $sessionId = session()->getId();
-        $sessionPanierProducts = session()->get('panierProducts', []);
+        $sessionId = $request->session()->getId();
 
         $newReservation = ProductReservation::create([
             'session_id' => $sessionId,
@@ -109,6 +108,7 @@ class PanierController extends Controller
             'tarif_amount' => $catTarif->amount ?? null,
             'quantity' => 1,
             'paid' => false,
+            'stripe_session_id' => null,
             'user_payeur_id' => $user->id ?? null,
             'paiement_datetime' => null,
             'paiement_method' => null,
@@ -196,7 +196,7 @@ class PanierController extends Controller
             }
         }
 
-        $sessionPanierProducts[] = [
+        $sessionPanierProducts = [
             'session_id' => $sessionId ?? null,
             'ip_address' => $request->ip() ?? null,
             'user_id' => $user->id ?? null,
@@ -205,7 +205,7 @@ class PanierController extends Controller
             'planning_ids' => $creneaux ? $creneaux->pluck('id')->toArray() : null,
             'reservation_id' => $newReservation->id ?? null,
         ];
-        session()->put('panierProducts', $sessionPanierProducts);
+        $request->session()->push('panierProducts', $sessionPanierProducts);
 
         return to_route('structures.activites.show', ['activite' => $activite, 'slug' => $activite->slug_title ])->with('success', 'Produit ajouté à votre panier');
 
@@ -228,23 +228,4 @@ class PanierController extends Controller
 
     }
 
-    private function getSessionReservations(): Collection
-    {
-        $sessionReservations = collect();
-        $sessionProducts = session()->get('panierProducts', []);
-
-        foreach ($sessionProducts as $panierProduct) {
-            $sessionReservations->push([
-                'session_id' => $panierProduct['session_id'],
-                'user_id' => $panierProduct['user_id'] ?? null,
-                'produit_id' => $panierProduct['produit_id'],
-                'cat_tarif_id' => $panierProduct['cat_tarif_id'],
-                'planning_ids' => $panierProduct['planning_ids'],
-                'ip_address' => $panierProduct['ip_address'],
-                'reservation_id' => $panierProduct['reservation_id'],
-            ]);
-        }
-
-        return $sessionReservations;
-    }
 }

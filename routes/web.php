@@ -27,7 +27,6 @@ use App\Http\Controllers\StructureTarifController;
 use App\Http\Controllers\AdminDisciplineController;
 use App\Http\Controllers\StructureGestionController;
 use App\Http\Controllers\FamilleDisciplineController;
-use App\Http\Controllers\PanierCoordonneesController;
 use App\Http\Controllers\StructureAddresseController;
 use App\Http\Controllers\StructureCatTarifController;
 use App\Http\Controllers\StructurePlanningController;
@@ -101,9 +100,9 @@ Route::delete('/panier/{reservation}/plannings/{planning}', [ReservationPlanning
 Route::delete('/panier/{reservation}/plannings/{planning}', [ReservationPlanningController::class, 'destroy'])->name(
     'reservations.plannings.destroy'
 );
-Route::get('/panier/coordonnees', [PanierCoordonneesController::class, 'index'])->name(
-    'panier.coordonnees.index'
-);
+
+Route::post('/panier/paiement/webhook', [PanierPaymentController::class, 'webhook'])->name('create.checkout.webhook');
+
 
 
 //Blog
@@ -139,15 +138,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/blog/{post:slug}/comments/{comment}', [PostCommentController::class, 'destroy'])->name('posts.comments.destroy');
 
     //Panier et paiement
-    Route::post('/panier/coordonnees/store', [PanierCoordonneesController::class, 'store'])->name(
-        'panier.coordonnees.store'
-    );
-
     Route::get('/panier/paiement', [PanierPaymentController::class, 'index'])->name('panier.paiement.index');
     Route::post('/panier/paiement/create-checkout-session', [PanierPaymentController::class, 'createCheckoutSession'])->name('create.checkout.session');
     Route::get('/panier/paiement/success', [PanierPaymentController::class, 'success'])->name('panier.paiement.success');
     Route::get('/panier/paiement/cancel', [PanierPaymentController::class, 'cancel'])->name('panier.paiement.cancel');
-    Route::post('/panier/paiement/webhook', [PanierPaymentController::class, 'webhook'])->name('create.checkout.webhook');
+
 
     //structures
     Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
