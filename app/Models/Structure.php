@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Structure extends Model
 {
     use HasFactory;
+    use Notifiable;
+
 
     /**
      * The attributes that are mass assignable.
@@ -37,7 +40,7 @@ class Structure extends Model
     protected function imageUrl(): Attribute
     {
         return Attribute::make(
-            get: fn() => Storage::url($this->logo),
+            get: fn () => Storage::url($this->logo),
         );
     }
 
@@ -45,9 +48,9 @@ class Structure extends Model
     {
         $query->when(
             $filters['search'] ?? false,
-            fn($query, $search) =>
+            fn ($query, $search) =>
             $query->where(
-                fn($query) =>
+                fn ($query) =>
                 $query->where('name', 'like', '%' . $search . '%')
                     ->orWhere('presentation_courte', 'like', '%' . $search . '%')
                     ->orWhere('city', 'like', '%' . $search . '%')
@@ -61,10 +64,10 @@ class Structure extends Model
 
         $query->when(
             $filters['famille'] ?? false,
-            fn($query, $famille) =>
+            fn ($query, $famille) =>
             $query->whereHas(
                 'famille',
-                fn($query) =>
+                fn ($query) =>
                 $query->where('slug', $famille)
             )
         );
@@ -72,10 +75,10 @@ class Structure extends Model
 
         $query->when(
             $filters['disciplines'] ?? false,
-            fn($query, $disciplines) =>
+            fn ($query, $disciplines) =>
             $query->whereHas(
                 'disciplines',
-                fn($query) =>
+                fn ($query) =>
                 $query->where('slug', $disciplines)
             )
         );
@@ -83,9 +86,9 @@ class Structure extends Model
 
         $query->when(
             $filters['localite'] ?? false,
-            fn($query, $localite) =>
+            fn ($query, $localite) =>
                 $query->where(
-                    fn($query) =>
+                    fn ($query) =>
                 $query->where('city', 'like', '%' . $localite . '%')
                      ->orWhere('zip_code', 'like', '%' . $localite . '%')
                 )

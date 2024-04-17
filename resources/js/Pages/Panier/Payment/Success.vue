@@ -31,9 +31,9 @@ const props = defineProps({
         </template>
 
         <Breadcrumb />
-        <div class="container mx-auto flex flex-col gap-4 py-6">
-            <div class="w-full space-y-4 px-2 md:px-0">
-                <h2 class="text-center text-lg font-normal md:text-left">
+        <div class="container flex flex-col gap-4 py-6 mx-auto">
+            <div class="w-full px-2 space-y-4 md:px-0">
+                <h2 class="text-lg font-normal text-center md:text-left">
                     Merci
                     <span v-if="user" class="font-semibold text-indigo-500">{{
                         user.name
