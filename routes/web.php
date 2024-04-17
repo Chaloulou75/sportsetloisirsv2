@@ -101,9 +101,9 @@ Route::delete('/panier/{reservation}/plannings/{planning}', [ReservationPlanning
     'reservations.plannings.destroy'
 );
 
+Route::post('/panier/paiement/create-checkout-session', [PanierPaymentController::class, 'createCheckoutSession'])->name('create.checkout.session');
+
 Route::post('/panier/paiement/webhook', [PanierPaymentController::class, 'webhook'])->name('create.checkout.webhook');
-
-
 
 //Blog
 Route::get('/blog/articles/{discipline?}', [PostController::class, 'index'])->name('posts.index');
@@ -139,7 +139,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     //Panier et paiement
     Route::get('/panier/paiement', [PanierPaymentController::class, 'index'])->name('panier.paiement.index');
-    Route::post('/panier/paiement/create-checkout-session', [PanierPaymentController::class, 'createCheckoutSession'])->name('create.checkout.session');
+
     Route::get('/panier/paiement/success', [PanierPaymentController::class, 'success'])->name('panier.paiement.success');
     Route::get('/panier/paiement/cancel', [PanierPaymentController::class, 'cancel'])->name('panier.paiement.cancel');
 

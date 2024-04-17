@@ -116,7 +116,6 @@ class PanierPaymentController extends Controller
     }
 
 
-
     public function createCheckoutSession(Request $request)
     {
         Stripe::setApiKey(env('VITE_STRIPE_SECRET'));
