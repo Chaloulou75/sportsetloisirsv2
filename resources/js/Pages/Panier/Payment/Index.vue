@@ -15,7 +15,7 @@ const props = defineProps({
 });
 
 const goToCheckout = () => {
-    router.post(route("create-checkout-session"));
+    router.post(route("create.checkout.session"));
 };
 </script>
 
