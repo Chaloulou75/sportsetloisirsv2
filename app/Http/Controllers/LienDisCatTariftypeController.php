@@ -95,7 +95,6 @@ class LienDisCatTariftypeController extends Controller
             'tarif_booking_fields.sous_fields',
             'tarif_booking_fields.sous_fields.valeurs',
         )->find($tarifType->id);
-        // dd($tarifType);
 
         $categorie = LienDisciplineCategorie::with([
             'discipline',

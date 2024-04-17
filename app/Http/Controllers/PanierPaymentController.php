@@ -136,10 +136,6 @@ class PanierPaymentController extends Controller
 
                 if ($reservation->plannings_count > 0) {
                     foreach ($reservation->plannings as $planning) {
-
-                        $start = Carbon::parse($planning->start)->isoFormat('LLLL');
-                        $end = Carbon::parse($planning->end)->isoFormat('LLLL');
-
                         $price = $planning->pivot->quantity * $reservation->tarif_amount;
                         $totalPrice += $price;
                         $lineItems[] = [
@@ -148,9 +144,6 @@ class PanierPaymentController extends Controller
                                 'product_data' => [
                                     'name' => $reservation->activite_title,
                                     'description' => $description,
-                                    // 'metadata' => [
-                                    //     'creneau' => $start .' au ' . $end,
-                                    // ],
                                 ],
                                 'unit_amount' => $reservation->tarif_amount * 100,
                             ],

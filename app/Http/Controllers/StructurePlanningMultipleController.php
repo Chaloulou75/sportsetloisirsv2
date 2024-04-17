@@ -57,7 +57,7 @@ class StructurePlanningMultipleController extends Controller
 
             $currentDate->addDay();
         }
-        // dd($combinedDatePairs);
+
         foreach ($combinedDatePairs as $combinedDatePair) {
             StructurePlanning::create([
                 'structure_id' => $structure->id,

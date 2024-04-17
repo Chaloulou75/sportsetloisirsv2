@@ -30,8 +30,6 @@ class StructureCatTarifController extends Controller
             'produits' => ['nullable'],
         ]);
 
-        // dd($request->attributs);
-
         $strCatTarif = StructureCatTarif::create([
             'structure_id' => $structure->id,
             'categorie_id' => $request->categorie_id,
@@ -76,14 +74,14 @@ class StructureCatTarifController extends Controller
                                         'valeur' => $sousAttributValeur
                                     ]);
                                 } elseif (is_array($sousAttributValeur) && !empty(array_filter($sousAttributValeur, 'is_array'))) {
-                                        foreach ($sousAttributValeur as $innerSsAttribut) {
-                                            $strCatTarifAttribut->sous_attributs()->create([
-                                                'sousattribut_id' => $sousAttId,
-                                                'ss_att_valeur_id' => $innerSsAttribut['id'],
-                                                'valeur' => $innerSsAttribut['valeur']
-                                            ]);
-                                        }
-                                    } else {
+                                    foreach ($sousAttributValeur as $innerSsAttribut) {
+                                        $strCatTarifAttribut->sous_attributs()->create([
+                                            'sousattribut_id' => $sousAttId,
+                                            'ss_att_valeur_id' => $innerSsAttribut['id'],
+                                            'valeur' => $innerSsAttribut['valeur']
+                                        ]);
+                                    }
+                                } else {
                                     $strCatTarifAttribut->sous_attributs()->create([
                                         'sousattribut_id' => $sousAttId,
                                         'ss_att_valeur_id' => $sousAttributValeur['id'],
@@ -172,7 +170,7 @@ class StructureCatTarifController extends Controller
                                             'sousattribut_id' => $sousAttId,
                                             'valeur' => $sousAttributValeur
                                         ]);
-                                    }  elseif (is_array($sousAttributValeur) && !empty(array_filter($sousAttributValeur, 'is_array'))) {
+                                    } elseif (is_array($sousAttributValeur) && !empty(array_filter($sousAttributValeur, 'is_array'))) {
                                         foreach ($sousAttributValeur as $innerSsAttribut) {
                                             $strCatTarifAttribut->sous_attributs()->create([
                                                 'sousattribut_id' => $sousAttId,
