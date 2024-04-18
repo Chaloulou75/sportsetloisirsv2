@@ -126,9 +126,11 @@ class PanierPaymentController extends Controller
                         ->where('paid', false)
                         ->get();
 
-        $lineItems = [];
-        $totalPrice = 0;
         if($reservations->isNotEmpty()) {
+
+            $lineItems = [];
+            $totalPrice = 0;
+
             foreach ($reservations as $reservation) {
 
                 $description = ($reservation->activite->description !== '' && $reservation->activite->description !== null) ? $reservation->activite->description : "Pas de description";
