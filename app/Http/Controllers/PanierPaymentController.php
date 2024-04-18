@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Error;
 use Carbon\Carbon;
 use Stripe\Stripe;
 use Stripe\Invoice;
 use App\Models\City;
 use Inertia\Inertia;
-use Stripe\Customer;
 use Inertia\Response;
 use App\Models\Famille;
 use Stripe\StripeClient;
@@ -17,6 +15,7 @@ use Stripe\Checkout\Session;
 use App\Models\ListDiscipline;
 use App\Models\ProductReservation;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use App\Notifications\ReservationPaid;
 use App\Http\Resources\FamilleResource;
 use Stripe\Exception\ApiErrorException;
@@ -67,66 +66,24 @@ class PanierPaymentController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
-
-
     public function createCheckoutSession(Request $request)
     {
-        Stripe::setApiKey(env('VITE_STRIPE_SECRET'));
-        $user = auth()->user();
-        $reservations = ProductReservation::withRelations()
-                        ->withCount('plannings')
-                        ->where('user_id', $user->id)
-                        ->where('paid', false)
-                        ->get();
+        try {
+            Stripe::setApiKey(config('services.stripe.secret'));
 
-        if($reservations->isNotEmpty()) {
+            $user = auth()->user();
+            $reservations = ProductReservation::withRelations()
+                            ->withCount('plannings')
+                            ->where('user_id', $user->id)
+                            ->where('paid', false)
+                            ->get();
+
+
+            if ($reservations->isEmpty()) {
+                return redirect()->route('panier.index')
+                    ->with("message", "Votre panier est vide, ajoutez des produits à votre panier.");
+            }
+
 
             $lineItems = [];
             $totalPrice = 0;
@@ -168,8 +125,8 @@ class PanierPaymentController extends Controller
                 }
             }
 
-            $successUrl = route('panier.paiement.success');
-            $successUrl .= '?session_id={CHECKOUT_SESSION_ID}';
+            $successUrl = route('panier.paiement.success') . '?session_id={CHECKOUT_SESSION_ID}';
+
             $sessionStripe = Session::create([
                 'line_items' => $lineItems,
                 'mode' => 'payment',
@@ -186,8 +143,15 @@ class PanierPaymentController extends Controller
             }
 
             return Inertia::location($sessionStripe->url);
-        } else {
-            return to_route(route('panier.index'))->with("message", "Votre panier est vide, ajoutez des produits à votre panier.");
+
+        } catch (ApiErrorException $e) {
+            // Handle Stripe API errors
+            Log::error('Stripe API Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Une erreur est survenue lors du traitement de votre paiement. Veuillez réessayer plus tard.');
+        } catch (\Exception $e) {
+            // Handle other unexpected errors
+            Log::error('Unexpected Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Une erreur inattendue est survenue. Veuillez réessayer plus tard.');
         }
 
     }
@@ -204,7 +168,7 @@ class PanierPaymentController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $stripe = Stripe::setApiKey(env('VITE_STRIPE_SECRET'));
+        Stripe::setApiKey(config('services.stripe.secret'));
 
         $sessionId = $request->get('session_id');
         try {
@@ -268,7 +232,7 @@ class PanierPaymentController extends Controller
     public function webhook()
     {
         // This is your Stripe CLI webhook secret for testing your endpoint locally.
-        $endpoint_secret = env('VITE_STRIPE_WEBHOOK_SECRET');
+        $endpoint_secret = config('services.stripe.webhook');
 
         $payload = @file_get_contents('php://input');
         $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
