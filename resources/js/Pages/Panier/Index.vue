@@ -167,21 +167,23 @@ onMounted(() => {
 });
 
 onBeforeMount(() => {
-    props.reservations.forEach((reservation) => {
-        if (!panierForm.quantity[reservation.id]) {
-            panierForm.quantity[reservation.id] = {};
-        }
-        if (reservation.plannings && reservation.plannings.length > 0) {
-            reservation.plannings.forEach((creneau) => {
-                const quantity = ref(creneau.pivot.quantity || 1);
-                panierForm.quantity[reservation.id][creneau.id] =
-                    quantity.value;
-            });
-        } else {
-            const quantity = ref(reservation.quantity || 1);
-            panierForm.quantity[reservation.id] = quantity.value;
-        }
-    });
+    if (props.reservations && props.reservations.length > 0) {
+        props.reservations.forEach((reservation) => {
+            if (!panierForm.quantity[reservation.id]) {
+                panierForm.quantity[reservation.id] = {};
+            }
+            if (reservation.plannings && reservation.plannings.length > 0) {
+                reservation.plannings.forEach((creneau) => {
+                    const quantity = ref(creneau.pivot.quantity || 1);
+                    panierForm.quantity[reservation.id][creneau.id] =
+                        quantity.value;
+                });
+            } else {
+                const quantity = ref(reservation.quantity || 1);
+                panierForm.quantity[reservation.id] = quantity.value;
+            }
+        });
+    }
 });
 </script>
 <template>
@@ -662,6 +664,7 @@ onBeforeMount(() => {
                 </div>
 
                 <div
+                    v-if="reservations && reservations.length > 0"
                     class="mt-6 h-full w-full rounded-lg border border-blue-400 bg-gray-50 p-6 text-xl font-bold text-gray-700 shadow-md md:mt-0 md:w-1/3"
                 >
                     <div class="my-4 w-full">

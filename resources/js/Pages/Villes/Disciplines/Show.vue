@@ -361,7 +361,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                     @click="goToMap"
                                 >
                                     <MapIcon class="mr-2 h-5 w-5" />
-                                    Afficher la carte
+                                    Carte
                                 </button>
                             </div>
                             <LeafletMapProduitMultiple
@@ -439,7 +439,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                     @click="goToListe"
                                 >
                                     <ListBulletIcon class="mr-2 h-5 w-5" />
-                                    Afficher la liste
+                                    Liste
                                 </button>
                             </div>
                         </div>

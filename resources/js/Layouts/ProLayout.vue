@@ -41,6 +41,7 @@ const props = defineProps({
     confirmedReservationsCount: Number,
     allReservationsCount: Number,
     pendingReservationsCount: Number,
+    totalAmountConfirmed: Number,
     can: Object,
 });
 </script>
@@ -55,6 +56,7 @@ const props = defineProps({
                     :all-reservations-count="allReservationsCount"
                     :pending-reservations-count="pendingReservationsCount"
                     :confirmed-reservations-count="confirmedReservationsCount"
+                    :total-amount-confirmed="totalAmountConfirmed"
                     :can="can"
                     @eventFromChild="handleButtonEvent"
                 />

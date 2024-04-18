@@ -15,6 +15,7 @@ const props = defineProps({
     confirmedReservationsCount: Number,
     allReservationsCount: Number,
     pendingReservationsCount: Number,
+    totalAmountConfirmed: Number,
     can: Object,
 });
 
@@ -137,7 +138,9 @@ const user = computed(() => page.props.auth.user);
                                     class="flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
                                 >
                                     <div>Solde</div>
-                                    <div>245 €</div>
+                                    <div v-if="totalAmountConfirmed">
+                                        {{ totalAmountConfirmed }} €
+                                    </div>
                                 </Link>
                             </li>
                             <li>

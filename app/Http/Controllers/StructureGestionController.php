@@ -16,32 +16,41 @@ class StructureGestionController extends Controller
      */
     public function index(Structure $structure): Response
     {
+        $structure = Structure::withRelations()->findOrFail($structure->id);
+
         $allReservations = ProductReservation::withRelations()
+                        ->withCount('plannings')
                         ->where('structure_id', $structure->id)
-                        ->get();
-        $allReservationsCount = $allReservations->count();
+                        ->where('paid', true)
+                        ->paginate(10);
+        $allReservationsCount = $allReservations->total();
 
         $pendingReservations = ProductReservation::withRelations()
+            ->withCount('plannings')
             ->where('structure_id', $structure->id)
+            ->where('paid', true)
             ->where('pending', true)
-            ->get();
-        $pendingReservationsCount = $pendingReservations->count();
+            ->paginate(10);
+        $pendingReservationsCount = $pendingReservations->total();
 
         $confirmedReservations = ProductReservation::withRelations()
+            ->withCount('plannings')
             ->where('structure_id', $structure->id)
+            ->where('paid', true)
             ->where('confirmed', true)
-            ->get();
-        $confirmedReservationsCount = $confirmedReservations->count();
+            ->paginate(10);
+        $confirmedReservationsCount = $confirmedReservations->total();
 
         $totalAmountConfirmed = $confirmedReservations->sum(function ($reservation) {
-            return $reservation->tarif_amount * $reservation->quantity;
+            return $this->calculateTotalPrice($reservation);
         });
+
 
         $totalAmountPending = $pendingReservations->sum(function ($reservation) {
-            return $reservation->tarif_amount * $reservation->quantity;
+            return $this->calculateTotalPrice($reservation);
         });
 
-        $structure = Structure::withRelations()->findOrFail($structure->id);
+
 
         return Inertia::render('Structures/Gestion/Index', [
             'structure' => fn () => $structure,
@@ -107,5 +116,19 @@ class StructureGestionController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    private function calculateTotalPrice($reservation)
+    {
+        $totalPrice = 0;
+        if ($reservation->plannings_count > 0) {
+            foreach ($reservation->plannings as $planning) {
+                $price = $planning->pivot->quantity * $reservation->tarif_amount;
+                $totalPrice += $price;
+            }
+        } else {
+            $totalPrice += $reservation->tarif_amount * $reservation->quantity;
+        }
+        return $totalPrice;
     }
 }

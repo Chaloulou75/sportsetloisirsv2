@@ -5,7 +5,9 @@ import { ref, computed, defineAsyncComponent } from "vue";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 dayjs.locale("fr");
-
+const Pagination = defineAsyncComponent(() =>
+    import("@/Components/Pagination.vue")
+);
 const ActiviteCard = defineAsyncComponent(() =>
     import("@/Components/Structures/ActiviteCard.vue")
 );
@@ -26,6 +28,17 @@ const props = defineProps({
     totalAmountPending: Number,
     can: Object,
 });
+
+const formattedCriteria = (criteria) => {
+    const criteriaObject = JSON.parse(criteria);
+    return formatObject(criteriaObject);
+};
+
+const formatObject = (obj) => {
+    return Object.entries(obj)
+        .map(([key, value]) => `${value}`)
+        .join(", ");
+};
 
 const currentMonth = ref(dayjs().format("MMMM YYYY"));
 const formatDate = (dateString) => {
@@ -48,7 +61,7 @@ const formatCurrency = (value) => {
 <template>
     <Head
         title="Gestion de votre structure"
-        :description="'Gestion de votre structure, disciplines et activités.'"
+        description="Gestion de votre structure, réservations, disciplines et activités."
     />
     <ProLayout
         :structure="structure"
@@ -56,6 +69,7 @@ const formatCurrency = (value) => {
         :all-reservations-count="allReservationsCount"
         :pending-reservations-count="pendingReservationsCount"
         :confirmed-reservations-count="confirmedReservationsCount"
+        :total-amount-confirmed="totalAmountConfirmed"
     >
         <template #header>
             <h1
@@ -86,7 +100,7 @@ const formatCurrency = (value) => {
                                 demandes</span
                             >
                             <span v-else> demande</span>
-                            de réservation en attente:
+                            de réservation réglées en attente:
                         </p>
                         <div class="text-2xl font-bold text-indigo-500">
                             {{ totalAmountPending }} €
@@ -94,38 +108,142 @@ const formatCurrency = (value) => {
                     </div>
                     <ul class="list-inside list-disc">
                         <li
-                            v-for="reservation in pendingReservations"
+                            v-for="reservation in pendingReservations.data"
                             :key="reservation.id"
+                            class="mb-4"
                         >
-                            {{ reservation.activite_title }}
+                            <span>
+                                <span class="font-semibold"
+                                    >{{ reservation.activite_title }} -
+                                    {{
+                                        reservation.cat_tarif.cat_tarif_type.nom
+                                    }}</span
+                                >, produit n°{{ reservation.produit_id }}
+                                <span class="text-xs italic"
+                                    >({{
+                                        formattedCriteria(
+                                            reservation.produit_criteres
+                                        )
+                                    }})</span
+                                >
+                                - Réservation faite par
+                                <span class="font-semibold"
+                                    >{{ reservation.user.name }}
+                                </span>
+                                <span class="text-xs italic">
+                                    ({{ reservation.user.email }})</span
+                                >
+                                -
+                                <span
+                                    v-if="reservation.plannings_count < 1"
+                                    class="font-bold text-green-600"
+                                >
+                                    {{
+                                        formatCurrency(reservation.tarif_amount)
+                                    }}</span
+                                >
+                                <span
+                                    v-if="reservation.plannings_count < 1"
+                                    class="ml-5 font-semibold text-indigo-500"
+                                >
+                                    Quantité:
+                                    {{ reservation.quantity }}
+                                </span>
+                            </span>
+                            <template v-if="reservation.plannings_count > 0">
+                                <div
+                                    class="ml-4"
+                                    v-for="planning in reservation.plannings"
+                                    :key="planning.id"
+                                >
+                                    <ul class="list-inside list-disc">
+                                        <li>
+                                            du
+                                            <span class="font-semibold">{{
+                                                formatDate(planning.start)
+                                            }}</span>
+                                            au
+                                            <span class="font-semibold">{{
+                                                formatDate(planning.end)
+                                            }}</span>
+                                            <span
+                                                class="ml-5 font-semibold text-indigo-500"
+                                            >
+                                                {{
+                                                    formatCurrency(
+                                                        reservation.tarif_amount
+                                                    )
+                                                }}
+                                            </span>
+                                            <span
+                                                class="ml-5 font-semibold text-indigo-500"
+                                            >
+                                                Quantité:
+                                                {{ planning.pivot.quantity }}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </template>
                             <template
-                                v-for="planning in reservation.plannings"
-                                :key="planning.id"
-                            >
-                                <div>
-                                    <span class="font-semibold text-indigo-500">
-                                        {{ planning.title }}
-                                    </span>
-                                    : du
-                                    <span class="font-semibold">{{
-                                        formatDate(planning.start)
-                                    }}</span>
-                                    au
-                                    <span class="font-semibold">{{
-                                        formatDate(planning.end)
-                                    }}</span>
-                                    <span
-                                        class="ml-5 font-semibold text-indigo-500"
+                                v-if="
+                                    reservation.attributs &&
+                                    reservation.attributs.length > 0
+                                "
+                                ><p class="px-4 text-sm text-gray-700">
+                                    Les attributs liés à cette réservation:
+                                </p>
+
+                                <div
+                                    class="inline-flex space-x-2 px-4 text-sm"
+                                    v-for="attribut in reservation.attributs"
+                                    :key="attribut.id"
+                                >
+                                    <div
+                                        class="inline-flex"
+                                        v-if="attribut.booking_field"
                                     >
-                                        {{
-                                            formatCurrency(
-                                                reservation.tarif_amount
-                                            )
-                                        }}
-                                    </span>
+                                        <div>
+                                            {{ attribut.booking_field.nom }}:
+                                        </div>
+                                        <div v-if="attribut.valeur">
+                                            {{ attribut.valeur }}
+                                            <div
+                                                v-if="
+                                                    attribut.reservation_sous_attributs &&
+                                                    attribut
+                                                        .reservation_sous_attributs
+                                                        .length > 0
+                                                "
+                                                class="text-xs"
+                                            >
+                                                <span
+                                                    v-for="sousattribut in attribut.reservation_sous_attributs"
+                                                    :key="sousattribut.id"
+                                                    class="text-xs text-gray-700"
+                                                    ><span
+                                                        class="text-slate-500"
+                                                        v-if="
+                                                            sousattribut.booking_sous_field
+                                                        "
+                                                        >{{
+                                                            sousattribut
+                                                                .booking_sous_field
+                                                                .nom
+                                                        }}:
+                                                    </span>
+                                                    {{ sousattribut.valeur }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </template>
                         </li>
+                        <Pagination
+                            :links="pendingReservations.links"
+                            :only="['pendingReservations']"
+                        />
                     </ul>
                     <div class="flex w-full items-center justify-end">
                         <Link
@@ -164,7 +282,7 @@ const formatCurrency = (value) => {
                     </div>
                     <ul class="list-inside list-disc">
                         <li
-                            v-for="reservation in confirmedReservations"
+                            v-for="reservation in confirmedReservations.data"
                             :key="reservation.id"
                         >
                             {{ reservation.activite_title }}
@@ -196,6 +314,10 @@ const formatCurrency = (value) => {
                                 </div>
                             </template>
                         </li>
+                        <Pagination
+                            :links="confirmedReservations.links"
+                            :only="['confirmedReservations']"
+                        />
                     </ul>
                     <div class="flex w-full items-center justify-end">
                         <Link

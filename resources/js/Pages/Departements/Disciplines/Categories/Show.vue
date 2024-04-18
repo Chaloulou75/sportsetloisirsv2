@@ -1188,7 +1188,7 @@ onMounted(() => {
                                     @click="goToMap"
                                 >
                                     <MapIcon class="mr-2 h-5 w-5" />
-                                    Afficher la carte
+                                    Carte
                                 </button>
                             </div>
                             <LeafletMapProduitMultiple
@@ -1265,7 +1265,7 @@ onMounted(() => {
                                     @click="goToListe"
                                 >
                                     <ListBulletIcon class="mr-2 h-5 w-5" />
-                                    Afficher la liste
+                                    Liste
                                 </button>
                             </div>
                         </div>

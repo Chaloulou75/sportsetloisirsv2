@@ -54,7 +54,6 @@ class PanierPaymentController extends Controller
                 $price = $reservation->tarif_amount * $reservation->quantity;
                 $totalPrice += $price;
             }
-
         }
         return Inertia::render('Panier/Payment/Index', [
             'familles' => fn () => FamilleResource::collection($familles),
