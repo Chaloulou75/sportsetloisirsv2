@@ -1,6 +1,6 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { Head, router } from "@inertiajs/vue3";
+import { Head, Link, router } from "@inertiajs/vue3";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import Breadcrumb from "@/Components/Panier/Breadcrumb.vue";
 
@@ -15,7 +15,7 @@ const props = defineProps({
 });
 
 const goToCheckout = () => {
-    router.post(route("create.checkout.session"));
+    router.get(route("create.checkout.session"));
 };
 </script>
 
@@ -34,24 +34,25 @@ const goToCheckout = () => {
         </template>
 
         <Breadcrumb />
-        <div class="container flex flex-col gap-4 py-6 mx-auto">
-            <div class="w-full px-2 space-y-4 md:px-0">
-                <h2 class="text-lg font-semibold text-center md:text-left">
+        <div class="container mx-auto flex flex-col gap-4 py-6">
+            <div class="w-full space-y-4 px-2 md:px-0">
+                <h2 class="text-center text-lg font-semibold">
                     Remplissez vos informations:
                 </h2>
             </div>
             <div
-                class="w-full max-w-lg p-3 mx-auto border border-gray-200 shadow-sm bg-gray-50"
+                class="mx-auto w-full max-w-lg border border-gray-200 bg-gray-50 p-3 shadow-sm"
             >
-                <button
-                    class="flex items-center justify-center w-full max-w-full px-4 py-3 mx-auto text-base text-white bg-indigo-800 border border-gray-200 rounded-md shadow hover:bg-indigo-900"
-                    type="submit"
-                    @click.prevent="goToCheckout"
+                <Link
+                    :href="route('create.checkout.session')"
+                    class="mx-auto flex w-full max-w-full items-center justify-center rounded-md border border-gray-200 bg-indigo-800 px-4 py-3 text-base text-white shadow hover:bg-indigo-900"
                 >
                     Procéder au paiement de {{ totalPrice }} €
-                </button>
+                </Link>
 
-                <!-- <form @submit.prevent="processPayment" class="space-y-3">
+                <!-- type="submit"
+                    @click.prevent="goToCheckout"
+                    <form @submit.prevent="processPayment" class="space-y-3">
                     <div id="address-element" ref="addressElement"></div>
                     <div id="payment-element" ref="paymentElement"></div>
                     <div v-if="cardError" role="alert">{{ cardError }}</div>
