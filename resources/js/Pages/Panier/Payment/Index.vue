@@ -15,7 +15,7 @@ const props = defineProps({
 });
 
 const goToCheckout = () => {
-    router.get(route("create.checkout.session"));
+    router.post(route("create.checkout.session"));
 };
 </script>
 
@@ -43,31 +43,14 @@ const goToCheckout = () => {
             <div
                 class="mx-auto w-full max-w-lg border border-gray-200 bg-gray-50 p-3 shadow-sm"
             >
-                <Link
-                    :href="route('create.checkout.session')"
-                    class="mx-auto flex w-full max-w-full items-center justify-center rounded-md border border-gray-200 bg-indigo-800 px-4 py-3 text-base text-white shadow hover:bg-indigo-900"
-                >
-                    Procéder au paiement de {{ totalPrice }} €
-                </Link>
-
-                <!-- type="submit"
-                    @click.prevent="goToCheckout"
-                    <form @submit.prevent="processPayment" class="space-y-3">
-                    <div id="address-element" ref="addressElement"></div>
-                    <div id="payment-element" ref="paymentElement"></div>
-                    <div v-if="cardError" role="alert">{{ cardError }}</div>
+                <form @submit.prevent="goToCheckout">
                     <button
-                        class="flex items-center justify-center w-full max-w-full px-4 py-3 mx-auto text-base text-white bg-indigo-800 border border-gray-200 rounded-md shadow hover:bg-indigo-900"
                         type="submit"
-                        :class="{
-                            'opacity-25': isLoading,
-                        }"
-                        :disabled="isLoading"
+                        class="mx-auto flex w-full max-w-full items-center justify-center rounded-md border border-gray-200 bg-indigo-800 px-4 py-3 text-base text-white shadow hover:bg-indigo-900"
                     >
-                        <LoadingSVG v-if="isLoading" />
-                        Payer {{ totalPrice }} €
+                        Procéder au paiement de {{ totalPrice }} €
                     </button>
-                </form> -->
+                </form>
             </div>
         </div>
     </ResultLayout>
