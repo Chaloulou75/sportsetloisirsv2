@@ -105,12 +105,12 @@ const updateReservation = (reservation) => {
         :confirmed-reservations-count="confirmedReservationsCount"
     >
         <template #header>
-            <div class="flex h-full items-center justify-start">
+            <div class="flex items-center justify-start h-full">
                 <Link
                     class="h-full bg-blue-600 py-2.5 md:px-4 md:py-4"
                     :href="route('structures.gestion.index', structure)"
                 >
-                    <ChevronLeftIcon class="h-10 w-10 text-white" />
+                    <ChevronLeftIcon class="w-10 h-10 text-white" />
                 </Link>
                 <h1
                     class="px-2 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-6 md:py-4 md:text-left md:text-2xl md:font-bold"
@@ -121,7 +121,7 @@ const updateReservation = (reservation) => {
         </template>
 
         <template #default="{}">
-            <div class="space-y-10 px-2 py-6 text-gray-700 md:px-4">
+            <div class="px-2 py-6 space-y-10 text-gray-700 md:px-4">
                 <h3 class="text-2xl">
                     Bienvenue
                     <span class="text-indigo-700">{{ user.name }}</span>
@@ -129,7 +129,7 @@ const updateReservation = (reservation) => {
 
                 <!-- réservations en attente -->
                 <div
-                    class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
+                    class="px-4 py-6 space-y-10 border border-gray-200 rounded-md shadow-md bg-gray-50"
                 >
                     <div class="flex items-center justify-between">
                         <p class="text-xl font-semibold">
@@ -196,19 +196,73 @@ const updateReservation = (reservation) => {
                                     </span>
                                 </div>
                             </template>
+                            <template
+                                v-if="
+                                    reservation.attributs &&
+                                    reservation.attributs.length > 0
+                                "
+                                ><p class="px-4 text-sm text-gray-700">
+                                    Les attributs liés à cette réservation:
+                                </p>
+
+                                <div
+                                    class="inline-flex px-4 space-x-2 text-sm"
+                                    v-for="attribut in reservation.attributs"
+                                    :key="attribut.id"
+                                >
+                                    <div
+                                        class="inline-flex"
+                                        v-if="attribut.booking_field"
+                                    >
+                                        <div>
+                                            {{ attribut.booking_field.nom }}:
+                                        </div>
+                                        <div v-if="attribut.valeur">
+                                            {{ attribut.valeur }}
+                                            <div
+                                                v-if="
+                                                    attribut.reservation_sous_attributs &&
+                                                    attribut
+                                                        .reservation_sous_attributs
+                                                        .length > 0
+                                                "
+                                                class="text-xs"
+                                            >
+                                                <span
+                                                    v-for="sousattribut in attribut.reservation_sous_attributs"
+                                                    :key="sousattribut.id"
+                                                    class="text-xs text-gray-700"
+                                                    ><span
+                                                        class="text-slate-500"
+                                                        v-if="
+                                                            sousattribut.booking_sous_field
+                                                        "
+                                                        >{{
+                                                            sousattribut
+                                                                .booking_sous_field
+                                                                .nom
+                                                        }}:
+                                                    </span>
+                                                    {{ sousattribut.valeur }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
 
                             <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
                                 <button
                                     type="button"
                                     @click="confirmReservation(reservation)"
-                                    class="rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-indigo-500 shadow hover:bg-gray-100 hover:text-indigo-800"
+                                    class="px-4 py-2 text-lg text-indigo-500 bg-white border border-gray-200 rounded-md shadow hover:bg-gray-100 hover:text-indigo-800"
                                 >
                                     Confirmer
                                 </button>
                                 <button
                                     type="button"
                                     @click="refusReservation(reservation)"
-                                    class="rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-red-500 shadow hover:bg-red-50 hover:text-red-800"
+                                    class="px-4 py-2 text-lg text-red-500 bg-white border border-gray-200 rounded-md shadow hover:bg-red-50 hover:text-red-800"
                                 >
                                     Refuser
                                 </button>
@@ -219,7 +273,7 @@ const updateReservation = (reservation) => {
 
                 <!-- réservations en cours -->
                 <div
-                    class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
+                    class="px-4 py-6 space-y-10 border border-gray-200 rounded-md shadow-md bg-gray-50"
                 >
                     <div class="flex items-center justify-between">
                         <p class="text-xl font-semibold">
@@ -284,7 +338,7 @@ const updateReservation = (reservation) => {
                                     <button
                                         type="button"
                                         @click="cancelReservation(reservation)"
-                                        class="w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-red-500 shadow hover:bg-red-50 hover:text-red-800"
+                                        class="w-full px-4 py-2 text-lg text-red-500 bg-white border border-gray-200 rounded-md shadow hover:bg-red-50 hover:text-red-800"
                                     >
                                         Annuler
                                     </button>
@@ -297,7 +351,7 @@ const updateReservation = (reservation) => {
                 <!-- réservations terminées -->
                 <div
                     v-if="finishedReservationsCount > 0"
-                    class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
+                    class="px-4 py-6 space-y-10 border border-gray-200 rounded-md shadow-md bg-gray-50"
                 >
                     <div class="flex items-center justify-between">
                         <p class="text-xl font-semibold">
@@ -353,7 +407,7 @@ const updateReservation = (reservation) => {
                 <!-- réservations annulées -->
                 <div
                     v-if="cancelledReservationsCount > 0"
-                    class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
+                    class="px-4 py-6 space-y-10 border border-gray-200 rounded-md shadow-md bg-gray-50"
                 >
                     <div class="flex items-center justify-between">
                         <p class="text-xl font-semibold">

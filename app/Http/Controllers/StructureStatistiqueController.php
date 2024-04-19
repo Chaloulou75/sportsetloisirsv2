@@ -16,6 +16,9 @@ class StructureStatistiqueController extends Controller
      */
     public function index(Structure $structure): Response
     {
+        $structure = Structure::withRelations()->findOrFail($structure->id);
+
+        $notificationsNotReadCount = $structure->unreadNotifications;
 
         $allReservations = ProductReservation::withRelations()
                 ->get();
@@ -42,12 +45,9 @@ class StructureStatistiqueController extends Controller
             return $reservation->tarif->amount;
         });
 
-        $structure = Structure::withRelations()
-                    ->where('slug', $structure->slug)
-                    ->firstOrFail();
-
         return Inertia::render('Structures/Gestion/Statistiques/Index', [
             'structure' => fn () => $structure,
+            'notificationsNotReadCount' => fn () => $notificationsNotReadCount,
             'allReservations' => fn () => $allReservations,
             'allReservationsCount' => fn () => $allReservationsCount,
             'confirmedReservations' => fn () => $confirmedReservations,

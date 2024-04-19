@@ -29,7 +29,7 @@ class ReservationPaidToStructure extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -37,6 +37,7 @@ class ReservationPaidToStructure extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
+        $urlGestion = route('structures.gestion.index', $this->reservation->structure);
 
         return (new MailMessage())
                     ->subject('Vous avez reçu une nouvelle réservation!')
@@ -46,7 +47,7 @@ class ReservationPaidToStructure extends Notification implements ShouldQueue
                     ->line('Montant unitaire: ' . $this->reservation->tarif_amount)
                     ->line('Quantité: ' . $this->reservation->quantity)
                     ->line('Methode de paiement: ' . $this->reservation->paiement_method)
-                    // ->action('Voir la réservation dans votre dashboard')
+                    ->action('Voir la réservation', $urlGestion)
                     ->line('Si vous avez des questions, contactez nous.');
 
     }
@@ -59,7 +60,12 @@ class ReservationPaidToStructure extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            'reservation_id' => $this->reservation->id,
+            'structure_id' => $this->reservation->structure_id,
+            'produit_id' => $this->reservation->produit_id,
+            'unit_amount' => $this->reservation->tarif_amount,
+            'quantity' => $this->reservation->quantity,
+            'stripe_session_id' => $this->reservation->stripe_session_id,
         ];
     }
 }

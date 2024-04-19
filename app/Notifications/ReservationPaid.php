@@ -30,7 +30,7 @@ class ReservationPaid extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -66,7 +66,12 @@ class ReservationPaid extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            'reservation_id' => $this->reservation->id,
+            'structure_id' => $this->reservation->structure_id,
+            'produit_id' => $this->reservation->produit_id,
+            'unit_amount' => $this->reservation->tarif_amount,
+            'quantity' => $this->reservation->quantity,
+            'stripe_session_id' => $this->reservation->stripe_session_id,
         ];
     }
 }

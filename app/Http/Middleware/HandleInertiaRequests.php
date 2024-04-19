@@ -49,8 +49,14 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             'appName' => config('app.name'),
             'auth' => [
-                'user' => fn () => $request->user() ? $request->user()->load('structures:id,name,slug')->only('id', 'name', 'email', 'structures') : null,
+                'user' => fn () => $request->user() ? array_merge(
+                    $request->user()->load('structures:id,name,slug')->only('id', 'name', 'email', 'structures'),
+                    ['unreadNotificationsCount' => $request->user()->unreadNotifications()->count()]
+                ) : null,
             ],
+            'structures_notifications' => fn () => $request->user() ? $request->user()->structures->mapWithKeys(function ($structure) {
+                return [$structure->id => $structure->unreadNotifications()->count()];
+            }) : [],
             'user_can' => [
                 'view_admin' => fn () => $request->user() ? $request->user()->can('viewAdmin', User::class) : false,
             ],
@@ -66,7 +72,7 @@ class HandleInertiaRequests extends Middleware
                     'message' => $request->session()->get('message'),
                 ];
             },
-            'productsReservationsCount' => $reservationsCount ?? null,
+            'productsReservationsCount' => fn () => $reservationsCount ?? null,
         ]);
     }
 }

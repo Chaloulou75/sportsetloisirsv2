@@ -47,7 +47,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="min-h-full w-full bg-white">
+    <div class="w-full min-h-full bg-white">
         <main>
             <div class="flex flex-col md:flex-row">
                 <!-- Page Heading -->
@@ -65,10 +65,10 @@ const props = defineProps({
                     <ProNavigation :structure="structure" />
 
                     <header
-                        class="h-auto w-full bg-gradient-to-br from-green-100 to-blue-100 shadow-sm"
+                        class="w-full h-auto shadow-sm bg-gradient-to-br from-green-100 to-blue-100"
                         v-if="$slots.header"
                     >
-                        <div class="mx-auto max-w-full">
+                        <div class="max-w-full mx-auto">
                             <slot name="header" />
                         </div>
                     </header>

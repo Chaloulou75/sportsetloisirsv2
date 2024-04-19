@@ -30,26 +30,41 @@ class StructureGestionController extends Controller
             ->where('structure_id', $structure->id)
             ->where('paid', true)
             ->where('pending', true)
+            ->latest()
             ->paginate(10);
+
+        $pendingReservationsAll = ProductReservation::withRelations()
+                    ->withCount('plannings')
+                    ->where('structure_id', $structure->id)
+                    ->where('paid', true)
+                    ->where('pending', true)
+                    ->get();
+
         $pendingReservationsCount = $pendingReservations->total();
+
+        $totalAmountPending = $pendingReservationsAll->sum(function ($reservation) {
+            return $this->calculateTotalPrice($reservation);
+        });
 
         $confirmedReservations = ProductReservation::withRelations()
             ->withCount('plannings')
             ->where('structure_id', $structure->id)
             ->where('paid', true)
             ->where('confirmed', true)
+            ->latest()
             ->paginate(10);
         $confirmedReservationsCount = $confirmedReservations->total();
 
-        $totalAmountConfirmed = $confirmedReservations->sum(function ($reservation) {
+        $confirmedReservationsAll = ProductReservation::withRelations()
+                    ->withCount('plannings')
+                    ->where('structure_id', $structure->id)
+                    ->where('paid', true)
+                    ->where('confirmed', true)
+                    ->get();
+
+        $totalAmountConfirmed = $confirmedReservationsAll->sum(function ($reservation) {
             return $this->calculateTotalPrice($reservation);
         });
-
-
-        $totalAmountPending = $pendingReservations->sum(function ($reservation) {
-            return $this->calculateTotalPrice($reservation);
-        });
-
 
 
         return Inertia::render('Structures/Gestion/Index', [

@@ -23,29 +23,35 @@ const showingInsNavigationDropdown = ref(false);
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
+const structureNotifCount = computed(() => {
+    if (props.structure && page.props.structures_notifications) {
+        return page.props.structures_notifications[props.structure.id] || 0;
+    }
+    return 0;
+});
 </script>
 <template>
     <nav
-        class="min-h-full w-full flex-col justify-between border-r border-gray-100 bg-gray-50 md:flex md:w-1/6"
+        class="flex-col justify-between w-full min-h-full border-r border-gray-100 bg-gray-50 md:flex md:w-1/6"
     >
         <div class="w-full space-y-6 md:sticky md:inset-x-0 md:top-0">
             <!-- Hamburger logo-->
-            <div class="flex h-16 justify-between bg-blue-100 pl-3">
-                <div class="flex shrink-0 items-center">
+            <div class="flex justify-between h-16 pl-3 bg-blue-100">
+                <div class="flex items-center shrink-0">
                     <Link :href="route('welcome')">
-                        <BreezeApplicationLogo class="block h-9 w-auto" />
+                        <BreezeApplicationLogo class="block w-auto h-9" />
                     </Link>
                 </div>
-                <div class="-ml-2 flex items-center md:hidden">
+                <div class="flex items-center -ml-2 md:hidden">
                     <button
                         @click="
                             showingInsNavigationDropdown =
                                 !showingInsNavigationDropdown
                         "
-                        class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
+                        class="inline-flex items-center justify-center p-2 text-gray-400 transition duration-150 ease-in-out rounded-md hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
                     >
                         <svg
-                            class="h-6 w-6"
+                            class="w-6 h-6"
                             stroke="currentColor"
                             fill="none"
                             viewBox="0 0 24 24"
@@ -77,14 +83,14 @@ const user = computed(() => page.props.auth.user);
             </div>
 
             <ul
-                class="hidden h-full w-full space-y-6 md:flex md:flex-col md:items-start"
+                class="hidden w-full h-full space-y-6 md:flex md:flex-col md:items-start"
             >
                 <!-- Accueil -->
                 <li v-if="structure" class="w-full">
                     <Link
                         :href="route('structures.gestion.index', structure)"
                         :active="route().current('structures.gestion.index')"
-                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        class="block px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-sm hover:bg-blue-700"
                         :class="{
                             'bg-blue-600 text-white': route().current(
                                 'structures.gestion.index',
@@ -102,18 +108,18 @@ const user = computed(() => page.props.auth.user);
                         open
                     >
                         <summary
-                            class="flex cursor-pointer items-center justify-between rounded-sm bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                            class="flex items-center justify-between px-4 py-2 text-white bg-blue-600 rounded-sm cursor-pointer hover:bg-blue-700"
                         >
                             <span class="text-sm font-medium">
                                 Réservations
                             </span>
 
                             <span
-                                class="shrink-0 transition duration-300 group-open:-rotate-180"
+                                class="transition duration-300 shrink-0 group-open:-rotate-180"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    class="h-5 w-5"
+                                    class="w-5 h-5"
                                     viewBox="0 0 20 20"
                                     fill="currentColor"
                                 >
@@ -135,7 +141,7 @@ const user = computed(() => page.props.auth.user);
                                             structure.slug
                                         )
                                     "
-                                    class="flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
+                                    class="flex items-center justify-between px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-sm hover:bg-green-500 hover:text-white"
                                 >
                                     <div>Solde</div>
                                     <div v-if="totalAmountConfirmed">
@@ -152,10 +158,12 @@ const user = computed(() => page.props.auth.user);
                                             structure.slug
                                         )
                                     "
-                                    class="flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
+                                    class="relative flex items-center justify-between px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-sm hover:bg-green-500 hover:text-white"
                                 >
                                     <div>A valider</div>
-                                    <div>
+                                    <div
+                                        class="absolute right-1 rounded-full border border-gray-200 bg-white px-2.5 py-0.5 text-gray-800"
+                                    >
                                         {{ pendingReservationsCount }}
                                     </div>
                                 </Link>
@@ -169,10 +177,12 @@ const user = computed(() => page.props.auth.user);
                                             structure.slug
                                         )
                                     "
-                                    class="flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
+                                    class="relative flex items-center justify-between px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-sm hover:bg-green-500 hover:text-white"
                                 >
                                     <div>En cours</div>
-                                    <div>
+                                    <div
+                                        class="absolute right-1 rounded-full border border-gray-200 bg-white px-2.5 py-0.5 text-gray-800"
+                                    >
                                         {{ confirmedReservationsCount }}
                                     </div>
                                 </Link>
@@ -186,10 +196,14 @@ const user = computed(() => page.props.auth.user);
                                             structure.slug
                                         )
                                     "
-                                    class="flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
+                                    class="relative flex items-center justify-between px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 hover:bg-green-500 hover:text-white"
                                 >
-                                    <div>Messages</div>
-                                    <div>4</div>
+                                    <div class="">Messages non lus</div>
+                                    <div
+                                        class="absolute right-1 rounded-full border border-gray-200 bg-white px-2.5 py-0.5 text-gray-800"
+                                    >
+                                        {{ structureNotifCount }}
+                                    </div>
                                 </Link>
                             </li>
                         </ul>
@@ -202,18 +216,18 @@ const user = computed(() => page.props.auth.user);
                         open
                     >
                         <summary
-                            class="flex cursor-pointer items-center justify-between rounded-sm bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                            class="flex items-center justify-between px-4 py-2 text-white bg-blue-600 rounded-sm cursor-pointer hover:bg-blue-700"
                         >
                             <span class="text-sm font-medium">
                                 Publications
                             </span>
 
                             <span
-                                class="shrink-0 transition duration-300 group-open:-rotate-180"
+                                class="transition duration-300 shrink-0 group-open:-rotate-180"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    class="h-5 w-5"
+                                    class="w-5 h-5"
                                     viewBox="0 0 20 20"
                                     fill="currentColor"
                                 >
@@ -235,10 +249,14 @@ const user = computed(() => page.props.auth.user);
                                             structure
                                         )
                                     "
-                                    class="flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
+                                    class="relative flex items-center justify-between px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-sm hover:bg-green-500 hover:text-white"
                                 >
                                     <div>Ranking Score</div>
-                                    <div>2265</div>
+                                    <div
+                                        class="absolute right-1 rounded-full border border-gray-200 bg-white px-2.5 py-0.5 text-gray-800"
+                                    >
+                                        2265
+                                    </div>
                                 </Link>
                             </li>
 
@@ -252,7 +270,7 @@ const user = computed(() => page.props.auth.user);
                                     "
                                     :href="route('structures.edit', structure)"
                                     :active="route().current('structures.edit')"
-                                    class="group relative flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
+                                    class="relative flex items-center justify-between px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-sm group hover:bg-green-500 hover:text-white"
                                     :class="{
                                         'bg-green-500 text-white':
                                             route().current(
@@ -289,7 +307,7 @@ const user = computed(() => page.props.auth.user);
                                         )
                                     "
                                     v-if="can.update"
-                                    class="relative flex items-center justify-between rounded-sm bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-green-500 hover:text-white"
+                                    class="relative flex items-center justify-between px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-sm hover:bg-green-500 hover:text-white"
                                     :class="{
                                         'bg-green-500 text-white':
                                             route().current(
@@ -334,7 +352,7 @@ const user = computed(() => page.props.auth.user);
                                 structure
                             )
                         "
-                        class="flex items-center justify-between rounded-sm border-2 border-dotted border-sky-500 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
+                        class="flex items-center justify-between px-4 py-2 text-sm font-medium text-gray-700 border-2 border-dotted rounded-sm border-sky-500 hover:bg-gray-100 hover:text-gray-700"
                         >Statistiques
                     </Link>
                 </li>
@@ -342,7 +360,7 @@ const user = computed(() => page.props.auth.user);
                 <li class="w-full">
                     <Link
                         :href="route('structures.gestion.index', structure)"
-                        class="flex items-center justify-between rounded-sm border-2 border-dotted border-sky-500 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
+                        class="flex items-center justify-between px-4 py-2 text-sm font-medium text-gray-700 border-2 border-dotted rounded-sm border-sky-500 hover:bg-gray-100 hover:text-gray-700"
                         >Avis Clients
                     </Link>
                 </li>
@@ -350,7 +368,7 @@ const user = computed(() => page.props.auth.user);
                 <li class="w-full">
                     <Link
                         :href="route('structures.gestion.index', structure)"
-                        class="block rounded-sm border-2 border-dotted border-sky-500 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700"
+                        class="block px-4 py-2 text-sm font-medium text-gray-700 border-2 border-dotted rounded-sm border-sky-500 hover:bg-gray-100 hover:text-gray-700"
                         >Articles de blog
                     </Link>
                 </li>
@@ -365,7 +383,7 @@ const user = computed(() => page.props.auth.user);
             }"
             class="md:hidden"
         >
-            <div class="space-y-1 pb-3 pt-2">
+            <div class="pt-2 pb-3 space-y-1">
                 <BreezeResponsiveNavLink :href="route('welcome')">
                     Accueil Site
                 </BreezeResponsiveNavLink>
@@ -402,7 +420,7 @@ const user = computed(() => page.props.auth.user);
             </div>
 
             <!-- Responsive Settings Options -->
-            <div class="border-t border-gray-200 py-1">
+            <div class="py-1 border-t border-gray-200">
                 <div class="px-4" v-if="user">
                     <div class="text-base font-medium text-gray-800">
                         {{ user.name }}
