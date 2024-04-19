@@ -17,6 +17,7 @@ class StructureGestionController extends Controller
     public function index(Structure $structure): Response
     {
         $structure = Structure::withRelations()->findOrFail($structure->id);
+        $structureNotifs = $structure->unreadNotifications;
 
         $allReservations = ProductReservation::withRelations()
                         ->withCount('plannings')
@@ -69,6 +70,7 @@ class StructureGestionController extends Controller
 
         return Inertia::render('Structures/Gestion/Index', [
             'structure' => fn () => $structure,
+            'structureNotifs' => fn () => $structureNotifs,
             'allReservations' => fn () => $allReservations,
             'allReservationsCount' => fn () => $allReservationsCount,
             'confirmedReservations' => fn () => $confirmedReservations,

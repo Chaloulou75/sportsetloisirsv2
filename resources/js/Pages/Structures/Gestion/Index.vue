@@ -1,7 +1,7 @@
 <script setup>
 import ProLayout from "@/Layouts/ProLayout.vue";
 import { Head, usePage, Link } from "@inertiajs/vue3";
-import { ref, computed, defineAsyncComponent, provide } from "vue";
+import { ref, computed, defineAsyncComponent } from "vue";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 dayjs.locale("fr");
@@ -12,13 +12,10 @@ const ActiviteCard = defineAsyncComponent(() =>
     import("@/Components/Structures/ActiviteCard.vue")
 );
 
-const page = usePage();
-const user = computed(() => page.props.auth.user);
-
 const props = defineProps({
     errors: Object,
     structure: Object,
-    notificationsNotReadCount: Object,
+    structureNotifs: Object,
     confirmedReservations: Object,
     allReservations: Object,
     pendingReservations: Object,
@@ -30,11 +27,22 @@ const props = defineProps({
     can: Object,
 });
 
+const page = usePage();
+const user = computed(() => page.props.auth.user);
 const structureNotifCount = computed(() => {
     if (props.structure && page.props.structures_notifications) {
         return page.props.structures_notifications[props.structure.id] || 0;
     }
     return 0;
+});
+
+const isUnreadNotification = computed(() => {
+    return (reservation) => {
+        return props.structureNotifs.some(
+            (notification) =>
+                notification.data.reservation_id === reservation.id
+        );
+    };
 });
 
 const formattedCriteria = (criteria) => {
@@ -119,7 +127,11 @@ const formatCurrency = (value) => {
                         <li
                             v-for="reservation in pendingReservations.data"
                             :key="reservation.id"
-                            class="mb-4"
+                            class="px-2 py-2 mb-4"
+                            :class="{
+                                'border border-gray-100 bg-white':
+                                    isUnreadNotification(reservation),
+                            }"
                         >
                             <span>
                                 <span class="font-semibold"
