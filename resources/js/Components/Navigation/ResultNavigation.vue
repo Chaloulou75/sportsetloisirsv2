@@ -85,16 +85,16 @@ const submitForm = async () => {
 
 <template>
     <nav
-        class="fixed inset-x-0 top-0 z-[9998] border-b border-gray-100 bg-slate-900/60 backdrop-blur-sm backdrop-opacity-60"
+        class="fixed inset-x-0 top-0 z-[9998] border-b border-gray-100 bg-slate-900/70 backdrop-blur-sm"
     >
         <!-- Primary Navigation Menu -->
-        <div class="max-w-full px-4 mx-auto sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
+        <div class="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
+            <div class="flex h-16 justify-between">
                 <div class="flex">
                     <!-- Logo -->
-                    <div class="flex items-center shrink-0">
+                    <div class="flex shrink-0 items-center">
                         <Link :href="route('welcome')">
-                            <BreezeApplicationLogo class="block w-auto h-9" />
+                            <BreezeApplicationLogo class="block h-9 w-auto" />
                         </Link>
                     </div>
                 </div>
@@ -104,7 +104,7 @@ const submitForm = async () => {
                     class="hidden space-x-8 lg:ml-10 lg:flex lg:w-full"
                 >
                     <section
-                        class="flex items-center justify-center w-full px-2 mx-auto md:flex-row md:space-y-0"
+                        class="mx-auto flex w-full items-center justify-center px-2 md:flex-row md:space-y-0"
                     >
                         <AutocompleteCityNav
                             :cities="allCities"
@@ -130,10 +130,10 @@ const submitForm = async () => {
                                     'bg-white text-gray-500 hover:text-gray-900':
                                         !localite || !search,
                                 }"
-                                class="flex items-center justify-center w-full px-2 py-2 text-sm font-medium border border-gray-300 rounded shadow-sm focus:outline-none focus:ring focus:ring-gray-500 focus:ring-offset-2 md:w-auto"
+                                class="flex w-full items-center justify-center rounded border border-gray-300 px-2 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring focus:ring-gray-500 focus:ring-offset-2 md:w-auto"
                             >
                                 <MagnifyingGlassIcon
-                                    class="w-5 h-5 md:h-7 md:w-7"
+                                    class="h-5 w-5 md:h-7 md:w-7"
                                 />
                                 <span class="sr-only">Rechercher</span>
                             </button>
@@ -150,7 +150,7 @@ const submitForm = async () => {
                                         type="button"
                                         class="inline-flex items-center px-1 py-2 text-white transition duration-150 ease-in-out hover:text-red-500 focus:text-red-500"
                                     >
-                                        <HeartIcon class="w-8 h-8" />
+                                        <HeartIcon class="h-8 w-8" />
                                     </button>
                                 </span>
                             </template>
@@ -187,11 +187,11 @@ const submitForm = async () => {
                         class="relative"
                     >
                         <ShoppingCartIcon
-                            class="w-8 h-8 text-white hover:text-indigo-500 focus:text-indigo-500"
+                            class="h-8 w-8 text-white hover:text-indigo-500 focus:text-indigo-500"
                         />
                         <span
                             v-if="productCountInSession"
-                            class="absolute top-0 right-0 px-1 -mt-1 -mr-1 text-xs text-white bg-red-500 rounded-full"
+                            class="absolute right-0 top-0 -mr-1 -mt-1 rounded-full bg-red-500 px-1 text-xs text-white"
                         >
                             {{ productCountInSession }}
                         </span>
@@ -205,7 +205,7 @@ const submitForm = async () => {
                                         type="button"
                                         class="relative inline-flex items-center px-1 py-2 text-white hover:text-indigo-500 focus:text-indigo-500"
                                     >
-                                        <UserIcon class="w-8 h-8" />
+                                        <UserIcon class="h-8 w-8" />
                                         <span
                                             v-if="
                                                 user &&
@@ -231,7 +231,7 @@ const submitForm = async () => {
 
                             <template #content>
                                 <div
-                                    class="block w-full px-4 py-2 text-sm leading-5 text-left text-gray-700"
+                                    class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700"
                                 >
                                     {{ user.name }}
                                 </div>
@@ -248,7 +248,7 @@ const submitForm = async () => {
                                     Mon profil
                                 </BreezeDropdownLink>
                                 <Link
-                                    class="inline-flex items-center justify-between w-full px-4 py-2 text-sm leading-5 text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                                    class="inline-flex w-full items-center justify-between px-4 py-2 text-left text-sm leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
                                     preserve-scroll
                                     v-if="user && user.structures.length > 0"
                                     :href="
@@ -265,7 +265,7 @@ const submitForm = async () => {
                                 >
                                     Gestion de ma structure
                                     <span
-                                        class="flex items-center justify-center rounded-full bg-green-500 px-1.5 text-xs text-white"
+                                        class="flex items-center justify-center rounded-full bg-green-500 p-1.5 text-xs text-white"
                                         >{{ structureNotifCount }}</span
                                     >
                                 </Link>
@@ -305,7 +305,7 @@ const submitForm = async () => {
                                         type="button"
                                         class="inline-flex items-center px-1 py-2 text-white hover:text-indigo-500 focus:text-indigo-500"
                                     >
-                                        <UserIcon class="w-8 h-8" />
+                                        <UserIcon class="h-8 w-8" />
                                     </button>
                                 </span>
                             </template>
@@ -335,25 +335,25 @@ const submitForm = async () => {
                 </div>
 
                 <!-- svg -->
-                <div class="flex items-center -mr-2 space-x-2 lg:hidden">
+                <div class="-mr-2 flex items-center space-x-2 lg:hidden">
                     <button
                         @click="showingSearchForm = !showingSearchForm"
                         type="button"
-                        class="items-center justify-center px-2 py-2 text-white bg-transparent rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        class="items-center justify-center rounded bg-transparent px-2 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
-                        <MagnifyingGlassIcon class="w-6 h-6" />
+                        <MagnifyingGlassIcon class="h-6 w-6" />
                         <span class="sr-only">Rechercher</span>
                     </button>
                     <Link
                         preserve-scroll
                         :href="route('panier.index')"
                         :active="route().current('panier.index')"
-                        class="relative items-center justify-center px-2 py-2 text-white bg-transparent rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        class="relative items-center justify-center rounded bg-transparent px-2 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
-                        <ShoppingCartIcon class="w-6 h-6" />
+                        <ShoppingCartIcon class="h-6 w-6" />
                         <span
                             v-if="productCountInSession"
-                            class="absolute top-0 right-0 px-1 text-xs text-white bg-red-500 rounded-full"
+                            class="absolute right-0 top-0 rounded-full bg-red-500 px-1 text-xs text-white"
                         >
                             {{ productCountInSession }}
                         </span>
@@ -363,9 +363,20 @@ const submitForm = async () => {
                             showingNavigationDropdown =
                                 !showingNavigationDropdown
                         "
-                        class="items-center justify-center px-2 py-2 text-white bg-transparent rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        class="relative items-center justify-center rounded bg-transparent px-2 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
-                        <UserIcon class="w-6 h-6" />
+                        <UserIcon class="h-6 w-6" />
+                        <span
+                            v-if="user && user.unreadNotificationsCount === 0"
+                            class="absolute right-0.5 top-0 rounded-full bg-green-500 px-1.5 text-xs text-white"
+                        >
+                        </span>
+                        <span
+                            v-if="user && user.unreadNotificationsCount > 0"
+                            class="absolute right-0.5 top-0 rounded-full bg-green-500 px-1.5 text-xs text-white"
+                        >
+                            {{ user.unreadNotificationsCount }}
+                        </span>
                     </button>
                 </div>
             </div>
@@ -379,10 +390,10 @@ const submitForm = async () => {
             }"
             class="lg:hidden"
         >
-            <div class="pt-2 pb-3 space-y-1">
+            <div class="space-y-1 pb-3 pt-2">
                 <Link
                     preserve-scroll
-                    class="block w-full py-2 pl-3 pr-4 text-base font-medium text-left text-white transition duration-150 ease-in-out border-l-4 border-transparent hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
+                    class="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
                     :href="route('posts.index')"
                     :active="route().current('posts.index')"
                 >
@@ -390,7 +401,7 @@ const submitForm = async () => {
                 </Link>
                 <Link
                     preserve-scroll
-                    class="block w-full py-2 pl-3 pr-4 text-base font-medium text-left text-white transition duration-150 ease-in-out border-l-4 border-transparent hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
+                    class="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
                     :href="route('favoris.index')"
                     :active="route().current('favoris.index')"
                 >
@@ -398,7 +409,7 @@ const submitForm = async () => {
                 </Link>
                 <Link
                     preserve-scroll
-                    class="block w-full py-2 pl-3 pr-4 text-base font-medium text-left text-white transition duration-150 ease-in-out border-l-4 border-transparent hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
+                    class="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
                     v-if="user && !user.structures.length > 0"
                     :href="route('structures.create')"
                     :active="route().current('structures.create')"
@@ -407,7 +418,7 @@ const submitForm = async () => {
                 </Link>
                 <Link
                     preserve-scroll
-                    class="block w-full py-2 pl-3 pr-4 text-base font-medium text-left text-white transition duration-150 ease-in-out border-l-4 border-transparent hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
+                    class="inline-flex w-full justify-between border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
                     v-if="user && user.structures.length > 0"
                     :href="
                         route(
@@ -418,10 +429,14 @@ const submitForm = async () => {
                     :active="route().current('structures.gestion.index')"
                 >
                     Gestion de ma structure
+                    <span
+                        class="flex items-center justify-center rounded-full bg-green-500 px-1.5 text-xs text-white"
+                        >{{ structureNotifCount }}</span
+                    >
                 </Link>
                 <Link
                     preserve-scroll
-                    class="block w-full py-2 pl-3 pr-4 text-base font-medium text-left text-white transition duration-150 ease-in-out border-l-4 border-transparent hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
+                    class="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
                     v-if="user && $page.props.user_can.view_admin"
                     :href="route('admin.index')"
                 >
@@ -430,7 +445,7 @@ const submitForm = async () => {
             </div>
 
             <!-- Responsive Settings Options -->
-            <div class="py-1 border-t border-gray-200">
+            <div class="border-t border-gray-200 py-1">
                 <div class="px-4" v-if="user">
                     <div class="text-base font-medium text-gray-200">
                         {{ user.name }}
@@ -443,7 +458,7 @@ const submitForm = async () => {
                 <div class="mt-3 space-y-1" v-if="user">
                     <Link
                         preserve-scroll
-                        class="block w-full py-2 pl-3 pr-4 text-base font-medium text-left text-white transition duration-150 ease-in-out border-l-4 border-transparent hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
+                        class="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
                         :href="route('logout')"
                         method="post"
                         as="button"
@@ -455,7 +470,7 @@ const submitForm = async () => {
                 <div v-else>
                     <Link
                         preserve-scroll
-                        class="block w-full py-2 pl-3 pr-4 text-base font-medium text-left text-white transition duration-150 ease-in-out border-l-4 border-transparent hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
+                        class="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
                         :href="route('login')"
                         :active="route().current('login')"
                     >
@@ -463,7 +478,7 @@ const submitForm = async () => {
                     </Link>
                     <Link
                         preserve-scroll
-                        class="block w-full py-2 pl-3 pr-4 text-base font-medium text-left text-white transition duration-150 ease-in-out border-l-4 border-transparent hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
+                        class="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
                         :href="route('register')"
                         :active="route().current('register')"
                     >
@@ -477,10 +492,10 @@ const submitForm = async () => {
                 block: showingSearchForm,
                 hidden: !showingSearchForm,
             }"
-            class="pt-2 pb-3 lg:hidden"
+            class="pb-3 pt-2 lg:hidden"
         >
             <section
-                class="flex flex-col items-center justify-center w-full px-2 mx-auto space-y-2 md:flex-row md:space-y-0 lg:hidden"
+                class="mx-auto flex w-full flex-col items-center justify-center space-y-2 px-2 md:flex-row md:space-y-0 lg:hidden"
             >
                 <AutocompleteCityNav
                     :cities="allCities"
@@ -503,9 +518,9 @@ const submitForm = async () => {
                             'bg-white text-gray-700 hover:text-gray-900':
                                 !localite || !search,
                         }"
-                        class="flex items-center justify-center w-full px-2 py-2 text-base font-semibold border border-gray-500 rounded-md shadow-sm hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:w-auto"
+                        class="flex w-full items-center justify-center rounded-md border border-gray-500 px-2 py-2 text-base font-semibold shadow-sm hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 md:w-auto"
                     >
-                        <MagnifyingGlassIcon class="w-6 h-6 mr-2" />
+                        <MagnifyingGlassIcon class="mr-2 h-6 w-6" />
                         <span class="">Rechercher</span>
                     </button>
                 </div>
