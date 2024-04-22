@@ -387,8 +387,7 @@ class StructureController extends Controller
             'activites.produits.plannings',
             ])
             ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'abo_news', 'abo_promo', 'logo'])
-            ->where('slug', $structure->slug)
-            ->firstOrFail();
+            ->findOrFail($structure->id);
 
         return Inertia::render('Structures/Edit', [
             'structurestypes' => fn () => $structurestypes,

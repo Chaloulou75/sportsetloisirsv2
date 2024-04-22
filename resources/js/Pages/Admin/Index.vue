@@ -8,9 +8,12 @@ const page = usePage();
 
 const user = computed(() => page.props.auth.user);
 const appName = computed(() => page.props.appName);
+const adminNotificationsCount = computed(
+    () => page.props.admin_notifications_count
+);
 </script>
 <template>
-    <Head title="Gestion du site" :description="'Administration du site.'" />
+    <Head title="Gestion du site" description="Administration du site." />
     <AdminLayout>
         <template #header>
             <div class="flex h-full items-center justify-start">
@@ -28,12 +31,19 @@ const appName = computed(() => page.props.appName);
             </div>
         </template>
 
-        <div class="w-full space-y-16 px-2 py-6 text-slate-700 md:px-6">
-            <p class="text-lg text-gray-700">
+        <div class="w-full space-y-4 px-2 py-6 text-slate-700 md:px-6">
+            <h2 class="text-lg">
                 Bienvenue
                 <span class="font-semibold">{{ user.name }}</span> dans le panel
                 d'administration de
                 <span class="font-semibold">{{ appName }}</span>
+            </h2>
+            <p>
+                Vous avez reçu
+                <span class="text-indigo-500"
+                    >{{ adminNotificationsCount }} notifications
+                </span>
+                sur le site.
             </p>
         </div>
     </AdminLayout>

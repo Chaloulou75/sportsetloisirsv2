@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Stripe\Stripe;
 use Stripe\Invoice;
 use App\Models\City;
+use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Famille;
@@ -14,11 +15,12 @@ use Illuminate\Http\Request;
 use Stripe\Checkout\Session;
 use App\Models\ListDiscipline;
 use App\Models\ProductReservation;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use App\Notifications\ReservationPaid;
 use App\Http\Resources\FamilleResource;
 use Stripe\Exception\ApiErrorException;
+use App\Notifications\ReservationPaidToAdmin;
 use App\Notifications\ReservationPaidToStructure;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -183,6 +185,7 @@ class PanierPaymentController extends Controller
 
             if ($reservations->isNotEmpty()) {
                 $user = auth()->user();
+
                 foreach ($reservations as $reservation) {
                     $reservation->update([
                         'user_payeur_id' => $user->id,
@@ -194,6 +197,14 @@ class PanierPaymentController extends Controller
 
                     $reservation->structure->notify(new ReservationPaidToStructure($reservation, $sessionStripe));
 
+                    $admins = User::whereHas('roles', function ($query) {
+                        $query->where('name', 'admin');
+                    })->get();
+                    if($admins) {
+                        foreach ($admins as $admin) {
+                            $admin->notify(new ReservationPaidToAdmin($reservation, $sessionStripe));
+                        }
+                    }
                 }
             }
             session()->forget('panierProducts');

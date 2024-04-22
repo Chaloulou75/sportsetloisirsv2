@@ -42,21 +42,21 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('update-structure', function (User $user, Structure $structure) {
-            return ($user->id === $structure->user_id) || ($user->email === 'c.jeandey@gmail.com') || ($user->email === 'tonio20@hotmail.fr');
+            return ($user->id === $structure->user_id) || $user->isAdmin();
         });
         Gate::define('destroy-structure', function (User $user, Structure $structure) {
-            return ($user->id === $structure->user_id) || ($user->email === 'c.jeandey@gmail.com') || ($user->email === 'tonio20@hotmail.fr');
+            return ($user->id === $structure->user_id) || $user->isAdmin();
         });
 
         Gate::define('update-activite', function (User $user, StructureActivite $activite) {
-            return ($user->id === $activite->user_id) || ($user->email === 'c.jeandey@gmail.com') || ($user->email === 'tonio20@hotmail.fr');
+            return ($user->id === $activite->user_id) || $user->isAdmin();
         });
         Gate::define('destroy-activite', function (User $user, StructureActivite $activite) {
-            return ($user->id === $activite->user_id) || ($user->email === 'c.jeandey@gmail.com') || ($user->email === 'tonio20@hotmail.fr');
+            return ($user->id === $activite->user_id) || $user->isAdmin();
         });
 
         Gate::define('viewPulse', function (User $user) {
-            return ($user->email === 'c.jeandey@gmail.com') || ($user->email === 'tonio20@hotmail.fr');
+            return $user->isAdmin();
         });
 
     }

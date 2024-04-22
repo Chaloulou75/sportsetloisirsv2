@@ -27,6 +27,10 @@ const props = defineProps({
 });
 const page = usePage();
 const user = computed(() => page.props.auth.user);
+const isAdmin = computed(() => page.props.user_can.view_admin);
+const adminNotificationsCount = computed(
+    () => page.props.admin_notifications_count
+);
 const structureNotifCount = computed(() => {
     if (
         page.props.auth.user.structures &&
@@ -42,7 +46,7 @@ const structureNotifCount = computed(() => {
 });
 
 const productCountInSession = computed(
-    () => page.props.productsReservationsCount
+    () => page.props.products_reservations_count
 );
 
 const showingNavigationDropdown = ref(false);
@@ -209,7 +213,7 @@ const submitForm = async () => {
                                         <span
                                             v-if="
                                                 user &&
-                                                user.unreadNotificationsCount ===
+                                                user.unread_notifications_count ===
                                                     0
                                             "
                                             class="absolute right-0 top-0 z-20 mr-2.5 mt-1 rounded-full bg-green-500 p-1"
@@ -218,12 +222,14 @@ const submitForm = async () => {
                                         <span
                                             v-if="
                                                 user &&
-                                                user.unreadNotificationsCount >
+                                                user.unread_notifications_count >
                                                     0
                                             "
                                             class="absolute right-1 top-1 -mt-1 rounded-full bg-green-500 px-1.5 text-xs text-white"
                                         >
-                                            {{ user.unreadNotificationsCount }}
+                                            {{
+                                                user.unread_notifications_count
+                                            }}
                                         </span>
                                     </button>
                                 </span>
@@ -265,7 +271,8 @@ const submitForm = async () => {
                                 >
                                     Gestion de ma structure
                                     <span
-                                        class="flex items-center justify-center rounded-full bg-green-500 p-1.5 text-xs text-white"
+                                        v-if="structureNotifCount > 0"
+                                        class="flex items-center justify-center rounded-full bg-green-500 px-1.5 py-0.5 text-xs text-white"
                                         >{{ structureNotifCount }}</span
                                     >
                                 </Link>
@@ -276,15 +283,19 @@ const submitForm = async () => {
                                 >
                                     Inscrire une structure
                                 </BreezeDropdownLink>
-                                <BreezeDropdownLink
+                                <Link
+                                    class="inline-flex w-full items-center justify-between px-4 py-2 text-left text-sm leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
                                     preserve-scroll
-                                    v-if="
-                                        user && $page.props.user_can.view_admin
-                                    "
+                                    v-if="user && isAdmin"
                                     :href="route('admin.index')"
                                 >
                                     Gestion du site
-                                </BreezeDropdownLink>
+                                    <span
+                                        v-if="adminNotificationsCount > 0"
+                                        class="flex items-center justify-center rounded-full bg-green-500 px-1.5 py-0.5 text-xs text-white"
+                                        >{{ adminNotificationsCount }}</span
+                                    >
+                                </Link>
 
                                 <BreezeDropdownLink
                                     preserve-scroll
@@ -367,15 +378,15 @@ const submitForm = async () => {
                     >
                         <UserIcon class="h-6 w-6" />
                         <span
-                            v-if="user && user.unreadNotificationsCount === 0"
+                            v-if="user && user.unread_notifications_count === 0"
                             class="absolute right-0.5 top-0 rounded-full bg-green-500 px-1.5 text-xs text-white"
                         >
                         </span>
                         <span
-                            v-if="user && user.unreadNotificationsCount > 0"
+                            v-if="user && user.unread_notifications_count > 0"
                             class="absolute right-0.5 top-0 rounded-full bg-green-500 px-1.5 text-xs text-white"
                         >
-                            {{ user.unreadNotificationsCount }}
+                            {{ user.unread_notifications_count }}
                         </span>
                     </button>
                 </div>
@@ -430,17 +441,22 @@ const submitForm = async () => {
                 >
                     Gestion de ma structure
                     <span
-                        class="flex items-center justify-center rounded-full bg-green-500 px-1.5 text-xs text-white"
+                        class="flex items-center justify-center rounded-full bg-green-500 px-1.5 py-0.5 text-xs text-white"
                         >{{ structureNotifCount }}</span
                     >
                 </Link>
                 <Link
                     preserve-scroll
                     class="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
-                    v-if="user && $page.props.user_can.view_admin"
+                    v-if="user && isAdmin"
                     :href="route('admin.index')"
                 >
                     Gestion du site
+                    <span
+                        v-if="adminNotificationsCount > 0"
+                        class="flex items-center justify-center rounded-full bg-green-500 px-1.5 py-0.5 text-xs text-white"
+                        >{{ adminNotificationsCount }}</span
+                    >
                 </Link>
             </div>
 

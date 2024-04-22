@@ -15,11 +15,9 @@ class AdminsOnly
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $allowedEmails = ['tonio20@hotmail.fr', 'c.jeandey@gmail.com'];
-
-        if (!auth()->check() || !in_array(auth()->user()->email, $allowedEmails)) {
-            return redirect(route('welcome'))->with('error', 'Requête non autorisée');
+        if (auth()->check() && auth()->user()->isAdmin()) {
+            return $next($request);
         }
-        return $next($request);
+        return redirect(route('welcome'))->with('error', 'Requête non autorisée');
     }
 }

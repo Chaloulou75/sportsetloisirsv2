@@ -16,6 +16,6 @@ class UserPolicy
 
     public function viewAdmin(User $user)
     {
-        return ($user->email === 'c.jeandey@gmail.com') || ($user->email === 'tonio20@hotmail.fr');
+        return $user->isAdmin();
     }
 }

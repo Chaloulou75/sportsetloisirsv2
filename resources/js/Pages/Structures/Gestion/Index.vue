@@ -129,7 +129,7 @@ const formatCurrency = (value) => {
                             :key="reservation.id"
                             class="mb-4 px-2 py-2"
                             :class="{
-                                'border border-gray-300 bg-white':
+                                'border border-blue-300 bg-white':
                                     isUnreadNotification(reservation),
                             }"
                         >
@@ -141,14 +141,14 @@ const formatCurrency = (value) => {
                                         reservation.cat_tarif.cat_tarif_type.nom
                                     }}</span
                                 >, produit n°{{ reservation.produit_id }}
-                                <span class="text-xs italic"
+                                <!-- <span class="text-xs italic"
                                     >({{
                                         formattedCriteria(
                                             reservation.produit_criteres
                                         )
-                                    }})</span
-                                >
-                                - Réservation faite par
+                                    }}) -
+                                </span> -->
+                                Réservation faite par
                                 <span class="font-semibold"
                                     >{{ reservation.user.name }}
                                 </span>

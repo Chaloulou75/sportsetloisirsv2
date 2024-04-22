@@ -51,7 +51,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => fn () => $request->user() ? array_merge(
                     $request->user()->load('structures:id,name,slug')->only('id', 'name', 'email', 'structures'),
-                    ['unreadNotificationsCount' => $request->user()->unreadNotifications()->count()]
+                    ['unread_notifications_count' => $request->user()->unreadNotifications()->count()]
                 ) : null,
             ],
             'structures_notifications' => fn () => $request->user() ? $request->user()->structures->mapWithKeys(function ($structure) {
@@ -72,7 +72,15 @@ class HandleInertiaRequests extends Middleware
                     'message' => $request->session()->get('message'),
                 ];
             },
-            'productsReservationsCount' => fn () => $reservationsCount ?? null,
+            'admin_notifications_count' => function () use ($request) {
+                $user = $request->user();
+                if ($user && $user->isAdmin()) {
+                    return $user->unreadNotifications()->count();
+                } else {
+                    return null;
+                }
+            },
+            'products_reservations_count' => fn () => $reservationsCount ?? null,
         ]);
     }
 }

@@ -26,9 +26,8 @@ class AppServiceProvider extends ServiceProvider
     {
         JsonResource::withoutWrapping();
 
-        $allowedEmails = ['tonio20@hotmail.fr', 'c.jeandey@gmail.com'];
-        Gate::define('admin', function ($user) use ($allowedEmails) {
-            return in_array($user->email, $allowedEmails);
+        Gate::define('admin', function ($user) {
+            return $user->isAdmin();
         });
 
         /**

@@ -2,13 +2,14 @@
 
 namespace App\Notifications;
 
+use Stripe\Invoice;
 use Illuminate\Bus\Queueable;
 use App\Models\ProductReservation;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class ReservationPaidToStructure extends Notification implements ShouldQueue
+class ReservationPaidToAdmin extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -29,7 +30,9 @@ class ReservationPaidToStructure extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
+
         return ['mail', 'database'];
+
     }
 
     /**
@@ -37,18 +40,24 @@ class ReservationPaidToStructure extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
+
         $urlGestion = route('structures.gestion.index', $this->reservation->structure);
 
+        $invoiceId = $this->sessionStripe->invoice;
+        $invoice = Invoice::retrieve($invoiceId);
+        $invoiceUrl = $invoice->hosted_invoice_url;
+        $invoicePDF = $invoice->invoice_pdf;
         return (new MailMessage())
-            ->subject('Vous avez reçu une nouvelle réservation!')
-            ->greeting('Félicitation '. $this->reservation->structure->name .'!')
-            ->line('Vous avez reçu le paiement d\'une réservation pour votre activité: ' . $this->reservation->activite_title)
-            ->line('Réservation: ' . $this->reservation->id)
-            ->line('Montant unitaire: ' . $this->reservation->tarif_amount)
-            ->line('Quantité: ' . $this->reservation->quantity)
-            ->line('Methode de paiement: ' . $this->reservation->paiement_method)
-            ->action('Voir la réservation', $urlGestion)
-            ->line('Si vous avez des questions, contactez nous.');
+                    ->subject('Une nouvelle réservation a été réglée.')
+                    ->greeting('Vous avez reçu le paiement d\'une réservation pour votre activité: ' . $this->reservation->activite_title . ' de la structure: ' .$this->reservation->structure->name)
+                    ->line('Réservation: ' . $this->reservation->id)
+                    ->line('Montant unitaire: ' . $this->reservation->tarif_amount)
+                    ->line('Quantité: ' . $this->reservation->quantity)
+                    ->line('Methode de paiement: ' . $this->reservation->paiement_method)
+                    ->action('Voir votre facture liée', $invoiceUrl)
+                    ->action('Voir la réservation pour la structure', $urlGestion)
+                    ->line('Si vous avez des questions, contactez nous.');
+
     }
 
     /**

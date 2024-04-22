@@ -68,6 +68,7 @@ class ReservationPaid extends Notification implements ShouldQueue
         return [
             'reservation_id' => $this->reservation->id,
             'structure_id' => $this->reservation->structure_id,
+            'activite_id' => $this->reservation->activite_id,
             'produit_id' => $this->reservation->produit_id,
             'unit_amount' => $this->reservation->tarif_amount,
             'quantity' => $this->reservation->quantity,
