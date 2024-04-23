@@ -7,6 +7,9 @@ use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
 use Illuminate\Http\Request;
 use App\Models\ProductReservation;
+use App\Notifications\ReservationPaid;
+use App\Notifications\ReservationPaidToAdmin;
+use App\Notifications\ReservationPaidToStructure;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -51,11 +54,11 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => fn () => $request->user() ? array_merge(
                     $request->user()->load('structures:id,name,slug')->only('id', 'name', 'email', 'structures'),
-                    ['unread_notifications_count' => $request->user()->unreadNotifications()->count()]
+                    ['unread_notifications_count' => $request->user()->unreadNotifications()->where('type', ReservationPaid::class)->orWhere('type', ReservationPaidToAdmin::class)->count()]
                 ) : null,
             ],
             'structures_notifications' => fn () => $request->user() ? $request->user()->structures->mapWithKeys(function ($structure) {
-                return [$structure->id => $structure->unreadNotifications()->count()];
+                return [$structure->id => $structure->unreadNotifications()->where('type', ReservationPaidToStructure::class)->count()];
             }) : [],
             'user_can' => [
                 'view_admin' => fn () => $request->user() ? $request->user()->can('viewAdmin', User::class) : false,
@@ -75,7 +78,7 @@ class HandleInertiaRequests extends Middleware
             'admin_notifications_count' => function () use ($request) {
                 $user = $request->user();
                 if ($user && $user->isAdmin()) {
-                    return $user->unreadNotifications()->count();
+                    return $user->unreadNotifications()->where('type', ReservationPaidToAdmin::class)->count();
                 } else {
                     return null;
                 }

@@ -61,7 +61,7 @@ class DatabaseSeeder extends Seeder
         $this->call(LiensDisCatCritValSsCritValeurTableSeeder::class);
         // $this->call(LiensDisciplinesSimilairesTableSeeder::class);
         // $this->call(LiensFamillesDisciplinesTableSeeder::class);
-
+        $this->call(RoleSeeder::class);
         User::factory()->create([
                     'name' => 'Charles J',
                     'email' => 'c.jeandey@gmail.com',
