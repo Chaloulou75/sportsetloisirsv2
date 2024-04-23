@@ -118,6 +118,11 @@ class StructureProduit extends Model
         return $this->hasMany(StructureActiviteDate::class, 'structure_produit_id');
     }
 
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(ProductReservation::class, 'produit_id');
+    }
+
     public function scopeWithRelations(Builder $query): void
     {
         $query->with([

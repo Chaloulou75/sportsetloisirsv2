@@ -41,7 +41,7 @@ const adminNotificationsCount = computed(
             <p>
                 Vous avez reçu
                 <span class="text-indigo-500"
-                    >{{ adminNotificationsCount }} notifications
+                    >{{ adminNotificationsCount }} notifications d'activités
                 </span>
                 sur le site.
             </p>

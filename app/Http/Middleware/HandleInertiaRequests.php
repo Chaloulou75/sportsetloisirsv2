@@ -54,10 +54,15 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => fn () => $request->user() ? array_merge(
                     $request->user()->load('structures:id,name,slug')->only('id', 'name', 'email', 'structures'),
-                    ['unread_notifications_count' => $request->user()->unreadNotifications()->where('type', ReservationPaid::class)->orWhere('type', ReservationPaidToAdmin::class)->count()]
+                    [
+                        'unread_notifications_count' => $request->user()->unreadNotifications()
+                        ->where('type', ReservationPaid::class)
+                        ->orWhere('type', ReservationPaidToAdmin::class)
+                        ->count()
+                    ]
                 ) : null,
             ],
-            'structures_notifications' => fn () => $request->user() ? $request->user()->structures->mapWithKeys(function ($structure) {
+            'structures_notifications_count' => fn () => $request->user() ? $request->user()->structures->mapWithKeys(function ($structure) {
                 return [$structure->id => $structure->unreadNotifications()->where('type', ReservationPaidToStructure::class)->count()];
             }) : [],
             'user_can' => [

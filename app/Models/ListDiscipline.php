@@ -93,4 +93,9 @@ class ListDiscipline extends Model
     {
         return $this->belongsToMany(Post::class, 'discipline_post', 'discipline_id', 'post_id');
     }
+
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(ProductReservation::class, 'discipline_id');
+    }
 }

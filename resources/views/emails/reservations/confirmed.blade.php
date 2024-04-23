@@ -5,9 +5,8 @@ Votre réservation a été confirmée:
 
 - Votre numéro de confirmation est le **{{ $reservationCode }}**
 - Activité: **{{ $activiteName }}**
-- Début: **{{ $planningStart }}**
-- Fin: **{{ $planningEnd }}**
 - Tarif: **{{ $tarifAmount }}** €.
+- Quantité: **{{ $quantity }}** €.
 
 <x-mail::button :url="$url" color="success">
 {{ $activiteName }}

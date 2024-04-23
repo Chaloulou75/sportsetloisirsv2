@@ -34,10 +34,10 @@ const adminNotificationsCount = computed(
 const structureNotifCount = computed(() => {
     if (
         page.props.auth.user.structures &&
-        page.props.structures_notifications
+        page.props.structures_notifications_count
     ) {
         return (
-            page.props.structures_notifications[
+            page.props.structures_notifications_count[
                 page.props.auth.user.structures[0].id
             ] || 0
         );

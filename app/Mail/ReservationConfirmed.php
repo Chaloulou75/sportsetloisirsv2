@@ -3,14 +3,8 @@
 namespace App\Mail;
 
 use Carbon\Carbon;
-use App\Models\User;
-use App\Models\Structure;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use App\Models\StructureTarif;
-use App\Models\StructureProduit;
-use App\Models\StructureActivite;
-use App\Models\StructurePlanning;
 use App\Models\ProductReservation;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
@@ -27,12 +21,7 @@ class ReservationConfirmed extends Mailable
      * Create a new message instance.
      */
     public function __construct(
-        protected StructureActivite $activite,
-        protected StructureProduit $produit,
-        protected StructurePlanning $planning,
-        protected StructureTarif $tarif,
-        protected ProductReservation $reservation,
-        protected User $user,
+        protected ProductReservation $reservation
     ) {
     }
 
@@ -52,25 +41,25 @@ class ReservationConfirmed extends Mailable
      */
     public function content(): Content
     {
-
-        $planningStart = Carbon::parse($this->planning->start);
-        $planningEnd = Carbon::parse($this->planning->end);
-        $formattedStart = $planningStart->locale('fr_FR')->isoFormat('dddd D MMMM YYYY [à] H[h]mm');
-        $formattedEnd = $planningEnd->locale('fr_FR')->isoFormat('dddd D MMMM YYYY [à] H[h]mm');
+        // $planningStart = Carbon::parse($this->planning->start);
+        // $planningEnd = Carbon::parse($this->planning->end);
+        // $formattedStart = $planningStart->locale('fr_FR')->isoFormat('dddd D MMMM YYYY [à] H[h]mm');
+        // $formattedEnd = $planningEnd->locale('fr_FR')->isoFormat('dddd D MMMM YYYY [à] H[h]mm');
 
         return new Content(
             markdown: 'emails.reservations.confirmed',
             with: [
                 'url' => route('structures.activites.show', [
-                    'activite' => $this->activite->id,
-                    'slug' => $this->activite->slug_title
+                    'activite' => $this->reservation->activite->id,
+                    'slug' => $this->reservation->activite->slug_title
                 ]),
-                'activiteName' => $this->activite->titre,
-                'tarifAmount' => $this->tarif->amount,
-                'planningStart' => $formattedStart,
-                'planningEnd' =>  $formattedEnd,
-                'userName' => $this->user->name,
-                'userEmail' => $this->user->email,
+                'activiteName' => $this->reservation->activite_title,
+                'tarifAmount' => $this->reservation->tarif_amount,
+                'quantity' => $this->reservation->quantity,
+                // 'planningStart' => $formattedStart,
+                // 'planningEnd' =>  $formattedEnd,
+                'userName' => $this->reservation->user->name,
+                'userEmail' => $this->reservation->user->email,
                 'reservationCode' => $this->reservation->code,
             ],
         );

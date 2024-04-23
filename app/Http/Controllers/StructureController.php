@@ -449,7 +449,7 @@ class StructureController extends Controller
                             ->where('city_id', $validated['city_id'])
                             ->exists();
         if($exists) {
-            return to_route('structures.edit', $structure->slug)->with('error', 'Ce nom de structure existe déjà dans cette ville.');
+            return to_route('structures.edit', $structure)->with('error', 'Ce nom de structure existe déjà dans cette ville.');
         }
 
         $departmentNumber = substr($validated['zip_code'], 0, 2);
@@ -496,7 +496,7 @@ class StructureController extends Controller
             }
         }
 
-        return to_route('structures.edit', $structure->slug)->with('success', 'Votre structure a été mise à jour');
+        return to_route('structures.edit', $structure)->with('success', 'Votre structure a été mise à jour');
     }
 
     /**

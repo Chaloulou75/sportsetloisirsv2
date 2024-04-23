@@ -22,57 +22,58 @@ class ProductReservationController extends Controller
 {
     public function index(Structure $structure): Response
     {
-        $allReservations = ProductReservation::withRelations()->get();
 
-        $allReservationsCount = $allReservations->count();
-
-        $pendingReservations = ProductReservation::withRelations()
-            ->where('pending', true)
-            ->latest()
-            ->get();
-
-        $pendingReservationsCount = $pendingReservations->count();
-
-        $confirmedReservations = ProductReservation::withRelations()
-            ->where('confirmed', true)
-            ->latest()
-            ->get();
-
-        $confirmedReservationsCount = $confirmedReservations->count();
-
-        $finishedReservations = ProductReservation::withRelations()
-                    ->where('finished', true)
-                    ->latest()
-                    ->get();
-
-        $finishedReservationsCount = $finishedReservations->count();
-
-        $cancelledReservations = ProductReservation::withRelations()
-                            ->where('cancelled', true)
-                            ->latest()
-                            ->get();
-
-        $cancelledReservationsCount = $cancelledReservations->count();
+        $structure = Structure::with(['activites' => function ($query) {
+            $query->with(['reservations'])
+                  ->withCount('reservations')
+                  ->orderByDesc('reservations_count')
+                  ->take(3);
+        }])->findOrFail($structure->id);
 
 
-        $totalAmountConfirmed = $confirmedReservations->sum(function ($reservation) {
-            return $reservation->tarif_amount * $reservation->quantity;
+        $structureNotifs = $structure->unreadNotifications;
+
+        $allReservationsQuery = $structure->reservations()
+                        ->with([
+                            'plannings',
+                            'attributs',
+                            'attributs.booking_field',
+                            'attributs.reservation_sous_attributs',
+                            'attributs.reservation_sous_attributs.booking_sous_field', 'cat_tarif.cat_tarif_type',
+                            'user'
+                        ])
+                        ->withCount('plannings')
+                        ->where('paid', true)
+                        ->latest()
+                        ->get();
+
+        $allReservationsCount = $allReservationsQuery->count();
+
+        $pendingReservationsAll = $allReservationsQuery->where('pending', true);
+        $pendingReservationsCount = $pendingReservationsAll->count();
+        $totalAmountPending = $pendingReservationsAll->sum(function ($reservation) {
+            return $this->calculateTotalPrice($reservation);
         });
+        $pendingReservations = $pendingReservationsAll->paginate(10);
 
-        $totalAmountPending = $pendingReservations->sum(function ($reservation) {
-            return $reservation->tarif_amount * $reservation->quantity;
+        $confirmedReservationsAll = $allReservationsQuery->where('confirmed', true);
+        $totalAmountConfirmed = $confirmedReservationsAll->sum(function ($reservation) {
+            return $this->calculateTotalPrice($reservation);
         });
+        $confirmedReservations = $confirmedReservationsAll->paginate(10);
+        $confirmedReservationsCount = $confirmedReservations->total();
 
-        $structure = Structure::withRelations()
-                    ->with(['activites' => function ($query) {
-                        $query->latest()->limit(3);
-                    }])
-                    ->where('slug', $structure->slug)
-                    ->firstOrFail();
+        $finishedReservationsAll = $allReservationsQuery->where('finished', true);
+        $finishedReservations = $finishedReservationsAll->paginate(10);
+        $finishedReservationsCount = $finishedReservations->total();
+
+        $cancelledReservationsAll = $allReservationsQuery->where('cancelled', true);
+        $cancelledReservations = $cancelledReservationsAll->paginate(10);
+        $cancelledReservationsCount = $cancelledReservations->total();
 
         return Inertia::render('Structures/Gestion/Reservations/Index', [
             'structure' => fn () => $structure,
-            'allReservations' => fn () => $allReservations,
+            'structureNotifs' => fn () => $structureNotifs,
             'allReservationsCount' => fn () => $allReservationsCount,
             'confirmedReservations' => fn () => $confirmedReservations,
             'confirmedReservationsCount' => fn () => $confirmedReservationsCount,
@@ -93,7 +94,7 @@ class ProductReservationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $user = auth()->user();
         if(!$user) {
@@ -155,14 +156,7 @@ class ProductReservationController extends Controller
      */
     public function update(Request $request, Structure $structure, ProductReservation $reservation): RedirectResponse
     {
-        $user = User::find($reservation->user_id);
-        $userEmail = $user->email;
-        $produit = StructureProduit::find($reservation->produit_id);
-        $tarif = StructureCatTarif::find($reservation->tarif_id);
-        $planning = StructurePlanning::find($reservation->planning_id);
-        $activiteId = $produit->activite->id;
-        $activite = StructureActivite::find($activiteId);
-
+        $reservation = $reservation->withRelations()->findOrFail($reservation->id);
 
         if($request->status === "confirmed") {
             $randomCode = strval(rand(0000, 9999));
@@ -174,8 +168,8 @@ class ProductReservationController extends Controller
                 'code' => $randomCode,
             ]);
 
-            //envoie email avec le code à 4 chiffres
-            Mail::to($userEmail)->send(new ReservationConfirmed($activite, $produit, $planning, $tarif, $reservation, $user));
+            //envoie email avec le code à 4 chiffres + notification structure + admin
+            Mail::to($reservation->user->email)->send(new ReservationConfirmed($reservation));
 
             return to_route('structures.gestion.reservations.index', $structure)->with('success', 'Réservation modifiée, un email de confirmation avec le code a été envoyé à l\'utlilisateur.');
 
@@ -243,5 +237,19 @@ class ProductReservationController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    private function calculateTotalPrice($reservation)
+    {
+        $totalPrice = 0;
+        if ($reservation->plannings_count > 0) {
+            foreach ($reservation->plannings as $planning) {
+                $price = $planning->pivot->quantity * $reservation->tarif_amount;
+                $totalPrice += $price;
+            }
+        } else {
+            $totalPrice += $reservation->tarif_amount * $reservation->quantity;
+        }
+        return $totalPrice;
     }
 }

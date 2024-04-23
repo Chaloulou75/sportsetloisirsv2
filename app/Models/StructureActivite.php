@@ -77,6 +77,12 @@ class StructureActivite extends Model
         return $this->hasMany(StructureActiviteDate::class, 'structure_activite_id');
     }
 
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(ProductReservation::class, 'activite_id');
+
+    }
+
     /**
      * Get the activite image url.
      */

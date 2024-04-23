@@ -16,62 +16,42 @@ class StructureGestionController extends Controller
      */
     public function index(Structure $structure): Response
     {
-        $structure = Structure::withRelations()->findOrFail($structure->id);
+        $structure = Structure::with(['activites' => function ($query) {
+            $query->with(['reservations'])
+                  ->withCount('reservations')
+                  ->orderByDesc('reservations_count')
+                  ->take(3);
+        }])->findOrFail($structure->id);
+
+
         $structureNotifs = $structure->unreadNotifications;
 
-        $allReservations = ProductReservation::withRelations()
+        $allReservationsQuery = $structure->reservations()
+                        ->with(['plannings', 'cat_tarif.cat_tarif_type', 'user'])
                         ->withCount('plannings')
-                        ->where('structure_id', $structure->id)
                         ->where('paid', true)
-                        ->paginate(10);
-        $allReservationsCount = $allReservations->total();
+                        ->latest()
+                        ->get();
 
-        $pendingReservations = ProductReservation::withRelations()
-            ->withCount('plannings')
-            ->where('structure_id', $structure->id)
-            ->where('paid', true)
-            ->where('pending', true)
-            ->latest()
-            ->paginate(10);
+        $allReservationsCount = $allReservationsQuery->count();
 
-        $pendingReservationsAll = ProductReservation::withRelations()
-                    ->withCount('plannings')
-                    ->where('structure_id', $structure->id)
-                    ->where('paid', true)
-                    ->where('pending', true)
-                    ->get();
-
-        $pendingReservationsCount = $pendingReservations->total();
-
+        $pendingReservationsAll = $allReservationsQuery->where('pending', true);
+        $pendingReservationsCount = $pendingReservationsAll->count();
         $totalAmountPending = $pendingReservationsAll->sum(function ($reservation) {
             return $this->calculateTotalPrice($reservation);
         });
+        $pendingReservations = $pendingReservationsAll->paginate(10);
 
-        $confirmedReservations = ProductReservation::withRelations()
-            ->withCount('plannings')
-            ->where('structure_id', $structure->id)
-            ->where('paid', true)
-            ->where('confirmed', true)
-            ->latest()
-            ->paginate(10);
-        $confirmedReservationsCount = $confirmedReservations->total();
-
-        $confirmedReservationsAll = ProductReservation::withRelations()
-                    ->withCount('plannings')
-                    ->where('structure_id', $structure->id)
-                    ->where('paid', true)
-                    ->where('confirmed', true)
-                    ->get();
-
+        $confirmedReservationsAll = $allReservationsQuery->where('confirmed', true);
         $totalAmountConfirmed = $confirmedReservationsAll->sum(function ($reservation) {
             return $this->calculateTotalPrice($reservation);
         });
-
+        $confirmedReservations = $confirmedReservationsAll->paginate(10);
+        $confirmedReservationsCount = $confirmedReservations->total();
 
         return Inertia::render('Structures/Gestion/Index', [
             'structure' => fn () => $structure,
             'structureNotifs' => fn () => $structureNotifs,
-            'allReservations' => fn () => $allReservations,
             'allReservationsCount' => fn () => $allReservationsCount,
             'confirmedReservations' => fn () => $confirmedReservations,
             'confirmedReservationsCount' => fn () => $confirmedReservationsCount,

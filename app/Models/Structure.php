@@ -170,6 +170,11 @@ class Structure extends Model
         return $this->hasMany(StructurePlanning::class, 'structure_id');
     }
 
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(ProductReservation::class, 'structure_id');
+    }
+
     public function scopeWithRelations(Builder $query): void
     {
         $query->with([
