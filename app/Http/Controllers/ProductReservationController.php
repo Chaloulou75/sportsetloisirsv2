@@ -163,6 +163,7 @@ class ProductReservationController extends Controller
 
             $reservation->update([
                 'confirmed' => true,
+                'datetime_structure_confirmed' => now(),
                 'pending' => false,
                 'finished' => false,
                 'code' => $randomCode,
@@ -179,6 +180,7 @@ class ProductReservationController extends Controller
                 'pending' => false,
                 'finished' => false,
                 'cancelled' => true,
+                'datetime_structure_cancelled' => now(),
                 'code' => null,
             ]);
             return to_route('structures.gestion.reservations.index', $structure)->with('success', 'Réservation refusée.');
@@ -205,6 +207,7 @@ class ProductReservationController extends Controller
                             'confirmed' => false,
                             'pending' => false,
                             'finished' => true,
+                            'datetime_structure_finished' => now(),
                             'cancelled' => false,
                         ]);
                 //email terminée
@@ -220,6 +223,7 @@ class ProductReservationController extends Controller
                 'pending' => false,
                 'finished' => false,
                 'cancelled' => true,
+                'datetime_structure_cancelled' => now(),
                 'code' => null,
             ]);
             //email annulée
