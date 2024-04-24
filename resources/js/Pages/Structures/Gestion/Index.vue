@@ -117,8 +117,10 @@ const formatCurrency = (value) => {
                 <div
                     class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
                 >
-                    <div class="flex items-center justify-between">
-                        <p class="text-xl font-semibold">
+                    <div
+                        class="flex flex-col items-center justify-between md:flex-row"
+                    >
+                        <p class="text-justify text-xl font-semibold">
                             Vous avez
                             <span class="text-indigo-700">{{
                                 pendingReservationsCount
@@ -133,8 +135,10 @@ const formatCurrency = (value) => {
                                 >( {{ structureNotifCount }} non lues)</span
                             >:
                         </p>
-                        <div class="text-2xl font-bold text-indigo-500">
-                            {{ totalAmountPending }} €
+                        <div
+                            class="mt-4 text-2xl font-bold text-indigo-500 md:mt-0"
+                        >
+                            {{ formatCurrency(totalAmountPending) }}
                         </div>
                     </div>
                     <ul class="list-inside list-disc">
@@ -147,67 +151,54 @@ const formatCurrency = (value) => {
                                     isUnreadNotification(reservation),
                             }"
                         >
-                            <span>
-                                <span class="text-sm"
-                                    >N° {{ reservation.id }}:
-                                </span>
-                                <span class="font-semibold">
-                                    {{ reservation.activite_title }} -
+                            <span class="text-sm font-normal text-gray-700">
+                                N° {{ reservation.id }}:
+                                <span class="font-semibold text-indigo-500"
+                                    >{{ reservation.activite_title }} -
                                     {{
                                         reservation.cat_tarif.cat_tarif_type.nom
                                     }}</span
-                                ><span class="text-xs italic">
-                                    (produit n°{{
-                                        reservation.produit_id
-                                    }})</span
                                 >
-
-                                <!-- <span class="text-xs italic"
-                                    >({{
-                                        formattedCriteria(
-                                            reservation.produit_criteres
-                                        )
-                                    }}) -
-                                </span> -->
-                                Réservation faite par
-                                <span class="font-semibold"
-                                    >{{ reservation.user.name }}
-                                </span>
                                 <span class="text-xs italic">
-                                    ({{ reservation.user.email }})</span
-                                >
-                                -
-                                <span
-                                    v-if="reservation.plannings_count < 1"
-                                    class="font-bold text-green-600"
-                                >
-                                    {{
-                                        formatCurrency(reservation.tarif_amount)
-                                    }}</span
-                                >
-                                <span
-                                    v-if="reservation.plannings_count < 1"
-                                    class="ml-5 font-semibold text-indigo-500"
-                                >
-                                    Quantité:
-                                    {{ reservation.quantity }}
+                                    (produit n°{{ reservation.produit_id }})
                                 </span>
-                                <span
-                                    v-if="reservation.plannings_count < 1"
-                                    class="ml-5 font-semibold text-green-600"
-                                >
-                                    Total:
-                                    {{
-                                        formatCurrency(
-                                            reservation.quantity *
+                                <p>
+                                    Réservation faite par
+                                    <span class="font-semibold"
+                                        >{{ reservation.user.name }}
+                                    </span>
+                                    <span class="text-xs italic">
+                                        ({{ reservation.user.email }})</span
+                                    >
+                                </p>
+                                <ul class="list-inside list-disc font-semibold">
+                                    <li v-if="reservation.plannings_count < 1">
+                                        Prix unitaire:
+                                        {{
+                                            formatCurrency(
                                                 reservation.tarif_amount
-                                        )
-                                    }}
-                                </span>
+                                            )
+                                        }}
+                                    </li>
+                                    <li v-if="reservation.plannings_count < 1">
+                                        Quantité:
+                                        {{ reservation.quantity }}
+                                    </li>
+                                    <li v-if="reservation.plannings_count < 1">
+                                        <span class="text-green-600"></span>
+                                        Total:
+                                        {{
+                                            formatCurrency(
+                                                reservation.quantity *
+                                                    reservation.tarif_amount
+                                            )
+                                        }}
+                                    </li>
+                                </ul>
                             </span>
                             <template v-if="reservation.plannings_count > 0">
                                 <div
-                                    class="ml-4"
+                                    class="ml-4 text-sm"
                                     v-for="planning in reservation.plannings"
                                     :key="planning.id"
                                 >
@@ -221,37 +212,39 @@ const formatCurrency = (value) => {
                                             <span class="font-semibold">{{
                                                 formatDate(planning.end)
                                             }}</span>
-                                            <span
-                                                class="ml-5 font-semibold text-green-600"
+                                            <ul
+                                                class="ml-4 list-inside list-disc"
                                             >
-                                                {{
-                                                    formatCurrency(
-                                                        reservation.tarif_amount
-                                                    )
-                                                }}
-                                            </span>
-                                            <span
-                                                class="ml-5 font-semibold text-indigo-500"
-                                            >
-                                                Quantité:
-                                                {{ planning.pivot.quantity }}
-                                            </span>
-                                            <span
-                                                v-if="
-                                                    reservation.plannings_count >
-                                                    0
-                                                "
-                                                class="ml-5 font-semibold text-green-600"
-                                            >
-                                                Total:
-                                                {{
-                                                    formatCurrency(
-                                                        planning.pivot
-                                                            .quantity *
+                                                <li>
+                                                    {{
+                                                        formatCurrency(
                                                             reservation.tarif_amount
-                                                    )
-                                                }}
-                                            </span>
+                                                        )
+                                                    }}
+                                                </li>
+                                                <li>
+                                                    <span
+                                                        class="font-semibold text-indigo-500"
+                                                    >
+                                                        Quantité:
+                                                        {{
+                                                            planning.pivot
+                                                                .quantity
+                                                        }}
+                                                    </span>
+                                                </li>
+
+                                                <li>
+                                                    Total:
+                                                    {{
+                                                        formatCurrency(
+                                                            planning.pivot
+                                                                .quantity *
+                                                                reservation.tarif_amount
+                                                        )
+                                                    }}
+                                                </li>
+                                            </ul>
                                         </li>
                                     </ul>
                                 </div>
@@ -265,7 +258,9 @@ const formatCurrency = (value) => {
                         />
                     </div>
 
-                    <div class="flex w-full items-center justify-end">
+                    <div
+                        class="flex w-full items-center justify-center md:justify-end"
+                    >
                         <Link
                             preserve-scroll
                             :href="
@@ -285,7 +280,9 @@ const formatCurrency = (value) => {
                 <div
                     class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
                 >
-                    <div class="flex items-center justify-between">
+                    <div
+                        class="flex flex-col items-center justify-between md:flex-row"
+                    >
                         <p class="text-xl font-semibold">
                             <span class="text-indigo-700">{{
                                 confirmedReservationsCount
@@ -296,7 +293,9 @@ const formatCurrency = (value) => {
                             <span v-else> réservation</span>
                             en cours:
                         </p>
-                        <div class="text-2xl font-bold text-indigo-500">
+                        <div
+                            class="mt-4 text-2xl font-bold text-indigo-500 md:mt-0"
+                        >
                             {{ formatCurrency(totalAmountConfirmed) }}
                         </div>
                     </div>
@@ -422,7 +421,9 @@ const formatCurrency = (value) => {
                             :only="['confirmedReservations']"
                         />
                     </div>
-                    <div class="flex w-full items-center justify-end">
+                    <div
+                        class="flex w-full items-center justify-center md:justify-end"
+                    >
                         <Link
                             preserve-scroll
                             :href="

@@ -401,7 +401,9 @@ const updateReservation = (reservation) => {
                 <div
                     class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
                 >
-                    <div class="flex items-center justify-between">
+                    <div
+                        class="flex flex-col items-center justify-between md:flex-row"
+                    >
                         <p class="text-xl font-semibold">
                             <span class="text-indigo-700">{{
                                 confirmedReservationsCount
@@ -413,7 +415,7 @@ const updateReservation = (reservation) => {
                             en cours:
                         </p>
                         <div class="text-2xl font-bold text-indigo-500">
-                            {{ totalAmountConfirmed }} €
+                            {{ formatCurrency(totalAmountConfirmed) }}
                         </div>
                     </div>
                     <div class="space-y-8">

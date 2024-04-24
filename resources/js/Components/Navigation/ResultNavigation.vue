@@ -429,7 +429,7 @@ const submitForm = async () => {
                 </Link>
                 <Link
                     preserve-scroll
-                    class="inline-flex w-full justify-between border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
+                    class="inline-flex w-full items-center justify-between border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
                     v-if="user && user.structures.length > 0"
                     :href="
                         route(
@@ -441,20 +441,20 @@ const submitForm = async () => {
                 >
                     Gestion de ma structure
                     <span
-                        class="flex items-center justify-center rounded-full bg-green-500 px-1.5 py-0.5 text-xs text-white"
+                        class="flex items-center justify-center rounded-full bg-green-500 px-2 py-1 text-xs text-white"
                         >{{ structureNotifCount }}</span
                     >
                 </Link>
                 <Link
                     preserve-scroll
-                    class="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
+                    class="inline-flex w-full items-center justify-between border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
                     v-if="user && isAdmin"
                     :href="route('admin.index')"
                 >
                     Gestion du site
                     <span
                         v-if="adminNotificationsCount > 0"
-                        class="flex items-center justify-center rounded-full bg-green-500 px-1.5 py-0.5 text-xs text-white"
+                        class="flex items-center justify-center rounded-full bg-green-500 px-2 py-1 text-xs text-white"
                         >{{ adminNotificationsCount }}</span
                     >
                 </Link>
