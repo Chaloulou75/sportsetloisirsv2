@@ -248,7 +248,6 @@ class PanierPaymentController extends Controller
 
     public function webhook()
     {
-        // This is your Stripe CLI webhook secret for testing your endpoint locally.
         $endpoint_secret = config('services.stripe.webhook');
 
         $payload = @file_get_contents('php://input');

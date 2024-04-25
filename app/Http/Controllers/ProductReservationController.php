@@ -232,7 +232,6 @@ class ProductReservationController extends Controller
 
         // envoie email à l'user et la structure
         return to_route('structures.gestion.reservations.index', $structure)->with('success', 'Réservation modifiée.');
-
     }
 
     /**

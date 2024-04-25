@@ -62,9 +62,7 @@ class HandleInertiaRequests extends Middleware
                     ]
                 ) : null,
             ],
-            'structures_notifications_count' => fn () => $request->user() ? $request->user()->structures->mapWithKeys(function ($structure) {
-                return [$structure->id => $structure->unreadNotifications()->where('type', ReservationPaidToStructure::class)->count()];
-            }) : [],
+
             'user_can' => [
                 'view_admin' => fn () => $request->user() ? $request->user()->can('viewAdmin', User::class) : false,
             ],
@@ -80,6 +78,9 @@ class HandleInertiaRequests extends Middleware
                     'message' => $request->session()->get('message'),
                 ];
             },
+            'structures_notifications_count' => fn () => $request->user() ? $request->user()->structures->mapWithKeys(function ($structure) {
+                return [$structure->id => $structure->unreadNotifications()->where('type', ReservationPaidToStructure::class)->count()];
+            }) : [],
             'admin_notifications_count' => function () use ($request) {
                 $user = $request->user();
                 if ($user && $user->isAdmin()) {
