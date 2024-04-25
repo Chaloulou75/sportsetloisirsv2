@@ -220,7 +220,9 @@ class PanierController extends Controller
         $sessionPanierProducts = array_filter($sessionPanierProducts, function ($item) use ($reservation) {
             return $item['reservation_id'] !== $reservation->id;
         });
-        session()->put('panierProducts', $sessionPanierProducts);
+        if($sessionPanierProducts) {
+            session()->put('panierProducts', $sessionPanierProducts);
+        }
 
         $reservation->delete();
 
