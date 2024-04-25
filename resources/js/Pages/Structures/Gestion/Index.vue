@@ -6,6 +6,9 @@ import dayjs from "dayjs";
 import "dayjs/locale/fr";
 dayjs.locale("fr");
 
+const ReservationsList = defineAsyncComponent(() =>
+    import("@/Components/Reservation/ReservationsList.vue")
+);
 const Pagination = defineAsyncComponent(() =>
     import("@/Components/Pagination.vue")
 );
@@ -38,15 +41,6 @@ const structureNotifCount = computed(() => {
     return 0;
 });
 
-const isUnreadNotification = computed(() => {
-    return (reservation) => {
-        return props.structureNotifs.some(
-            (notification) =>
-                notification.data.reservation_id === reservation.id
-        );
-    };
-});
-
 const formattedCriteria = (criteria) => {
     const criteriaObject = JSON.parse(criteria);
     return formatObject(criteriaObject);
@@ -59,10 +53,6 @@ const formatObject = (obj) => {
 };
 
 const currentMonth = ref(dayjs().format("MMMM YYYY"));
-const formatDate = (dateString) => {
-    const date = dayjs(dateString);
-    return date.format("dddd D MMMM YYYY à H[h]mm");
-};
 
 const formatCurrency = (value) => {
     let numericValue;
@@ -115,7 +105,7 @@ const formatCurrency = (value) => {
 
                 <!-- réservations en attente -->
                 <div
-                    class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
+                    class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-2 py-6 shadow-md"
                 >
                     <div
                         class="flex flex-col items-center justify-between md:flex-row"
@@ -141,116 +131,11 @@ const formatCurrency = (value) => {
                             {{ formatCurrency(totalAmountPending) }}
                         </div>
                     </div>
-                    <ul class="list-inside list-disc">
-                        <li
-                            v-for="reservation in pendingReservations.data"
-                            :key="reservation.id"
-                            class="mb-4 px-2 py-2"
-                            :class="{
-                                'border border-blue-300 bg-white':
-                                    isUnreadNotification(reservation),
-                            }"
-                        >
-                            <span class="text-sm font-normal text-gray-700">
-                                N° {{ reservation.id }}:
-                                <span class="font-semibold text-indigo-500"
-                                    >{{ reservation.activite_title }} -
-                                    {{
-                                        reservation.cat_tarif.cat_tarif_type.nom
-                                    }}</span
-                                >
-                                <span class="text-xs italic">
-                                    (produit n°{{ reservation.produit_id }})
-                                </span>
-                                <p>
-                                    Réservation faite par
-                                    <span class="font-semibold"
-                                        >{{ reservation.user.name }}
-                                    </span>
-                                    <span class="text-xs italic">
-                                        ({{ reservation.user.email }})</span
-                                    >
-                                </p>
-                                <ul class="list-inside list-disc font-semibold">
-                                    <li v-if="reservation.plannings_count < 1">
-                                        Prix unitaire:
-                                        {{
-                                            formatCurrency(
-                                                reservation.tarif_amount
-                                            )
-                                        }}
-                                    </li>
-                                    <li v-if="reservation.plannings_count < 1">
-                                        Quantité:
-                                        {{ reservation.quantity }}
-                                    </li>
-                                    <li v-if="reservation.plannings_count < 1">
-                                        <span class="text-green-600"></span>
-                                        Total:
-                                        {{
-                                            formatCurrency(
-                                                reservation.quantity *
-                                                    reservation.tarif_amount
-                                            )
-                                        }}
-                                    </li>
-                                </ul>
-                            </span>
-                            <template v-if="reservation.plannings_count > 0">
-                                <div
-                                    class="ml-4 text-sm"
-                                    v-for="planning in reservation.plannings"
-                                    :key="planning.id"
-                                >
-                                    <ul class="list-inside list-disc">
-                                        <li>
-                                            du
-                                            <span class="font-semibold">{{
-                                                formatDate(planning.start)
-                                            }}</span>
-                                            au
-                                            <span class="font-semibold">{{
-                                                formatDate(planning.end)
-                                            }}</span>
-                                            <ul
-                                                class="ml-4 list-inside list-disc"
-                                            >
-                                                <li>
-                                                    {{
-                                                        formatCurrency(
-                                                            reservation.tarif_amount
-                                                        )
-                                                    }}
-                                                </li>
-                                                <li>
-                                                    <span
-                                                        class="font-semibold text-indigo-500"
-                                                    >
-                                                        Quantité:
-                                                        {{
-                                                            planning.pivot
-                                                                .quantity
-                                                        }}
-                                                    </span>
-                                                </li>
-
-                                                <li>
-                                                    Total:
-                                                    {{
-                                                        formatCurrency(
-                                                            planning.pivot
-                                                                .quantity *
-                                                                reservation.tarif_amount
-                                                        )
-                                                    }}
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </template>
-                        </li>
-                    </ul>
+                    <ReservationsList
+                        :reservations="pendingReservations.data"
+                        :structure="structure"
+                        :notifications="structureNotifs"
+                    />
                     <div class="flex w-full items-center justify-end">
                         <Pagination
                             :links="pendingReservations.links"
@@ -278,7 +163,7 @@ const formatCurrency = (value) => {
 
                 <!-- réservations en cours -->
                 <div
-                    class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
+                    class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-2 py-6 shadow-sm"
                 >
                     <div
                         class="flex flex-col items-center justify-between md:flex-row"
@@ -299,122 +184,11 @@ const formatCurrency = (value) => {
                             {{ formatCurrency(totalAmountConfirmed) }}
                         </div>
                     </div>
-                    <ul class="list-inside list-disc">
-                        <li
-                            v-for="reservation in confirmedReservations.data"
-                            :key="reservation.id"
-                        >
-                            <span>
-                                <span class="text-sm"
-                                    >N° {{ reservation.id }}:
-                                </span>
-                                <span class="font-semibold">
-                                    {{ reservation.activite_title }} -
-                                    {{
-                                        reservation.cat_tarif.cat_tarif_type.nom
-                                    }}</span
-                                ><span class="text-xs italic">
-                                    (produit n°{{
-                                        reservation.produit_id
-                                    }})</span
-                                >
-
-                                <!-- <span class="text-xs italic"
-                                    >({{
-                                        formattedCriteria(
-                                            reservation.produit_criteres
-                                        )
-                                    }}) -
-                                </span> -->
-                                Réservation faite par
-                                <span class="font-semibold"
-                                    >{{ reservation.user.name }}
-                                </span>
-                                <span class="text-xs italic">
-                                    ({{ reservation.user.email }})</span
-                                >
-                                -
-                                <span
-                                    v-if="reservation.plannings_count < 1"
-                                    class="font-bold text-green-600"
-                                >
-                                    {{
-                                        formatCurrency(reservation.tarif_amount)
-                                    }}</span
-                                >
-                                <span
-                                    v-if="reservation.plannings_count < 1"
-                                    class="ml-5 font-semibold text-indigo-500"
-                                >
-                                    Quantité:
-                                    {{ reservation.quantity }}
-                                </span>
-                                <span
-                                    v-if="reservation.plannings_count < 1"
-                                    class="ml-5 font-semibold text-green-600"
-                                >
-                                    Total:
-                                    {{
-                                        formatCurrency(
-                                            reservation.quantity *
-                                                reservation.tarif_amount
-                                        )
-                                    }}
-                                </span>
-                            </span>
-                            <template v-if="reservation.plannings_count > 0">
-                                <div
-                                    class="ml-4"
-                                    v-for="planning in reservation.plannings"
-                                    :key="planning.id"
-                                >
-                                    <ul class="list-inside list-disc">
-                                        <li>
-                                            du
-                                            <span class="font-semibold">{{
-                                                formatDate(planning.start)
-                                            }}</span>
-                                            au
-                                            <span class="font-semibold">{{
-                                                formatDate(planning.end)
-                                            }}</span>
-                                            <span
-                                                class="ml-5 font-semibold text-green-600"
-                                            >
-                                                {{
-                                                    formatCurrency(
-                                                        reservation.tarif_amount
-                                                    )
-                                                }}
-                                            </span>
-                                            <span
-                                                class="ml-5 font-semibold text-indigo-500"
-                                            >
-                                                Quantité:
-                                                {{ planning.pivot.quantity }}
-                                            </span>
-                                            <span
-                                                v-if="
-                                                    reservation.plannings_count >
-                                                    0
-                                                "
-                                                class="ml-5 font-semibold text-green-600"
-                                            >
-                                                Total:
-                                                {{
-                                                    formatCurrency(
-                                                        planning.pivot
-                                                            .quantity *
-                                                            reservation.tarif_amount
-                                                    )
-                                                }}
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </template>
-                        </li>
-                    </ul>
+                    <ReservationsList
+                        :reservations="confirmedReservations.data"
+                        :structure="structure"
+                        :notifications="structureNotifs"
+                    />
                     <div class="flex w-full items-center justify-end">
                         <Pagination
                             :links="confirmedReservations.links"
@@ -441,7 +215,7 @@ const formatCurrency = (value) => {
 
                 <!-- Statistiques -->
                 <div
-                    class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
+                    class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-2 py-6 shadow-md"
                 >
                     <h2 class="text-2xl font-semibold">
                         Vos statistiques de {{ currentMonth }}:
@@ -499,7 +273,7 @@ const formatCurrency = (value) => {
 
                 <!-- activités populaires -->
                 <div
-                    class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-4 py-6 shadow-md"
+                    class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-2 py-6 shadow-md"
                 >
                     <h2 class="text-2xl font-semibold">
                         Vos activités les plus populaires:

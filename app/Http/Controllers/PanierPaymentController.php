@@ -95,6 +95,10 @@ class PanierPaymentController extends Controller
 
                 if ($reservation->plannings_count > 0) {
                     foreach ($reservation->plannings as $planning) {
+
+                        $start = Carbon::parse($planning->start)->isoFormat('LLLL');
+                        $end = Carbon::parse($planning->end)->isoFormat('LLLL');
+
                         $price = $planning->pivot->quantity * $reservation->tarif_amount;
                         $totalPrice += $price;
                         $lineItems[] = [
@@ -102,7 +106,7 @@ class PanierPaymentController extends Controller
                                 'currency' => 'eur',
                                 'product_data' => [
                                     'name' => $reservation->activite_title,
-                                    'description' => $description,
+                                    'description' => 'Du ' . $start . ' au ' . $end . ".\n" . $description,
                                 ],
                                 'unit_amount' => $reservation->tarif_amount * 100,
                             ],
@@ -187,10 +191,13 @@ class PanierPaymentController extends Controller
                 $user = auth()->user();
 
                 foreach ($reservations as $reservation) {
+
+                    $payment_method = !empty($sessionStripe->payment_method_types) ? $sessionStripe->payment_method_types[0] : null;
+
                     $reservation->update([
                         'user_payeur_id' => $user->id,
                         'paid' => true,
-                        'paiement_method' => $sessionStripe->payment_method_types[0],
+                        'paiement_method' => $payment_method,
                         'paiement_datetime' => now(),
                     ]);
                     $user->notify(new ReservationPaid($reservation, $sessionStripe));
@@ -255,10 +262,10 @@ class PanierPaymentController extends Controller
                 $endpoint_secret
             );
         } catch (\UnexpectedValueException $e) {
-            // Invalid payload
+            Log::error('Invalid payload: ' . $e->getMessage());
             return response('', 400);
         } catch (\Stripe\Exception\SignatureVerificationException $e) {
-            // Invalid signature
+            Log::error('Invalid signature: ' . $e->getMessage());
             return response('', 400);
         }
 
@@ -276,25 +283,39 @@ class PanierPaymentController extends Controller
                     $user = auth()->user();
                     // Update all matching reservations at once
                     foreach ($reservations as $reservation) {
+
+                        $payment_method = !empty($sessionStripe->payment_method_types) ? $sessionStripe->payment_method_types[0] : null;
+
                         $reservation->update([
                             'user_payeur_id' => $user->id,
                             'paid' => true,
-                            'paiement_method' => $sessionStripe->payment_method_types[0],
+                            'paiement_method' => $payment_method,
                             'paiement_datetime' => now(),
                         ]);
                         $user->notify(new ReservationPaid($reservation, $sessionStripe));
 
                         $reservation->structure->notify(new ReservationPaidToStructure($reservation, $sessionStripe));
 
+                        $admins = User::whereHas('roles', function ($query) {
+                            $query->where('name', 'admin');
+                        })->get();
+                        if($admins) {
+                            foreach ($admins as $admin) {
+                                $admin->notify(new ReservationPaidToAdmin($reservation, $sessionStripe));
+                            }
+                        }
                     }
                 }
 
+                // handle other event types
+                break;
 
-                // ... handle other event types
-                // no break
             default:
-                echo 'Received unknown event type ' . $event->type;
+
+                Log::info('Received unknown event type: ' . $event->type);
+                return response('Received unknown event type', 400);
+
         }
-        return response('');
+        return response('ok', 200);
     }
 }

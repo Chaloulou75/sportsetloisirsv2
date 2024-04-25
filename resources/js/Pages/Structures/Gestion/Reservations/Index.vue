@@ -7,6 +7,9 @@ import dayjs from "dayjs";
 import "dayjs/locale/fr";
 dayjs.locale("fr");
 
+const ReservationsList = defineAsyncComponent(() =>
+    import("@/Components/Reservation/ReservationsList.vue")
+);
 const Pagination = defineAsyncComponent(() =>
     import("@/Components/Pagination.vue")
 );
@@ -189,205 +192,32 @@ const updateReservation = (reservation) => {
                         </div>
                     </div>
                     <div class="space-y-8">
-                        <div
-                            class="space-y-4"
-                            v-for="reservation in pendingReservations.data"
-                            :key="reservation.id"
+                        <ReservationsList
+                            :reservations="pendingReservations.data"
+                            :structure="structure"
+                            :notifications="structureNotifs"
                         >
-                            <p>
-                                &bullet; Vous avez reçu une demande de
-                                réservation de la part de
-                                <span
-                                    v-if="reservation.user"
-                                    class="font-semibold text-indigo-500"
-                                    >{{ reservation.user.name }}</span
-                                >
-                            </p>
-                            <p class="font-semibold text-indigo-500">
-                                {{ reservation.activite_title }}
-                            </p>
-                            <span>
-                                <span class="text-sm"
-                                    >N° {{ reservation.id }}:
-                                </span>
-                                <span class="font-semibold">
-                                    {{ reservation.activite_title }} -
-                                    {{
-                                        reservation.cat_tarif.cat_tarif_type.nom
-                                    }}</span
-                                ><span class="text-xs italic">
-                                    (produit n°{{
-                                        reservation.produit_id
-                                    }})</span
-                                >
-
-                                <span class="text-xs italic"
-                                    >({{
-                                        formattedCriteria(
-                                            reservation.produit_criteres
-                                        )
-                                    }}) -
-                                </span>
-                                Réservation faite par
-                                <span class="font-semibold"
-                                    >{{ reservation.user.name }}
-                                </span>
-                                <span class="text-xs italic">
-                                    ({{ reservation.user.email }})</span
-                                >
-                                -
-                                <span
-                                    v-if="reservation.plannings_count < 1"
-                                    class="font-bold text-green-600"
-                                >
-                                    {{
-                                        formatCurrency(reservation.tarif_amount)
-                                    }}</span
-                                >
-                                <span
-                                    v-if="reservation.plannings_count < 1"
-                                    class="ml-5 font-semibold text-indigo-500"
-                                >
-                                    Quantité:
-                                    {{ reservation.quantity }}
-                                </span>
-                                <span
-                                    v-if="reservation.plannings_count < 1"
-                                    class="ml-5 font-semibold text-green-600"
-                                >
-                                    Total:
-                                    {{
-                                        formatCurrency(
-                                            reservation.quantity *
-                                                reservation.tarif_amount
-                                        )
-                                    }}
-                                </span>
-                            </span>
-                            <template v-if="reservation.plannings_count > 0">
+                            <template #item="{ reservation }">
                                 <div
-                                    class="ml-4"
-                                    v-for="planning in reservation.plannings"
-                                    :key="planning.id"
+                                    class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-4"
                                 >
-                                    <ul class="list-inside list-disc">
-                                        <li>
-                                            du
-                                            <span class="font-semibold">{{
-                                                formatDate(planning.start)
-                                            }}</span>
-                                            au
-                                            <span class="font-semibold">{{
-                                                formatDate(planning.end)
-                                            }}</span>
-                                            <span
-                                                class="ml-5 font-semibold text-green-600"
-                                            >
-                                                {{
-                                                    formatCurrency(
-                                                        reservation.tarif_amount
-                                                    )
-                                                }}
-                                            </span>
-                                            <span
-                                                class="ml-5 font-semibold text-indigo-500"
-                                            >
-                                                Quantité:
-                                                {{ planning.pivot.quantity }}
-                                            </span>
-                                            <span
-                                                v-if="
-                                                    reservation.plannings_count >
-                                                    0
-                                                "
-                                                class="ml-5 font-semibold text-green-600"
-                                            >
-                                                Total:
-                                                {{
-                                                    formatCurrency(
-                                                        planning.pivot
-                                                            .quantity *
-                                                            reservation.tarif_amount
-                                                    )
-                                                }}
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </template>
-
-                            <template
-                                v-if="
-                                    reservation.attributs &&
-                                    reservation.attributs.length > 0
-                                "
-                                ><p class="px-4 text-sm text-gray-700">
-                                    Les attributs liés à cette réservation:
-                                </p>
-
-                                <div
-                                    class="inline-flex space-x-2 px-4 text-sm"
-                                    v-for="attribut in reservation.attributs"
-                                    :key="attribut.id"
-                                >
-                                    <div
-                                        class="inline-flex"
-                                        v-if="attribut.booking_field"
+                                    <button
+                                        type="button"
+                                        @click="confirmReservation(reservation)"
+                                        class="rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-indigo-500 shadow hover:bg-gray-100 hover:text-indigo-800"
                                     >
-                                        <div>
-                                            {{ attribut.booking_field.nom }}:
-                                        </div>
-                                        <div v-if="attribut.valeur">
-                                            {{ attribut.valeur }}
-                                            <div
-                                                v-if="
-                                                    attribut.reservation_sous_attributs &&
-                                                    attribut
-                                                        .reservation_sous_attributs
-                                                        .length > 0
-                                                "
-                                                class="text-xs"
-                                            >
-                                                <span
-                                                    v-for="sousattribut in attribut.reservation_sous_attributs"
-                                                    :key="sousattribut.id"
-                                                    class="text-xs text-gray-700"
-                                                    ><span
-                                                        class="text-slate-500"
-                                                        v-if="
-                                                            sousattribut.booking_sous_field
-                                                        "
-                                                        >{{
-                                                            sousattribut
-                                                                .booking_sous_field
-                                                                .nom
-                                                        }}:
-                                                    </span>
-                                                    {{ sousattribut.valeur }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                        Confirmer
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="refusReservation(reservation)"
+                                        class="rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-red-500 shadow hover:bg-red-50 hover:text-red-800"
+                                    >
+                                        Refuser
+                                    </button>
                                 </div>
                             </template>
-
-                            <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
-                                <button
-                                    type="button"
-                                    @click="confirmReservation(reservation)"
-                                    class="rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-indigo-500 shadow hover:bg-gray-100 hover:text-indigo-800"
-                                >
-                                    Confirmer
-                                </button>
-                                <button
-                                    type="button"
-                                    @click="refusReservation(reservation)"
-                                    class="rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-red-500 shadow hover:bg-red-50 hover:text-red-800"
-                                >
-                                    Refuser
-                                </button>
-                            </div>
-                        </div>
+                        </ReservationsList>
                         <div class="flex w-full items-center justify-end">
                             <Pagination
                                 :links="pendingReservations.links"
@@ -419,148 +249,35 @@ const updateReservation = (reservation) => {
                         </div>
                     </div>
                     <div class="space-y-8">
-                        <div
-                            class="space-y-4"
-                            v-for="(
-                                reservation, index
-                            ) in confirmedReservations.data"
-                            :key="reservation.id"
-                            :index="index"
+                        <ReservationsList
+                            :reservations="confirmedReservations.data"
+                            :structure="structure"
+                            :notifications="structureNotifs"
                         >
-                            <p>
-                                &bullet; Vous avez reçu une demande de
-                                réservation de la part de
-                                <span class="font-semibold text-indigo-500">{{
-                                    reservation.user.name
-                                }}</span>
-                            </p>
-                            <span>
-                                <span class="text-sm"
-                                    >N° {{ reservation.id }}:
-                                </span>
-                                <span class="font-semibold">
-                                    {{ reservation.activite_title }} -
-                                    {{
-                                        reservation.cat_tarif.cat_tarif_type.nom
-                                    }}</span
-                                ><span class="text-xs italic">
-                                    (produit n°{{
-                                        reservation.produit_id
-                                    }})</span
-                                >
-
-                                <span class="text-xs italic"
-                                    >({{
-                                        formattedCriteria(
-                                            reservation.produit_criteres
-                                        )
-                                    }}) -
-                                </span>
-                                Réservation faite par
-                                <span class="font-semibold"
-                                    >{{ reservation.user.name }}
-                                </span>
-                                <span class="text-xs italic">
-                                    ({{ reservation.user.email }})</span
-                                >
-                                -
-                                <span
-                                    v-if="reservation.plannings_count < 1"
-                                    class="font-bold text-green-600"
-                                >
-                                    {{
-                                        formatCurrency(reservation.tarif_amount)
-                                    }}</span
-                                >
-                                <span
-                                    v-if="reservation.plannings_count < 1"
-                                    class="ml-5 font-semibold text-indigo-500"
-                                >
-                                    Quantité:
-                                    {{ reservation.quantity }}
-                                </span>
-                                <span
-                                    v-if="reservation.plannings_count < 1"
-                                    class="ml-5 font-semibold text-green-600"
-                                >
-                                    Total:
-                                    {{
-                                        formatCurrency(
-                                            reservation.quantity *
-                                                reservation.tarif_amount
-                                        )
-                                    }}
-                                </span>
-                            </span>
-                            <template v-if="reservation.plannings_count > 0">
+                            <template #item="{ reservation }">
                                 <div
-                                    class="ml-4"
-                                    v-for="planning in reservation.plannings"
-                                    :key="planning.id"
+                                    class="grid grid-cols-1 gap-4 md:grid-cols-4"
                                 >
-                                    <ul class="list-inside list-disc">
-                                        <li>
-                                            du
-                                            <span class="font-semibold">{{
-                                                formatDate(planning.start)
-                                            }}</span>
-                                            au
-                                            <span class="font-semibold">{{
-                                                formatDate(planning.end)
-                                            }}</span>
-                                            <span
-                                                class="ml-5 font-semibold text-green-600"
-                                            >
-                                                {{
-                                                    formatCurrency(
-                                                        reservation.tarif_amount
-                                                    )
-                                                }}
-                                            </span>
-                                            <span
-                                                class="ml-5 font-semibold text-indigo-500"
-                                            >
-                                                Quantité:
-                                                {{ planning.pivot.quantity }}
-                                            </span>
-                                            <span
-                                                v-if="
-                                                    reservation.plannings_count >
-                                                    0
-                                                "
-                                                class="ml-5 font-semibold text-green-600"
-                                            >
-                                                Total:
-                                                {{
-                                                    formatCurrency(
-                                                        planning.pivot
-                                                            .quantity *
-                                                            reservation.tarif_amount
-                                                    )
-                                                }}
-                                            </span>
-                                        </li>
-                                    </ul>
+                                    <CodeForm
+                                        :structure="structure"
+                                        :reservation="reservation"
+                                        :errors="errors[index]"
+                                    />
+                                    <div class="w-full place-self-end">
+                                        <button
+                                            type="button"
+                                            @click="
+                                                cancelReservation(reservation)
+                                            "
+                                            class="w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-red-500 shadow hover:bg-red-50 hover:text-red-800"
+                                        >
+                                            Annuler
+                                        </button>
+                                    </div>
                                 </div>
                             </template>
+                        </ReservationsList>
 
-                            <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
-                                <CodeForm
-                                    :structure="structure"
-                                    :reservation="reservation"
-                                    :errors="errors[index]"
-                                />
-                                <div class="w-full place-self-end">
-                                    <button
-                                        type="button"
-                                        @click="cancelReservation(reservation)"
-                                        class="w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-lg text-red-500 shadow hover:bg-red-50 hover:text-red-800"
-                                    >
-                                        Annuler
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
                         <div class="flex w-full items-center justify-end">
                             <Pagination
                                 :links="confirmedReservations.links"
@@ -591,127 +308,12 @@ const updateReservation = (reservation) => {
                         </div> -->
                     </div>
                     <div class="space-y-8">
-                        <div
-                            class="space-y-4"
-                            v-for="reservation in finishedReservations.data"
-                            :key="reservation.id"
-                        >
-                            <p>
-                                &bullet; Réservation de la part de
-                                <span class="font-semibold text-indigo-500">{{
-                                    reservation.user.name
-                                }}</span>
-                            </p>
-                            <span>
-                                <span class="text-sm"
-                                    >N° {{ reservation.id }}:
-                                </span>
-                                <span class="font-semibold">
-                                    {{ reservation.activite_title }} -
-                                    {{
-                                        reservation.cat_tarif.cat_tarif_type.nom
-                                    }}</span
-                                ><span class="text-xs italic">
-                                    (produit n°{{
-                                        reservation.produit_id
-                                    }})</span
-                                >
+                        <ReservationsList
+                            :reservations="finishedReservations.data"
+                            :structure="structure"
+                            :notifications="structureNotifs"
+                        />
 
-                                <span class="text-xs italic"
-                                    >({{
-                                        formattedCriteria(
-                                            reservation.produit_criteres
-                                        )
-                                    }}) -
-                                </span>
-                                Réservation faite par
-                                <span class="font-semibold"
-                                    >{{ reservation.user.name }}
-                                </span>
-                                <span class="text-xs italic">
-                                    ({{ reservation.user.email }})</span
-                                >
-                                -
-                                <span
-                                    v-if="reservation.plannings_count < 1"
-                                    class="font-bold text-green-600"
-                                >
-                                    {{
-                                        formatCurrency(reservation.tarif_amount)
-                                    }}</span
-                                >
-                                <span
-                                    v-if="reservation.plannings_count < 1"
-                                    class="ml-5 font-semibold text-indigo-500"
-                                >
-                                    Quantité:
-                                    {{ reservation.quantity }}
-                                </span>
-                                <span
-                                    v-if="reservation.plannings_count < 1"
-                                    class="ml-5 font-semibold text-green-600"
-                                >
-                                    Total:
-                                    {{
-                                        formatCurrency(
-                                            reservation.quantity *
-                                                reservation.tarif_amount
-                                        )
-                                    }}
-                                </span>
-                            </span>
-                            <template v-if="reservation.plannings_count > 0">
-                                <div
-                                    class="ml-4"
-                                    v-for="planning in reservation.plannings"
-                                    :key="planning.id"
-                                >
-                                    <ul class="list-inside list-disc">
-                                        <li>
-                                            du
-                                            <span class="font-semibold">{{
-                                                formatDate(planning.start)
-                                            }}</span>
-                                            au
-                                            <span class="font-semibold">{{
-                                                formatDate(planning.end)
-                                            }}</span>
-                                            <span
-                                                class="ml-5 font-semibold text-green-600"
-                                            >
-                                                {{
-                                                    formatCurrency(
-                                                        reservation.tarif_amount
-                                                    )
-                                                }}
-                                            </span>
-                                            <span
-                                                class="ml-5 font-semibold text-indigo-500"
-                                            >
-                                                Quantité:
-                                                {{ planning.pivot.quantity }}
-                                            </span>
-                                            <span
-                                                v-if="
-                                                    reservation.plannings_count >
-                                                    0
-                                                "
-                                                class="ml-5 font-semibold text-green-600"
-                                            >
-                                                Total:
-                                                {{
-                                                    formatCurrency(
-                                                        planning.pivot
-                                                            .quantity *
-                                                            reservation.tarif_amount
-                                                    )
-                                                }}
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </template>
-                        </div>
                         <div class="flex w-full items-center justify-end">
                             <Pagination
                                 :links="finishedReservations.links"
@@ -742,127 +344,11 @@ const updateReservation = (reservation) => {
                         </div> -->
                     </div>
                     <div class="space-y-8">
-                        <div
-                            class="space-y-4"
-                            v-for="reservation in cancelledReservations.data"
-                            :key="reservation.id"
-                        >
-                            <p>
-                                &bullet; Réservation de la part de
-                                <span class="font-semibold text-indigo-500">{{
-                                    reservation.user.name
-                                }}</span>
-                            </p>
-                            <span>
-                                <span class="text-sm"
-                                    >N° {{ reservation.id }}:
-                                </span>
-                                <span class="font-semibold">
-                                    {{ reservation.activite_title }} -
-                                    {{
-                                        reservation.cat_tarif.cat_tarif_type.nom
-                                    }}</span
-                                ><span class="text-xs italic">
-                                    (produit n°{{
-                                        reservation.produit_id
-                                    }})</span
-                                >
-
-                                <span class="text-xs italic"
-                                    >({{
-                                        formattedCriteria(
-                                            reservation.produit_criteres
-                                        )
-                                    }}) -
-                                </span>
-                                Réservation faite par
-                                <span class="font-semibold"
-                                    >{{ reservation.user.name }}
-                                </span>
-                                <span class="text-xs italic">
-                                    ({{ reservation.user.email }})</span
-                                >
-                                -
-                                <span
-                                    v-if="reservation.plannings_count < 1"
-                                    class="font-bold text-green-600"
-                                >
-                                    {{
-                                        formatCurrency(reservation.tarif_amount)
-                                    }}</span
-                                >
-                                <span
-                                    v-if="reservation.plannings_count < 1"
-                                    class="ml-5 font-semibold text-indigo-500"
-                                >
-                                    Quantité:
-                                    {{ reservation.quantity }}
-                                </span>
-                                <span
-                                    v-if="reservation.plannings_count < 1"
-                                    class="ml-5 font-semibold text-green-600"
-                                >
-                                    Total:
-                                    {{
-                                        formatCurrency(
-                                            reservation.quantity *
-                                                reservation.tarif_amount
-                                        )
-                                    }}
-                                </span>
-                            </span>
-                            <template v-if="reservation.plannings_count > 0">
-                                <div
-                                    class="ml-4"
-                                    v-for="planning in reservation.plannings"
-                                    :key="planning.id"
-                                >
-                                    <ul class="list-inside list-disc">
-                                        <li>
-                                            du
-                                            <span class="font-semibold">{{
-                                                formatDate(planning.start)
-                                            }}</span>
-                                            au
-                                            <span class="font-semibold">{{
-                                                formatDate(planning.end)
-                                            }}</span>
-                                            <span
-                                                class="ml-5 font-semibold text-green-600"
-                                            >
-                                                {{
-                                                    formatCurrency(
-                                                        reservation.tarif_amount
-                                                    )
-                                                }}
-                                            </span>
-                                            <span
-                                                class="ml-5 font-semibold text-indigo-500"
-                                            >
-                                                Quantité:
-                                                {{ planning.pivot.quantity }}
-                                            </span>
-                                            <span
-                                                v-if="
-                                                    reservation.plannings_count >
-                                                    0
-                                                "
-                                                class="ml-5 font-semibold text-green-600"
-                                            >
-                                                Total:
-                                                {{
-                                                    formatCurrency(
-                                                        planning.pivot
-                                                            .quantity *
-                                                            reservation.tarif_amount
-                                                    )
-                                                }}
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </template>
-                        </div>
+                        <ReservationsList
+                            :reservations="cancelledReservations.data"
+                            :structure="structure"
+                            :notifications="structureNotifs"
+                        />
                         <div class="flex w-full items-center justify-end">
                             <Pagination
                                 :links="cancelledReservations.links"
