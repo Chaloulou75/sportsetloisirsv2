@@ -17,6 +17,7 @@ use App\Models\ProductReservation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
+use App\Http\Resources\ListDisciplineResource;
 use App\Models\LienDisCatTarBookingFieldSousField;
 
 class PanierController extends Controller
@@ -52,7 +53,7 @@ class PanierController extends Controller
 
         return Inertia::render('Panier/Index', [
             'familles' => fn () => FamilleResource::collection($familles),
-            'listDisciplines' => fn () => $listDisciplines,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => $allCities,
             'reservations' => fn () => $reservations ?? null
         ]);

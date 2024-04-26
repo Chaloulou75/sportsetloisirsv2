@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
+use App\Http\Resources\ListDisciplineResource;
 
 class MentionController extends Controller
 {
@@ -28,7 +29,7 @@ class MentionController extends Controller
 
         return Inertia::render('Mentions/Index', [
             'familles' => fn () => FamilleResource::collection($familles),
-            'listDisciplines' => fn () => $listDisciplines,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => $allCities,
         ]);
     }

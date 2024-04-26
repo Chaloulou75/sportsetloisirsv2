@@ -21,6 +21,7 @@ use App\Notifications\ReservationPaid;
 use App\Http\Resources\FamilleResource;
 use Stripe\Exception\ApiErrorException;
 use App\Notifications\ReservationPaidToAdmin;
+use App\Http\Resources\ListDisciplineResource;
 use App\Notifications\ReservationPaidToStructure;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -59,7 +60,7 @@ class PanierPaymentController extends Controller
         }
         return Inertia::render('Panier/Payment/Index', [
             'familles' => fn () => FamilleResource::collection($familles),
-            'listDisciplines' => fn () => $listDisciplines,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => $allCities,
             'reservations' => fn () => $reservations ?? null,
             'user' => fn () =>  $user ?? null,
@@ -216,7 +217,7 @@ class PanierPaymentController extends Controller
 
             return Inertia::render('Panier/Payment/Success', [
                 'familles' => fn () => FamilleResource::collection($familles),
-                'listDisciplines' => fn () => $listDisciplines,
+                'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
                 'allCities' => fn () => $allCities,
             ]);
         } catch (\Stripe\Exception\ApiErrorException $e) {
@@ -238,7 +239,7 @@ class PanierPaymentController extends Controller
 
         return Inertia::render('Panier/Payment/Cancel', [
             'familles' => fn () => FamilleResource::collection($familles),
-            'listDisciplines' => fn () => $listDisciplines,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => $allCities,
         ]);
 
