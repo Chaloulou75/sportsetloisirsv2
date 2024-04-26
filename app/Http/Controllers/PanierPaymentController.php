@@ -34,10 +34,10 @@ class PanierPaymentController extends Controller
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
-        $allCities = Cache::remember('allCities', 600, function () {
+        $allCities = Cache::remember('all_cities', 600, function () {
             return City::withProducts()->get();
         });
-        $listDisciplines = Cache::remember('listDisciplines', 600, function () {
+        $listDisciplines = Cache::remember('list_disciplines', 600, function () {
             return ListDiscipline::withProducts()->get();
         });
 
@@ -166,10 +166,10 @@ class PanierPaymentController extends Controller
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
-        $allCities = Cache::remember('allCities', 600, function () {
+        $allCities = Cache::remember('all_cities', 600, function () {
             return City::withProducts()->get();
         });
-        $listDisciplines = Cache::remember('listDisciplines', 600, function () {
+        $listDisciplines = Cache::remember('list_disciplines', 600, function () {
             return ListDiscipline::withProducts()->get();
         });
 
@@ -231,10 +231,10 @@ class PanierPaymentController extends Controller
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
-        $allCities = Cache::remember('allCities', 600, function () {
+        $allCities = Cache::remember('all_cities', 600, function () {
             return City::withProducts()->get();
         });
-        $listDisciplines = Cache::remember('listDisciplines', 600, function () {
+        $listDisciplines = Cache::remember('list_disciplines', 600, function () {
             return ListDiscipline::withProducts()->get();
         });
 
@@ -307,8 +307,9 @@ class PanierPaymentController extends Controller
                 }
 
                 // handle other event types
-                break;
+                // break;
 
+                // no break
             default:
 
                 Log::info('Received unknown event type: ' . $event->type);

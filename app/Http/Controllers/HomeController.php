@@ -21,37 +21,41 @@ class HomeController extends Controller
 {
     public function index(): Response
     {
-        $disciplinesCount = Cache::remember('disciplinesCount', 600, function () {
-            return ListDiscipline::count();
-        });
-        $structuresCount = Cache::remember('structuresCount', 600, function () {
-            return Structure::count();
-        });
-        $produitsCount = Cache::remember('produitsCount', 600, function () {
-            return StructureProduit::count();
-        });
-        $citiesCount = Cache::remember('citiesCount', 600, function () {
-            return City::count();
-        });
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
-        $allCities = Cache::remember('allCities', 600, function () {
+
+        $allCities = Cache::remember('all_cities', 600, function () {
             return City::withProducts()->get();
         });
-        $listDisciplines = Cache::remember('listDisciplines', 600, function () {
+
+        $listDisciplines = Cache::remember('list_disciplines', 600, function () {
             return ListDiscipline::withProducts()->get();
         });
-
-        $disciplines = Cache::remember('disciplines', 600, function () {
-            return ListDiscipline::whereHas('structureProduits')->select(['id', 'name', 'slug', 'theme'])
-                ->withCount('structureProduits')
-                ->orderByDesc('structure_produits_count')
-                ->take(12)
-                ->get();
+        $disciplinesCount = Cache::remember('list_disciplines_count', 600, function () use ($listDisciplines) {
+            return $listDisciplines->count();
         });
 
-        $topVilles = Cache::remember('topVilles', 600, function () {
+        $structuresCount = Cache::remember('structures_count', 600, function () {
+            return Structure::count();
+        });
+
+        $produitsCount = Cache::remember('produits_count', 600, function () {
+            return StructureProduit::count();
+        });
+
+        $citiesCount = Cache::remember('cities_count', 600, function () use ($allCities) {
+            return $allCities->count();
+        });
+
+        $disciplines = Cache::remember('disciplines', 600, function () use ($listDisciplines) {
+            $sortedDisciplines = $listDisciplines->sortByDesc(function ($discipline) {
+                return $discipline->structureProduits->count();
+            });
+            return $sortedDisciplines->take(12);
+        });
+
+        $topVilles = Cache::remember('top_villes', 600, function () {
             return City::whereHas('produits')
                 ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'departement', 'nom_departement'])
                 ->withCount('produits')
@@ -83,21 +87,27 @@ class HomeController extends Controller
             ->sortByDesc('count')
             ->values();
 
-        $lastStructures = Cache::remember('lastStructures', 600, function () {
-            return Structure::withRelations()
-                        ->latest()
+        $lastStructures = Cache::remember('last_structures', 600, function () {
+            return Structure::with(['activites', 'structuretype', 'adresses'])
+                        ->select('id', 'name', 'slug', 'structuretype_id', 'zip_code', 'city', 'view_count', 'logo')
                         ->take(12)
+                        ->latest()
                         ->get();
         });
 
         $posts = Cache::remember('posts', 600, function () {
-            return Post::with('author', 'comments', 'tags', 'disciplines')
-                        ->withCount('comments')
-                        ->orderByDesc('likes')
-                        ->orderByDesc('views_count')
-                        ->latest()
-                        ->take(6)
-                        ->get();
+            return Post::with([
+                    'author:id,name',
+                    'comments:id',
+                    'tags:id,name',
+                    'disciplines:id,name'
+                ])
+                    ->withCount('comments')
+                    ->orderByDesc('likes')
+                    ->orderByDesc('views_count')
+                    ->take(6)
+                    ->latest()
+                    ->get();
         });
 
         return Inertia::render('Welcome', [

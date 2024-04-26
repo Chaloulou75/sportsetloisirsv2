@@ -27,10 +27,10 @@ class FamilleController extends Controller
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
-        $allCities = Cache::remember('allCities', 600, function () {
+        $allCities = Cache::remember('all_cities', 600, function () {
             return City::withProducts()->get();
         });
-        $listDisciplines = Cache::remember('listDisciplines', 600, function () {
+        $listDisciplines = Cache::remember('list_disciplines', 600, function () {
             return ListDiscipline::withProducts()->get();
         });
 
@@ -38,7 +38,7 @@ class FamilleController extends Controller
         $disciplinesCount = Cache::remember('disciplinesCount', 600, function () {
             return ListDiscipline::count();
         });
-        $structuresCount = Cache::remember('structuresCount', 600, function () {
+        $structuresCount = Cache::remember('structures_count', 600, function () {
             return Structure::count();
         });
 

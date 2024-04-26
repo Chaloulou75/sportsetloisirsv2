@@ -2,16 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Structure;
 use Illuminate\Http\Request;
-use App\Mail\ReservationAsked;
-use App\Models\StructureProduit;
-use App\Models\StructureActivite;
-use App\Models\StructureCatTarif;
-use App\Models\StructurePlanning;
 use App\Mail\ReservationConfirmed;
 use App\Models\ProductReservation;
 use Illuminate\Support\Facades\Auth;
@@ -29,7 +23,6 @@ class ProductReservationController extends Controller
                   ->orderByDesc('reservations_count')
                   ->take(3);
         }])->findOrFail($structure->id);
-
 
         $structureNotifs = $structure->unreadNotifications;
 
