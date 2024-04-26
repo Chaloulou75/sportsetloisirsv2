@@ -170,11 +170,11 @@ class PanierPaymentController extends Controller
         $listDisciplines = Cache::remember('list_disciplines', 600, function () {
             return ListDiscipline::withProducts()->get();
         });
-
-        Stripe::setApiKey(config('services.stripe.secret'));
-
-        $sessionId = $request->get('session_id');
         try {
+            Stripe::setApiKey(config('services.stripe.secret'));
+
+            $sessionId = $request->get('session_id');
+
             $sessionStripe = Session::retrieve($sessionId);
 
             if (!$sessionStripe) {
@@ -305,7 +305,7 @@ class PanierPaymentController extends Controller
                 }
 
                 // handle other event types
-                // no break
+                break;
             default:
 
                 Log::info('Received unknown event type: ' . $event->type);
