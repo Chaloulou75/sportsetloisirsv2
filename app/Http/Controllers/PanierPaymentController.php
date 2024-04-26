@@ -79,12 +79,10 @@ class PanierPaymentController extends Controller
                             ->where('paid', false)
                             ->get();
 
-
             if ($reservations->isEmpty()) {
                 return redirect()->route('panier.index')
                     ->with("message", "Votre panier est vide, ajoutez des produits à votre panier.");
             }
-
 
             $lineItems = [];
             $totalPrice = 0;
@@ -307,8 +305,6 @@ class PanierPaymentController extends Controller
                 }
 
                 // handle other event types
-                // break;
-
                 // no break
             default:
 

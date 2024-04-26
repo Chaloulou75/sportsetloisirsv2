@@ -101,7 +101,7 @@ Route::delete('/panier/{reservation}/plannings/{planning}', [ReservationPlanning
     'reservations.plannings.destroy'
 );
 
-Route::post('/panier/paiement/webhook', [PanierPaymentController::class, 'webhook'])->name('create.checkout.webhook');
+Route::post('/stripe/webhook', [PanierPaymentController::class, 'webhook'])->name('stripe.webhook');
 
 //Blog
 Route::get('/blog/articles/{discipline?}', [PostController::class, 'index'])->name('posts.index');

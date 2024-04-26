@@ -32,9 +32,9 @@ return [
     ],
 
     'stripe' => [
-        'public_key' => env('VITE_STRIPE_PUBLIC_KEY'),
-        'secret' => env('VITE_STRIPE_SECRET'),
-        'webhook' => env('VITE_STRIPE_WEBHOOK_SECRET'),
+        'public_key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
+        'webhook' => env('STRIPE_WEBHOOK_SECRET'),
     ]
 
 ];

@@ -14,12 +14,9 @@ use App\Models\StructureActivite;
 use App\Models\StructureCatTarif;
 use App\Models\StructurePlanning;
 use App\Models\ProductReservation;
-use Illuminate\Support\Collection;
-use App\Models\LienDisCatTariftype;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
-use App\Models\LienDisCatTarBookingField;
 use App\Models\LienDisCatTarBookingFieldSousField;
 
 class PanierController extends Controller

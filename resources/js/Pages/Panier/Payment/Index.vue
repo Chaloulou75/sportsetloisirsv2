@@ -34,19 +34,14 @@ const goToCheckout = () => {
         </template>
 
         <Breadcrumb />
-        <div class="container mx-auto flex flex-col gap-4 py-6">
-            <div class="w-full space-y-4 px-2 md:px-0">
-                <h2 class="text-center text-lg font-semibold">
-                    Remplissez vos informations:
-                </h2>
-            </div>
+        <div class="container flex flex-col gap-4 py-6 mx-auto">
             <div
-                class="mx-auto w-full max-w-lg border border-gray-200 bg-gray-50 p-3 shadow-sm"
+                class="w-full max-w-lg p-3 mx-auto border border-gray-200 shadow-sm bg-gray-50"
             >
                 <form @submit.prevent="goToCheckout">
                     <button
                         type="submit"
-                        class="mx-auto flex w-full max-w-full items-center justify-center rounded-md border border-gray-200 bg-indigo-800 px-4 py-3 text-base text-white shadow hover:bg-indigo-900"
+                        class="flex items-center justify-center w-full max-w-full px-4 py-3 mx-auto text-base text-white bg-indigo-800 border border-gray-200 rounded-md shadow hover:bg-indigo-900"
                     >
                         Procéder au paiement de {{ totalPrice }} €
                     </button>
