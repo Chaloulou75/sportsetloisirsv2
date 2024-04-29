@@ -28,7 +28,7 @@ class CityController extends Controller
             return Structure::count();
         });
 
-        $produitsCount = Cache::remember('structures_count', 600, function () {
+        $produitsCount = Cache::remember('produits_count', 600, function () {
             return StructureProduit::count();
         });
 

@@ -53,22 +53,26 @@ const formatCurrency = (value) => {
         <li
             v-for="reservation in reservations"
             :key="reservation.id"
-            class="mb-4 bg-white px-2 py-2 shadow-sm"
+            class="mb-4 inline-block w-full bg-white px-2 py-2 shadow-sm"
             :class="{
                 'border-4 border-blue-300': isUnreadNotification(reservation),
                 'border border-blue-100': !isUnreadNotification(reservation),
             }"
         >
-            <span class="text-sm font-normal text-gray-700">
-                N° {{ reservation.id }}:
-                <span class="font-semibold uppercase text-indigo-500"
-                    >{{ reservation.activite_title }} -
-                    {{ reservation.cat_tarif.cat_tarif_type.nom }}</span
-                >
-                <span class="text-xs italic">
-                    (produit n°{{ reservation.produit_id }})
-                </span>
-            </span>
+            <div class="inline-flex w-full items-center justify-between">
+                <div class="text-sm font-normal text-gray-700">
+                    N° {{ reservation.id }}:
+                    <span class="font-semibold uppercase text-indigo-500"
+                        >{{ reservation.activite_title }} -
+                        {{ reservation.cat_tarif.cat_tarif_type.nom }}.</span
+                    >
+                    <span class="text-xs italic">
+                        Produit n°{{ reservation.produit_id }}, réglée le
+                        {{ formatDate(reservation.paiement_datetime) }}
+                    </span>
+                </div>
+            </div>
+
             <p>
                 Réservation faite par
                 <span class="font-semibold">{{ reservation.user.name }} </span>

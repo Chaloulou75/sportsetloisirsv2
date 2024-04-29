@@ -248,4 +248,11 @@ class ProductReservationController extends Controller
         }
         return $totalPrice;
     }
+
+    public function markAsRead(Structure $structure, Request $request)
+    {
+        $structure->unreadNotifications->markAsRead();
+
+        return to_route('structures.gestion.reservations.index', $structure)->with('message', 'Notifications marquées comme lue.');
+    }
 }

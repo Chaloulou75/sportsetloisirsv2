@@ -1,6 +1,6 @@
 <script setup>
 import ProLayout from "@/Layouts/ProLayout.vue";
-import { Head, usePage, Link } from "@inertiajs/vue3";
+import { Head, usePage, useForm, Link } from "@inertiajs/vue3";
 import { ref, computed, defineAsyncComponent } from "vue";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
@@ -74,6 +74,21 @@ const formatCurrency = (value) => {
     }
     return value;
 };
+
+const reservationForm = useForm({
+    markedAsRead: false,
+});
+
+const markReservationAsRead = () => {
+    reservationForm.put(
+        route("structures.gestion.reservations.markAsRead", {
+            structure: props.structure,
+        }),
+        {
+            preserveScroll: true,
+        }
+    );
+};
 </script>
 <template>
     <Head
@@ -108,7 +123,7 @@ const formatCurrency = (value) => {
                     class="space-y-10 rounded-md border border-gray-200 bg-gray-50 px-2 py-6 shadow-md"
                 >
                     <div
-                        class="flex flex-col items-center justify-between md:flex-row"
+                        class="flex flex-col items-start justify-between md:flex-row"
                     >
                         <p class="text-justify text-xl font-semibold">
                             Vous avez
@@ -125,10 +140,25 @@ const formatCurrency = (value) => {
                                 >( {{ structureNotifCount }} non lues)</span
                             >:
                         </p>
-                        <div
-                            class="mt-4 text-2xl font-bold text-indigo-500 md:mt-0"
-                        >
-                            {{ formatCurrency(totalAmountPending) }}
+                        <div>
+                            <div
+                                class="mt-4 text-2xl font-bold text-indigo-500 md:mt-0"
+                            >
+                                {{ formatCurrency(totalAmountPending) }}
+                            </div>
+                            <div v-if="structureNotifCount > 0">
+                                <label class="inline-flex items-center">
+                                    <span class="mr-2 text-xs"
+                                        >Tout marquer comme lu</span
+                                    >
+                                    <input
+                                        type="checkbox"
+                                        class="form-checkbox h-4 w-4 shrink-0 rounded border-gray-200 text-indigo-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
+                                        v-model="reservationForm.markedAsRead"
+                                        @change="markReservationAsRead"
+                                    />
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <ReservationsList

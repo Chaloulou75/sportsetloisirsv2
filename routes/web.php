@@ -151,6 +151,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/gestion/{structure:slug}', [StructureGestionController::class, 'index'])->name('structures.gestion.index');
     Route::get('/gestion/{structure:slug}/reservations', [ProductReservationController::class, 'index'])->name('structures.gestion.reservations.index');
+    Route::put('/gestion/{structure}/reservations/mark-reservation-as-read', [ProductReservationController::class, 'markAsRead'])->name('structures.gestion.reservations.markAsRead');
     Route::put('/gestion/{structure:slug}/reservations/{reservation}', [ProductReservationController::class, 'update'])->name('structures.gestion.reservations.update');
     Route::get('/gestion/{structure:slug}/statistiques', [StructureStatistiqueController::class, 'index'])->name('structures.gestion.statistiques.index');
 
