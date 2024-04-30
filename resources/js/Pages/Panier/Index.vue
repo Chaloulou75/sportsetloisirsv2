@@ -374,7 +374,7 @@ onBeforeMount(() => {
                             </div>
                             <template v-if="reservation.cat_tarif"
                                 ><h3 class="px-4 text-sm text-gray-700">
-                                    Les attributs liés au tarifs:
+                                    Les attributs liés au tarif:
                                 </h3>
                                 <div
                                     class="mt-auto grid w-full grid-cols-3 justify-items-center gap-1 px-4 text-xs text-gray-900 md:grid-cols-6"
