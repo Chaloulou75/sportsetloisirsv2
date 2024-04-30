@@ -140,9 +140,9 @@ const markReservationAsRead = () => {
                                 >( {{ structureNotifCount }} non lues)</span
                             >:
                         </p>
-                        <div>
+                        <div class="flex w-full flex-col items-end justify-end">
                             <div
-                                class="mt-4 text-2xl font-bold text-indigo-500 md:mt-0"
+                                class="mt-4 self-center text-2xl font-bold text-indigo-500 md:mt-0 md:self-end"
                             >
                                 {{ formatCurrency(totalAmountPending) }}
                             </div>

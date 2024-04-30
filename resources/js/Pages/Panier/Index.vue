@@ -372,6 +372,130 @@ onBeforeMount(() => {
                                     <XMarkIcon class="h-6 w-6 text-white" />
                                 </button>
                             </div>
+                            <template v-if="reservation.cat_tarif"
+                                ><h3 class="px-4 text-sm text-gray-700">
+                                    Les attributs liés au tarifs:
+                                </h3>
+                                <div
+                                    class="mt-auto grid w-full grid-cols-3 justify-items-center gap-1 px-4 text-xs text-gray-900 md:grid-cols-6"
+                                >
+                                    <template
+                                        v-for="attribut in reservation.cat_tarif
+                                            .attributs"
+                                        :key="attribut.id"
+                                    >
+                                        <div
+                                            v-if="attribut.tarif_attribut"
+                                            class="flex w-full flex-col items-center justify-center bg-gray-100 px-1 py-1 font-medium"
+                                        >
+                                            <div
+                                                class="text-center text-xs uppercase text-slate-500"
+                                            >
+                                                {{
+                                                    attribut.tarif_attribut.nom
+                                                }}
+                                            </div>
+                                            <div
+                                                v-if="attribut.valeur"
+                                                class="text-center text-xs"
+                                            >
+                                                {{ attribut.valeur }}
+                                                <div
+                                                    v-if="
+                                                        attribut.sous_attributs &&
+                                                        attribut.sous_attributs
+                                                            .length > 0
+                                                    "
+                                                    class="text-xs"
+                                                >
+                                                    <span
+                                                        v-for="sousattribut in attribut.sous_attributs"
+                                                        :key="sousattribut.id"
+                                                        class="text-xs text-gray-700"
+                                                        ><span
+                                                            class="text-slate-500"
+                                                            v-if="
+                                                                sousattribut.sous_attribut
+                                                            "
+                                                            >{{
+                                                                sousattribut
+                                                                    .sous_attribut
+                                                                    .nom
+                                                            }}:
+                                                        </span>
+                                                        {{
+                                                            sousattribut.valeur
+                                                        }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                            <template
+                                v-if="
+                                    reservation.attributs &&
+                                    reservation.attributs.length > 0
+                                "
+                                ><h3 class="px-4 text-sm text-gray-700">
+                                    Les attributs liés à cette réservation:
+                                </h3>
+                                <div
+                                    class="mt-auto grid w-full grid-cols-3 justify-items-center gap-1 px-4 text-xs text-gray-900 md:grid-cols-6"
+                                >
+                                    <template
+                                        v-for="attribut in reservation.attributs"
+                                        :key="attribut.id"
+                                    >
+                                        <div
+                                            v-if="attribut.booking_field"
+                                            class="flex w-full flex-col items-center justify-center bg-gray-100 px-1 py-1 font-medium"
+                                        >
+                                            <div
+                                                class="text-center text-xs uppercase text-slate-500"
+                                            >
+                                                {{ attribut.booking_field.nom }}
+                                            </div>
+                                            <div
+                                                v-if="attribut.valeur"
+                                                class="text-center text-xs"
+                                            >
+                                                {{ attribut.valeur }}
+                                                <div
+                                                    v-if="
+                                                        attribut.reservation_sous_attributs &&
+                                                        attribut
+                                                            .reservation_sous_attributs
+                                                            .length > 0
+                                                    "
+                                                    class="text-xs"
+                                                >
+                                                    <span
+                                                        v-for="sousattribut in attribut.reservation_sous_attributs"
+                                                        :key="sousattribut.id"
+                                                        class="text-xs text-gray-700"
+                                                        ><span
+                                                            class="text-slate-500"
+                                                            v-if="
+                                                                sousattribut.booking_sous_field
+                                                            "
+                                                            >{{
+                                                                sousattribut
+                                                                    .booking_sous_field
+                                                                    .nom
+                                                            }}:
+                                                        </span>
+                                                        {{
+                                                            sousattribut.valeur
+                                                        }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
                             <template
                                 v-if="
                                     reservation.plannings &&
@@ -584,69 +708,7 @@ onBeforeMount(() => {
                                     </p>
                                 </div>
                             </template>
-                            <template
-                                v-if="
-                                    reservation.attributs &&
-                                    reservation.attributs.length > 0
-                                "
-                                ><h3 class="px-4 text-sm text-gray-700">
-                                    Les attributs liés à cette réservation:
-                                </h3>
-                                <div
-                                    class="mt-auto grid w-full grid-cols-3 justify-items-center gap-1 px-4 text-xs text-gray-900 md:grid-cols-6"
-                                >
-                                    <template
-                                        v-for="attribut in reservation.attributs"
-                                        :key="attribut.id"
-                                    >
-                                        <div
-                                            v-if="attribut.booking_field"
-                                            class="flex w-full flex-col items-center justify-center bg-gray-100 px-1 py-1 font-medium"
-                                        >
-                                            <div
-                                                class="text-center text-xs uppercase text-slate-500"
-                                            >
-                                                {{ attribut.booking_field.nom }}
-                                            </div>
-                                            <div
-                                                v-if="attribut.valeur"
-                                                class="text-center text-xs"
-                                            >
-                                                {{ attribut.valeur }}
-                                                <div
-                                                    v-if="
-                                                        attribut.reservation_sous_attributs &&
-                                                        attribut
-                                                            .reservation_sous_attributs
-                                                            .length > 0
-                                                    "
-                                                    class="text-xs"
-                                                >
-                                                    <span
-                                                        v-for="sousattribut in attribut.reservation_sous_attributs"
-                                                        :key="sousattribut.id"
-                                                        class="text-xs text-gray-700"
-                                                        ><span
-                                                            class="text-slate-500"
-                                                            v-if="
-                                                                sousattribut.booking_sous_field
-                                                            "
-                                                            >{{
-                                                                sousattribut
-                                                                    .booking_sous_field
-                                                                    .nom
-                                                            }}:
-                                                        </span>
-                                                        {{
-                                                            sousattribut.valeur
-                                                        }}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </template>
-                                </div>
-                            </template>
+
                             <div
                                 class="flex w-full justify-between border-t border-gray-200 bg-white px-4 py-2 text-lg font-bold"
                             >

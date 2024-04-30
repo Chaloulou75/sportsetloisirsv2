@@ -225,10 +225,12 @@ const submitForm = async () => {
                                                 user.unread_notifications_count >
                                                     0
                                             "
-                                            class="absolute right-1 top-1 -mt-1 rounded-full bg-green-500 px-1.5 text-xs text-white"
+                                            class="absolute -top-1 right-0 rounded-full bg-green-500 px-1.5 py-0.5 text-xs text-white"
                                         >
                                             {{
-                                                user.unread_notifications_count
+                                                user.unread_notifications_count +
+                                                adminNotificationsCount +
+                                                structureNotifCount
                                             }}
                                         </span>
                                     </button>
@@ -248,10 +250,20 @@ const submitForm = async () => {
                                     Blog
                                 </BreezeDropdownLink>
                                 <BreezeDropdownLink
+                                    class="inline-flex w-full items-center justify-between"
                                     :href="route('profile.edit')"
                                     preserve-scroll
                                 >
                                     Mon profil
+                                    <span
+                                        v-if="
+                                            user &&
+                                            user.unread_notifications_count > 0
+                                        "
+                                        class="flex items-center justify-center rounded-full bg-green-500 px-1.5 py-0.5 text-xs text-white"
+                                    >
+                                        {{ user.unread_notifications_count }}
+                                    </span>
                                 </BreezeDropdownLink>
                                 <Link
                                     class="inline-flex w-full items-center justify-between px-4 py-2 text-left text-sm leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
@@ -441,6 +453,7 @@ const submitForm = async () => {
                 >
                     Gestion de ma structure
                     <span
+                        v-if="structureNotifCount > 0"
                         class="flex items-center justify-center rounded-full bg-green-500 px-2 py-1 text-xs text-white"
                         >{{ structureNotifCount }}</span
                     >

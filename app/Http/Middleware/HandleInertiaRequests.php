@@ -57,7 +57,7 @@ class HandleInertiaRequests extends Middleware
                     [
                         'unread_notifications_count' => $request->user()->unreadNotifications()
                         ->where('type', ReservationPaid::class)
-                        ->orWhere('type', ReservationPaidToAdmin::class)
+                        // ->orWhere('type', ReservationPaidToAdmin::class)
                         ->count()
                     ]
                 ) : null,
