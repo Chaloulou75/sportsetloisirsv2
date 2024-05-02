@@ -8,6 +8,7 @@ use Inertia\Response;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
+use Illuminate\Http\RedirectResponse;
 
 class AdminDisciplineController extends Controller
 {
@@ -86,7 +87,7 @@ class AdminDisciplineController extends Controller
         //
     }
 
-    public function duplicate(Request $request)
+    public function duplicate(Request $request): RedirectResponse
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
@@ -107,7 +108,6 @@ class AdminDisciplineController extends Controller
             $categoryExistsInTarget = $targetCategoriesWithPivot->contains(function ($targetCategory) use ($originPivotAttributes) {
                 return $targetCategory->pivot->categorie_id === $originPivotAttributes->categorie_id;
             });
-
 
             if (!$categoryExistsInTarget) {
 
