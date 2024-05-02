@@ -123,9 +123,12 @@ class CategoryDisciplineController extends Controller
             'nom_categorie_pro' => $categorieNotIn->nom,
         ]);
 
-        $attached = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('categorie_id', $categorieNotIn->id)->first();
+        $attached = $discipline->categories()->withPivot('categorie_id')->wherePivot('categorie_id', $categorieNotIn->id)->first();
 
-        $attached->update(['slug' => $attached->slug . '-' . $attached->id]);
+        if ($attached) {
+            $newSlug = Str::slug($categorieNotIn->nom) . '-' . $attached->pivot->id;
+            $discipline->categories()->updateExistingPivot($categorieNotIn->id, ['slug' => $newSlug]);
+        }
 
         return to_route('admin.disciplines.categories.edit', $discipline)->with('success', 'Catégorie ajoutée');
     }

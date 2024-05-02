@@ -223,6 +223,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
         Route::get('/disciplines/dis-{discipline:slug}', [AdminDisciplineController::class, 'edit'])->name('admin.disciplines.edit');
+
+        Route::post('/disciplines/duplicate_parameters', [AdminDisciplineController::class, 'duplicate'])->name('admin.disciplines.duplicate_parameters');
+
         Route::get('/disciplines/dis-{discipline:slug}/informations', [DisciplineController::class, 'edit'])->name('admin.disciplines.informations.edit');
         Route::get('/disciplines/dis-{discipline:slug}/familles', [FamilleDisciplineController::class, 'edit'])->name('admin.disciplines.familles.edit');
         Route::get('/disciplines/dis-{discipline:slug}/similaires', [DisciplineSimilaireController::class, 'edit'])->name('admin.disciplines.similaires.edit');

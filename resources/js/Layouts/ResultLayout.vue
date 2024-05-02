@@ -1,11 +1,16 @@
 <script setup>
+import { ref, computed } from "vue";
+import { usePage } from "@inertiajs/vue3";
 import ResultNavigation from "@/Components/Navigation/ResultNavigation.vue";
 import FamilleResultNavigation from "@/Components/Familles/FamilleResultNavigation.vue";
 import ToastMessages from "@/Components/ToastMessages.vue";
 import Footer from "@/Components/Footer.vue";
-import { ref, computed } from "vue";
+
 import { classMapping } from "@/Utils/classMapping.js";
 import { TransitionRoot } from "@headlessui/vue";
+
+const page = usePage();
+const flash = computed(() => page.props.flash);
 
 const props = defineProps({
     listDisciplines: Object,

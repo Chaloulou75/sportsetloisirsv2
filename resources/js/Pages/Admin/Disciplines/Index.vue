@@ -52,29 +52,49 @@ const submitCreateInfoBase = () => {
         }
     );
 };
+
+const replicateDisciplineForm = useForm({
+    discipline_origin: null,
+    discipline_target: null,
+});
+
+const replicateDiscipline = () => {
+    replicateDisciplineForm.post(
+        route("admin.disciplines.duplicate_parameters"),
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                replicateDisciplineForm.reset();
+            },
+        }
+    );
+};
 </script>
 <template>
-    <Head title="Gestion du contenu" :description="'Administration du site.'" />
+    <Head
+        title="Gestion du contenu"
+        description="Administration du site. Gestion du contenu"
+    />
     <AdminLayout>
         <template #header>
-            <div class="flex items-center justify-start h-full">
+            <div class="flex h-full items-center justify-start">
                 <Link
                     :href="route('admin.index')"
                     class="h-full bg-blue-600 py-2.5 md:px-4 md:py-4"
                 >
-                    <ChevronLeftIcon class="w-10 h-10 text-white" />
+                    <ChevronLeftIcon class="h-10 w-10 text-white" />
                 </Link>
                 <h1
-                    class="px-3 text-base font-semibold text-center text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
+                    class="px-3 text-center text-base font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
                     Gestion du contenu (disciplines, catégories, critères)
                 </h1>
             </div>
         </template>
 
-        <div class="w-full px-2 py-6 space-y-16 text-slate-700 md:px-6">
+        <div class="w-full space-y-16 px-2 py-6 text-slate-700 md:px-6">
             <div
-                class="flex flex-col items-start justify-between w-full space-y-4 gap-x-4"
+                class="flex w-full flex-col items-start justify-between gap-x-4 space-y-4"
             >
                 <h2 class="text-lg font-medium">Rechercher une discipline:</h2>
                 <AutocompleteDisciplineNav
@@ -91,17 +111,17 @@ const submitCreateInfoBase = () => {
                         "
                         class="group inline-flex w-full max-w-md items-center justify-center rounded border border-gray-300 bg-white px-4 py-2.5 text-base font-medium text-gray-600 shadow-sm hover:bg-indigo-500 hover:text-white focus:outline-none focus:ring-2"
                     >
-                        <span class="inline-flex mr-4 group-hover:text-white"
+                        <span class="mr-4 inline-flex group-hover:text-white"
                             >Gérer {{ discipline }}</span
                         >
                         <MagnifyingGlassIcon
-                            class="w-5 h-5 text-indigo-500 group-hover:text-white"
+                            class="h-5 w-5 text-indigo-500 group-hover:text-white"
                         />
                     </Link>
                 </template>
 
                 <template
-                    class="flex flex-col items-end justify-center w-full space-y-2 gap-x-4 md:flex-row md:space-y-0"
+                    class="flex w-full flex-col items-end justify-center gap-x-4 space-y-2 md:flex-row md:space-y-0"
                     v-if="!discipline"
                 >
                     <button
@@ -128,7 +148,7 @@ const submitCreateInfoBase = () => {
                             <button
                                 @click="showCreateDisciplineForm"
                                 type="button"
-                                class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium bg-gray-100 border border-transparent rounded shadow-sm text-slate-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 focus:ring-offset-2"
+                                class="inline-flex w-full justify-center rounded border border-transparent bg-gray-100 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 focus:ring-offset-2"
                             >
                                 Annuler
                             </button>
@@ -138,7 +158,7 @@ const submitCreateInfoBase = () => {
                                     'opacity-25': createInfoBaseForm.processing,
                                 }"
                                 type="submit"
-                                class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                class="inline-flex w-full justify-center rounded border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                             >
                                 <LoadingSVG
                                     v-if="createInfoBaseForm.processing"
@@ -148,6 +168,36 @@ const submitCreateInfoBase = () => {
                         </div>
                     </form>
                 </template>
+
+                <h2 class="mt-4 text-lg font-medium">
+                    Dupliquer les catégories d'une discipline à une autre:
+                </h2>
+                <form
+                    @submit.prevent="replicateDiscipline"
+                    class="flex w-full flex-col items-center justify-between space-y-5 md:flex-row md:space-x-4 md:space-y-0"
+                >
+                    <AutocompleteDisciplineNav
+                        class="w-full"
+                        :disciplines="listDisciplines"
+                        v-model="replicateDisciplineForm.discipline_origin"
+                    />
+                    <AutocompleteDisciplineNav
+                        class="w-full"
+                        :disciplines="listDisciplines"
+                        v-model="replicateDisciplineForm.discipline_target"
+                    />
+                    <button
+                        :disabled="replicateDisciplineForm.processing"
+                        :class="{
+                            'opacity-25': replicateDisciplineForm.processing,
+                        }"
+                        type="submit"
+                        class="inline-flex w-full max-w-sm justify-center rounded border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    >
+                        <LoadingSVG v-if="replicateDisciplineForm.processing" />
+                        Dupliquer la discipline
+                    </button>
+                </form>
             </div>
         </div>
     </AdminLayout>
