@@ -50,6 +50,13 @@ class HandleInertiaRequests extends Middleware
 
 
         return array_merge(parent::share($request), [
+            'flash' => function () use ($request) {
+                return [
+                    'success' => $request->session()->get('success'),
+                    'error' => $request->session()->get('error'),
+                    'info' => $request->session()->get('info'),
+                ];
+            },
             'appName' => config('app.name'),
             'auth' => [
                 'user' => fn () => $request->user() ? array_merge(
@@ -61,7 +68,6 @@ class HandleInertiaRequests extends Middleware
                     ]
                 ) : null,
             ],
-
             'user_can' => [
                 'view_admin' => fn () => $request->user() ? $request->user()->can('viewAdmin', User::class) : false,
             ],
@@ -69,13 +75,6 @@ class HandleInertiaRequests extends Middleware
                 return array_merge((new Ziggy())->toArray(), [
                     'location' => $request->url(),
                 ]);
-            },
-            'flash' => function () use ($request) {
-                return [
-                    'success' => $request->session()->get('success'),
-                    'error' => $request->session()->get('error'),
-                    'message' => $request->session()->get('message'),
-                ];
             },
             'structures_notifications_count' => fn () => $request->user() ? $request->user()->structures->mapWithKeys(function ($structure) {
                 return [$structure->id => $structure->unreadNotifications()->where('type', ReservationPaidToStructure::class)->count()];

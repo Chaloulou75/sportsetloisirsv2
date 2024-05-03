@@ -12,7 +12,7 @@ const isShowing = ref(true);
 </script>
 
 <template>
-    <div class="min-h-screen w-full bg-white">
+    <div class="relative w-full min-h-screen bg-white">
         <main>
             <div class="flex flex-col md:flex-row">
                 <!-- Page Heading -->
@@ -22,10 +22,10 @@ const isShowing = ref(true);
                     <AdminNavigation />
 
                     <header
-                        class="h-auto w-full bg-gradient-to-br from-green-100 to-blue-100 shadow-sm"
+                        class="w-full h-auto shadow-sm bg-gradient-to-br from-green-100 to-blue-100"
                         v-if="$slots.header"
                     >
-                        <div class="mx-auto max-w-full">
+                        <div class="max-w-full mx-auto">
                             <slot name="header" />
                         </div>
                     </header>

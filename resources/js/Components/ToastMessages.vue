@@ -1,6 +1,6 @@
 <script setup>
-import { computed, watch } from "vue";
-import { usePage } from "@inertiajs/vue3";
+import { onUnmounted, computed } from "vue";
+import { usePage, router } from "@inertiajs/vue3";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
@@ -9,9 +9,7 @@ const props = defineProps({
     message: String,
 });
 const page = usePage();
-const flash = page.props.flash;
-
-// const flash = computed(() => page.props.flash);
+const flash = computed(() => page.props.flash);
 
 const options = {
     autoClose: 4000,
@@ -33,8 +31,8 @@ if (flash.success) {
 if (flash.error) {
     notify("error", flash.error);
 }
-if (flash.message) {
-    notify("message", flash.message);
+if (flash.info) {
+    notify("info", flash.info);
 }
 </script>
 

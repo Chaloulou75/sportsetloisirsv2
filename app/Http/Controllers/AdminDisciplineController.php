@@ -126,6 +126,6 @@ class AdminDisciplineController extends Controller
             }
         }
 
-        return to_route('admin.disciplines.index')->with('success', 'Les catégories de la discipline '. $dis_origin->name .' a été dupliquée à '. $dis_target->name .'.');
+        return to_route('admin.disciplines.index')->with('info', 'Les catégories de la discipline '. $dis_origin->name .' a été dupliquée à '. $dis_target->name .'.');
     }
 }
