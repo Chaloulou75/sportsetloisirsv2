@@ -48,13 +48,12 @@ class HandleInertiaRequests extends Middleware
             $reservationsCount = ProductReservation::where('user_id', $request->user()->id)->where('paid', false)->count();
         }
 
-
         return array_merge(parent::share($request), [
             'flash' => function () use ($request) {
                 return [
                     'success' => $request->session()->get('success'),
                     'error' => $request->session()->get('error'),
-                    'info' => $request->session()->get('info'),
+                    'message' => $request->session()->get('message'),
                 ];
             },
             'appName' => config('app.name'),

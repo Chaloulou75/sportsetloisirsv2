@@ -91,7 +91,7 @@ class ProductReservationController extends Controller
     {
         $user = auth()->user();
         if(!$user) {
-            return to_route('login')->with('info', 'Connectez vous pour effectuer vos réservations');
+            return to_route('login')->with('message', 'Connectez vous pour effectuer vos réservations');
         }
         request()->validate([
             'reservations' => ['required'],
@@ -253,6 +253,6 @@ class ProductReservationController extends Controller
     {
         $structure->unreadNotifications->markAsRead();
 
-        return to_route('structures.gestion.reservations.index', $structure)->with('info', 'Notifications marquées comme lue.');
+        return to_route('structures.gestion.reservations.index', $structure)->with('message', 'Notifications marquées comme lue.');
     }
 }

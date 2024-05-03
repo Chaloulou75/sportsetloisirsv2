@@ -36,21 +36,13 @@ const createInfoBaseForm = useForm({
 });
 
 const submitCreateInfoBase = () => {
-    router.post(
-        route("disciplines.create"),
-        {
-            name: createInfoBaseForm.name,
-            description: createInfoBaseForm.description,
-            theme: createInfoBaseForm.theme,
+    createInfoBaseForm.post(route("disciplines.create"), {
+        preserveScroll: true,
+        onSuccess: () => {
+            createInfoBaseForm.reset();
+            showCreateDisciplineForm();
         },
-        {
-            preserveScroll: true,
-            onSuccess: () => {
-                createInfoBaseForm.reset();
-                showCreateDisciplineForm();
-            },
-        }
-    );
+    });
 };
 
 const replicateDisciplineForm = useForm({
@@ -181,11 +173,25 @@ const replicateDiscipline = () => {
                         :disciplines="listDisciplines"
                         v-model="replicateDisciplineForm.discipline_origin"
                     />
+                    <p
+                        class="text-xs text-red-500"
+                        v-if="replicateDisciplineForm.errors.discipline_origin"
+                    >
+                        {{ replicateDisciplineForm.errors.discipline_origin }}
+                    </p>
+
                     <AutocompleteDisciplineNav
                         class="w-full"
                         :disciplines="listDisciplines"
                         v-model="replicateDisciplineForm.discipline_target"
                     />
+                    <p
+                        class="text-xs text-red-500"
+                        v-if="replicateDisciplineForm.errors.discipline_target"
+                    >
+                        {{ replicateDisciplineForm.errors.discipline_target }}
+                    </p>
+
                     <button
                         :disabled="replicateDisciplineForm.processing"
                         :class="{

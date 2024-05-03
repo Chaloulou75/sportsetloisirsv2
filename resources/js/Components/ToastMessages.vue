@@ -1,5 +1,5 @@
 <script setup>
-import { onUnmounted, computed } from "vue";
+import { onUnmounted, ref, watchEffect, computed } from "vue";
 import { usePage, router } from "@inertiajs/vue3";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
@@ -9,7 +9,9 @@ const props = defineProps({
     message: String,
 });
 const page = usePage();
-const flash = computed(() => page.props.flash);
+const isToastDisplayed = ref(false);
+const timeout = ref(null);
+// const flash = computed(() => page.props.flash);
 
 const options = {
     autoClose: 4000,
@@ -25,15 +27,37 @@ const notify = (type, message) => {
     toast(message, options);
 };
 
-if (flash.success) {
-    notify("success", flash.success);
-}
-if (flash.error) {
-    notify("error", flash.error);
-}
-if (flash.info) {
-    notify("info", flash.info);
-}
+watchEffect(async () => {
+    if (!isToastDisplayed.value && page.props.flash.success) {
+        isToastDisplayed.value = true;
+        notify("success", page.props.flash.success);
+        clearTimeout(timeout.value);
+        timeout.value = setTimeout(() => {
+            page.props.flash.success = "";
+            isToastDisplayed.value = false;
+        }, 4000);
+    }
+    if (!isToastDisplayed.value && page.props.flash.error) {
+        isToastDisplayed.value = true;
+        notify("error", page.props.flash.error);
+        clearTimeout(timeout.value);
+        timeout.value = setTimeout(() => {
+            page.props.flash.error = "";
+            isToastDisplayed.value = false;
+        }, 4000);
+    }
+    if (!isToastDisplayed.value && page.props.flash.message) {
+        isToastDisplayed.value = true;
+        notify("message", page.props.flash.message);
+        clearTimeout(timeout.value);
+        timeout.value = setTimeout(() => {
+            page.props.flash.message = "";
+            isToastDisplayed.value = false;
+        }, 4000);
+    }
+});
+
+onUnmounted(() => clearTimeout(timeout.value));
 </script>
 
 <template></template>
