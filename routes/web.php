@@ -224,8 +224,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('/disciplines/dis-{discipline:slug}', [AdminDisciplineController::class, 'edit'])->name('admin.disciplines.edit');
 
-        Route::post('/disciplines/duplicate_parameters', [AdminDisciplineController::class, 'duplicate'])->name('admin.disciplines.duplicate_parameters');
-
         Route::get('/disciplines/dis-{discipline:slug}/informations', [DisciplineController::class, 'edit'])->name('admin.disciplines.informations.edit');
         Route::get('/disciplines/dis-{discipline:slug}/familles', [FamilleDisciplineController::class, 'edit'])->name('admin.disciplines.familles.edit');
         Route::get('/disciplines/dis-{discipline:slug}/similaires', [DisciplineSimilaireController::class, 'edit'])->name('admin.disciplines.similaires.edit');
@@ -253,7 +251,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::post('/tarifsType/{tarifType}/discats/attributs/{attribut}', [AdminTarifTypeDisCatAttributController::class, 'store'])->name('admin.tariftypes.discats.attributs.store');
 
-
         Route::post('/discipline-similaire/{discipline}', [DisciplineSimilaireController::class, 'store'])->name('discipline-similaire.store');
         Route::put('/discipline-similaire/{discipline}', [DisciplineSimilaireController::class, 'detach'])->name('discipline-similaire.detach');
 
@@ -266,6 +263,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/categories-disciplines/{discipline}', [CategoryDisciplineController::class, 'store'])->name('categories-disciplines.store');
         Route::put('/categories-disciplines/{discipline}', [CategoryDisciplineController::class, 'detach'])->name('categories-disciplines.detach');
         Route::patch('/categories-disciplines/{discipline}', [CategoryDisciplineController::class, 'update'])->name('categories-disciplines.update');
+
+        //dupliquer les categories d'une discipline
+        Route::post('/disciplines/duplicate_categories', [AdminCategorieDisciplineController::class, 'duplicate'])->name('admin.disciplines.duplicate_categories');
+
+        //dupliquer les criteres des categories d'une discipline
+        Route::post('/disciplines/duplicate_categories_and_criteres', [CategoryDisciplineCritereController::class, 'duplicate'])->name('admin.disciplines.duplicate_categories_and_criteres');
 
         Route::post('/categories-disciplines-criteres', [CategoryDisciplineCritereController::class, 'store'])->name('categories-disciplines-criteres.store');
         Route::patch('/categories-disciplines-criteres/{critere}', [CategoryDisciplineCritereController::class, 'update'])->name('categories-disciplines-criteres.update');

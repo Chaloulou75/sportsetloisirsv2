@@ -6,6 +6,7 @@ use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Critere;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use Illuminate\Validation\Rule;
@@ -169,5 +170,48 @@ class CategoryDisciplineCritereController extends Controller
         $discCatCritere->delete();
         return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $discCatCritere->discipline->slug, 'categorie' => $discCatCritere->categorie])->with('success', 'Critère et valeurs associés supprimés');
 
+    }
+
+    public function duplicate(Request $request): RedirectResponse
+    {
+        $user = auth()->user();
+        $this->authorize('viewAdmin', $user);
+
+        $validatedData = $request->validate([
+            'discipline_origin' => ['required', 'exists:liste_disciplines,slug'],
+            'discipline_target' => ['required', 'exists:liste_disciplines,slug'],
+        ]);
+
+        $dis_origin = ListDiscipline::with(['categories.criteres'])->where('slug', $validatedData['discipline_origin'])->firstOrFail();
+        $dis_target = ListDiscipline::with(['categories'])->where('slug', $validatedData['discipline_target'])->firstOrFail();
+
+        foreach ($dis_origin->categories as $category) {
+            $originPivotAttributes = $category->pivot;
+            $targetCategoriesWithPivot = $dis_target->categories;
+
+            // Check if the target discipline's categories contain the same categorie_id as the origin category
+            $categoryExistsInTarget = $targetCategoriesWithPivot->contains(function ($targetCategory) use ($originPivotAttributes) {
+                return $targetCategory->pivot->categorie_id === $originPivotAttributes->categorie_id;
+            });
+
+            if (!$categoryExistsInTarget) {
+
+                $pivotAttributes = collect($originPivotAttributes)->except(['id','discipline_id', 'categorie_id'])->toArray();
+
+                $pivotAttributes['slug'] = Str::slug($category->nom) . '-' . $category->id . '_random_texte';
+
+                $dis_target->categories()->attach($category->id, $pivotAttributes);
+
+                $pivot = $dis_target->categories()->where('categorie_id', $category->id)->first()->pivot;
+
+                if ($pivot) {
+                    $newSlug = Str::slug($category->nom) . '-' . $pivot->id;
+                    $dis_target->categories()->updateExistingPivot($category->id, ['slug' => $newSlug]);
+                }
+            }
+        }
+
+
+        return to_route('admin.disciplines.index')->with('success', 'Les catégories et leurs critères de la discipline '. $dis_origin->name .' a été dupliquée à '. $dis_target->name .'.');
     }
 }

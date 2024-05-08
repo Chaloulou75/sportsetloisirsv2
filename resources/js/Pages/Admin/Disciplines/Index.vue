@@ -52,7 +52,20 @@ const replicateDisciplineForm = useForm({
 
 const replicateDiscipline = () => {
     replicateDisciplineForm.post(
-        route("admin.disciplines.duplicate_parameters"),
+        route("admin.disciplines.duplicate_categories"),
+        {
+            preserveScroll: true,
+            preserveState: false,
+            onSuccess: () => {
+                replicateDisciplineForm.reset();
+            },
+        }
+    );
+};
+
+const replicateCatAndCriteres = () => {
+    replicateDisciplineForm.post(
+        route("admin.disciplines.duplicate_categories_and_criteres"),
         {
             preserveScroll: true,
             onSuccess: () => {
@@ -163,6 +176,24 @@ const replicateDiscipline = () => {
 
                 <h2 class="mt-4 text-lg font-medium">
                     Dupliquer les catégories d'une discipline à une autre:
+                    <span
+                        class="text-sm uppercase text-indigo-500"
+                        v-if="replicateDisciplineForm.discipline_origin"
+                    >
+                        {{ replicateDisciplineForm.discipline_origin }}
+                    </span>
+                    <span
+                        class="text-sm"
+                        v-if="replicateDisciplineForm.discipline_origin"
+                    >
+                        à
+                    </span>
+                    <span
+                        class="text-sm uppercase text-indigo-500"
+                        v-if="replicateDisciplineForm.discipline_target"
+                    >
+                        {{ replicateDisciplineForm.discipline_target }}
+                    </span>
                 </h2>
                 <form
                     @submit.prevent="replicateDiscipline"
@@ -198,10 +229,26 @@ const replicateDiscipline = () => {
                             'opacity-25': replicateDisciplineForm.processing,
                         }"
                         type="submit"
-                        class="inline-flex w-full max-w-sm justify-center rounded border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        class="inline-flex w-full max-w-sm justify-center rounded border border-transparent bg-green-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                     >
                         <LoadingSVG v-if="replicateDisciplineForm.processing" />
-                        Dupliquer la discipline
+                        Dupliquer les catégories d'une discipline
+                    </button>
+                </form>
+                <form
+                    @submit.prevent="replicateCatAndCriteres"
+                    class="flex w-full items-center justify-end"
+                >
+                    <button
+                        :disabled="replicateDisciplineForm.processing"
+                        :class="{
+                            'opacity-25': replicateDisciplineForm.processing,
+                        }"
+                        type="submit"
+                        class="inline-flex w-full max-w-sm justify-center rounded border border-transparent bg-green-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                    >
+                        <LoadingSVG v-if="replicateDisciplineForm.processing" />
+                        Dupliquer les catégories et les critères
                     </button>
                 </form>
             </div>

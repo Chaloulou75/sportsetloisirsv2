@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class LienDisciplineCategorie extends Model
+class LienDisciplineCategorie extends Pivot
 {
     use HasFactory;
 
@@ -40,9 +41,14 @@ class LienDisciplineCategorie extends Model
         return $this->hasMany(StructureProduit::class, 'categorie_id');
     }
 
-    public function criteres(): HasMany
+    // public function criteres(): HasMany
+    // {
+    //     return $this->hasMany(LienDisciplineCategorieCritere::class, 'categorie_id');
+    // }
+
+    public function criteres(): BelongsToMany
     {
-        return $this->hasMany(LienDisciplineCategorieCritere::class, 'categorie_id');
+        return $this->belongsToMany(Critere::class, 'liens_disciplines_categories_criteres', 'categorie_id', 'critere_id');
     }
 
     public function tarif_types(): HasMany
