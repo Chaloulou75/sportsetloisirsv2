@@ -45,36 +45,53 @@ const submitCreateInfoBase = () => {
     });
 };
 
-const replicateDisciplineForm = useForm({
+const replicateCategoriesForm = useForm({
     discipline_origin: null,
     discipline_target: null,
 });
 
 const replicateDiscipline = () => {
-    replicateDisciplineForm.post(
+    replicateCategoriesForm.post(
         route("admin.disciplines.duplicate_categories"),
         {
             preserveScroll: true,
             preserveState: false,
             onSuccess: () => {
-                replicateDisciplineForm.reset();
+                replicateCategoriesForm.reset();
             },
         }
     );
 };
 
-const replicateDisCatCritForm = useForm({
+const replicateCatAndCritForm = useForm({
     discipline_origin: null,
     discipline_target: null,
 });
 const replicateCatAndCriteres = () => {
-    replicateDisCatCritForm.post(
+    replicateCatAndCritForm.post(
         route("admin.disciplines.duplicate_categories_and_criteres"),
         {
             preserveScroll: true,
             preserveState: false,
             onSuccess: () => {
-                replicateDisCatCritForm.reset();
+                replicateCatAndCritForm.reset();
+            },
+        }
+    );
+};
+
+const replicateCatTarifForm = useForm({
+    discipline_origin: null,
+    discipline_target: null,
+});
+const replicateCatTarifs = () => {
+    replicateCatTarifForm.post(
+        route("admin.disciplines.duplicate_categories_and_tarifs"),
+        {
+            preserveScroll: true,
+            preserveState: false,
+            onSuccess: () => {
+                replicateCatTarifForm.reset();
             },
         }
     );
@@ -197,21 +214,21 @@ const replicateCatAndCriteres = () => {
                         d'une discipline à une autre:
                         <span
                             class="text-sm uppercase text-indigo-500"
-                            v-if="replicateDisciplineForm.discipline_origin"
+                            v-if="replicateCategoriesForm.discipline_origin"
                         >
-                            {{ replicateDisciplineForm.discipline_origin }}
+                            {{ replicateCategoriesForm.discipline_origin }}
                         </span>
                         <span
                             class="text-sm"
-                            v-if="replicateDisciplineForm.discipline_origin"
+                            v-if="replicateCategoriesForm.discipline_origin"
                         >
                             à
                         </span>
                         <span
                             class="text-sm uppercase text-indigo-500"
-                            v-if="replicateDisciplineForm.discipline_target"
+                            v-if="replicateCategoriesForm.discipline_target"
                         >
-                            {{ replicateDisciplineForm.discipline_target }}
+                            {{ replicateCategoriesForm.discipline_target }}
                         </span>
                     </h2>
                     <form
@@ -221,46 +238,46 @@ const replicateCatAndCriteres = () => {
                         <AutocompleteDisciplineNav
                             class="w-full"
                             :disciplines="listDisciplines"
-                            v-model="replicateDisciplineForm.discipline_origin"
+                            v-model="replicateCategoriesForm.discipline_origin"
                         />
                         <p
                             class="text-xs text-red-500"
                             v-if="
-                                replicateDisciplineForm.errors.discipline_origin
+                                replicateCategoriesForm.errors.discipline_origin
                             "
                         >
                             {{
-                                replicateDisciplineForm.errors.discipline_origin
+                                replicateCategoriesForm.errors.discipline_origin
                             }}
                         </p>
 
                         <AutocompleteDisciplineNav
                             class="w-full"
                             :disciplines="listDisciplines"
-                            v-model="replicateDisciplineForm.discipline_target"
+                            v-model="replicateCategoriesForm.discipline_target"
                         />
                         <p
                             class="text-xs text-red-500"
                             v-if="
-                                replicateDisciplineForm.errors.discipline_target
+                                replicateCategoriesForm.errors.discipline_target
                             "
                         >
                             {{
-                                replicateDisciplineForm.errors.discipline_target
+                                replicateCategoriesForm.errors.discipline_target
                             }}
                         </p>
 
                         <button
-                            :disabled="replicateDisciplineForm.processing"
+                            :disabled="replicateCategoriesForm.processing"
                             :class="{
                                 'opacity-25':
-                                    replicateDisciplineForm.processing,
+                                    replicateCategoriesForm.processing,
                             }"
                             type="submit"
                             class="inline-flex w-full max-w-sm justify-center rounded border border-transparent bg-green-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                         >
                             <LoadingSVG
-                                v-if="replicateDisciplineForm.processing"
+                                v-if="replicateCategoriesForm.processing"
                             />
                             Dupliquer
                         </button>
@@ -276,21 +293,21 @@ const replicateCatAndCriteres = () => {
                         etc... d'une discipline à une autre:
                         <span
                             class="text-base uppercase text-indigo-500"
-                            v-if="replicateDisCatCritForm.discipline_origin"
+                            v-if="replicateCatAndCritForm.discipline_origin"
                         >
-                            {{ replicateDisCatCritForm.discipline_origin }}
+                            {{ replicateCatAndCritForm.discipline_origin }}
                         </span>
                         <span
                             class="text-base"
-                            v-if="replicateDisCatCritForm.discipline_origin"
+                            v-if="replicateCatAndCritForm.discipline_origin"
                         >
                             à
                         </span>
                         <span
                             class="text-base uppercase text-indigo-500"
-                            v-if="replicateDisCatCritForm.discipline_target"
+                            v-if="replicateCatAndCritForm.discipline_target"
                         >
-                            {{ replicateDisCatCritForm.discipline_target }}
+                            {{ replicateCatAndCritForm.discipline_target }}
                         </span>
                     </h2>
                     <form
@@ -300,45 +317,116 @@ const replicateCatAndCriteres = () => {
                         <AutocompleteDisciplineNav
                             class="w-full"
                             :disciplines="listDisciplines"
-                            v-model="replicateDisCatCritForm.discipline_origin"
+                            v-model="replicateCatAndCritForm.discipline_origin"
                         />
                         <p
                             class="text-xs text-red-500"
                             v-if="
-                                replicateDisCatCritForm.errors.discipline_origin
+                                replicateCatAndCritForm.errors.discipline_origin
                             "
                         >
                             {{
-                                replicateDisCatCritForm.errors.discipline_origin
+                                replicateCatAndCritForm.errors.discipline_origin
                             }}
                         </p>
 
                         <AutocompleteDisciplineNav
                             class="w-full"
                             :disciplines="listDisciplines"
-                            v-model="replicateDisCatCritForm.discipline_target"
+                            v-model="replicateCatAndCritForm.discipline_target"
                         />
                         <p
                             class="text-xs text-red-500"
                             v-if="
-                                replicateDisCatCritForm.errors.discipline_target
+                                replicateCatAndCritForm.errors.discipline_target
                             "
                         >
                             {{
-                                replicateDisCatCritForm.errors.discipline_target
+                                replicateCatAndCritForm.errors.discipline_target
                             }}
                         </p>
                         <button
-                            :disabled="replicateDisCatCritForm.processing"
+                            :disabled="replicateCatAndCritForm.processing"
                             :class="{
                                 'opacity-25':
-                                    replicateDisCatCritForm.processing,
+                                    replicateCatAndCritForm.processing,
                             }"
                             type="submit"
                             class="inline-flex w-full max-w-sm justify-center rounded border border-transparent bg-green-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                         >
                             <LoadingSVG
-                                v-if="replicateDisCatCritForm.processing"
+                                v-if="replicateCatAndCritForm.processing"
+                            />
+                            Dupliquer
+                        </button>
+                    </form>
+                </div>
+                <div class="w-full space-y-4">
+                    <h2 class="text-base font-semibold md:text-lg">
+                        Dupliquer les
+                        <span class="uppercase text-indigo-500">tarifs</span>,
+                        <span class="uppercase text-indigo-500">attributs</span>
+                        etc... d'une discipline à une autre:
+                        <span
+                            class="text-base uppercase text-indigo-500"
+                            v-if="replicateCatTarifForm.discipline_origin"
+                        >
+                            {{ replicateCatTarifForm.discipline_origin }}
+                        </span>
+                        <span
+                            class="text-base"
+                            v-if="replicateCatTarifForm.discipline_origin"
+                        >
+                            à
+                        </span>
+                        <span
+                            class="text-base uppercase text-indigo-500"
+                            v-if="replicateCatTarifForm.discipline_target"
+                        >
+                            {{ replicateCatTarifForm.discipline_target }}
+                        </span>
+                    </h2>
+                    <form
+                        @submit.prevent="replicateCatTarifs"
+                        class="flex w-full flex-col items-center justify-between space-y-5 md:flex-row md:space-x-4 md:space-y-0"
+                    >
+                        <AutocompleteDisciplineNav
+                            class="w-full"
+                            :disciplines="listDisciplines"
+                            v-model="replicateCatTarifForm.discipline_origin"
+                        />
+                        <p
+                            class="text-xs text-red-500"
+                            v-if="
+                                replicateCatTarifForm.errors.discipline_origin
+                            "
+                        >
+                            {{ replicateCatTarifForm.errors.discipline_origin }}
+                        </p>
+
+                        <AutocompleteDisciplineNav
+                            class="w-full"
+                            :disciplines="listDisciplines"
+                            v-model="replicateCatTarifForm.discipline_target"
+                        />
+                        <p
+                            class="text-xs text-red-500"
+                            v-if="
+                                replicateCatTarifForm.errors.discipline_target
+                            "
+                        >
+                            {{ replicateCatTarifForm.errors.discipline_target }}
+                        </p>
+                        <button
+                            :disabled="replicateCatTarifForm.processing"
+                            :class="{
+                                'opacity-25': replicateCatTarifForm.processing,
+                            }"
+                            type="submit"
+                            class="inline-flex w-full max-w-sm justify-center rounded border border-transparent bg-green-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                        >
+                            <LoadingSVG
+                                v-if="replicateCatTarifForm.processing"
                             />
                             Dupliquer
                         </button>

@@ -181,19 +181,18 @@ class CategoryDisciplineController extends Controller
 
         $categorieInId = $request->input('categorieIn');
         $categorieIn = Categorie::findOrFail($categorieInId);
-
         $disciplineCategorie = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('categorie_id', $categorieIn->id)->first();
         $discCatCrit = LienDisciplineCategorieCritere::with('valeurs')->where('categorie_id', $disciplineCategorie->id)->get();
 
-
-        foreach ($discCatCrit as $item) {
-            if ($item->valeurs->isNotEmpty()) {
-                foreach ($item->valeurs as $valeur) {
-                    $valeur->delete();
+        if($discCatCrit) {
+            foreach ($discCatCrit as $item) {
+                if ($item->valeurs->isNotEmpty()) {
+                    foreach ($item->valeurs as $valeur) {
+                        $valeur->delete();
+                    }
                 }
             }
         }
-
 
         if($discCatCrit->isNotEmpty()) {
             foreach($discCatCrit as $critere) {
