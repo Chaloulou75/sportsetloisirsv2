@@ -214,10 +214,37 @@ class CategoryDisciplineCritereController extends Controller
                             $critereAttributes = collect($critere)->except(['id','discipline_id', 'categorie_id', 'created_at', 'updated_at'])->toArray();
                             $critereAttributes['discipline_id'] = $pivotTarget->discipline_id;
                             $critereAttributes['categorie_id'] = $pivotTarget->id;
-                            $newCritereForTarget = new LienDisciplineCategorieCritere();
-                            $newCritereForTarget->fill($critereAttributes);
-                            $newCritereForTarget->save();
-                            // dd($critere->valeurs);
+                            $critereForTarget = new LienDisciplineCategorieCritere();
+                            $critereForTarget->fill($critereAttributes);
+                            $critereForTarget->save();
+
+                            if($critere->valeurs) {
+                                foreach($critere->valeurs as $valeur) {
+                                    $critValeur = $critereForTarget->valeurs()->create([
+                                        'valeur' => $valeur->valeur,
+                                        'ordre' => $valeur->ordre,
+                                        'defaut' => $valeur->defaut,
+                                        'inclus_all' => $valeur->inclus_all
+                                    ]);
+                                    if($valeur->sous_criteres) {
+                                        foreach($valeur->sous_criteres as $sousCritere) {
+                                            $sousCrit = $critValeur->sous_criteres()->create([
+                                                'nom' => $sousCritere->nom,
+                                                'type_champ_form' => $sousCritere->type_champ_form
+                                            ]);
+                                            if($sousCritere->sous_criteres_valeurs) {
+                                                foreach($sousCritere->sous_criteres_valeurs as $sousCritValeur) {
+                                                    $sousCrit->sous_criteres_valeurs()->create([
+                                                        'valeur' => $sousCritValeur->valeur,
+                                                        'ordre' => $sousCritValeur->ordre,
+                                                        'defaut' => $sousCritValeur->defaut,
+                                                    ]);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -225,6 +252,6 @@ class CategoryDisciplineCritereController extends Controller
         }
 
 
-        return to_route('admin.disciplines.index')->with('success', 'Les catégories et leurs critères de la discipline '. $dis_origin->name .' a été dupliquée à '. $dis_target->name .'.');
+        return to_route('admin.disciplines.index')->with('success', 'Les catégories, critères et valeurs de la discipline '. $dis_origin->name .' a été dupliquée à '. $dis_target->name .'.');
     }
 }

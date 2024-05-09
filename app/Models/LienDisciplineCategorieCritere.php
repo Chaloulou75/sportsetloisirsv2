@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class LienDisciplineCategorieCritere extends Pivot
+class LienDisciplineCategorieCritere extends Model
 {
     use HasFactory;
 

@@ -123,7 +123,9 @@ const updateCategorie = (index) => {
                 class="mx-auto flex flex-col items-center justify-center space-y-4 md:flex-row md:items-start md:justify-around md:space-y-0"
             >
                 <div class="w-full md:w-2/3">
-                    <h3 class="mb-4 text-center text-lg text-slate-700">
+                    <h3
+                        class="mb-4 text-center text-lg font-semibold text-slate-700"
+                    >
                         Les catégories associées à
                         <span class="text-indigo-700">{{
                             discipline.name
@@ -249,7 +251,9 @@ const updateCategorie = (index) => {
                     </ul>
                 </div>
                 <div class="w-full md:w-1/3">
-                    <h3 class="mb-4 text-center text-lg text-slate-700">
+                    <h3
+                        class="mb-4 text-center text-lg font-semibold text-slate-700"
+                    >
                         Ajouter des catégories à
                         <span class="text-indigo-700">{{
                             discipline.name

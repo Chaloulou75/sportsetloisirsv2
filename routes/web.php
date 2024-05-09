@@ -210,7 +210,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('/categories/{categorie}', [CategoryController::class, 'update'])->name('admin.categories.update');
         Route::delete('/categories/{categorie}', [CategoryController::class, 'destroy'])->name('admin.categories.destroy');
         Route::post('/categories/{categorie}/disciplines', [AdminCategorieDisciplineController::class, 'store'])->name('admin.categories.disciplines.store');
-        Route::delete('/categories/{categorie}/disciplines', [AdminCategorieDisciplineController::class, 'destroy'])->name('admin.categories.disciplines.destroy');
 
         Route::get('/utilisateurs', [UserController::class, 'index'])->name('admin.users.index');
         Route::get('/structures', [AdminStructureController::class, 'index'])->name('admin.structures.index');
@@ -220,7 +219,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/blog/tags', [AdminBlogTagController::class, 'index'])->name('admin.blog.tags.index');
         Route::post('/blog/tags', [AdminBlogTagController::class, 'store'])->name('admin.blog.tags.store');
         Route::delete('/blog/tags/{tag}', [AdminBlogTagController::class, 'destroy'])->name('admin.blog.tags.destroy');
-
 
         Route::get('/disciplines/dis-{discipline:slug}', [AdminDisciplineController::class, 'edit'])->name('admin.disciplines.edit');
 
@@ -245,11 +243,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/tarifs/{tarif}/attributs', [AdminTarifTypeAttributController::class, 'store'])->name('admin.tarifs.attributs.store');
         Route::patch('/tarifs/{tarif}/attributs/{attribut}', [AdminTarifTypeAttributController::class, 'update'])->name('admin.tarifs.attributs.update');
         Route::delete('/tarifs/{tarif}/attributs/{attribut}', [AdminTarifTypeAttributController::class, 'destroy'])->name('admin.tarifs.attributs.destroy');
-
-        Route::post('/tarifsTypes/{tarifType}/discats', [AdminTarifTypeDisCatController::class, 'store'])->name('admin.tariftypes.discats.store');
-        Route::delete('/tarifsTypes/{tarifType}/discats', [AdminTarifTypeDisCatController::class, 'destroy'])->name('admin.tariftypes.discats.destroy');
-
-        Route::post('/tarifsType/{tarifType}/discats/attributs/{attribut}', [AdminTarifTypeDisCatAttributController::class, 'store'])->name('admin.tariftypes.discats.attributs.store');
 
         Route::post('/discipline-similaire/{discipline}', [DisciplineSimilaireController::class, 'store'])->name('discipline-similaire.store');
         Route::put('/discipline-similaire/{discipline}', [DisciplineSimilaireController::class, 'detach'])->name('discipline-similaire.detach');
