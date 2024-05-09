@@ -182,11 +182,12 @@ class CategoryDisciplineCritereController extends Controller
             'discipline_target' => ['required', 'exists:liste_disciplines,slug'],
         ]);
 
-        $dis_origin = ListDiscipline::with(['categories.criteres'])->where('slug', $validatedData['discipline_origin'])->firstOrFail();
+        $dis_origin = ListDiscipline::with(['categories'])->where('slug', $validatedData['discipline_origin'])->firstOrFail();
         $dis_target = ListDiscipline::with(['categories'])->where('slug', $validatedData['discipline_target'])->firstOrFail();
 
         foreach ($dis_origin->categories as $category) {
             $originPivotAttributes = $category->pivot;
+
             $targetCategoriesWithPivot = $dis_target->categories;
 
             // Check if the target discipline's categories contain the same categorie_id as the origin category
@@ -202,11 +203,23 @@ class CategoryDisciplineCritereController extends Controller
 
                 $dis_target->categories()->attach($category->id, $pivotAttributes);
 
-                $pivot = $dis_target->categories()->where('categorie_id', $category->id)->first()->pivot;
+                $pivotTarget = $dis_target->categories()->where('categorie_id', $category->id)->first()->pivot;
 
-                if ($pivot) {
-                    $newSlug = Str::slug($category->nom) . '-' . $pivot->id;
+                if ($pivotTarget) {
+                    $newSlug = Str::slug($category->nom) . '-' . $pivotTarget->id;
                     $dis_target->categories()->updateExistingPivot($category->id, ['slug' => $newSlug]);
+
+                    if($originPivotAttributes->criteres) {
+                        foreach($originPivotAttributes->criteres as $critere) {
+                            $critereAttributes = collect($critere)->except(['id','discipline_id', 'categorie_id', 'created_at', 'updated_at'])->toArray();
+                            $critereAttributes['discipline_id'] = $pivotTarget->discipline_id;
+                            $critereAttributes['categorie_id'] = $pivotTarget->id;
+                            $newCritereForTarget = new LienDisciplineCategorieCritere();
+                            $newCritereForTarget->fill($critereAttributes);
+                            $newCritereForTarget->save();
+                            // dd($critere->valeurs);
+                        }
+                    }
                 }
             }
         }

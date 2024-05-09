@@ -41,15 +41,15 @@ class LienDisciplineCategorie extends Pivot
         return $this->hasMany(StructureProduit::class, 'categorie_id');
     }
 
-    // public function criteres(): HasMany
-    // {
-    //     return $this->hasMany(LienDisciplineCategorieCritere::class, 'categorie_id');
-    // }
-
-    public function criteres(): BelongsToMany
+    public function criteres(): HasMany
     {
-        return $this->belongsToMany(Critere::class, 'liens_disciplines_categories_criteres', 'categorie_id', 'critere_id');
+        return $this->hasMany(LienDisciplineCategorieCritere::class, 'categorie_id');
     }
+
+    // public function criteres(): BelongsToMany
+    // {
+    //     return $this->belongsToMany(Critere::class, 'liens_disciplines_categories_criteres', 'categorie_id', 'critere_id');
+    // }
 
     public function tarif_types(): HasMany
     {

@@ -21,20 +21,18 @@ class Categorie extends Model
 
     public function disciplines(): BelongsToMany
     {
-        return $this->belongsToMany(ListDiscipline::class, 'liens_disciplines_categories', 'categorie_id', 'discipline_id')->withPivot('id', 'slug', 'nom_categorie_pro', 'nom_categorie_client');
+        return $this->belongsToMany(ListDiscipline::class, 'liens_disciplines_categories', 'categorie_id', 'discipline_id')->using(LienDisciplineCategorie::class)->withPivot('id', 'slug', 'nom_categorie_pro', 'nom_categorie_client')->withTimestamps();
     }
 
-    // public function criteres(): HasManyThrough
-    // {
-    //     return $this->hasManyThrough(
-    //         Critere::class, // Target model
-    //         LienDisciplineCategorieCritere::class,        // Intermediate model
-    //         'categorie_id',                         // Foreign key on intermediate model
-    //         'categorie_id',                         // Foreign key on target model
-    //         'id',                                   // Local key on current model
-    //         'id'                                    // Local key on intermediate model
-    //     );
-    // }
+    public function criteres(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Critere::class,
+            'liens_disciplines_categories_criteres',
+            'categorie_id',
+            'critere_id'
+        )->using(LienDisciplineCategorieCritere::class)->withPivot('id', 'discipline_id', 'categorie_id', 'critere_id', 'nom', 'type_champ_form', 'ordre', 'visible_back', 'visible_front', 'visible_block', 'indexable')->withTimestamps();
+    }
 
     public function activites(): BelongsToMany
     {

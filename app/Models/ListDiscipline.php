@@ -67,7 +67,7 @@ class ListDiscipline extends Model
 
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(Categorie::class, 'liens_disciplines_categories', 'discipline_id', 'categorie_id')->withPivot('id', 'slug', 'nom_categorie_pro', 'nom_categorie_client');
+        return $this->belongsToMany(Categorie::class, 'liens_disciplines_categories', 'discipline_id', 'categorie_id')->using(LienDisciplineCategorie::class)->withPivot('id', 'slug', 'nom_categorie_pro', 'nom_categorie_client');
     }
 
     public function structures(): BelongsToMany
