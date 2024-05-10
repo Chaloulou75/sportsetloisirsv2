@@ -192,7 +192,6 @@ class LienDisCatTariftypeController extends Controller
 
         foreach ($dis_origin->categories as $category) {
             $originPivotAttributes = $category->pivot;
-
             $targetCategoriesWithPivot = $dis_target->categories;
 
             // Check if the target discipline's categories contain the same categorie_id as the origin category
@@ -210,7 +209,55 @@ class LienDisCatTariftypeController extends Controller
                     $newSlug = Str::slug($category->nom) . '-' . $pivotTarget->id;
                     $dis_target->categories()->updateExistingPivot($category->id, ['slug' => $newSlug]);
 
-                    dd($pivotTarget->tarif_types);
+                    if($originPivotAttributes->tarif_types) {
+                        foreach($originPivotAttributes->tarif_types as $tarifType) {
+                            $catTarifType = $pivotTarget->tarif_types()->create([
+                                'discipline_id' => $dis_target->id,
+                                'tarif_type_id' => $tarifType->tarif_type_id,
+                                'nom' => $tarifType->nom,
+                                'show_planning' => $tarifType->show_planning
+                            ]);
+                            if($tarifType->tarif_attributs) {
+                                foreach($tarifType->tarif_attributs as $attribut) {
+                                    $catTarAtt = $catTarifType->tarif_attributs()->create([
+                                        'nom' => $attribut->nom,
+                                        'type_champ_form' => $attribut->type_champ_form,
+                                        'ordre' => $attribut->ordre,
+                                    ]);
+                                    if($attribut->valeurs) {
+                                        foreach($attribut->valeurs as $valeur) {
+                                            $catTarAttValeur = $catTarAtt->valeurs()->create([
+                                                'valeur' => $valeur->valeur,
+                                                'ordre' => $valeur->ordre,
+                                            ]);
+                                        }
+                                    }
+
+                                    if($attribut->sous_attributs) {
+                                        foreach($attribut->sous_attributs as $ssAttribut) {
+                                            $catTarAttSsAttr = $catTarAtt->sous_attributs()->create([
+                                                'att_valeur_id' => $ssAttribut->att_valeur_id,
+                                                'nom' => $ssAttribut->nom,
+                                                'type_champ_form' => $ssAttribut->type_champ_form,
+                                                'ordre' => $ssAttribut->ordre,
+                                            ]);
+                                        }
+                                    }
+
+                                }
+
+                            }
+                            if($tarifType->tarif_booking_fields) {
+                                foreach($tarifType->tarif_booking_fields as $bookingField) {
+                                    $catTarBookingField = $catTarifType->tarif_booking_fields()->create([
+                                        'nom' => $attribut->nom,
+                                        'type_champ_form' => $attribut->type_champ_form,
+                                        'ordre' => $attribut->ordre,
+                                    ]);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
