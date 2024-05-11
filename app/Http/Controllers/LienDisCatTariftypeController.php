@@ -230,9 +230,27 @@ class LienDisCatTariftypeController extends Controller
                                                 'valeur' => $valeur->valeur,
                                                 'ordre' => $valeur->ordre,
                                             ]);
+                                            if($valeur->sous_attributs) {
+                                                foreach($valeur->sous_attributs as $ssAttr) {
+                                                    $catTarAttValSsAttr = $catTarAttValeur->sous_attributs()->create([
+                                                        'att_valeur_id' => $ssAttr->att_valeur_id,
+                                                        'nom' => $ssAttr->nom,
+                                                        'type_champ_form' => $ssAttr->type_champ_form,
+                                                        'ordre' => $ssAttr->ordre,
+                                                    ]);
+                                                    if($ssAttr->valeurs) {
+                                                        foreach ($ssAttr->valeurs as $ssAttrVal) {
+                                                            $catTarAttValSsAttr->valeurs()->create([
+                                                                'valeur' => $ssAttrVal->valeur,
+                                                                'ordre' => $ssAttrVal->ordre,
+                                                                'inclus_all' => $ssAttrVal->inclus_all
+                                                            ]);
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
-
                                     if($attribut->sous_attributs) {
                                         foreach($attribut->sous_attributs as $ssAttribut) {
                                             $catTarAttSsAttr = $catTarAtt->sous_attributs()->create([
@@ -241,19 +259,52 @@ class LienDisCatTariftypeController extends Controller
                                                 'type_champ_form' => $ssAttribut->type_champ_form,
                                                 'ordre' => $ssAttribut->ordre,
                                             ]);
+                                            if($ssAttribut->valeurs) {
+                                                foreach ($ssAttribut->valeurs as $sousAttrVal) {
+                                                    $catTarAttSsAttr->valeurs()->create([
+                                                        'valeur' => $sousAttrVal->valeur,
+                                                        'ordre' => $sousAttrVal->ordre,
+                                                        'inclus_all' => $sousAttrVal->inclus_all
+                                                    ]);
+                                                }
+                                            }
                                         }
                                     }
-
                                 }
-
                             }
                             if($tarifType->tarif_booking_fields) {
                                 foreach($tarifType->tarif_booking_fields as $bookingField) {
                                     $catTarBookingField = $catTarifType->tarif_booking_fields()->create([
-                                        'nom' => $attribut->nom,
-                                        'type_champ_form' => $attribut->type_champ_form,
-                                        'ordre' => $attribut->ordre,
+                                        'nom' => $bookingField->nom,
+                                        'type_champ_form' => $bookingField->type_champ_form,
+                                        'ordre' => $bookingField->ordre,
                                     ]);
+                                    if($bookingField->sous_fields) {
+                                        foreach ($bookingField->sous_fields as $ssField) {
+                                            $ssFieldBooking = $catTarBookingField->sous_fields()->create([
+                                                'nom' => $ssField->nom,
+                                                'type_champ_form' => $ssField->type_champ_form,
+                                                'ordre' => $ssField->ordre,
+                                            ]);
+                                            if($ssField->valeurs) {
+                                                foreach($ssField->valeurs as $value) {
+                                                    $ssFieldBooking->valeurs()->create([
+                                                        'valeur' => $value->valeur,
+                                                        'ordre' => $value->ordre,
+                                                        'inclus_all' => $value->inclus_all
+                                                    ]);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if($bookingField->valeurs) {
+                                        foreach($bookingField->valeurs as $val) {
+                                            $catTarBookingField->valeurs()->create([
+                                                'valeur' => $val->valeur,
+                                                'ordre' => $val->ordre,
+                                            ]);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -263,7 +314,7 @@ class LienDisCatTariftypeController extends Controller
         }
 
 
-        return to_route('admin.disciplines.index')->with('success', 'Les catégories, et tarifs de la discipline '. $dis_origin->name .' a été dupliquée à '. $dis_target->name .'.');
+        return to_route('admin.disciplines.index')->with('success', 'Les catégories, tarifs, et champs de formulaire associés à la discipline '. $dis_origin->name .' ont été dupliquées à '. $dis_target->name .'.');
 
     }
 }
