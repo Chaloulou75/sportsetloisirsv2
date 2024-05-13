@@ -14,7 +14,6 @@
         "laravel/cashier": "^15.3",
         "laravel/framework": "^10.1.5",
         "laravel/pulse": "^1.0@beta",
-        "laravel/sanctum": "^3.2.1",
         "laravel/tinker": "^2.8.1",
         "orangehill/iseed": "^3.0",
         "propaganistas/laravel-phone": "^5.0",

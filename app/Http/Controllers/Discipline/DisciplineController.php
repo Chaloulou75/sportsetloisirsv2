@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreDisciplineRequest;
 use App\Http\Resources\PostResource;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
@@ -130,23 +131,20 @@ class DisciplineController extends Controller
     /**
     * Update the specified resource in storage.
     */
-    public function create(Request $request): RedirectResponse
+    public function create(StoreDisciplineRequest $request): RedirectResponse
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'min:8'],
-        ]);
+        $validated = $request->validated();
 
-        $slug = Str::slug($request->name, '-');
-
+        $slug = Str::slug($validated['name'], '-');
 
         $discipline = ListDiscipline::create([
-            "name" => $request->name,
+            "name" => $validated['name'],
             "slug" => $slug,
-            "description" => $request->description,
+            "description" => $validated['description'],
+            'theme' => $validated['theme'],
         ]);
 
         return to_route('admin.index')->with('success', 'Discipline ' . $discipline->name . ' créée.');
@@ -172,23 +170,19 @@ class DisciplineController extends Controller
     /**
     * Update the specified resource in storage.
     */
-    public function update(Request $request, ListDiscipline $discipline): RedirectResponse
+    public function update(StoreDisciplineRequest $request, ListDiscipline $discipline): RedirectResponse
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'min:8'],
-            'theme' => ['required'],
-        ]);
+        $validated = $request->validated();
 
         $discipline = ListDiscipline::find($discipline->id);
 
         $discipline->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'theme' => $request->theme,
+            'name' => $validated['name'],
+            "description" => $validated['description'],
+            'theme' => $validated['theme']
         ]);
 
         $slug = Str::slug($discipline->name, '-');

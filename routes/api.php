@@ -16,10 +16,6 @@ use App\Http\Controllers\Discipline\DisciplineController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::get('/familles', [FamilleController::class, 'loadFamilles']);
 Route::get('/listdisciplines/{id}', [DisciplineController::class, 'getCategories']);
 Route::get('/listdisciplines_similaires/{id}', [DisciplineController::class, 'getDisciplinesSimilaires']);

@@ -202,7 +202,9 @@ class LienDisCatTariftypeController extends Controller
             if (!$categoryExistsInTarget) {
                 $pivotAttributes = collect($originPivotAttributes)->except(['id','discipline_id', 'categorie_id'])->toArray();
                 $pivotAttributes['slug'] = Str::slug($category->nom) . '-' . $category->id . '_random_texte';
+
                 $dis_target->categories()->attach($category->id, $pivotAttributes);
+
                 $pivotTarget = $dis_target->categories()->where('categorie_id', $category->id)->first()->pivot;
 
                 if ($pivotTarget) {

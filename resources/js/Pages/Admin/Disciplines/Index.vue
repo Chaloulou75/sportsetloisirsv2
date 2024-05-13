@@ -1,6 +1,6 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import { Head, Link, router, useForm } from "@inertiajs/vue3";
+import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref, defineAsyncComponent } from "vue";
 import AutocompleteDisciplineNav from "@/Components/Navigation/AutocompleteDisciplineNav.vue";
 import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
@@ -51,16 +51,21 @@ const replicateCategoriesForm = useForm({
 });
 
 const replicateDiscipline = () => {
-    replicateCategoriesForm.post(
-        route("admin.disciplines.duplicate_categories"),
-        {
-            preserveScroll: true,
-            preserveState: false,
-            onSuccess: () => {
-                replicateCategoriesForm.reset();
-            },
-        }
+    const isConfirmed = window.confirm(
+        "Sûr de vouloir dupliquer toutes les catégories?"
     );
+    if (isConfirmed) {
+        replicateCategoriesForm.post(
+            route("admin.disciplines.duplicate_categories"),
+            {
+                preserveScroll: true,
+                preserveState: false,
+                onSuccess: () => {
+                    replicateCategoriesForm.reset();
+                },
+            }
+        );
+    }
 };
 
 const replicateCatAndCritForm = useForm({
@@ -68,16 +73,21 @@ const replicateCatAndCritForm = useForm({
     discipline_target: null,
 });
 const replicateCatAndCriteres = () => {
-    replicateCatAndCritForm.post(
-        route("admin.disciplines.duplicate_categories_and_criteres"),
-        {
-            preserveScroll: true,
-            preserveState: false,
-            onSuccess: () => {
-                replicateCatAndCritForm.reset();
-            },
-        }
+    const isConfirmed = window.confirm(
+        "Sûr de vouloir dupliquer toutes les catégories, critères et tarifs associés?"
     );
+    if (isConfirmed) {
+        replicateCatAndCritForm.post(
+            route("admin.disciplines.duplicate_categories_and_criteres"),
+            {
+                preserveScroll: true,
+                preserveState: false,
+                onSuccess: () => {
+                    replicateCatAndCritForm.reset();
+                },
+            }
+        );
+    }
 };
 
 const replicateCatTarifForm = useForm({
@@ -85,16 +95,21 @@ const replicateCatTarifForm = useForm({
     discipline_target: null,
 });
 const replicateCatTarifs = () => {
-    replicateCatTarifForm.post(
-        route("admin.disciplines.duplicate_categories_and_tarifs"),
-        {
-            preserveScroll: true,
-            preserveState: false,
-            onSuccess: () => {
-                replicateCatTarifForm.reset();
-            },
-        }
+    const isConfirmed = window.confirm(
+        "Sûr de vouloir dupliquer toutes les catégories et tarifs liés?"
     );
+    if (isConfirmed) {
+        replicateCatTarifForm.post(
+            route("admin.disciplines.duplicate_categories_and_tarifs"),
+            {
+                preserveScroll: true,
+                preserveState: false,
+                onSuccess: () => {
+                    replicateCatTarifForm.reset();
+                },
+            }
+        );
+    }
 };
 </script>
 <template>
@@ -114,7 +129,8 @@ const replicateCatTarifs = () => {
                 <h1
                     class="px-3 text-center text-base font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
-                    Gestion du contenu (disciplines, catégories, critères)
+                    Gestion du contenu (disciplines, catégories, critères,
+                    tarifs)
                 </h1>
             </div>
         </template>
@@ -285,11 +301,11 @@ const replicateCatTarifs = () => {
                 </div>
                 <div class="w-full space-y-4">
                     <h2 class="text-base font-semibold md:text-lg">
-                        Dupliquer les
+                        Dupliquer tous les paramètres d'une discipline:
                         <span class="uppercase text-indigo-500">catégories</span
                         >,
                         <span class="uppercase text-indigo-500">critères</span>,
-                        <span class="uppercase text-indigo-500">valeurs</span>
+                        <span class="uppercase text-indigo-500">tarifs</span>
                         etc... d'une discipline à une autre:
                         <span
                             class="text-base uppercase text-indigo-500"
@@ -365,7 +381,11 @@ const replicateCatTarifs = () => {
                     <h2 class="text-base font-semibold md:text-lg">
                         Dupliquer les
                         <span class="uppercase text-indigo-500">tarifs</span>,
-                        <span class="uppercase text-indigo-500">attributs</span>
+                        <span class="uppercase text-indigo-500">attributs</span
+                        >,
+                        <span class="uppercase text-indigo-500"
+                            >champ de formulaire de réservation</span
+                        >
                         etc... d'une discipline à une autre:
                         <span
                             class="text-base uppercase text-indigo-500"

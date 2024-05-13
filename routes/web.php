@@ -1,6 +1,5 @@
 <?php
 
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\HomeController;
@@ -32,12 +31,10 @@ use App\Http\Controllers\StructureCatTarifController;
 use App\Http\Controllers\StructurePlanningController;
 use App\Http\Controllers\ProductReservationController;
 use App\Http\Controllers\StructureCategorieController;
-use App\Models\LienDisCatTarBookingFieldSsFieldValeur;
 use App\Http\Controllers\DisciplineSimilaireController;
 use App\Http\Controllers\LienDisCatTariftypeController;
 use App\Http\Controllers\ReservationPlanningController;
 use App\Http\Controllers\StructureDisciplineController;
-use App\Http\Controllers\AdminTarifTypeDisCatController;
 use App\Http\Controllers\StructureStatistiqueController;
 use App\Http\Controllers\Discipline\DisciplineController;
 use App\Http\Controllers\AdminTarifTypeAttributController;
@@ -50,7 +47,6 @@ use App\Http\Controllers\LienDisCatTarAttrSousAttrController;
 use App\Http\Controllers\LienDisCatTarBookingFieldController;
 use App\Http\Controllers\StructurePlanningMultipleController;
 use App\Http\Controllers\LienDisCatTariftypeAttributController;
-use App\Http\Controllers\AdminTarifTypeDisCatAttributController;
 use App\Http\Controllers\Discipline\CategoryDisciplineController;
 use App\Http\Controllers\LienDisCatCritValSsCritValeurController;
 use App\Http\Controllers\CategoryDisciplineCritereValeurController;
@@ -259,14 +255,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         //dupliquer les categories d'une discipline
         Route::post('/disciplines/duplicate_categories', [AdminCategorieDisciplineController::class, 'duplicate'])->name('admin.disciplines.duplicate_categories');
-
         //dupliquer les criteres des categories d'une discipline
         Route::post('/disciplines/duplicate_categories_and_criteres', [CategoryDisciplineCritereController::class, 'duplicate'])->name('admin.disciplines.duplicate_categories_and_criteres');
-
-
         //dupliquer les tarifs des categories d'une discipline
         Route::post('/disciplines/duplicate_categories_and_tarifs', [LienDisCatTariftypeController::class, 'duplicate'])->name('admin.disciplines.duplicate_categories_and_tarifs');
-
 
         Route::post('/categories-disciplines-criteres', [CategoryDisciplineCritereController::class, 'store'])->name('categories-disciplines-criteres.store');
         Route::patch('/categories-disciplines-criteres/{critere}', [CategoryDisciplineCritereController::class, 'update'])->name('categories-disciplines-criteres.update');
