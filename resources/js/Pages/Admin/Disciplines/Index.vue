@@ -382,10 +382,11 @@ const replicateCatTarifs = () => {
                     <h2 class="text-base font-semibold md:text-lg">
                         Dupliquer les
                         <span class="uppercase text-indigo-500">tarifs</span>,
+                        ses
                         <span class="uppercase text-indigo-500">attributs</span
-                        >,
+                        >, et
                         <span class="uppercase text-indigo-500"
-                            >champ de formulaire de réservation</span
+                            >champs de formulaire de réservation</span
                         >
                         etc... d'une discipline à une autre:
                         <span
