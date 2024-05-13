@@ -301,7 +301,8 @@ const replicateCatTarifs = () => {
                 </div>
                 <div class="w-full space-y-4">
                     <h2 class="text-base font-semibold md:text-lg">
-                        Dupliquer tous les paramètres d'une discipline:
+                        Dupliquer <span class="italic">tous</span> les
+                        paramètres d'une discipline:
                         <span class="uppercase text-indigo-500">catégories</span
                         >,
                         <span class="uppercase text-indigo-500">critères</span>,
