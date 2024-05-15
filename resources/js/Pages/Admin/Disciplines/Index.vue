@@ -50,7 +50,7 @@ const replicateCategoriesForm = useForm({
     discipline_target: null,
 });
 
-const replicateDiscipline = () => {
+const replicateDisciplineCategories = () => {
     const isConfirmed = window.confirm(
         "Sûr de vouloir dupliquer toutes les catégories?"
     );
@@ -58,6 +58,7 @@ const replicateDiscipline = () => {
         replicateCategoriesForm.post(
             route("admin.disciplines.duplicate_categories"),
             {
+                errorBag: "replicateCategoriesForm",
                 preserveScroll: true,
                 preserveState: false,
                 onSuccess: () => {
@@ -80,6 +81,7 @@ const replicateCatAndCriteres = () => {
         replicateCatAndCritForm.post(
             route("admin.disciplines.duplicate_categories_and_criteres"),
             {
+                errorBag: "replicateCatAndCritForm",
                 preserveScroll: true,
                 preserveState: false,
                 onSuccess: () => {
@@ -102,6 +104,7 @@ const replicateCatTarifs = () => {
         replicateCatTarifForm.post(
             route("admin.disciplines.duplicate_categories_and_tarifs"),
             {
+                errorBag: "replicateCatTarifForm",
                 preserveScroll: true,
                 preserveState: false,
                 onSuccess: () => {
@@ -142,6 +145,7 @@ const replicateCatDis = () => {
         replicateCatDisForm.post(
             route("admin.disciplines.duplicate_criteres_of_categorie"),
             {
+                errorBag: "replicateCatDisForm",
                 preserveScroll: true,
                 preserveState: false,
                 onSuccess: () => {
@@ -181,6 +185,7 @@ const replicateCatDisTar = () => {
         replicateCatDisTarForm.post(
             route("admin.disciplines.duplicate_tarifs_of_categorie"),
             {
+                errorBag: "replicateCatDisTarForm",
                 preserveScroll: true,
                 preserveState: false,
                 onSuccess: () => {
@@ -333,7 +338,7 @@ const replicateCatDisTar = () => {
                         </span>
                     </h2>
                     <form
-                        @submit.prevent="replicateDiscipline"
+                        @submit.prevent="replicateDisciplineCategories"
                         class="flex w-full flex-col items-center justify-between space-y-5 md:flex-row md:items-end md:space-x-4 md:space-y-0"
                     >
                         <div class="w-full flex-1">
@@ -346,14 +351,11 @@ const replicateCatDisTar = () => {
                                 "
                             />
                             <p
-                                class="text-xs text-red-500"
-                                v-if="
-                                    replicateCategoriesForm.errors
-                                        .discipline_origin
-                                "
+                                class="mt-1 text-xs text-red-500"
+                                v-if="errors.replicateCategoriesForm"
                             >
                                 {{
-                                    replicateCategoriesForm.errors
+                                    errors.replicateCategoriesForm
                                         .discipline_origin
                                 }}
                             </p>
@@ -369,14 +371,11 @@ const replicateCatDisTar = () => {
                                 "
                             />
                             <p
-                                class="text-xs text-red-500"
-                                v-if="
-                                    replicateCategoriesForm.errors
-                                        .discipline_target
-                                "
+                                class="mt-1 text-xs text-red-500"
+                                v-if="errors.replicateCategoriesForm"
                             >
                                 {{
-                                    replicateCategoriesForm.errors
+                                    errors.replicateCategoriesForm
                                         .discipline_target
                                 }}
                             </p>
@@ -440,14 +439,11 @@ const replicateCatDisTar = () => {
                                 "
                             />
                             <p
-                                class="text-xs text-red-500"
-                                v-if="
-                                    replicateCatAndCritForm.errors
-                                        .discipline_origin
-                                "
+                                class="mt-1 text-xs text-red-500"
+                                v-if="errors.replicateCatAndCritForm"
                             >
                                 {{
-                                    replicateCatAndCritForm.errors
+                                    errors.replicateCatAndCritForm
                                         .discipline_origin
                                 }}
                             </p>
@@ -463,14 +459,11 @@ const replicateCatDisTar = () => {
                                 "
                             />
                             <p
-                                class="text-xs text-red-500"
-                                v-if="
-                                    replicateCatAndCritForm.errors
-                                        .discipline_target
-                                "
+                                class="mt-1 text-xs text-red-500"
+                                v-if="errors.replicateCatAndCritForm"
                             >
                                 {{
-                                    replicateCatAndCritForm.errors
+                                    errors.replicateCatAndCritForm
                                         .discipline_target
                                 }}
                             </p>
@@ -535,14 +528,11 @@ const replicateCatDisTar = () => {
                                 "
                             />
                             <p
-                                class="text-xs text-red-500"
-                                v-if="
-                                    replicateCatTarifForm.errors
-                                        .discipline_origin
-                                "
+                                class="mt-1 text-xs text-red-500"
+                                v-if="errors.replicateCatTarifForm"
                             >
                                 {{
-                                    replicateCatTarifForm.errors
+                                    errors.replicateCatTarifForm
                                         .discipline_origin
                                 }}
                             </p>
@@ -557,14 +547,11 @@ const replicateCatDisTar = () => {
                                 "
                             />
                             <p
-                                class="text-xs text-red-500"
-                                v-if="
-                                    replicateCatTarifForm.errors
-                                        .discipline_target
-                                "
+                                class="mt-1 text-xs text-red-500"
+                                v-if="errors.replicateCatTarifForm"
                             >
                                 {{
-                                    replicateCatTarifForm.errors
+                                    errors.replicateCatTarifForm
                                         .discipline_target
                                 }}
                             </p>
@@ -623,13 +610,11 @@ const replicateCatDisTar = () => {
                                 v-model="replicateCatDisForm.discipline_origin"
                             />
                             <p
-                                class="text-xs text-red-500"
-                                v-if="
-                                    replicateCatDisForm.errors.discipline_origin
-                                "
+                                class="mt-1 text-xs text-red-500"
+                                v-if="errors.replicateCatDisForm"
                             >
                                 {{
-                                    replicateCatDisForm.errors.discipline_origin
+                                    errors.replicateCatDisForm.discipline_origin
                                 }}
                             </p>
                         </div>
@@ -657,13 +642,11 @@ const replicateCatDisTar = () => {
                                 </option>
                             </select>
                             <p
-                                class="text-xs text-red-500"
-                                v-if="
-                                    replicateCatDisForm.errors.categorie_origin
-                                "
+                                class="mt-1 text-xs text-red-500"
+                                v-if="errors.replicateCatDisForm"
                             >
                                 {{
-                                    replicateCatDisForm.errors.categorie_origin
+                                    errors.replicateCatDisForm.categorie_origin
                                 }}
                             </p>
                         </div>
@@ -676,13 +659,11 @@ const replicateCatDisTar = () => {
                                 v-model="replicateCatDisForm.discipline_target"
                             />
                             <p
-                                class="text-xs text-red-500"
-                                v-if="
-                                    replicateCatDisForm.errors.discipline_target
-                                "
+                                class="mt-1 text-xs text-red-500"
+                                v-if="errors.replicateCatDisForm"
                             >
                                 {{
-                                    replicateCatDisForm.errors.discipline_target
+                                    errors.replicateCatDisForm.discipline_target
                                 }}
                             </p>
                         </div>
@@ -740,14 +721,11 @@ const replicateCatDisTar = () => {
                                 "
                             />
                             <p
-                                class="text-xs text-red-500"
-                                v-if="
-                                    replicateCatDisTarForm.errors
-                                        .discipline_origin
-                                "
+                                class="mt-1 text-xs text-red-500"
+                                v-if="errors.replicateCatDisTarForm"
                             >
                                 {{
-                                    replicateCatDisTarForm.errors
+                                    errors.replicateCatDisTarForm
                                         .discipline_origin
                                 }}
                             </p>
@@ -778,14 +756,11 @@ const replicateCatDisTar = () => {
                                 </option>
                             </select>
                             <p
-                                class="text-xs text-red-500"
-                                v-if="
-                                    replicateCatDisTarForm.errors
-                                        .categorie_origin
-                                "
+                                class="mt-1 text-xs text-red-500"
+                                v-if="errors.replicateCatDisTarForm"
                             >
                                 {{
-                                    replicateCatDisTarForm.errors
+                                    errors.replicateCatDisTarForm
                                         .categorie_origin
                                 }}
                             </p>
@@ -801,14 +776,11 @@ const replicateCatDisTar = () => {
                                 "
                             />
                             <p
-                                class="text-xs text-red-500"
-                                v-if="
-                                    replicateCatDisTarForm.errors
-                                        .discipline_target
-                                "
+                                class="mt-1 text-xs text-red-500"
+                                v-if="errors.replicateCatDisTarForm"
                             >
                                 {{
-                                    replicateCatDisTarForm.errors
+                                    errors.replicateCatDisTarForm
                                         .discipline_target
                                 }}
                             </p>

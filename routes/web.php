@@ -262,8 +262,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         //dupliquer les tarifs des categories d'une discipline
         Route::post('/disciplines/duplicate_categories_and_tarifs', [LienDisCatTariftypeController::class, 'duplicate'])->name('admin.disciplines.duplicate_categories_and_tarifs');
-
-        // ou 1 seule catégorie
+        // ou d'1 seule catégorie
         Route::post('/disciplines/duplicate_tarifs_of_categorie', [LienDisCatTariftypeController::class, 'duplicateOneCategorie'])->name('admin.disciplines.duplicate_tarifs_of_categorie');
 
         Route::post('/categories-disciplines-criteres', [CategoryDisciplineCritereController::class, 'store'])->name('categories-disciplines-criteres.store');
@@ -323,7 +322,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/bookingfields/{bookingfield}/sous_fields', [LienDisCatTarBookingFieldSousFieldController::class, 'store'])->name('admin.disciplines.categories.tarifs.bookingfields.sous_fields.store');
         Route::patch('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/bookingfields/{bookingfield}/sous_fields/{sousField}', [LienDisCatTarBookingFieldSousFieldController::class, 'update'])->name('admin.disciplines.categories.tarifs.bookingfields.sous_fields.update');
         Route::delete('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/bookingfields/{bookingfield}/sous_fields/{sousField}', [LienDisCatTarBookingFieldSousFieldController::class, 'destroy'])->name('admin.disciplines.categories.tarifs.bookingfields.sous_fields.destroy');
-
 
         // Tarifs Booking fields sous fields valeurs
         Route::post('/disciplines/dis-{discipline:slug}/categories/cat-{categorie}/tarifs/{tarifType}/bookingfields/{bookingfield}/sous_fields/{sousField}/valeurs', [LienDisCatTarBookingFieldSsFieldValeurController::class, 'store'])->name('admin.disciplines.categories.tarifs.bookingfields.sous_fields.valeurs.store');
