@@ -8,11 +8,11 @@ const props = defineProps({
 });
 </script>
 <template>
-    <div class="grid grid-cols-1 gap-6 md:grid-cols-4">
+    <div class="grid max-w-sm grid-cols-1 gap-6 md:grid-cols-4">
         <!-- name -->
         <div class="col-span-1 md:col-span-4">
             <label for="name" class="block text-sm font-medium text-gray-700">
-                Nom de la discipline
+                Nom de la discipline:
                 <span class="text-xs italic"></span>
             </label>
             <div class="mt-1 flex rounded-md">
@@ -37,14 +37,14 @@ const props = defineProps({
                 for="description"
                 class="block text-sm font-medium text-gray-700"
             >
-                Description de la discipline
+                Description de la discipline:
                 <span class="text-xs italic"></span>
             </label>
             <div class="mt-1 flex rounded-md">
                 <textarea
                     v-model="description"
                     id="description"
-                    class="mt-2 w-full rounded-lg border-gray-200 align-top shadow-sm sm:text-sm"
+                    class="w-full rounded-lg border-gray-200 align-top shadow-sm sm:text-sm"
                     rows="4"
                     placeholder=""
                 ></textarea>
@@ -57,7 +57,7 @@ const props = defineProps({
         <!-- thème -->
         <div class="col-span-1 md:col-span-3">
             <label for="theme" class="block text-sm font-medium text-gray-700">
-                Thème
+                Thème:
             </label>
 
             <div class="mt-1 flex space-x-4 rounded-md text-sm">

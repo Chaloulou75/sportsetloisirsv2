@@ -256,6 +256,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         //dupliquer les categories d'une discipline
         Route::post('/disciplines/duplicate_categories', [AdminCategorieDisciplineController::class, 'duplicate'])->name('admin.disciplines.duplicate_categories');
         //dupliquer tous les parametres categories, criteres, tarifs etc  d'une discipline
+        Route::post('/disciplines/duplicate_all_parameters', [AdminCategorieDisciplineController::class, 'duplicateAllParameters'])->name('admin.disciplines.duplicate_all_parameters');
+        // Dupliquer que les cats et criteres
         Route::post('/disciplines/duplicate_categories_and_criteres', [CategoryDisciplineCritereController::class, 'duplicate'])->name('admin.disciplines.duplicate_categories_and_criteres');
         // ou 1 seule catégorie
         Route::post('/disciplines/duplicate_criteres_of_categorie', [CategoryDisciplineCritereController::class, 'duplicateOneCategorie'])->name('admin.disciplines.duplicate_criteres_of_categorie');
