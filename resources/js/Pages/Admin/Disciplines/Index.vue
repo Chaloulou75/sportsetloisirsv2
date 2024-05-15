@@ -138,13 +138,13 @@ const replicateCatTarifs = () => {
     }
 };
 
-const categoriesOfOrigin = ref([]);
+const categoriesOfOriginForCatDis = ref([]);
 const replicateCatDisForm = useForm({
     discipline_origin: null,
     categorie_origin: null,
     discipline_target: null,
 });
-
+//categoriesOfOrigin
 watch(
     () => replicateCatDisForm.discipline_origin,
     async (newDisciplineSlug) => {
@@ -152,7 +152,7 @@ watch(
             axios
                 .get("/api/listdisciplinesbyslug/" + newDisciplineSlug)
                 .then((response) => {
-                    categoriesOfOrigin.value = response.data;
+                    categoriesOfOriginForCatDis.value = response.data;
                 })
                 .catch((e) => {
                     console.log(e);
@@ -179,6 +179,7 @@ const replicateCatDis = () => {
     }
 };
 
+const categoriesOfOrigin = ref([]);
 const replicateCatDisTarForm = useForm({
     discipline_origin: null,
     categorie_origin: null,
@@ -664,7 +665,7 @@ const replicateCatDisTar = () => {
                                     Selectionner une categorie
                                 </option>
                                 <option
-                                    v-for="category in categoriesOfOrigin"
+                                    v-for="category in categoriesOfOriginForCatDis"
                                     :value="category.id"
                                 >
                                     {{ category.nom }} /
