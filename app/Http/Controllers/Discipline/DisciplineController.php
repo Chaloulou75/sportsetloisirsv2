@@ -212,6 +212,16 @@ class DisciplineController extends Controller
 
     }
 
+    public function getCategoriesFromSlug($slug)
+    {
+        $listdiscipline = ListDiscipline::where('slug', $slug)->firstOrFail();
+
+        $categories = $listdiscipline->categories;
+
+        return CategorieResource::collection($categories);
+
+    }
+
     public function getDisciplinesSimilaires($id)
     {
         $discipline = ListDiscipline::findOrFail($id);

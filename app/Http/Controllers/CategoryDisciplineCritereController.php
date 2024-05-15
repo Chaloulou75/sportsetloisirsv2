@@ -6,6 +6,7 @@ use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Critere;
+use App\Models\Categorie;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
@@ -581,5 +582,168 @@ class CategoryDisciplineCritereController extends Controller
         }
 
         return to_route('admin.disciplines.index')->with('success', 'Les catégories, critères et valeurs de la discipline '. $dis_origin->name .' a été dupliquée à '. $dis_target->name .'.');
+    }
+
+    public function duplicateOneCategorie(Request $request): RedirectResponse
+    {
+        $user = auth()->user();
+        $this->authorize('viewAdmin', $user);
+
+        $validatedData = $request->validate([
+            'discipline_origin' => ['required', 'exists:liste_disciplines,slug'],
+            'categorie_origin' => ['required', 'exists:categories,id'],
+            'discipline_target' => ['required', 'exists:liste_disciplines,slug'],
+        ]);
+
+        $dis_origin = ListDiscipline::with(['categories'])
+                    ->where('slug', $validatedData['discipline_origin'])
+                    ->firstOrFail();
+
+        $cat_origin = Categorie::findOrFail($validatedData['categorie_origin']);
+
+        $dis_target = ListDiscipline::with(['categories'])
+                    ->where('slug', $validatedData['discipline_target'])
+                    ->firstOrFail();
+
+        $disCatOrigin = $dis_origin->categories()->where('categorie_id', $cat_origin->id)->first()->pivot;
+        $targetCategoriesWithPivot = $dis_target->categories;
+
+        // Check if the target discipline's categories contain the same categorie_id as the origin category
+        $categoryExistsInTarget = $targetCategoriesWithPivot->contains(function ($targetCategory) use ($disCatOrigin) {
+            return $targetCategory->pivot->categorie_id === $disCatOrigin->categorie_id;
+        });
+
+        if (!$categoryExistsInTarget) {
+
+            $pivotAttributes = collect($disCatOrigin)->except(['id','discipline_id', 'categorie_id'])->toArray();
+
+            $pivotAttributes['slug'] = Str::slug($cat_origin->nom) . '-' . $cat_origin->id . '_random_texte';
+
+            $dis_target->categories()->attach($cat_origin->id, $pivotAttributes);
+
+            $pivotTarget = $dis_target->categories()->where('categorie_id', $cat_origin->id)->first()->pivot;
+
+            if ($pivotTarget) {
+                $newSlug = Str::slug($cat_origin->nom) . '-' . $pivotTarget->id;
+                $dis_target->categories()->updateExistingPivot($cat_origin->id, ['slug' => $newSlug]);
+
+                if($disCatOrigin->criteres) {
+                    foreach($disCatOrigin->criteres as $critere) {
+                        $critereForTarget = $pivotTarget->criteres()->create([
+                            'categorie_id' => $pivotTarget->id,
+                            'discipline_id' => $pivotTarget->discipline_id,
+                            'critere_id' => $critere->critere_id,
+                            'nom' => $critere->nom,
+                            'type_champ_form' => $critere->type_champ_form,
+                            'ordre' => $critere->ordre,
+                            'visible_back' => $critere->visible_back,
+                            'visible_front' => $critere->visible_front,
+                            'visible_block' => $critere->visible_block,
+                            'indexable' => $critere->indexable
+                        ]);
+
+                        if($critere->valeurs) {
+                            foreach($critere->valeurs as $valeur) {
+                                $critValeur = $critereForTarget->valeurs()->create([
+                                    'valeur' => $valeur->valeur,
+                                    'ordre' => $valeur->ordre,
+                                    'defaut' => $valeur->defaut,
+                                    'inclus_all' => $valeur->inclus_all
+                                ]);
+                                if($valeur->sous_criteres) {
+                                    foreach($valeur->sous_criteres as $sousCritere) {
+                                        $sousCrit = $critValeur->sous_criteres()->create([
+                                            'nom' => $sousCritere->nom,
+                                            'type_champ_form' => $sousCritere->type_champ_form
+                                        ]);
+                                        if($sousCritere->sous_criteres_valeurs) {
+                                            foreach($sousCritere->sous_criteres_valeurs as $sousCritValeur) {
+                                                $sousCrit->sous_criteres_valeurs()->create([
+                                                    'valeur' => $sousCritValeur->valeur,
+                                                    'ordre' => $sousCritValeur->ordre,
+                                                    'defaut' => $sousCritValeur->defaut,
+                                                ]);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        } else {
+            // updateOrCreate criteres and tarifs for existing categories
+            $pivotTarget = $dis_target->categories()->where('categorie_id', $cat_origin->id)->first()->pivot;
+            if ($pivotTarget) {
+                if($disCatOrigin->criteres) {
+                    foreach($disCatOrigin->criteres as $critere) {
+                        $critereForTarget = $pivotTarget->criteres()->updateOrCreate(
+                            [
+                                'categorie_id' => $pivotTarget->id,
+                                'discipline_id' => $pivotTarget->discipline_id,
+                                'critere_id' => $critere->critere_id
+                            ],
+                            [
+                                'nom' => $critere->nom,
+                                'type_champ_form' => $critere->type_champ_form,
+                                'ordre' => $critere->ordre,
+                                'visible_back' => $critere->visible_back,
+                                'visible_front' => $critere->visible_front,
+                                'visible_block' => $critere->visible_block,
+                                'indexable' => $critere->indexable
+                            ]
+                        );
+
+                        if($critere->valeurs) {
+                            foreach($critere->valeurs as $valeur) {
+                                $critValeur = $critereForTarget->valeurs()->updateOrCreate(
+                                    [
+                                        'discipline_categorie_critere_id' => $critereForTarget->id,
+                                        'valeur' => $valeur->valeur,
+                                    ],
+                                    [
+                                        'ordre' => $valeur->ordre,
+                                        'defaut' => $valeur->defaut,
+                                        'inclus_all' => $valeur->inclus_all
+                                    ]
+                                );
+                                if($valeur->sous_criteres) {
+                                    foreach($valeur->sous_criteres as $sousCritere) {
+                                        $sousCrit = $critValeur->sous_criteres()->updateOrCreate(
+                                            [
+                                                'dis_cat_crit_val_id' => $critValeur->id,
+                                                'nom' => $sousCritere->nom
+                                            ],
+                                            [
+                                                'type_champ_form' => $sousCritere->type_champ_form
+                                            ]
+                                        );
+                                        if($sousCritere->sous_criteres_valeurs) {
+                                            foreach($sousCritere->sous_criteres_valeurs as $sousCritValeur) {
+                                                $sousCrit->sous_criteres_valeurs()->updateOrCreate(
+                                                    [
+                                                        'dcc_val_ss_crit_id' => $sousCrit->id,
+                                                        'valeur' => $sousCritValeur->valeur
+                                                    ],
+                                                    [
+                                                        'ordre' => $sousCritValeur->ordre,
+                                                        'defaut' => $sousCritValeur->defaut,
+                                                    ]
+                                                );
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        return to_route('admin.disciplines.index')->with('success', 'La catégorie, ses critères et valeurs de la discipline '. $dis_origin->name .' ont été dupliqués à '. $dis_target->name .'.');
     }
 }

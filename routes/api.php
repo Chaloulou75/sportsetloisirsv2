@@ -18,6 +18,6 @@ use App\Http\Controllers\Discipline\DisciplineController;
 
 Route::get('/familles', [FamilleController::class, 'loadFamilles']);
 Route::get('/listdisciplines/{id}', [DisciplineController::class, 'getCategories']);
+Route::get('/listdisciplinesbyslug/{slug}', [DisciplineController::class, 'getCategoriesFromSlug']);
 Route::get('/listdisciplines_similaires/{id}', [DisciplineController::class, 'getDisciplinesSimilaires']);
-
 Route::get('/disciplines', [DisciplineController::class,'loadDisciplines']);

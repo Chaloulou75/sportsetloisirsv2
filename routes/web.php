@@ -257,8 +257,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/disciplines/duplicate_categories', [AdminCategorieDisciplineController::class, 'duplicate'])->name('admin.disciplines.duplicate_categories');
         //dupliquer tous les parametres categories, criteres, tarifs etc  d'une discipline
         Route::post('/disciplines/duplicate_categories_and_criteres', [CategoryDisciplineCritereController::class, 'duplicate'])->name('admin.disciplines.duplicate_categories_and_criteres');
+        // ou 1 seule catégorie
+        Route::post('/disciplines/duplicate_criteres_of_categorie', [CategoryDisciplineCritereController::class, 'duplicateOneCategorie'])->name('admin.disciplines.duplicate_criteres_of_categorie');
+
         //dupliquer les tarifs des categories d'une discipline
         Route::post('/disciplines/duplicate_categories_and_tarifs', [LienDisCatTariftypeController::class, 'duplicate'])->name('admin.disciplines.duplicate_categories_and_tarifs');
+
+        // ou 1 seule catégorie
+        Route::post('/disciplines/duplicate_tarifs_of_categorie', [LienDisCatTariftypeController::class, 'duplicateOneCategorie'])->name('admin.disciplines.duplicate_tarifs_of_categorie');
 
         Route::post('/categories-disciplines-criteres', [CategoryDisciplineCritereController::class, 'store'])->name('categories-disciplines-criteres.store');
         Route::patch('/categories-disciplines-criteres/{critere}', [CategoryDisciplineCritereController::class, 'update'])->name('categories-disciplines-criteres.update');

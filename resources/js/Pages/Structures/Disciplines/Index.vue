@@ -124,7 +124,6 @@ watch(
                 .get("/api/listdisciplines_similaires/" + newDisciplineID)
                 .then((response) => {
                     activiteSimilairesList.value = response.data;
-                    console.log(activiteSimilairesList.value);
                 })
                 .catch((e) => {
                     console.log(e);
