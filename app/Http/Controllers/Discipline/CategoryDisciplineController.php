@@ -16,6 +16,7 @@ use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\DisCatTarifTypeResource;
 use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
@@ -224,5 +225,13 @@ class CategoryDisciplineController extends Controller
         ]);
 
         return to_route('admin.disciplines.categories.edit', $discipline)->with('success', 'Catégorie mise à jour');
+    }
+
+    public function getTarifs(ListDiscipline $discipline, Categorie $categorie)
+    {
+        $disCat = LienDisciplineCategorie::with('tarif_types')->where('categorie_id', $categorie->id)->where('discipline_id', $discipline->id)->firstOrFail();
+
+        $tarifs = $disCat->tarif_types;
+        return DisCatTarifTypeResource::collection($tarifs);
     }
 }

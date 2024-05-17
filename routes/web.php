@@ -54,6 +54,7 @@ use App\Http\Controllers\LienDisCatTarAttrSousAttrValeurController;
 use App\Http\Controllers\LienDisCatTarBookingFieldValeurController;
 use App\Http\Controllers\LienDisCatTarBookingFieldSousFieldController;
 use App\Http\Controllers\LienDisCatTarBookingFieldSsFieldValeurController;
+use App\Models\LienDisCatTarBookingField;
 
 /*
 |--------------------------------------------------------------------------
@@ -266,6 +267,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/disciplines/duplicate_categories_and_tarifs', [LienDisCatTariftypeController::class, 'duplicate'])->name('admin.disciplines.duplicate_categories_and_tarifs');
         // ou d'1 seule catégorie
         Route::post('/disciplines/duplicate_tarifs_of_categorie', [LienDisCatTariftypeController::class, 'duplicateOneCategorie'])->name('admin.disciplines.duplicate_tarifs_of_categorie');
+
+        // duplicate booking fields of a DisCat
+        Route::post('/disciplines/duplicate_tarif_booking_fields_of_categorie', [LienDisCatTarBookingFieldController::class, 'duplicate'])->name('admin.disciplines.duplicate_tarif_booking_fields_of_categorie');
 
         Route::post('/categories-disciplines-criteres', [CategoryDisciplineCritereController::class, 'store'])->name('categories-disciplines-criteres.store');
         Route::patch('/categories-disciplines-criteres/{critere}', [CategoryDisciplineCritereController::class, 'update'])->name('categories-disciplines-criteres.update');

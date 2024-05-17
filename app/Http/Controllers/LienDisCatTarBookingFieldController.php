@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categorie;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use App\Models\LienDisCatTariftype;
@@ -62,5 +64,172 @@ class LienDisCatTarBookingFieldController extends Controller
         $bookingfield->delete();
 
         return to_route('admin.disciplines.categories.tarifs.edit', ['discipline' => $discipline, 'categorie' => $categorie, 'tarifType' => $tarifType])->with('success', 'champ supprimé');
+    }
+
+    public function duplicate(Request $request): RedirectResponse
+    {
+        $user = auth()->user();
+        $this->authorize('viewAdmin', $user);
+        $validatedData = $request->validate([
+            'discipline_origin' => ['required', 'exists:liste_disciplines,slug'],
+            'categorie_origin' => ['required', 'exists:categories,id'],
+            'cat_tarif_origin' => ['required', 'exists:liens_dis_cat_tariftypes,id'],
+            'discipline_target' => ['required', 'exists:liste_disciplines,slug'],
+        ]);
+
+        $dis_origin = ListDiscipline::with(['categories'])
+                    ->where('slug', $validatedData['discipline_origin'])
+                    ->firstOrFail();
+
+        $cat_origin = Categorie::findOrFail($validatedData['categorie_origin']);
+
+        $catTarOrigin = LienDisCatTariftype::with('tarif_booking_fields')->findOrFail($validatedData['cat_tarif_origin']);
+
+        $dis_target = ListDiscipline::with(['categories'])
+                    ->where('slug', $validatedData['discipline_target'])
+                    ->firstOrFail();
+
+        $disCatOrigin = $dis_origin->categories()->where('categorie_id', $cat_origin->id)->first()->pivot;
+        $targetCategoriesWithPivot = $dis_target->categories;
+
+        // Check if the target discipline's categorie contain the same categorie_id as the origin category
+        $categoryExistsInTarget = $targetCategoriesWithPivot->contains(function ($targetCategory) use ($disCatOrigin) {
+            return $targetCategory->pivot->categorie_id === $disCatOrigin->categorie_id;
+        });
+
+        if (!$categoryExistsInTarget) {
+
+            $pivotAttributes = collect($disCatOrigin)->except(['id','discipline_id', 'categorie_id'])->toArray();
+
+            $pivotAttributes['slug'] = Str::slug($cat_origin->nom) . '-' . $cat_origin->id . '_random_texte';
+
+            $dis_target->categories()->attach($cat_origin->id, $pivotAttributes);
+
+            $pivotTarget = $dis_target->categories()->where('categorie_id', $cat_origin->id)->first()->pivot;
+
+            if ($pivotTarget) {
+                $newSlug = Str::slug($cat_origin->nom) . '-' . $pivotTarget->id;
+                $dis_target->categories()->updateExistingPivot($cat_origin->id, ['slug' => $newSlug]);
+
+                if($disCatOrigin->tarif_types && $catTarOrigin) {
+
+                    $catTarifType = $pivotTarget->tarif_types()->create([
+                        'discipline_id' => $dis_target->id,
+                        'tarif_type_id' => $catTarOrigin->tarif_type_id,
+                        'nom' => $catTarOrigin->nom,
+                        'show_planning' => $catTarOrigin->show_planning
+                    ]);
+                    if($catTarOrigin->tarif_booking_fields) {
+                        foreach($catTarOrigin->tarif_booking_fields as $bookingField) {
+                            $catTarBookingField = $catTarifType->tarif_booking_fields()->create([
+                                'nom' => $bookingField->nom,
+                                'type_champ_form' => $bookingField->type_champ_form,
+                                'ordre' => $bookingField->ordre,
+                            ]);
+                            if($bookingField->sous_fields) {
+                                foreach ($bookingField->sous_fields as $ssField) {
+                                    $ssFieldBooking = $catTarBookingField->sous_fields()->create([
+                                        'nom' => $ssField->nom,
+                                        'type_champ_form' => $ssField->type_champ_form,
+                                        'ordre' => $ssField->ordre,
+                                    ]);
+                                    if($ssField->valeurs) {
+                                        foreach($ssField->valeurs as $value) {
+                                            $ssFieldBooking->valeurs()->create([
+                                                'valeur' => $value->valeur,
+                                                'ordre' => $value->ordre,
+                                                'inclus_all' => $value->inclus_all
+                                            ]);
+                                        }
+                                    }
+                                }
+                            }
+                            if($bookingField->valeurs) {
+                                foreach($bookingField->valeurs as $val) {
+                                    $catTarBookingField->valeurs()->create([
+                                        'valeur' => $val->valeur,
+                                        'ordre' => $val->ordre,
+                                    ]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            // updateOrCreate tarifs if existing categorie
+            $pivotTarget = $dis_target->categories()->where('categorie_id', $cat_origin->id)->first()->pivot;
+            if ($pivotTarget) {
+                if($disCatOrigin->tarif_types && $catTarOrigin) {
+                    $catTarifType = $pivotTarget->tarif_types()->updateOrCreate(
+                        [
+                            'discipline_id' => $dis_target->id,
+                            'tarif_type_id' => $catTarOrigin->tarif_type_id
+                        ],
+                        [
+                            'nom' => $catTarOrigin->nom,
+                            'show_planning' => $catTarOrigin->show_planning
+                        ]
+                    );
+                    if($catTarOrigin->tarif_booking_fields) {
+                        foreach($catTarOrigin->tarif_booking_fields as $bookingField) {
+                            $catTarBookingField = $catTarifType->tarif_booking_fields()->updateOrCreate(
+                                [
+                                    'cat_tarif_id' => $catTarifType->id,
+                                    'nom' => $bookingField->nom,
+                                ],
+                                [
+                                    'type_champ_form' => $bookingField->type_champ_form,
+                                    'ordre' => $bookingField->ordre,
+                                ]
+                            );
+                            if($bookingField->sous_fields) {
+                                foreach ($bookingField->sous_fields as $ssField) {
+                                    $ssFieldBooking = $catTarBookingField->sous_fields()->updateOrCreate(
+                                        [
+                                            'booking_field_id' => $catTarBookingField->id,
+                                            'nom' => $ssField->nom,
+                                        ],
+                                        [
+                                            'type_champ_form' => $ssField->type_champ_form,
+                                            'ordre' => $ssField->ordre,
+                                        ]
+                                    );
+                                    if($ssField->valeurs) {
+                                        foreach($ssField->valeurs as $value) {
+                                            $ssFieldBooking->valeurs()->updateOrCreate(
+                                                [
+                                                    'sousfield_id' => $ssFieldBooking->id,
+                                                    'valeur' => $value->valeur
+                                                ],
+                                                [
+                                                    'ordre' => $value->ordre,
+                                                    'inclus_all' => $value->inclus_all
+                                                ]
+                                            );
+                                        }
+                                    }
+                                }
+                            }
+                            if($bookingField->valeurs) {
+                                foreach($bookingField->valeurs as $val) {
+                                    $catTarBookingField->valeurs()->updateOrCreate(
+                                        [
+                                            'cat_tar_field_id' => $catTarBookingField->id,
+                                            'valeur' => $val->valeur,
+                                        ],
+                                        [
+                                            'ordre' => $val->ordre,
+                                        ]
+                                    );
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return to_route('admin.disciplines.index')->with('success', 'La catégorie, tarif et champs de formulaire associés de la discipline '. $dis_origin->name .' ont été dupliqués à '. $dis_target->name .'.');
     }
 }

@@ -219,6 +219,74 @@ const replicateCatDisTar = () => {
         );
     }
 };
+
+const categoriesOfOriginForBooking = ref([]);
+const catTarifTypes = ref([]);
+
+const replicateCatDisTarBookingForm = useForm({
+    discipline_origin: null,
+    categorie_origin: null,
+    cat_tarif_origin: null,
+    discipline_target: null,
+});
+
+watch(
+    () => replicateCatDisTarBookingForm.discipline_origin,
+    async (newDisciplineSlug) => {
+        if (newDisciplineSlug) {
+            axios
+                .get("/api/listdisciplinesbyslug/" + newDisciplineSlug)
+                .then((response) => {
+                    categoriesOfOriginForBooking.value = response.data;
+                })
+                .catch((e) => {
+                    console.log(e);
+                });
+        }
+    }
+);
+
+watch(
+    () => replicateCatDisTarBookingForm.categorie_origin,
+    async (newCategorie) => {
+        if (newCategorie) {
+            axios
+                .get(
+                    "/api/liensdiscategorie/" +
+                        replicateCatDisTarBookingForm.discipline_origin +
+                        "/" +
+                        newCategorie
+                )
+                .then((response) => {
+                    catTarifTypes.value = response.data;
+                })
+                .catch((e) => {
+                    console.log(e);
+                });
+        }
+    }
+);
+
+const replicateCatDisTarBooking = () => {
+    const isConfirmed = window.confirm(
+        "Sûr de vouloir dupliquer tous les champs de formulaire liés à ce type de tarif de cette catégorie?"
+    );
+    if (isConfirmed) {
+        replicateCatDisTarBookingForm.post(
+            route(
+                "admin.disciplines.duplicate_tarif_booking_fields_of_categorie"
+            ),
+            {
+                errorBag: "replicateCatDisTarBookingForm",
+                preserveScroll: true,
+                preserveState: false,
+                onSuccess: () => {
+                    replicateCatDisTarBookingForm.reset();
+                },
+            }
+        );
+    }
+};
 </script>
 <template>
     <Head
@@ -716,7 +784,7 @@ const replicateCatDisTar = () => {
 
                 <div class="w-full space-y-4">
                     <h2 class="text-base font-semibold">
-                        Dupliquer les
+                        Dupliquer pour toutes les catégories les
                         <span class="uppercase text-indigo-500">tarifs</span>,
                         ses
                         <span class="uppercase text-indigo-500">attributs</span
@@ -809,7 +877,12 @@ const replicateCatDisTar = () => {
                 <div class="w-full space-y-4">
                     <h2 class="text-base font-semibold">
                         Dupliquer les
-                        <span class="uppercase text-indigo-500">tarifs</span>
+                        <span class="uppercase text-indigo-500">tarifs</span>,
+                        <span class="uppercase text-indigo-500">attributs</span>
+                        et
+                        <span class="uppercase text-indigo-500"
+                            >champs de formulaire</span
+                        >
                         d'une
                         <span class="uppercase text-indigo-500">catégorie</span>
                         de discipline à une autre:
@@ -922,6 +995,187 @@ const replicateCatDisTar = () => {
                         >
                             <LoadingSVG
                                 v-if="replicateCatDisTarForm.processing"
+                            />
+                            Dupliquer
+                        </button>
+                    </form>
+                </div>
+
+                <div class="w-full space-y-4">
+                    <h2 class="text-base font-semibold">
+                        Dupliquer les
+                        <span class="uppercase text-indigo-500"
+                            >champs de formulaire</span
+                        >
+                        d'une
+                        <span class="uppercase text-indigo-500">catégorie</span>
+                        de discipline à une autre:
+                        <span
+                            class="uppercase text-indigo-500"
+                            v-if="
+                                replicateCatDisTarBookingForm.discipline_origin
+                            "
+                        >
+                            {{
+                                replicateCatDisTarBookingForm.discipline_origin
+                            }}
+                        </span>
+                        <span
+                            v-if="
+                                replicateCatDisTarBookingForm.discipline_origin
+                            "
+                        >
+                            à
+                        </span>
+                        <span
+                            class="uppercase text-indigo-500"
+                            v-if="
+                                replicateCatDisTarBookingForm.discipline_target
+                            "
+                        >
+                            {{
+                                replicateCatDisTarBookingForm.discipline_target
+                            }}
+                        </span>
+                    </h2>
+                    <form
+                        @submit.prevent="replicateCatDisTarBooking"
+                        class="flex w-full flex-col items-center justify-between space-y-5 md:flex-row md:items-end md:space-x-4 md:space-y-0"
+                    >
+                        <div class="w-full flex-1">
+                            <p class="block text-sm font-medium text-gray-700">
+                                Discipline originale:
+                            </p>
+                            <AutocompleteDisciplineNav
+                                class="!w-full"
+                                :disciplines="listDisciplines"
+                                v-model="
+                                    replicateCatDisTarBookingForm.discipline_origin
+                                "
+                            />
+                            <p
+                                class="mt-1 text-xs text-red-500"
+                                v-if="errors.replicateCatDisTarBookingForm"
+                            >
+                                {{
+                                    errors.replicateCatDisTarBookingForm
+                                        .discipline_origin
+                                }}
+                            </p>
+                        </div>
+                        <div
+                            v-if="
+                                replicateCatDisTarBookingForm.discipline_origin
+                            "
+                            class="flex flex-col items-start"
+                        >
+                            <label
+                                class="block text-sm font-medium text-gray-700"
+                                >Catégorie originale:</label
+                            >
+                            <select
+                                v-model="
+                                    replicateCatDisTarBookingForm.categorie_origin
+                                "
+                                class="form-select w-full flex-1 rounded-md border border-gray-300 px-2 py-3 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                v-if="
+                                    replicateCatDisTarBookingForm.discipline_origin
+                                "
+                            >
+                                <option value="" disabled selected>
+                                    Selectionner une categorie
+                                </option>
+                                <option
+                                    v-for="category in categoriesOfOriginForBooking"
+                                    :value="category.id"
+                                >
+                                    {{ category.nom }} /
+                                    {{ category.pivot.nom_categorie_client }}
+                                </option>
+                            </select>
+                            <p
+                                class="mt-1 text-xs text-red-500"
+                                v-if="errors.replicateCatDisTarBookingForm"
+                            >
+                                {{
+                                    errors.replicateCatDisTarBookingForm
+                                        .categorie_origin
+                                }}
+                            </p>
+                        </div>
+
+                        <div
+                            v-if="
+                                replicateCatDisTarBookingForm.categorie_origin
+                            "
+                            class="flex flex-col items-start"
+                        >
+                            <label
+                                class="block text-sm font-medium text-gray-700"
+                                >Type de tarif originale:</label
+                            >
+                            <select
+                                v-model="
+                                    replicateCatDisTarBookingForm.cat_tarif_origin
+                                "
+                                class="form-select w-full flex-1 rounded-md border border-gray-300 px-2 py-3 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                v-if="
+                                    replicateCatDisTarBookingForm.categorie_origin
+                                "
+                            >
+                                <option value="" disabled selected>
+                                    Selectionner un type de tarif
+                                </option>
+                                <option
+                                    v-for="tarif in catTarifTypes"
+                                    :value="tarif.id"
+                                >
+                                    {{ tarif.nom }}
+                                </option>
+                            </select>
+                            <p
+                                class="mt-1 text-xs text-red-500"
+                                v-if="errors.replicateCatDisTarBookingForm"
+                            >
+                                {{
+                                    errors.replicateCatDisTarBookingForm
+                                        .categorie_origin
+                                }}
+                            </p>
+                        </div>
+
+                        <div class="w-full flex-1">
+                            <p class="block text-sm font-medium text-gray-700">
+                                Discipline cible:
+                            </p>
+                            <AutocompleteDisciplineNav
+                                class="!w-full"
+                                :disciplines="listDisciplines"
+                                v-model="
+                                    replicateCatDisTarBookingForm.discipline_target
+                                "
+                            />
+                            <p
+                                class="mt-1 text-xs text-red-500"
+                                v-if="errors.replicateCatDisTarBookingForm"
+                            >
+                                {{
+                                    errors.replicateCatDisTarBookingForm
+                                        .discipline_target
+                                }}
+                            </p>
+                        </div>
+                        <button
+                            :disabled="replicateCatDisTarBookingForm.processing"
+                            :class="{
+                                'opacity-25':
+                                    replicateCatDisTarBookingForm.processing,
+                            }"
+                            type="submit"
+                            class="inline-flex w-full max-w-sm justify-center rounded-md border border-transparent bg-green-600 px-4 py-3 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 md:w-auto"
+                        >
+                            <LoadingSVG
+                                v-if="replicateCatDisTarBookingForm.processing"
                             />
                             Dupliquer
                         </button>

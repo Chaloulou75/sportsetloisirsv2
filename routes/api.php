@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Discipline\CategoryDisciplineController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Famille\FamilleController;
@@ -21,3 +22,5 @@ Route::get('/listdisciplines/{id}', [DisciplineController::class, 'getCategories
 Route::get('/listdisciplinesbyslug/{slug}', [DisciplineController::class, 'getCategoriesFromSlug']);
 Route::get('/listdisciplines_similaires/{id}', [DisciplineController::class, 'getDisciplinesSimilaires']);
 Route::get('/disciplines', [DisciplineController::class,'loadDisciplines']);
+
+Route::get('/liensdiscategorie/{discipline}/{categorie}', [CategoryDisciplineController::class,'getTarifs']);
