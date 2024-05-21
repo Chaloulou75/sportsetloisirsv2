@@ -1,5 +1,5 @@
 <script setup>
-import ApplicationLogo from "@/Components/ApplicationLogo.vue";
+import BreezeApplicationLogo from "@/Components/ApplicationLogo.vue";
 import { Link } from "@inertiajs/vue3";
 import ToastMessages from "@/Components/ToastMessages.vue";
 </script>
@@ -9,8 +9,8 @@ import ToastMessages from "@/Components/ToastMessages.vue";
         class="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0"
     >
         <div>
-            <Link href="/">
-                <ApplicationLogo class="h-20 w-20 fill-current text-gray-500" />
+            <Link :href="route('welcome')">
+                <BreezeApplicationLogo class="block h-9 w-auto" />
             </Link>
         </div>
 

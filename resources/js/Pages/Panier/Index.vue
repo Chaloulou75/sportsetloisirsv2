@@ -471,11 +471,12 @@ onBeforeMount(() => {
                                                     "
                                                     class="text-xs"
                                                 >
-                                                    <span
+                                                    <p
                                                         v-for="sousattribut in attribut.reservation_sous_attributs"
                                                         :key="sousattribut.id"
                                                         class="text-xs text-gray-700"
-                                                        ><span
+                                                    >
+                                                        <span
                                                             class="text-slate-500"
                                                             v-if="
                                                                 sousattribut.booking_sous_field
@@ -489,7 +490,7 @@ onBeforeMount(() => {
                                                         {{
                                                             sousattribut.valeur
                                                         }}
-                                                    </span>
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>

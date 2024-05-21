@@ -75,6 +75,9 @@ class HandleInertiaRequests extends Middleware
                     'location' => $request->url(),
                 ]);
             },
+            'stripe' => [
+                'public' => config('services.stripe.public_key'),
+            ],
             'structures_notifications_count' => fn () => $request->user() ? $request->user()->structures->mapWithKeys(function ($structure) {
                 return [$structure->id => $structure->unreadNotifications()->where('type', ReservationPaidToStructure::class)->count()];
             }) : [],

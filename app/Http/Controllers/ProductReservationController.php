@@ -125,7 +125,7 @@ class ProductReservationController extends Controller
             }
         }
 
-        return to_route('panier.paiement.index')->with('success', 'Finalisez vos réservations');
+        return to_route('customers.create')->with('success', 'Insérer vos coordonnées');
     }
 
     /**

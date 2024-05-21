@@ -42,12 +42,7 @@ const submit = () => {
     >
         <template #header>
             <ResultsHeader>
-                <template v-slot:title>
-                    <ArrowRightIcon
-                        class="mr-2 inline-block h-6 w-6 text-gray-600"
-                    ></ArrowRightIcon>
-                    Connexion
-                </template>
+                <template v-slot:title> Connexion </template>
                 <template v-slot:ariane>
                     <nav aria-label="Breadcrumb" class="flex">
                         <ol

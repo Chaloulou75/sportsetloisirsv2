@@ -1040,8 +1040,9 @@ const replicateCatDisTarBooking = () => {
                     </h2>
                     <form
                         @submit.prevent="replicateCatDisTarBooking"
-                        class="flex w-full flex-col items-center justify-between space-y-5 md:flex-row md:items-end md:space-x-4 md:space-y-0"
+                        class="grid grid-flow-col place-content-between gap-4"
                     >
+                        <!-- class="flex w-full flex-col items-center justify-between space-y-5 md:flex-row md:items-end md:space-x-4 md:space-y-0" -->
                         <div class="w-full flex-1">
                             <p class="block text-sm font-medium text-gray-700">
                                 Discipline originale:
@@ -1063,87 +1064,89 @@ const replicateCatDisTarBooking = () => {
                                 }}
                             </p>
                         </div>
-                        <div
+                        <template
                             v-if="
                                 replicateCatDisTarBookingForm.discipline_origin
                             "
-                            class="flex flex-col items-start"
                         >
-                            <label
-                                class="block text-sm font-medium text-gray-700"
-                                >Catégorie originale:</label
-                            >
-                            <select
-                                v-model="
-                                    replicateCatDisTarBookingForm.categorie_origin
-                                "
-                                class="form-select w-full flex-1 rounded-md border border-gray-300 px-2 py-3 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                v-if="
-                                    replicateCatDisTarBookingForm.discipline_origin
-                                "
-                            >
-                                <option value="" disabled selected>
-                                    Selectionner une categorie
-                                </option>
-                                <option
-                                    v-for="category in categoriesOfOriginForBooking"
-                                    :value="category.id"
+                            <div class="flex flex-col items-start">
+                                <label
+                                    class="block text-sm font-medium text-gray-700"
+                                    >Catégorie originale:</label
                                 >
-                                    {{ category.nom }} /
-                                    {{ category.pivot.nom_categorie_client }}
-                                </option>
-                            </select>
-                            <p
-                                class="mt-1 text-xs text-red-500"
-                                v-if="errors.replicateCatDisTarBookingForm"
-                            >
-                                {{
-                                    errors.replicateCatDisTarBookingForm
-                                        .categorie_origin
-                                }}
-                            </p>
-                        </div>
-
-                        <div
+                                <select
+                                    v-model="
+                                        replicateCatDisTarBookingForm.categorie_origin
+                                    "
+                                    class="form-select w-full rounded-md border border-gray-300 px-2 py-3 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    v-if="
+                                        replicateCatDisTarBookingForm.discipline_origin
+                                    "
+                                >
+                                    <option value="" disabled selected>
+                                        Selectionner une categorie
+                                    </option>
+                                    <option
+                                        v-for="category in categoriesOfOriginForBooking"
+                                        :value="category.id"
+                                    >
+                                        {{ category.nom }} /
+                                        {{
+                                            category.pivot.nom_categorie_client
+                                        }}
+                                    </option>
+                                </select>
+                                <p
+                                    class="mt-1 text-xs text-red-500"
+                                    v-if="errors.replicateCatDisTarBookingForm"
+                                >
+                                    {{
+                                        errors.replicateCatDisTarBookingForm
+                                            .categorie_origin
+                                    }}
+                                </p>
+                            </div>
+                        </template>
+                        <template
                             v-if="
                                 replicateCatDisTarBookingForm.categorie_origin
                             "
-                            class="flex flex-col items-start"
                         >
-                            <label
-                                class="block text-sm font-medium text-gray-700"
-                                >Type de tarif originale:</label
-                            >
-                            <select
-                                v-model="
-                                    replicateCatDisTarBookingForm.cat_tarif_origin
-                                "
-                                class="form-select w-full flex-1 rounded-md border border-gray-300 px-2 py-3 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                v-if="
-                                    replicateCatDisTarBookingForm.categorie_origin
-                                "
-                            >
-                                <option value="" disabled selected>
-                                    Selectionner un type de tarif
-                                </option>
-                                <option
-                                    v-for="tarif in catTarifTypes"
-                                    :value="tarif.id"
+                            <div class="flex flex-col items-start">
+                                <label
+                                    class="block text-sm font-medium text-gray-700"
+                                    >Type de tarif:</label
                                 >
-                                    {{ tarif.nom }}
-                                </option>
-                            </select>
-                            <p
-                                class="mt-1 text-xs text-red-500"
-                                v-if="errors.replicateCatDisTarBookingForm"
-                            >
-                                {{
-                                    errors.replicateCatDisTarBookingForm
-                                        .categorie_origin
-                                }}
-                            </p>
-                        </div>
-
+                                <select
+                                    v-model="
+                                        replicateCatDisTarBookingForm.cat_tarif_origin
+                                    "
+                                    class="form-select w-full rounded-md border border-gray-300 px-2 py-3 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    v-if="
+                                        replicateCatDisTarBookingForm.categorie_origin
+                                    "
+                                >
+                                    <option value="" disabled selected>
+                                        Selectionner un type de tarif
+                                    </option>
+                                    <option
+                                        v-for="tarif in catTarifTypes"
+                                        :value="tarif.id"
+                                    >
+                                        {{ tarif.nom }}
+                                    </option>
+                                </select>
+                                <p
+                                    class="mt-1 text-xs text-red-500"
+                                    v-if="errors.replicateCatDisTarBookingForm"
+                                >
+                                    {{
+                                        errors.replicateCatDisTarBookingForm
+                                            .categorie_origin
+                                    }}
+                                </p>
+                            </div>
+                        </template>
                         <div class="w-full flex-1">
                             <p class="block text-sm font-medium text-gray-700">
                                 Discipline cible:
@@ -1172,7 +1175,7 @@ const replicateCatDisTarBooking = () => {
                                     replicateCatDisTarBookingForm.processing,
                             }"
                             type="submit"
-                            class="inline-flex w-full max-w-sm justify-center rounded-md border border-transparent bg-green-600 px-4 py-3 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 md:w-auto"
+                            class="inline-flex w-full max-w-sm justify-center place-self-end rounded-md border border-transparent bg-green-600 px-4 py-3 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 md:w-auto"
                         >
                             <LoadingSVG
                                 v-if="replicateCatDisTarBookingForm.processing"

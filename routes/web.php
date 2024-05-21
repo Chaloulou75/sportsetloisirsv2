@@ -6,12 +6,15 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
+use App\Models\LienDisCatTarBookingField;
 use App\Http\Controllers\PanierController;
+use App\Http\Controllers\StripeController;
 use App\Http\Controllers\CritereController;
 use App\Http\Controllers\MentionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActiviteController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PostLikeController;
 use App\Http\Controllers\AdminBlogController;
 use App\Http\Controllers\FavoritesController;
@@ -54,7 +57,6 @@ use App\Http\Controllers\LienDisCatTarAttrSousAttrValeurController;
 use App\Http\Controllers\LienDisCatTarBookingFieldValeurController;
 use App\Http\Controllers\LienDisCatTarBookingFieldSousFieldController;
 use App\Http\Controllers\LienDisCatTarBookingFieldSsFieldValeurController;
-use App\Models\LienDisCatTarBookingField;
 
 /*
 |--------------------------------------------------------------------------
@@ -132,12 +134,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/blog/{post:slug}/comments', [PostCommentController::class, 'store'])->name('posts.comments.store');
     Route::delete('/blog/{post:slug}/comments/{comment}', [PostCommentController::class, 'destroy'])->name('posts.comments.destroy');
 
-    //Panier et paiement
+    //Panier, coordonnées et paiement
     Route::get('/panier/paiement', [PanierPaymentController::class, 'index'])->name('panier.paiement.index');
+    Route::get('/panier/coordonnees/create', [CustomerController::class, 'create'])->name('customers.create');
+    Route::post('/panier/coordonnees/store', [CustomerController::class, 'store'])->name('customers.store');
     Route::post('/panier/paiement/create-checkout-session', [PanierPaymentController::class, 'createCheckoutSession'])->name('create.checkout.session');
+
     Route::get('/panier/paiement/success', [PanierPaymentController::class, 'success'])->name('panier.paiement.success');
     Route::get('/panier/paiement/cancel', [PanierPaymentController::class, 'cancel'])->name('panier.paiement.cancel');
-
 
     //structures
     Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');

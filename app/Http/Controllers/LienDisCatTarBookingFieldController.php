@@ -230,6 +230,6 @@ class LienDisCatTarBookingFieldController extends Controller
             }
         }
 
-        return to_route('admin.disciplines.index')->with('success', 'La catégorie, tarif et champs de formulaire associés de la discipline '. $dis_origin->name .' ont été dupliqués à '. $dis_target->name .'.');
+        return to_route('admin.disciplines.index')->with('success', 'La catégorie, tarif et champs de formulaire associés à la discipline '. $dis_origin->name .' ont été dupliqués à la discipline '. $dis_target->name .'.');
     }
 }

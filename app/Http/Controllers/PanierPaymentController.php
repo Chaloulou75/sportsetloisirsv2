@@ -11,6 +11,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Famille;
 use Stripe\StripeClient;
+use Stripe\PaymentIntent;
 use Illuminate\Http\Request;
 use Stripe\Checkout\Session;
 use App\Models\ListDiscipline;
@@ -43,6 +44,7 @@ class PanierPaymentController extends Controller
         });
 
         $user = auth()->user();
+        $customer = $user->customer;
 
         $reservations = ProductReservation::withRelations()->withCount('plannings')->where('user_id', $user->id)->where('paid', false)->get();
 
@@ -58,6 +60,10 @@ class PanierPaymentController extends Controller
                 $totalPrice += $price;
             }
         }
+
+        $intent = $user->createSetupIntent();
+        $returnUrl = route('panier.paiement.success');
+
         return Inertia::render('Panier/Payment/Index', [
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
@@ -65,6 +71,8 @@ class PanierPaymentController extends Controller
             'reservations' => fn () => $reservations ?? null,
             'user' => fn () =>  $user ?? null,
             'totalPrice' => fn () => $totalPrice ?? null,
+            'clientSecret' => fn () => $intent->client_secret,
+            'returnUrl' => fn () => $returnUrl,
         ]);
     }
 
@@ -149,12 +157,8 @@ class PanierPaymentController extends Controller
             return Inertia::location($sessionStripe->url);
 
         } catch (ApiErrorException $e) {
-            // Handle Stripe API errors
-            Log::error('Stripe API Error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Une erreur est survenue lors du traitement de votre paiement. Veuillez réessayer plus tard.');
         } catch (\Exception $e) {
-            // Handle other unexpected errors
-            Log::error('Unexpected Error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Une erreur inattendue est survenue. Veuillez réessayer plus tard.');
         }
 
@@ -171,58 +175,71 @@ class PanierPaymentController extends Controller
         $listDisciplines = Cache::remember('list_disciplines', 600, function () {
             return ListDiscipline::withProducts()->get();
         });
-        try {
-            Stripe::setApiKey(config('services.stripe.secret'));
 
-            $sessionId = $request->get('session_id');
+        Stripe::setApiKey(config('services.stripe.secret'));
 
-            $sessionStripe = Session::retrieve($sessionId);
+        $stripeCharge = $request->user()->charge(
+            100,
+            $request->paymentMethodId
+        );
+        dd($stripeCharge);
 
-            if (!$sessionStripe) {
-                throw new NotFoundHttpException();
-            }
 
-            $reservations = ProductReservation::withRelations()->where('stripe_session_id', $sessionStripe->id)
-            ->where('paid', false)
-            ->get();
 
-            if ($reservations->isNotEmpty()) {
-                $user = auth()->user();
 
-                foreach ($reservations as $reservation) {
+        // VERSION CHECKOUT
+        // try {
+        //     Stripe::setApiKey(config('services.stripe.secret'));
 
-                    $payment_method = !empty($sessionStripe->payment_method_types) ? $sessionStripe->payment_method_types[0] : null;
+        //     $sessionId = $request->get('session_id');
 
-                    $reservation->update([
-                        'user_payeur_id' => $user->id,
-                        'paid' => true,
-                        'paiement_method' => $payment_method,
-                        'paiement_datetime' => now(),
-                    ]);
-                    $user->notify(new ReservationPaid($reservation, $sessionStripe));
+        //     $sessionStripe = Session::retrieve($sessionId);
 
-                    $reservation->structure->notify(new ReservationPaidToStructure($reservation, $sessionStripe));
+        //     if (!$sessionStripe) {
+        //         throw new NotFoundHttpException();
+        //     }
 
-                    $admins = User::whereHas('roles', function ($query) {
-                        $query->where('name', 'admin');
-                    })->get();
-                    if($admins) {
-                        foreach ($admins as $admin) {
-                            $admin->notify(new ReservationPaidToAdmin($reservation, $sessionStripe));
-                        }
-                    }
-                }
-            }
-            session()->forget('panierProducts');
+        //     $reservations = ProductReservation::withRelations()->where('stripe_session_id', $sessionStripe->id)
+        //     ->where('paid', false)
+        //     ->get();
 
-            return Inertia::render('Panier/Payment/Success', [
-                'familles' => fn () => FamilleResource::collection($familles),
-                'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
-                'allCities' => fn () => $allCities,
-            ]);
-        } catch (\Stripe\Exception\ApiErrorException $e) {
-            throw new NotFoundHttpException();
-        }
+        //     if ($reservations->isNotEmpty()) {
+        //         $user = auth()->user();
+
+        //         foreach ($reservations as $reservation) {
+
+        //             $payment_method = !empty($sessionStripe->payment_method_types) ? $sessionStripe->payment_method_types[0] : null;
+
+        //             $reservation->update([
+        //                 'user_payeur_id' => $user->id,
+        //                 'paid' => true,
+        //                 'paiement_method' => $payment_method,
+        //                 'paiement_datetime' => now(),
+        //             ]);
+        //             $user->notify(new ReservationPaid($reservation, $sessionStripe));
+
+        //             $reservation->structure->notify(new ReservationPaidToStructure($reservation, $sessionStripe));
+
+        //             $admins = User::whereHas('roles', function ($query) {
+        //                 $query->where('name', 'admin');
+        //             })->get();
+        //             if($admins) {
+        //                 foreach ($admins as $admin) {
+        //                     $admin->notify(new ReservationPaidToAdmin($reservation, $sessionStripe));
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     session()->forget('panierProducts');
+
+        //     return Inertia::render('Panier/Payment/Success', [
+        //         'familles' => fn () => FamilleResource::collection($familles),
+        //         'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
+        //         'allCities' => fn () => $allCities,
+        //     ]);
+        // } catch (\Stripe\Exception\ApiErrorException $e) {
+        //     throw new NotFoundHttpException();
+        // }
     }
 
     public function cancel(Request $request): Response
