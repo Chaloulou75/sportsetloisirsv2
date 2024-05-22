@@ -10,12 +10,14 @@ use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Famille;
+use Stripe\SetupIntent;
 use Stripe\StripeClient;
 use Stripe\PaymentIntent;
 use Illuminate\Http\Request;
 use Stripe\Checkout\Session;
 use App\Models\ListDiscipline;
 use App\Models\ProductReservation;
+use Laravel\Cashier\Exceptions\PaymentFailure;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use App\Notifications\ReservationPaid;
@@ -60,8 +62,13 @@ class PanierPaymentController extends Controller
                 $totalPrice += $price;
             }
         }
+        $stripe = new StripeClient(config('services.stripe.secret'));
 
-        $intent = $user->createSetupIntent();
+        $intent = $stripe->paymentIntents->create([
+            'amount' => $totalPrice * 100,
+            'currency' => 'eur',
+            'automatic_payment_methods' => ['enabled' => true],
+        ]);
         $returnUrl = route('panier.paiement.success');
 
         return Inertia::render('Panier/Payment/Index', [
@@ -164,6 +171,26 @@ class PanierPaymentController extends Controller
 
     }
 
+    public function purchase(Request $request)
+    {
+        $user = $request->user();
+        // $paymentMethodId = $request->input('payment_method_id');
+        // $totalPrice = $request->input('totalPrice');
+
+        dd($request->payment_intent, $request->payment_intent_client_secret);
+        try {
+            // Assuming you have the logic to charge the user
+            // $user->charge($totalPrice * 100, $paymentMethodId);
+
+            // Update reservations or other necessary logic
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+        }
+
+    }
+
     public function success(Request $request)
     {
         $familles = Cache::remember('familles', 600, function () {
@@ -175,17 +202,12 @@ class PanierPaymentController extends Controller
         $listDisciplines = Cache::remember('list_disciplines', 600, function () {
             return ListDiscipline::withProducts()->get();
         });
-
-        Stripe::setApiKey(config('services.stripe.secret'));
-
-        $stripeCharge = $request->user()->charge(
-            100,
-            $request->paymentMethodId
-        );
-        dd($stripeCharge);
-
-
-
+        session()->forget('panierProducts');
+        return Inertia::render('Panier/Payment/Success', [
+            'familles' => fn () => FamilleResource::collection($familles),
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
+            'allCities' => fn () => $allCities,
+        ]);
 
         // VERSION CHECKOUT
         // try {
@@ -324,11 +346,44 @@ class PanierPaymentController extends Controller
 
                 // handle other event types
                 break;
+
+            case 'payment_intent.succeeded':
+                $paymentIntent = $event->data->object;
+                $reservations = ProductReservation::withRelations()
+                                ->where('stripe_session_id', $paymentIntent->id)
+                                ->where('paid', false)
+                                ->get();
+
+                if ($reservations->isNotEmpty()) {
+                    $user = auth()->user();
+                    // Update all matching reservations at once
+                    foreach ($reservations as $reservation) {
+
+                        $payment_method = !empty($paymentIntent->payment_method_types) ? $paymentIntent->payment_method_types[0] : null;
+
+                        $reservation->update([
+                            'user_payeur_id' => $user->id,
+                            'paid' => true,
+                            'paiement_method' => $payment_method,
+                            'paiement_datetime' => now(),
+                        ]);
+                        $user->notify(new ReservationPaid($reservation, $paymentIntent));
+
+                        $reservation->structure->notify(new ReservationPaidToStructure($reservation, $paymentIntent));
+
+                        $admins = User::whereHas('roles', function ($query) {
+                            $query->where('name', 'admin');
+                        })->get();
+                        if($admins) {
+                            foreach ($admins as $admin) {
+                                $admin->notify(new ReservationPaidToAdmin($reservation, $paymentIntent));
+                            }
+                        }
+                    }
+                }
+                // no break
             default:
-
-                Log::info('Received unknown event type: ' . $event->type);
                 return response('Received unknown event type', 400);
-
         }
         return response('ok', 200);
     }

@@ -135,13 +135,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/blog/{post:slug}/comments/{comment}', [PostCommentController::class, 'destroy'])->name('posts.comments.destroy');
 
     //Panier, coordonnées et paiement
-    Route::get('/panier/paiement', [PanierPaymentController::class, 'index'])->name('panier.paiement.index');
     Route::get('/panier/coordonnees/create', [CustomerController::class, 'create'])->name('customers.create');
     Route::post('/panier/coordonnees/store', [CustomerController::class, 'store'])->name('customers.store');
-    Route::post('/panier/paiement/create-checkout-session', [PanierPaymentController::class, 'createCheckoutSession'])->name('create.checkout.session');
 
+    Route::get('/panier/paiement', [PanierPaymentController::class, 'index'])->name('panier.paiement.index');
+
+    Route::post('/panier/paiement/purchase', [PanierPaymentController::class, 'purchase'])->name('panier.paiement.purchase');
     Route::get('/panier/paiement/success', [PanierPaymentController::class, 'success'])->name('panier.paiement.success');
     Route::get('/panier/paiement/cancel', [PanierPaymentController::class, 'cancel'])->name('panier.paiement.cancel');
+
+    Route::post('/panier/paiement/create-checkout-session', [PanierPaymentController::class, 'createCheckoutSession'])->name('create.checkout.session'); // FOR CHECKOUT
+
 
     //structures
     Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
