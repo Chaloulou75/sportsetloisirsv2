@@ -38,16 +38,23 @@ const handlePayment = async () => {
     isProcessing.value = true;
 
     try {
-        const { error } = await stripe.value.confirmPayment({
+        const { error, paymentIntent } = await stripe.value.confirmPayment({
             elements: elements.value,
             confirmParams: {
                 return_url: route("panier.paiement.success"),
+                payment_method_data: {
+                    billing_details: {
+                        name: cardHolderName.value,
+                    },
+                },
             },
         });
 
         if (error) {
-            console.log(error);
+            console.error("Payment failed:", error);
+            isProcessing.value = false;
         } else {
+            console.log("Payment succeeded", paymentIntent);
         }
     } catch (err) {
         console.error("Unexpected error during payment confirmation:", err);

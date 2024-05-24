@@ -105,7 +105,7 @@ const submitForm = async () => {
 
                 <div
                     v-if="!route().current('welcome')"
-                    class="hidden space-x-8 lg:ml-10 lg:flex lg:w-full"
+                    class="hidden space-x-8 md:ml-10 md:flex md:w-full"
                 >
                     <section
                         class="mx-auto flex w-full items-center justify-center px-2 md:flex-row md:space-y-0"
@@ -145,7 +145,7 @@ const submitForm = async () => {
                     </section>
                 </div>
 
-                <div class="hidden h-full lg:flex lg:items-center lg:space-x-2">
+                <div class="hidden h-full md:flex md:items-center md:space-x-2">
                     <div class="relative ml-3">
                         <BreezeDropdown align="right" width="48">
                             <template #trigger>
@@ -358,7 +358,7 @@ const submitForm = async () => {
                 </div>
 
                 <!-- svg -->
-                <div class="-mr-2 flex items-center space-x-2 lg:hidden">
+                <div class="-mr-2 flex items-center space-x-2 md:hidden">
                     <button
                         @click="showingSearchForm = !showingSearchForm"
                         type="button"
@@ -411,7 +411,7 @@ const submitForm = async () => {
                 block: showingNavigationDropdown,
                 hidden: !showingNavigationDropdown,
             }"
-            class="lg:hidden"
+            class="md:hidden"
         >
             <div class="space-y-1 pb-3 pt-2">
                 <Link
@@ -521,10 +521,10 @@ const submitForm = async () => {
                 block: showingSearchForm,
                 hidden: !showingSearchForm,
             }"
-            class="pb-3 pt-2 lg:hidden"
+            class="pb-3 pt-2 md:hidden"
         >
             <section
-                class="mx-auto flex w-full flex-col items-center justify-center space-y-2 px-2 md:flex-row md:space-y-0 lg:hidden"
+                class="mx-auto flex w-full flex-col items-center justify-center space-y-2 px-2 md:hidden md:flex-row md:space-y-0"
             >
                 <AutocompleteCityNav
                     :cities="allCities"

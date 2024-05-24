@@ -177,7 +177,7 @@ class PanierPaymentController extends Controller
         // $paymentMethodId = $request->input('payment_method_id');
         // $totalPrice = $request->input('totalPrice');
 
-        dd($request->payment_intent, $request->payment_intent_client_secret);
+        dd('yppppppppppppppyyy', $request->payment_intent, $request->payment_intent_client_secret);
         try {
             // Assuming you have the logic to charge the user
             // $user->charge($totalPrice * 100, $paymentMethodId);
