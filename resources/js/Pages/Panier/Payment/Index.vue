@@ -51,13 +51,13 @@ const handlePayment = async () => {
         });
 
         if (error) {
-            console.error("Payment failed:", error);
             isProcessing.value = false;
+            router.get(route("panier.paiement.cancel"));
         } else {
             console.log("Payment succeeded", paymentIntent);
         }
     } catch (err) {
-        console.error("Unexpected error during payment confirmation:", err);
+        router.get(route("panier.paiement.cancel"));
     } finally {
         isProcessing.value = false;
     }

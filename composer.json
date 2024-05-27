@@ -17,6 +17,7 @@
         "laravel/tinker": "^2.8.1",
         "orangehill/iseed": "^3.0",
         "propaganistas/laravel-phone": "^5.0",
+        "spatie/laravel-stripe-webhooks": "^3.8",
         "stripe/stripe-php": "^13.17",
         "tightenco/ziggy": "^1.5"
     },

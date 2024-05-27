@@ -107,7 +107,7 @@ class PanierController extends Controller
             'quantity' => 1,
             'paid' => false,
             'stripe_session_id' => null,
-            'user_payeur_id' => $user->id ?? null,
+            'customer_id' => null,
             'paiement_datetime' => null,
             'paiement_method' => null,
             'transaction_number' => null,

@@ -46,6 +46,11 @@ class ProductReservation extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
     public function discipline(): BelongsTo
     {
         return $this->belongsTo(ListDiscipline::class, 'discipline_id');
@@ -96,6 +101,7 @@ class ProductReservation extends Model
     {
         $query->with([
             'user:id,name,email',
+            'customer',
             'discipline:id,name,slug',
             'structure:id,name,slug',
             'activite:id,titre,description',

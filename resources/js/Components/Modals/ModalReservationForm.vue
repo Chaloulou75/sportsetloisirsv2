@@ -52,7 +52,7 @@ const formatDate = (dateTime) => {
 };
 
 const bookingForm = useForm({
-    produitId: selectedProduit.value.id,
+    produitId: props.produitId,
     catTarifId: props.catTarifId,
     attributs: {},
     sousattributs: {},

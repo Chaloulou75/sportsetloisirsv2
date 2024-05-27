@@ -24,20 +24,24 @@ const props = defineProps({
     >
         <template #header>
             <ResultsHeader>
-                <template v-slot:title> Paiement annulé</template>
+                <template v-slot:title> Echec du paiement</template>
             </ResultsHeader>
         </template>
 
         <Breadcrumb />
-        <div class="container flex flex-col gap-4 py-6 mx-auto">
-            <div class="w-full max-w-sm px-2 mx-auto space-y-4 md:px-0">
-                <h2 class="text-lg font-semibold text-center md:text-left">
-                    Paiement annulé:
+        <div class="container mx-auto flex flex-col gap-4 py-6">
+            <div class="mx-auto w-full max-w-sm space-y-4 px-2 md:px-0">
+                <h2 class="text-center text-lg font-semibold md:text-left">
+                    Echec lors de la tentative de paiement:
                 </h2>
+                <p class="text-center text-base font-medium md:text-left">
+                    Une erreur est survenue durant le paiement, veuillez
+                    réessayer en accèdant à votre panier:
+                </p>
                 <Link
                     :href="route('panier.index')"
                     :only="['reservations']"
-                    class="flex items-center justify-center w-full max-w-full px-4 py-3 mx-auto text-base text-white bg-indigo-800 border border-gray-200 rounded-md shadow hover:bg-indigo-900"
+                    class="mx-auto flex w-full max-w-full items-center justify-center rounded-md border border-gray-200 bg-indigo-800 px-4 py-3 text-base text-white shadow hover:bg-indigo-900"
                     >Retourner au panier</Link
                 >
             </div>

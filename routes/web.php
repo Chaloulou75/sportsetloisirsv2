@@ -8,7 +8,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Models\LienDisCatTarBookingField;
 use App\Http\Controllers\PanierController;
-use App\Http\Controllers\StripeController;
 use App\Http\Controllers\CritereController;
 use App\Http\Controllers\MentionController;
 use App\Http\Controllers\ProfileController;
@@ -100,7 +99,7 @@ Route::delete('/panier/{reservation}/plannings/{planning}', [ReservationPlanning
     'reservations.plannings.destroy'
 );
 
-Route::post('/stripe/webhook', [PanierPaymentController::class, 'webhook'])->name('stripe.webhook');
+Route::stripeWebhooks('stripe/webhook');
 
 //Blog
 Route::get('/blog/articles/{discipline?}', [PostController::class, 'index'])->name('posts.index');
@@ -139,13 +138,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/panier/coordonnees/store', [CustomerController::class, 'store'])->name('customers.store');
 
     Route::get('/panier/paiement', [PanierPaymentController::class, 'index'])->name('panier.paiement.index');
-
-    Route::post('/panier/paiement/purchase', [PanierPaymentController::class, 'purchase'])->name('panier.paiement.purchase');
     Route::get('/panier/paiement/success', [PanierPaymentController::class, 'success'])->name('panier.paiement.success');
     Route::get('/panier/paiement/cancel', [PanierPaymentController::class, 'cancel'])->name('panier.paiement.cancel');
-
-    Route::post('/panier/paiement/create-checkout-session', [PanierPaymentController::class, 'createCheckoutSession'])->name('create.checkout.session'); // FOR CHECKOUT
-
 
     //structures
     Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');

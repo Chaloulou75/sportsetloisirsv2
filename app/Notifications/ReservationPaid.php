@@ -38,11 +38,14 @@ class ReservationPaid extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-
+        dd($this->sessionStripe);
         $invoiceId = $this->sessionStripe->invoice;
-        $invoice = Invoice::retrieve($invoiceId);
-        $invoiceUrl = $invoice->hosted_invoice_url;
-        $invoicePDF = $invoice->invoice_pdf;
+        if($invoiceId) {
+            $invoice = Invoice::retrieve($invoiceId);
+            $invoiceUrl = $invoice->hosted_invoice_url;
+            $invoicePDF = $invoice->invoice_pdf;
+        }
+
 
         return (new MailMessage())
             ->subject('Confirmation du paiement de votre réservation.')
@@ -52,7 +55,7 @@ class ReservationPaid extends Notification implements ShouldQueue
             ->line('Montant unitaire: ' . $this->reservation->tarif_amount)
             ->line('Quantité: ' . $this->reservation->quantity)
             ->line('Methode de paiement: ' . $this->reservation->paiement_method)
-            ->action('Voir votre facture liée', $invoiceUrl)
+            ->action('Voir votre facture liée', $invoiceUrl ?? null)
             // ->attach($invoicePDF)
             ->line('Si vous avez des questions, contactez nous.');
 

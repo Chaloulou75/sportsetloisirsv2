@@ -92,6 +92,12 @@ const createCustomer = () => {
                                 name="prenom"
                                 v-model="customerForm.prenom"
                             />
+                            <div
+                                v-if="errors.prenom"
+                                class="mt-2 text-xs text-red-500"
+                            >
+                                {{ errors.prenom }}
+                            </div>
                         </div>
                         <div class="w-full">
                             <InputLabel class="py-2" for="nom" value="Nom" />
@@ -102,6 +108,12 @@ const createCustomer = () => {
                                 name="nom"
                                 v-model="customerForm.nom"
                             />
+                            <div
+                                v-if="errors.nom"
+                                class="mt-2 text-xs text-red-500"
+                            >
+                                {{ errors.nom }}
+                            </div>
                         </div>
                     </div>
 
