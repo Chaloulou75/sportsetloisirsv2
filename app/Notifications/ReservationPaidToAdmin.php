@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use Stripe\Invoice;
 use Illuminate\Bus\Queueable;
 use App\Models\ProductReservation;
 use Illuminate\Notifications\Notification;
@@ -43,10 +42,6 @@ class ReservationPaidToAdmin extends Notification implements ShouldQueue
 
         $urlGestion = route('structures.gestion.index', $this->reservation->structure);
 
-        $invoiceId = $this->sessionStripe->invoice;
-        $invoice = Invoice::retrieve($invoiceId);
-        $invoiceUrl = $invoice->hosted_invoice_url;
-        $invoicePDF = $invoice->invoice_pdf;
         return (new MailMessage())
                     ->subject('Une nouvelle réservation a été réglée.')
                     ->greeting('Vous avez reçu le paiement d\'une réservation pour votre activité: ' . $this->reservation->activite_title . ' de la structure: ' .$this->reservation->structure->name)
@@ -54,7 +49,6 @@ class ReservationPaidToAdmin extends Notification implements ShouldQueue
                     ->line('Montant unitaire: ' . $this->reservation->tarif_amount)
                     ->line('Quantité: ' . $this->reservation->quantity)
                     ->line('Methode de paiement: ' . $this->reservation->paiement_method)
-                    ->action('Voir votre facture liée', $invoiceUrl)
                     ->action('Voir la réservation pour la structure', $urlGestion)
                     ->line('Si vous avez des questions, contactez nous.');
 

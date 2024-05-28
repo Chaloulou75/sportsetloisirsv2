@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use Stripe\Invoice;
 use Illuminate\Bus\Queueable;
 use App\Models\ProductReservation;
 use Illuminate\Notifications\Notification;
@@ -18,7 +17,7 @@ class ReservationPaid extends Notification implements ShouldQueue
      */
     public function __construct(
         public ProductReservation $reservation,
-        public $sessionStripe
+        public $sessionStripe,
     ) {
         //
     }
@@ -38,26 +37,13 @@ class ReservationPaid extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-        dd($this->sessionStripe);
-        $invoiceId = $this->sessionStripe->invoice;
-        if($invoiceId) {
-            $invoice = Invoice::retrieve($invoiceId);
-            $invoiceUrl = $invoice->hosted_invoice_url;
-            $invoicePDF = $invoice->invoice_pdf;
-        }
-
-
         return (new MailMessage())
-            ->subject('Confirmation du paiement de votre réservation.')
-            ->greeting('Merci pour votre réservation ' . $this->reservation->activite_title)
-            ->line('Details de votre réservation:')
-            ->line('Reservation numéro: ' . $this->reservation->id)
-            ->line('Montant unitaire: ' . $this->reservation->tarif_amount)
-            ->line('Quantité: ' . $this->reservation->quantity)
-            ->line('Methode de paiement: ' . $this->reservation->paiement_method)
-            ->action('Voir votre facture liée', $invoiceUrl ?? null)
-            // ->attach($invoicePDF)
-            ->line('Si vous avez des questions, contactez nous.');
+        ->subject('Confirmation du paiement de votre réservation.')
+        ->greeting('Merci pour votre réservation ' . $this->reservation->activite_title)
+        ->line('Details de votre réservation:')
+        ->line('Reservation numéro: ' . $this->reservation->id)
+        ->line('Methode de paiement: ' . $this->reservation->paiement_method)
+        ->line('Si vous avez des questions, contactez nous.');
 
     }
 
