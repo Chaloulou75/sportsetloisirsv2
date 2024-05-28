@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use Stripe\StripeClient;
 use Illuminate\Bus\Queueable;
 use App\Models\ProductReservation;
 use Illuminate\Notifications\Notification;
@@ -37,13 +38,21 @@ class ReservationPaid extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
+        $chargeId = $this->sessionStripe['latest_charge'];
+        if($chargeId) {
+            $stripe = new StripeClient(config('services.stripe.secret'));
+            $charge = $stripe->charges->retrieve($chargeId, []);
+            $receiptUrl = $charge->receipt_url;
+        }
+
         return (new MailMessage())
-        ->subject('Confirmation du paiement de votre réservation.')
-        ->greeting('Merci pour votre réservation ' . $this->reservation->activite_title)
-        ->line('Details de votre réservation:')
-        ->line('Reservation numéro: ' . $this->reservation->id)
-        ->line('Methode de paiement: ' . $this->reservation->paiement_method)
-        ->line('Si vous avez des questions, contactez nous.');
+            ->subject('Confirmation du paiement de votre réservation.')
+            ->greeting('Merci pour votre réservation ' . $this->reservation->activite_title)
+            ->line('Details de votre réservation:')
+            ->line('Reservation numéro: ' . $this->reservation->id)
+            ->line('Methode de paiement: ' . $this->reservation->paiement_method)
+            ->action('Voir votre reçu de paiement lié', $receiptUrl)
+            ->line('Si vous avez des questions, contactez nous.');
 
     }
 

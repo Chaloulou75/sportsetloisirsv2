@@ -114,13 +114,15 @@ class ProductReservationController extends Controller
         if($request->quantity) {
             foreach($request->quantity as $prod => $quantite) {
                 $resa = ProductReservation::withRelations()->find($prod);
-                if(is_array($quantite)) {
-                    foreach($quantite as $creneau => $quantDeCreneau) {
+                if ($resa) {
+                    if(is_array($quantite)) {
+                        foreach($quantite as $creneau => $quantDeCreneau) {
 
-                        $resa->plannings()->updateExistingPivot($creneau, ['quantity' => $quantDeCreneau]);
+                            $resa->plannings()->updateExistingPivot($creneau, ['quantity' => $quantDeCreneau]);
+                        }
+                    } else {
+                        $resa->update(['quantity' => $quantite]);
                     }
-                } else {
-                    $resa->update(['quantity' => $quantite]);
                 }
             }
         }

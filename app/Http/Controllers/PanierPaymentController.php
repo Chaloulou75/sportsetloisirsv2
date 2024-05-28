@@ -101,6 +101,8 @@ class PanierPaymentController extends Controller
 
     public function success(Request $request): Response
     {
+        session()->forget('panierProducts');
+
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
@@ -110,8 +112,6 @@ class PanierPaymentController extends Controller
         $listDisciplines = Cache::remember('list_disciplines', 600, function () {
             return ListDiscipline::withProducts()->get();
         });
-
-        session()->forget('panierProducts');
 
         return Inertia::render('Panier/Payment/Success', [
             'familles' => fn () => FamilleResource::collection($familles),

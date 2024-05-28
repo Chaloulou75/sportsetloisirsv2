@@ -3,10 +3,8 @@
 namespace App\Listeners;
 
 use App\Models\User;
-use Stripe\StripeClient;
 use App\Models\ProductReservation;
 use App\Notifications\ReservationPaid;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Spatie\WebhookClient\Models\WebhookCall;
 use App\Notifications\ReservationPaidToAdmin;
@@ -37,10 +35,7 @@ class PaymentIntentSucceededListener implements ShouldQueue
             ->get();
 
         if ($reservations->isNotEmpty()) {
-
-            // Update all matching reservations at once
             foreach ($reservations as $reservation) {
-
                 $user = $reservation->user;
                 $customer = $user->customer;
 
@@ -58,24 +53,6 @@ class PaymentIntentSucceededListener implements ShouldQueue
                     $price = $reservation->tarif_amount * $reservation->quantity;
                     $totalPrice += $price;
                 }
-
-                // $stripe = new StripeClient(config('services.stripe.secret'));
-                // // Create the invoice
-                // $invoice = $stripe->invoices->create([
-                //     'customer' => $customer->stripe_id,
-                //     'auto_advance' => true, // Automatically finalize and attempt payment on the invoice
-                //     'collection_method' => 'charge_automatically',
-                // ]);
-
-                // $stripe->invoiceItems->create([
-                //     'customer' => $customer->stripe_id,
-                //     'invoice' => $invoice->id,
-                //     'amount' => $totalPrice * 100, // Amount should be in cents
-                //     'currency' => 'eur',
-                //     'description' => "Reservation ID: {$reservation->id}",
-                // ]);
-
-                // $finalInvoice = $stripe->invoices->finalizeInvoice($invoice->id);
 
                 $reservation->update([
                     'paid' => true,
