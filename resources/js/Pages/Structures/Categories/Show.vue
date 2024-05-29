@@ -131,7 +131,7 @@ const latestAdresseId = computed(() => {
                     <ChevronLeftIcon class="h-10 w-10 text-white" />
                 </Link>
                 <div
-                    class="flex h-full w-full flex-col items-center md:flex-row"
+                    class="flex h-full w-full flex-col items-center md:flex-row md:justify-between"
                 >
                     <Link
                         :href="
@@ -140,36 +140,40 @@ const latestAdresseId = computed(() => {
                                 discipline: props.discipline.slug,
                             })
                         "
-                        class="shrink-0 px-3 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
+                        class="shrink-0 px-6 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                     >
                         {{ discipline.name }}
                     </Link>
-
-                    <Link
-                        :href="
-                            route('structures.categories.show', {
-                                structure: structure.slug,
-                                discipline: discipline.slug,
-                                categorie: category.id,
-                            })
-                        "
-                        v-for="category in categoriesListByDiscipline"
-                        :key="category.id"
-                        class="flex h-full w-full flex-col items-center border border-gray-200 py-2.5 text-xs hover:bg-gray-100 hover:text-slate-700 md:py-4"
-                        :class="{
-                            'bg-green-500 text-white':
-                                category.id === categorie.id,
-                            'bg-white text-slate-500':
-                                category.id !== categorie.id,
-                        }"
+                    <div
+                        class="w-full md:flex md:flex-1 md:items-center md:justify-start"
                     >
-                        <AcademicCapIcon
-                            class="hidden h-6 w-6 md:inline-flex"
-                        />
-                        <div class="text-center">
-                            {{ category.nom_categorie_pro }}
-                        </div>
-                    </Link>
+                        <Link
+                            :href="
+                                route('structures.categories.show', {
+                                    structure: structure.slug,
+                                    discipline: discipline.slug,
+                                    categorie: category.id,
+                                })
+                            "
+                            v-for="category in categoriesListByDiscipline"
+                            :key="category.id"
+                            class="flex h-full w-full flex-col items-center border border-gray-200 px-6 py-2.5 text-xs ring ring-green-500 hover:bg-gray-50 hover:text-slate-700 md:w-auto md:py-4"
+                            :class="{
+                                'bg-green-500 text-white':
+                                    category.id === categorie.id,
+                                'bg-white text-slate-500':
+                                    category.id !== categorie.id,
+                            }"
+                        >
+                            <AcademicCapIcon
+                                class="hidden h-6 w-6 md:inline-flex"
+                            />
+                            <div class="text-center">
+                                {{ category.nom_categorie_pro }}
+                            </div>
+                        </Link>
+                    </div>
+
                     <div class="w-full md:w-auto">
                         <BreezeDropdown align="right" width="48">
                             <template #trigger>
