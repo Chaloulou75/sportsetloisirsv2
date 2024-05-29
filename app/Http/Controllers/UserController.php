@@ -14,17 +14,23 @@ class UserController extends Controller
      */
     public function index(): Response
     {
-
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 
-        $users = User::with('roles')->select(['id', 'name', 'email'])->paginate(12);
+        $users = User::with(['roles', 'structures'])
+                ->filter(
+                    request(['search'])
+                )
+                ->select(['id', 'name', 'email'])
+                ->paginate(12)
+                ->withQueryString();
 
         return Inertia::render('Admin/Users/Index', [
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
             'users' => fn () => $users,
+            'filters' => request()->all(['search']),
         ]);
     }
 

@@ -12,7 +12,7 @@ const props = defineProps({
             class="mx-auto my-2 flex w-full max-w-max flex-col items-center justify-center px-2 py-2 md:w-auto md:px-6"
         >
             <h1
-                class="w-auto text-center text-3xl font-black leading-tight tracking-widest md:text-5xl"
+                class="w-auto text-center font-pt-sans text-3xl font-black leading-tight tracking-widest md:text-5xl"
                 :class="{
                     'text-white': discipline?.theme === 'dark',
                     'text-gray-900':

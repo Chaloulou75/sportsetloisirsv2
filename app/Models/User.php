@@ -47,6 +47,19 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
+    public function scopeFilter($query, array $filters): void
+    {
+        $query->when(
+            $filters['search'] ?? false,
+            fn ($query, $search) =>
+            $query->where(
+                fn ($query) =>
+                $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%')
+            )
+        );
+    }
+
     /**
      * Get the customer associated with the user.
      */

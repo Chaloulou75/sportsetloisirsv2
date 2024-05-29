@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\City;
+use App\Models\Role;
 use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -59,6 +60,8 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        $user->roles()->attach(Role::find(2));
 
         event(new Registered($user));
 

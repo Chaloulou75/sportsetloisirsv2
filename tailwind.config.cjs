@@ -14,7 +14,8 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                sans: ["PT Sans", "Figtree", ...defaultTheme.fontFamily.sans],
+                sans: ["Figtree", ...defaultTheme.fontFamily.sans],
+                "pt-sans": ["PT Sans"],
             },
             colors: {
                 darkblue: "#151f32",

@@ -23,7 +23,6 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
-        dd($request->user());
         $email = $request->query('email');
 
         $familles = Cache::remember('familles', 600, function () {
