@@ -40,7 +40,8 @@ onMounted(() => {
     >
         <nav class="mx-auto w-full max-w-full" aria-label="Global">
             <div class="relative md:flex md:items-center md:justify-between">
-                <div class="flex items-center justify-end md:hidden">
+                <!-- flex md:hidden -->
+                <div class="hidden items-center justify-end">
                     <div class="md:hidden">
                         <button
                             type="button"

@@ -145,7 +145,7 @@ const latestAdresseId = computed(() => {
                         {{ discipline.name }}
                     </Link>
                     <div
-                        class="w-full md:flex md:flex-1 md:items-center md:justify-start"
+                        class="w-full space-x-0 space-y-1 md:flex md:flex-1 md:items-center md:justify-start md:space-x-4 md:space-y-0"
                     >
                         <Link
                             :href="
@@ -157,7 +157,7 @@ const latestAdresseId = computed(() => {
                             "
                             v-for="category in categoriesListByDiscipline"
                             :key="category.id"
-                            class="flex h-full w-full flex-col items-center border border-gray-200 px-6 py-2.5 text-xs ring ring-green-500 hover:bg-gray-50 hover:text-slate-700 md:w-auto md:py-4"
+                            class="flex h-full w-full flex-col items-center px-6 py-2.5 text-xs ring ring-green-500/40 hover:bg-gray-50 hover:text-slate-700 md:w-auto md:py-4"
                             :class="{
                                 'bg-green-500 text-white':
                                     category.id === categorie.id,

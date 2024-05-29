@@ -87,7 +87,8 @@ const formatCityName = (ville) => {
         <template #header>
             <ResultsHeader>
                 <template v-slot:title>
-                    <span class="text-3xl uppercase md:text-5xl"
+                    <span
+                        class="bg-gradient-to-r from-gray-800 to-blue-700 bg-clip-text text-4xl uppercase text-transparent md:text-7xl"
                         >Sports et loisirs</span
                     >
                 </template>
@@ -141,11 +142,11 @@ const formatCityName = (ville) => {
                         </h3>
                         <p class="text-gray-600">
                             Trouvez un club de sport ou un des
-                            <span class="font-semibold">{{
+                            <span class="font-semibold oldstyle-nums">{{
                                 produitsCount
                             }}</span>
                             cours collectifs dans plus de
-                            <span class="font-semibold">{{
+                            <span class="font-semibold oldstyle-nums">{{
                                 disciplinesCount
                             }}</span>
                             <span class="italic"> disciplines différentes</span
@@ -428,7 +429,9 @@ const formatCityName = (ville) => {
                     <div
                         class="flex flex-col justify-between space-y-6 bg-gray-50 px-4 py-6 text-center ring ring-gray-500"
                     >
-                        <div class="text-3xl font-semibold md:text-7xl">
+                        <div
+                            class="text-3xl font-semibold oldstyle-nums md:text-7xl"
+                        >
                             {{ disciplinesCount }}
                         </div>
                         <div class="text-lg uppercase">
@@ -438,7 +441,9 @@ const formatCityName = (ville) => {
                     <div
                         class="flex flex-col justify-between space-y-6 bg-gray-50 px-4 py-6 text-center ring ring-gray-500"
                     >
-                        <div class="text-3xl font-semibold md:text-7xl">
+                        <div
+                            class="text-3xl font-semibold oldstyle-nums md:text-7xl"
+                        >
                             {{ produitsCount }}
                         </div>
                         <div class="text-lg uppercase">
@@ -448,7 +453,9 @@ const formatCityName = (ville) => {
                     <div
                         class="flex flex-col justify-between space-y-6 bg-gray-50 px-4 py-6 text-center ring ring-gray-500"
                     >
-                        <div class="text-3xl font-semibold md:text-7xl">
+                        <div
+                            class="text-3xl font-semibold oldstyle-nums md:text-7xl"
+                        >
                             1000000
                         </div>
                         <div class="text-lg uppercase">pages vues / mois</div>
