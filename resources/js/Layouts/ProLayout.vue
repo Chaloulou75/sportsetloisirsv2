@@ -47,7 +47,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="w-full min-h-full bg-white">
+    <div class="min-h-full w-full bg-white">
         <main>
             <div class="flex flex-col md:flex-row">
                 <!-- Page Heading -->
@@ -61,14 +61,14 @@ const props = defineProps({
                     @eventFromChild="handleButtonEvent"
                 />
 
-                <div class="w-full max-w-full overflow-hidden md:flex-1">
+                <div class="h-full w-full max-w-full md:flex-1">
                     <ProNavigation :structure="structure" />
 
                     <header
-                        class="w-full h-auto shadow-sm bg-gradient-to-br from-green-100 to-blue-100"
+                        class="h-auto w-full bg-gradient-to-br from-green-100 to-blue-100 shadow-sm"
                         v-if="$slots.header"
                     >
-                        <div class="max-w-full mx-auto">
+                        <div class="mx-auto max-w-full">
                             <slot name="header" />
                         </div>
                     </header>

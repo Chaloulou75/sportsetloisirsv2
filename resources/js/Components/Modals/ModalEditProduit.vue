@@ -369,13 +369,13 @@ const onSubmitEditProduitForm = () => {
                 leave-to="opacity-0"
             >
                 <div
-                    class="fixed inset-0 transition-opacity bg-black bg-opacity-50"
+                    class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
                 />
             </TransitionChild>
 
             <div class="fixed inset-0 overflow-auto">
                 <div
-                    class="flex items-center justify-center min-h-full p-4 text-center"
+                    class="flex min-h-full items-center justify-center p-4 text-center"
                 >
                     <TransitionChild
                         as="template"
@@ -387,7 +387,7 @@ const onSubmitEditProduitForm = () => {
                         leave-to="opacity-0 scale-95"
                     >
                         <DialogPanel
-                            class="w-full max-w-6xl p-6 text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
+                            class="w-full max-w-6xl transform rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
                         >
                             <form
                                 @submit.prevent="onSubmitEditProduitForm()"
@@ -395,7 +395,7 @@ const onSubmitEditProduitForm = () => {
                             >
                                 <DialogTitle
                                     as="div"
-                                    class="flex items-center justify-between w-full"
+                                    class="flex w-full items-center justify-between"
                                 >
                                     <h3
                                         class="text-lg font-medium leading-6 text-gray-800"
@@ -409,11 +409,11 @@ const onSubmitEditProduitForm = () => {
                                     <button type="button">
                                         <XCircleIcon
                                             @click="emit('close')"
-                                            class="w-6 h-6 text-gray-600 hover:text-red-600"
+                                            class="h-6 w-6 text-gray-600 hover:text-red-600"
                                         />
                                     </button>
                                 </DialogTitle>
-                                <div class="w-full mt-2">
+                                <div class="mt-2 w-full">
                                     <div class="flex flex-col space-y-3">
                                         <div class="flex flex-col space-y-3">
                                             <div
@@ -428,7 +428,7 @@ const onSubmitEditProduitForm = () => {
                                                             ? 'bg-green-600'
                                                             : 'bg-gray-200'
                                                     "
-                                                    class="relative inline-flex items-center h-6 rounded-full w-11"
+                                                    class="relative inline-flex h-6 w-11 items-center rounded-full"
                                                 >
                                                     <span class="sr-only"
                                                         >Actif</span
@@ -439,7 +439,7 @@ const onSubmitEditProduitForm = () => {
                                                                 ? 'translate-x-6'
                                                                 : 'translate-x-1'
                                                         "
-                                                        class="inline-block w-4 h-4 transition transform bg-white rounded-full"
+                                                        class="inline-block h-4 w-4 transform rounded-full bg-white transition"
                                                     />
                                                 </Switch>
                                                 <p
@@ -461,7 +461,7 @@ const onSubmitEditProduitForm = () => {
                                                 v-if="
                                                     filteredCriteres.length > 0
                                                 "
-                                                class="grid w-full grid-cols-1 gap-4 mx-auto md:grid-cols-3"
+                                                class="mx-auto grid w-full grid-cols-1 gap-4 md:grid-cols-3"
                                             >
                                                 <div
                                                     v-for="critere in filteredCriteres"
@@ -548,7 +548,7 @@ const onSubmitEditProduitForm = () => {
                                                             {{ critere.nom }}
                                                         </label>
                                                         <div
-                                                            class="flex mt-1 rounded-md"
+                                                            class="mt-1 flex rounded-md"
                                                         >
                                                             <TextInput
                                                                 type="text"
@@ -565,7 +565,7 @@ const onSubmitEditProduitForm = () => {
                                                                 :id="
                                                                     critere.nom
                                                                 "
-                                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                                 placeholder=""
                                                                 autocomplete="none"
                                                             />
@@ -587,7 +587,7 @@ const onSubmitEditProduitForm = () => {
                                                             {{ critere.nom }}
                                                         </label>
                                                         <div
-                                                            class="flex mt-1 rounded-md"
+                                                            class="mt-1 flex rounded-md"
                                                         >
                                                             <TextInput
                                                                 type="number"
@@ -605,7 +605,7 @@ const onSubmitEditProduitForm = () => {
                                                                 :id="
                                                                     critere.nom
                                                                 "
-                                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                                 placeholder=""
                                                                 autocomplete="none"
                                                             />
@@ -618,7 +618,7 @@ const onSubmitEditProduitForm = () => {
                                                             critere.type_champ_form ===
                                                             'time'
                                                         "
-                                                        class="flex flex-col items-start max-w-sm space-y-3"
+                                                        class="flex max-w-sm flex-col items-start space-y-3"
                                                     >
                                                         <SingleTimeForm
                                                             class="w-full"
@@ -638,7 +638,7 @@ const onSubmitEditProduitForm = () => {
                                                             critere.type_champ_form ===
                                                             'times'
                                                         "
-                                                        class="flex flex-col items-start max-w-sm space-y-3"
+                                                        class="flex max-w-sm flex-col items-start space-y-3"
                                                     >
                                                         <OpenTimesForm
                                                             class="w-full"
@@ -658,7 +658,7 @@ const onSubmitEditProduitForm = () => {
                                                             critere.type_champ_form ===
                                                             'date'
                                                         "
-                                                        class="flex flex-col items-start max-w-sm space-y-3"
+                                                        class="flex max-w-sm flex-col items-start space-y-3"
                                                     >
                                                         <SingleDateForm
                                                             class="w-full"
@@ -678,7 +678,7 @@ const onSubmitEditProduitForm = () => {
                                                             critere.type_champ_form ===
                                                             'dates'
                                                         "
-                                                        class="flex flex-col items-start max-w-sm space-y-3"
+                                                        class="flex max-w-sm flex-col items-start space-y-3"
                                                     >
                                                         <OpenDaysForm
                                                             class="w-full"
@@ -700,7 +700,7 @@ const onSubmitEditProduitForm = () => {
                                                         "
                                                     >
                                                         <div
-                                                            class="flex flex-col items-start max-w-sm space-y-3"
+                                                            class="flex max-w-sm flex-col items-start space-y-3"
                                                         >
                                                             <OpenMonthsForm
                                                                 class="w-full"
@@ -724,7 +724,7 @@ const onSubmitEditProduitForm = () => {
                                                             critere.type_champ_form ===
                                                             'adresse'
                                                         "
-                                                        class="flex flex-col w-full max-w-sm space-y-2"
+                                                        class="flex w-full max-w-sm flex-col space-y-2"
                                                     >
                                                         <div
                                                             v-if="!addAddress"
@@ -739,7 +739,7 @@ const onSubmitEditProduitForm = () => {
                                                                 Adresse
                                                             </label>
                                                             <div
-                                                                class="flex mt-1 rounded-md"
+                                                                class="mt-1 flex rounded-md"
                                                             >
                                                                 <select
                                                                     name="
@@ -751,7 +751,7 @@ const onSubmitEditProduitForm = () => {
                                                                     v-model="
                                                                         formEditProduit.adresse
                                                                     "
-                                                                    class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
+                                                                    class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                                                 >
                                                                     <option
                                                                         v-for="adresse in structure.adresses"
@@ -785,7 +785,7 @@ const onSubmitEditProduitForm = () => {
                                                                 "
                                                                 id="addAddress"
                                                                 type="checkbox"
-                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded form-checkbox focus:ring-blue-500"
+                                                                class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
                                                             />
                                                             <label
                                                                 for="addAddress"
@@ -802,7 +802,7 @@ const onSubmitEditProduitForm = () => {
                                                             critere.type_champ_form ===
                                                             'rayon'
                                                         "
-                                                        class="flex flex-col items-start w-full max-w-sm space-y-3"
+                                                        class="flex w-full max-w-sm flex-col items-start space-y-3"
                                                     >
                                                         <RangeInputForm
                                                             class="w-full max-w-sm"
@@ -821,7 +821,7 @@ const onSubmitEditProduitForm = () => {
                                                                 critere.type_champ_form ===
                                                                 'instructeur'
                                                             "
-                                                            class="flex items-start w-full"
+                                                            class="flex w-full items-start"
                                                         >
                                                             <input
                                                                 v-model="
@@ -829,7 +829,7 @@ const onSubmitEditProduitForm = () => {
                                                                 "
                                                                 id="addInstructeur"
                                                                 type="checkbox"
-                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded form-checkbox focus:ring-blue-500"
+                                                                class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
                                                             />
                                                             <label
                                                                 for="addInstructeur"
@@ -1038,11 +1038,11 @@ const onSubmitEditProduitForm = () => {
                                 </div>
 
                                 <div
-                                    class="flex items-center justify-between w-full mt-4"
+                                    class="mt-4 flex w-full items-center justify-between"
                                 >
                                     <button
                                         type="button"
-                                        class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                                        class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
                                         @click="emit('close')"
                                     >
                                         Annuler
@@ -1054,7 +1054,7 @@ const onSubmitEditProduitForm = () => {
                                         }"
                                         :disabled="formEditProduit.processing"
                                         type="submit"
-                                        class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                                        class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                     >
                                         <LoadingSVG
                                             v-if="formEditProduit.processing"

@@ -32,15 +32,25 @@ class StructureDisciplineController extends Controller
      */
     public function index(Structure $structure): Response
     {
+        // $structure = Structure::withRelations()->findOrFail($structure->id);
         $structure = Structure::with([
-            'disciplines',
-            'activites',
-            'adresses' => function ($query) {
-                $query->latest();
-            },
-            'produits',
-        ])->select(['id', 'name', 'slug'])
-        ->find($structure->id);
+                    'creator:id,name',
+                    'users:id,name',
+                    'adresses'  => function ($query) {
+                        $query->latest();
+                    },
+                    'city',
+                    'departement:id,departement,numero',
+                    'structuretype:id,name,slug',
+                    'disciplines:id,name,slug,theme',
+                    'disciplines.str_categories' => function ($query) {
+                        $query->withCount('str_activites');
+                    },
+                    'disciplines.str_categories.str_activites',
+                    'disciplines.categories' => function ($query) {
+                        $query->whereDoesntHave('disc_categories.str_categories');
+                    }
+                ])->findOrFail($structure->id);
 
         $allReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {
             $query->where('structure_id', $structure->id);
@@ -58,41 +68,13 @@ class StructureDisciplineController extends Controller
                     ->latest()
                     ->get();
 
-        $actByDiscAndCategorie = $activites->groupBy('discipline.name')->map(function ($disciplineCategories) {
-            $categories = $disciplineCategories->groupBy('categorie.nom_categorie_pro')->map(function ($categorieItems) {
-                return [
-                            'activite_id' => $categorieItems->first()->id,
-                            'categorie_id' => $categorieItems->first()->categorie->id,
-                            'name' => $categorieItems->first()->categorie->nom_categorie_pro ?? 'Sans Catégorie',
-                            'count' => $categorieItems->count(),
-                        ];
-            })->sortByDesc('count');
-
-            $categoryIdsInDiscipline = $categories->pluck('categorie_id');
-
-            $missingCategories = LienDisciplineCategorie::where('discipline_id', $disciplineCategories->first()->discipline->id)
-            ->whereNotIn('id', $categoryIdsInDiscipline)
-            ->get();
-
-            return [
-                'id' => $disciplineCategories->first()->id,
-                'discipline_id' => $disciplineCategories->first()->discipline->id,
-                'disciplineName' => $disciplineCategories->first()->discipline->name,
-                'disciplineSlug' => $disciplineCategories->first()->discipline->slug,
-                'count' => $disciplineCategories->count(),
-                'categories' => $categories,
-                'missingCategories' => $missingCategories,
-            ];
-        });
-
         $categoriesListByDiscipline = LienDisciplineCategorie::with([
                     'tarif_types',
                     'tarif_types.tarif_attributs.sous_attributs.valeurs',
                     'tarif_types.tarif_attributs.valeurs'
-                ])->whereHas('structures_activites', function (Builder $query) use ($structure) {
+                ])->whereHas('str_activites', function (Builder $query) use ($structure) {
                     $query->where('structure_id', $structure->id);
                 })->get();
-
 
         $activiteForTarifs = StructureActivite::with([
                     'structure:id,name,slug',
@@ -138,7 +120,7 @@ class StructureDisciplineController extends Controller
 
         $categories = Categorie::with('disciplines')->select(['id', 'nom', 'ico'])->get();
 
-        $dejaUsedDisciplines = $structure->disciplines->unique()->pluck('discipline_id');
+        $dejaUsedDisciplines = $structure->disciplines->pluck('id');
 
         $listDisciplines = ListDiscipline::with(['categories'])->select(['id', 'name', 'slug'])->get();
 
@@ -148,7 +130,6 @@ class StructureDisciplineController extends Controller
             'dejaUsedDisciplines' => fn () => $dejaUsedDisciplines,
             'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'activites' => fn () => $activites,
-            'actByDiscAndCategorie' => fn () => $actByDiscAndCategorie,
             'categoriesListByDiscipline' => fn () => $categoriesListByDiscipline,
             'activiteForTarifs' => fn () => $activiteForTarifs,
             'strCatTarifs' => fn () => $strCatTarifs,
@@ -214,7 +195,7 @@ class StructureDisciplineController extends Controller
             'tarif_types',
             'tarif_types.tarif_attributs.sous_attributs.valeurs',
             'tarif_types.tarif_attributs.valeurs'
-        ])->whereHas('structures_activites', function (Builder $query) use ($structure) {
+        ])->whereHas('str_activites', function (Builder $query) use ($structure) {
             $query->where('structure_id', $structure->id);
         })->where('discipline_id', $discipline->id)->get();
 
@@ -222,7 +203,7 @@ class StructureDisciplineController extends Controller
             'tarif_types',
             'tarif_types.tarif_attributs.sous_attributs.valeurs',
             'tarif_types.tarif_attributs.valeurs'
-        ])->whereDoesntHave('structures_activites', function (Builder $query) use ($structure) {
+        ])->whereDoesntHave('str_activites', function (Builder $query) use ($structure) {
             $query->where('structure_id', $structure->id);
         })->where('discipline_id', $discipline->id)->get();
 
@@ -339,64 +320,15 @@ class StructureDisciplineController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Structure $structure, $discipline): RedirectResponse
+    public function destroy(Structure $structure, ListDiscipline $discipline): RedirectResponse
     {
-        $structure = Structure::where('slug', $structure->slug)->firstOrFail();
-        $discipline = ListDiscipline::findOrFail($discipline);
+        StructureCategorie::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->delete();
+        StructureActivite::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->delete();
+        StructureProduit::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->delete();
+        StructureProduitCritere::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->delete();
+        StructurePlanning::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->delete();
 
-        $structureDiscipline = StructureDiscipline::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->first();
-
-        $categories = StructureCategorie::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->get();
-
-        $activites = StructureActivite::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->get();
-
-        $produits = StructureProduit::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->get();
-
-        $criteres = StructureProduitCritere::with('sous_criteres')->where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->get();
-
-        $plannings = StructurePlanning::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->get();
-
-        if($produits->isNotEmpty()) {
-            foreach($produits as $produit) {
-                if($produit->tarifs()->count() > 0) {
-                    $produit->tarifs()->detach();
-                }
-                $produit->delete();
-            }
-        }
-
-        if($plannings->isNotEmpty()) {
-            foreach($plannings as $planning) {
-                $planning->delete();
-            }
-        }
-
-        if($criteres->isNotEmpty()) {
-            foreach($criteres as $critere) {
-                if($critere->sous_criteres()) {
-                    foreach($critere->sous_criteres() as $souscritere) {
-                        $souscritere->delete();
-                    }
-                }
-                $critere->delete();
-            }
-        }
-
-        if($activites->isNotEmpty()) {
-            foreach($activites as $activite) {
-                $activite->delete();
-            }
-        }
-
-        if($categories->isNotEmpty()) {
-            foreach($categories as $categorie) {
-                $categorie->delete();
-            }
-        }
-
-        if($structureDiscipline) {
-            $structureDiscipline->delete();
-        }
+        $structure->disciplines()->detach($discipline->id);
 
         return to_route('structures.disciplines.index', $structure)->with('success', 'Discipline supprimée de votre liste.');
 

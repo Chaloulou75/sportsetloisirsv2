@@ -13,8 +13,8 @@ const MicroNavActiviteBackPro = defineAsyncComponent(() =>
     import("@/Components/Structures/MicroNavActiviteBackPro.vue")
 );
 
-const DisciplineCard = defineAsyncComponent(() =>
-    import("@/Components/Structures/DisciplineCard.vue")
+const DisciplineCardNew = defineAsyncComponent(() =>
+    import("@/Components/Structures/DisciplineCardNew.vue")
 );
 
 const TarifDisplay = defineAsyncComponent(() =>
@@ -47,7 +47,6 @@ const props = defineProps({
     categoriesListByDiscipline: Object,
     activiteForTarifs: Object,
     strCatTarifs: Object,
-    actByDiscAndCategorie: Object,
     structure: Object,
     categories: Object,
     dejaUsedDisciplines: Array,
@@ -87,13 +86,12 @@ const form = useForm({
 const categoriesList = ref([]);
 const activiteSimilairesList = ref([]);
 const selectedDiscipline = ref({});
-const dejaUsedDisciplinesRef = ref(props.dejaUsedDisciplines);
 
-const currentActivite = ref(null);
+const currentDiscipline = ref(null);
 const showDeleteDisciplineModal = ref(false);
-const handleOpenDeleteModal = (activite) => {
+const handleOpenDeleteModal = (discipline) => {
     showDeleteDisciplineModal.value = true;
-    currentActivite.value = activite;
+    currentDiscipline.value = discipline;
 };
 
 const currentCategorie = ref(null);
@@ -132,15 +130,8 @@ watch(
     }
 );
 
-const removeDiscipline = (disciplineId) => {
-    dejaUsedDisciplinesRef.value = dejaUsedDisciplinesRef.value.filter(
-        (id) => id !== disciplineId
-    );
-    selectedDiscipline.value = null;
-};
-
 const refreshPage = () => {
-    router.reload({ only: ["dejaUsedDisciplines"] });
+    router.reload({ only: ["structure", "dejaUsedDisciplines"] });
     selectedDiscipline.value = null;
 };
 
@@ -203,7 +194,7 @@ const openAddPlanningModal = () => {
                             <AutocompleteActiviteFormSmall
                                 class="w-full md:w-1/2"
                                 :disciplines="listDisciplines"
-                                :deja-used-disciplines="dejaUsedDisciplinesRef"
+                                :deja-used-disciplines="dejaUsedDisciplines"
                                 :errors="form.errors"
                                 v-model:discipline="form.discipline_id"
                                 :selected-discipline="selectedDiscipline"
@@ -311,7 +302,7 @@ const openAddPlanningModal = () => {
                                     :index="discipline.id"
                                     :class="{
                                         'pointer-events-none text-gray-400':
-                                            dejaUsedDisciplinesRef.includes(
+                                            dejaUsedDisciplines.includes(
                                                 discipline.id
                                             ),
                                     }"
@@ -324,7 +315,7 @@ const openAddPlanningModal = () => {
                                         {{ discipline.name }}
                                         <span
                                             v-if="
-                                                dejaUsedDisciplinesRef.includes(
+                                                dejaUsedDisciplines.includes(
                                                     discipline.id
                                                 )
                                             "
@@ -336,7 +327,7 @@ const openAddPlanningModal = () => {
                             </div>
                         </section>
                         <section
-                            v-if="activites.length > 0"
+                            v-if="structure.disciplines.length > 0"
                             class="mx-auto my-4 max-w-full space-y-4 px-2 sm:px-4 lg:px-8"
                         >
                             <h2 class="text-xl font-bold text-gray-700">
@@ -346,12 +337,10 @@ const openAddPlanningModal = () => {
                             <div
                                 class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
                             >
-                                <DisciplineCard
-                                    v-for="(
-                                        activite, index
-                                    ) in actByDiscAndCategorie"
-                                    :key="activite.id"
-                                    :activite="activite"
+                                <DisciplineCardNew
+                                    v-for="discipline in structure.disciplines"
+                                    :key="discipline.id"
+                                    :discipline="discipline"
                                     :structure="structure"
                                     @open-delete-modal="handleOpenDeleteModal"
                                     @open-delete-categorie-modal="
@@ -415,14 +404,14 @@ const openAddPlanningModal = () => {
                 :categorie="currentCategorie"
                 :show="showDeleteCategorieModal"
                 @close="showDeleteCategorieModal = false"
-                @deleteCategorie="refreshPage"
+                @delete-categorie="refreshPage"
             />
             <ModalDeleteDiscipline
                 :structure="structure"
-                :activite="currentActivite"
+                :discipline="currentDiscipline"
                 :show="showDeleteDisciplineModal"
                 @close="showDeleteDisciplineModal = false"
-                @deleteDiscipline="removeDiscipline"
+                @delete-discipline="refreshPage"
             />
             <ModalAddTarif
                 :errors="errors"

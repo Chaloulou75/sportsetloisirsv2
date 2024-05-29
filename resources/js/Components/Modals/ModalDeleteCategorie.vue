@@ -20,18 +20,21 @@ const props = defineProps({
     show: Boolean,
 });
 
-function destroyCategorie(categorie) {
-    const url = `/structures/${props.structure.slug}/categories/${categorie.categorie_id}`;
-    router.delete(url, {
-        preserveScroll: true,
-        onSuccess: () => {
-            emit("close");
-            emit("deleteCategorie");
-        },
-        structure: props.structure.slug,
-        categorie: categorie.categorie_id,
-    });
-}
+const destroyCategorie = () => {
+    router.delete(
+        route("structures.categories.destroy", {
+            structure: props.structure,
+            categorie: props.categorie,
+        }),
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                emit("close");
+                emit("deleteCategorie");
+            },
+        }
+    );
+};
 </script>
 
 <template>
@@ -48,13 +51,13 @@ function destroyCategorie(categorie) {
                     leave-to="opacity-0"
                 >
                     <div
-                        class="fixed inset-0 transition-opacity bg-black bg-opacity-50"
+                        class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
                     />
                 </TransitionChild>
 
                 <div class="fixed inset-0 z-10 overflow-y-auto">
                     <div
-                        class="flex items-end justify-center min-h-full p-4 text-center md:items-center md:p-0"
+                        class="flex min-h-full items-end justify-center p-4 text-center md:items-center md:p-0"
                     >
                         <TransitionChild
                             as="template"
@@ -66,17 +69,17 @@ function destroyCategorie(categorie) {
                             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                         >
                             <DialogPanel
-                                class="relative overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl md:my-8 md:w-full md:max-w-xl"
+                                class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all md:my-8 md:w-full md:max-w-xl"
                             >
                                 <div
-                                    class="px-4 pt-5 pb-4 bg-white md:p-6 md:pb-4"
+                                    class="bg-white px-4 pb-4 pt-5 md:p-6 md:pb-4"
                                 >
                                     <div class="md:flex md:items-start">
                                         <div
-                                            class="flex items-center justify-center flex-shrink-0 w-12 h-12 mx-auto bg-red-100 rounded-full md:mx-0 md:h-10 md:w-10"
+                                            class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 md:mx-0 md:h-10 md:w-10"
                                         >
                                             <ExclamationTriangleIcon
-                                                class="w-6 h-6 text-red-600"
+                                                class="h-6 w-6 text-red-600"
                                                 aria-hidden="true"
                                             />
                                         </div>
@@ -85,15 +88,26 @@ function destroyCategorie(categorie) {
                                         >
                                             <DialogTitle
                                                 as="div"
-                                                class="flex items-start justify-between w-full"
+                                                class="flex w-full items-start justify-between"
                                             >
                                                 <h3
-                                                    class="w-full text-lg font-medium leading-6 text-center text-gray-800 md:text-left"
+                                                    class="w-full text-center text-lg font-medium leading-6 text-gray-800 md:text-left"
                                                 >
                                                     Suppression de la catégorie
-                                                    <span class="text-blue-600">
+                                                    <span
+                                                        v-if="categorie.name"
+                                                        class="text-blue-600"
+                                                    >
                                                         {{
                                                             categorie.name
+                                                        }}</span
+                                                    >
+                                                    <span
+                                                        v-else
+                                                        class="text-blue-600"
+                                                    >
+                                                        {{
+                                                            categorie.nom_categorie_pro
                                                         }}</span
                                                     >
                                                 </h3>
@@ -104,7 +118,7 @@ function destroyCategorie(categorie) {
                                                 >
                                                     <XCircleIcon
                                                         @click="$emit('close')"
-                                                        class="w-6 h-6 text-gray-600 hover:text-red-600"
+                                                        class="h-6 w-6 text-gray-600 hover:text-red-600"
                                                     />
                                                 </button>
                                             </DialogTitle>
@@ -124,11 +138,11 @@ function destroyCategorie(categorie) {
                                     </div>
                                 </div>
                                 <div
-                                    class="justify-between px-4 py-3 space-y-2 bg-gray-50 md:flex md:space-y-0 md:px-6"
+                                    class="justify-between space-y-2 bg-gray-50 px-4 py-3 md:flex md:space-y-0 md:px-6"
                                 >
                                     <button
                                         type="button"
-                                        class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm"
+                                        class="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm"
                                         @click="emit('close')"
                                         ref="cancelButtonRef"
                                     >
@@ -136,7 +150,7 @@ function destroyCategorie(categorie) {
                                     </button>
                                     <button
                                         type="button"
-                                        class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+                                        class="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
                                         @click="destroyCategorie(categorie)"
                                     >
                                         Supprimer

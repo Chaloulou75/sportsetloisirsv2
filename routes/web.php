@@ -186,7 +186,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('str-{structure:slug}/dis-{discipline:slug}/cat-{categorie:id}', [StructureCategorieController::class, 'show'])->name('structures.categories.show');
 
-    Route::delete('structures/{structure}/categories/{category}', [StructureCategorieController::class, 'destroy'])->name('structures.categories.destroy');
+    Route::delete('structures/{structure}/categories/{categorie}', [StructureCategorieController::class, 'destroy'])->name('structures.categories.destroy');
 
     Route::post('structures/{structure:slug}/adresses', [StructureAddresseController::class, 'store'])->name('structures.adresses.store');
     Route::put('structures/{structure:slug}/adresses/{adress}', [StructureAddresseController::class, 'update'])->name('structures.adresses.update');

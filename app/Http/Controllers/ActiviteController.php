@@ -56,10 +56,7 @@ class ActiviteController extends Controller
             return to_route('structures.disciplines.index', $structure)->with('error', 'Cette discipline est déjà associée à cette structure.');
         }
 
-        $structureDiscipline = $structure->disciplines()->create([
-            'discipline_id' => $discipline->id,
-            'nb_produits' => 1,
-        ]);
+        $structureDiscipline = $structure->disciplines()->attach($discipline->id, ['nb_produits' => 1]);
 
         // structureCategorie
         $validatedData = request()->validate([
@@ -70,9 +67,8 @@ class ActiviteController extends Controller
 
             $disCat = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('categorie_id', $category_id)->firstOrfail();
 
-            $structureActiviteCategorie = $structure->categories()->create([
+            $structureActiviteCategorie = $structure->categories()->attach($disCat->id, [
                 'discipline_id' => $discipline->id,
-                'categorie_id' => $disCat->id,
             ]);
 
             $titre = $disCat->nom_categorie_pro . ' de ' . $discipline->name ;
@@ -205,7 +201,7 @@ class ActiviteController extends Controller
             // 'actif' => 1,
         ]);
 
-        return to_route('structures.categories.show', ['structure' => $structure->slug, 'discipline' => $structureActivite->discipline->slug, 'categorie' => $structureActivite->categorie->id, ])->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
+        return to_route('structures.categories.show', ['structure' => $structure, 'discipline' => $structureActivite->discipline, 'categorie' => $structureActivite->categorie, ])->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
 
     }
 
@@ -302,7 +298,7 @@ class ActiviteController extends Controller
 
         $structureActivite->update(['actif' => $request->actif]);
 
-        return to_route('structures.categories.show', ['structure' => $structure->slug, 'discipline' => $structureActivite->discipline->slug, 'categorie' => $structureActivite->categorie->id])->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
+        return to_route('structures.categories.show', ['structure' => $structure, 'discipline' => $structureActivite->discipline, 'categorie' => $structureActivite->categorie])->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
     }
 
     public function newactivitystore(Request $request, Structure $structure, $discipline): RedirectResponse

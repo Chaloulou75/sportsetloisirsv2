@@ -29,8 +29,9 @@ class StructureCategorieController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Structure $structure, $discipline, $categorie): Response
+    public function show(Structure $structure, ListDiscipline $discipline, $categorie): Response
     {
+
         if (!Gate::allows('update-structure', $structure)) {
             return to_route('structures.disciplines.index', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
@@ -56,7 +57,7 @@ class StructureCategorieController extends Controller
         ->where('slug', $structure->slug)
         ->first();
 
-        $discipline = ListDiscipline::where('slug', $discipline)->first();
+        $discipline = ListDiscipline::where('slug', $discipline->slug)->first();
 
         $categorie = LienDisciplineCategorie::with([
             'tarif_types',
@@ -68,7 +69,7 @@ class StructureCategorieController extends Controller
             'tarif_types',
             'tarif_types.tarif_attributs.sous_attributs.valeurs',
             'tarif_types.tarif_attributs.valeurs'
-        ])->whereHas('structures_activites', function (Builder $query) use ($structure) {
+        ])->whereHas('str_activites', function (Builder $query) use ($structure) {
             $query->where('structure_id', $structure->id);
         })->where('discipline_id', $discipline->id)->get();
 
@@ -76,7 +77,7 @@ class StructureCategorieController extends Controller
             'tarif_types',
             'tarif_types.tarif_attributs.sous_attributs.valeurs',
             'tarif_types.tarif_attributs.valeurs'
-        ])->whereDoesntHave('structures_activites', function (Builder $query) use ($structure) {
+        ])->whereDoesntHave('str_activites', function (Builder $query) use ($structure) {
             $query->where('structure_id', $structure->id);
         })->where('discipline_id', $discipline->id)->get();
 
@@ -194,60 +195,23 @@ class StructureCategorieController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Structure $structure, $categorie): RedirectResponse
+    public function destroy(Structure $structure, LienDisciplineCategorie $categorie): RedirectResponse
     {
+        StructureActivite::where('structure_id', $structure->id)->where('categorie_id', $categorie->id)->delete();
+        StructureProduit::where('structure_id', $structure->id)->where('categorie_id', $categorie->id)->delete();
+        StructureProduitCritere::where('structure_id', $structure->id)->where('categorie_id', $categorie->id)->delete();
+        StructurePlanning::where('structure_id', $structure->id)->where('categorie_id', $categorie->id)->delete();
 
-        $structure = Structure::where('slug', $structure->slug)->firstOrFail();
-        $categorie = LienDisciplineCategorie::findOrFail($categorie);
+        $structure->categories()->detach($categorie->id);
 
-        $structureCategorie = StructureCategorie::where('structure_id', $structure->id)->where('categorie_id', $categorie->id)->first();
+        $disciplineId = $categorie->discipline_id;
 
-        $discipline = $structureCategorie->discipline;
+        $remainingCategorie = StructureCategorie::where('structure_id', $structure->id)->where('discipline_id', $disciplineId)
+                        ->exists();
 
-        $activites = StructureActivite::where('structure_id', $structure->id)->where('categorie_id', $categorie->id)->get();
-
-        $produits = StructureProduit::where('structure_id', $structure->id)->where('categorie_id', $categorie->id)->get();
-
-        $criteres = StructureProduitCritere::where('structure_id', $structure->id)->where('categorie_id', $categorie->id)->get();
-
-        $plannings = StructurePlanning::where('structure_id', $structure->id)->where('categorie_id', $categorie->id)->get();
-
-        if($plannings->isNotEmpty()) {
-            foreach($plannings as $planning) {
-                $planning->delete();
-            }
+        if (!$remainingCategorie) {
+            $structure->disciplines()->detach($disciplineId);
         }
-
-        if($criteres->isNotEmpty()) {
-            foreach($criteres as $critere) {
-                $critere->delete();
-            }
-        }
-
-        if($produits->isNotEmpty()) {
-            foreach($produits as $produit) {
-                $produit->delete();
-            }
-        }
-
-        if($activites->isNotEmpty()) {
-            foreach($activites as $activite) {
-                $activite->delete();
-            }
-        }
-
-        if($structureCategorie) {
-            $structureCategorie->delete();
-        }
-
-        //supprimer StructureDiscipline basé sur structureCategorie if no categories
-        $structureDisciplines = StructureDiscipline::doesntHave('categories')->where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->get();
-
-        if($structureDisciplines->isNotEmpty()) {
-            foreach($structureDisciplines as $structureDiscipline) {
-                $structureDiscipline->delete();
-            }
-        };
 
         return to_route('structures.disciplines.index', $structure)->with('success', 'Catégorie supprimée de votre liste.');
     }

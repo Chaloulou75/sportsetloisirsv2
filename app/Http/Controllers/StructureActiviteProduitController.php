@@ -144,7 +144,7 @@ class StructureActiviteProduitController extends Controller
         }
 
 
-        return to_route('structures.categories.show', ['structure' => $structure->slug, 'discipline' => $activite->discipline->slug, 'categorie' => $activite->categorie->id ])->with('success', 'Produit ajouté.');
+        return to_route('structures.categories.show', ['structure' => $structure, 'discipline' => $activite->discipline, 'categorie' => $activite->categorie ])->with('success', 'Produit ajouté.');
 
     }
 

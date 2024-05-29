@@ -31,7 +31,12 @@ class LienDisciplineCategorie extends Pivot
         return $this->belongsTo(Categorie::class, 'categorie_id');
     }
 
-    public function structures_activites(): HasMany
+    public function str_categories(): HasMany
+    {
+        return $this->hasMany(StructureCategorie::class, 'categorie_id');
+    }
+
+    public function str_activites(): HasMany
     {
         return $this->hasMany(StructureActivite::class, 'categorie_id');
     }

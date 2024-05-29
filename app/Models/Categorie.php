@@ -24,6 +24,11 @@ class Categorie extends Model
         return $this->belongsToMany(ListDiscipline::class, 'liens_disciplines_categories', 'categorie_id', 'discipline_id')->using(LienDisciplineCategorie::class)->withPivot('id', 'slug', 'nom_categorie_pro', 'nom_categorie_client')->withTimestamps();
     }
 
+    public function disc_categories(): HasMany
+    {
+        return $this->hasMany(LienDisciplineCategorie::class, 'categorie_id', 'id');
+    }
+
     public function criteres(): BelongsToMany
     {
         return $this->belongsToMany(

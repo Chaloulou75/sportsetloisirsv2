@@ -62,7 +62,7 @@ class ListDiscipline extends Model
 
     public function familles(): BelongsToMany
     {
-        return $this->belongsToMany(Famille::class, 'liens_familles_disciplines', 'discipline_id', 'famille_id');
+        return $this->belongsToMany(Famille::class, 'liens_familles_disciplines', 'discipline_id', 'famille_id')->using(LienFamilleDiscipline::class);
     }
 
     public function categories(): BelongsToMany
@@ -72,12 +72,17 @@ class ListDiscipline extends Model
 
     public function structures(): BelongsToMany
     {
-        return $this->belongsToMany(Structure::class, 'structures_disciplines', 'discipline_id', 'structure_id');
+        return $this->belongsToMany(Structure::class, 'structures_disciplines', 'discipline_id', 'structure_id')->using(StructureDiscipline::class)->withPivot('id');
     }
 
-    public function activites(): BelongsToMany
+    public function str_categories(): BelongsToMany
     {
-        return $this->belongsToMany(StructureActivite::class, 'structures_produits', 'discipline_id', 'activite_id');
+        return $this->belongsToMany(LienDisciplineCategorie::class, 'structures_categories', 'discipline_id', 'categorie_id')->using(StructureCategorie::class)->withPivot('id');
+    }
+
+    public function activites(): HasMany
+    {
+        return $this->hasMany(StructureActivite::class, 'discipline_id');
     }
 
     public function structureProduits(): HasMany

@@ -140,15 +140,25 @@ class Structure extends Model
         return $this->hasMany(StructureAddress::class, 'structure_id');
     }
 
-    public function disciplines(): HasMany
+    public function disciplines(): BelongsToMany
     {
-        return $this->hasMany(StructureDiscipline::class, 'structure_id');
+        return $this->belongsToMany(ListDiscipline::class, 'structures_disciplines', 'structure_id', 'discipline_id')->using(StructureDiscipline::class)->withTimestamps();
     }
 
-    public function categories(): HasMany
+    public function categories(): BelongsToMany
     {
-        return $this->hasMany(StructureCategorie::class, 'structure_id');
+        return $this->belongsToMany(LienDisciplineCategorie::class, 'structures_categories', 'structure_id', 'categorie_id')->using(StructureCategorie::class)->withTimestamps();
     }
+
+    // public function disciplines(): HasMany
+    // {
+    //     return $this->hasMany(StructureDiscipline::class, 'structure_id');
+    // }
+
+    // public function categories(): HasMany
+    // {
+    //     return $this->hasMany(StructureCategorie::class, 'structure_id');
+    // }
 
     public function activites(): HasMany
     {
@@ -178,28 +188,34 @@ class Structure extends Model
     public function scopeWithRelations(Builder $query): void
     {
         $query->with([
-                'creator:id,name',
-                'users:id,name',
-                'adresses'  => function ($query) {
-                    $query->latest();
-                },
-                'city',
-                'departement:id,departement,numero',
-                'structuretype:id,name,slug',
-                'disciplines',
-                'disciplines.discipline:id,name,slug,theme',
-                'categories',
-                'activites',
-                'activites.discipline:id,name',
-                'activites.categorie:id,categorie_id,discipline_id,nom_categorie_client,nom_categorie_pro',
-                'activites.produits',
-                'activites.produits.adresse',
-                'activites.produits.criteres',
-                'activites.produits.criteres.critere',
-                'activites.produits.criteres.sous_criteres',
-                'activites.produits.criteres.critere_valeur',
-                'activites.produits.plannings',
-            ])->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'logo'])->withCount(['disciplines', 'activites']);
+            'creator:id,name',
+            'users:id,name',
+            'adresses'  => function ($query) {
+                $query->latest();
+            },
+            'city',
+            'departement:id,departement,numero',
+            'structuretype:id,name,slug',
+            'disciplines:id,name,slug,theme',
+            'disciplines.str_categories' => function ($query) {
+                $query->withCount('str_activites');
+            },
+            'disciplines.str_categories.str_activites',
+            'categories',
+            'activites',
+            'activites.discipline:id,name,slug,theme',
+            'activites.categorie:id,categorie_id,discipline_id,nom_categorie_client,nom_categorie_pro',
+            'activites.produits',
+            'activites.produits.adresse',
+            'activites.produits.criteres',
+            'activites.produits.criteres.critere',
+            'activites.produits.criteres.sous_criteres',
+            'activites.produits.criteres.critere_valeur',
+            'activites.produits.plannings',
+        ])->withCount([
+            'disciplines',
+            'activites',
+        ]);
     }
 
 }
