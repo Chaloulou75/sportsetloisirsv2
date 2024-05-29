@@ -53,7 +53,7 @@ const headerClass = computed(() => {
     >
         <Link
             :href="link"
-            class="group relative flex h-full w-full items-center justify-center rounded bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-overlay shadow transition duration-150 ease-in-out hover:bg-blend-multiply hover:shadow-md md:w-auto"
+            class="group relative flex h-full w-full items-center justify-center rounded bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-overlay shadow ring ring-gray-500 transition duration-150 ease-in-out hover:bg-blend-multiply hover:shadow-md md:w-auto"
             :class="headerClass"
         >
             <div

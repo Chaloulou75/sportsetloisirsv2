@@ -38,7 +38,7 @@ const adminNotificationsCount = computed(
                 d'administration de
                 <span class="font-semibold">{{ appName }}</span>
             </h2>
-            <p>
+            <p v-if="adminNotificationsCount > 0">
                 Vous avez reçu
                 <span class="text-indigo-500"
                     >{{ adminNotificationsCount }} notifications d'activités

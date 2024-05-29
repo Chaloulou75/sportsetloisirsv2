@@ -178,7 +178,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                     et aux alentours
                 </h2>
                 <div
-                    class="flex w-full flex-col flex-wrap items-stretch justify-center gap-4 text-gray-700 md:flex-row"
+                    class="mx-auto grid h-auto grid-cols-1 place-content-center place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
                 >
                     <DisciplineSmallCard
                         v-for="discipline in flattenedDisciplines"
@@ -230,7 +230,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                 class="w-full px-2 md:w-1/2"
                             >
                                 <div
-                                    class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
+                                    class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:gap-8 lg:grid-cols-2"
                                 >
                                     <ProduitCard
                                         v-for="(

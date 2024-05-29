@@ -23,7 +23,7 @@ const props = defineProps({
 </script>
 <template>
     <article
-        class="rounded-xl border border-indigo-600 border-opacity-5 bg-gray-50 transition-colors duration-300 hover:border-opacity-100 hover:bg-gray-100"
+        class="rounded-lg bg-gray-50 ring ring-indigo-600 ring-opacity-30 transition-colors duration-300 hover:bg-gray-100 hover:ring-opacity-100"
     >
         <div class="px-5 py-6 lg:flex">
             <div v-if="post.thumbnail" class="lg:mr-8">

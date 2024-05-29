@@ -149,7 +149,7 @@ const formatCityName = (ville) => {
             :data="data"
             @mouseover="emit('card-hover', produit)"
             @mouseout="emit('card-out')"
-            class="flex h-full flex-col rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:shadow-2xl md:px-0 md:hover:scale-105"
+            class="flex h-full flex-col rounded-lg shadow-sm shadow-indigo-200 ring ring-gray-200 transition duration-300 ease-in-out hover:shadow-2xl md:px-0 md:hover:scale-105"
         >
             <div
                 class="relative h-56 w-full rounded-md bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-soft-light"

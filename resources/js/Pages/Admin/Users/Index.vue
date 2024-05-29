@@ -62,6 +62,14 @@ const props = defineProps({
                             >
                                 {{ user.name }}
                                 <span class="text-xs">{{ user.email }}</span>
+                                <template
+                                    v-for="role in user.roles"
+                                    :key="role.id"
+                                >
+                                    <span v-if="role" class="text-xs">{{
+                                        role.name
+                                    }}</span></template
+                                >
                             </Link>
 
                             <Pagination

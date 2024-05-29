@@ -95,7 +95,7 @@ const formatCityName = (ville) => {
         </template>
         <template #default>
             <section
-                class="flex flex-col items-end justify-center w-full max-w-full px-2 py-8 mx-auto space-x-0 space-y-4 md:flex-row md:space-x-4 md:space-y-0 md:px-8"
+                class="mx-auto flex w-full max-w-full flex-col items-end justify-center space-x-0 space-y-4 px-2 py-8 md:flex-row md:space-x-4 md:space-y-0 md:px-8"
             >
                 <AutocompleteCity :cities="allCities" v-model="localite" />
                 <AutocompleteDiscipline
@@ -114,10 +114,10 @@ const formatCityName = (ville) => {
                             'bg-white text-gray-700 hover:bg-sky-800 hover:text-white':
                                 !localite || !search,
                         }"
-                        class="flex items-center justify-center w-full px-4 py-3 text-base font-medium border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-700 focus:ring-offset-2 md:w-auto"
+                        class="flex w-full items-center justify-center rounded border border-gray-300 px-4 py-3 text-base font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-700 focus:ring-offset-2 md:w-auto"
                     >
                         <MagnifyingGlassIcon
-                            class="w-6 h-6 mr-2 md:mr-0 md:h-5 md:w-5"
+                            class="mr-2 h-6 w-6 md:mr-0 md:h-5 md:w-5"
                         />
                         <span class="inline-block md:hidden">Rechercher</span>
                         <span class="sr-only">Rechercher</span>
@@ -126,13 +126,13 @@ const formatCityName = (ville) => {
             </section>
 
             <section
-                class="max-w-full px-2 py-8 mx-auto bg-transparent md:px-8 md:py-20"
+                class="mx-auto max-w-full bg-transparent px-2 py-8 md:px-8 md:py-20"
             >
                 <div
                     class="flex flex-col items-start justify-between space-y-12 md:flex-row md:space-x-20 md:space-y-0"
                 >
                     <div
-                        class="px-6 py-4 bg-white rounded-lg shadow-xl shadow-red-500"
+                        class="rounded-lg bg-white px-6 py-4 shadow-xl shadow-red-500"
                     >
                         <h3
                             class="pb-4 text-lg font-semibold text-gray-600 underline decoration-red-500 decoration-4 underline-offset-2"
@@ -155,7 +155,7 @@ const formatCityName = (ville) => {
                         </p>
                     </div>
                     <div
-                        class="px-6 py-4 bg-white rounded-lg shadow-lg shadow-sky-600 md:translate-y-20"
+                        class="rounded-lg bg-white px-6 py-4 shadow-lg shadow-sky-600 md:translate-y-20"
                     >
                         <h3
                             class="pb-4 text-lg font-semibold text-gray-600 underline decoration-sky-600 decoration-4 underline-offset-2"
@@ -173,7 +173,7 @@ const formatCityName = (ville) => {
                         </p>
                     </div>
                     <div
-                        class="px-6 py-4 bg-white rounded-lg shadow-lg shadow-yellow-500"
+                        class="rounded-lg bg-white px-6 py-4 shadow-lg shadow-yellow-500"
                     >
                         <h3
                             class="pb-4 text-lg font-semibold text-gray-600 underline decoration-yellow-500 decoration-4 underline-offset-2"
@@ -190,7 +190,7 @@ const formatCityName = (ville) => {
                 </div>
             </section>
 
-            <section class="max-w-full px-2 py-8 mx-auto md:px-8 md:py-20">
+            <section class="mx-auto max-w-full px-2 py-8 md:px-8 md:py-20">
                 <h3 class="pb-6 text-2xl font-semibold text-gray-700">
                     Besoin d'inspiration:
                 </h3>
@@ -204,20 +204,20 @@ const formatCityName = (ville) => {
                         :link="route('disciplines.show', discipline.slug)"
                     />
                 </div>
-                <div class="flex items-center justify-center mb-4">
+                <div class="mb-4 flex items-center justify-center">
                     <Link
                         :href="route('disciplines.index')"
-                        class="flex items-center justify-center px-12 py-3 text-sm font-medium text-gray-600 border border-gray-600 rounded shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                        class="flex items-center justify-center rounded px-12 py-3 text-sm font-medium text-gray-600 shadow-sm ring ring-gray-400 hover:bg-indigo-500 hover:text-white hover:shadow-lg hover:ring-gray-100 focus:outline-none focus:ring active:bg-indigo-500"
                     >
                         Et beaucoup d'autres
                         <span>
-                            <ArrowRightIcon class="w-6 h-6 ml-2" />
+                            <ArrowRightIcon class="ml-2 h-6 w-6" />
                         </span>
                     </Link>
                 </div>
             </section>
 
-            <section class="max-w-full px-2 py-8 mx-auto md:px-8 md:py-20">
+            <section class="mx-auto max-w-full px-2 py-8 md:px-8 md:py-20">
                 <h3 class="pb-6 text-2xl font-semibold text-gray-700">
                     Top villes:
                 </h3>
@@ -232,7 +232,7 @@ const formatCityName = (ville) => {
                         "
                         v-for="city in topVilles"
                         :key="city.id"
-                        class="flex flex-col items-center justify-center px-12 py-3 text-sm font-medium text-gray-600 border border-gray-600 rounded shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                        class="flex flex-col items-center justify-center rounded px-12 py-3 text-sm font-medium text-gray-600 shadow-sm ring ring-gray-400 hover:bg-indigo-500 hover:text-white hover:shadow-lg hover:ring-gray-100 focus:outline-none focus:ring active:bg-indigo-500"
                     >
                         {{ formatCityName(city.ville) }}
                         <span class="text-xs italic"
@@ -240,20 +240,20 @@ const formatCityName = (ville) => {
                         >
                     </Link>
                 </div>
-                <div class="flex items-center justify-center mb-4">
+                <div class="mb-4 flex items-center justify-center">
                     <Link
                         :href="route('villes.index')"
-                        class="flex items-center justify-center px-12 py-3 text-sm font-medium text-gray-600 border border-gray-600 rounded shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                        class="flex items-center justify-center rounded px-12 py-3 text-sm font-medium text-gray-600 shadow-sm ring ring-gray-400 hover:bg-indigo-500 hover:text-white hover:shadow-lg hover:ring-gray-100 focus:outline-none focus:ring active:bg-indigo-500"
                     >
                         Et beaucoup d'autres
                         <span>
-                            <ArrowRightIcon class="w-6 h-6 ml-2" />
+                            <ArrowRightIcon class="ml-2 h-6 w-6" />
                         </span>
                     </Link>
                 </div>
             </section>
 
-            <section class="max-w-full px-2 py-8 mx-auto md:px-8 md:py-20">
+            <section class="mx-auto max-w-full px-2 py-8 md:px-8 md:py-20">
                 <h3 class="pb-6 text-2xl font-semibold text-gray-700">
                     Top departements:
                 </h3>
@@ -271,7 +271,7 @@ const formatCityName = (ville) => {
                         "
                         v-for="departement in topDepartements"
                         :key="departement.id"
-                        class="flex flex-col items-center justify-center px-12 py-3 text-sm font-medium text-gray-600 border border-gray-600 rounded shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                        class="flex flex-col items-center justify-center rounded px-12 py-3 text-sm font-medium text-gray-600 shadow-sm ring ring-gray-400 hover:bg-indigo-500 hover:text-white hover:shadow-lg hover:ring-gray-100 focus:outline-none focus:ring active:bg-indigo-500"
                     >
                         {{ formatCityName(departement.departement) }}
                         <span class="text-xs italic"
@@ -279,29 +279,29 @@ const formatCityName = (ville) => {
                         ></Link
                     >
                 </div>
-                <div class="flex items-center justify-center mb-4">
+                <div class="mb-4 flex items-center justify-center">
                     <Link
                         :href="route('departements.index')"
-                        class="flex items-center justify-center px-12 py-3 text-sm font-medium text-gray-600 border border-gray-600 rounded shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                        class="flex items-center justify-center rounded px-12 py-3 text-sm font-medium text-gray-600 shadow-sm ring ring-gray-400 hover:bg-indigo-500 hover:text-white hover:shadow-lg hover:ring-gray-100 focus:outline-none focus:ring active:bg-indigo-500"
                     >
                         Et beaucoup d'autres
                         <span>
-                            <ArrowRightIcon class="w-6 h-6 ml-2" />
+                            <ArrowRightIcon class="ml-2 h-6 w-6" />
                         </span>
                     </Link>
                 </div>
             </section>
 
             <section
-                class="flex flex-col justify-between max-w-full px-2 py-8 mx-auto md:flex-row md:px-8 md:py-20"
+                class="mx-auto flex max-w-full flex-col justify-between px-2 py-8 md:flex-row md:px-8 md:py-20"
             >
-                <div class="max-w-full mb-6 grow sm:mb-0">
+                <div class="mb-6 max-w-full grow sm:mb-0">
                     <h3 class="pb-6 text-2xl font-semibold text-gray-700">
                         Les dernieres structures inscrites:
                     </h3>
                     <div
                         v-if="lastStructures.length > 0"
-                        class="grid h-auto grid-cols-1 gap-4 mb-8 place-items-stretch sm:grid-cols-2 lg:grid-cols-3"
+                        class="mb-8 grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3"
                     >
                         <StructureCard
                             v-for="structure in lastStructures"
@@ -315,31 +315,31 @@ const formatCityName = (ville) => {
                             :data="{}"
                         />
                     </div>
-                    <div class="flex items-center justify-center mb-4">
+                    <div class="mb-4 flex items-center justify-center">
                         <Link
                             :href="route('structures.index')"
-                            class="flex items-center justify-center px-12 py-3 text-sm font-medium text-gray-600 border border-gray-600 rounded shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                            class="flex items-center justify-center rounded px-12 py-3 text-sm font-medium text-gray-600 shadow-sm ring ring-gray-400 hover:bg-indigo-500 hover:text-white hover:shadow-lg hover:ring-gray-100 focus:outline-none focus:ring active:bg-indigo-500"
                         >
                             Et beaucoup d'autres
                             <span>
-                                <ArrowRightIcon class="w-6 h-6 ml-2" />
+                                <ArrowRightIcon class="ml-2 h-6 w-6" />
                             </span>
                         </Link>
                     </div>
                 </div>
-                <div class="max-w-sm mx-auto text-gray-700 md:px-8">
+                <div class="mx-auto max-w-sm text-gray-700 md:px-8">
                     <h3
-                        class="pb-6 text-2xl font-semibold text-center text-gray-700 sm:text-left"
+                        class="pb-6 text-center text-2xl font-semibold text-gray-700 sm:text-left"
                     >
                         Inscrivez votre structure:
                     </h3>
                     <p
-                        class="pb-6 text-lg font-semibold text-center text-gray-700 sm:text-left"
+                        class="pb-6 text-center text-lg font-semibold text-gray-700 sm:text-left"
                     >
                         C'est gratuit
                     </p>
                     <p
-                        class="pb-6 text-base font-medium text-justify text-gray-700 sm:text-left"
+                        class="pb-6 text-justify text-base font-medium text-gray-700 sm:text-left"
                     >
                         Pour inscrire votre structure, il vous suffit de créer
                         un compte. Vous aurez accès à l'ensemble de nos services
@@ -347,61 +347,61 @@ const formatCityName = (ville) => {
                         d'informations, et diffuser vos évenements.
                     </p>
                     <p
-                        class="pb-6 text-lg font-semibold text-center text-gray-700 sm:text-left"
+                        class="pb-6 text-center text-lg font-semibold text-gray-700 sm:text-left"
                     >
                         Une fiche complète
                     </p>
-                    <p class="flex items-center mb-2 font-medium">
+                    <p class="mb-2 flex items-center font-medium">
                         <CheckIcon
-                            class="w-5 h-5 mr-2 text-blue-800"
+                            class="mr-2 h-5 w-5 text-blue-800"
                         />Présentation de votre structure
                     </p>
-                    <p class="flex items-center mb-2 font-medium">
-                        <CheckIcon class="w-5 h-5 mr-2 text-blue-800" />Lieux de
+                    <p class="mb-2 flex items-center font-medium">
+                        <CheckIcon class="mr-2 h-5 w-5 text-blue-800" />Lieux de
                         pratique
                     </p>
-                    <p class="flex items-center mb-2 font-medium">
-                        <CheckIcon class="w-5 h-5 mr-2 text-blue-800" />Horaires
+                    <p class="mb-2 flex items-center font-medium">
+                        <CheckIcon class="mr-2 h-5 w-5 text-blue-800" />Horaires
                         de pratique
                     </p>
-                    <p class="flex items-center mb-2 font-medium">
-                        <CheckIcon class="w-5 h-5 mr-2 text-blue-800" />Tarifs
+                    <p class="mb-2 flex items-center font-medium">
+                        <CheckIcon class="mr-2 h-5 w-5 text-blue-800" />Tarifs
                     </p>
-                    <p class="flex items-center mb-8 font-medium">
-                        <CheckIcon class="w-5 h-5 mr-2 text-blue-800" />Photos
+                    <p class="mb-8 flex items-center font-medium">
+                        <CheckIcon class="mr-2 h-5 w-5 text-blue-800" />Photos
                     </p>
-                    <div class="flex items-center justify-center mb-4">
+                    <div class="mb-4 flex items-center justify-center">
                         <Link
                             v-if="$page.props.auth.user"
                             :href="route('structures.create')"
-                            class="flex items-center justify-center px-12 py-3 text-sm font-medium text-gray-600 border border-gray-600 rounded shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                            class="flex items-center justify-center rounded px-12 py-3 text-sm font-medium text-gray-600 shadow-sm ring ring-gray-400 hover:bg-indigo-500 hover:text-white hover:shadow-lg hover:ring-gray-100 focus:outline-none focus:ring active:bg-indigo-500"
                         >
                             Créer votre structure
                             <span>
-                                <ArrowRightIcon class="w-6 h-6 ml-2" />
+                                <ArrowRightIcon class="ml-2 h-6 w-6" />
                             </span>
                         </Link>
                         <Link
                             v-else
                             :href="route('register')"
-                            class="flex items-center justify-center px-12 py-3 text-sm font-medium text-gray-600 border border-gray-600 rounded shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                            class="flex items-center justify-center rounded px-12 py-3 text-sm font-medium text-gray-600 shadow-sm ring ring-gray-400 hover:bg-indigo-500 hover:text-white hover:shadow-lg hover:ring-gray-100 focus:outline-none focus:ring active:bg-indigo-500"
                         >
                             S'inscrire
                             <span>
-                                <ArrowRightIcon class="w-6 h-6 ml-2" />
+                                <ArrowRightIcon class="ml-2 h-6 w-6" />
                             </span>
                         </Link>
                     </div>
                 </div>
             </section>
 
-            <section class="max-w-full px-2 py-8 mx-auto md:px-8 md:py-20">
+            <section class="mx-auto max-w-full px-2 py-8 md:px-8 md:py-20">
                 <h3 class="pb-6 text-2xl font-semibold text-gray-700">
                     Top articles:
                 </h3>
                 <div
                     v-if="posts"
-                    class="grid h-auto grid-cols-1 gap-4 mb-8 place-items-stretch sm:grid-cols-2 md:grid-cols-3"
+                    class="mb-8 grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                 >
                     <PostFeaturedCard
                         v-for="post in posts"
@@ -409,16 +409,50 @@ const formatCityName = (ville) => {
                         :post="post"
                     />
                 </div>
-                <div class="flex items-center justify-center mb-4">
+                <div class="mb-4 flex items-center justify-center">
                     <Link
                         :href="route('posts.index')"
-                        class="flex items-center justify-center px-12 py-3 text-sm font-medium text-gray-600 border border-gray-600 rounded shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                        class="flex items-center justify-center rounded px-12 py-3 text-sm font-medium text-gray-600 shadow-sm ring ring-gray-400 hover:bg-indigo-500 hover:text-white hover:shadow-lg hover:ring-gray-100 focus:outline-none focus:ring active:bg-indigo-500"
                     >
                         Et beaucoup d'autres
                         <span>
-                            <ArrowRightIcon class="w-6 h-6 ml-2" />
+                            <ArrowRightIcon class="ml-2 h-6 w-6" />
                         </span>
                     </Link>
+                </div>
+            </section>
+            <section class="mx-auto max-w-full px-2 py-8 md:px-8 md:py-20">
+                <div
+                    class="grid grid-cols-1 justify-evenly gap-4 md:grid-cols-3 md:gap-8"
+                >
+                    <div
+                        class="flex flex-col justify-between space-y-6 bg-gray-50 px-4 py-6 text-center ring ring-gray-500"
+                    >
+                        <div class="text-3xl font-semibold md:text-7xl">
+                            {{ disciplinesCount }}
+                        </div>
+                        <div class="text-lg uppercase">
+                            disciplines référencées
+                        </div>
+                    </div>
+                    <div
+                        class="flex flex-col justify-between space-y-6 bg-gray-50 px-4 py-6 text-center ring ring-gray-500"
+                    >
+                        <div class="text-3xl font-semibold md:text-7xl">
+                            {{ produitsCount }}
+                        </div>
+                        <div class="text-lg uppercase">
+                            clubs et cours collectifs inscrits
+                        </div>
+                    </div>
+                    <div
+                        class="flex flex-col justify-between space-y-6 bg-gray-50 px-4 py-6 text-center ring ring-gray-500"
+                    >
+                        <div class="text-3xl font-semibold md:text-7xl">
+                            1000000
+                        </div>
+                        <div class="text-lg uppercase">pages vues / mois</div>
+                    </div>
                 </div>
             </section>
             <CookieBanner

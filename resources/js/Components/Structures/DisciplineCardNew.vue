@@ -43,10 +43,10 @@ const headerClass = computed(() => {
         leave-to="opacity-0"
     >
         <div
-            class="block h-full rounded-lg shadow-sm shadow-indigo-200 transition duration-300 ease-in-out hover:shadow-2xl"
+            class="block h-full shadow-sm shadow-indigo-200 ring ring-gray-300 transition duration-300 ease-in-out hover:shadow-lg"
         >
             <div
-                class="relative h-56 w-full rounded-md bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-soft-light"
+                class="relative h-56 w-full bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-soft-light"
                 :class="headerClass"
             >
                 <button

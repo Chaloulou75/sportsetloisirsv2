@@ -121,7 +121,7 @@ const formatCityName = (ville) => {
             :data="data"
             @mouseover="emit('card-hover', structure)"
             @mouseout="emit('card-out')"
-            class="block h-full transition duration-300 ease-in-out rounded-lg shadow-sm shadow-sky-700 hover:shadow-2xl md:px-0 md:hover:scale-105"
+            class="block h-full rounded-sm shadow-sm shadow-sky-700 ring ring-gray-300 transition duration-300 ease-in-out hover:shadow-lg md:px-0 md:hover:scale-105"
         >
             <div class="relative flex items-center justify-center">
                 <!-- Button (positioned on top right) -->
@@ -131,7 +131,7 @@ const formatCityName = (ville) => {
                     @click.prevent="() => toggleFavorite(structure.id)"
                 >
                     <HeartIcon
-                        class="w-6 h-6"
+                        class="h-6 w-6"
                         :class="
                             isFavorite
                                 ? 'text-red-500'
@@ -145,19 +145,19 @@ const formatCityName = (ville) => {
                     v-if="structure.logo"
                     alt="Home"
                     :src="structure.image_url"
-                    class="object-contain object-center rounded-full h-14 w-14 shrink-0 md:h-20 md:w-20"
+                    class="h-14 w-14 shrink-0 rounded-full object-contain object-center md:h-20 md:w-20"
                 />
                 <img
                     v-else
                     alt="Home"
                     src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                    class="object-cover w-full h-56 rounded-md"
+                    class="h-56 w-full rounded-md object-cover"
                 />
             </div>
 
-            <div class="flex flex-col px-3 mt-2">
+            <div class="mt-2 flex flex-col px-3">
                 <p
-                    class="text-sm font-medium text-center text-pink-500 uppercase"
+                    class="text-center text-sm font-medium uppercase text-pink-500"
                 >
                     {{ structure.structuretype.name }}
                 </p>
@@ -168,7 +168,7 @@ const formatCityName = (ville) => {
                 </p>
                 <ul>
                     <li
-                        class="text-sm font-semibold list-disc list-inside"
+                        class="list-inside list-disc text-sm font-semibold"
                         v-for="(activite, index) in getUniqueActivitesTitre(
                             structure.activites
                         )"
@@ -180,7 +180,7 @@ const formatCityName = (ville) => {
 
                 <div class="flex items-center py-1.5">
                     <dt class="sr-only">Ville</dt>
-                    <MapPinIcon class="w-4 h-4 mr-1 text-indigo-700" />
+                    <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
                     <div
                         v-if="structure.adresses.length > 0"
                         class="text-sm font-medium"
@@ -206,7 +206,7 @@ const formatCityName = (ville) => {
                     structure: structure.slug,
                 })
             "
-            class="block h-full transition duration-300 ease-in-out rounded-lg shadow-sm shadow-sky-700 hover:scale-105 hover:shadow-2xl md:px-0"
+            class="block h-full rounded-lg shadow-sm shadow-sky-700 transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl md:px-0"
         >
             <div class="relative flex items-center justify-center">
                 <!-- Button (positioned on top right) -->
@@ -216,7 +216,7 @@ const formatCityName = (ville) => {
                     @click.prevent="() => toggleFavorite(structure.id)"
                 >
                     <HeartIcon
-                        class="w-6 h-6"
+                        class="h-6 w-6"
                         :class="
                             isFavorite
                                 ? 'text-red-500'
@@ -230,19 +230,19 @@ const formatCityName = (ville) => {
                     v-if="structure.logo"
                     alt="Home"
                     :src="structure.image_url"
-                    class="object-contain object-center rounded-full h-14 w-14 shrink-0 md:h-20 md:w-20"
+                    class="h-14 w-14 shrink-0 rounded-full object-contain object-center md:h-20 md:w-20"
                 />
                 <img
                     v-else
                     alt="Home"
                     src="https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                    class="object-cover w-full h-56 rounded-md"
+                    class="h-56 w-full rounded-md object-cover"
                 />
             </div>
 
-            <div class="flex flex-col px-3 mt-2">
+            <div class="mt-2 flex flex-col px-3">
                 <p
-                    class="text-sm font-medium text-center text-pink-500 uppercase"
+                    class="text-center text-sm font-medium uppercase text-pink-500"
                 >
                     {{ structure.structuretype.name }}
                 </p>
@@ -253,7 +253,7 @@ const formatCityName = (ville) => {
                 </p>
                 <ul>
                     <li
-                        class="text-sm font-semibold list-disc list-inside"
+                        class="list-inside list-disc text-sm font-semibold"
                         v-for="(activite, index) in getUniqueActivitesTitre(
                             structure.activites
                         )"
@@ -265,7 +265,7 @@ const formatCityName = (ville) => {
 
                 <div class="flex items-center py-1.5">
                     <dt class="sr-only">Ville</dt>
-                    <MapPinIcon class="w-4 h-4 mr-1 text-indigo-700" />
+                    <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
                     <div
                         v-if="structure.adresses.length > 0"
                         class="text-sm font-medium"

@@ -18,7 +18,7 @@ class UserController extends Controller
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 
-        $users = User::select(['id', 'name', 'email'])->paginate(12);
+        $users = User::with('roles')->select(['id', 'name', 'email'])->paginate(12);
 
         return Inertia::render('Admin/Users/Index', [
             'user_can' => [
