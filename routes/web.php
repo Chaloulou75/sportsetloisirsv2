@@ -16,6 +16,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PostLikeController;
 use App\Http\Controllers\AdminBlogController;
+use App\Http\Controllers\AdminRoleController;
 use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\PostCommentController;
@@ -214,10 +215,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/structures', [AdminStructureController::class, 'index'])->name('admin.structures.index');
         Route::get('/disciplines', [AdminDisciplineController::class, 'index'])->name('admin.disciplines.index');
         Route::get('/tarifs', [AdminTarifTypeController::class, 'index'])->name('admin.tarifs.index');
+
         Route::get('/blog', [AdminBlogController::class, 'index'])->name('admin.blog.index');
         Route::get('/blog/tags', [AdminBlogTagController::class, 'index'])->name('admin.blog.tags.index');
         Route::post('/blog/tags', [AdminBlogTagController::class, 'store'])->name('admin.blog.tags.store');
         Route::delete('/blog/tags/{tag}', [AdminBlogTagController::class, 'destroy'])->name('admin.blog.tags.destroy');
+
+        Route::post('/roles', [AdminRoleController::class, 'store'])->name('admin.roles.store');
+        Route::patch('/roles/{role}', [AdminRoleController::class, 'update'])->name('admin.roles.update');
+        Route::delete('/roles/{role}', [AdminRoleController::class, 'destroy'])->name('admin.roles.destroy');
 
         Route::get('/disciplines/dis-{discipline:slug}', [AdminDisciplineController::class, 'edit'])->name('admin.disciplines.edit');
 

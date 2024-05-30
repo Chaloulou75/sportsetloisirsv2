@@ -16,11 +16,13 @@ const user = computed(() => page.props.auth.user);
         class="min-h-full w-full flex-col justify-between border-r border-gray-100 bg-gray-50 md:flex md:w-1/6"
     >
         <div class="w-full space-y-6 md:sticky md:inset-x-0 md:top-0">
-            <!-- Hamburger logo-->
-            <div class="flex h-16 justify-between bg-blue-100 pl-3">
-                <div class="flex shrink-0 items-center">
+            <!-- Hamburger logo -->
+            <div
+                class="flex h-16 justify-between bg-blue-50 pl-4 pr-4 shadow-sm"
+            >
+                <div class="flex items-center">
                     <Link :href="route('welcome')">
-                        <BreezeApplicationLogo class="block h-9 w-auto" />
+                        <BreezeApplicationLogo class="block h-10 w-auto" />
                     </Link>
                 </div>
                 <div class="-ml-2 flex items-center md:hidden">
@@ -29,7 +31,7 @@ const user = computed(() => page.props.auth.user);
                             showingInsNavigationDropdown =
                                 !showingInsNavigationDropdown
                         "
-                        class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
+                        class="inline-flex items-center justify-center rounded-md p-2 text-gray-500 transition duration-150 ease-in-out hover:bg-gray-200 focus:bg-gray-200"
                     >
                         <svg
                             class="h-6 w-6"
@@ -64,15 +66,15 @@ const user = computed(() => page.props.auth.user);
             </div>
 
             <ul
-                class="hidden h-full w-full space-y-3 md:flex md:flex-col md:items-start"
+                class="hidden h-full w-full space-y-4 px-4 md:flex md:flex-col md:items-start"
             >
                 <li class="w-full">
                     <Link
                         :href="route('admin.index')"
                         :active="route().current('admin.index')"
-                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        class="block rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition duration-150 ease-in-out hover:bg-blue-100 hover:text-blue-800"
                         :class="{
-                            'bg-blue-600 text-white':
+                            'bg-blue-100 text-blue-800':
                                 route().current('admin.index'),
                         }"
                     >
@@ -84,13 +86,13 @@ const user = computed(() => page.props.auth.user);
                     <Link
                         :href="route('admin.users.index')"
                         :active="route().current('admin.users.index')"
-                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        class="block rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition duration-150 ease-in-out hover:bg-blue-100 hover:text-blue-800"
                         :class="{
-                            'bg-blue-600 text-white':
+                            'bg-blue-100 text-blue-800':
                                 route().current('admin.users.index'),
                         }"
                     >
-                        Gestion des utilisateurs
+                        Gestion des utilisateurs et des rôles
                     </Link>
                 </li>
 
@@ -98,9 +100,9 @@ const user = computed(() => page.props.auth.user);
                     <Link
                         :href="route('admin.categories.index')"
                         :active="route().current('admin.categories.index')"
-                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        class="block rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition duration-150 ease-in-out hover:bg-blue-100 hover:text-blue-800"
                         :class="{
-                            'bg-blue-600 text-white': route().current(
+                            'bg-blue-100 text-blue-800': route().current(
                                 'admin.categories.index'
                             ),
                         }"
@@ -113,23 +115,23 @@ const user = computed(() => page.props.auth.user);
                     <Link
                         :href="route('admin.criteres.index')"
                         :active="route().current('admin.criteres.index')"
-                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        class="block rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition duration-150 ease-in-out hover:bg-blue-100 hover:text-blue-800"
                         :class="{
-                            'bg-blue-600 text-white': route().current(
+                            'bg-blue-100 text-blue-800': route().current(
                                 'admin.criteres.index'
                             ),
                         }"
                     >
-                        Gestion des criteres
+                        Gestion des critères
                     </Link>
                 </li>
                 <li class="w-full">
                     <Link
                         :href="route('admin.tarifs.index')"
                         :active="route().current('admin.tarifs.index')"
-                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        class="block rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition duration-150 ease-in-out hover:bg-blue-100 hover:text-blue-800"
                         :class="{
-                            'bg-blue-600 text-white':
+                            'bg-blue-100 text-blue-800':
                                 route().current('admin.tarifs.index'),
                         }"
                     >
@@ -140,9 +142,9 @@ const user = computed(() => page.props.auth.user);
                     <Link
                         :href="route('admin.disciplines.index')"
                         :active="route().current('admin.disciplines.index')"
-                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        class="block rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition duration-150 ease-in-out hover:bg-blue-100 hover:text-blue-800"
                         :class="{
-                            'bg-blue-600 text-white': route().current(
+                            'bg-blue-100 text-blue-800': route().current(
                                 'admin.disciplines.index'
                             ),
                         }"
@@ -155,9 +157,9 @@ const user = computed(() => page.props.auth.user);
                     <Link
                         :href="route('admin.structures.index')"
                         :active="route().current('admin.structures.index')"
-                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        class="block rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition duration-150 ease-in-out hover:bg-blue-100 hover:text-blue-800"
                         :class="{
-                            'bg-blue-600 text-white': route().current(
+                            'bg-blue-100 text-blue-800': route().current(
                                 'admin.structures.index'
                             ),
                         }"
@@ -169,9 +171,9 @@ const user = computed(() => page.props.auth.user);
                     <Link
                         :href="route('admin.index')"
                         :active="route().current('admin.index')"
-                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        class="block rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition duration-150 ease-in-out hover:bg-blue-100 hover:text-blue-800"
                         :class="{
-                            'bg-blue-600 text-white':
+                            'bg-blue-100 text-blue-800':
                                 route().current('admin.index'),
                         }"
                     >
@@ -182,9 +184,9 @@ const user = computed(() => page.props.auth.user);
                     <Link
                         :href="route('admin.index')"
                         :active="route().current('admin.index')"
-                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        class="block rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition duration-150 ease-in-out hover:bg-blue-100 hover:text-blue-800"
                         :class="{
-                            'bg-blue-600 text-white':
+                            'bg-blue-100 text-blue-800':
                                 route().current('admin.index'),
                         }"
                     >
@@ -195,9 +197,9 @@ const user = computed(() => page.props.auth.user);
                     <Link
                         :href="route('admin.blog.index')"
                         :active="route().current('admin.blog.index')"
-                        class="block rounded-sm bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        class="block rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition duration-150 ease-in-out hover:bg-blue-100 hover:text-blue-800"
                         :class="{
-                            'bg-blue-600 text-white':
+                            'bg-blue-100 text-blue-800':
                                 route().current('admin.blog.index'),
                         }"
                     >
@@ -206,6 +208,7 @@ const user = computed(() => page.props.auth.user);
                 </li>
             </ul>
         </div>
+
         <!-- Responsive Navigation Menu -->
         <div
             :class="{
@@ -222,7 +225,7 @@ const user = computed(() => page.props.auth.user);
                     Accueil Admin
                 </BreezeResponsiveNavLink>
                 <BreezeResponsiveNavLink :href="route('admin.users.index')">
-                    Gestion utilisateurs
+                    Gestion utilisateurs et rôles
                 </BreezeResponsiveNavLink>
                 <BreezeResponsiveNavLink
                     :href="route('admin.structures.index')"
@@ -243,7 +246,8 @@ const user = computed(() => page.props.auth.user);
                 <BreezeResponsiveNavLink
                     :href="route('admin.disciplines.index')"
                 >
-                    Gestion du contenu
+                    Gestion du contenu (disciplines, catégories, critères,
+                    tarifs)
                 </BreezeResponsiveNavLink>
                 <BreezeResponsiveNavLink :href="route('admin.index')">
                     Statistiques

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -17,7 +18,8 @@ class UserController extends Controller
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 
-        $users = User::with(['roles', 'structures'])
+        $roles = Role::with('users')->select(['id', 'name', 'description'])->withCount('users')->get();
+        $users = User::with(['roles', 'structures:id,name,slug', 'customer'])
                 ->filter(
                     request(['search'])
                 )
@@ -30,6 +32,7 @@ class UserController extends Controller
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
             'users' => fn () => $users,
+            'roles' => fn () => $roles,
             'filters' => request()->all(['search']),
         ]);
     }

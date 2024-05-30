@@ -1,10 +1,14 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import { Head, Link, router } from "@inertiajs/vue3";
-import { ref, watch, defineAsyncComponent } from "vue";
+import { Head, Link, router, useForm } from "@inertiajs/vue3";
+import { ref, watch, onMounted, defineAsyncComponent } from "vue";
 import { ChevronLeftIcon } from "@heroicons/vue/24/outline";
 import TextInput from "@/Components/Forms/TextInput.vue";
+import autoAnimate from "@formkit/auto-animate";
 import { debounce } from "lodash";
+import InputLabel from "@/Components/Forms/InputLabel.vue";
+import InputError from "@/Components/Forms/InputError.vue";
+import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 
 const Pagination = defineAsyncComponent(() =>
     import("@/Components/Pagination.vue")
@@ -13,6 +17,7 @@ const Pagination = defineAsyncComponent(() =>
 const props = defineProps({
     errors: Object,
     users: Object,
+    roles: Object,
     filters: Object,
     user_can: Object,
 });
@@ -37,6 +42,89 @@ watch(
         );
     }, 300)
 );
+
+const showCreateRoleForm = ref(false);
+const toggleCreateRoleForm = () => {
+    showCreateRoleForm.value = !showCreateRoleForm.value;
+};
+
+const createRoleForm = useForm({
+    name: null,
+    description: null,
+});
+
+const createRole = () => {
+    createRoleForm.post(route("admin.roles.store"), {
+        errorBag: "createRoleForm",
+        preserveScroll: true,
+        only: ["users", "roles"],
+        onSuccess: () => {
+            createRoleForm.reset();
+            toggleCreateRoleForm();
+        },
+    });
+};
+
+const currentRole = ref(null);
+const showUpdateRoleForm = ref(false);
+const updateRoleForm = useForm({
+    name: null,
+    description: null,
+});
+
+const openUpdateRoleForm = (role) => {
+    showUpdateRoleForm.value = true;
+    currentRole.value = role;
+    if (role) {
+        updateRoleForm.name = currentRole.value.name;
+        updateRoleForm.description = currentRole.value.description;
+    }
+};
+
+const cancelUpdateRoleForm = () => {
+    showUpdateRoleForm.value = false;
+    currentRole.value = null;
+};
+
+const updateRole = (role) => {
+    updateRoleForm.patch(
+        route("admin.roles.update", {
+            role: role,
+        }),
+        {
+            errorBag: "updateRoleForm",
+            preserveScroll: true,
+            only: ["users", "roles"],
+            onSuccess: () => {
+                updateRoleForm.reset();
+                openUpdateRoleForm(null);
+            },
+        }
+    );
+};
+
+const deleteRole = (role) => {
+    router.delete(
+        route("admin.roles.destroy", {
+            role: role,
+        }),
+        {
+            only: ["users", "roles"],
+            preserveScroll: true,
+        }
+    );
+};
+
+const toAnimateOne = ref();
+const toAnimateTwo = ref();
+onMounted(() => {
+    if (toAnimateOne.value) {
+        autoAnimate(toAnimateOne.value);
+    }
+    if (toAnimateTwo.value) {
+        autoAnimate(toAnimateTwo.value);
+    }
+});
 </script>
 <template>
     <Head
@@ -55,7 +143,7 @@ watch(
                 <h1
                     class="px-3 text-center text-base font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
-                    Gestion des utilisateurs (To Do!)
+                    Gestion des utilisateurs
                 </h1>
             </div>
         </template>
@@ -64,7 +152,7 @@ watch(
             <h2
                 class="text-center text-xl text-slate-700 underline decoration-indigo-600 decoration-4 underline-offset-4 md:text-2xl"
             >
-                Gestion des utilisateurs
+                Gestion des utilisateurs et des rôles.
             </h2>
             <div>
                 <!-- search box -->
@@ -110,14 +198,21 @@ watch(
                             Gérer les utilisateurs existants:
                         </h3>
                         <div
+                            ref="toAnimateOne"
                             class="mx-auto grid h-auto grid-cols-1 place-content-center place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
                         >
                             <Link
                                 v-for="user in users.data"
                                 :key="user.id"
-                                class="flex w-full flex-col items-center justify-center rounded-lg bg-white px-6 py-4 text-center text-sm font-medium text-gray-700 shadow-md ring-1 ring-gray-300 transition-all duration-200 ease-in-out hover:text-gray-900 hover:shadow-lg hover:ring-gray-400 focus:outline-none"
+                                class="relative flex w-full flex-col items-center justify-center rounded-lg bg-white px-6 py-4 text-center text-sm font-medium text-gray-700 shadow-md ring-1 ring-gray-300 transition-all duration-200 ease-in-out hover:text-gray-900 hover:shadow-lg hover:ring-gray-400 focus:outline-none"
                                 :href="route('profile.edit', user)"
                             >
+                                <div
+                                    v-if="user.customer"
+                                    class="absolute -top-3 rounded-full bg-yellow-100 px-2 py-1 text-xs text-yellow-800"
+                                >
+                                    Client
+                                </div>
                                 <div
                                     class="text-lg font-semibold text-gray-800"
                                 >
@@ -132,7 +227,7 @@ watch(
                                     class="mx-auto mt-4 w-full"
                                 >
                                     <div
-                                        class="mb-1 text-sm font-semibold uppercase tracking-wide text-gray-700"
+                                        class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-700"
                                     >
                                         Roles
                                     </div>
@@ -145,7 +240,7 @@ watch(
                                         >
                                             <div
                                                 v-if="role"
-                                                class="rounded-full bg-blue-100 px-2 py-1 text-xs text-blue-800"
+                                                class="rounded-full bg-blue-100 px-2 py-1 text-xs uppercase text-blue-800"
                                             >
                                                 {{ role.name }}
                                             </div>
@@ -158,7 +253,7 @@ watch(
                                     class="mx-auto mt-4 w-full"
                                 >
                                     <div
-                                        class="mb-1 text-sm font-semibold uppercase tracking-wide text-gray-700"
+                                        class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-700"
                                     >
                                         Structures
                                     </div>
@@ -201,6 +296,206 @@ watch(
                         >
                             Créer un nouvel utilisateur
                         </Link>
+                    </div>
+                </div>
+                <div
+                    class="mt-8 flex w-full flex-col items-start justify-center space-y-4 py-4 md:flex-row md:justify-around md:space-y-0"
+                >
+                    <div class="w-full md:w-2/3">
+                        <h3
+                            class="mb-8 text-center text-lg font-semibold text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
+                        >
+                            Gérer les rôles existants:
+                        </h3>
+                        <div
+                            ref="toAnimateTwo"
+                            class="mx-auto grid h-auto grid-cols-1 place-content-center place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+                        >
+                            <div
+                                v-for="role in roles"
+                                :key="role.id"
+                                class="relative flex w-full flex-col items-center justify-center rounded-lg bg-white px-6 py-4 text-center text-sm font-medium text-gray-700 shadow-md ring-1 ring-gray-300 transition-all duration-200 ease-in-out hover:text-gray-900 hover:shadow-lg hover:ring-gray-400 focus:outline-none"
+                            >
+                                <button
+                                    type="button"
+                                    @click.prevent="openUpdateRoleForm(role)"
+                                    class="text-lg font-semibold text-gray-800 hover:text-indigo-800 hover:underline"
+                                >
+                                    {{ role.name }}
+                                </button>
+                                <div class="text-xs text-gray-600">
+                                    {{ role.description }}
+                                </div>
+                                <div class="my-1 text-xs text-gray-500">
+                                    {{ role.users_count }}
+                                    <span v-if="role.users_count > 1"
+                                        >utilisateurs</span
+                                    ><span v-else>utilisateur</span>
+                                </div>
+                                <button
+                                    type="button"
+                                    @click.prevent="deleteRole(role)"
+                                    class="mt-2.5 flex items-center justify-center rounded-full border border-gray-200 bg-red-100 px-3 py-1 text-sm text-red-700 hover:bg-red-200 hover:text-red-900"
+                                >
+                                    supprimer
+                                </button>
+                            </div>
+                        </div>
+                        <form
+                            v-if="showUpdateRoleForm"
+                            class="mt-6 flex w-full max-w-md flex-col items-start space-y-4"
+                            @submit.prevent="updateRole(currentRole)"
+                        >
+                            <div class="mt-1 flex w-full flex-col rounded-md">
+                                <p class="my-1 text-xs italic text-red-600">
+                                    Il est vivement déconseillé de changer ou
+                                    supprimer le nom d'un rôle.
+                                </p>
+                                <InputLabel for="role_name" value="Nom:" />
+                                <TextInput
+                                    v-model="updateRoleForm.name"
+                                    type="text"
+                                    name="role_name"
+                                    id="role_name"
+                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                    placeholder=""
+                                    autocomplete="none"
+                                />
+                                <InputError
+                                    v-if="updateRoleForm.errors.name"
+                                    class="mt-1"
+                                    :message="updateRoleForm.errors.name"
+                                />
+                            </div>
+                            <div class="mt-1 flex w-full flex-col rounded-md">
+                                <InputLabel
+                                    for="role_description"
+                                    value="Description:"
+                                />
+                                <textarea
+                                    v-model="updateRoleForm.description"
+                                    name="role_description"
+                                    id="role_description"
+                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                    placeholder=""
+                                    autocomplete="none"
+                                ></textarea>
+                                <InputError
+                                    v-if="updateRoleForm.errors.description"
+                                    class="mt-1"
+                                    :message="updateRoleForm.errors.description"
+                                />
+                            </div>
+
+                            <div
+                                class="flex w-full items-center justify-between"
+                            >
+                                <button
+                                    :disabled="updateRoleForm.processing"
+                                    :class="{
+                                        'opacity-25': updateRoleForm.processing,
+                                    }"
+                                    class="flex w-auto max-w-xs items-center justify-center rounded-md border border-gray-200 bg-indigo-800 px-4 py-2 text-base text-white shadow hover:bg-indigo-900"
+                                    type="submit"
+                                >
+                                    <LoadingSVG
+                                        v-if="updateRoleForm.processing"
+                                    />
+                                    Enregistrer
+                                </button>
+                                <button
+                                    class="rounded border border-gray-300 bg-white px-4 py-2 text-center text-base font-medium text-gray-600 shadow-sm"
+                                    type="button"
+                                    @click="cancelUpdateRoleForm"
+                                >
+                                    Annuler
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div
+                        class="flex w-full flex-col items-center justify-center md:w-1/3"
+                    >
+                        <h3
+                            class="mb-8 w-full text-center text-lg font-bold text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
+                        >
+                            Créer un rôle:
+                        </h3>
+                        <button
+                            type="button"
+                            v-if="!showCreateRoleForm"
+                            @click="toggleCreateRoleForm"
+                            class="inline-flex w-auto items-center justify-center space-y-1 rounded-lg border border-gray-300 bg-white px-6 py-3 text-center text-sm font-medium text-gray-700 shadow-md transition-all duration-200 ease-in-out hover:border-indigo-500 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 active:bg-indigo-600"
+                        >
+                            Créer un nouveau rôle
+                        </button>
+                        <form
+                            v-if="showCreateRoleForm"
+                            class="flex w-full flex-col items-start space-y-4 px-4"
+                            @submit.prevent="createRole"
+                        >
+                            <div class="mt-1 flex w-full flex-col rounded-md">
+                                <InputLabel for="role_name" value="Nom:" />
+                                <TextInput
+                                    v-model="createRoleForm.name"
+                                    type="text"
+                                    name="role_name"
+                                    id="role_name"
+                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                    placeholder=""
+                                    autocomplete="none"
+                                />
+                                <InputError
+                                    v-if="createRoleForm.errors.name"
+                                    class="mt-1"
+                                    :message="createRoleForm.errors.name"
+                                />
+                            </div>
+                            <div class="mt-1 flex w-full flex-col rounded-md">
+                                <InputLabel
+                                    for="role_description"
+                                    value="Description:"
+                                />
+                                <textarea
+                                    v-model="createRoleForm.description"
+                                    name="role_description"
+                                    id="role_description"
+                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                    placeholder=""
+                                    autocomplete="none"
+                                ></textarea>
+                                <InputError
+                                    v-if="createRoleForm.errors.description"
+                                    class="mt-1"
+                                    :message="createRoleForm.errors.description"
+                                />
+                            </div>
+
+                            <div
+                                class="flex w-full items-center justify-between"
+                            >
+                                <button
+                                    :disabled="createRoleForm.processing"
+                                    :class="{
+                                        'opacity-25': createRoleForm.processing,
+                                    }"
+                                    class="flex w-auto max-w-xs items-center justify-center rounded-md border border-gray-200 bg-indigo-800 px-4 py-2 text-base text-white shadow hover:bg-indigo-900"
+                                    type="submit"
+                                >
+                                    <LoadingSVG
+                                        v-if="createRoleForm.processing"
+                                    />
+                                    Enregistrer
+                                </button>
+                                <button
+                                    class="rounded border border-gray-300 bg-white px-4 py-2 text-center text-base font-medium text-gray-600 shadow-sm"
+                                    type="button"
+                                    @click="toggleCreateRoleForm"
+                                >
+                                    Annuler
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
