@@ -115,6 +115,40 @@ const deleteRole = (role) => {
     );
 };
 
+const assignRoleForm = useForm({
+    user: null,
+    role: null,
+});
+
+const assignRole = () => {
+    assignRoleForm.post(route("admin.role_user.store"), {
+        errorBag: "assignRoleForm",
+        preserveScroll: true,
+        onSuccess: () => assignRoleForm.reset(),
+    });
+};
+
+const cancelAssignment = () => {
+    assignRoleForm.reset();
+};
+
+const detachRoleForm = useForm({
+    user: null,
+    role: null,
+});
+
+const detachRole = () => {
+    detachRoleForm.delete(route("admin.role_user.destroy"), {
+        errorBag: "detachRoleForm",
+        preserveScroll: true,
+        onSuccess: () => detachRoleForm.reset(),
+    });
+};
+
+const keepAssignment = () => {
+    detachRoleForm.reset();
+};
+
 const toAnimateOne = ref();
 const toAnimateTwo = ref();
 onMounted(() => {
@@ -195,9 +229,10 @@ onMounted(() => {
                         <h3
                             class="mb-8 text-center text-lg font-semibold text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
                         >
-                            Gérer les utilisateurs existants:
+                            Géstion des utilisateurs existants:
                         </h3>
                         <div
+                            v-if="users.data.length > 0"
                             ref="toAnimateOne"
                             class="mx-auto grid h-auto grid-cols-1 place-content-center place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
                         >
@@ -308,6 +343,7 @@ onMounted(() => {
                             Gérer les rôles existants:
                         </h3>
                         <div
+                            v-if="roles.length > 0"
                             ref="toAnimateTwo"
                             class="mx-auto grid h-auto grid-cols-1 place-content-center place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
                         >
@@ -496,6 +532,196 @@ onMounted(() => {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+                <div
+                    class="mt-8 flex w-full flex-col items-start justify-evenly space-y-4 py-4 md:flex-row md:justify-around md:space-y-0"
+                >
+                    <div class="w-full md:w-1/2">
+                        <div
+                            class="mx-auto mt-10 max-w-lg rounded-lg bg-white p-6 shadow-md"
+                        >
+                            <h4 class="mb-4 text-base font-semibold">
+                                Assigner un rôle:
+                            </h4>
+                            <form @submit.prevent="assignRole">
+                                <div class="mb-4">
+                                    <label
+                                        for="user"
+                                        class="mb-2 block text-sm font-medium text-gray-700"
+                                        >Selectionner un utilisateur</label
+                                    >
+                                    <select
+                                        v-model="assignRoleForm.user"
+                                        id="user"
+                                        name="user"
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                                    >
+                                        <option value="" disabled>
+                                            Selectionner un utilisateur
+                                        </option>
+                                        <option
+                                            v-for="user in users.data"
+                                            :key="user.id"
+                                            :value="user.id"
+                                        >
+                                            {{ user.name }}
+                                        </option>
+                                    </select>
+                                    <InputError
+                                        v-if="assignRoleForm.errors.user"
+                                        class="mt-1"
+                                        :message="assignRoleForm.errors.user"
+                                    />
+                                </div>
+
+                                <div class="mb-4">
+                                    <label
+                                        for="role"
+                                        class="mb-2 block text-sm font-medium text-gray-700"
+                                        >Selectionner un Rôle</label
+                                    >
+                                    <select
+                                        v-model="assignRoleForm.role"
+                                        id="role"
+                                        name="role"
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                                    >
+                                        <option value="" disabled>
+                                            Selectionner un rôle
+                                        </option>
+                                        <option
+                                            v-for="role in roles"
+                                            :key="role.id"
+                                            :value="role.id"
+                                        >
+                                            {{ role.name }}
+                                        </option>
+                                    </select>
+                                    <InputError
+                                        v-if="assignRoleForm.errors.role"
+                                        class="mt-1"
+                                        :message="assignRoleForm.errors.role"
+                                    />
+                                </div>
+
+                                <div class="flex items-center justify-between">
+                                    <button
+                                        :disabled="assignRoleForm.processing"
+                                        :class="{
+                                            'opacity-50':
+                                                assignRoleForm.processing,
+                                        }"
+                                        class="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white ring-blue-300 transition duration-150 ease-in-out hover:bg-blue-700 focus:border-blue-800 focus:outline-none focus:ring active:bg-blue-800 disabled:opacity-25"
+                                    >
+                                        <LoadingSVG
+                                            v-if="assignRoleForm.processing"
+                                        />
+                                        Assigner le rôle
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="cancelAssignment"
+                                        class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                    >
+                                        Annuler
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/2">
+                        <div
+                            class="mx-auto mt-10 max-w-lg rounded-lg bg-white p-6 shadow-md"
+                        >
+                            <h4 class="mb-4 text-base font-semibold">
+                                Détacher un rôle:
+                            </h4>
+                            <form @submit.prevent="detachRole">
+                                <div class="mb-4">
+                                    <label
+                                        for="user"
+                                        class="mb-2 block text-sm font-medium text-gray-700"
+                                        >Selectionner un utilisateur</label
+                                    >
+                                    <select
+                                        v-model="detachRoleForm.user"
+                                        id="user"
+                                        name="user"
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                                    >
+                                        <option value="" disabled>
+                                            Selectionner un utilisateur
+                                        </option>
+                                        <option
+                                            v-for="user in users.data"
+                                            :key="user.id"
+                                            :value="user.id"
+                                        >
+                                            {{ user.name }}
+                                        </option>
+                                    </select>
+                                    <InputError
+                                        v-if="detachRoleForm.errors.user"
+                                        class="mt-1"
+                                        :message="detachRoleForm.errors.user"
+                                    />
+                                </div>
+
+                                <div class="mb-4">
+                                    <label
+                                        for="role"
+                                        class="mb-2 block text-sm font-medium text-gray-700"
+                                        >Selectionner un Rôle</label
+                                    >
+                                    <select
+                                        v-model="detachRoleForm.role"
+                                        id="role"
+                                        name="role"
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                                    >
+                                        <option value="" disabled>
+                                            Selectionner un rôle
+                                        </option>
+                                        <option
+                                            v-for="role in roles"
+                                            :key="role.id"
+                                            :value="role.id"
+                                        >
+                                            {{ role.name }}
+                                        </option>
+                                    </select>
+                                    <InputError
+                                        v-if="detachRoleForm.errors.role"
+                                        class="mt-1"
+                                        :message="detachRoleForm.errors.role"
+                                    />
+                                </div>
+
+                                <div class="flex items-center justify-between">
+                                    <button
+                                        :disabled="detachRoleForm.processing"
+                                        :class="{
+                                            'opacity-50':
+                                                detachRoleForm.processing,
+                                        }"
+                                        class="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white ring-blue-300 transition duration-150 ease-in-out hover:bg-blue-700 focus:border-blue-800 focus:outline-none focus:ring active:bg-blue-800 disabled:opacity-25"
+                                    >
+                                        <LoadingSVG
+                                            v-if="detachRoleForm.processing"
+                                        />
+                                        Détacher le rôle
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="keepAssignment"
+                                        class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                    >
+                                        Annuler
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

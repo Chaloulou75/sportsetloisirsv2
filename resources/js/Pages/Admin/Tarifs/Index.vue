@@ -5,14 +5,13 @@ import { ref, onMounted } from "vue";
 import autoAnimate from "@formkit/auto-animate";
 import {
     TrashIcon,
-    XCircleIcon,
-    PlusCircleIcon,
     ArrowPathIcon,
-    ChevronUpDownIcon,
     ChevronLeftIcon,
-    CheckCircleIcon,
 } from "@heroicons/vue/24/outline";
-import { TransitionRoot } from "@headlessui/vue";
+import TextInput from "@/Components/Forms/TextInput.vue";
+import InputError from "@/Components/Forms/InputError.vue";
+import InputLabel from "@/Components/Forms/InputLabel.vue";
+import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 
 const props = defineProps({
     errors: Object,
@@ -196,17 +195,18 @@ onMounted(() => {
                         type="button"
                         v-if="!showCreateTarifForm"
                         @click="toggleCreateTarifForm"
-                        class="inline-flex w-auto items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                        class="inline-flex w-auto items-center justify-center space-y-1 rounded-lg border border-gray-300 bg-white px-6 py-3 text-center text-sm font-medium text-gray-700 shadow-md transition-all duration-200 ease-in-out hover:border-indigo-500 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 active:bg-indigo-600"
                     >
                         Créer un type de tarif
                     </button>
                     <form
                         v-if="showCreateTarifForm"
-                        class="flex flex-col items-start space-y-4"
+                        class="flex w-full flex-col items-start space-y-4 px-4"
                         @submit.prevent="createTarif"
                     >
-                        <div class="mt-1 flex flex-col rounded-md">
-                            <input
+                        <div class="mt-1 flex w-full flex-col rounded-md">
+                            <InputLabel for="tarif_type" value="Type:" />
+                            <TextInput
                                 v-model="createtarifForm.type"
                                 type="text"
                                 name="tarif_type"
@@ -215,12 +215,11 @@ onMounted(() => {
                                 placeholder=""
                                 autocomplete="none"
                             />
-                            <div
+                            <InputError
                                 v-if="errors.createtarifForm"
                                 class="text-xs text-red-500"
-                            >
-                                {{ errors.createtarifForm.type }}
-                            </div>
+                                :message="errors.createtarifForm.type"
+                            />
                         </div>
 
                         <div class="flex w-full items-center justify-between">
@@ -229,13 +228,14 @@ onMounted(() => {
                                 :class="{
                                     'opacity-25': createtarifForm.processing,
                                 }"
-                                class="rounded border border-gray-300 bg-blue-600 px-2 py-2 text-center text-sm font-medium text-white shadow-sm"
+                                class="flex w-auto max-w-xs items-center justify-center rounded-md border border-gray-200 bg-indigo-800 px-4 py-2 text-base text-white shadow hover:bg-indigo-900"
                                 type="submit"
                             >
+                                <LoadingSVG v-if="createtarifForm.processing" />
                                 Enregistrer
                             </button>
                             <button
-                                class="rounded border border-gray-300 bg-white px-2 py-2 text-center text-sm font-medium text-gray-600 shadow-sm"
+                                class="rounded border border-gray-300 bg-white px-4 py-2 text-center text-base font-medium text-gray-600 shadow-sm"
                                 type="button"
                                 @click="toggleCreateTarifForm"
                             >

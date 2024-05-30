@@ -8,6 +8,10 @@ import {
     TrashIcon,
     ArrowPathIcon,
 } from "@heroicons/vue/24/outline";
+import TextInput from "@/Components/Forms/TextInput.vue";
+import InputError from "@/Components/Forms/InputError.vue";
+import InputLabel from "@/Components/Forms/InputLabel.vue";
+import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 
 const props = defineProps({
     errors: Object,
@@ -127,7 +131,7 @@ onMounted(() => {
                                 @submit.prevent="updateCategorie(categorie)"
                             >
                                 <div class="mt-1 flex flex-col rounded-md">
-                                    <input
+                                    <TextInput
                                         v-model="
                                             categorieForm[categorie.id].nom
                                         "
@@ -185,17 +189,18 @@ onMounted(() => {
                         type="button"
                         v-if="!showCreateCategoryForm"
                         @click="toggleCreateCategoryForm"
-                        class="inline-flex w-auto items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                        class="inline-flex w-auto items-center justify-center space-y-1 rounded-lg border border-gray-300 bg-white px-6 py-3 text-center text-sm font-medium text-gray-700 shadow-md transition-all duration-200 ease-in-out hover:border-indigo-500 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 active:bg-indigo-600"
                     >
                         Créer une nouvelle catégorie
                     </button>
                     <form
                         v-if="showCreateCategoryForm"
-                        class="flex flex-col items-start space-y-4"
+                        class="flex w-full flex-col items-start space-y-4 px-4"
                         @submit.prevent="createCategorie"
                     >
-                        <div class="mt-1 flex flex-col rounded-md">
-                            <input
+                        <div class="mt-1 flex w-full flex-col rounded-md">
+                            <InputLabel for="categorie_nom" value="Nom:" />
+                            <TextInput
                                 v-model="createCategorieForm.nom"
                                 type="text"
                                 name="categorie_nom"
@@ -204,12 +209,11 @@ onMounted(() => {
                                 placeholder=""
                                 autocomplete="none"
                             />
-                            <div
+                            <InputError
                                 v-if="createCategorieForm.errors.nom"
                                 class="text-xs text-red-500"
-                            >
-                                {{ createCategorieForm.errors.nom }}
-                            </div>
+                                :message="createCategorieForm.errors.nom"
+                            />
                         </div>
 
                         <div class="flex w-full items-center justify-between">
@@ -219,13 +223,17 @@ onMounted(() => {
                                     'opacity-25':
                                         createCategorieForm.processing,
                                 }"
-                                class="rounded border border-gray-300 bg-blue-600 px-2 py-2 text-center text-sm font-medium text-white shadow-sm"
+                                class="flex w-auto max-w-xs items-center justify-center rounded-md border border-gray-200 bg-indigo-800 px-4 py-2 text-base text-white shadow hover:bg-indigo-900"
                                 type="submit"
                             >
+                                <LoadingSVG
+                                    v-if="createCategorieForm.processing"
+                                />
                                 Enregistrer
                             </button>
+
                             <button
-                                class="rounded border border-gray-300 bg-white px-2 py-2 text-center text-sm font-medium text-gray-600 shadow-sm"
+                                class="rounded border border-gray-300 bg-white px-4 py-2 text-center text-base font-medium text-gray-600 shadow-sm"
                                 type="button"
                                 @click="toggleCreateCategoryForm"
                             >

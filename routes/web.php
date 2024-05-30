@@ -21,6 +21,7 @@ use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\AdminBlogTagController;
+use App\Http\Controllers\AdminRoleUserController;
 use App\Http\Controllers\PanierPaymentController;
 use App\Http\Controllers\StructureUserController;
 use App\Http\Controllers\AdminStructureController;
@@ -224,6 +225,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/roles', [AdminRoleController::class, 'store'])->name('admin.roles.store');
         Route::patch('/roles/{role}', [AdminRoleController::class, 'update'])->name('admin.roles.update');
         Route::delete('/roles/{role}', [AdminRoleController::class, 'destroy'])->name('admin.roles.destroy');
+
+        Route::post('/role_user', [AdminRoleUserController::class, 'store'])->name('admin.role_user.store');
+        Route::delete('/role_user', [AdminRoleUserController::class, 'destroy'])->name('admin.role_user.destroy');
 
         Route::get('/disciplines/dis-{discipline:slug}', [AdminDisciplineController::class, 'edit'])->name('admin.disciplines.edit');
 
