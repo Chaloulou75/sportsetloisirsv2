@@ -29,12 +29,17 @@ class AdminRoleUserController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'user' => 'required|exists:users,id',
             'role' => 'required|exists:roles,id',
         ]);
-        $user = User::findOrFail($request->input('user'));
-        $role = Role::findOrFail($request->input('role'));
+        $user = User::findOrFail($validated['user']);
+        $role = Role::findOrFail($validated['role']);
+
+        $userRoles = $user->roles()->pluck('role_id');
+        if ($userRoles->contains($validated['role'])) {
+            return to_route('admin.users.index')->withErrors(['user' => 'Cet utilisateur est déjà assigné à ce rôle.']);
+        }
 
         $user->roles()->attach($role);
 

@@ -24,9 +24,9 @@ const props = defineProps({
 
 let search = ref(props.filters.search);
 
-function resetSearch() {
+const resetSearch = () => {
     search.value = "";
-}
+};
 
 watch(
     search,
@@ -40,7 +40,7 @@ watch(
                 only: ["users"],
             }
         );
-    }, 300)
+    }, 500)
 );
 
 const showCreateRoleForm = ref(false);
@@ -83,6 +83,7 @@ const openUpdateRoleForm = (role) => {
 
 const cancelUpdateRoleForm = () => {
     showUpdateRoleForm.value = false;
+    updateRoleForm.clearErrors();
     currentRole.value = null;
 };
 
@@ -129,6 +130,7 @@ const assignRole = () => {
 };
 
 const cancelAssignment = () => {
+    assignRoleForm.clearErrors();
     assignRoleForm.reset();
 };
 
@@ -146,6 +148,7 @@ const detachRole = () => {
 };
 
 const keepAssignment = () => {
+    detachRoleForm.clearErrors();
     detachRoleForm.reset();
 };
 
@@ -398,9 +401,9 @@ onMounted(() => {
                                     autocomplete="none"
                                 />
                                 <InputError
-                                    v-if="updateRoleForm.errors.name"
+                                    v-if="errors.updateRoleForm"
                                     class="mt-1"
-                                    :message="updateRoleForm.errors.name"
+                                    :message="errors.updateRoleForm.name"
                                 />
                             </div>
                             <div class="mt-1 flex w-full flex-col rounded-md">
@@ -417,9 +420,9 @@ onMounted(() => {
                                     autocomplete="none"
                                 ></textarea>
                                 <InputError
-                                    v-if="updateRoleForm.errors.description"
+                                    v-if="errors.updateRoleForm"
                                     class="mt-1"
-                                    :message="updateRoleForm.errors.description"
+                                    :message="errors.updateRoleForm.description"
                                 />
                             </div>
 
@@ -482,9 +485,9 @@ onMounted(() => {
                                     autocomplete="none"
                                 />
                                 <InputError
-                                    v-if="createRoleForm.errors.name"
+                                    v-if="errors.createRoleForm"
                                     class="mt-1"
-                                    :message="createRoleForm.errors.name"
+                                    :message="errors.createRoleForm.name"
                                 />
                             </div>
                             <div class="mt-1 flex w-full flex-col rounded-md">
@@ -501,9 +504,9 @@ onMounted(() => {
                                     autocomplete="none"
                                 ></textarea>
                                 <InputError
-                                    v-if="createRoleForm.errors.description"
+                                    v-if="errors.createRoleForm"
                                     class="mt-1"
-                                    :message="createRoleForm.errors.description"
+                                    :message="errors.createRoleForm.description"
                                 />
                             </div>
 
@@ -569,9 +572,9 @@ onMounted(() => {
                                         </option>
                                     </select>
                                     <InputError
-                                        v-if="assignRoleForm.errors.user"
+                                        v-if="errors.assignRoleForm"
                                         class="mt-1"
-                                        :message="assignRoleForm.errors.user"
+                                        :message="errors.assignRoleForm.user"
                                     />
                                 </div>
 
@@ -579,7 +582,7 @@ onMounted(() => {
                                     <label
                                         for="role"
                                         class="mb-2 block text-sm font-medium text-gray-700"
-                                        >Selectionner un Rôle</label
+                                        >Selectionner un rôle</label
                                     >
                                     <select
                                         v-model="assignRoleForm.role"
@@ -599,9 +602,9 @@ onMounted(() => {
                                         </option>
                                     </select>
                                     <InputError
-                                        v-if="assignRoleForm.errors.role"
+                                        v-if="errors.assignRoleForm"
                                         class="mt-1"
-                                        :message="assignRoleForm.errors.role"
+                                        :message="errors.assignRoleForm.role"
                                     />
                                 </div>
 
@@ -612,7 +615,7 @@ onMounted(() => {
                                             'opacity-50':
                                                 assignRoleForm.processing,
                                         }"
-                                        class="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white ring-blue-300 transition duration-150 ease-in-out hover:bg-blue-700 focus:border-blue-800 focus:outline-none focus:ring active:bg-blue-800 disabled:opacity-25"
+                                        class="inline-flex items-center rounded-md border border-transparent bg-gray-600 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white ring-gray-300 transition duration-150 ease-in-out hover:bg-gray-700 focus:border-gray-800 focus:outline-none focus:ring active:bg-gray-800 disabled:opacity-25"
                                     >
                                         <LoadingSVG
                                             v-if="assignRoleForm.processing"
@@ -662,9 +665,9 @@ onMounted(() => {
                                         </option>
                                     </select>
                                     <InputError
-                                        v-if="detachRoleForm.errors.user"
+                                        v-if="errors.detachRoleForm"
                                         class="mt-1"
-                                        :message="detachRoleForm.errors.user"
+                                        :message="errors.detachRoleForm.user"
                                     />
                                 </div>
 
@@ -672,7 +675,7 @@ onMounted(() => {
                                     <label
                                         for="role"
                                         class="mb-2 block text-sm font-medium text-gray-700"
-                                        >Selectionner un Rôle</label
+                                        >Selectionner un rôle</label
                                     >
                                     <select
                                         v-model="detachRoleForm.role"
@@ -692,9 +695,9 @@ onMounted(() => {
                                         </option>
                                     </select>
                                     <InputError
-                                        v-if="detachRoleForm.errors.role"
+                                        v-if="errors.detachRoleForm"
                                         class="mt-1"
-                                        :message="detachRoleForm.errors.role"
+                                        :message="errors.detachRoleForm.role"
                                     />
                                 </div>
 
@@ -705,7 +708,7 @@ onMounted(() => {
                                             'opacity-50':
                                                 detachRoleForm.processing,
                                         }"
-                                        class="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white ring-blue-300 transition duration-150 ease-in-out hover:bg-blue-700 focus:border-blue-800 focus:outline-none focus:ring active:bg-blue-800 disabled:opacity-25"
+                                        class="inline-flex items-center rounded-md border border-transparent bg-gray-600 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white ring-gray-300 transition duration-150 ease-in-out hover:bg-gray-700 focus:border-gray-800 focus:outline-none focus:ring active:bg-gray-800 disabled:opacity-25"
                                     >
                                         <LoadingSVG
                                             v-if="detachRoleForm.processing"

@@ -28,15 +28,13 @@ class AdminRoleController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255|unique:roles,name',
             'description' => 'nullable|string|max:255',
         ]);
-
-        Role::create($request->all());
+        Role::create($validated);
 
         return to_route('admin.users.index')->with('success', 'Rôle créer.');
-
     }
 
     /**
