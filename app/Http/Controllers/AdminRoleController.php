@@ -34,7 +34,7 @@ class AdminRoleController extends Controller
         ]);
         Role::create($validated);
 
-        return to_route('admin.users.index')->with('success', 'Rôle créer.');
+        return to_route('admin.users.index')->with('success', 'Rôle créé.');
     }
 
     /**

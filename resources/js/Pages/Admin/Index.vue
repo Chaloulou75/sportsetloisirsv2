@@ -4,6 +4,10 @@ import { Head, Link, usePage } from "@inertiajs/vue3";
 import { ChevronLeftIcon } from "@heroicons/vue/24/outline";
 import { computed } from "vue";
 
+const props = defineProps({
+    notifications: Object,
+    user_can: Object,
+});
 const page = usePage();
 
 const user = computed(() => page.props.auth.user);
@@ -45,6 +49,23 @@ const adminNotificationsCount = computed(
                 </span>
                 sur le site.
             </p>
+            <div>
+                <ul class="list-inside list-disc">
+                    <li
+                        v-for="notification in notifications"
+                        :key="notification.id"
+                    >
+                        <p
+                            v-if="
+                                notification.type ===
+                                'App\\Notifications\\ReservationPaidToAdmin'
+                            "
+                        >
+                            {{ notification.data }}
+                        </p>
+                    </li>
+                </ul>
+            </div>
         </div>
     </AdminLayout>
 </template>

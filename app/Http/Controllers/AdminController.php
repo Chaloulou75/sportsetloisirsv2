@@ -5,11 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Models\Critere;
-use App\Models\Categorie;
-use App\Models\Structure;
 use Illuminate\Http\Request;
-use App\Models\ListDiscipline;
+use App\Notifications\ReservationPaidToAdmin;
 
 class AdminController extends Controller
 {
@@ -21,24 +18,13 @@ class AdminController extends Controller
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 
-        $listDisciplines = ListDiscipline::select(['id', 'slug', 'name'])->get();
-        $categories = Categorie::select(['id', 'nom'])->get();
-
-        $structures = Structure::select(['id', 'name', 'slug'])->get();
-
-        $users = User::select(['id', 'name', 'email'])->paginate(12);
-
-        $criteres = Critere::select(['id', 'nom'])->get();
+        $notifications = $user->unreadNotifications()->where('type', ReservationPaidToAdmin::class)->get();
 
         return Inertia::render('Admin/Index', [
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'categories' => fn () => $categories,
-            'listDisciplines' => fn () => $listDisciplines,
-            'structures' => fn () => $structures,
-            'users' => fn () => $users,
-            'criteres' => fn () => $criteres,
+            'notifications' => $notifications,
         ]);
     }
 

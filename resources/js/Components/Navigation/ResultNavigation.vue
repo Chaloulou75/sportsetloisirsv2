@@ -225,13 +225,20 @@ const submitForm = async () => {
                                                 user.unread_notifications_count >
                                                     0
                                             "
-                                            class="absolute -top-1 right-0 rounded-full bg-green-500 px-1.5 py-0.5 text-xs text-white"
+                                            class="absolute end-1 top-1.5 -me-2 -mt-2 flex"
                                         >
-                                            {{
-                                                user.unread_notifications_count +
-                                                adminNotificationsCount +
-                                                structureNotifCount
-                                            }}
+                                            <span
+                                                class="absolute inline-flex size-full animate-ping rounded-full bg-red-400 opacity-75 dark:bg-red-600"
+                                            ></span>
+                                            <span
+                                                class="relative inline-flex rounded-full bg-green-500 px-1.5 py-0.5 text-xs text-white"
+                                            >
+                                                {{
+                                                    user.unread_notifications_count +
+                                                    adminNotificationsCount +
+                                                    structureNotifCount
+                                                }}
+                                            </span>
                                         </span>
                                     </button>
                                 </span>
@@ -250,9 +257,8 @@ const submitForm = async () => {
                                     Blog
                                 </BreezeDropdownLink>
                                 <BreezeDropdownLink
-                                    class="inline-flex w-full items-center justify-between"
                                     :href="route('profile.edit')"
-                                    preserve-scroll
+                                    class="relative inline-flex w-full items-center justify-between"
                                 >
                                     Mon profil
                                     <span
@@ -260,13 +266,14 @@ const submitForm = async () => {
                                             user &&
                                             user.unread_notifications_count > 0
                                         "
-                                        class="flex items-center justify-center rounded-full bg-green-500 px-1.5 py-0.5 text-xs text-white"
+                                        class="inline-flex items-center rounded-full bg-green-500 px-1.5 py-0.5 text-xs font-medium text-white"
+                                        >{{
+                                            user.unread_notifications_count
+                                        }}</span
                                     >
-                                        {{ user.unread_notifications_count }}
-                                    </span>
                                 </BreezeDropdownLink>
-                                <Link
-                                    class="inline-flex w-full items-center justify-between px-4 py-2 text-left text-sm leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                                <BreezeDropdownLink
+                                    class="relative inline-flex w-full items-center justify-between"
                                     preserve-scroll
                                     v-if="user && user.structures.length > 0"
                                     :href="
@@ -275,19 +282,14 @@ const submitForm = async () => {
                                             user.structures[0].slug
                                         )
                                     "
-                                    :active="
-                                        route().current(
-                                            'structures.gestion.index'
-                                        )
-                                    "
                                 >
                                     Gestion de ma structure
                                     <span
                                         v-if="structureNotifCount > 0"
-                                        class="flex items-center justify-center rounded-full bg-green-500 px-1.5 py-0.5 text-xs text-white"
+                                        class="inline-flex items-center rounded-full bg-green-500 px-1.5 py-0.5 text-xs font-medium text-white"
                                         >{{ structureNotifCount }}</span
                                     >
-                                </Link>
+                                </BreezeDropdownLink>
                                 <BreezeDropdownLink
                                     preserve-scroll
                                     v-if="user && !user.structures.length > 0"
@@ -295,8 +297,8 @@ const submitForm = async () => {
                                 >
                                     Inscrire une structure
                                 </BreezeDropdownLink>
-                                <Link
-                                    class="inline-flex w-full items-center justify-between px-4 py-2 text-left text-sm leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                                <BreezeDropdownLink
+                                    class="relative inline-flex w-full items-center justify-between"
                                     preserve-scroll
                                     v-if="user && isAdmin"
                                     :href="route('admin.index')"
@@ -304,11 +306,10 @@ const submitForm = async () => {
                                     Gestion du site
                                     <span
                                         v-if="adminNotificationsCount > 0"
-                                        class="flex items-center justify-center rounded-full bg-green-500 px-1.5 py-0.5 text-xs text-white"
+                                        class="inline-flex items-center rounded-full bg-green-500 px-1.5 py-0.5 text-xs font-medium text-white"
                                         >{{ adminNotificationsCount }}</span
                                     >
-                                </Link>
-
+                                </BreezeDropdownLink>
                                 <BreezeDropdownLink
                                     preserve-scroll
                                     :href="route('logout')"
