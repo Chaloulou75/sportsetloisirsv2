@@ -19,6 +19,7 @@ import {
 } from "@heroicons/vue/24/outline";
 import {
     Listbox,
+    ListboxLabel,
     ListboxButton,
     ListboxOptions,
     ListboxOption,

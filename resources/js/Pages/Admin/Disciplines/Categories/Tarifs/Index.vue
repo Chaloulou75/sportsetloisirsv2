@@ -21,6 +21,7 @@ import {
     ListboxButton,
     ListboxOptions,
     ListboxOption,
+    ListboxLabel,
 } from "@headlessui/vue";
 
 const props = defineProps({
@@ -1705,10 +1706,15 @@ onMounted(() => {
                     >
                         <div class="flex w-full flex-grow flex-col space-y-3">
                             <Listbox
+                                as="div"
                                 class="w-full flex-grow"
                                 v-model="addTarifTypeForm.type"
                             >
                                 <div class="relative mt-1">
+                                    <ListboxLabel
+                                        class="text-sm font-medium text-gray-700"
+                                        >Type de tarif:</ListboxLabel
+                                    >
                                     <ListboxButton
                                         class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
                                     >

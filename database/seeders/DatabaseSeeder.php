@@ -9,6 +9,7 @@ use Illuminate\Database\Seeder;
 use App\Models\LienDisciplineSimilaire;
 use Database\Seeders\AListePaysTableSeeder;
 use Database\Seeders\CategoriesTableSeeder;
+use Database\Seeders\TypeChampsTableSeeder;
 use Database\Seeders\VilleFranceSlugSeeder;
 use Database\Seeders\DepartementsSlugSeeder;
 use Database\Seeders\DepartementsTableSeeder;
@@ -49,6 +50,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ListeCriteresTableSeeder::class);
         $this->call(CategoriesTableSeeder::class);
         $this->call(StructuretypesTableSeeder::class);
+        $this->call(TypeChampsTableSeeder::class);
         $this->call(ListeStructuresTypesAttributsTableSeeder::class);
         $this->call(ListeStructuresTypesValeursTableSeeder::class);
         $this->call(ListeTarifsTypesTableSeeder::class);

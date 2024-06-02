@@ -951,8 +951,8 @@ onMounted(() => {
                             class="w-full max-w-sm"
                             v-model="formCriteres.criteres[critere.id]"
                             :name="critere.nom"
-                            :metric="`Km`"
                         />
+
                         <!-- Heure seule -->
                         <div
                             v-if="critere.type_champ_form === 'time'"
@@ -1021,6 +1021,7 @@ onMounted(() => {
                                 :key="souscritere.id"
                                 class=""
                             >
+                                <!-- select -->
                                 <SelectForm
                                     :classes="'flex items-center space-x-4'"
                                     class="max-w-sm py-2"
@@ -1040,7 +1041,7 @@ onMounted(() => {
                                     "
                                     :options="souscritere.sous_criteres_valeurs"
                                 />
-
+                                <!-- number -->
                                 <div
                                     v-if="
                                         formCriteres.criteres[critere.id] ===
@@ -1070,6 +1071,7 @@ onMounted(() => {
                                         "
                                     />
                                 </div>
+                                <!-- text -->
                                 <div
                                     v-if="
                                         formCriteres.criteres[critere.id] ===
@@ -1270,7 +1272,10 @@ onMounted(() => {
                             />
                         </div>
                         <!-- Blog -->
-                        <div class="my-8 px-3 md:my-16 md:px-6 lg:px-8">
+                        <div
+                            v-if="posts.length > 0"
+                            class="my-8 px-3 md:my-16 md:px-6 lg:px-8"
+                        >
                             <h2
                                 class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
                             >
@@ -1352,7 +1357,10 @@ onMounted(() => {
                     </div>
                 </div>
                 <!-- Blog -->
-                <div class="my-8 px-3 md:my-16 md:px-6 lg:px-8">
+                <div
+                    v-if="posts.length > 0"
+                    class="my-8 px-3 md:my-16 md:px-6 lg:px-8"
+                >
                     <h2
                         class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
                     >

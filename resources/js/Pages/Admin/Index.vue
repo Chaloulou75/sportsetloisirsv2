@@ -55,14 +55,15 @@ const adminNotificationsCount = computed(
                         v-for="notification in notifications"
                         :key="notification.id"
                     >
-                        <p
+                        <template
                             v-if="
                                 notification.type ===
                                 'App\\Notifications\\ReservationPaidToAdmin'
                             "
                         >
+                            Une nouvelle réservation a été régléé:
                             {{ notification.data }}
-                        </p>
+                        </template>
                     </li>
                 </ul>
             </div>

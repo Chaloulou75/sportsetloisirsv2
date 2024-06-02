@@ -42,7 +42,7 @@ defineExpose({ focus: () => input.value.focus() });
                     for="email"
                     class="block text-sm font-medium text-gray-700"
                 >
-                    Email *
+                    Email*
                 </label>
                 <div class="mt-1 flex rounded-md shadow-sm">
                     <input
@@ -98,7 +98,7 @@ defineExpose({ focus: () => input.value.focus() });
                     for="phone"
                     class="block text-sm font-medium text-gray-700"
                 >
-                    Numéro de téléphone *
+                    Numéro de téléphone*
                 </label>
                 <div class="mt-1 flex w-full">
                     <MazPhoneNumberInput

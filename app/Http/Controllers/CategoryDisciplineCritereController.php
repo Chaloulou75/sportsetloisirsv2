@@ -15,6 +15,7 @@ use Illuminate\Http\RedirectResponse;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
 use App\Models\LienDisciplineCategorieCritereValeur;
+use App\Models\TypeChamp;
 
 class CategoryDisciplineCritereController extends Controller
 {
@@ -90,6 +91,7 @@ class CategoryDisciplineCritereController extends Controller
             ->get();
 
         $listeCriteres = Critere::select(['id', 'nom'])->get();
+        $typeChamps = TypeChamp::select(['id', 'type'])->get();
 
         return Inertia::render('Admin/Disciplines/Categories/Criteres/Edit', [
             'user_can' => [
@@ -99,6 +101,7 @@ class CategoryDisciplineCritereController extends Controller
             'categories' => fn () => $categories,
             'discipline' => fn () => $discipline,
             'listeCriteres' => fn () => $listeCriteres,
+            'type_champs' => fn () => $typeChamps,
         ]);
 
     }

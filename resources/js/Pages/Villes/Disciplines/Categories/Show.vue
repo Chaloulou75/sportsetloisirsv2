@@ -1241,7 +1241,10 @@ onMounted(() => {
                             />
                         </div>
                         <!-- Blog -->
-                        <div class="my-8 px-3 md:my-16 md:px-6 lg:px-8">
+                        <div
+                            v-if="posts.length > 0"
+                            class="my-8 px-3 md:my-16 md:px-6 lg:px-8"
+                        >
                             <h2
                                 class="my-4 text-center text-lg font-semibold text-gray-600 md:my-8 md:text-2xl"
                             >

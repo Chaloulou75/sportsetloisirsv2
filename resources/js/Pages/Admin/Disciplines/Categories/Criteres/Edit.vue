@@ -18,6 +18,7 @@ import {
 } from "@heroicons/vue/24/outline";
 import {
     Listbox,
+    ListboxLabel,
     ListboxButton,
     ListboxOptions,
     ListboxOption,
@@ -30,6 +31,7 @@ const props = defineProps({
     categorie: Object,
     listeCriteres: Object,
     user_can: Object,
+    type_champs: Object,
 });
 
 const visibleUpdateNomCritereForms = ref([]);
@@ -345,20 +347,20 @@ const showAddCritereForm = (categorie) => {
     return critereFormsVisibility.value[categorie.id] || false;
 };
 
-const type_champs = [
-    { type: "select" },
-    { type: "checkbox" },
-    { type: "text" },
-    { type: "number" },
-    { type: "adresse" },
-    { type: "date" },
-    { type: "dates" },
-    { type: "time" },
-    { type: "times" },
-    { type: "mois" },
-    { type: "rayon" },
-    { type: "instructeur" },
-];
+// const type_champs = [
+//     { type: "select" },
+//     { type: "checkbox" },
+//     { type: "text" },
+//     { type: "number" },
+//     { type: "adresse" },
+//     { type: "date" },
+//     { type: "dates" },
+//     { type: "time" },
+//     { type: "times" },
+//     { type: "mois" },
+//     { type: "rayon" },
+//     { type: "instructeur" },
+// ];
 
 const sous_crit_type_champs = [
     { type: "select" },
@@ -368,7 +370,7 @@ const sous_crit_type_champs = [
 
 const addCritereForm = useForm({
     critere: props.listeCriteres[0],
-    type_champ: type_champs[0],
+    type_champ: props.type_champs[0],
     nom: null,
     remember: true,
 });
@@ -1422,10 +1424,16 @@ onMounted(() => {
                     >
                         <div class="flex w-full flex-grow flex-col space-y-3">
                             <Listbox
+                                as="div"
                                 class="w-full flex-grow"
                                 v-model="addCritereForm.critere"
                             >
                                 <div class="relative mt-1">
+                                    <ListboxLabel
+                                        class="text-sm font-medium text-gray-700"
+                                        >Critere:</ListboxLabel
+                                    >
+
                                     <ListboxButton
                                         class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
                                     >
@@ -1491,11 +1499,16 @@ onMounted(() => {
                             </Listbox>
 
                             <Listbox
+                                as="div"
                                 v-if="addCritereForm.critere"
                                 class="w-full flex-grow"
                                 v-model="addCritereForm.type_champ"
                             >
                                 <div class="relative mt-1">
+                                    <ListboxLabel
+                                        class="text-sm font-medium text-gray-700"
+                                        >Type de champ:</ListboxLabel
+                                    >
                                     <ListboxButton
                                         class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
                                     >
