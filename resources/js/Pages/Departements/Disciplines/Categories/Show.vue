@@ -9,6 +9,7 @@ import {
     watch,
     onMounted,
 } from "vue";
+import { debounce } from "lodash";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
@@ -16,6 +17,7 @@ import SelectForm from "@/Components/Forms/SelectForm.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
 import InputLabel from "@/Components/Forms/InputLabel.vue";
 import RangeInputForm from "@/Components/Forms/RangeInputForm.vue";
+import autoAnimate from "@formkit/auto-animate";
 import { TransitionRoot } from "@headlessui/vue";
 import {
     AdjustmentsHorizontalIcon,
@@ -673,11 +675,13 @@ const filterProducts = () => {
     }
 };
 
+const debouncedFilterProducts = debounce(filterProducts, 300);
+
 watch(
     () => formCriteres.value.criteres,
     (newCriteres) => {
         selectedCriteres.value = Object.entries(newCriteres);
-        filterProducts();
+        debouncedFilterProducts();
     },
     { deep: true }
 );
@@ -686,7 +690,7 @@ watch(
     () => formCriteres.value.sousCriteres,
     (newSousCriteres) => {
         selectedSousCriteres.value = Object.entries(newSousCriteres);
-        filterProducts();
+        debouncedFilterProducts();
     },
     { deep: true }
 );
@@ -695,11 +699,14 @@ const resetFormCriteres = () => {
     formCriteres.value.criteres = {};
     formCriteres.value.sousCriteres = {};
     selectedCriteres.value = [];
-    filterProducts();
+    debouncedFilterProducts();
 };
-
+const listToAnimate = ref();
 onMounted(() => {
-    filterProducts();
+    if (listToAnimate.value) {
+        autoAnimate(listToAnimate.value);
+    }
+    debouncedFilterProducts();
 });
 </script>
 
@@ -848,7 +855,7 @@ onMounted(() => {
 
                 <div
                     v-if="criteres"
-                    class="mx-auto w-full flex-col items-start justify-center space-x-0 space-y-2 rounded bg-transparent px-2 py-2 backdrop-blur-md md:flex-row md:items-center md:justify-start md:space-x-6 md:space-y-0 md:px-6"
+                    class="mx-auto w-full flex-col items-start justify-center gap-4 overflow-x-auto rounded bg-transparent px-2 py-2 backdrop-blur-md md:flex-row md:items-center md:justify-between md:space-y-0 md:px-6"
                     :class="{
                         flex: showCriteres,
                         hidden: !showCriteres,
@@ -1076,6 +1083,7 @@ onMounted(() => {
                                 class="w-full px-2 md:w-1/2"
                             >
                                 <div
+                                    ref="listToAnimate"
                                     class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
                                 >
                                     <ProduitCard

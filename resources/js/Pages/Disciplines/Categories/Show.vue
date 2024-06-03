@@ -9,6 +9,7 @@ import {
     watch,
     onMounted,
 } from "vue";
+import { debounce } from "lodash";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
@@ -679,11 +680,13 @@ const filterProducts = () => {
     }
 };
 
+const debouncedFilterProducts = debounce(filterProducts, 300);
+
 watch(
     () => formCriteres.value.criteres,
     (newCriteres) => {
         selectedCriteres.value = Object.entries(newCriteres);
-        filterProducts();
+        debouncedFilterProducts();
     },
     { deep: true }
 );
@@ -692,7 +695,7 @@ watch(
     () => formCriteres.value.sousCriteres,
     (newSousCriteres) => {
         selectedSousCriteres.value = Object.entries(newSousCriteres);
-        filterProducts();
+        debouncedFilterProducts();
     },
     { deep: true }
 );
@@ -701,14 +704,14 @@ const resetFormCriteres = () => {
     formCriteres.value.criteres = {};
     formCriteres.value.sousCriteres = {};
     selectedCriteres.value = [];
-    filterProducts();
+    debouncedFilterProducts();
 };
 
 onMounted(() => {
     if (listToAnimate.value) {
         autoAnimate(listToAnimate.value);
     }
-    filterProducts();
+    debouncedFilterProducts();
 });
 </script>
 

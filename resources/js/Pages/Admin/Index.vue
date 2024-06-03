@@ -44,10 +44,13 @@ const adminNotificationsCount = computed(
             </h2>
             <p v-if="adminNotificationsCount > 0">
                 Vous avez reçu
-                <span class="text-indigo-500"
-                    >{{ adminNotificationsCount }} notifications d'activités
-                </span>
-                sur le site.
+                <span v-if="adminNotificationsCount > 1" class="text-indigo-500"
+                    >{{ adminNotificationsCount }} notifications</span
+                >
+                <span v-else class="text-indigo-500"
+                    >{{ adminNotificationsCount }} notification</span
+                >
+                d'activités sur le site.
             </p>
             <div>
                 <ul class="list-inside list-disc">
@@ -61,8 +64,23 @@ const adminNotificationsCount = computed(
                                 'App\\Notifications\\ReservationPaidToAdmin'
                             "
                         >
-                            Une nouvelle réservation a été régléé:
-                            {{ notification.data }}
+                            Une nouvelle réservation a été réglée:
+                            <div class="mt-2">
+                                <ul class="list-inside list-disc pl-4">
+                                    <li
+                                        v-for="(
+                                            value, key
+                                        ) in notification.data"
+                                        :key="key"
+                                        class="text-sm"
+                                    >
+                                        <span class="font-semibold capitalize"
+                                            >{{ key }}:</span
+                                        >
+                                        {{ value }}
+                                    </li>
+                                </ul>
+                            </div>
                         </template>
                     </li>
                 </ul>
