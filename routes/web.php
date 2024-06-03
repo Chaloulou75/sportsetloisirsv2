@@ -135,6 +135,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/blog/{post:slug}/comments', [PostCommentController::class, 'store'])->name('posts.comments.store');
     Route::delete('/blog/{post:slug}/comments/{comment}', [PostCommentController::class, 'destroy'])->name('posts.comments.destroy');
 
+    Route::get('/customers/{customer}', [CustomerController::class, 'show'])->name('customers.show');
     //Panier, coordonnées et paiement
     Route::get('/panier/coordonnees/create', [CustomerController::class, 'create'])->name('customers.create');
     Route::post('/panier/coordonnees/store', [CustomerController::class, 'store'])->name('customers.store');
@@ -151,6 +152,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/structures/{structure}', [StructureController::class, 'destroy'])->name('structures.destroy');
 
     Route::get('/gestion/{structure:slug}', [StructureGestionController::class, 'index'])->name('structures.gestion.index');
+
+    Route::put('/gestion/{structure}/notifications/{notification}', [StructureGestionController::class, 'markAsRead'])->name('structures.gestion.notifications.markAsRead');
+
     Route::get('/gestion/{structure:slug}/reservations', [ProductReservationController::class, 'index'])->name('structures.gestion.reservations.index');
     Route::put('/gestion/{structure}/reservations/mark-reservation-as-read', [ProductReservationController::class, 'markAsRead'])->name('structures.gestion.reservations.markAsRead');
     Route::put('/gestion/{structure:slug}/reservations/{reservation}', [ProductReservationController::class, 'update'])->name('structures.gestion.reservations.update');
@@ -205,6 +209,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Admin routes
     Route::prefix('admin')->middleware(['admin'])->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('admin.index');
+        Route::patch('/notifications/{notification}', [AdminController::class, 'markAsRead'])->name('admin.notifications.markAsRead');
 
         Route::get('/categories', [CategoryController::class, 'index'])->name('admin.categories.index');
         Route::post('/categories', [CategoryController::class, 'store'])->name('admin.categories.store');

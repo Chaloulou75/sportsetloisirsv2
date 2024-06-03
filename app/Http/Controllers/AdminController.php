@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Notifications\ReservationPaid;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\Request;
@@ -73,5 +74,16 @@ class AdminController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function markAsRead($notification)
+    {
+        $user = auth()->user();
+        $this->authorize('viewAdmin', $user);
+        $notif = $user->unreadnotifications()->find($notification);
+
+        $notif->markAsRead();
+
+        return to_route('admin.index')->with('success', 'Notification marquée comme lu');
     }
 }

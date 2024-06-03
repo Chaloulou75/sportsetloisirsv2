@@ -1,6 +1,6 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import { Head, Link, usePage } from "@inertiajs/vue3";
+import { Head, Link, usePage, useForm } from "@inertiajs/vue3";
 import { ChevronLeftIcon } from "@heroicons/vue/24/outline";
 import { computed } from "vue";
 
@@ -15,6 +15,22 @@ const appName = computed(() => page.props.appName);
 const adminNotificationsCount = computed(
     () => page.props.admin_notifications_count
 );
+
+const notificationForm = useForm({
+    markedAsRead: false,
+});
+
+const markNotificationAsRead = (notification) => {
+    notificationForm.patch(
+        route("admin.notifications.markAsRead", {
+            notification: notification,
+        }),
+        {
+            only: ["notifications"],
+            preserveScroll: true,
+        }
+    );
+};
 </script>
 <template>
     <Head title="Gestion du site" description="Administration du site." />
@@ -53,7 +69,7 @@ const adminNotificationsCount = computed(
                 d'activités sur le site.
             </p>
             <div>
-                <ul class="list-inside list-disc">
+                <ul>
                     <li
                         v-for="notification in notifications"
                         :key="notification.id"
@@ -64,9 +80,13 @@ const adminNotificationsCount = computed(
                                 'App\\Notifications\\ReservationPaidToAdmin'
                             "
                         >
-                            Une nouvelle réservation a été réglée:
-                            <div class="mt-2">
+                            <div class="mt-2 flex items-start justify-between">
                                 <ul class="list-inside list-disc pl-4">
+                                    <span
+                                        class="text-sm font-medium text-gray-700"
+                                        >Une nouvelle réservation a été
+                                        réglée:</span
+                                    >
                                     <li
                                         v-for="(
                                             value, key
@@ -80,6 +100,25 @@ const adminNotificationsCount = computed(
                                         {{ value }}
                                     </li>
                                 </ul>
+                                <div>
+                                    <label class="inline-flex items-center">
+                                        <span class="mr-2 text-xs"
+                                            >Marquer comme lu</span
+                                        >
+                                        <input
+                                            type="checkbox"
+                                            class="form-checkbox h-4 w-4 shrink-0 rounded border-gray-200 text-indigo-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
+                                            v-model="
+                                                notificationForm.markedAsRead
+                                            "
+                                            @change="
+                                                markNotificationAsRead(
+                                                    notification
+                                                )
+                                            "
+                                        />
+                                    </label>
+                                </div>
                             </div>
                         </template>
                     </li>

@@ -67,6 +67,7 @@ const deletePost = () => {
             post: props.post,
         }),
         {
+            only: ["post"],
             preserveScroll: true,
         }
     );
@@ -78,6 +79,7 @@ const incrementPostLike = () => {
             post: props.post,
         }),
         {
+            only: ["post"],
             preserveScroll: true,
         }
     );

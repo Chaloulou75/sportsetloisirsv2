@@ -59,7 +59,7 @@ class HandleInertiaRequests extends Middleware
             'appName' => config('app.name'),
             'auth' => [
                 'user' => fn () => $request->user() ? array_merge(
-                    $request->user()->load('structures:id,name,slug')->only('id', 'name', 'email', 'structures'),
+                    $request->user()->load('structures:id,name,slug', 'customer')->only('id', 'name', 'email', 'structures', 'customer'),
                     [
                         'unread_notifications_count' => $request->user()->unreadNotifications()
                         ->where('type', ReservationPaid::class)

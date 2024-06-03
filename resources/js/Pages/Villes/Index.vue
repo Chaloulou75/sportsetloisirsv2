@@ -1,8 +1,9 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { router, Head, Link } from "@inertiajs/vue3";
-import { ref, watch, defineAsyncComponent } from "vue";
+import { ref, watch, onMounted, defineAsyncComponent } from "vue";
 import { debounce } from "lodash";
+import autoAnimate from "@formkit/auto-animate";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
 import { HomeIcon } from "@heroicons/vue/24/outline";
@@ -40,6 +41,12 @@ watch(
         );
     }, 400)
 );
+const listToAnimate = ref();
+onMounted(() => {
+    if (listToAnimate.value) {
+        autoAnimate(listToAnimate.value);
+    }
+});
 </script>
 
 <template>
@@ -139,6 +146,7 @@ watch(
             </div>
             <div class="mx-auto min-h-screen max-w-full px-2 sm:px-6 lg:px-8">
                 <div
+                    ref="listToAnimate"
                     class="grid h-auto grid-cols-1 place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3"
                 >
                     <Link

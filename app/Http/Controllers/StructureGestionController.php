@@ -128,4 +128,13 @@ class StructureGestionController extends Controller
         }
         return $totalPrice;
     }
+
+    public function markAsRead(Structure $structure, $notification)
+    {
+        $notif = $structure->unreadNotifications()->find($notification);
+
+        $notif->markAsRead();
+
+        return to_route('structures.gestion.index', $structure)->with('message', 'Notification marquée comme lue.');
+    }
 }

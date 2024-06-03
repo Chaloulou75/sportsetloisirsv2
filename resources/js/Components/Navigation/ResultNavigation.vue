@@ -257,10 +257,15 @@ const submitForm = async () => {
                                     Blog
                                 </BreezeDropdownLink>
                                 <BreezeDropdownLink
-                                    :href="route('profile.edit')"
+                                    v-if="user && user.customer"
+                                    :href="
+                                        route('customers.show', {
+                                            customer: user.customer,
+                                        })
+                                    "
                                     class="relative inline-flex w-full items-center justify-between"
                                 >
-                                    Mon profil
+                                    Mes réservations
                                     <span
                                         v-if="
                                             user &&
@@ -271,6 +276,12 @@ const submitForm = async () => {
                                             user.unread_notifications_count
                                         }}</span
                                     >
+                                </BreezeDropdownLink>
+                                <BreezeDropdownLink
+                                    :href="route('profile.edit')"
+                                    class="relative inline-flex w-full items-center justify-between"
+                                >
+                                    Mon profil
                                 </BreezeDropdownLink>
                                 <BreezeDropdownLink
                                     class="relative inline-flex w-full items-center justify-between"
@@ -422,6 +433,14 @@ const submitForm = async () => {
                     :active="route().current('posts.index')"
                 >
                     Blog
+                </Link>
+                <Link
+                    v-if="user && user.customer"
+                    :href="route('customers.show', { customer: user.customer })"
+                    preserve-scroll
+                    class="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
+                >
+                    Mes réservations
                 </Link>
                 <Link
                     preserve-scroll

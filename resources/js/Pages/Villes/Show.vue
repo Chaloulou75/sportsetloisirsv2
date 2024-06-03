@@ -230,6 +230,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                 class="w-full px-2 md:w-1/2"
                             >
                                 <div
+                                    ref="listToAnimate"
                                     class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:gap-8 lg:grid-cols-2"
                                 >
                                     <ProduitCard

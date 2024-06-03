@@ -10,8 +10,10 @@ use App\Models\ListDiscipline;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
+use App\Http\Resources\CustomerResource;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use App\Http\Resources\ListDisciplineResource;
 
 class CustomerController extends Controller
 {
@@ -58,6 +60,7 @@ class CustomerController extends Controller
         $user = auth()->user();
         $validated = $request->validated();
         $customer = Customer::updateOrCreate(['user_id' => $user->id], $validated);
+
         return to_route('panier.paiement.index')->with('success', 'Finalisez vos réservations');
     }
 
@@ -66,7 +69,29 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        //
+        $customer = $customer->with([
+            'user',
+            'reservations' => function ($query) {
+                $query->withRelations();
+            }
+        ])->findOrFail($customer->id);
+
+        $familles = Cache::remember('familles', 600, function () {
+            return Famille::withProducts()->get();
+        });
+        $allCities = Cache::remember('all_cities', 600, function () {
+            return City::withProducts()->get();
+        });
+        $listDisciplines = Cache::remember('list_disciplines', 600, function () {
+            return ListDiscipline::withProducts()->get();
+        });
+
+        return Inertia::render('Customers/Show', [
+            'familles' => fn () => FamilleResource::collection($familles),
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
+            'allCities' => fn () => $allCities,
+            'customer' => fn () => CustomerResource::make($customer),
+        ]);
     }
 
     /**
