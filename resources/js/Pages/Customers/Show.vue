@@ -43,6 +43,22 @@ const formatCurrency = (value) => {
     return value;
 };
 
+const getCreneauAmount = computed(() => {
+    return (reservation) => {
+        const tarifAmount = reservation.tarif_amount;
+        let quantity;
+        if (reservation.plannings_count > 0) {
+            reservation.plannings.forEach((planning) => {
+                quantitity += planning.quantity;
+            });
+            quantity = reservation.planning;
+        } else {
+            quantity = reservation.quantity;
+        }
+        return tarifAmount * quantity;
+    };
+});
+
 const listToAnimate = ref();
 
 onMounted(() => {
@@ -371,13 +387,24 @@ onMounted(() => {
                             class="flex w-full justify-between border-t border-gray-200 bg-white px-4 py-2 text-lg font-bold"
                         >
                             <div class="text-gray-700">Montant:</div>
-                            <div class="text-green-700">€</div>
+                            <div class="text-green-700">
+                                {{ getCreneauAmount(reservation) }} €
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div v-else class="flex-1 px-2">
-                <p class="text-lg text-gray-700">Votre panier est vide.</p>
+            <div
+                v-else-if="
+                    customer &&
+                    customer.reservations &&
+                    customer.reservations.length === 0
+                "
+                class="flex-1 px-2"
+            >
+                <p class="text-lg text-gray-700">
+                    Vous n'avez pas de réservations en cours.
+                </p>
             </div>
         </div>
     </ResultLayout>

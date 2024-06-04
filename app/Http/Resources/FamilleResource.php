@@ -19,6 +19,8 @@ class FamilleResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'disciplines' => $this->whenLoaded('disciplines', fn () => $this->disciplines),
+            'updated_at' => $this->updated_at,
+            'created_at' => $this->created_at,
         ];
     }
 }

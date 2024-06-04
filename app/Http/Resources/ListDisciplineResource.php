@@ -22,6 +22,7 @@ class ListDisciplineResource extends JsonResource
             'theme' => $this->theme,
             'description' => $this->description,
             'view_count' => $this->view_count,
+            'famille' => $this->whenLoaded('famille', fn () => FamilleResource::make($this->famille)),
             'updated_at' => $this->updated_at,
             'created_at' => $this->created_at,
         ];

@@ -72,7 +72,7 @@ class CustomerController extends Controller
         $customer = $customer->with([
             'user',
             'reservations' => function ($query) {
-                $query->withRelations();
+                $query->withRelations()->isPaid();
             }
         ])->findOrFail($customer->id);
 

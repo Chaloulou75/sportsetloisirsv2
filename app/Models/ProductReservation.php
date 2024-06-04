@@ -132,4 +132,9 @@ class ProductReservation extends Model
             'attributs.reservation_sous_attributs.booking_sous_field'
         ]);
     }
+
+    public function scopeIsPaid(Builder $query): void
+    {
+        $query->where('paid', true);
+    }
 }
