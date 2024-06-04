@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Stripe\Checkout\Session;
 use App\Models\ListDiscipline;
 use App\Models\ProductReservation;
+use App\Http\Resources\CityResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
 use Stripe\Exception\ApiErrorException;
@@ -90,7 +91,7 @@ class PanierPaymentController extends Controller
         return Inertia::render('Panier/Payment/Index', [
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'reservations' => fn () => $reservations ?? null,
             'user' => fn () =>  $user ?? null,
             'totalPrice' => fn () => $totalPrice ?? null,
@@ -116,7 +117,7 @@ class PanierPaymentController extends Controller
         return Inertia::render('Panier/Payment/Success', [
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
         ]);
     }
 
@@ -135,7 +136,7 @@ class PanierPaymentController extends Controller
         return Inertia::render('Panier/Payment/Cancel', [
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
         ]);
     }
 }

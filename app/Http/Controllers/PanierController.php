@@ -14,6 +14,7 @@ use App\Models\StructureActivite;
 use App\Models\StructureCatTarif;
 use App\Models\StructurePlanning;
 use App\Models\ProductReservation;
+use App\Http\Resources\CityResource;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
@@ -54,7 +55,7 @@ class PanierController extends Controller
         return Inertia::render('Panier/Index', [
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'reservations' => fn () => $reservations ?? null
         ]);
     }

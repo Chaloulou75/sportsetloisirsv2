@@ -19,6 +19,7 @@ use App\Models\StructureActivite;
 use App\Models\StructurePlanning;
 use App\Models\StructureCategorie;
 use App\Models\StructureDiscipline;
+use App\Http\Resources\CityResource;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
@@ -154,7 +155,7 @@ class ActiviteController extends Controller
         return Inertia::render('Structures/Activites/Show', [
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => $listDisciplines,
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'activite' => fn () => $activite,
             'produits' => fn () => $produits,
             'criteres' => fn () => $criteres,

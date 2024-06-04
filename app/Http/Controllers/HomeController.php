@@ -11,6 +11,7 @@ use App\Models\Structure;
 use App\Models\Departement;
 use App\Models\ListDiscipline;
 use App\Models\StructureProduit;
+use App\Http\Resources\CityResource;
 use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -119,8 +120,8 @@ class HomeController extends Controller
             'produitsCount' => fn () => $produitsCount,
             'citiesCount' => fn () => $citiesCount,
             'lastStructures' => fn () => $lastStructures,
-            'allCities' => fn () => $allCities,
-            'topVilles' => fn () => $topVilles,
+            'allCities' => fn () => CityResource::collection($allCities),
+            'topVilles' => fn () => CityResource::collection($topVilles),
             'topDepartements' => fn () => $topDepartements,
             'posts' => fn () => PostResource::collection($posts),
             'canLogin' => Route::has('login'),

@@ -16,11 +16,11 @@ class PostResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'author' => $this->whenLoaded('author', fn () => UserResource::make($this->author)),
+            'author' => UserResource::make($this->whenLoaded('author')),
             'disciplines' => $this->whenLoaded('disciplines', fn () => $this->disciplines),
-            'tags' => $this->whenLoaded('tags', fn () => $this->tags),
-            'comments' => $this->whenLoaded('comments', fn () => $this->comments),
-            'comments_count' => $this->comments_count,
+            'tags' => TagResource::collection($this->whenLoaded('tags')),
+            'comments' => CommentResource::collection($this->whenLoaded('comments')),
+            'comments_count' => $this->whenCounted('comments'),
             'slug' => $this->slug,
             'title' => $this->title,
             'excerpt' => $this->excerpt,

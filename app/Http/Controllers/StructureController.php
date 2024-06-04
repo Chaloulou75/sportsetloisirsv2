@@ -25,6 +25,7 @@ use App\Models\StructureTypeInfo;
 use App\Models\ProductReservation;
 use App\Models\StructureCategorie;
 use App\Models\StructureDiscipline;
+use App\Http\Resources\CityResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
@@ -78,7 +79,7 @@ class StructureController extends Controller
             'structures' => fn () => $structures,
             'filters' => request()->all(['search']),
             'familles' => fn () => FamilleResource::collection($familles),
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'listDisciplines' => fn () => $listDisciplines,
         ]);
     }
@@ -106,7 +107,7 @@ class StructureController extends Controller
             'structurestypes' => fn () => $structurestypes,
             'disciplines' => fn () => $disciplines,
             'familles' => fn () => FamilleResource::collection($familles),
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'listDisciplines' => fn () => $listDisciplines,
         ]);
     }
@@ -324,7 +325,7 @@ class StructureController extends Controller
         return Inertia::render('Structures/Show', [
             'structure' => fn () => $structure,
             'familles' => fn () => FamilleResource::collection($familles),
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'listDisciplines' => fn () => $listDisciplines,
             'criteres' => fn () => $criteres,
             'can' => [

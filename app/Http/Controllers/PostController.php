@@ -11,6 +11,7 @@ use App\Models\Famille;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
+use App\Http\Resources\CityResource;
 use App\Http\Resources\PostResource;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
@@ -58,8 +59,8 @@ class PostController extends Controller
 
         return Inertia::render('Posts/Index', [
             'familles' => fn () => FamilleResource::collection($familles),
-            'listDisciplines' => fn () => $listDisciplines,
-            'allCities' => fn () => $allCities,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
+            'allCities' => fn () => CityResource::collection($allCities),
             'posts' => fn () => PostResource::collection($posts),
             'discipline' => fn () => $discipline ?? null,
             'filters' => request()->all(['search', 'author']),
@@ -88,7 +89,7 @@ class PostController extends Controller
         return Inertia::render('Posts/Create', [
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'disciplines' => fn () => ListDisciplineResource::collection($disciplines),
             'tags' => fn () => $tags,
         ]);
@@ -171,7 +172,7 @@ class PostController extends Controller
         return Inertia::render('Posts/Show', [
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'post' => fn () => PostResource::make($post),
             'comments' => CommentResource::collection($post->comments()->with('author')->latest()->latest('id')->paginate(10)),
         ]);

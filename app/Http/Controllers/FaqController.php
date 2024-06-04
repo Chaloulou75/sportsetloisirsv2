@@ -8,6 +8,7 @@ use Inertia\Response;
 use App\Models\Famille;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
+use App\Http\Resources\CityResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
 
@@ -28,7 +29,7 @@ class FaqController extends Controller
         return Inertia::render('Faq/Index', [
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => $listDisciplines,
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
         ]);
     }
 }

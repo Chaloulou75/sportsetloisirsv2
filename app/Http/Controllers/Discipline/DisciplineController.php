@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreDisciplineRequest;
+use App\Http\Resources\CityResource;
 use App\Http\Resources\PostResource;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
@@ -22,6 +22,7 @@ use App\Http\Resources\FamilleResource;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineSimilaire;
 use App\Http\Resources\CategorieResource;
+use App\Http\Requests\StoreDisciplineRequest;
 use App\Http\Resources\ListDisciplineResource;
 
 class DisciplineController extends Controller
@@ -58,7 +59,7 @@ class DisciplineController extends Controller
             'disciplines' => fn () => $disciplines,
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => $listDisciplines,
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'structuresCount' => fn () => $structuresCount,
             'filters' => request()->all(['search']),
         ]);
@@ -122,7 +123,7 @@ class DisciplineController extends Controller
             'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
             'allStructureTypes' => fn () => $allStructureTypes,
             'listDisciplines' => fn () => $listDisciplines,
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'produits' => fn () => $produits,
             'structures' => fn () => $structures,
             'posts' => fn () => PostResource::collection($posts),

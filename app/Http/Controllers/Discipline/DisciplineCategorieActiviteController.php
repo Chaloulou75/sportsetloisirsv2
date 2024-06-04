@@ -12,6 +12,7 @@ use App\Models\ListDiscipline;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CityResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
 use App\Models\LienDisciplineCategorie;
@@ -86,7 +87,7 @@ class DisciplineCategorieActiviteController extends Controller
             'discipline' => fn () => $requestDiscipline,
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => $listDisciplines,
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'activite' => fn () => $activite,
             'criteres' => fn () => $criteres,
             'activiteSimilaires' => fn () => $activiteSimilaires,

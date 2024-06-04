@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CityResource;
 use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
@@ -129,7 +130,7 @@ class DepartementDisciplineCategorieController extends Controller
             'structures' => fn () => $structures,
             'discipline' => fn () => $discipline,
             'listDisciplines' => fn () => $listDisciplines,
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'posts' => fn () => PostResource::collection($posts),
         ]);
 

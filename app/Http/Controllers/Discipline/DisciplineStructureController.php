@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CityResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
@@ -71,7 +72,7 @@ class DisciplineStructureController extends Controller
         return Inertia::render('Structures/Show', [
             'structure' => fn () => $structure,
             'familles' => fn () => FamilleResource::collection($familles),
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'listDisciplines' => fn () => $listDisciplines,
             'criteres' => fn () => $criteres,
             'can' => [

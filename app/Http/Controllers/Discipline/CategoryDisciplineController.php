@@ -16,12 +16,13 @@ use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\DisCatTarifTypeResource;
+use App\Http\Resources\CityResource;
 use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
+use App\Http\Resources\DisCatTarifTypeResource;
 
 class CategoryDisciplineController extends Controller
 {
@@ -103,7 +104,7 @@ class CategoryDisciplineController extends Controller
             'discipline' => fn () => $discipline,
             'criteres' => fn () => $criteres,
             'listDisciplines' => fn () => $listDisciplines,
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'produits' => fn () => $produits,
             'structures' => fn () => $structures,
             'posts' => fn () => PostResource::collection($posts),

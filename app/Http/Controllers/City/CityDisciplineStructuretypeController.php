@@ -12,6 +12,7 @@ use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Models\StructureTypeInfo;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CityResource;
 use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
@@ -138,13 +139,13 @@ class CityDisciplineStructuretypeController extends Controller
             'categories' => fn () => $categories,
             'firstCategories' => fn () => $firstCategories,
             'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
-            'city' => fn () => $city,
-            'citiesAround' => fn () => $citiesAround,
+            'city' => fn () => CityResource::make($city),
+            'citiesAround' => fn () => CityResource::collection($citiesAround),
             'produits' => fn () => $produits,
             'structures' => fn () => $structures,
             'discipline' => fn () => $discipline,
             'listDisciplines' => fn () => $listDisciplines,
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'posts' => fn () => PostResource::collection($posts),
         ]);
 

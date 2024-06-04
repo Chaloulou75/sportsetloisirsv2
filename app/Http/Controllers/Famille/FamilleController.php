@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use App\Models\StructureProduit;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CityResource;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
@@ -44,7 +45,7 @@ class FamilleController extends Controller
 
         return Inertia::render('Familles/Index', [
             'familles' => fn () => FamilleResource::collection($familles),
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'listDisciplines' => fn () => $listDisciplines,
             'familleCount' => fn () => $familleCount,
             'disciplinesCount' => fn () => $disciplinesCount,
@@ -88,7 +89,7 @@ class FamilleController extends Controller
 
         return Inertia::render('Familles/Show', [
             'familles' => fn () => FamilleResource::collection($familles),
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'listDisciplines' => fn () => $listDisciplines,
             'famille' => fn () => $famille,
         ]);

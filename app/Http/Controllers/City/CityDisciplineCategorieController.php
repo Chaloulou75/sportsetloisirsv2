@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CityResource;
 use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
@@ -144,13 +145,13 @@ class CityDisciplineCategorieController extends Controller
             'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
             'allStructureTypes' => fn () => $allStructureTypes,
             'city' => fn () => $city,
-            'citiesAround' => fn () => $citiesAround,
+            'citiesAround' => fn () => CityResource::collection($citiesAround),
             'produits' => fn () => $produits,
             'structures' => fn () => $structures,
             'discipline' => fn () => $discipline,
             'criteres' => fn () => $criteres,
             'listDisciplines' => fn () => $listDisciplines,
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'posts' => fn () => PostResource::collection($posts),
         ]);
 

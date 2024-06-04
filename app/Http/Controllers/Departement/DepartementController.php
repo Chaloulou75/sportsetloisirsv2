@@ -14,6 +14,7 @@ use App\Models\ListDiscipline;
 use App\Models\StructureProduit;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CityResource;
 use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
@@ -115,7 +116,7 @@ class DepartementController extends Controller
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => $listDisciplines,
             'flattenedDisciplines' => fn () => $flattenedDisciplines,
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'departement' => fn () => $departement,
             'produits' => fn () => $produits,
             'structures' => fn () => $structures,

@@ -13,6 +13,7 @@ use App\Models\ListDiscipline;
 use App\Models\StructureProduit;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CityResource;
 use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
@@ -52,10 +53,10 @@ class CityController extends Controller
                         ->withQueryString();
 
         return Inertia::render('Villes/Index', [
-            'cities' => fn () => $cities,
+            'cities' => fn () => CityResource::collection($cities),
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => $listDisciplines,
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'structuresCount' => fn () => $structuresCount,
             'produitsCount' => fn () => $produitsCount,
             'filters' => request()->all(['search']),
@@ -131,7 +132,7 @@ class CityController extends Controller
         return Inertia::render('Villes/Show', [
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => $listDisciplines,
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'city' => fn () => $city,
             'citiesAround' => fn () => $citiesAround,
             'produits' => fn () => $produits,

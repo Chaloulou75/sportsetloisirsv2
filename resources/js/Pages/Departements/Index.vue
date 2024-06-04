@@ -146,14 +146,8 @@ watch(
                     <Link
                         :href="
                             route('departements.show', {
-                                departement: departement,
+                                departement: departement.slug,
                             })
-                        "
-                        :active="
-                            route().current(
-                                'departements.show',
-                                departement.slug
-                            )
                         "
                         v-for="(departement, index) in departements.data"
                         :key="departement.id"

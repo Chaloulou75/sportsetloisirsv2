@@ -11,9 +11,11 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CityResource;
 use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
+use App\Http\Resources\ListDisciplineResource;
 use App\Models\LienDisciplineCategorie;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
@@ -125,13 +127,13 @@ class CityDisciplineController extends Controller
             'firstCategories' => fn () => $firstCategories,
             'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
             'allStructureTypes' => fn () => $allStructureTypes,
-            'city' => fn () => $city,
-            'citiesAround' => fn () => $citiesAround,
+            'city' => fn () => CityResource::make($city),
+            'citiesAround' => fn () => CityResource::collection($citiesAround),
             'produits' => fn () => $produits,
             'structures' => fn () => $structures,
             'discipline' => fn () => $discipline,
-            'listDisciplines' => fn () => $listDisciplines,
-            'allCities' => fn () => $allCities,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
+            'allCities' => fn () => CityResource::collection($allCities),
             'posts' =>  fn () => PostResource::collection($posts),
         ]);
     }

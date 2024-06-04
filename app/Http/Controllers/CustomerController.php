@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Models\Famille;
 use App\Models\Customer;
 use App\Models\ListDiscipline;
+use App\Http\Resources\CityResource;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
@@ -46,7 +47,7 @@ class CustomerController extends Controller
         return Inertia::render('Panier/Customers/Create', [
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => $listDisciplines,
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'customer' => fn () => $customer ?? null,
         ]);
 
@@ -89,7 +90,7 @@ class CustomerController extends Controller
         return Inertia::render('Customers/Show', [
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'customer' => fn () => CustomerResource::make($customer),
         ]);
     }

@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
+use App\Http\Resources\CityResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
 
@@ -59,7 +60,7 @@ class FavoritesController extends Controller
                     'structures' => fn () => $structures ?? [],
                     'activites' => fn () => $activites ?? [],
                     'produits' => fn () => $produits ?? [],
-                    'allCities' => fn () => $allCities,
+                    'allCities' => fn () => CityResource::collection($allCities),
                     'listDisciplines' => fn () => $listDisciplines,
         ]);
 

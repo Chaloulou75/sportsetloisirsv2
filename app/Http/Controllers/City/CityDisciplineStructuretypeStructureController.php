@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CityResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
@@ -88,7 +89,7 @@ class CityDisciplineStructuretypeStructureController extends Controller
         return Inertia::render('Structures/Show', [
             'structure' => fn () => $structure,
             'familles' => fn () => FamilleResource::collection($familles),
-            'allCities' => fn () => $allCities,
+            'allCities' => fn () => CityResource::collection($allCities),
             'listDisciplines' => fn () => $listDisciplines,
             'criteres' => fn () => $criteres,
             'can' => [
@@ -100,8 +101,8 @@ class CityDisciplineStructuretypeStructureController extends Controller
             'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
             'allStructureTypes' => fn () => $allStructureTypes,
             'structuretypeElected' => fn () => $structuretypeElected,
-            'city' => fn () => $city,
-            'citiesAround' => fn () => $citiesAround,
+            'city' => fn () => CityResource::make($city),
+            'citiesAround' => fn () => CityResource::collection($citiesAround),
             'requestDiscipline' => fn () => $requestDiscipline,
         ]);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TypeChampResource;
 use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -101,7 +102,7 @@ class CategoryDisciplineCritereController extends Controller
             'categories' => fn () => $categories,
             'discipline' => fn () => $discipline,
             'listeCriteres' => fn () => $listeCriteres,
-            'type_champs' => fn () => $typeChamps,
+            'type_champs' => fn () => TypeChampResource::collection($typeChamps),
         ]);
 
     }
