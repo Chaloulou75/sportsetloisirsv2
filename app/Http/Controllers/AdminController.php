@@ -81,9 +81,10 @@ class AdminController extends Controller
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
         $notif = $user->unreadnotifications()->find($notification);
+        if($notif) {
+            $notif->markAsRead();
+        }
 
-        $notif->markAsRead();
-
-        return to_route('admin.index')->with('success', 'Notification marquée comme lu');
+        return to_route('admin.index')->with('message', 'Notification marquée comme lue');
     }
 }

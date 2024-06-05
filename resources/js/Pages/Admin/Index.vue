@@ -17,7 +17,7 @@ const adminNotificationsCount = computed(
 );
 
 const notificationForm = useForm({
-    markedAsRead: false,
+    markedAsRead: {},
 });
 
 const markNotificationAsRead = (notification) => {
@@ -26,7 +26,6 @@ const markNotificationAsRead = (notification) => {
             notification: notification,
         }),
         {
-            only: ["notifications"],
             preserveScroll: true,
         }
     );
@@ -108,8 +107,10 @@ const markNotificationAsRead = (notification) => {
                                         <input
                                             type="checkbox"
                                             class="form-checkbox h-4 w-4 shrink-0 rounded border-gray-200 text-indigo-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                                            v-model="
-                                                notificationForm.markedAsRead
+                                            :checked="
+                                                notificationForm.markedAsRead[
+                                                    notification.id
+                                                ]
                                             "
                                             @change="
                                                 markNotificationAsRead(

@@ -133,7 +133,9 @@ class StructureGestionController extends Controller
     {
         $notif = $structure->unreadNotifications()->find($notification);
 
-        $notif->markAsRead();
+        if($notif) {
+            $notif->markAsRead();
+        }
 
         return to_route('structures.gestion.index', $structure)->with('message', 'Notification marquée comme lue.');
     }

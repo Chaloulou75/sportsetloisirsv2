@@ -51,7 +51,7 @@ const formatCurrency = (value) => {
 
 // reprendre cette partie
 const notificationForm = useForm({
-    markedAsRead: false,
+    markedAsRead: {},
 });
 
 const markNotificationAsRead = (reservationId) => {
@@ -65,8 +65,8 @@ const markNotificationAsRead = (reservationId) => {
                 notification: notification.id,
             }),
             {
-                only: ["reservations", "notifications"],
                 preserveScroll: true,
+                onSuccess: () => {},
             }
         );
     }
@@ -105,7 +105,9 @@ const markNotificationAsRead = (reservationId) => {
                         <input
                             type="checkbox"
                             class="form-checkbox h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                            v-model="notificationForm.markedAsRead"
+                            :checked="
+                                notificationForm.markedAsRead[reservation.id]
+                            "
                             @change="markNotificationAsRead(reservation.id)"
                         />
                     </label>
