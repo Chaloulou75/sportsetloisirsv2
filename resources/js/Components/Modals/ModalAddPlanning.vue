@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import OpenDaysForm from "@/Components/Forms/DayTime/OpenDaysForm.vue";
 import OpenTimesForm from "@/Components/Forms/DayTime/OpenTimesForm.vue";
@@ -20,13 +20,14 @@ const props = defineProps({
     errors: Object,
     structure: Object,
     structureActivites: Object,
+    produit: Object,
     show: Boolean,
 });
 
 const addPlanningForm = useForm({
     title: null,
-    activite: null,
-    produit: null,
+    activite: props.produit ? props.produit.activite_id : null,
+    produit: props.produit ? props.produit.id : null,
     dates: null,
     horaires: null,
 });
@@ -38,7 +39,7 @@ watch(
     (newVal) => {
         if (newVal) {
             const activite = props.structureActivites.find(
-                (activite) => activite.id === newVal
+                (act) => act.id === newVal
             );
             filteredProducts.value = activite ? activite.produits ?? [] : [];
             addPlanningForm.title = activite ? activite.titre ?? null : null;
@@ -47,6 +48,21 @@ watch(
                 : null;
         } else {
             filteredProducts.value = null;
+        }
+    }
+);
+
+watch(
+    () => props.produit,
+    (newProduit) => {
+        if (newProduit) {
+            const activite = props.structureActivites.find(
+                (act) => act.id === newProduit.activite_id
+            );
+            addPlanningForm.title = activite ? activite.titre ?? null : null;
+            addPlanningForm.activite = newProduit.activite_id;
+            filteredProducts.value = activite ? activite.produits ?? [] : [];
+            addPlanningForm.produit = newProduit.id;
         }
     }
 );
@@ -82,11 +98,11 @@ const onSubmit = () => {
                 leave-to="opacity-0"
             >
                 <div
-                    class="fixed inset-0 transition-opacity bg-black bg-opacity-50"
+                    class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
                 />
             </TransitionChild>
             <div
-                class="fixed inset-0 flex items-center justify-center w-screen p-4 text-center"
+                class="fixed inset-0 flex w-screen items-center justify-center p-4 text-center"
             >
                 <TransitionChild
                     as="template"
@@ -98,21 +114,26 @@ const onSubmit = () => {
                     leave-to="opacity-0 scale-95"
                 >
                     <DialogPanel
-                        class="w-full max-w-5xl p-6 space-y-5 overflow-visible text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
+                        class="w-full max-w-5xl transform space-y-5 overflow-visible rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
                     >
                         <DialogTitle
                             as="div"
-                            class="flex items-center justify-between w-full"
+                            class="flex w-full items-center justify-between"
                         >
                             <h3
                                 class="text-lg font-medium leading-6 text-gray-800"
                             >
                                 Ajouter un créneau
+                                <span
+                                    class="text-indigo-700"
+                                    v-if="addPlanningForm.title"
+                                    >à {{ addPlanningForm.title }}</span
+                                >
                             </h3>
                             <button type="button">
                                 <XCircleIcon
                                     @click="emit('close')"
-                                    class="w-6 h-6 text-gray-600 hover:text-red-600"
+                                    class="h-6 w-6 text-gray-600 hover:text-red-600"
                                 />
                             </button>
                         </DialogTitle>
@@ -125,7 +146,7 @@ const onSubmit = () => {
                                     <div>
                                         <label
                                             for="titre"
-                                            class="block mb-1 text-sm font-medium text-gray-700"
+                                            class="mb-1 block text-sm font-medium text-gray-700"
                                             >Titre</label
                                         >
                                         <TextInput
@@ -144,7 +165,7 @@ const onSubmit = () => {
                                     <div>
                                         <label
                                             for="hs-select-label"
-                                            class="block mb-1 text-sm font-medium text-gray-700"
+                                            class="mb-1 block text-sm font-medium text-gray-700"
                                             >Activité liée</label
                                         >
                                         <select
@@ -171,7 +192,7 @@ const onSubmit = () => {
                                                 filteredProducts.length > 0
                                             "
                                             for="hs-select-label"
-                                            class="block mb-1 text-sm font-medium text-gray-700"
+                                            class="mb-1 block text-sm font-medium text-gray-700"
                                             >Produit lié</label
                                         >
                                         <select
@@ -209,7 +230,7 @@ const onSubmit = () => {
 
                                     <!-- Heures x2 ouverture / fermeture -->
                                     <div
-                                        class="flex flex-col items-start max-w-sm space-y-3"
+                                        class="flex max-w-sm flex-col items-start space-y-3"
                                     >
                                         <OpenTimesForm
                                             class="w-full"
@@ -219,7 +240,7 @@ const onSubmit = () => {
                                     </div>
                                     <!-- Dates x 2 -->
                                     <div
-                                        class="flex flex-col items-start max-w-sm space-y-3"
+                                        class="flex max-w-sm flex-col items-start space-y-3"
                                     >
                                         <OpenDaysForm
                                             class="w-full"
@@ -229,11 +250,11 @@ const onSubmit = () => {
                                     </div>
                                 </div>
                                 <div
-                                    class="flex items-center justify-between w-full mt-4"
+                                    class="mt-4 flex w-full items-center justify-between"
                                 >
                                     <button
                                         type="button"
-                                        class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                                        class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
                                         @click.prevent="emit('close')"
                                     >
                                         Annuler
@@ -245,7 +266,7 @@ const onSubmit = () => {
                                                 addPlanningForm.processing,
                                         }"
                                         type="submit"
-                                        class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                                        class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                     >
                                         <LoadingSVG
                                             v-if="addPlanningForm.processing"

@@ -61,7 +61,7 @@ const props = defineProps({
                     @eventFromChild="handleButtonEvent"
                 />
 
-                <div class="h-full w-full max-w-full md:flex-1">
+                <div class="h-full w-full max-w-full md:w-5/6">
                     <ProNavigation :structure="structure" />
 
                     <header

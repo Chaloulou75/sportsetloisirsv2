@@ -53,6 +53,10 @@ const PlanningDisplay = defineAsyncComponent(() =>
     import("@/Components/Inscription/Activity/PlanningDisplay.vue")
 );
 
+const AddButtonsDisplay = defineAsyncComponent(() =>
+    import("@/Components/Inscription/Activity/AddButtonsDisplay.vue")
+);
+
 const MicroNavActiviteBackPro = defineAsyncComponent(() =>
     import("@/Components/Structures/MicroNavActiviteBackPro.vue")
 );
@@ -77,6 +81,22 @@ const handleButtonEvent = (message) => {
     }
 };
 
+const handleOpenAddModal = (message) => {
+    switch (message) {
+        case "add-activite":
+            openAddActiviteModal();
+            break;
+        case "add-planning":
+            openAddPlanningModal();
+            break;
+        case "add-tarif":
+            openAddTarifModal();
+            break;
+        default:
+            break;
+    }
+};
+
 const showAddActiviteModal = ref(false);
 const openAddActiviteModal = () => {
     showAddActiviteModal.value = true;
@@ -87,8 +107,10 @@ const openAddTarifModal = () => {
     showAddTarifModal.value = true;
 };
 
+const currentProduit = ref(null);
 const showAddPlanningModal = ref(false);
-const openAddPlanningModal = () => {
+const openAddPlanningModal = (produit) => {
+    currentProduit.value = produit;
     showAddPlanningModal.value = true;
 };
 
@@ -145,7 +167,7 @@ const latestAdresseId = computed(() => {
                         {{ discipline.name }}
                     </Link>
                     <div
-                        class="w-full space-x-0 space-y-1 md:flex md:flex-1 md:items-center md:justify-start md:space-x-4 md:space-y-0"
+                        class="w-full space-y-1 md:flex md:flex-1 md:items-center md:justify-start md:space-x-1 md:space-y-0"
                     >
                         <Link
                             :href="
@@ -157,9 +179,9 @@ const latestAdresseId = computed(() => {
                             "
                             v-for="category in categoriesListByDiscipline"
                             :key="category.id"
-                            class="flex h-full w-full flex-col items-center px-6 py-2.5 text-xs ring ring-green-500/40 hover:bg-gray-50 hover:text-slate-700 md:w-auto md:py-4"
+                            class="flex h-full w-full flex-col items-center bg-white px-6 py-2.5 text-xs text-slate-500 ring ring-green-500/80 hover:bg-gray-50 hover:text-slate-700 md:w-auto md:py-4"
                             :class="{
-                                'bg-green-500 text-white':
+                                'bg-green-500/80 text-white':
                                     category.id === categorie.id,
                                 'bg-white text-slate-500':
                                     category.id !== categorie.id,
@@ -220,44 +242,16 @@ const latestAdresseId = computed(() => {
             <div
                 class="relative flex flex-col space-y-6 py-2 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
             >
-                <div class="mx-auto max-w-full flex-1 space-y-8 px-1 lg:px-4">
-                    <div
-                        class="flex w-full flex-col items-center justify-start space-y-2 px-2 py-3 md:h-20 md:flex-row md:space-x-4 md:space-y-0 md:px-0 md:py-6"
-                    >
-                        <p class="text-lg font-medium leading-6 text-slate-500">
-                            Ajouter
-                            <span v-if="displayActivites">une activité</span
-                            ><span v-if="displayTarifs">un tarif</span
-                            ><span v-if="displayPlanning">un créneau</span> à
-                            <span class="text-indigo-500">{{
-                                discipline.name
-                            }}</span>
-                        </p>
-                        <button
-                            v-if="displayActivites"
-                            type="button"
-                            @click="openAddActiviteModal()"
-                            class="inline-flex w-auto items-center justify-between bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
-                        >
-                            <PlusIcon class="h-6 w-6" />
-                        </button>
-                        <button
-                            v-if="displayPlanning"
-                            type="button"
-                            @click="openAddPlanningModal()"
-                            class="inline-flex w-auto items-center justify-between bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
-                        >
-                            <PlusIcon class="h-6 w-6" />
-                        </button>
-                        <button
-                            v-if="displayTarifs"
-                            type="button"
-                            @click="openAddTarifModal()"
-                            class="inline-flex w-auto items-center justify-between bg-green-600 px-4 py-3 text-lg text-white shadow-lg transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
-                        >
-                            <PlusIcon class="h-5 w-5" />
-                        </button>
-                    </div>
+                <div
+                    class="mx-auto max-w-full flex-1 space-y-8 px-1 md:space-y-16 lg:px-4"
+                >
+                    <AddButtonsDisplay
+                        :display-activity="displayActivites"
+                        :display-tarif="displayTarifs"
+                        :display-planning="displayPlanning"
+                        :discipline="discipline"
+                        @open-add-modal="handleOpenAddModal"
+                    />
 
                     <template v-if="displayActivites">
                         <ActivityDisplay
@@ -274,6 +268,7 @@ const latestAdresseId = computed(() => {
                             :activite-for-tarifs="activiteForTarifs"
                             :all-categories="categoriesListByDiscipline"
                             @add-tarif="openAddTarifModal"
+                            @add-planning="openAddPlanningModal"
                         />
                         <div v-if="structureActivites.length === 0">
                             <p class="font-semibold italic text-gray-600">
@@ -329,6 +324,7 @@ const latestAdresseId = computed(() => {
                 :errors="errors"
                 :structure="structure"
                 :structure-activites="structureActivites"
+                :produit="currentProduit"
                 :show="showAddPlanningModal"
                 @close="showAddPlanningModal = false"
                 @show-display="handleButtonEvent('Planning')"
