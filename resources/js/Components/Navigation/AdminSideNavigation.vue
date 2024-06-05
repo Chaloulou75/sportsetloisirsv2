@@ -97,62 +97,112 @@ const user = computed(() => page.props.auth.user);
                 </li>
 
                 <li class="w-full">
-                    <Link
-                        :href="route('admin.categories.index')"
-                        :active="route().current('admin.categories.index')"
-                        class="block rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition duration-150 ease-in-out hover:bg-blue-100 hover:text-blue-800"
-                        :class="{
-                            'bg-blue-100 text-blue-800': route().current(
-                                'admin.categories.index'
-                            ),
-                        }"
+                    <details
+                        class="group [&_summary::-webkit-details-marker]:hidden"
+                        open
                     >
-                        Gestion des catégories
-                    </Link>
+                        <summary
+                            class="flex cursor-pointer items-center justify-between rounded-md px-4 py-2 text-gray-700 transition duration-150 ease-in-out hover:bg-blue-100 hover:text-blue-800"
+                        >
+                            <span class="text-sm font-medium">
+                                Paramètrage du contenu
+                            </span>
+
+                            <span
+                                class="shrink-0 transition duration-300 group-open:-rotate-180"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-5 w-5"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                        clip-rule="evenodd"
+                                    />
+                                </svg>
+                            </span>
+                        </summary>
+                        <ul class="space-y-2">
+                            <li class="mt-2">
+                                <Link
+                                    :href="route('admin.categories.index')"
+                                    :active="
+                                        route().current(
+                                            'admin.categories.index'
+                                        )
+                                    "
+                                    class="block rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition duration-150 ease-in-out hover:bg-blue-100 hover:text-blue-800"
+                                    :class="{
+                                        'bg-blue-100 text-blue-800':
+                                            route().current(
+                                                'admin.categories.index'
+                                            ),
+                                    }"
+                                >
+                                    Gestion des catégories
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    :href="route('admin.criteres.index')"
+                                    :active="
+                                        route().current('admin.criteres.index')
+                                    "
+                                    class="block rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition duration-150 ease-in-out hover:bg-blue-100 hover:text-blue-800"
+                                    :class="{
+                                        'bg-blue-100 text-blue-800':
+                                            route().current(
+                                                'admin.criteres.index'
+                                            ),
+                                    }"
+                                >
+                                    Gestion des critères
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    :href="route('admin.tarifs.index')"
+                                    :active="
+                                        route().current('admin.tarifs.index')
+                                    "
+                                    class="block rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition duration-150 ease-in-out hover:bg-blue-100 hover:text-blue-800"
+                                    :class="{
+                                        'bg-blue-100 text-blue-800':
+                                            route().current(
+                                                'admin.tarifs.index'
+                                            ),
+                                    }"
+                                >
+                                    Gestion des types de tarifs
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    :href="route('admin.disciplines.index')"
+                                    :active="
+                                        route().current(
+                                            'admin.disciplines.index'
+                                        )
+                                    "
+                                    class="block rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition duration-150 ease-in-out hover:bg-blue-100 hover:text-blue-800"
+                                    :class="{
+                                        'bg-blue-100 text-blue-800':
+                                            route().current(
+                                                'admin.disciplines.index'
+                                            ),
+                                    }"
+                                >
+                                    Gestion des disciplines (catégories,
+                                    critères, tarifs)
+                                </Link>
+                            </li>
+                        </ul>
+                    </details>
                 </li>
 
-                <li class="w-full">
-                    <Link
-                        :href="route('admin.criteres.index')"
-                        :active="route().current('admin.criteres.index')"
-                        class="block rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition duration-150 ease-in-out hover:bg-blue-100 hover:text-blue-800"
-                        :class="{
-                            'bg-blue-100 text-blue-800': route().current(
-                                'admin.criteres.index'
-                            ),
-                        }"
-                    >
-                        Gestion des critères
-                    </Link>
-                </li>
-                <li class="w-full">
-                    <Link
-                        :href="route('admin.tarifs.index')"
-                        :active="route().current('admin.tarifs.index')"
-                        class="block rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition duration-150 ease-in-out hover:bg-blue-100 hover:text-blue-800"
-                        :class="{
-                            'bg-blue-100 text-blue-800':
-                                route().current('admin.tarifs.index'),
-                        }"
-                    >
-                        Gestion des types de tarifs
-                    </Link>
-                </li>
-                <li class="w-full">
-                    <Link
-                        :href="route('admin.disciplines.index')"
-                        :active="route().current('admin.disciplines.index')"
-                        class="block rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition duration-150 ease-in-out hover:bg-blue-100 hover:text-blue-800"
-                        :class="{
-                            'bg-blue-100 text-blue-800': route().current(
-                                'admin.disciplines.index'
-                            ),
-                        }"
-                    >
-                        Gestion du contenu (disciplines, catégories, critères,
-                        tarifs)
-                    </Link>
-                </li>
                 <li class="w-full">
                     <Link
                         :href="route('admin.structures.index')"
