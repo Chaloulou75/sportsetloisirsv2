@@ -64,6 +64,7 @@ class ActiviteController extends Controller
             'categories_id' => ['required', 'array', Rule::exists('categories', 'id')]
         ]);
 
+
         foreach ($validatedData['categories_id'] as $category_id) {
 
             $disCat = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('categorie_id', $category_id)->firstOrfail();
@@ -165,44 +166,37 @@ class ActiviteController extends Controller
     }
 
     /**
-     * Show the form for editing a resource.
-     */
-    public function edit(Structure $structure, $activite)
-    {
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function update(Request $request, Structure $structure, $activite): RedirectResponse
+    public function update(Request $request, Structure $structure, StructureActivite $activite): RedirectResponse
     {
         if (!Gate::allows('update-structure', $structure)) {
             return to_route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission de modifier cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
 
         $request->validate([
-                'titre' => 'required|string|min:3',
-                'description' => 'nullable|string',
-                'image' => 'nullable|image|max:2048',
-            ]);
+            'titre' => 'required|string|min:3',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|max:2048',
+        ]);
 
-        $structureActivite = StructureActivite::with(['structure','categorie', 'discipline'])->where('structure_id', $structure->id)->findOrFail($activite);
+        // $structureActivite = StructureActivite::with(['structure','categorie', 'discipline'])->where('structure_id', $structure->id)->findOrFail($activite->id);
 
         if ($request->hasFile('image')) {
-            if($structureActivite->image) {
-                Storage::disk('public')->delete($structureActivite->image);
+            if($activite->image) {
+                Storage::disk('public')->delete($activite->image);
             }
-            $path = $request->file('image')->store('structures/' . $structure->id . '/activites/' . $structureActivite->id, 'public');
-            $structureActivite->update(['image' => $path]);
+            $path = $request->file('image')->store('structures/' . $structure->id . '/activites/' . $activite->id, 'public');
+            $activite->update(['image' => $path]);
         }
 
-        $structureActivite->update([
+        $activite->update([
             'titre' => $request->titre,
             'description' => $request->description,
             // 'actif' => 1,
         ]);
 
-        return to_route('structures.categories.show', ['structure' => $structure, 'discipline' => $structureActivite->discipline, 'categorie' => $structureActivite->categorie, ])->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
+        return to_route('structures.disciplines.show', ['structure' => $structure, 'discipline' => $activite->discipline ])->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
 
     }
 
@@ -302,7 +296,7 @@ class ActiviteController extends Controller
         return to_route('structures.categories.show', ['structure' => $structure, 'discipline' => $structureActivite->discipline, 'categorie' => $structureActivite->categorie])->with('success', 'Activité mise à jour, ajoutez d\'autres activités à votre structure.');
     }
 
-    public function newactivitystore(Request $request, Structure $structure, $discipline): RedirectResponse
+    public function newactivitystore(Request $request, Structure $structure): RedirectResponse
     {
         $request->validate([
             'structure_id' => ['required', Rule::exists(Structure::class, 'id')],
@@ -326,9 +320,27 @@ class ActiviteController extends Controller
             'instructeur_phone' => ['nullable'],
         ]);
 
-        $structure = Structure::with('adresses')->findOrFail($structure->id);
+        $structure = Structure::with([
+            'adresses',
+            'disciplines',
+            'disciplines.str_categories',
+            'categories',
+        ])->findOrFail($structure->id);
+
+        $discipline = ListDiscipline::find($request->discipline_id);
 
         $categorie = LienDisciplineCategorie::with('discipline')->find($request->categorie_id);
+
+        $strDiscipline = $structure->disciplines->firstWhere('id', $discipline->id);
+
+        if($strDiscipline) {
+            $strCategories = $strDiscipline->str_categories;
+            if (!$strCategories->contains($categorie)) {
+                $structure->categories()->attach($categorie->id, [
+                    'discipline_id' => $discipline->id,
+                ]);
+            }
+        }
 
         $structureActivite = $structure->activites()->create([
             'discipline_id' => $request->discipline_id,

@@ -44,7 +44,7 @@ const handleClick = (type) => {
             v-if="displayActivity"
             type="button"
             @click="handleClick('activite')"
-            class="inline-flex w-auto items-center justify-between bg-green-500 px-3 py-3 text-lg text-white shadow-lg ring-2 ring-green-500 transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
+            class="inline-flex w-auto items-center justify-between bg-green-500 px-3 py-3 text-lg text-white shadow-lg ring-2 ring-green-500 transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex"
         >
             <PlusIcon class="h-6 w-6" />
         </button>
@@ -52,7 +52,7 @@ const handleClick = (type) => {
             v-if="displayPlanning"
             type="button"
             @click="handleClick('planning')"
-            class="inline-flex w-auto items-center justify-between bg-green-500 px-3 py-3 text-lg text-white shadow-lg ring-2 ring-green-500 transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
+            class="inline-flex w-auto items-center justify-between bg-green-500 px-3 py-3 text-lg text-white shadow-lg ring-2 ring-green-500 transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex"
         >
             <PlusIcon class="h-6 w-6" />
         </button>
@@ -60,7 +60,7 @@ const handleClick = (type) => {
             v-if="displayTarif"
             type="button"
             @click="handleClick('tarif')"
-            class="inline-flex w-auto items-center justify-between bg-green-500 px-3 py-3 text-lg text-white shadow-lg ring-2 ring-green-500 transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:w-auto"
+            class="inline-flex w-auto items-center justify-between bg-green-500 px-3 py-3 text-lg text-white shadow-lg ring-2 ring-green-500 transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex"
         >
             <PlusIcon class="h-6 w-6" />
         </button>

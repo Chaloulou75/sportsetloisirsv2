@@ -142,7 +142,7 @@ const latestAdresseId = computed(() => {
         <template #header>
             <div class="flex h-full items-center justify-start">
                 <Link
-                    class="hidden h-full bg-blue-600 py-2.5 md:flex md:px-4 md:py-4"
+                    class="hidden h-full bg-blue-600 py-2.5 hover:bg-blue-700 md:flex md:px-4 md:py-4"
                     :href="
                         route('structures.disciplines.show', {
                             structure: props.structure,
@@ -162,7 +162,7 @@ const latestAdresseId = computed(() => {
                                 discipline: props.discipline.slug,
                             })
                         "
-                        class="shrink-0 px-6 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
+                        class="shrink-0 px-6 py-2.5 text-center text-lg font-semibold text-indigo-700 hover:text-indigo-900 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                     >
                         {{ discipline.name }}
                     </Link>
@@ -179,7 +179,7 @@ const latestAdresseId = computed(() => {
                             "
                             v-for="category in categoriesListByDiscipline"
                             :key="category.id"
-                            class="flex h-full w-full flex-col items-center bg-white px-6 py-2.5 text-xs text-slate-500 ring ring-green-500/80 hover:bg-gray-50 hover:text-slate-700 md:w-auto md:py-4"
+                            class="flex h-full w-full flex-col items-center px-6 py-2.5 text-xs text-slate-500 ring ring-green-500/80 hover:bg-gray-50 hover:text-slate-700 md:w-auto md:py-4"
                             :class="{
                                 'bg-green-500/80 text-white':
                                     category.id === categorie.id,

@@ -166,9 +166,11 @@ const openAddPlanningModal = () => {
         :confirmed-reservations-count="confirmedReservationsCount"
     >
         <template #header>
-            <div class="flex h-full items-center justify-start">
+            <div
+                class="flex h-full w-full items-center justify-center md:justify-start"
+            >
                 <Link
-                    class="h-full bg-blue-600 py-2.5 md:px-4 md:py-4"
+                    class="hidden h-full bg-blue-600 py-2.5 md:block md:px-4 md:py-4"
                     :href="route('structures.gestion.index', structure)"
                 >
                     <ChevronLeftIcon class="h-10 w-10 text-white" />
@@ -352,16 +354,14 @@ const openAddPlanningModal = () => {
                     </template>
                     <template v-if="displayPlanning">
                         <div
-                            class="flex w-full flex-col items-center justify-end space-y-2 px-2 py-3 md:my-4 md:h-20 md:flex-row md:space-y-0 md:px-0 md:py-6"
+                            class="mb-4 flex w-full items-center justify-center px-4 py-3 md:justify-end"
                         >
                             <button
                                 type="button"
                                 @click="openAddPlanningModal()"
-                                class="inline-flex w-auto items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white hover:bg-green-700 md:flex"
+                                class="inline-flex w-auto items-center justify-between bg-green-500 px-3 py-3 text-sm text-white shadow-lg ring-2 ring-green-500 transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:text-lg"
                             >
-                                <span class="hidden md:block"
-                                    >Ajouter un créneau</span
-                                >
+                                Ajouter un créneau
                                 <PlusIcon class="h-5 w-5 md:ml-2" />
                             </button>
                         </div>
@@ -373,16 +373,14 @@ const openAddPlanningModal = () => {
                     </template>
                     <template v-if="displayTarifs">
                         <div
-                            class="flex w-full flex-col items-center justify-end space-y-2 px-2 py-3 md:my-4 md:h-20 md:flex-row md:space-y-0 md:px-0 md:py-6"
+                            class="mb-4 flex w-full items-center justify-center px-4 py-3 md:justify-end"
                         >
                             <button
                                 type="button"
                                 @click="openAddTarifModal(structure)"
-                                class="inline-flex w-auto items-center justify-between rounded-sm bg-green-600 px-4 py-3 text-lg text-white hover:bg-green-700 md:flex"
+                                class="inline-flex w-auto items-center justify-between bg-green-500 px-3 py-3 text-sm text-white shadow-lg ring-2 ring-green-500 transition duration-150 hover:bg-white hover:text-gray-600 hover:ring-2 hover:ring-green-400 hover:ring-offset-2 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 md:flex md:text-lg"
                             >
-                                <span class="hidden md:block"
-                                    >Ajouter un tarif</span
-                                >
+                                Ajouter un tarif
                                 <PlusIcon class="h-5 w-5 md:ml-2" />
                             </button>
                         </div>

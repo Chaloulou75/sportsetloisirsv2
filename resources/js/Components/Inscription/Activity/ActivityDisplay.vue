@@ -36,8 +36,8 @@ dayjs.extend(localeData);
 
 const emit = defineEmits(["addTarif", "addPlanning"]);
 
-const openAddTarifModal = () => {
-    emit("addTarif");
+const openAddTarifModal = (produit) => {
+    emit("addTarif", produit);
 };
 
 const openAddPlanningModal = (produit) => {
@@ -171,27 +171,21 @@ const closeEditModal = () => {
 };
 
 const formEdit = useForm({
+    _method: "put",
     titre: props.structureActivite.titre,
     description: props.structureActivite.description,
     image: null,
 });
 
-const submitForm = (id) => {
-    router.post(
+const submitForm = (activiteId) => {
+    formEdit.post(
         route("structures.activites.update", {
             structure: props.structure.slug,
-            activite: id,
+            activite: activiteId,
         }),
-        {
-            _method: "put",
-            titre: formEdit.titre,
-            description: formEdit.description,
-            image: formEdit.image,
-        },
         {
             forceFormData: true,
             preserveScroll: true,
-            only: ["structureActivites"],
             onSuccess: () => {
                 formEdit.reset();
                 closeEditModal();
@@ -249,7 +243,11 @@ const destroy = (structureActivite, produit) => {
 
 const openTarifToggle = (produit) => {
     currentProduit.value = produit;
-    openTarif.value = !openTarif.value;
+    if (currentProduit.value.cat_tarifs.length === 0) {
+        openAddTarifModal(produit);
+    } else {
+        openTarif.value = !openTarif.value;
+    }
 };
 
 const isOpenTarif = (produit) => {
@@ -401,15 +399,28 @@ const destroyTarif = (tarif) => {
                                                             la photo ou
                                                             l'image:</label
                                                         >
-                                                        <input
-                                                            class="mt-1 text-sm text-gray-700 focus:outline-none"
-                                                            type="file"
-                                                            id="image"
-                                                            @input="
-                                                                formEdit.image =
-                                                                    $event.target.files[0]
-                                                            "
-                                                        />
+                                                        <div class="flex">
+                                                            <input
+                                                                class="mt-1 text-sm text-gray-700 focus:outline-none"
+                                                                type="file"
+                                                                id="image"
+                                                                @input="
+                                                                    formEdit.image =
+                                                                        $event.target.files[0]
+                                                                "
+                                                            />
+                                                            <img
+                                                                v-if="
+                                                                    structureActivite.image
+                                                                "
+                                                                alt="activite"
+                                                                :src="
+                                                                    structureActivite.image_url
+                                                                "
+                                                                class="h-auto max-h-12 w-auto max-w-xs object-cover"
+                                                            />
+                                                        </div>
+
                                                         <span
                                                             v-if="errors.image"
                                                             class="mt-2 text-xs text-red-500"
@@ -503,6 +514,10 @@ const destroyTarif = (tarif) => {
                                                     :disabled="
                                                         formEdit.processing
                                                     "
+                                                    :class="{
+                                                        'opacity-25':
+                                                            formEdit.processing,
+                                                    }"
                                                     type="submit"
                                                     class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
                                                 >
@@ -524,14 +539,14 @@ const destroyTarif = (tarif) => {
             </div>
             <div class="flex w-full flex-col items-start md:flex-row">
                 <div
-                    class="h-56 w-full max-w-sm bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-soft-light"
+                    class="flex h-56 w-auto max-w-sm items-center justify-center bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-soft-light"
                     :class="headerClass"
                 >
                     <img
                         v-if="structureActivite.image"
                         alt="activite"
                         :src="structureActivite.image_url"
-                        class="h-56 w-auto max-w-xs object-cover"
+                        class="h-auto max-h-56 w-auto max-w-xs object-cover"
                     />
                 </div>
                 <div
@@ -910,7 +925,9 @@ const destroyTarif = (tarif) => {
                                                             <button
                                                                 type="button"
                                                                 @click="
-                                                                    openAddTarifModal
+                                                                    openAddTarifModal(
+                                                                        produit
+                                                                    )
                                                                 "
                                                                 class="flex h-full w-full max-w-16 items-center justify-center text-center text-xs text-white"
                                                             >

@@ -96,17 +96,20 @@ const handleOpenAddModal = (message) => {
     }
 };
 
+const currentProduit = ref(null);
+
 const showAddActiviteModal = ref(false);
 const openAddActiviteModal = () => {
     showAddActiviteModal.value = true;
 };
 
 const showAddTarifModal = ref(false);
-const openAddTarifModal = () => {
+const openAddTarifModal = (produit) => {
+    console.log(produit);
+    currentProduit.value = produit;
     showAddTarifModal.value = true;
 };
 
-const currentProduit = ref(null);
 const showAddPlanningModal = ref(false);
 const openAddPlanningModal = (produit) => {
     currentProduit.value = produit;
@@ -135,7 +138,7 @@ const latestAdresseId = computed(() => {
         <template #header>
             <div class="flex h-full items-center justify-start">
                 <Link
-                    class="hidden h-full bg-blue-600 py-2.5 md:flex md:px-4 md:py-4"
+                    class="hidden h-full bg-blue-600 py-2.5 hover:bg-blue-700 md:flex md:px-4 md:py-4"
                     :href="route('structures.disciplines.index', structure)"
                 >
                     <ChevronLeftIcon class="h-10 w-10 text-white" />
@@ -150,7 +153,7 @@ const latestAdresseId = computed(() => {
                                 discipline: props.discipline.slug,
                             })
                         "
-                        class="shrink-0 px-6 py-2.5 text-center text-lg font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
+                        class="shrink-0 px-6 py-2.5 text-center text-lg font-semibold text-indigo-700 hover:text-indigo-900 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                     >
                         {{ discipline.name }}
                     </Link>
@@ -291,6 +294,7 @@ const latestAdresseId = computed(() => {
                 :errors="errors"
                 :structure="structure"
                 :discipline="discipline"
+                :produit="currentProduit"
                 :all-categories="categoriesListByDiscipline"
                 :activite-for-tarifs="activiteForTarifs"
                 :structure-activites="structureActivites"

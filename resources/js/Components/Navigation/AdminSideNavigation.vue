@@ -13,7 +13,7 @@ const user = computed(() => page.props.auth.user);
 </script>
 <template>
     <nav
-        class="min-h-full w-full min-w-full flex-col justify-between border-r border-gray-100 bg-gray-50 md:flex md:w-1/6"
+        class="min-h-full w-full flex-col justify-between border-r border-gray-100 bg-gray-50 md:flex md:w-1/6"
     >
         <div class="w-full space-y-6 md:sticky md:inset-x-0 md:top-0">
             <!-- Hamburger logo -->
