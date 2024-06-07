@@ -43,12 +43,8 @@ const ModalAddPlanning = defineAsyncComponent(() =>
 
 const props = defineProps({
     errors: Object,
-    activites: Object,
-    categoriesListByDiscipline: Object,
-    activiteForTarifs: Object,
     strCatTarifs: Object,
     structure: Object,
-    categories: Object,
     dejaUsedDisciplines: Array,
     listDisciplines: Object,
     confirmedReservationsCount: Number,
@@ -226,7 +222,7 @@ const openAddPlanningModal = () => {
                                 </label>
                                 <div class="mt-1">
                                     <ul
-                                        class="flex w-full flex-col items-start justify-between rounded-md border border-gray-300 bg-white px-3 py-2 shadow-md focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-base md:flex-row md:items-center"
+                                        class="flex w-full flex-col items-start justify-between rounded-md border border-gray-300 bg-white px-3 py-2 shadow-md focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm md:flex-row md:items-center md:space-x-2"
                                     >
                                         <li
                                             v-for="categorie in categoriesList"
@@ -368,7 +364,6 @@ const openAddPlanningModal = () => {
                         <PlanningDisplay
                             :errors="errors"
                             :structure="structure"
-                            :structure-activites="activites"
                         />
                     </template>
                     <template v-if="displayTarifs">
@@ -418,7 +413,6 @@ const openAddPlanningModal = () => {
             <ModalAddPlanning
                 :errors="errors"
                 :structure="structure"
-                :structure-activites="activites"
                 :show="showAddPlanningModal"
                 @close="showAddPlanningModal = false"
                 @show-display="handleButtonEvent('Planning')"

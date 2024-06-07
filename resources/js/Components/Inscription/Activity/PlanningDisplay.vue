@@ -22,12 +22,11 @@ const props = defineProps({
     errors: Object,
     show: Boolean,
     structure: Object,
-    structureActivites: Object,
 });
 
-const selectedActivite = ref(props.structureActivites[0]);
-const selectedProduct = ref(props.structureActivites[0]?.produits?.[0] ?? "");
-const selectedTitle = ref(props.structureActivites[0]?.titre ?? "");
+const selectedActivite = ref(props.structure?.activites[0] ?? null);
+const selectedProduct = ref(props.structure.activites[0]?.produits?.[0] ?? "");
+const selectedTitle = ref(props.structure.activites[0]?.titre ?? "");
 const selectedEvent = ref({});
 const isOpen = ref(false);
 
@@ -43,29 +42,29 @@ function openModal() {
 const getEvents = () => {
     const events = [];
 
-    for (const structureActivite of props.structureActivites) {
-        for (const planning of structureActivite.plannings) {
+    for (const activite of props.structure.activites) {
+        for (const planning of activite.plannings) {
             if (planning) {
                 const event = {
                     start: planning.start,
                     end: planning.end,
                     title: `
                         <p class="text-sm text-gray-900 uppercase">
-                            ${planning.title ?? structureActivite.titre}
+                            ${planning.title ?? activite.titre}
                         </p>
                     `,
                     content: `
                         <ul class="text-xs font-semibold text-gray-800">
-                            <li>${structureActivite.discipline.name}</li>
+                            <li>${activite.discipline.name}</li>
                             <li>Produit n°: ${planning.produit_id}</li>
                         </ul>
                     `,
                     contentFull: `
                         <p class="text-xs text-gray-600 truncate">
-                            ${structureActivite.description}
+                            ${activite.description}
                         </p>
                     `,
-                    activiteId: structureActivite.id,
+                    activiteId: activite.id,
                     produitId: planning.produit_id,
                     planningId: planning.id,
                     class: "course",
@@ -95,7 +94,7 @@ const formPlanning = useForm({
 const filteredProducts = computed(() => {
     if (formPlanning.activite) {
         const selectedActiviteId = formPlanning.activite.id;
-        const activite = props.structureActivites.find(
+        const activite = props.structure.activites.find(
             (activite) => activite.id === selectedActiviteId
         );
         if (activite) {
@@ -138,7 +137,6 @@ const onSubmitEventForm = () => {
         },
         {
             preserveScroll: true,
-            only: ["structureActivites"],
             remember: true,
             onSuccess: () => {
                 formPlanning.reset();
@@ -157,7 +155,6 @@ const handleEventDeleted = (event) => {
         }),
         {
             preserveScroll: true,
-            only: ["structureActivites"],
             onSuccess: () => {
                 closeModal();
             },
@@ -178,13 +175,12 @@ const handleEventChanged = (event) => {
         },
         {
             preserveScroll: true,
-            only: ["structureActivites"],
         }
     );
 };
 </script>
 <template>
-    <div v-if="structureActivites.length === 0">
+    <div v-if="structure.activites.length === 0">
         <p class="font-semibold italic text-gray-600">
             Pas d'activité liée. Créer d'abord une activité.
         </p>
@@ -199,7 +195,7 @@ const handleEventChanged = (event) => {
         </h2>
     </div>
     <div
-        v-show="structureActivites.length > 0"
+        v-show="structure.activites.length > 0"
         class="mt-6 min-h-full w-full overflow-x-auto rounded-sm shadow-lg"
     >
         <vue-cal
@@ -329,7 +325,8 @@ const handleEventChanged = (event) => {
                                                         active,
                                                         selected,
                                                     }"
-                                                    v-for="activite in props.structureActivites"
+                                                    v-for="activite in props
+                                                        .structure.activites"
                                                     :key="activite.id"
                                                     :value="activite"
                                                     as="template"

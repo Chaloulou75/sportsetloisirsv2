@@ -19,7 +19,6 @@ const emit = defineEmits(["close", "showDisplay"]);
 const props = defineProps({
     errors: Object,
     structure: Object,
-    structureActivites: Object,
     produit: Object,
     show: Boolean,
 });
@@ -38,7 +37,7 @@ watch(
     () => addPlanningForm.activite,
     (newVal) => {
         if (newVal) {
-            const activite = props.structureActivites.find(
+            const activite = props.structure.activites.find(
                 (act) => act.id === newVal
             );
             filteredProducts.value = activite ? activite.produits ?? [] : [];
@@ -56,7 +55,7 @@ watch(
     () => props.produit,
     (newProduit) => {
         if (newProduit) {
-            const activite = props.structureActivites.find(
+            const activite = props.structure.activites.find(
                 (act) => act.id === newProduit.activite_id
             );
             addPlanningForm.title = activite ? activite.titre ?? null : null;
@@ -75,7 +74,6 @@ const onSubmit = () => {
         {
             errorBag: "addPlanningForm",
             preserveScroll: true,
-            only: ["structureActivites"],
             onSuccess: () => {
                 addPlanningForm.reset();
                 emit("close");
@@ -177,7 +175,7 @@ const onSubmit = () => {
                                                 Sélectionner une activité
                                             </option>
                                             <option
-                                                v-for="activite in structureActivites"
+                                                v-for="activite in structure.activites"
                                                 :key="activite.id"
                                                 :value="activite.id"
                                             >

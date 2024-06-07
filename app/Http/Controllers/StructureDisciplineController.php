@@ -47,19 +47,22 @@ class StructureDisciplineController extends Controller
                             ->withCount('str_categories')
                             ->orderBy('str_categories_count', 'desc');
                     },
-                    'disciplines.str_categories' => function ($query) use ($structure) {
+                    'disciplines.str_categories' => function ($query) {
                         $query->withCount('str_activites')
                               ->with([
                                   'tarif_types',
                                   'tarif_types.tarif_attributs.sous_attributs.valeurs',
                                   'tarif_types.tarif_attributs.valeurs'
                               ])
-                              ->whereHas('str_activites'); //->latest()
+                              ->whereHas('str_activites');
                     },
                     'disciplines.str_categories.str_activites',
                     'disciplines.str_categories.str_activites.produits',
                     'disciplines.categories' => function ($query) {
                         $query->whereDoesntHave('disc_categories.str_categories');
+                    },
+                    'activites' => function ($query) {
+                        $query->withRelations()->latest();
                     }
                 ])->findOrFail($structure->id);
 
@@ -74,14 +77,12 @@ class StructureDisciplineController extends Controller
         })->where('confirmed', true)
             ->count();
 
-        $activites = StructureActivite::withRelations()
-                    ->where('structure_id', $structure->id)
-                    ->latest()
-                    ->get();
+        // $activites = StructureActivite::withRelations()
+        //             ->where('structure_id', $structure->id)
+        //             ->latest()
+        //             ->get();
 
         $strCatTarifs = StructureCatTarif::withRelations()->with('produits')->where('structure_id', $structure->id)->get();
-
-        $categories = Categorie::with('disciplines')->select(['id', 'nom', 'ico'])->get();
 
         $dejaUsedDisciplines = $structure->disciplines->pluck('id');
 
@@ -89,10 +90,8 @@ class StructureDisciplineController extends Controller
 
         return Inertia::render('Structures/Disciplines/Index', [
             'structure' => fn () => $structure,
-            'categories' => fn () => $categories,
             'dejaUsedDisciplines' => fn () => $dejaUsedDisciplines,
             'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
-            'activites' => fn () => $activites,
             'strCatTarifs' => fn () => $strCatTarifs,
             'allReservationsCount' => fn () => $allReservationsCount,
             'confirmedReservationsCount' => fn () => $confirmedReservationsCount,
