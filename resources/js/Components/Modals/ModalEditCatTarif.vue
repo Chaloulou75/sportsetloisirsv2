@@ -31,12 +31,11 @@ const props = defineProps({
     discipline: Object,
     categorie: Object,
     tarifToUpdate: Object,
-    allCategories: Object,
-    activiteForTarifs: Object,
     show: Boolean,
 });
 
-const filteredCategories = ref(props.allCategories ?? null);
+const selectedDiscipline = ref(null);
+const filteredCategories = ref([]);
 const newCategorie = ref(null);
 
 const editCatTarifForm = useForm({
@@ -189,9 +188,14 @@ watch(
 watch(
     () => editCatTarifForm.discipline_id,
     (newDisciplineId) => {
-        filteredCategories.value = props.allCategories.filter(
-            (category) => category.discipline_id === newDisciplineId
+        selectedDiscipline.value = props.structure.disciplines.find(
+            (discipline) => discipline.id === newDisciplineId
         );
+        if (selectedDiscipline.value) {
+            filteredCategories.value = selectedDiscipline.value.str_categories;
+        } else {
+            filteredCategories.value = [];
+        }
         if (filteredCategories.value.length > 0) {
             editCatTarifForm.categorie_id = props.tarifToUpdate
                 ? props.tarifToUpdate.categorie_id
@@ -211,9 +215,11 @@ watch(
 watch(
     () => editCatTarifForm.categorie_id,
     (newCategorieId) => {
-        newCategorie.value = props.allCategories.find(
-            (categorie) => categorie.id === newCategorieId
-        );
+        if (selectedDiscipline.value) {
+            newCategorie.value = selectedDiscipline.value.str_categories.find(
+                (categorie) => categorie.id === newCategorieId
+            );
+        }
         if (newCategorie.value) {
             editCatTarifForm.tarif_type = props.tarifToUpdate
                 ? props.tarifToUpdate.cat_tarif_type
@@ -229,30 +235,26 @@ watch(
     }
 );
 
-//disciplines
 watch(
     () => editCatTarifForm.disciplines,
-    (newDisciplines) => {
-        if (newDisciplines) {
+    (newValue) => {
+        if (newValue) {
             editCatTarifForm.categories = {};
             editCatTarifForm.activites = {};
-            // editCatTarifForm.produits = {};
-            for (const disciplineId in newDisciplines) {
-                const discipline = newDisciplines[disciplineId];
+            editCatTarifForm.produits = {};
+
+            for (const disciplineId in newValue) {
+                const discipline = newValue[disciplineId];
                 if (discipline) {
-                    const disciplineData =
-                        props.activiteForTarifs[disciplineId];
+                    const disciplineData = props.structure.disciplines.find(
+                        (item) => item.id === parseInt(disciplineId)
+                    );
                     if (disciplineData) {
-                        const categories = disciplineData.categories;
-                        for (const categoryId in categories) {
-                            const catId = String(categoryId);
-                            const formCatId = String(
-                                editCatTarifForm.categorie_id
-                            );
-                            if (catId === formCatId) {
-                                editCatTarifForm.categories[categoryId] = true;
-                                const category = categories[categoryId];
-                                for (const activity of category.activites) {
+                        const categories = disciplineData.str_categories;
+                        for (const category of categories) {
+                            if (category.id === editCatTarifForm.categorie_id) {
+                                editCatTarifForm.categories[category.id] = true;
+                                for (const activity of category.str_activites) {
                                     editCatTarifForm.activites[
                                         activity.id
                                     ] = true;
@@ -272,24 +274,25 @@ watch(
     { deep: true }
 );
 
-//categories
 watch(
     () => editCatTarifForm.categories,
     (newValue) => {
         if (newValue) {
             editCatTarifForm.activites = {};
-            // editCatTarifForm.produits = {};
+            editCatTarifForm.produits = {};
             for (const categoryId in newValue) {
                 const category = newValue[categoryId];
                 if (category) {
-                    for (const disciplineId in props.activiteForTarifs) {
-                        const disciplineData =
-                            props.activiteForTarifs[disciplineId];
-                        const categoryData =
-                            disciplineData.categories[categoryId];
-                        if (categoryData) {
-                            const activites = categoryData.activites;
+                    for (const disciplineId in props.structure.disciplines) {
+                        const discipline =
+                            props.structure.disciplines[disciplineId];
+                        const categorie = discipline.str_categories.find(
+                            (cat) => cat.id === parseInt(categoryId)
+                        );
+                        if (categorie) {
+                            editCatTarifForm.categories[categorie.id] = true;
 
+                            const activites = categorie.str_activites;
                             for (const activity of activites) {
                                 editCatTarifForm.activites[activity.id] = true;
 
@@ -308,17 +311,16 @@ watch(
     { deep: true }
 );
 
-//activites
 watch(
     () => editCatTarifForm.activites,
     (newValue) => {
         if (newValue) {
-            // editCatTarifForm.produits = {};
-            for (const disciplineId in props.activiteForTarifs) {
-                const disciplineData = props.activiteForTarifs[disciplineId];
-                for (const categoryId in disciplineData.categories) {
-                    const categoryData = disciplineData.categories[categoryId];
-                    for (const activity of categoryData.activites) {
+            editCatTarifForm.produits = {};
+            for (const disciplineId in props.structure.disciplines) {
+                const discipline = props.structure.disciplines[disciplineId];
+                for (const categoryId in discipline.str_categories) {
+                    const categorie = discipline.str_categories[categoryId];
+                    for (const activity of categorie.str_activites) {
                         if (newValue[activity.id]) {
                             editCatTarifForm.activites[activity.id] = true;
                             for (const product of activity.produits) {
@@ -338,46 +340,19 @@ watch(
     () => editCatTarifForm.checkAll,
     (newValue) => {
         if (newValue && newValue === true) {
-            for (const disciplineId in props.activiteForTarifs) {
-                if (props.activiteForTarifs.hasOwnProperty(disciplineId)) {
-                    const disId = String(disciplineId);
-                    const formDiscId = String(editCatTarifForm.discipline_id);
-                    const propsDisId = String(
-                        props.discipline ? props.discipline.id : null
-                    );
-
-                    if (
-                        disId === formDiscId ||
-                        (props.discipline && disId === propsDisId)
-                    ) {
-                        editCatTarifForm.disciplines[disciplineId] = newValue;
-                        const categories =
-                            props.activiteForTarifs[disciplineId].categories;
-
-                        for (const categoryId in categories) {
-                            if (categories.hasOwnProperty(categoryId)) {
-                                const catId = String(categoryId);
-                                const formCatId = String(
-                                    editCatTarifForm.categorie_id
-                                );
-
-                                if (catId === formCatId) {
-                                    editCatTarifForm.categories[categoryId] =
-                                        newValue;
-                                    const activites =
-                                        categories[categoryId].activites;
-
-                                    activites.forEach((activity) => {
-                                        editCatTarifForm.activites[
-                                            activity.id
-                                        ] = newValue;
-
-                                        activity.produits.forEach((product) => {
-                                            editCatTarifForm.produits[
-                                                product.id
-                                            ] = newValue;
-                                        });
-                                    });
+            for (const discipline of props.structure.disciplines) {
+                if (discipline) {
+                    editCatTarifForm.disciplines[discipline.id] = true;
+                    const categories = discipline.str_categories;
+                    for (const category of categories) {
+                        if (category.id === editCatTarifForm.categorie_id) {
+                            editCatTarifForm.categories[category.id] = true;
+                            for (const activity of category.str_activites) {
+                                editCatTarifForm.activites[activity.id] = true;
+                                for (const product of activity.produits) {
+                                    editCatTarifForm.produits[
+                                        product.id
+                                    ] = true;
                                 }
                             }
                         }
@@ -473,333 +448,280 @@ const onSubmit = () => {
 };
 </script>
 <template>
-    <div>
-        <TransitionRoot appear :show="show" as="template">
-            <Dialog as="div" @close="open = false" class="relative z-10">
-                <TransitionChild
-                    as="template"
-                    enter="duration-300 ease-out"
-                    enter-from="opacity-0"
-                    enter-to="opacity-100"
-                    leave="duration-200 ease-in"
-                    leave-from="opacity-100"
-                    leave-to="opacity-0"
+    <TransitionRoot appear :show="show" as="template">
+        <Dialog as="div" @close="open = false" class="relative z-10">
+            <TransitionChild
+                as="template"
+                enter="duration-300 ease-out"
+                enter-from="opacity-0"
+                enter-to="opacity-100"
+                leave="duration-200 ease-in"
+                leave-from="opacity-100"
+                leave-to="opacity-0"
+            >
+                <div
+                    class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+                />
+            </TransitionChild>
+
+            <div class="fixed inset-0 overflow-y-auto">
+                <div
+                    class="flex min-h-full items-center justify-center p-4 text-center"
                 >
-                    <div
-                        class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
-                    />
-                </TransitionChild>
-
-                <div class="fixed inset-0 overflow-y-auto">
-                    <div
-                        class="flex min-h-full items-center justify-center p-4 text-center"
+                    <TransitionChild
+                        as="template"
+                        enter="duration-300 ease-out"
+                        enter-from="opacity-0 scale-95"
+                        enter-to="opacity-100 scale-100"
+                        leave="duration-200 ease-in"
+                        leave-from="opacity-100 scale-100"
+                        leave-to="opacity-0 scale-95"
                     >
-                        <TransitionChild
-                            as="template"
-                            enter="duration-300 ease-out"
-                            enter-from="opacity-0 scale-95"
-                            enter-to="opacity-100 scale-100"
-                            leave="duration-200 ease-in"
-                            leave-from="opacity-100 scale-100"
-                            leave-to="opacity-0 scale-95"
+                        <DialogPanel
+                            class="min-h-full w-full max-w-6xl transform space-y-10 overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
                         >
-                            <DialogPanel
-                                class="min-h-full w-full max-w-6xl transform space-y-10 overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                            <DialogTitle
+                                as="div"
+                                class="flex w-full items-center justify-between"
                             >
-                                <DialogTitle
-                                    as="div"
-                                    class="flex w-full items-center justify-between"
+                                <h3
+                                    class="text-lg font-medium leading-6 text-gray-800"
                                 >
-                                    <h3
-                                        class="text-lg font-medium leading-6 text-gray-800"
+                                    Editer un tarif aux produits
+                                    <span
+                                        v-if="newCategorie"
+                                        class="text-indigo-700"
                                     >
-                                        Editer un tarif aux produits
-                                        <span
-                                            v-if="newCategorie"
-                                            class="text-indigo-700"
+                                        <span class="text-gray-800"
+                                            >de la catégorie</span
                                         >
-                                            <span class="text-gray-800"
-                                                >de la catégorie</span
-                                            >
-                                            {{
-                                                newCategorie.nom_categorie_client
-                                            }}</span
-                                        ><span
-                                            v-else-if="categorie"
-                                            class="text-indigo-700"
+                                        {{
+                                            newCategorie.nom_categorie_client
+                                        }}</span
+                                    ><span
+                                        v-else-if="categorie"
+                                        class="text-indigo-700"
+                                    >
+                                        <span class="text-gray-800"
+                                            >de la catégorie</span
                                         >
-                                            <span class="text-gray-800"
-                                                >de la catégorie</span
-                                            >
-                                            {{
-                                                categorie.nom_categorie_client
-                                            }} </span
-                                        ><span
-                                            v-if="discipline"
-                                            class="text-indigo-700"
+                                        {{
+                                            categorie.nom_categorie_client
+                                        }} </span
+                                    ><span
+                                        v-if="discipline"
+                                        class="text-indigo-700"
+                                    >
+                                        <span class="text-gray-800"> de</span>
+                                        {{ discipline.name }}</span
+                                    >
+                                </h3>
+                                <button type="button">
+                                    <XCircleIcon
+                                        @click="emit('close')"
+                                        class="h-6 w-6 text-gray-600 hover:text-red-600"
+                                    />
+                                </button>
+                            </DialogTitle>
+                            <!-- test tarif with attributs-->
+                            <form
+                                @submit.prevent="onSubmit()"
+                                autocomplete="off"
+                            >
+                                <div class="flex flex-col space-y-3">
+                                    <!-- disciplines -->
+                                    <div
+                                        v-if="!discipline"
+                                        class="flex w-full flex-col items-start justify-start space-y-2"
+                                    >
+                                        <label
+                                            for="discipline"
+                                            class="block text-sm font-medium text-gray-700"
                                         >
-                                            <span class="text-gray-800">
-                                                de</span
-                                            >
-                                            {{ discipline.name }}</span
-                                        >
-                                    </h3>
-                                    <button type="button">
-                                        <XCircleIcon
-                                            @click="emit('close')"
-                                            class="h-6 w-6 text-gray-600 hover:text-red-600"
-                                        />
-                                    </button>
-                                </DialogTitle>
-                                <!-- test tarif with attributs-->
-                                <form
-                                    @submit.prevent="onSubmit()"
-                                    autocomplete="off"
-                                >
-                                    <div class="flex flex-col space-y-3">
-                                        <!-- disciplines -->
+                                            Discipline
+                                        </label>
                                         <div
-                                            v-if="!discipline"
-                                            class="flex w-full flex-col items-start justify-start space-y-2"
+                                            class="mt-1 flex w-full rounded-md md:w-1/2"
                                         >
-                                            <label
-                                                for="discipline"
-                                                class="block text-sm font-medium text-gray-700"
-                                            >
-                                                Discipline
-                                            </label>
-                                            <div
-                                                class="mt-1 flex w-full rounded-md md:w-1/2"
-                                            >
-                                                <select
-                                                    name="discipline"
-                                                    id="discipline"
-                                                    v-model="
-                                                        editCatTarifForm.discipline_id
-                                                    "
-                                                    class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
-                                                >
-                                                    <option
-                                                        v-for="discipline in props.activiteForTarifs"
-                                                        :key="discipline.id"
-                                                        :value="discipline.id"
-                                                    >
-                                                        {{
-                                                            discipline.disciplineName
-                                                        }}
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <!-- categories -->
-                                        <div
-                                            v-if="allCategories"
-                                            class="flex w-full flex-col items-start justify-start space-y-2"
-                                        >
-                                            <label
-                                                for="categorie"
-                                                class="block text-sm font-medium text-gray-700"
-                                            >
-                                                Categorie
-                                            </label>
-                                            <div
-                                                class="mt-1 flex w-full rounded-md md:w-1/2"
-                                            >
-                                                <select
-                                                    name="categorie"
-                                                    id="categorie"
-                                                    v-model="
-                                                        editCatTarifForm.categorie_id
-                                                    "
-                                                    class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
-                                                >
-                                                    <option
-                                                        v-for="categorie in filteredCategories"
-                                                        :key="categorie.id"
-                                                        :value="categorie.id"
-                                                    >
-                                                        {{
-                                                            categorie.nom_categorie_pro
-                                                        }}
-                                                    </option>
-                                                </select>
-                                            </div>
-                                            <div
-                                                v-if="errors.editCatTarifForm"
-                                                class="mt-2 text-xs text-red-500"
-                                            >
-                                                {{
-                                                    errors.editCatTarifForm
-                                                        .categorie
-                                                }}
-                                            </div>
-                                        </div>
-                                        <!-- tarif_types -->
-                                        <div
-                                            class="flex w-full flex-col items-center justify-start space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
-                                        >
-                                            <Listbox
-                                                v-if="
-                                                    editCatTarifForm.categorie_id &&
-                                                    newCategorie.tarif_types &&
-                                                    newCategorie.tarif_types
-                                                        .length > 0
-                                                "
-                                                class="w-full max-w-sm"
+                                            <select
+                                                name="discipline"
+                                                id="discipline"
                                                 v-model="
-                                                    editCatTarifForm.tarif_type
+                                                    editCatTarifForm.discipline_id
                                                 "
+                                                class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                             >
-                                                <div class="relative mt-1">
-                                                    <label
-                                                        for="tarifType"
-                                                        class="block text-sm font-medium text-gray-700"
-                                                    >
-                                                        Type de tarif
-                                                    </label>
-                                                    <ListboxButton
-                                                        class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
-                                                    >
-                                                        <span
-                                                            class="block truncate"
-                                                            >{{
-                                                                editCatTarifForm
-                                                                    .tarif_type
-                                                                    .nom
-                                                            }}</span
-                                                        >
-                                                        <span
-                                                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
-                                                        >
-                                                            <ChevronUpDownIcon
-                                                                class="h-5 w-5 text-gray-400"
-                                                                aria-hidden="true"
-                                                            />
-                                                        </span>
-                                                    </ListboxButton>
-
-                                                    <transition
-                                                        leave-active-class="transition duration-100 ease-in"
-                                                        leave-from-class="opacity-100"
-                                                        leave-to-class="opacity-0"
-                                                    >
-                                                        <ListboxOptions
-                                                            class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-                                                        >
-                                                            <ListboxOption
-                                                                v-slot="{
-                                                                    active,
-                                                                    selected,
-                                                                }"
-                                                                v-for="tarifType in newCategorie.tarif_types"
-                                                                :key="
-                                                                    tarifType.id
-                                                                "
-                                                                :value="
-                                                                    tarifType
-                                                                "
-                                                                as="template"
-                                                            >
-                                                                <li
-                                                                    :class="[
-                                                                        active
-                                                                            ? 'bg-amber-100 text-amber-900'
-                                                                            : 'text-gray-900',
-                                                                        'relative cursor-default select-none py-2 pl-10 pr-4',
-                                                                    ]"
-                                                                >
-                                                                    <span
-                                                                        :class="[
-                                                                            selected
-                                                                                ? 'font-medium'
-                                                                                : 'font-normal',
-                                                                            'block truncate',
-                                                                        ]"
-                                                                        >{{
-                                                                            tarifType.nom
-                                                                        }}</span
-                                                                    >
-                                                                    <span
-                                                                        v-if="
-                                                                            selected
-                                                                        "
-                                                                        class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
-                                                                    >
-                                                                        <CheckCircleIcon
-                                                                            class="h-5 w-5"
-                                                                            aria-hidden="true"
-                                                                        />
-                                                                    </span>
-                                                                </li>
-                                                            </ListboxOption>
-                                                        </ListboxOptions>
-                                                    </transition>
-                                                </div>
-                                            </Listbox>
-                                            <!-- titre -->
-                                            <div
-                                                v-if="
-                                                    editCatTarifForm.tarif_type
+                                                <option
+                                                    v-for="discipline in props
+                                                        .structure.disciplines"
+                                                    :key="discipline.id"
+                                                    :value="discipline.id"
+                                                >
+                                                    {{ discipline.name }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- categories -->
+                                    <div
+                                        v-if="editCatTarifForm.discipline_id"
+                                        class="flex w-full flex-col items-start justify-start space-y-2"
+                                    >
+                                        <label
+                                            for="categorie"
+                                            class="block text-sm font-medium text-gray-700"
+                                        >
+                                            Categorie
+                                        </label>
+                                        <div
+                                            class="mt-1 flex w-full rounded-md md:w-1/2"
+                                        >
+                                            <select
+                                                name="categorie"
+                                                id="categorie"
+                                                v-model="
+                                                    editCatTarifForm.categorie_id
                                                 "
-                                                class="w-full max-w-sm"
+                                                class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                             >
-                                                <label
-                                                    for="titre"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Titre
-                                                </label>
-                                                <div
-                                                    class="mt-1 flex rounded-md"
-                                                >
-                                                    <input
-                                                        v-model="
-                                                            editCatTarifForm.titre
-                                                        "
-                                                        type="text"
-                                                        name="titre"
-                                                        id="titre"
-                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                        placeholder=""
-                                                        autocomplete="none"
-                                                    />
-                                                </div>
-                                                <div
-                                                    v-if="
-                                                        errors.editCatTarifForm
-                                                    "
-                                                    class="mt-2 text-xs text-red-500"
+                                                <option
+                                                    v-for="categorie in filteredCategories"
+                                                    :key="categorie.id"
+                                                    :value="categorie.id"
                                                 >
                                                     {{
-                                                        errors.editCatTarifForm
-                                                            .titre
+                                                        categorie.nom_categorie_pro
                                                     }}
-                                                </div>
-                                            </div>
+                                                </option>
+                                            </select>
                                         </div>
-                                        <!-- description -->
+                                        <div
+                                            v-if="errors.editCatTarifForm"
+                                            class="mt-2 text-xs text-red-500"
+                                        >
+                                            {{
+                                                errors.editCatTarifForm
+                                                    .categorie
+                                            }}
+                                        </div>
+                                    </div>
+                                    <!-- tarif_types -->
+                                    <div
+                                        class="flex w-full flex-col items-center justify-start space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
+                                    >
+                                        <Listbox
+                                            v-if="
+                                                editCatTarifForm.categorie_id &&
+                                                newCategorie.tarif_types &&
+                                                newCategorie.tarif_types
+                                                    .length > 0
+                                            "
+                                            class="w-full max-w-sm"
+                                            v-model="
+                                                editCatTarifForm.tarif_type
+                                            "
+                                        >
+                                            <div class="relative mt-1">
+                                                <label
+                                                    for="tarifType"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                >
+                                                    Type de tarif
+                                                </label>
+                                                <ListboxButton
+                                                    class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                                                >
+                                                    <span
+                                                        class="block truncate"
+                                                        >{{
+                                                            editCatTarifForm
+                                                                .tarif_type.nom
+                                                        }}</span
+                                                    >
+                                                    <span
+                                                        class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+                                                    >
+                                                        <ChevronUpDownIcon
+                                                            class="h-5 w-5 text-gray-400"
+                                                            aria-hidden="true"
+                                                        />
+                                                    </span>
+                                                </ListboxButton>
+
+                                                <transition
+                                                    leave-active-class="transition duration-100 ease-in"
+                                                    leave-from-class="opacity-100"
+                                                    leave-to-class="opacity-0"
+                                                >
+                                                    <ListboxOptions
+                                                        class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                                                    >
+                                                        <ListboxOption
+                                                            v-slot="{
+                                                                active,
+                                                                selected,
+                                                            }"
+                                                            v-for="tarifType in newCategorie.tarif_types"
+                                                            :key="tarifType.id"
+                                                            :value="tarifType"
+                                                            as="template"
+                                                        >
+                                                            <li
+                                                                :class="[
+                                                                    active
+                                                                        ? 'bg-amber-100 text-amber-900'
+                                                                        : 'text-gray-900',
+                                                                    'relative cursor-default select-none py-2 pl-10 pr-4',
+                                                                ]"
+                                                            >
+                                                                <span
+                                                                    :class="[
+                                                                        selected
+                                                                            ? 'font-medium'
+                                                                            : 'font-normal',
+                                                                        'block truncate',
+                                                                    ]"
+                                                                    >{{
+                                                                        tarifType.nom
+                                                                    }}</span
+                                                                >
+                                                                <span
+                                                                    v-if="
+                                                                        selected
+                                                                    "
+                                                                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
+                                                                >
+                                                                    <CheckCircleIcon
+                                                                        class="h-5 w-5"
+                                                                        aria-hidden="true"
+                                                                    />
+                                                                </span>
+                                                            </li>
+                                                        </ListboxOption>
+                                                    </ListboxOptions>
+                                                </transition>
+                                            </div>
+                                        </Listbox>
+                                        <!-- titre -->
                                         <div
                                             v-if="editCatTarifForm.tarif_type"
-                                            class="w-full max-w-3xl"
+                                            class="w-full max-w-sm"
                                         >
                                             <label
-                                                for="description"
+                                                for="titre"
                                                 class="block text-sm font-medium text-gray-700"
                                             >
-                                                Description
+                                                Titre
                                             </label>
-                                            <div class="mt-1">
-                                                <textarea
+                                            <div class="mt-1 flex rounded-md">
+                                                <input
                                                     v-model="
-                                                        editCatTarifForm.description
+                                                        editCatTarifForm.titre
                                                     "
-                                                    id="description"
-                                                    name="description"
-                                                    rows="2"
-                                                    class="mt-1 block h-32 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                    :class="{
-                                                        errors: 'border-red-500 focus:ring focus:ring-red-200',
-                                                    }"
+                                                    type="text"
+                                                    name="titre"
+                                                    id="titre"
+                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                     placeholder=""
                                                     autocomplete="none"
                                                 />
@@ -810,80 +732,233 @@ const onSubmit = () => {
                                             >
                                                 {{
                                                     errors.editCatTarifForm
-                                                        .description
+                                                        .titre
                                                 }}
                                             </div>
                                         </div>
-                                        <!-- attributs && sous attributs -->
-                                        <div
-                                            v-if="
-                                                editCatTarifForm.tarif_type &&
-                                                editCatTarifForm.tarif_type
-                                                    .tarif_attributs.length > 0
-                                            "
-                                            class="mx-auto grid w-full grid-cols-1 gap-4 md:grid-cols-3"
+                                    </div>
+                                    <!-- description -->
+                                    <div
+                                        v-if="editCatTarifForm.tarif_type"
+                                        class="w-full max-w-3xl"
+                                    >
+                                        <label
+                                            for="description"
+                                            class="block text-sm font-medium text-gray-700"
                                         >
+                                            Description
+                                        </label>
+                                        <div class="mt-1">
+                                            <textarea
+                                                v-model="
+                                                    editCatTarifForm.description
+                                                "
+                                                id="description"
+                                                name="description"
+                                                rows="2"
+                                                class="mt-1 block h-32 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                :class="{
+                                                    errors: 'border-red-500 focus:ring focus:ring-red-200',
+                                                }"
+                                                placeholder=""
+                                                autocomplete="none"
+                                            />
+                                        </div>
+                                        <div
+                                            v-if="errors.editCatTarifForm"
+                                            class="mt-2 text-xs text-red-500"
+                                        >
+                                            {{
+                                                errors.editCatTarifForm
+                                                    .description
+                                            }}
+                                        </div>
+                                    </div>
+                                    <!-- attributs && sous attributs -->
+                                    <div
+                                        v-if="
+                                            editCatTarifForm.tarif_type &&
+                                            editCatTarifForm.tarif_type
+                                                .tarif_attributs.length > 0
+                                        "
+                                        class="mx-auto grid w-full grid-cols-1 gap-4 md:grid-cols-3"
+                                    >
+                                        <div
+                                            v-for="attribut in editCatTarifForm
+                                                .tarif_type.tarif_attributs"
+                                            :key="attribut.id"
+                                            class="col-span-1"
+                                        >
+                                            <!-- select  -->
+                                            <SelectForm
+                                                :classes="'block'"
+                                                class="w-full max-w-sm"
+                                                v-if="
+                                                    attribut.type_champ_form ===
+                                                    'select'
+                                                "
+                                                :name="attribut.nom"
+                                                v-model="
+                                                    editCatTarifForm.attributs[
+                                                        attribut.id
+                                                    ]
+                                                "
+                                                :options="attribut.valeurs"
+                                            />
+
+                                            <!-- checkbox -->
+                                            <CheckboxForm
+                                                class="max-w-sm"
+                                                v-if="
+                                                    attribut.type_champ_form ===
+                                                    'checkbox'
+                                                "
+                                                :critere="attribut"
+                                                :name="attribut.nom"
+                                                v-model="
+                                                    editCatTarifForm.attributs[
+                                                        attribut.id
+                                                    ]
+                                                "
+                                                :options="attribut.valeurs"
+                                                :is-checkbox-selected="
+                                                    isCheckboxSelected
+                                                "
+                                                @update-selected-checkboxes="
+                                                    updateSelectedCheckboxes
+                                                "
+                                            />
+
+                                            <!-- input text -->
                                             <div
-                                                v-for="attribut in editCatTarifForm
-                                                    .tarif_type.tarif_attributs"
-                                                :key="attribut.id"
-                                                class="col-span-1"
+                                                class="w-full max-w-sm"
+                                                v-if="
+                                                    attribut.type_champ_form ===
+                                                    'text'
+                                                "
                                             >
-                                                <!-- select  -->
+                                                <label
+                                                    :for="attribut.nom"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                >
+                                                    {{ attribut.nom }}
+                                                </label>
+                                                <div
+                                                    class="mt-1 flex rounded-md"
+                                                >
+                                                    <TextInput
+                                                        type="text"
+                                                        v-model="
+                                                            editCatTarifForm
+                                                                .attributs[
+                                                                attribut.id
+                                                            ]
+                                                        "
+                                                        :name="attribut.nom"
+                                                        :id="attribut.nom"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                        placeholder=""
+                                                        autocomplete="none"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <!-- number text -->
+                                            <div
+                                                class="w-full max-w-sm"
+                                                v-if="
+                                                    attribut.type_champ_form ===
+                                                    'number'
+                                                "
+                                            >
+                                                <label
+                                                    :for="attribut.nom"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                >
+                                                    {{ attribut.nom }}
+                                                </label>
+                                                <div
+                                                    class="mt-1 flex rounded-md"
+                                                >
+                                                    <TextInput
+                                                        type="number"
+                                                        min="0"
+                                                        v-model="
+                                                            editCatTarifForm
+                                                                .attributs[
+                                                                attribut.id
+                                                            ]
+                                                        "
+                                                        :name="attribut.nom"
+                                                        :id="attribut.nom"
+                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                        placeholder=""
+                                                        autocomplete="none"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <!-- sous attributs -->
+                                            <template
+                                                v-for="sousattribut in attribut.sous_attributs"
+                                                :key="sousattribut.id"
+                                            >
                                                 <SelectForm
-                                                    :classes="'block'"
+                                                    :classes="'block '"
                                                     class="w-full max-w-sm"
                                                     v-if="
-                                                        attribut.type_champ_form ===
+                                                        sousattribut.type_champ_form ===
                                                         'select'
                                                     "
-                                                    :name="attribut.nom"
+                                                    :name="sousattribut.nom"
                                                     v-model="
                                                         editCatTarifForm
-                                                            .attributs[
-                                                            attribut.id
+                                                            .sousattributs[
+                                                            sousattribut.id
                                                         ]
                                                     "
-                                                    :options="attribut.valeurs"
+                                                    :options="
+                                                        sousattribut.valeurs
+                                                    "
                                                 />
 
                                                 <!-- checkbox -->
                                                 <CheckboxForm
                                                     class="max-w-sm"
                                                     v-if="
-                                                        attribut.type_champ_form ===
+                                                        sousattribut.type_champ_form ===
                                                         'checkbox'
                                                     "
-                                                    :critere="attribut"
-                                                    :name="attribut.nom"
+                                                    :critere="sousattribut"
+                                                    :name="sousattribut.nom"
                                                     v-model="
                                                         editCatTarifForm
-                                                            .attributs[
-                                                            attribut.id
+                                                            .sousattributs[
+                                                            sousattribut.id
                                                         ]
                                                     "
-                                                    :options="attribut.valeurs"
+                                                    :options="
+                                                        sousattribut.valeurs
+                                                    "
                                                     :is-checkbox-selected="
-                                                        isCheckboxSelected
+                                                        isCheckboxSousAttrSelected
                                                     "
                                                     @update-selected-checkboxes="
-                                                        updateSelectedCheckboxes
+                                                        updateSousAttrSelectedCheckboxes
                                                     "
                                                 />
-
                                                 <!-- input text -->
                                                 <div
                                                     class="w-full max-w-sm"
                                                     v-if="
-                                                        attribut.type_champ_form ===
+                                                        sousattribut.type_champ_form ===
                                                         'text'
                                                     "
                                                 >
                                                     <label
-                                                        :for="attribut.nom"
+                                                        :for="sousattribut.nom"
                                                         class="block text-sm font-medium text-gray-700"
                                                     >
-                                                        {{ attribut.nom }}
+                                                        {{ sousattribut.nom }}
                                                     </label>
                                                     <div
                                                         class="mt-1 flex rounded-md"
@@ -892,12 +967,17 @@ const onSubmit = () => {
                                                             type="text"
                                                             v-model="
                                                                 editCatTarifForm
-                                                                    .attributs[
-                                                                    attribut.id
+                                                                    .sousattributs[
+                                                                    sousattribut
+                                                                        .id
                                                                 ]
                                                             "
-                                                            :name="attribut.nom"
-                                                            :id="attribut.nom"
+                                                            :name="
+                                                                sousattribut.nom
+                                                            "
+                                                            :id="
+                                                                sousattribut.nom
+                                                            "
                                                             class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                             placeholder=""
                                                             autocomplete="none"
@@ -907,17 +987,17 @@ const onSubmit = () => {
 
                                                 <!-- number text -->
                                                 <div
-                                                    class="w-full max-w-sm"
+                                                    class="w-full min-w-max"
                                                     v-if="
-                                                        attribut.type_champ_form ===
+                                                        sousattribut.type_champ_form ===
                                                         'number'
                                                     "
                                                 >
                                                     <label
-                                                        :for="attribut.nom"
+                                                        :for="sousattribut.nom"
                                                         class="block text-sm font-medium text-gray-700"
                                                     >
-                                                        {{ attribut.nom }}
+                                                        {{ sousattribut.nom }}
                                                     </label>
                                                     <div
                                                         class="mt-1 flex rounded-md"
@@ -927,284 +1007,183 @@ const onSubmit = () => {
                                                             min="0"
                                                             v-model="
                                                                 editCatTarifForm
-                                                                    .attributs[
-                                                                    attribut.id
+                                                                    .sousattributs[
+                                                                    sousattribut
+                                                                        .id
                                                                 ]
                                                             "
-                                                            :name="attribut.nom"
-                                                            :id="attribut.nom"
+                                                            :name="
+                                                                sousattribut.nom
+                                                            "
+                                                            :id="
+                                                                sousattribut.nom
+                                                            "
                                                             class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                             placeholder=""
                                                             autocomplete="none"
                                                         />
                                                     </div>
                                                 </div>
-                                                <!-- sous attributs -->
-                                                <template
-                                                    v-for="sousattribut in attribut.sous_attributs"
-                                                    :key="sousattribut.id"
-                                                >
-                                                    <SelectForm
-                                                        :classes="'block '"
-                                                        class="w-full max-w-sm"
-                                                        v-if="
-                                                            sousattribut.type_champ_form ===
-                                                            'select'
-                                                        "
-                                                        :name="sousattribut.nom"
-                                                        v-model="
-                                                            editCatTarifForm
-                                                                .sousattributs[
-                                                                sousattribut.id
-                                                            ]
-                                                        "
-                                                        :options="
-                                                            sousattribut.valeurs
-                                                        "
-                                                    />
-
-                                                    <!-- checkbox -->
-                                                    <CheckboxForm
-                                                        class="max-w-sm"
-                                                        v-if="
-                                                            sousattribut.type_champ_form ===
-                                                            'checkbox'
-                                                        "
-                                                        :critere="sousattribut"
-                                                        :name="sousattribut.nom"
-                                                        v-model="
-                                                            editCatTarifForm
-                                                                .sousattributs[
-                                                                sousattribut.id
-                                                            ]
-                                                        "
-                                                        :options="
-                                                            sousattribut.valeurs
-                                                        "
-                                                        :is-checkbox-selected="
-                                                            isCheckboxSousAttrSelected
-                                                        "
-                                                        @update-selected-checkboxes="
-                                                            updateSousAttrSelectedCheckboxes
-                                                        "
-                                                    />
-                                                    <!-- input text -->
-                                                    <div
-                                                        class="w-full max-w-sm"
-                                                        v-if="
-                                                            sousattribut.type_champ_form ===
-                                                            'text'
-                                                        "
-                                                    >
-                                                        <label
-                                                            :for="
-                                                                sousattribut.nom
-                                                            "
-                                                            class="block text-sm font-medium text-gray-700"
-                                                        >
-                                                            {{
-                                                                sousattribut.nom
-                                                            }}
-                                                        </label>
-                                                        <div
-                                                            class="mt-1 flex rounded-md"
-                                                        >
-                                                            <TextInput
-                                                                type="text"
-                                                                v-model="
-                                                                    editCatTarifForm
-                                                                        .sousattributs[
-                                                                        sousattribut
-                                                                            .id
-                                                                    ]
-                                                                "
-                                                                :name="
-                                                                    sousattribut.nom
-                                                                "
-                                                                :id="
-                                                                    sousattribut.nom
-                                                                "
-                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                                placeholder=""
-                                                                autocomplete="none"
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- number text -->
-                                                    <div
-                                                        class="w-full min-w-max"
-                                                        v-if="
-                                                            sousattribut.type_champ_form ===
-                                                            'number'
-                                                        "
-                                                    >
-                                                        <label
-                                                            :for="
-                                                                sousattribut.nom
-                                                            "
-                                                            class="block text-sm font-medium text-gray-700"
-                                                        >
-                                                            {{
-                                                                sousattribut.nom
-                                                            }}
-                                                        </label>
-                                                        <div
-                                                            class="mt-1 flex rounded-md"
-                                                        >
-                                                            <TextInput
-                                                                type="number"
-                                                                min="0"
-                                                                v-model="
-                                                                    editCatTarifForm
-                                                                        .sousattributs[
-                                                                        sousattribut
-                                                                            .id
-                                                                    ]
-                                                                "
-                                                                :name="
-                                                                    sousattribut.nom
-                                                                "
-                                                                :id="
-                                                                    sousattribut.nom
-                                                                "
-                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                                placeholder=""
-                                                                autocomplete="none"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </template>
-                                            </div>
+                                            </template>
                                         </div>
+                                    </div>
 
+                                    <div
+                                        v-if="editCatTarifForm.tarif_type"
+                                        class="w-full max-w-sm"
+                                    >
+                                        <label
+                                            for="amount"
+                                            class="block text-sm font-medium text-gray-700"
+                                        >
+                                            Montant
+                                        </label>
                                         <div
-                                            v-if="editCatTarifForm.tarif_type"
-                                            class="w-full max-w-sm"
+                                            class="mt-1 flex items-center rounded-md"
                                         >
-                                            <label
-                                                for="amount"
-                                                class="block text-sm font-medium text-gray-700"
-                                            >
-                                                Montant
-                                            </label>
-                                            <div
-                                                class="mt-1 flex items-center rounded-md"
-                                            >
-                                                <input
-                                                    v-model="
-                                                        editCatTarifForm.amount
-                                                    "
-                                                    type="number"
-                                                    name="amount"
-                                                    id="amount"
-                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                    placeholder=""
-                                                    autocomplete="none"
-                                                />
-                                                <CurrencyEuroIcon
-                                                    class="ml-2 h-6 w-6"
-                                                />
-                                            </div>
-                                            <div
-                                                v-if="errors.editCatTarifForm"
-                                                class="mt-2 text-xs text-red-500"
-                                            >
-                                                {{
-                                                    errors.editCatTarifForm
-                                                        .amount
-                                                }}
-                                            </div>
+                                            <input
+                                                v-model="
+                                                    editCatTarifForm.amount
+                                                "
+                                                type="number"
+                                                name="amount"
+                                                id="amount"
+                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                placeholder=""
+                                                autocomplete="none"
+                                            />
+                                            <CurrencyEuroIcon
+                                                class="ml-2 h-6 w-6"
+                                            />
                                         </div>
-                                        <!-- liste des produits -->
-                                        <template
-                                            v-if="
-                                                editCatTarifForm.categorie_id &&
-                                                editCatTarifForm.tarif_type
-                                            "
+                                        <div
+                                            v-if="errors.editCatTarifForm"
+                                            class="mt-2 text-xs text-red-500"
                                         >
-                                            <div
-                                                class="flex flex-col space-y-2"
+                                            {{ errors.editCatTarifForm.amount }}
+                                        </div>
+                                    </div>
+                                    <!-- liste des produits -->
+                                    <template
+                                        v-if="
+                                            editCatTarifForm.categorie_id &&
+                                            editCatTarifForm.tarif_type
+                                        "
+                                    >
+                                        <div class="flex flex-col space-y-2">
+                                            <p
+                                                class="text-base font-medium text-gray-700"
                                             >
-                                                <p
-                                                    class="text-base font-medium text-gray-700"
-                                                >
-                                                    Ce tarif est valable pour:
-                                                </p>
+                                                Ce tarif est valable pour:
+                                            </p>
 
-                                                <label
-                                                    class="flex items-center"
+                                            <label class="flex items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    name="Tout"
+                                                    v-model="
+                                                        editCatTarifForm.checkAll
+                                                    "
+                                                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                                />
+                                                <span
+                                                    class="ml-2 text-sm text-gray-600"
+                                                    >Tout sélectionner</span
                                                 >
-                                                    <input
-                                                        type="checkbox"
-                                                        name="Tout"
-                                                        v-model="
-                                                            editCatTarifForm.checkAll
-                                                        "
-                                                        class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
-                                                    />
-                                                    <span
-                                                        class="ml-2 text-sm text-gray-600"
-                                                        >Tout sélectionner</span
-                                                    >
-                                                </label>
+                                            </label>
 
-                                                <div
-                                                    v-for="discipline in props.activiteForTarifs"
-                                                    :key="discipline.id"
-                                                    class="ml-2 md:ml-4"
+                                            <div
+                                                v-for="discipline in props
+                                                    .structure.disciplines"
+                                                :key="discipline.id"
+                                                class="ml-2 md:ml-4"
+                                            >
+                                                <template
+                                                    v-if="
+                                                        discipline.id ===
+                                                        (editCatTarifForm.discipline_id ||
+                                                            (props.discipline &&
+                                                                props.discipline
+                                                                    .id))
+                                                    "
                                                 >
-                                                    <template
-                                                        v-if="
-                                                            discipline.id ===
-                                                            (editCatTarifForm.discipline_id ||
-                                                                (props.discipline &&
-                                                                    props
-                                                                        .discipline
-                                                                        .id))
-                                                        "
+                                                    <label
+                                                        class="flex items-center"
                                                     >
-                                                        <label
-                                                            class="flex items-center"
+                                                        <input
+                                                            type="checkbox"
+                                                            :id="discipline.id"
+                                                            :value="
+                                                                discipline.id
+                                                            "
+                                                            :name="
+                                                                discipline.name
+                                                            "
+                                                            v-model="
+                                                                editCatTarifForm
+                                                                    .disciplines[
+                                                                    discipline
+                                                                        .id
+                                                                ]
+                                                            "
+                                                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                                        />
+
+                                                        <span
+                                                            class="ml-2 text-sm text-gray-600"
+                                                            >{{
+                                                                discipline.name
+                                                            }}</span
                                                         >
-                                                            <input
-                                                                type="checkbox"
-                                                                :id="
-                                                                    discipline.id
-                                                                "
-                                                                :value="
-                                                                    discipline.id
-                                                                "
-                                                                :name="
-                                                                    discipline.disciplineName
-                                                                "
-                                                                v-model="
-                                                                    editCatTarifForm
-                                                                        .disciplines[
-                                                                        discipline
-                                                                            .id
-                                                                    ]
-                                                                "
-                                                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
-                                                            />
-
-                                                            <span
-                                                                class="ml-2 text-sm text-gray-600"
-                                                                >{{
-                                                                    discipline.disciplineName
-                                                                }}</span
+                                                    </label>
+                                                    <div
+                                                        v-for="category in discipline.str_categories"
+                                                        :key="category.id"
+                                                        class="ml-4 md:ml-8"
+                                                    >
+                                                        <template
+                                                            v-if="
+                                                                category.id ===
+                                                                editCatTarifForm.categorie_id
+                                                            "
+                                                        >
+                                                            <label
+                                                                class="flex items-center"
                                                             >
-                                                        </label>
-                                                        <div
-                                                            v-for="category in discipline.categories"
-                                                            :key="category.id"
-                                                            class="ml-4 md:ml-8"
-                                                        >
-                                                            <template
-                                                                v-if="
-                                                                    category.id ===
-                                                                    editCatTarifForm.categorie_id
+                                                                <input
+                                                                    type="checkbox"
+                                                                    :id="
+                                                                        category.id
+                                                                    "
+                                                                    :value="
+                                                                        category.id
+                                                                    "
+                                                                    :name="
+                                                                        category.nom_categorie_pro
+                                                                    "
+                                                                    v-model="
+                                                                        editCatTarifForm
+                                                                            .categories[
+                                                                            category
+                                                                                .id
+                                                                        ]
+                                                                    "
+                                                                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                                                />
+                                                                <span
+                                                                    class="ml-2 text-sm text-gray-600"
+                                                                    >{{
+                                                                        category.nom_categorie_pro
+                                                                    }}</span
+                                                                >
+                                                            </label>
+
+                                                            <div
+                                                                v-for="activite in category.str_activites"
+                                                                :key="
+                                                                    activite.id
                                                                 "
+                                                                class="ml-6 md:ml-12"
                                                             >
                                                                 <label
                                                                     class="flex items-center"
@@ -1212,18 +1191,18 @@ const onSubmit = () => {
                                                                     <input
                                                                         type="checkbox"
                                                                         :id="
-                                                                            category.id
+                                                                            activite.id
                                                                         "
                                                                         :value="
-                                                                            category.id
+                                                                            activite.id
                                                                         "
                                                                         :name="
-                                                                            category.name
+                                                                            activite.titre
                                                                         "
                                                                         v-model="
                                                                             editCatTarifForm
-                                                                                .categories[
-                                                                                category
+                                                                                .activites[
+                                                                                activite
                                                                                     .id
                                                                             ]
                                                                         "
@@ -1232,36 +1211,36 @@ const onSubmit = () => {
                                                                     <span
                                                                         class="ml-2 text-sm text-gray-600"
                                                                         >{{
-                                                                            category.name
+                                                                            activite.titre
                                                                         }}</span
                                                                     >
                                                                 </label>
 
                                                                 <div
-                                                                    v-for="activite in category.activites"
-                                                                    :key="
-                                                                        activite.id
-                                                                    "
-                                                                    class="ml-6 md:ml-12"
+                                                                    class="ml-8 flex flex-col items-center space-x-0 space-y-3 md:ml-16 md:flex-row md:flex-wrap md:space-x-8 md:space-y-0"
                                                                 >
                                                                     <label
+                                                                        v-for="produit in activite.produits"
+                                                                        :key="
+                                                                            produit.id
+                                                                        "
                                                                         class="flex items-center"
                                                                     >
                                                                         <input
                                                                             type="checkbox"
                                                                             :id="
-                                                                                activite.id
+                                                                                produit.id
                                                                             "
                                                                             :value="
-                                                                                activite.id
+                                                                                produit.id
                                                                             "
                                                                             :name="
-                                                                                activite.titre
+                                                                                produit.id
                                                                             "
                                                                             v-model="
                                                                                 editCatTarifForm
-                                                                                    .activites[
-                                                                                    activite
+                                                                                    .produits[
+                                                                                    produit
                                                                                         .id
                                                                                 ]
                                                                             "
@@ -1269,96 +1248,53 @@ const onSubmit = () => {
                                                                         />
                                                                         <span
                                                                             class="ml-2 text-sm text-gray-600"
-                                                                            >{{
-                                                                                activite.titre
+                                                                            >Produit
+                                                                            n°
+                                                                            {{
+                                                                                produit.id
                                                                             }}</span
                                                                         >
                                                                     </label>
-
-                                                                    <div
-                                                                        class="ml-8 flex flex-col items-center space-x-0 space-y-3 md:ml-16 md:flex-row md:flex-wrap md:space-x-8 md:space-y-0"
-                                                                    >
-                                                                        <label
-                                                                            v-for="produit in activite.produits"
-                                                                            :key="
-                                                                                produit.id
-                                                                            "
-                                                                            class="flex items-center"
-                                                                        >
-                                                                            <input
-                                                                                type="checkbox"
-                                                                                :id="
-                                                                                    produit.id
-                                                                                "
-                                                                                :value="
-                                                                                    produit.id
-                                                                                "
-                                                                                :name="
-                                                                                    produit.id
-                                                                                "
-                                                                                v-model="
-                                                                                    editCatTarifForm
-                                                                                        .produits[
-                                                                                        produit
-                                                                                            .id
-                                                                                    ]
-                                                                                "
-                                                                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
-                                                                            />
-                                                                            <span
-                                                                                class="ml-2 text-sm text-gray-600"
-                                                                                >Produit
-                                                                                n°
-                                                                                {{
-                                                                                    produit.id
-                                                                                }}</span
-                                                                            >
-                                                                        </label>
-                                                                    </div>
                                                                 </div>
-                                                            </template>
-                                                        </div>
-                                                    </template>
-                                                </div>
+                                                            </div>
+                                                        </template>
+                                                    </div>
+                                                </template>
                                             </div>
-                                        </template>
-                                    </div>
-                                    <div
-                                        class="mt-4 flex w-full items-center justify-between"
+                                        </div>
+                                    </template>
+                                </div>
+                                <div
+                                    class="mt-4 flex w-full items-center justify-between"
+                                >
+                                    <button
+                                        type="button"
+                                        class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                                        @click.prevent="emit('close')"
                                     >
-                                        <button
-                                            type="button"
-                                            class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
-                                            @click.prevent="emit('close')"
-                                        >
-                                            Annuler
-                                        </button>
-                                        <button
-                                            v-if="editCatTarifForm.tarif_type"
-                                            :disabled="
-                                                editCatTarifForm.processing
-                                            "
-                                            :class="{
-                                                'opacity-25':
-                                                    editCatTarifForm.processing,
-                                            }"
-                                            type="submit"
-                                            class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
-                                        >
-                                            <LoadingSVG
-                                                v-if="
-                                                    editCatTarifForm.processing
-                                                "
-                                            />
-                                            Enregistrer
-                                        </button>
-                                    </div>
-                                </form>
-                            </DialogPanel>
-                        </TransitionChild>
-                    </div>
+                                        Annuler
+                                    </button>
+                                    <button
+                                        v-if="editCatTarifForm.tarif_type"
+                                        :disabled="editCatTarifForm.processing"
+                                        :class="{
+                                            'opacity-25':
+                                                editCatTarifForm.processing,
+                                        }"
+                                        type="submit"
+                                        class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                                    >
+                                        <LoadingSVG
+                                            v-if="editCatTarifForm.processing"
+                                        />
+                                        Enregistrer
+                                    </button>
+                                </div>
+                            </form>
+                        </DialogPanel>
+                    </TransitionChild>
                 </div>
-            </Dialog>
-        </TransitionRoot>
-    </div>
+            </div>
+        </Dialog>
+    </TransitionRoot>
 </template>

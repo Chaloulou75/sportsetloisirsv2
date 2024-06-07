@@ -387,10 +387,7 @@ const openAddPlanningModal = () => {
                         <TarifDisplay
                             :errors="errors"
                             :structure="structure"
-                            :all-categories="categoriesListByDiscipline"
                             :str-cat-tarifs="strCatTarifs"
-                            :structure-activites="activites"
-                            :activite-for-tarifs="activiteForTarifs"
                             @show-display="handleButtonEvent('Mes tarifs')"
                         />
                     </template>

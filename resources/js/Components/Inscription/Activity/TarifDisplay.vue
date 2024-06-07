@@ -14,11 +14,8 @@ const props = defineProps({
     structure: Object,
     discipline: Object,
     categorie: Object,
-    allCategories: Object,
     tarifTypes: Object,
     strCatTarifs: Object,
-    activiteForTarifs: Object,
-    structureActivites: Object,
 });
 
 //newest version
@@ -251,8 +248,6 @@ const emitShowDisplay = () => {
         :discipline="discipline"
         :categorie="categorie"
         :tarif-to-update="tarifToUpdate"
-        :all-categories="allCategories"
-        :activite-for-tarifs="activiteForTarifs"
         :show="showEditCatTarifModal"
         @close="showEditCatTarifModal = false"
         @show-display="emitShowDisplay"

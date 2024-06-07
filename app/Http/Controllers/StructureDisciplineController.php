@@ -54,7 +54,7 @@ class StructureDisciplineController extends Controller
                                   'tarif_types.tarif_attributs.sous_attributs.valeurs',
                                   'tarif_types.tarif_attributs.valeurs'
                               ])
-                              ->whereHas('str_activites');
+                              ->whereHas('str_activites'); //->latest()
                     },
                     'disciplines.str_categories.str_activites',
                     'disciplines.str_categories.str_activites.produits',
@@ -62,14 +62,6 @@ class StructureDisciplineController extends Controller
                         $query->whereDoesntHave('disc_categories.str_categories');
                     }
                 ])->findOrFail($structure->id);
-
-        $categoriesListByDiscipline = LienDisciplineCategorie::with([
-                            'tarif_types',
-                            'tarif_types.tarif_attributs.sous_attributs.valeurs',
-                            'tarif_types.tarif_attributs.valeurs'
-                        ])->whereHas('str_activites', function (Builder $query) use ($structure) {
-                            $query->where('structure_id', $structure->id);
-                        })->get();
 
         $allReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {
             $query->where('structure_id', $structure->id);
@@ -87,47 +79,6 @@ class StructureDisciplineController extends Controller
                     ->latest()
                     ->get();
 
-
-        $activiteForTarifs = StructureActivite::with([
-                    'structure:id,name,slug',
-                    'categorie:id,nom_categorie_pro',
-                    'discipline:id,name',
-                    'produits'])
-                    ->where('structure_id', $structure->id)
-                    ->latest()
-                    ->get()
-                    ->groupBy('discipline.id')
-                    ->map(function ($disciplineActivites, $disciplineId) {
-                        return [
-                            'id' => $disciplineId,
-                            'disciplineName' => $disciplineActivites->first()->discipline->name,
-                            'categories' => $disciplineActivites->groupBy('categorie.id')->map(function ($categorieItems, $categoryId) {
-                                $activites = $categorieItems->map(function ($activiteItem) {
-                                    return [
-                                        'id' => $activiteItem->id,
-                                        'titre' => $activiteItem->titre,
-                                        'disciplineId' => $activiteItem->discipline_id,
-                                        'categorieId' => $activiteItem->categorie_id,
-                                        'produits' => $activiteItem->produits->map(function ($produitItem) {
-                                            return [
-                                                'id' => $produitItem->id,
-                                                'disciplineId' => $produitItem->discipline_id,
-                                                'categorieId' => $produitItem->categorie_id,
-                                                'activiteId' => $produitItem->activite_id,
-                                            ];
-                                        }),
-                                    ];
-                                });
-                                return [
-                                    'id' => $categoryId,
-                                    'disciplineId' => $categorieItems->first()->discipline->id,
-                                    'name' => $categorieItems->first()->categorie->nom_categorie_pro ?? 'Sans Catégorie',
-                                    'activites' => $activites,
-                                ];
-                            }),
-                        ];
-                    });
-
         $strCatTarifs = StructureCatTarif::withRelations()->with('produits')->where('structure_id', $structure->id)->get();
 
         $categories = Categorie::with('disciplines')->select(['id', 'nom', 'ico'])->get();
@@ -142,8 +93,6 @@ class StructureDisciplineController extends Controller
             'dejaUsedDisciplines' => fn () => $dejaUsedDisciplines,
             'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'activites' => fn () => $activites,
-            'categoriesListByDiscipline' => fn () => $categoriesListByDiscipline,
-            'activiteForTarifs' => fn () => $activiteForTarifs,
             'strCatTarifs' => fn () => $strCatTarifs,
             'allReservationsCount' => fn () => $allReservationsCount,
             'confirmedReservationsCount' => fn () => $confirmedReservationsCount,
