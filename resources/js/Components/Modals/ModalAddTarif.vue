@@ -31,13 +31,11 @@ const props = defineProps({
     discipline: Object,
     categorie: Object,
     produit: Object,
-    allCategories: Object,
-    activiteForTarifs: Object,
-    structureActivites: Object,
     show: Boolean,
 });
 
-const filteredCategories = ref(props.allCategories ?? null);
+const selectedDiscipline = ref(props.discipline ? props.discipline.id : null);
+const filteredCategories = ref([]);
 const newSelectedCategorieId = ref(props.categorie ? props.categorie.id : null);
 const newCategorie = ref(null);
 
@@ -122,9 +120,14 @@ const isCheckboxSousAttrSelected = computed(() => {
 watch(
     () => addTarifForm.discipline_id,
     (newDisciplineId) => {
-        filteredCategories.value = props.allCategories.filter(
-            (category) => category.discipline_id === newDisciplineId
+        selectedDiscipline.value = props.structure.disciplines.find(
+            (discipline) => discipline.id === newDisciplineId
         );
+        if (selectedDiscipline.value) {
+            filteredCategories.value = selectedDiscipline.value.str_categories;
+        } else {
+            filteredCategories.value = [];
+        }
         if (filteredCategories.value.length > 0) {
             addTarifForm.categorie_id = filteredCategories.value[0].id;
         } else {
@@ -135,15 +138,18 @@ watch(
         addTarifForm.categories = {};
         addTarifForm.activites = {};
         addTarifForm.produits = {};
-    }
+    },
+    { deep: true }
 );
 
 watch(
     () => addTarifForm.categorie_id,
     (newCategorieId) => {
-        newCategorie.value = props.allCategories.find(
-            (categorie) => categorie.id === newCategorieId
-        );
+        if (selectedDiscipline.value) {
+            newCategorie.value = selectedDiscipline.value.str_categories.find(
+                (categorie) => categorie.id === newCategorieId
+            );
+        }
         if (newCategorie.value) {
             addTarifForm.tarif_type = newCategorie.value.tarif_types[0];
         } else {
@@ -171,18 +177,15 @@ watch(
             for (const disciplineId in newValue) {
                 const discipline = newValue[disciplineId];
                 if (discipline) {
-                    const disciplineData =
-                        props.activiteForTarifs[disciplineId];
+                    const disciplineData = props.structure.disciplines.find(
+                        (item) => item.id === parseInt(disciplineId)
+                    );
                     if (disciplineData) {
-                        const categories = disciplineData.categories;
-                        for (const categoryId in categories) {
-                            const catId = String(categoryId);
-                            const formCatId = String(addTarifForm.categorie_id);
-
-                            if (catId === formCatId) {
-                                addTarifForm.categories[categoryId] = true;
-                                const category = categories[categoryId];
-                                for (const activity of category.activites) {
+                        const categories = disciplineData.str_categories;
+                        for (const category of categories) {
+                            if (category.id === addTarifForm.categorie_id) {
+                                addTarifForm.categories[category.id] = true;
+                                for (const activity of category.str_activites) {
                                     addTarifForm.activites[activity.id] = true;
                                     for (const product of activity.produits) {
                                         addTarifForm.produits[
@@ -209,14 +212,16 @@ watch(
             for (const categoryId in newValue) {
                 const category = newValue[categoryId];
                 if (category) {
-                    for (const disciplineId in props.activiteForTarifs) {
-                        const disciplineData =
-                            props.activiteForTarifs[disciplineId];
-                        const categoryData =
-                            disciplineData.categories[categoryId];
-                        if (categoryData) {
-                            const activites = categoryData.activites;
+                    for (const disciplineId in props.structure.disciplines) {
+                        const discipline =
+                            props.structure.disciplines[disciplineId];
+                        const categorie = discipline.str_categories.find(
+                            (cat) => cat.id === parseInt(categoryId)
+                        );
+                        if (categorie) {
+                            addTarifForm.categories[categorie.id] = true;
 
+                            const activites = categorie.str_activites;
                             for (const activity of activites) {
                                 addTarifForm.activites[activity.id] = true;
 
@@ -238,11 +243,11 @@ watch(
     (newValue) => {
         if (newValue) {
             addTarifForm.produits = {};
-            for (const disciplineId in props.activiteForTarifs) {
-                const disciplineData = props.activiteForTarifs[disciplineId];
-                for (const categoryId in disciplineData.categories) {
-                    const categoryData = disciplineData.categories[categoryId];
-                    for (const activity of categoryData.activites) {
+            for (const disciplineId in props.structure.disciplines) {
+                const discipline = props.structure.disciplines[disciplineId];
+                for (const categoryId in discipline.str_categories) {
+                    const categorie = discipline.str_categories[categoryId];
+                    for (const activity of categorie.str_activites) {
                         if (newValue[activity.id]) {
                             addTarifForm.activites[activity.id] = true;
                             for (const product of activity.produits) {
@@ -262,44 +267,17 @@ watch(
     () => addTarifForm.checkAll,
     (newValue) => {
         if (newValue && newValue === true) {
-            for (const disciplineId in props.activiteForTarifs) {
-                if (props.activiteForTarifs.hasOwnProperty(disciplineId)) {
-                    const disId = String(disciplineId);
-                    const formDiscId = String(addTarifForm.discipline_id);
-                    const propsDisId = String(
-                        props.discipline ? props.discipline.id : null
-                    );
-
-                    if (
-                        disId === formDiscId ||
-                        (props.discipline && disId === propsDisId)
-                    ) {
-                        addTarifForm.disciplines[disciplineId] = newValue;
-                        const categories =
-                            props.activiteForTarifs[disciplineId].categories;
-
-                        for (const categoryId in categories) {
-                            if (categories.hasOwnProperty(categoryId)) {
-                                const catId = String(categoryId);
-                                const formCatId = String(
-                                    addTarifForm.categorie_id
-                                );
-
-                                if (catId === formCatId) {
-                                    addTarifForm.categories[categoryId] =
-                                        newValue;
-                                    const activites =
-                                        categories[categoryId].activites;
-
-                                    activites.forEach((activity) => {
-                                        addTarifForm.activites[activity.id] =
-                                            newValue;
-
-                                        activity.produits.forEach((product) => {
-                                            addTarifForm.produits[product.id] =
-                                                newValue;
-                                        });
-                                    });
+            for (const discipline of props.structure.disciplines) {
+                if (discipline) {
+                    addTarifForm.disciplines[discipline.id] = true;
+                    const categories = discipline.str_categories;
+                    for (const category of categories) {
+                        if (category.id === addTarifForm.categorie_id) {
+                            addTarifForm.categories[category.id] = true;
+                            for (const activity of category.str_activites) {
+                                addTarifForm.activites[activity.id] = true;
+                                for (const product of activity.produits) {
+                                    addTarifForm.produits[product.id] = true;
                                 }
                             }
                         }
@@ -457,13 +435,11 @@ onMounted(() => {
                                                 class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                             >
                                                 <option
-                                                    v-for="discipline in props.activiteForTarifs"
+                                                    v-for="discipline in structure.disciplines"
                                                     :key="discipline.id"
                                                     :value="discipline.id"
                                                 >
-                                                    {{
-                                                        discipline.disciplineName
-                                                    }}
+                                                    {{ discipline.name }}
                                                 </option>
                                             </select>
                                         </div>
@@ -473,7 +449,7 @@ onMounted(() => {
                                         v-if="
                                             (discipline ||
                                                 addTarifForm.discipline_id) &&
-                                            allCategories
+                                            structure
                                         "
                                         class="flex w-full flex-col items-start justify-start space-y-2"
                                     >
@@ -989,7 +965,7 @@ onMounted(() => {
                                             </label>
 
                                             <div
-                                                v-for="discipline in props.activiteForTarifs"
+                                                v-for="discipline in structure.disciplines"
                                                 :key="discipline.id"
                                                 class="ml-2 md:ml-4"
                                             >
@@ -1012,7 +988,7 @@ onMounted(() => {
                                                                 discipline.id
                                                             "
                                                             :name="
-                                                                discipline.disciplineName
+                                                                discipline.name
                                                             "
                                                             v-model="
                                                                 addTarifForm
@@ -1027,12 +1003,12 @@ onMounted(() => {
                                                         <span
                                                             class="ml-2 text-sm text-gray-600"
                                                             >{{
-                                                                discipline.disciplineName
+                                                                discipline.name
                                                             }}</span
                                                         >
                                                     </label>
                                                     <div
-                                                        v-for="category in discipline.categories"
+                                                        v-for="category in discipline.str_categories"
                                                         :key="category.id"
                                                         class="ml-4 md:ml-8"
                                                     >
@@ -1054,7 +1030,7 @@ onMounted(() => {
                                                                         category.id
                                                                     "
                                                                     :name="
-                                                                        category.name
+                                                                        category.nom_categorie_pro
                                                                     "
                                                                     v-model="
                                                                         addTarifForm
@@ -1068,13 +1044,13 @@ onMounted(() => {
                                                                 <span
                                                                     class="ml-2 text-sm text-gray-600"
                                                                     >{{
-                                                                        category.name
+                                                                        category.nom_categorie_pro
                                                                     }}</span
                                                                 >
                                                             </label>
 
                                                             <div
-                                                                v-for="activite in category.activites"
+                                                                v-for="activite in category.str_activites"
                                                                 :key="
                                                                     activite.id
                                                                 "

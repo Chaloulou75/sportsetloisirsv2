@@ -91,7 +91,7 @@ const headerClass = computed(() => {
                                         route('structures.categories.show', {
                                             structure: structure.slug,
                                             discipline: discipline.slug,
-                                            categorie: categorie.pivot.id,
+                                            categorie: categorie.pivot.slug,
                                         })
                                     "
                                     v-for="categorie in discipline.categories"
@@ -113,7 +113,7 @@ const headerClass = computed(() => {
                                     route('structures.categories.show', {
                                         structure: structure.slug,
                                         discipline: discipline.slug,
-                                        categorie: categorie.id,
+                                        categorie: categorie.slug,
                                     })
                                 "
                                 class="py-2 text-sm hover:text-indigo-500"

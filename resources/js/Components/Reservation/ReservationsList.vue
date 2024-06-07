@@ -90,7 +90,9 @@ const markNotificationAsRead = (reservationId) => {
                         </h3>
                         <p class="text-sm text-gray-500">
                             {{ reservation.activite_title }} -
-                            {{ reservation.cat_tarif.cat_tarif_type.nom }}
+                            <span v-if="reservation.cat_tarif">{{
+                                reservation.cat_tarif.cat_tarif_type.nom
+                            }}</span>
                         </p>
                         <p class="text-xs italic text-gray-400">
                             Produit n°{{ reservation.produit_id }}, réglée le

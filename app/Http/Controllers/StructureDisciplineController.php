@@ -42,15 +42,34 @@ class StructureDisciplineController extends Controller
                     'city',
                     'departement:id,departement,numero',
                     'structuretype:id,name,slug',
-                    'disciplines:id,name,slug,theme',
-                    'disciplines.str_categories' => function ($query) {
-                        $query->withCount('str_activites');
+                    'disciplines' => function ($query) {
+                        $query->select('liste_disciplines.id', 'liste_disciplines.name', 'liste_disciplines.slug', 'liste_disciplines.theme')
+                            ->withCount('str_categories')
+                            ->orderBy('str_categories_count', 'desc');
+                    },
+                    'disciplines.str_categories' => function ($query) use ($structure) {
+                        $query->withCount('str_activites')
+                              ->with([
+                                  'tarif_types',
+                                  'tarif_types.tarif_attributs.sous_attributs.valeurs',
+                                  'tarif_types.tarif_attributs.valeurs'
+                              ])
+                              ->whereHas('str_activites');
                     },
                     'disciplines.str_categories.str_activites',
+                    'disciplines.str_categories.str_activites.produits',
                     'disciplines.categories' => function ($query) {
                         $query->whereDoesntHave('disc_categories.str_categories');
                     }
                 ])->findOrFail($structure->id);
+
+        $categoriesListByDiscipline = LienDisciplineCategorie::with([
+                            'tarif_types',
+                            'tarif_types.tarif_attributs.sous_attributs.valeurs',
+                            'tarif_types.tarif_attributs.valeurs'
+                        ])->whereHas('str_activites', function (Builder $query) use ($structure) {
+                            $query->where('structure_id', $structure->id);
+                        })->get();
 
         $allReservationsCount = ProductReservation::with('produit', function ($query) use ($structure) {
             $query->where('structure_id', $structure->id);
@@ -68,13 +87,6 @@ class StructureDisciplineController extends Controller
                     ->latest()
                     ->get();
 
-        $categoriesListByDiscipline = LienDisciplineCategorie::with([
-                    'tarif_types',
-                    'tarif_types.tarif_attributs.sous_attributs.valeurs',
-                    'tarif_types.tarif_attributs.valeurs'
-                ])->whereHas('str_activites', function (Builder $query) use ($structure) {
-                    $query->where('structure_id', $structure->id);
-                })->get();
 
         $activiteForTarifs = StructureActivite::with([
                     'structure:id,name,slug',
@@ -179,17 +191,30 @@ class StructureDisciplineController extends Controller
         })->where('confirmed', true)
             ->count();
 
+        $discipline = ListDiscipline::where('slug', $discipline)->first();
+
         $structure = Structure::with([
-            'adresses' => function ($query) {
+            'creator:id,name',
+            'users:id,name',
+            'adresses'  => function ($query) {
                 $query->latest();
             },
-            'produits',
-        ])
-        ->select(['id', 'name', 'slug'])
-        ->where('slug', $structure->slug)
-        ->first();
-
-        $discipline = ListDiscipline::where('slug', $discipline)->first();
+            'city',
+            'departement:id,departement,numero',
+            'structuretype:id,name,slug',
+            'disciplines' => function ($query) use ($discipline) {
+                $query->where('discipline_id', $discipline->id)
+                      ->with([
+                          'str_categories' => function ($query) {
+                              $query->withCount('str_activites');
+                          },
+                          'str_categories.str_activites',
+                          'categories' => function ($query) {
+                              $query->whereDoesntHave('disc_categories.str_categories');
+                          }
+                      ]);
+            },
+        ])->findOrFail($structure->id);
 
         $categoriesListByDiscipline = LienDisciplineCategorie::with([
             'tarif_types',

@@ -414,9 +414,6 @@ const openAddPlanningModal = () => {
             <ModalAddTarif
                 :errors="errors"
                 :structure="structure"
-                :all-categories="categoriesListByDiscipline"
-                :activite-for-tarifs="activiteForTarifs"
-                :structure-activites="activites"
                 :show="showAddTarifModal"
                 @close="showAddTarifModal = false"
                 @show-display="handleButtonEvent('Mes tarifs')"

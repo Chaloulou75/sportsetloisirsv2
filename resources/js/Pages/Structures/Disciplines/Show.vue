@@ -160,26 +160,30 @@ const latestAdresseId = computed(() => {
                     <div
                         class="w-full space-y-1 md:flex md:flex-1 md:items-center md:justify-start md:space-x-1.5 md:space-y-0"
                     >
-                        <Link
-                            :href="
-                                route('structures.categories.show', {
-                                    structure: structure.slug,
-                                    discipline: discipline.slug,
-                                    categorie: category.id,
-                                })
-                            "
-                            v-for="category in categoriesListByDiscipline"
-                            :key="category.id"
-                            :index="category.id"
-                            class="flex h-full w-full flex-col items-center bg-white px-6 py-2.5 text-xs text-slate-500 ring ring-green-500/80 hover:bg-gray-50 hover:text-slate-700 md:w-auto md:py-4"
+                        <template
+                            v-for="discipline in structure.disciplines"
+                            :key="discipline.id"
                         >
-                            <AcademicCapIcon
-                                class="hidden h-6 w-6 md:inline-flex"
-                            />
-                            <div>
-                                {{ category.nom_categorie_pro }}
-                            </div>
-                        </Link>
+                            <Link
+                                :href="
+                                    route('structures.categories.show', {
+                                        structure: structure.slug,
+                                        discipline: discipline.slug,
+                                        categorie: category.slug,
+                                    })
+                                "
+                                v-for="category in discipline.str_categories"
+                                :key="category.id"
+                                class="flex h-full w-full flex-col items-center bg-white px-6 py-2.5 text-xs text-slate-500 ring ring-green-500/80 hover:bg-gray-50 hover:text-slate-700 md:w-auto md:py-4"
+                            >
+                                <AcademicCapIcon
+                                    class="hidden h-6 w-6 md:inline-flex"
+                                />
+                                <div>
+                                    {{ category.nom_categorie_pro }}
+                                </div>
+                            </Link>
+                        </template>
                     </div>
 
                     <div class="w-full md:w-auto">
@@ -200,19 +204,28 @@ const latestAdresseId = computed(() => {
                             </template>
 
                             <template #content>
-                                <BreezeDropdownLink
-                                    :href="
-                                        route('structures.categories.show', {
-                                            structure: structure.slug,
-                                            discipline: discipline.slug,
-                                            categorie: category.id,
-                                        })
-                                    "
-                                    v-for="category in categoriesWithoutStructures"
-                                    :key="category.id"
+                                <template
+                                    v-for="discipline in structure.disciplines"
+                                    :key="discipline.id"
                                 >
-                                    {{ category.nom_categorie_pro }}
-                                </BreezeDropdownLink>
+                                    <BreezeDropdownLink
+                                        :href="
+                                            route(
+                                                'structures.categories.show',
+                                                {
+                                                    structure: structure.slug,
+                                                    discipline: discipline.slug,
+                                                    categorie:
+                                                        category.pivot.slug,
+                                                }
+                                            )
+                                        "
+                                        v-for="category in discipline.categories"
+                                        :key="category.id"
+                                    >
+                                        {{ category.pivot.nom_categorie_pro }}
+                                    </BreezeDropdownLink>
+                                </template>
                             </template>
                         </BreezeDropdown>
                     </div>

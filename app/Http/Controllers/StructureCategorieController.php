@@ -31,7 +31,6 @@ class StructureCategorieController extends Controller
      */
     public function show(Structure $structure, ListDiscipline $discipline, $categorie): Response
     {
-
         if (!Gate::allows('update-structure', $structure)) {
             return to_route('structures.disciplines.index', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette activité, vous devez être le créateur de l\'activité ou un administrateur.');
         }
@@ -48,22 +47,33 @@ class StructureCategorieController extends Controller
             ->count();
 
         $structure = Structure::with([
-            'adresses' => function ($query) {
+            'creator:id,name',
+            'users:id,name',
+            'adresses'  => function ($query) {
                 $query->latest();
             },
-            'produits',
-        ])
-        ->select(['id', 'name', 'slug'])
-        ->where('slug', $structure->slug)
-        ->first();
-
-        $discipline = ListDiscipline::where('slug', $discipline->slug)->first();
+            'city',
+            'departement:id,departement,numero',
+            'structuretype:id,name,slug',
+            'disciplines' => function ($query) use ($discipline) {
+                $query->where('discipline_id', $discipline->id)
+                      ->with([
+                          'str_categories' => function ($query) {
+                              $query->withCount('str_activites');
+                          },
+                          'str_categories.str_activites',
+                          'categories' => function ($query) {
+                              $query->whereDoesntHave('disc_categories.str_categories');
+                          }
+                      ]);
+            },
+        ])->findOrFail($structure->id);
 
         $categorie = LienDisciplineCategorie::with([
             'tarif_types',
             'tarif_types.tarif_attributs.sous_attributs.valeurs',
             'tarif_types.tarif_attributs.valeurs'
-        ])->findOrFail($categorie);
+        ])->where('slug', $categorie)->first();
 
         $categoriesListByDiscipline = LienDisciplineCategorie::with([
             'tarif_types',

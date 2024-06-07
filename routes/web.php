@@ -192,7 +192,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('str-{structure:slug}/dis-{discipline:slug}', [StructureDisciplineController::class, 'show'])->name('structures.disciplines.show');
     Route::delete('structures/{structure}/disciplines/{discipline}', [StructureDisciplineController::class, 'destroy'])->name('structures.disciplines.destroy');
 
-    Route::get('str-{structure:slug}/dis-{discipline:slug}/cat-{categorie:id}', [StructureCategorieController::class, 'show'])->name('structures.categories.show');
+    Route::get('str-{structure:slug}/dis-{discipline:slug}/cat-{categorie:slug}', [StructureCategorieController::class, 'show'])->name('structures.categories.show');
 
     Route::delete('structures/{structure}/categories/{categorie}', [StructureCategorieController::class, 'destroy'])->name('structures.categories.destroy');
 

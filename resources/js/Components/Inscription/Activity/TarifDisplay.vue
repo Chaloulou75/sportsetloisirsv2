@@ -61,44 +61,6 @@ const formatCurrency = (value) => {
 const emitShowDisplay = () => {
     emit("showDisplay");
 };
-
-// Old version
-// const ModalEditTarif = defineAsyncComponent(() =>
-//     import("@/Components/Modals/ModalEditTarif.vue")
-// );
-// const tarifsList = computed(() => {
-//     const tarifs = [];
-//     for (const structureActivite of props.structureActivites) {
-//         if (structureActivite.produits.length > 0) {
-//             for (const produit of structureActivite.produits) {
-//                 for (const tarif of produit.tarifs) {
-//                     tarifs.push(tarif);
-//                 }
-//             }
-//         }
-//     }
-//     return tarifs;
-// });
-
-// const currentTarif = ref(null);
-// const showEditTarifModal = ref(false);
-
-// const openEditTarifModal = (tarif) => {
-//     currentTarif.value = tarif;
-//     showEditTarifModal.value = true;
-// };
-
-// const destroyTarif = (tarif) => {
-//     router.delete(
-//         route("tarifs.destroyTarif", {
-//             structure: props.structure.slug,
-//             tarif: tarif.id,
-//         }),
-//         {
-//             preserveScroll: true,
-//         }
-//     );
-// };
 </script>
 <template>
     <div v-if="strCatTarifs.length > 0" class="overflow-x-auto">
