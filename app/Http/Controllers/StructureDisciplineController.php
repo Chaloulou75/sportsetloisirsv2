@@ -32,16 +32,7 @@ class StructureDisciplineController extends Controller
      */
     public function index(Structure $structure): Response
     {
-        // $structure = Structure::withRelations()->findOrFail($structure->id);
         $structure = Structure::with([
-                    'creator:id,name',
-                    'users:id,name',
-                    'adresses'  => function ($query) {
-                        $query->latest();
-                    },
-                    'city',
-                    'departement:id,departement,numero',
-                    'structuretype:id,name,slug',
                     'disciplines' => function ($query) {
                         $query->select('liste_disciplines.id', 'liste_disciplines.name', 'liste_disciplines.slug', 'liste_disciplines.theme')
                             ->withCount('str_categories')
@@ -62,7 +53,15 @@ class StructureDisciplineController extends Controller
                         $query->whereDoesntHave('disc_categories.str_categories');
                     },
                     'activites' => function ($query) {
-                        $query->withRelations()->latest();
+                        $query->with([
+                            'discipline:id,name,slug',
+                            'plannings' => function ($query) {
+                                $query->endNotPassed();
+                            },
+                            'produits' => function ($query) {
+                                $query->latest();
+                            }
+                        ]);
                     }
                 ])->findOrFail($structure->id);
 
