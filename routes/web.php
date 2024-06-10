@@ -160,15 +160,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/gestion/{structure:slug}/reservations/{reservation}', [ProductReservationController::class, 'update'])->name('structures.gestion.reservations.update');
     Route::get('/gestion/{structure:slug}/statistiques', [StructureStatistiqueController::class, 'index'])->name('structures.gestion.statistiques.index');
 
+
+    Route::post('/structures/{structure:slug}/activites', [ActiviteController::class, 'store'])->name('structures.activites.store');
     Route::post('/structures/{structure:slug}/activites/newactivitystore', [ActiviteController::class, 'newactivitystore'])->name('structures.activites.newactivitystore');
     Route::put('/structures/{structure:slug}/activites/{activite:id}', [ActiviteController::class, 'update'])->name('structures.activites.update');
     Route::patch('/structures/{structure:slug}/activites/{activite:id}/toggleactif', [ActiviteController::class, 'toggleactif'])->name('structures.activites.toggleactif');
     Route::delete('/structures/{structure:slug}/activites/{activite:id}', [ ActiviteController::class, 'destroy'])->name('structures.activites.destroy');
 
-
+    // Produits
+    Route::post('structures/{structure}/activites/{activite}/produits', [StructureActiviteProduitController::class, 'store'])
+        ->name('structures.activites.produits.store');
+    Route::put('structures/{structure}/activites/{activite}/produits/{produit}', [StructureActiviteProduitController::class, 'update'])
+        ->name('structures.activites.produits.update');
+    Route::delete('structures/{structure}/activites/{activite}/produits/{produit}', [StructureActiviteProduitController::class, 'destroy'])
+        ->name('structures.activites.produits.destroy');
     Route::post('/structures/{structure:slug}/activites/{activite:id}/produits/{produit:id}/duplicate', [StructureActiviteProduitController::class, 'duplicate'])->name('produits.duplicate');
-    Route::resource('structures.activites.produits', StructureActiviteProduitController::class)->scoped(['structure' => 'slug', 'activite' => 'id', 'produit' => 'id']);
 
+    //tarif
     Route::post('/structures/{structure:slug}/tarifs/{tarif:id}/produits/{produit:id}/duplicate', [StructureTarifController::class, 'duplicate'])->name('tarifs.duplicate');
 
     // First version for tarifs

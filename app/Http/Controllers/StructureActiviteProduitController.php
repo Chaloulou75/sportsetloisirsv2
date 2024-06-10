@@ -289,7 +289,7 @@ class StructureActiviteProduitController extends Controller
 
         $produit->delete();
 
-        return to_route('structures.categories.show', ['structure' => $structure->slug, 'discipline' => $activite->discipline->slug, 'categorie' => $activite->categorie->id])->with('success', "Le produit a bien été supprimé");
+        return to_route('structures.disciplines.show', ['structure' => $structure->slug, 'discipline' => $activite->discipline->slug ])->with('success', "Le produit a bien été supprimé");
     }
 
     public function duplicate(Structure $structure, StructureActivite $activite, StructureProduit $produit): RedirectResponse
@@ -325,7 +325,7 @@ class StructureActiviteProduitController extends Controller
             $newProduit->catTarifs()->attach($tarif);
         }
 
-        return to_route('structures.categories.show', ['structure' => $structure->slug, 'discipline' => $activite->discipline->slug, 'categorie' => $activite->categorie->id])->with('success', "Le produit a bien été dupliqué");
+        return to_route('structures.disciplines.show', ['structure' => $structure->slug, 'discipline' => $activite->discipline->slug ])->with('success', "Le produit a bien été dupliqué");
     }
 
     private function insertCriteresRecursively($structure, $structureActivite, $structureProduit, $critereId, $criteresValues, $defaut)

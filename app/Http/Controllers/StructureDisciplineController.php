@@ -76,11 +76,6 @@ class StructureDisciplineController extends Controller
         })->where('confirmed', true)
             ->count();
 
-        // $activites = StructureActivite::withRelations()
-        //             ->where('structure_id', $structure->id)
-        //             ->latest()
-        //             ->get();
-
         $strCatTarifs = StructureCatTarif::withRelations()->with('produits')->where('structure_id', $structure->id)->get();
 
         $dejaUsedDisciplines = $structure->disciplines->pluck('id');
@@ -138,57 +133,73 @@ class StructureDisciplineController extends Controller
         })->where('confirmed', true)
             ->count();
 
-        $discipline = ListDiscipline::where('slug', $discipline)->first();
+        $discipline = ListDiscipline::with('categories')->where('slug', $discipline)->first();
 
         $structure = Structure::with([
-            'creator:id,name',
-            'users:id,name',
             'adresses'  => function ($query) {
                 $query->latest();
             },
-            'city',
-            'departement:id,departement,numero',
-            'structuretype:id,name,slug',
             'disciplines' => function ($query) use ($discipline) {
-                $query->where('discipline_id', $discipline->id)
-                      ->with([
-                          'str_categories' => function ($query) {
-                              $query->withCount('str_activites');
-                          },
-                          'str_categories.str_activites',
-                          'categories' => function ($query) {
-                              $query->whereDoesntHave('disc_categories.str_categories');
-                          }
-                      ]);
+                $query->select('liste_disciplines.id', 'liste_disciplines.name', 'liste_disciplines.slug', 'liste_disciplines.theme')
+                    ->where('discipline_id', $discipline->id)
+                    ->withCount('str_categories')
+                    ->orderBy('str_categories_count', 'desc');
             },
+            'disciplines.str_categories' => function ($query) {
+                $query->withCount('str_activites')
+                        ->with([
+                            'tarif_types',
+                            'tarif_types.tarif_attributs.sous_attributs.valeurs',
+                            'tarif_types.tarif_attributs.valeurs'
+                        ])
+                        ->whereHas('str_activites');
+            },
+            'disciplines.str_categories.str_activites',
+            'disciplines.str_categories.str_activites.produits',
+            'disciplines.categories' => function ($query) {
+                $query->whereDoesntHave('disc_categories.str_categories');
+            },
+            'categories' => function ($query) use ($discipline) {
+                $query->where('structures_categories.discipline_id', $discipline->id);
+            },
+            'activites' => function ($query) use ($discipline) {
+                $query->with([
+                    'discipline:id,name,slug',
+                    'plannings' => function ($query) {
+                        $query->endNotPassed()->orderByDateStart();
+                    },
+                    'produits' => function ($query) {
+                        $query->latest();
+                    },
+                    'produits.adresse',
+                    'produits.criteres',
+                    'produits.criteres.critere',
+                    'produits.criteres.critere_valeur',
+                    'produits.criteres.critere_valeur.sous_criteres.sous_criteres_valeurs',
+                    'produits.criteres.critere_valeur.sous_criteres.prod_sous_crit_valeurs.sous_critere_valeur',
+                    'produits.criteres.sous_criteres',
+                    'produits.criteres.sous_criteres.sous_critere_valeur',
+                    'produits.catTarifs',
+                    'produits.catTarifs.produits:id',
+                    'produits.catTarifs.categorie',
+                    'produits.catTarifs.cat_tarif_type',
+                    'produits.catTarifs.cat_tarif_type.tarif_attributs',
+                    'produits.catTarifs.cat_tarif_type.tarif_attributs.valeurs',
+                    'produits.catTarifs.cat_tarif_type.tarif_attributs.sous_attributs',
+                    'produits.catTarifs.cat_tarif_type.tarif_attributs.sous_attributs.valeurs',
+                    'produits.catTarifs.attributs',
+                    'produits.catTarifs.attributs.tarif_attribut',
+                    'produits.catTarifs.attributs.tarif_attribut.valeurs',
+                    'produits.catTarifs.attributs.sous_attributs',
+                    'produits.catTarifs.attributs.sous_attributs.sous_attribut',
+                    'produits.catTarifs.attributs.sous_attributs.sous_attribut_valeur',
+                    'produits.plannings' => function ($query) {
+                        $query->endNotPassed()->orderByDateStart();
+                    },
+                ])->where('discipline_id', $discipline->id)
+                ->latest();
+            }
         ])->findOrFail($structure->id);
-
-        $categoriesListByDiscipline = LienDisciplineCategorie::with([
-            'tarif_types',
-            'tarif_types.tarif_attributs.sous_attributs.valeurs',
-            'tarif_types.tarif_attributs.valeurs'
-        ])->whereHas('str_activites', function (Builder $query) use ($structure) {
-            $query->where('structure_id', $structure->id);
-        })->where('discipline_id', $discipline->id)->get();
-
-        $categoriesWithoutStructures = LienDisciplineCategorie::with([
-            'tarif_types',
-            'tarif_types.tarif_attributs.sous_attributs.valeurs',
-            'tarif_types.tarif_attributs.valeurs'
-        ])->whereDoesntHave('str_activites', function (Builder $query) use ($structure) {
-            $query->where('structure_id', $structure->id);
-        })->where('discipline_id', $discipline->id)->get();
-
-        $allCategories = $categoriesListByDiscipline->merge($categoriesWithoutStructures);
-
-        $structureActivites = $structure->activites()->withRelations()
-            ->with([
-                'produits.criteres.critere_valeur.sous_criteres.sous_criteres_valeurs',
-                'produits.criteres.sous_criteres.sous_critere_valeur'
-            ])
-            ->where('discipline_id', $discipline->id)
-            ->latest()
-            ->get();
 
         $strCatTarifs = StructureCatTarif::withRelations()
         ->with('produits')
@@ -198,7 +209,7 @@ class StructureDisciplineController extends Controller
         })
         ->get();
 
-        $uniqueCriteresInProducts = $structureActivites->flatMap(function ($activite) {
+        $uniqueCriteresInProducts = $structure->activites->flatMap(function ($activite) {
             return $activite->produits->flatMap(function ($produit) {
                 return $produit->criteres->map(function ($structureProduitCritere) {
                     return $structureProduitCritere->critere;
@@ -211,57 +222,11 @@ class StructureDisciplineController extends Controller
             ->where('visible_back', true)
             ->get();
 
-        $activiteForTarifs = StructureActivite::with([
-                'structure:id,name,slug',
-                'categorie:id,nom_categorie_pro',
-                'discipline:id,name',
-                'produits',
-            ])
-            ->where('structure_id', $structure->id)
-            ->latest()
-            ->get()
-            ->groupBy('discipline.id')
-            ->map(function ($disciplineActivites, $disciplineId) {
-                return [
-                    'id' => $disciplineId,
-                    'disciplineName' => $disciplineActivites->first()->discipline->name,
-                    'categories' => $disciplineActivites->groupBy('categorie.id')->map(function ($categorieItems, $categoryId) {
-                        $activites = $categorieItems->map(function ($activiteItem) {
-                            return [
-                                'id' => $activiteItem->id,
-                                'titre' => $activiteItem->titre,
-                                'disciplineId' => $activiteItem->discipline_id,
-                                'categorieId' => $activiteItem->categorie_id,
-                                'produits' => $activiteItem->produits->map(function ($produitItem) {
-                                    return [
-                                        'id' => $produitItem->id,
-                                        'disciplineId' => $produitItem->discipline_id,
-                                        'categorieId' => $produitItem->categorie_id,
-                                        'activiteId' => $produitItem->activite_id,
-                                    ];
-                                }),
-                            ];
-                        });
-                        return [
-                            'id' => $categoryId,
-                            'disciplineId' => $categorieItems->first()->discipline->id,
-                            'name' => $categorieItems->first()->categorie->nom_categorie_pro ?? 'Sans Catégorie',
-                            'activites' => $activites,
-                        ];
-                    }),
-                ];
-            });
-
         return Inertia::render('Structures/Disciplines/Show', [
             'structure' => fn () => $structure,
-            'structureActivites' => fn () => $structureActivites,
             'uniqueCriteresInProducts' => fn () => $uniqueCriteresInProducts,
             'criteres' => fn () => $criteres,
             'discipline' => fn () => $discipline,
-            'categoriesListByDiscipline' => fn () => $categoriesListByDiscipline,
-            'categoriesWithoutStructures' => fn () => $categoriesWithoutStructures,
-            'allCategories' => fn () => $allCategories,
-            'activiteForTarifs' => fn () => $activiteForTarifs,
             'strCatTarifs' => fn () => $strCatTarifs,
             'allReservationsCount' => fn () => $allReservationsCount,
             'confirmedReservationsCount' => fn () => $confirmedReservationsCount,

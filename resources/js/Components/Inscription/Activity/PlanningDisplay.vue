@@ -16,7 +16,7 @@ import {
 } from "@headlessui/vue";
 import { ChevronUpDownIcon, CheckCircleIcon } from "@heroicons/vue/20/solid";
 
-const emit = defineEmits(["close"]);
+const emit = defineEmits(["close", "showDisplay"]);
 
 const props = defineProps({
     errors: Object,
@@ -24,11 +24,31 @@ const props = defineProps({
     structure: Object,
 });
 
-const selectedActivite = ref(props.structure?.activites[0] ?? null);
-const selectedProduct = ref(props.structure.activites[0]?.produits?.[0] ?? "");
-const selectedTitle = ref(props.structure.activites[0]?.titre ?? "");
+const selectedActivite = ref(null);
+const selectedTitle = ref(null);
+const selectedProduct = ref(null);
 const selectedEvent = ref({});
 const isOpen = ref(false);
+
+watch(
+    () => props.structure,
+    (newStructure) => {
+        if (
+            newStructure &&
+            newStructure.activites &&
+            newStructure.activites.length > 0
+        ) {
+            selectedActivite.value = newStructure.activites[0];
+            selectedTitle.value = newStructure.activites[0].titre;
+            selectedProduct.value = newStructure.activites[0].produits?.[0];
+        } else {
+            selectedActivite.value = null;
+            selectedTitle.value = null;
+            selectedProduct.value = null;
+        }
+    },
+    { immediate: true }
+);
 
 function closeModal() {
     isOpen.value = false;
@@ -140,6 +160,7 @@ const onSubmitEventForm = () => {
             remember: true,
             onSuccess: () => {
                 formPlanning.reset();
+                emit("showDisplay");
                 closeModal();
             },
             structure: props.structure.slug,
@@ -156,6 +177,7 @@ const handleEventDeleted = (event) => {
         {
             preserveScroll: true,
             onSuccess: () => {
+                emit("showDisplay");
                 closeModal();
             },
         }
@@ -175,6 +197,9 @@ const handleEventChanged = (event) => {
         },
         {
             preserveScroll: true,
+            onSuccess: () => {
+                emit("showDisplay");
+            },
         }
     );
 };

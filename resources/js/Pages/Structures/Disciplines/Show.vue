@@ -17,10 +17,7 @@ const props = defineProps({
     structureActivites: Object,
     uniqueCriteresInProducts: Object,
     criteres: Object,
-    categoriesListByDiscipline: Object,
-    categoriesWithoutStructures: Object,
-    allCategories: Object,
-    activiteForTarifs: Object,
+    // activiteForTarifs: Object,
     strCatTarifs: Object,
     confirmedReservationsCount: Number,
     allReservationsCount: Number,
@@ -105,7 +102,6 @@ const openAddActiviteModal = () => {
 
 const showAddTarifModal = ref(false);
 const openAddTarifModal = (produit) => {
-    console.log(produit);
     currentProduit.value = produit;
     showAddTarifModal.value = true;
 };
@@ -160,30 +156,25 @@ const latestAdresseId = computed(() => {
                     <div
                         class="w-full space-y-1 md:flex md:flex-1 md:items-center md:justify-start md:space-x-1.5 md:space-y-0"
                     >
-                        <template
-                            v-for="discipline in structure.disciplines"
-                            :key="discipline.id"
+                        <Link
+                            :href="
+                                route('structures.categories.show', {
+                                    structure: structure.slug,
+                                    discipline: discipline.slug,
+                                    categorie: category.slug,
+                                })
+                            "
+                            v-for="category in structure.categories"
+                            :key="category.id"
+                            class="flex h-full w-full flex-col items-center bg-white px-6 py-2.5 text-xs text-slate-500 ring ring-green-500/80 hover:bg-gray-50 hover:text-slate-700 md:w-auto md:py-4"
                         >
-                            <Link
-                                :href="
-                                    route('structures.categories.show', {
-                                        structure: structure.slug,
-                                        discipline: discipline.slug,
-                                        categorie: category.slug,
-                                    })
-                                "
-                                v-for="category in discipline.str_categories"
-                                :key="category.id"
-                                class="flex h-full w-full flex-col items-center bg-white px-6 py-2.5 text-xs text-slate-500 ring ring-green-500/80 hover:bg-gray-50 hover:text-slate-700 md:w-auto md:py-4"
-                            >
-                                <AcademicCapIcon
-                                    class="hidden h-6 w-6 md:inline-flex"
-                                />
-                                <div>
-                                    {{ category.nom_categorie_pro }}
-                                </div>
-                            </Link>
-                        </template>
+                            <AcademicCapIcon
+                                class="hidden h-6 w-6 md:inline-flex"
+                            />
+                            <div>
+                                {{ category.nom_categorie_pro }}
+                            </div>
+                        </Link>
                     </div>
 
                     <div class="w-full md:w-auto">
@@ -252,22 +243,20 @@ const latestAdresseId = computed(() => {
                     />
                     <template v-if="displayActivites">
                         <ActivityDisplay
-                            v-for="structureActivite in structureActivites"
-                            :key="structureActivite.id"
+                            v-for="activite in structure.activites"
+                            :key="activite.id"
                             :errors="errors"
                             :structure="structure"
-                            :structure-activite="structureActivite"
+                            :activite="activite"
                             :unique-criteres-in-products="
                                 uniqueCriteresInProducts
                             "
                             :criteres="criteres"
                             :latest-adresse-id="latestAdresseId"
-                            :activite-for-tarifs="activiteForTarifs"
-                            :all-categories="categoriesListByDiscipline"
                             @add-tarif="openAddTarifModal"
                             @add-planning="openAddPlanningModal"
                         />
-                        <div v-if="structureActivites.length === 0">
+                        <div v-if="structure.activites.length === 0">
                             <p class="font-semibold italic text-gray-600">
                                 Pas d'activité dans cette catégorie
                             </p>
@@ -277,7 +266,7 @@ const latestAdresseId = computed(() => {
                         <PlanningDisplay
                             :errors="errors"
                             :structure="structure"
-                            :structure-activites="structureActivites"
+                            @show-display="handleButtonEvent('Planning')"
                         />
                     </template>
                     <template v-if="displayTarifs">
@@ -286,9 +275,6 @@ const latestAdresseId = computed(() => {
                             :structure="structure"
                             :discipline="discipline"
                             :str-cat-tarifs="strCatTarifs"
-                            :all-categories="categoriesListByDiscipline"
-                            :structure-activites="structureActivites"
-                            :activite-for-tarifs="activiteForTarifs"
                             @show-display="handleButtonEvent('Mes tarifs')"
                         />
                     </template>
@@ -298,7 +284,6 @@ const latestAdresseId = computed(() => {
                 :errors="errors"
                 :structure="structure"
                 :discipline="discipline"
-                :categories="allCategories"
                 :criteres="criteres"
                 :show="showAddActiviteModal"
                 @close="showAddActiviteModal = false"
@@ -310,7 +295,7 @@ const latestAdresseId = computed(() => {
                 :produit="currentProduit"
                 :all-categories="categoriesListByDiscipline"
                 :activite-for-tarifs="activiteForTarifs"
-                :structure-activites="structureActivites"
+                :structure-activites="structure.activites"
                 :show="showAddTarifModal"
                 @close="showAddTarifModal = false"
                 @show-display="handleButtonEvent('Mes tarifs')"
@@ -318,7 +303,7 @@ const latestAdresseId = computed(() => {
             <ModalAddPlanning
                 :errors="errors"
                 :structure="structure"
-                :structure-activites="structureActivites"
+                :structure-activites="structure.activites"
                 :produit="currentProduit"
                 :show="showAddPlanningModal"
                 @close="showAddPlanningModal = false"

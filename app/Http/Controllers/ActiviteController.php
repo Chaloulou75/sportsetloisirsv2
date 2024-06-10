@@ -203,52 +203,17 @@ class ActiviteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Structure $structure, $activite): RedirectResponse
+    public function destroy(Structure $structure, StructureActivite $activite): RedirectResponse
     {
-        $activite = StructureActivite::findOrFail($activite);
+
+        if ($activite->image) {
+            Storage::disk('public')->delete($activite->image);
+        }
 
         $discipline = $activite->discipline;
         $categorieId = $activite->categorie->id;
 
-        $produits = StructureProduit::where('activite_id', $activite->id)->get();
-
-        $criteres = StructureProduitCritere::with('sous_criteres')->where('activite_id', $activite->id)->get();
-
-        $souscriteres = StructureProduitSousCritere::where('activite_id', $activite->id)->get();
-
-        $plannings = StructurePlanning::where('activite_id', $activite->id)->get();
-
-        if($plannings->isNotEmpty()) {
-            foreach($plannings as $planning) {
-                $planning->delete();
-            }
-        }
-
-        if($souscriteres->isNotEmpty()) {
-            foreach($souscriteres as $souscritere) {
-                $souscritere->delete();
-            }
-        }
-
-        if($criteres->isNotEmpty()) {
-            foreach($criteres as $critere) {
-                $critere->delete();
-            }
-        }
-
-        if($produits->isNotEmpty()) {
-            foreach($produits as $produit) {
-                $produit->delete();
-            }
-        }
-
-        if($activite->image) {
-            Storage::disk('public')->delete($activite->image);
-        }
-
-        if($activite) {
-            $activite->delete();
-        }
+        $activite->delete();
 
         $structureCategories = StructureCategorie::doesntHave('activites')
         ->where('structure_id', $structure->id)

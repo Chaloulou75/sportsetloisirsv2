@@ -323,6 +323,9 @@ const onSubmit = () => {
 };
 
 onMounted(() => {
+    if (props.discipline) {
+        addTarifForm.discipline_id = props.discipline?.id ?? null;
+    }
     if (newSelectedCategorieId.value) {
         addTarifForm.categorie_id = newSelectedCategorieId.value;
     }

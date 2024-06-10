@@ -35,7 +35,6 @@ const props = defineProps({
     discipline: Object,
     criteres: Object,
     category: Object,
-    categories: Object,
     show: Boolean,
 });
 
@@ -146,7 +145,13 @@ const onSubmit = () => {
 };
 
 onMounted(() => {
-    form.categorie_id = ref(props.category?.id ?? null);
+    if (props.category) {
+        form.categorie_id = ref(props.category?.id ?? null);
+    } else {
+        form.categorie_id = ref(
+            props.discipline?.categories[0]?.pivot.id ?? null
+        );
+    }
 });
 </script>
 <template>
@@ -210,7 +215,7 @@ onMounted(() => {
                                     <div class="flex flex-col space-y-3">
                                         <!-- categories -->
                                         <div
-                                            v-if="categories"
+                                            v-if="discipline.categories"
                                             class="flex w-full flex-col items-center justify-start space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
                                         >
                                             <label
@@ -229,12 +234,17 @@ onMounted(() => {
                                                     class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
                                                 >
                                                     <option
-                                                        v-for="categorie in categories"
-                                                        :key="categorie.id"
-                                                        :value="categorie.id"
+                                                        v-for="categorie in discipline.categories"
+                                                        :key="
+                                                            categorie.pivot.id
+                                                        "
+                                                        :value="
+                                                            categorie.pivot.id
+                                                        "
                                                     >
                                                         {{
-                                                            categorie.nom_categorie_pro
+                                                            categorie.pivot
+                                                                .nom_categorie_pro
                                                         }}
                                                     </option>
                                                 </select>

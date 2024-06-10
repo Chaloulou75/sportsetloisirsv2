@@ -1,8 +1,7 @@
 <script setup>
 import { classMapping } from "@/Utils/classMapping.js";
 import { ref, computed, nextTick, defineAsyncComponent } from "vue";
-import { useForm, router, Link } from "@inertiajs/vue3";
-import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
+import { router, Link } from "@inertiajs/vue3";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import localeData from "dayjs/plugin/localeData";
@@ -11,7 +10,6 @@ import {
     MapPinIcon,
     ChevronUpIcon,
     DocumentDuplicateIcon,
-    XCircleIcon,
     TrashIcon,
     PlusIcon,
     PencilSquareIcon,
@@ -26,10 +24,6 @@ import {
     DisclosureButton,
     DisclosurePanel,
     TransitionRoot,
-    TransitionChild,
-    Dialog,
-    DialogPanel,
-    DialogTitle,
 } from "@headlessui/vue";
 dayjs.locale("fr");
 dayjs.extend(localeData);
@@ -43,6 +37,10 @@ const openAddTarifModal = (produit) => {
 const openAddPlanningModal = (produit) => {
     emit("addPlanning", produit);
 };
+
+const ModalEditActivite = defineAsyncComponent(() =>
+    import("@/Components/Modals/ModalEditActivite.vue")
+);
 
 const ModalAddProduit = defineAsyncComponent(() =>
     import("@/Components/Modals/ModalAddProduit.vue")
@@ -61,39 +59,36 @@ const ModalEditCatTarif = defineAsyncComponent(() =>
 );
 
 const props = defineProps({
-    structureActivite: Object,
+    activite: Object,
     structure: Object,
     errors: Object,
     uniqueCriteresInProducts: Object,
     criteres: Object,
     latestAdresseId: Number,
     tarifTypes: Object,
-    activiteForTarifs: Object,
     allCategories: Object,
 });
 
 const isShowing = ref(true);
-const currentStructureActivite = ref(null);
 const currentProduit = ref(null);
-const isOpen = ref(false);
+const showEditActiviteModal = ref(false);
 const showDeleteActiviteModal = ref(false);
 const showAddProduitModal = ref(false);
 const showEditProduitModal = ref(false);
 const openTarif = ref(false);
 const currentTarif = ref(null);
 const showEditTarifModal = ref(false);
-const showAddTarifModal = ref(false);
 
 const headerClass = computed(() => {
     const defaultClass = "bg-la-base";
-    const image = props.structureActivite.image;
-    const disciplineId = props.structureActivite.discipline_id;
+    const image = props.activite?.image;
+    const disciplineId = props.activite?.discipline_id;
 
-    if (props.structureActivite && image) {
+    if (props.activite && image) {
         return "";
     }
 
-    if (props.structureActivite && disciplineId && classMapping[disciplineId]) {
+    if (props.activite && disciplineId && classMapping[disciplineId]) {
         return classMapping[disciplineId];
     }
 
@@ -102,7 +97,7 @@ const headerClass = computed(() => {
 
 const uniqueCriteresByCategorie = computed(() => {
     return props.uniqueCriteresInProducts.filter((critere) => {
-        return critere.categorie_id === props.structureActivite.categorie_id;
+        return critere.categorie_id === props.activite.categorie_id;
     });
 });
 
@@ -117,17 +112,6 @@ const groupCriteres = (criteres) => {
     }, {});
 };
 
-const formatDate = (dateTime) => {
-    return dayjs(dateTime).locale("fr").format("DD MMMM YYYY");
-};
-
-const formatTime = (time) => {
-    const hours = time.substring(0, 2);
-    const minutes = time.substring(3, 5);
-    let formattedTime = `${hours}h${minutes}`;
-    return formattedTime;
-};
-
 const formatCurrency = (value) => {
     const numericValue = Number(value.replace(/[^0-9.-]+/g, ""));
     if (!isNaN(numericValue)) {
@@ -140,18 +124,15 @@ const formatCurrency = (value) => {
     return value;
 };
 
-const openDeleteModal = (structureActivite) => {
-    currentStructureActivite.value = structureActivite;
+const openDeleteModal = () => {
     showDeleteActiviteModal.value = true;
 };
 
-const openAddProduitModal = (structureActivite) => {
-    currentStructureActivite.value = structureActivite;
+const openAddProduitModal = () => {
     showAddProduitModal.value = true;
 };
 
-const openEditProduitModal = (structureActivite, produit) => {
-    currentStructureActivite.value = structureActivite;
+const openEditProduitModal = (produit) => {
     currentProduit.value = produit;
     showEditProduitModal.value = true;
 };
@@ -161,82 +142,50 @@ const openEditTarifModal = (tarif) => {
     showEditTarifModal.value = true;
 };
 
-const openEditModal = (structureActivite) => {
-    currentStructureActivite.value = structureActivite;
-    isOpen.value = true;
+const openEditModal = () => {
+    showEditActiviteModal.value = true;
 };
 
-const closeEditModal = () => {
-    isOpen.value = false;
-};
+const convertedActif = ref(!!props.activite.actif);
 
-const formEdit = useForm({
-    _method: "put",
-    titre: props.structureActivite.titre,
-    description: props.structureActivite.description,
-    image: null,
-});
-
-const submitForm = (activiteId) => {
-    formEdit.post(
-        route("structures.activites.update", {
-            structure: props.structure.slug,
-            activite: activiteId,
-        }),
-        {
-            forceFormData: true,
-            preserveScroll: true,
-            onSuccess: () => {
-                formEdit.reset();
-                closeEditModal();
-            },
-        }
-    );
-};
-
-const convertedActif = ref(!!props.structureActivite.actif);
-
-async function toggleActif(structureActivite) {
+async function toggleActif() {
     await nextTick();
     router.patch(
         route("structures.activites.toggleactif", {
             structure: props.structure.slug,
-            activite: props.structureActivite.id,
+            activite: props.activite.id,
         }),
         {
             actif: convertedActif.value,
         },
         {
             preserveScroll: true,
-            only: ["structureActivites"],
         }
     );
 }
 
-const duplicate = (structureActivite, produit) => {
+const duplicate = (produit) => {
     router.post(
         route("produits.duplicate", {
             structure: props.structure.slug,
-            activite: structureActivite.id,
+            activite: props.activite.id,
             produit: produit.id,
         }),
         {
             preserveScroll: true,
-            only: ["structureActivites"],
         }
     );
 };
 
-const destroy = (structureActivite, produit) => {
+const destroy = (produit) => {
     router.delete(
         route("structures.activites.produits.destroy", {
             structure: props.structure.slug,
-            activite: structureActivite.id,
+            activite: props.activite.id,
             produit: produit.id,
         }),
         {
             preserveScroll: true,
-            only: ["structureActivites"],
         }
     );
 };
@@ -293,13 +242,13 @@ const destroyTarif = (tarif) => {
         <div class="flex w-full flex-col ring ring-blue-300">
             <div class="flex w-full items-center justify-between bg-gray-700">
                 <h2 class="px-2 font-semibold uppercase text-white">
-                    {{ structureActivite.titre }}
+                    {{ activite.titre }}
                     <Link
                         class="text-xs lowercase italic text-gray-300 hover:text-gray-100 md:text-sm"
                         :href="
                             route('structures.activites.show', {
-                                activite: structureActivite,
-                                slug: structureActivite.slug_title,
+                                activite: activite,
+                                slug: activite.slug_title,
                             })
                         "
                     >
@@ -309,7 +258,7 @@ const destroyTarif = (tarif) => {
                 <div class="flex h-full items-center">
                     <button
                         type="button"
-                        @click="openEditModal(structureActivite)"
+                        @click="openEditModal()"
                         class="h-full w-auto bg-blue-500 p-4 hover:bg-blue-600"
                     >
                         <PencilSquareIcon
@@ -318,7 +267,7 @@ const destroyTarif = (tarif) => {
                     </button>
                     <button
                         type="button"
-                        @click="openDeleteModal(structureActivite)"
+                        @click="openDeleteModal(activite)"
                         class="h-full w-auto bg-red-500 p-4 hover:bg-red-600"
                     >
                         <TrashIcon
@@ -326,226 +275,16 @@ const destroyTarif = (tarif) => {
                         />
                     </button>
                 </div>
-                <TransitionRoot appear :show="isOpen" as="template">
-                    <Dialog
-                        as="div"
-                        @close="closeEditModal"
-                        class="relative z-10"
-                    >
-                        <TransitionChild
-                            as="template"
-                            enter="duration-300 ease-out"
-                            enter-from="opacity-0"
-                            enter-to="opacity-100"
-                            leave="duration-200 ease-in"
-                            leave-from="opacity-100"
-                            leave-to="opacity-0"
-                        >
-                            <div
-                                class="fixed inset-0 bg-gray-800 bg-opacity-50"
-                            />
-                        </TransitionChild>
-
-                        <div class="fixed inset-0 overflow-y-auto">
-                            <div
-                                class="flex min-h-full items-center justify-center p-4 text-center"
-                            >
-                                <TransitionChild
-                                    as="template"
-                                    enter="duration-300 ease-out"
-                                    enter-from="opacity-0 scale-95"
-                                    enter-to="opacity-100 scale-100"
-                                    leave="duration-200 ease-in"
-                                    leave-from="opacity-100 scale-100"
-                                    leave-to="opacity-0 scale-95"
-                                >
-                                    <DialogPanel
-                                        class="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
-                                    >
-                                        <form
-                                            @submit.prevent="
-                                                submitForm(
-                                                    currentStructureActivite.id
-                                                )
-                                            "
-                                            enctype="multipart/form-data"
-                                            autocomplete="off"
-                                        >
-                                            <DialogTitle
-                                                as="div"
-                                                class="flex w-full items-center justify-between"
-                                            >
-                                                <h3
-                                                    class="text-lg font-medium leading-6 text-gray-800"
-                                                >
-                                                    Modifier une activité
-                                                </h3>
-                                                <button type="button">
-                                                    <XCircleIcon
-                                                        @click="closeEditModal"
-                                                        class="h-6 w-6 text-gray-600 hover:text-gray-800"
-                                                    />
-                                                </button>
-                                            </DialogTitle>
-                                            <div class="mt-2 w-full">
-                                                <div
-                                                    class="flex flex-col space-y-3"
-                                                >
-                                                    <div>
-                                                        <label
-                                                            for="image"
-                                                            class="block text-sm font-medium text-gray-700"
-                                                            >Ajouter ou modifier
-                                                            la photo ou
-                                                            l'image:</label
-                                                        >
-                                                        <div class="flex">
-                                                            <input
-                                                                class="mt-1 text-sm text-gray-700 focus:outline-none"
-                                                                type="file"
-                                                                id="image"
-                                                                @input="
-                                                                    formEdit.image =
-                                                                        $event.target.files[0]
-                                                                "
-                                                            />
-                                                            <img
-                                                                v-if="
-                                                                    structureActivite.image
-                                                                "
-                                                                alt="activite"
-                                                                :src="
-                                                                    structureActivite.image_url
-                                                                "
-                                                                class="h-auto max-h-12 w-auto max-w-xs object-cover"
-                                                            />
-                                                        </div>
-
-                                                        <span
-                                                            v-if="errors.image"
-                                                            class="mt-2 text-xs text-red-500"
-                                                            >{{
-                                                                errors.image
-                                                            }}</span
-                                                        >
-                                                    </div>
-                                                    <div>
-                                                        <label
-                                                            for="titre"
-                                                            class="block text-sm font-medium text-gray-700"
-                                                        >
-                                                            Titre de l'activité
-                                                        </label>
-                                                        <div
-                                                            class="mt-1 flex rounded-md"
-                                                        >
-                                                            <input
-                                                                v-model="
-                                                                    formEdit.titre
-                                                                "
-                                                                type="text"
-                                                                name="titre"
-                                                                id="titre"
-                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                                :placeholder="`${structureActivite.categorie.nom_categorie_pro} de ${structureActivite.discipline.name}`"
-                                                                autocomplete="none"
-                                                            />
-                                                        </div>
-                                                        <div
-                                                            v-if="errors.titre"
-                                                            class="mt-2 text-xs text-red-500"
-                                                        >
-                                                            {{ errors.titre }}
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <label
-                                                            for="description"
-                                                            class="block text-sm font-medium text-gray-700"
-                                                        >
-                                                            Description
-                                                        </label>
-                                                        <div class="mt-1">
-                                                            <textarea
-                                                                v-model="
-                                                                    formEdit.description
-                                                                "
-                                                                id="description"
-                                                                name="description"
-                                                                rows="2"
-                                                                class="mt-1 block h-48 min-h-full w-full rounded-md border border-gray-300 placeholder-gray-400 placeholder-opacity-50 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                                :class="{
-                                                                    errors: 'border-red-500 focus:ring focus:ring-red-200',
-                                                                }"
-                                                                :placeholder="
-                                                                    currentStructureActivite.description
-                                                                "
-                                                                autocomplete="none"
-                                                                >{{
-                                                                    currentStructureActivite.description
-                                                                }}</textarea
-                                                            >
-                                                        </div>
-                                                        <div
-                                                            v-if="
-                                                                errors.description
-                                                            "
-                                                            class="mt-2 text-xs text-red-500"
-                                                        >
-                                                            {{
-                                                                errors.description
-                                                            }}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div
-                                                class="mt-4 flex w-full items-center justify-between"
-                                            >
-                                                <button
-                                                    type="button"
-                                                    class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
-                                                    @click="closeEditModal"
-                                                >
-                                                    Annuler
-                                                </button>
-                                                <button
-                                                    :disabled="
-                                                        formEdit.processing
-                                                    "
-                                                    :class="{
-                                                        'opacity-25':
-                                                            formEdit.processing,
-                                                    }"
-                                                    type="submit"
-                                                    class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
-                                                >
-                                                    <LoadingSVG
-                                                        v-if="
-                                                            formEdit.processing
-                                                        "
-                                                    />
-                                                    Enregistrer
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </DialogPanel>
-                                </TransitionChild>
-                            </div>
-                        </div>
-                    </Dialog>
-                </TransitionRoot>
             </div>
             <div class="flex w-full flex-col items-start md:flex-row">
                 <div
-                    class="flex h-56 w-auto max-w-sm items-center justify-center bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-soft-light"
+                    class="flex h-56 w-full items-center justify-center bg-slate-100/20 bg-cover bg-center bg-no-repeat bg-blend-soft-light md:max-w-xs"
                     :class="headerClass"
                 >
                     <img
-                        v-if="structureActivite.image"
+                        v-if="activite.image"
                         alt="activite"
-                        :src="structureActivite.image_url"
+                        :src="activite.image_url"
                         class="h-auto max-h-56 w-auto max-w-xs object-cover"
                     />
                 </div>
@@ -556,7 +295,7 @@ const destroyTarif = (tarif) => {
                         <div class="flex items-center space-x-2">
                             <Switch
                                 v-model="convertedActif"
-                                @click="toggleActif(structureActivite)"
+                                @click="toggleActif()"
                                 :class="
                                     convertedActif
                                         ? 'bg-green-600'
@@ -589,15 +328,13 @@ const destroyTarif = (tarif) => {
                     <div class="text-lg">
                         <h4 class="font-semibold">Description:</h4>
                         <p
-                            v-if="structureActivite.description"
+                            v-if="activite.description"
                             class="whitespace-pre-line break-all"
                         >
-                            {{ structureActivite.description }}
+                            {{ activite.description }}
                         </p>
                         <p v-else class="whitespace-pre-line break-all">
-                            {{
-                                structureActivite.structure.presentation_courte
-                            }}
+                            {{ structure.presentation_courte }}
                         </p>
                     </div>
                 </div>
@@ -608,8 +345,8 @@ const destroyTarif = (tarif) => {
                 >
                     <div class="flex items-center py-3">
                         <span>
-                            {{ structureActivite.produits.length }}
-                            <span v-if="structureActivite.produits.length > 1"
+                            {{ activite.produits.length }}
+                            <span v-if="activite.produits.length > 1"
                                 >déclinaisons</span
                             >
                             <span v-else>déclinaison</span>
@@ -622,7 +359,7 @@ const destroyTarif = (tarif) => {
 
                     <button
                         type="button"
-                        @click.prevent="openAddProduitModal(structureActivite)"
+                        @click.prevent="openAddProduitModal()"
                         class="flex h-full w-auto items-center justify-center bg-green-500 px-3 py-3 hover:bg-green-400"
                     >
                         <PlusIcon class="h-6 w-6 text-white" />
@@ -684,7 +421,7 @@ const destroyTarif = (tarif) => {
                                                 class="divide-y divide-gray-200"
                                             >
                                                 <template
-                                                    v-for="produit in structureActivite.produits"
+                                                    v-for="produit in activite.produits"
                                                     :key="produit.id"
                                                 >
                                                     <tr
@@ -834,7 +571,6 @@ const destroyTarif = (tarif) => {
                                                                 type="button"
                                                                 @click="
                                                                     openEditProduitModal(
-                                                                        structureActivite,
                                                                         produit
                                                                     )
                                                                 "
@@ -853,7 +589,6 @@ const destroyTarif = (tarif) => {
                                                                 @click="
                                                                     () =>
                                                                         duplicate(
-                                                                            structureActivite,
                                                                             produit
                                                                         )
                                                                 "
@@ -872,7 +607,6 @@ const destroyTarif = (tarif) => {
                                                                 @click="
                                                                     () =>
                                                                         destroy(
-                                                                            structureActivite,
                                                                             produit
                                                                         )
                                                                 "
@@ -1140,16 +874,23 @@ const destroyTarif = (tarif) => {
         </div>
     </TransitionRoot>
 
+    <ModalEditActivite
+        :activite="activite"
+        :structure="structure"
+        :show="showEditActiviteModal"
+        @close="showEditActiviteModal = false"
+    />
+
     <ModalDeleteActivite
         :structure="structure"
-        :structure-activite="structureActivite"
+        :activite="activite"
         :show="showDeleteActiviteModal"
         @close="showDeleteActiviteModal = false"
     />
     <ModalAddProduit
         :errors="errors"
         :structure="structure"
-        :structure-activite="structureActivite"
+        :activite="activite"
         :show="showAddProduitModal"
         @close="showAddProduitModal = false"
         :criteres="criteres"
@@ -1158,7 +899,7 @@ const destroyTarif = (tarif) => {
     <ModalEditProduit
         :errors="errors"
         :structure="structure"
-        :structure-activite="structureActivite"
+        :activite="activite"
         :produit="currentProduit"
         :show="showEditProduitModal"
         @close="showEditProduitModal = false"
@@ -1170,8 +911,6 @@ const destroyTarif = (tarif) => {
         :errors="errors"
         :structure="structure"
         :tarif-to-update="currentTarif"
-        :all-categories="allCategories"
-        :activite-for-tarifs="activiteForTarifs"
         :show="showEditTarifModal"
         @close="showEditTarifModal = false"
     />

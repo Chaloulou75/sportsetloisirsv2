@@ -31,7 +31,7 @@ const emit = defineEmits(["close"]);
 const props = defineProps({
     errors: Object,
     structure: Object,
-    structureActivite: Object,
+    activite: Object,
     produit: Object,
     show: Boolean,
     criteres: Object,
@@ -46,8 +46,7 @@ const addAddress = ref(false);
 const addInstructeur = ref(false);
 const filteredCriteres = computed(() => {
     return props.criteres.filter(
-        (critere) =>
-            critere.categorie_id === props.structureActivite.categorie_id
+        (critere) => critere.categorie_id === props.activite.categorie_id
     );
 });
 
@@ -342,7 +341,7 @@ const onSubmitEditProduitForm = () => {
     formEditProduit.put(
         route("structures.activites.produits.update", {
             structure: props.structure.slug,
-            activite: props.structureActivite.id,
+            activite: props.activite.id,
             produit: props.produit.id,
         }),
         {
@@ -403,7 +402,7 @@ const onSubmitEditProduitForm = () => {
                                         Modifier le produit / déclinaison
                                         {{ produit.id }} pour l'activité
                                         <span class="text-blue-700">
-                                            {{ structureActivite.titre }}</span
+                                            {{ activite.titre }}</span
                                         >
                                     </h3>
                                     <button type="button">
