@@ -536,7 +536,7 @@ const onSubmit = () => {
                                     >
                                         <label
                                             for="discipline"
-                                            class="block text-sm font-medium text-gray-700"
+                                            class="block text-sm font-medium normal-case text-gray-700"
                                         >
                                             Discipline
                                         </label>
@@ -569,7 +569,7 @@ const onSubmit = () => {
                                     >
                                         <label
                                             for="categorie"
-                                            class="block text-sm font-medium text-gray-700"
+                                            class="block text-sm font-medium normal-case text-gray-700"
                                         >
                                             Categorie
                                         </label>
@@ -624,7 +624,7 @@ const onSubmit = () => {
                                             <div class="relative mt-1">
                                                 <label
                                                     for="tarifType"
-                                                    class="block text-sm font-medium text-gray-700"
+                                                    class="block text-sm font-medium normal-case text-gray-700"
                                                 >
                                                     Type de tarif
                                                 </label>
@@ -709,7 +709,7 @@ const onSubmit = () => {
                                         >
                                             <label
                                                 for="titre"
-                                                class="block text-sm font-medium text-gray-700"
+                                                class="block text-sm font-medium normal-case text-gray-700"
                                             >
                                                 Titre
                                             </label>
@@ -744,7 +744,7 @@ const onSubmit = () => {
                                     >
                                         <label
                                             for="description"
-                                            class="block text-sm font-medium text-gray-700"
+                                            class="block text-sm font-medium normal-case text-gray-700"
                                         >
                                             Description
                                         </label>
@@ -839,7 +839,7 @@ const onSubmit = () => {
                                             >
                                                 <label
                                                     :for="attribut.nom"
-                                                    class="block text-sm font-medium text-gray-700"
+                                                    class="block text-sm font-medium normal-case text-gray-700"
                                                 >
                                                     {{ attribut.nom }}
                                                 </label>
@@ -873,7 +873,7 @@ const onSubmit = () => {
                                             >
                                                 <label
                                                     :for="attribut.nom"
-                                                    class="block text-sm font-medium text-gray-700"
+                                                    class="block text-sm font-medium normal-case text-gray-700"
                                                 >
                                                     {{ attribut.nom }}
                                                 </label>
@@ -956,7 +956,7 @@ const onSubmit = () => {
                                                 >
                                                     <label
                                                         :for="sousattribut.nom"
-                                                        class="block text-sm font-medium text-gray-700"
+                                                        class="block text-sm font-medium normal-case text-gray-700"
                                                     >
                                                         {{ sousattribut.nom }}
                                                     </label>
@@ -995,7 +995,7 @@ const onSubmit = () => {
                                                 >
                                                     <label
                                                         :for="sousattribut.nom"
-                                                        class="block text-sm font-medium text-gray-700"
+                                                        class="block text-sm font-medium normal-case text-gray-700"
                                                     >
                                                         {{ sousattribut.nom }}
                                                     </label>
@@ -1034,7 +1034,7 @@ const onSubmit = () => {
                                     >
                                         <label
                                             for="amount"
-                                            class="block text-sm font-medium text-gray-700"
+                                            class="block text-sm font-medium normal-case text-gray-700"
                                         >
                                             Montant
                                         </label>

@@ -27,7 +27,7 @@ const stripe = ref(null);
 const elements = ref(null);
 const paymentElement = ref(null);
 const isProcessing = ref(false);
-const cardHolderName = ref("");
+// const cardHolderName = ref("");
 
 const handlePayment = async () => {
     if (!stripe.value || !elements.value) {
@@ -43,9 +43,9 @@ const handlePayment = async () => {
             confirmParams: {
                 return_url: route("panier.paiement.success"),
                 payment_method_data: {
-                    billing_details: {
-                        name: cardHolderName.value,
-                    },
+                    // billing_details: {
+                    //     name: cardHolderName.value,
+                    // },
                 },
             },
         });
@@ -105,7 +105,7 @@ onMounted(async () => {
                 class="mx-auto w-full max-w-lg border border-gray-200 bg-gray-50 p-3 shadow-sm"
             >
                 <form id="payment-form">
-                    <div class="w-full">
+                    <!-- <div class="w-full">
                         <InputLabel
                             for="card-holder-name"
                             value="Nom du titulaire"
@@ -116,7 +116,7 @@ onMounted(async () => {
                             type="text"
                             v-model="cardHolderName"
                         />
-                    </div>
+                    </div> -->
 
                     <!-- Stripe Elements Placeholder -->
                     <div class="my-2 py-2" id="payment-element"></div>

@@ -102,7 +102,7 @@ const submitForm = () => {
                                         <div>
                                             <label
                                                 for="image"
-                                                class="block text-sm font-medium text-gray-700"
+                                                class="block text-sm font-medium normal-case text-gray-700"
                                                 >Ajouter ou modifier la photo ou
                                                 l'image:</label
                                             >
@@ -135,7 +135,7 @@ const submitForm = () => {
                                         <div>
                                             <label
                                                 for="titre"
-                                                class="block text-sm font-medium text-gray-700"
+                                                class="block text-sm font-medium normal-case text-gray-700"
                                             >
                                                 Titre de l'activité
                                             </label>
@@ -162,7 +162,7 @@ const submitForm = () => {
                                         <div>
                                             <label
                                                 for="description"
-                                                class="block text-sm font-medium text-gray-700"
+                                                class="block text-sm font-medium normal-case text-gray-700"
                                             >
                                                 Description
                                             </label>

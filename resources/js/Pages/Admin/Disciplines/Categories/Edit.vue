@@ -159,7 +159,7 @@ const updateCategorie = (index) => {
                                     <div>
                                         <label
                                             for="nom_categorie_client"
-                                            class="block text-sm font-medium text-gray-700"
+                                            class="block text-sm font-medium normal-case text-gray-700"
                                         >
                                             Nom client
                                             <span class="text-xs italic"></span>
@@ -194,7 +194,7 @@ const updateCategorie = (index) => {
                                     <div>
                                         <label
                                             for="nom_categorie_pro"
-                                            class="block text-sm font-medium text-gray-700"
+                                            class="block text-sm font-medium normal-case text-gray-700"
                                         >
                                             Nom Professionnel
                                             <span class="text-xs italic"></span>

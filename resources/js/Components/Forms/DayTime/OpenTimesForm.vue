@@ -36,7 +36,10 @@ onMounted(() => {
         leave-to="opacity-0"
     >
         <div class="z-10 w-full">
-            <label :for="name" class="block text-sm font-medium text-gray-700">
+            <label
+                :for="name"
+                class="block text-sm font-medium normal-case text-gray-700"
+            >
                 {{ name }}
             </label>
             <VueDatePicker

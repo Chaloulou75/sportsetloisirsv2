@@ -417,7 +417,7 @@ const showAddSousCritereForm = (valeur) => {
 
 const addSousCritereForm = useForm({
     nom: ref(null),
-    type_champ: ref(sous_crit_type_champs[0]),
+    type_champ: ref(props.type_champs[0]),
     remember: true,
 });
 
@@ -559,7 +559,7 @@ onMounted(() => {
                                     >
                                         <label
                                             for="nom critere"
-                                            class="block text-sm font-medium text-gray-700"
+                                            class="block text-sm font-medium normal-case text-gray-700"
                                             >Modifier le nom du critère
                                             <span class="font-semibold">{{
                                                 critere.nom
@@ -624,7 +624,7 @@ onMounted(() => {
                                 >
                                     <label
                                         for="ordre"
-                                        class="block text-sm font-medium text-gray-700"
+                                        class="block text-sm font-medium normal-case text-gray-700"
                                     >
                                         Ordre: {{ critere.ordre }}
                                     </label>
@@ -777,7 +777,7 @@ onMounted(() => {
                                         >
                                             <label
                                                 for="ordre"
-                                                class="block text-sm font-medium text-gray-700"
+                                                class="block text-sm font-medium normal-case text-gray-700"
                                             >
                                                 Ordre: {{ valeur.ordre }}
                                             </label>
@@ -936,7 +936,7 @@ onMounted(() => {
                                                                                 .id
                                                                         ]
                                                                     "
-                                                                    class="block text-sm font-medium text-gray-700"
+                                                                    class="block text-sm font-medium normal-case text-gray-700"
                                                                 >
                                                                     <span
                                                                         class="text-xs italic"
@@ -995,7 +995,7 @@ onMounted(() => {
                                                             >
                                                                 <label
                                                                     for="ordre"
-                                                                    class="block text-sm font-medium text-gray-700"
+                                                                    class="block text-sm font-medium normal-case text-gray-700"
                                                                 >
                                                                     Ordre:
                                                                     {{
@@ -1159,6 +1159,7 @@ onMounted(() => {
                                                 <div
                                                     class="flex w-full items-center justify-center py-2"
                                                 >
+                                                    <!---->
                                                     <button
                                                         class="inline-flex items-center justify-center space-y-1 rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                                                         v-if="
@@ -1263,8 +1264,10 @@ onMounted(() => {
                                                                 v-for="(
                                                                     type_champ,
                                                                     index
-                                                                ) in sous_crit_type_champs"
-                                                                :key="index"
+                                                                ) in type_champs"
+                                                                :key="
+                                                                    type_champ.id
+                                                                "
                                                                 :value="
                                                                     type_champ
                                                                 "
@@ -1383,12 +1386,15 @@ onMounted(() => {
                         <div
                             class="flex w-full items-center justify-center py-2"
                         >
+                            <!--  -->
                             <button
                                 class="inline-flex items-center justify-center space-y-1 rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                                 v-if="
                                     !showAddValeurForm(critere) &&
                                     (critere.type_champ_form === 'select' ||
-                                        critere.type_champ_form === 'checkbox')
+                                        critere.type_champ_form ===
+                                            'checkbox' ||
+                                        critere.type_champ_form === 'range')
                                 "
                                 type="button"
                                 @click="toggleAddValeurForm(critere)"
@@ -1538,7 +1544,7 @@ onMounted(() => {
                                                 v-for="(
                                                     type_champ, index
                                                 ) in type_champs"
-                                                :key="index"
+                                                :key="type_champ.id"
                                                 :value="type_champ"
                                                 as="template"
                                             >
@@ -1582,7 +1588,7 @@ onMounted(() => {
                             >
                                 <label
                                     for="nom critere"
-                                    class="block text-sm font-medium text-gray-700"
+                                    class="block text-sm font-medium normal-case text-gray-700"
                                     >Modifier le nom du critère?</label
                                 >
                                 <input

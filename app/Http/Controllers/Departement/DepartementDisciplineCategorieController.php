@@ -73,7 +73,7 @@ class DepartementDisciplineCategorieController extends Controller
                         ->get();
 
         $produits = $departement->cities->flatMap(function ($city) use ($discipline, $category) {
-            return $city->produits->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
+            return $city->produits()->withRelations()->where('discipline_id', $discipline->id)->where('categorie_id', $category->id)->get();
         })->paginate(12);
 
         $structuresFlat = $departement->cities->flatMap(function ($city) use ($discipline, $category) {

@@ -539,7 +539,7 @@ onMounted(() => {
                                     >
                                         <label
                                             for="nom critere"
-                                            class="block text-sm font-medium text-gray-700"
+                                            class="block text-sm font-medium normal-case text-gray-700"
                                             >Modifier le nom du critère
                                             <span class="font-semibold">{{
                                                 critere.nom
@@ -604,7 +604,7 @@ onMounted(() => {
                                 >
                                     <label
                                         for="ordre"
-                                        class="block text-sm font-medium text-gray-700"
+                                        class="block text-sm font-medium normal-case text-gray-700"
                                     >
                                         Ordre: {{ critere.ordre }}
                                     </label>
@@ -741,7 +741,7 @@ onMounted(() => {
                                         >
                                             <label
                                                 for="ordre"
-                                                class="block text-sm font-medium text-gray-700"
+                                                class="block text-sm font-medium normal-case text-gray-700"
                                             >
                                                 Ordre: {{ valeur.ordre }}
                                             </label>
@@ -900,7 +900,7 @@ onMounted(() => {
                                                                                 .id
                                                                         ]
                                                                     "
-                                                                    class="block text-sm font-medium text-gray-700"
+                                                                    class="block text-sm font-medium normal-case text-gray-700"
                                                                 >
                                                                     <span
                                                                         class="text-xs italic"
@@ -959,7 +959,7 @@ onMounted(() => {
                                                             >
                                                                 <label
                                                                     for="ordre"
-                                                                    class="block text-sm font-medium text-gray-700"
+                                                                    class="block text-sm font-medium normal-case text-gray-700"
                                                                 >
                                                                     Ordre:
                                                                     {{
@@ -1535,7 +1535,7 @@ onMounted(() => {
                             >
                                 <label
                                     for="nom critere"
-                                    class="block text-sm font-medium text-gray-700"
+                                    class="block text-sm font-medium normal-case text-gray-700"
                                     >Modifier le nom du critère?</label
                                 >
                                 <input

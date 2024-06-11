@@ -317,7 +317,7 @@ const handleEventChanged = (event) => {
                                     <div class="relative mt-1">
                                         <label
                                             for="activite"
-                                            class="block text-sm font-medium text-gray-700"
+                                            class="block text-sm font-medium normal-case text-gray-700"
                                         >
                                             Activité liée:
                                         </label>
@@ -402,7 +402,7 @@ const handleEventChanged = (event) => {
                                     <div class="relative mt-1">
                                         <label
                                             for="produit"
-                                            class="block text-sm font-medium text-gray-700"
+                                            class="block text-sm font-medium normal-case text-gray-700"
                                         >
                                             Produit lié:
                                         </label>

@@ -25,7 +25,7 @@ const results = ref();
         <div class="col-span-4 sm:col-span-3">
             <label
                 for="website"
-                class="block text-sm font-medium text-gray-700"
+                class="block text-sm font-medium normal-case text-gray-700"
             >
                 Site web
                 <span class="text-xs italic">(url complète)</span>
@@ -53,7 +53,10 @@ const results = ref();
 
         <!-- Email -->
         <div class="col-span-4 sm:col-span-3">
-            <label for="email" class="block text-sm font-medium text-gray-700">
+            <label
+                for="email"
+                class="block text-sm font-medium normal-case text-gray-700"
+            >
                 Email *
             </label>
             <div class="mt-1 flex rounded-md shadow-sm">
@@ -76,7 +79,7 @@ const results = ref();
         <div class="col-span-4 sm:col-span-3">
             <label
                 for="date_creation"
-                class="block text-sm font-medium text-gray-700"
+                class="block text-sm font-medium normal-case text-gray-700"
             >
                 En activité depuis:
             </label>
@@ -98,7 +101,10 @@ const results = ref();
 
         <!-- Phone1 -->
         <div class="col-span-4 sm:col-span-2">
-            <label for="phone1" class="block text-sm font-medium text-gray-700">
+            <label
+                for="phone1"
+                class="block text-sm font-medium normal-case text-gray-700"
+            >
                 Numéro de téléphone *
             </label>
             <div class="mt-1 flex w-full">
@@ -139,7 +145,10 @@ const results = ref();
 
         <!-- Phone2 -->
         <div class="col-span-4 sm:col-span-2">
-            <label for="phone2" class="block text-sm font-medium text-gray-700">
+            <label
+                for="phone2"
+                class="block text-sm font-medium normal-case text-gray-700"
+            >
                 Numéro de téléphone de sauvegarde
             </label>
             <div class="mt-1 flex w-full">
@@ -179,7 +188,7 @@ const results = ref();
         <div class="col-span-4 sm:col-span-2">
             <label
                 for="facebook"
-                class="block text-sm font-medium text-gray-700"
+                class="block text-sm font-medium normal-case text-gray-700"
             >
                 Facebook
                 <span class="text-xs italic">(url complète)</span>
@@ -204,7 +213,7 @@ const results = ref();
         <div class="col-span-4 sm:col-span-2">
             <label
                 for="instagram"
-                class="block text-sm font-medium text-gray-700"
+                class="block text-sm font-medium normal-case text-gray-700"
             >
                 Instagram
                 <span class="text-xs italic">(url complète)</span>
@@ -229,7 +238,7 @@ const results = ref();
         <div class="col-span-4 sm:col-span-2">
             <label
                 for="youtube"
-                class="block text-sm font-medium text-gray-700"
+                class="block text-sm font-medium normal-case text-gray-700"
             >
                 Youtube
                 <span class="text-xs italic">(url complète)</span>
@@ -252,7 +261,10 @@ const results = ref();
 
         <!-- tiktok -->
         <div class="col-span-4 sm:col-span-2">
-            <label for="tiktok" class="block text-sm font-medium text-gray-700">
+            <label
+                for="tiktok"
+                class="block text-sm font-medium normal-case text-gray-700"
+            >
                 Tiktok
                 <span class="text-xs italic">(url complète)</span>
             </label>

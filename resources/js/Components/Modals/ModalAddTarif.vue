@@ -422,7 +422,7 @@ onMounted(() => {
                                     >
                                         <label
                                             for="discipline"
-                                            class="block text-sm font-medium text-gray-700"
+                                            class="block text-sm font-medium normal-case text-gray-700"
                                         >
                                             Discipline
                                         </label>
@@ -458,7 +458,7 @@ onMounted(() => {
                                     >
                                         <label
                                             for="categorie"
-                                            class="block text-sm font-medium text-gray-700"
+                                            class="block text-sm font-medium normal-case text-gray-700"
                                         >
                                             Categorie
                                         </label>
@@ -507,7 +507,7 @@ onMounted(() => {
                                             <div class="relative mt-1">
                                                 <label
                                                     for="tarifType"
-                                                    class="block text-sm font-medium text-gray-700"
+                                                    class="block text-sm font-medium normal-case text-gray-700"
                                                 >
                                                     Type de tarif
                                                 </label>
@@ -592,7 +592,7 @@ onMounted(() => {
                                         >
                                             <label
                                                 for="titre"
-                                                class="block text-sm font-medium text-gray-700"
+                                                class="block text-sm font-medium normal-case text-gray-700"
                                             >
                                                 Titre
                                             </label>
@@ -623,7 +623,7 @@ onMounted(() => {
                                     >
                                         <label
                                             for="description"
-                                            class="block text-sm font-medium text-gray-700"
+                                            class="block text-sm font-medium normal-case text-gray-700"
                                         >
                                             Description
                                         </label>
@@ -716,7 +716,7 @@ onMounted(() => {
                                             >
                                                 <label
                                                     :for="attribut.nom"
-                                                    class="block text-sm font-medium text-gray-700"
+                                                    class="block text-sm font-medium normal-case text-gray-700"
                                                 >
                                                     {{ attribut.nom }}
                                                 </label>
@@ -750,7 +750,7 @@ onMounted(() => {
                                             >
                                                 <label
                                                     :for="attribut.nom"
-                                                    class="block text-sm font-medium text-gray-700"
+                                                    class="block text-sm font-medium normal-case text-gray-700"
                                                 >
                                                     {{ attribut.nom }}
                                                 </label>
@@ -833,7 +833,7 @@ onMounted(() => {
                                                 >
                                                     <label
                                                         :for="sousattribut.nom"
-                                                        class="block text-sm font-medium text-gray-700"
+                                                        class="block text-sm font-medium normal-case text-gray-700"
                                                     >
                                                         {{ sousattribut.nom }}
                                                     </label>
@@ -872,7 +872,7 @@ onMounted(() => {
                                                 >
                                                     <label
                                                         :for="sousattribut.nom"
-                                                        class="block text-sm font-medium text-gray-700"
+                                                        class="block text-sm font-medium normal-case text-gray-700"
                                                     >
                                                         {{ sousattribut.nom }}
                                                     </label>
@@ -911,7 +911,7 @@ onMounted(() => {
                                     >
                                         <label
                                             for="amount"
-                                            class="block text-sm font-medium text-gray-700"
+                                            class="block text-sm font-medium normal-case text-gray-700"
                                         >
                                             Montant
                                         </label>

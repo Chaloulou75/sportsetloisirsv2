@@ -326,7 +326,7 @@ const events = getEvents();
                 <template v-slot:ariane>
                     <nav aria-label="Breadcrumb" class="flex">
                         <ol
-                            class="flex text-gray-600 border border-gray-200 rounded-lg"
+                            class="flex rounded-lg border border-gray-200 text-gray-600"
                         >
                             <li class="flex items-center">
                                 <Link
@@ -334,7 +334,7 @@ const events = getEvents();
                                     :href="route('welcome')"
                                     class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
                                 >
-                                    <HomeIcon class="w-4 h-4" />
+                                    <HomeIcon class="h-4 w-4" />
 
                                     <span
                                         class="ms-1.5 hidden text-xs font-medium md:block"
@@ -353,7 +353,7 @@ const events = getEvents();
                                 <Link
                                     preserve-scroll
                                     :href="route('villes.show', city.slug)"
-                                    class="flex items-center h-10 text-xs font-medium transition bg-white pe-4 ps-8 hover:text-gray-900"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     {{ formatCityName(city.ville) }}
                                 </Link>
@@ -376,7 +376,7 @@ const events = getEvents();
                                             departement.slug
                                         )
                                     "
-                                    class="flex items-center h-10 text-xs font-medium transition bg-white pe-4 ps-8 hover:text-gray-900"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     {{ departement.departement }}
                                 </Link>
@@ -399,7 +399,7 @@ const events = getEvents();
                                             requestDiscipline.slug
                                         )
                                     "
-                                    class="flex items-center h-10 text-xs font-medium transition bg-white pe-4 ps-8 hover:text-gray-900"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     {{ requestDiscipline.name }}
                                 </Link>
@@ -422,7 +422,7 @@ const events = getEvents();
                                             category: requestCategory.slug,
                                         })
                                     "
-                                    class="flex items-center h-10 text-xs font-medium transition bg-white pe-4 ps-8 hover:text-gray-900"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     {{ requestCategory.nom_categorie_client }}
                                 </Link>
@@ -450,7 +450,7 @@ const events = getEvents();
                                             }
                                         )
                                     "
-                                    class="flex items-center h-10 text-xs font-medium transition bg-white pe-4 ps-8 hover:text-gray-900"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     {{ structuretypeElected.name }}
                                 </Link>
@@ -465,7 +465,7 @@ const events = getEvents();
                                 <Link
                                     preserve-scroll
                                     :href="route('structures.show', structure)"
-                                    class="flex items-center h-10 text-xs font-medium transition bg-white pe-4 ps-8 hover:text-gray-900"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 >
                                     {{ structure.name }}
                                 </Link>
@@ -494,14 +494,14 @@ const events = getEvents();
                 />
             </div>
             <section
-                class="max-w-full px-0 py-2 mx-auto sm:px-4 md:my-4 md:py-6 lg:px-8"
+                class="mx-auto max-w-full px-0 py-2 sm:px-4 md:my-4 md:py-6 lg:px-8"
             >
                 <div
-                    class="flex flex-col-reverse justify-between px-4 bg-white rounded-lg shadow md:flex-row md:space-x-6 md:py-6"
+                    class="flex flex-col-reverse justify-between rounded-lg bg-white px-4 shadow md:flex-row md:space-x-6 md:py-6"
                 >
                     <div class="w-full space-y-12 md:w-1/3">
                         <div
-                            class="flex items-center justify-center my-4 md:mb-8"
+                            class="my-4 flex items-center justify-center md:mb-8"
                         >
                             <h3 class="text-base font-semibold uppercase">
                                 Coordonnées de la structure
@@ -518,14 +518,14 @@ const events = getEvents();
                             <LeafletMap :item="structure" />
                         </div>
                         <div
-                            class="flex flex-col w-full px-2 py-4 space-y-3 bg-indigo-100 rounded-md text-slate-800"
+                            class="flex w-full flex-col space-y-3 rounded-md bg-indigo-100 px-2 py-4 text-slate-800"
                         >
-                            <h3 class="text-base font-semibold text-center">
+                            <h3 class="text-center text-base font-semibold">
                                 Contact
                             </h3>
 
                             <p class="text-base font-semibold text-gray-700">
-                                <UserIcon class="inline-block w-4 h-4" />
+                                <UserIcon class="inline-block h-4 w-4" />
                                 {{ structure.creator.name }}
                             </p>
                             <p
@@ -597,7 +597,7 @@ const events = getEvents();
                                 v-if="structure.phone1"
                                 class="text-base font-medium text-gray-700"
                             >
-                                <PhoneIcon class="inline-block w-4 h-4" />
+                                <PhoneIcon class="inline-block h-4 w-4" />
                                 <a
                                     :href="`tel:${structure.phone1}`"
                                     target="_blank"
@@ -610,7 +610,7 @@ const events = getEvents();
                                 v-if="structure.email"
                                 class="text-base font-medium text-gray-700"
                             >
-                                <AtSymbolIcon class="inline-block w-4 h-4" />
+                                <AtSymbolIcon class="inline-block h-4 w-4" />
                                 {{ structure.email }}
                             </p>
                         </div>
@@ -619,12 +619,12 @@ const events = getEvents();
                         <!-- titre -->
                         <div class="relative mb-4 md:mb-6">
                             <p
-                                class="mb-2 text-sm font-medium tracking-wider text-right text-gray-500 uppercase md:text-base"
+                                class="mb-2 text-right text-sm font-medium uppercase tracking-wider text-gray-500 md:text-base"
                             >
                                 {{ structure.structuretype.name }}
                             </p>
                             <h2
-                                class="text-xl font-semibold text-center text-black sm:text-2xl sm:leading-7 md:text-3xl"
+                                class="text-center text-xl font-semibold text-black sm:text-2xl sm:leading-7 md:text-3xl"
                             >
                                 {{ structure.name }}
                             </h2>
@@ -633,7 +633,7 @@ const events = getEvents();
                                 <img
                                     alt="img"
                                     :src="structure.image_url"
-                                    class="object-cover object-center rounded-full h-14 w-14 shrink-0 md:h-20 md:w-20"
+                                    class="h-14 w-14 shrink-0 rounded-full object-cover object-center md:h-20 md:w-20"
                                 />
                             </div>
                         </div>
@@ -641,13 +641,13 @@ const events = getEvents();
                         <div>
                             <p
                                 v-if="structure.presentation_longue"
-                                class="text-base font-medium leading-5 text-gray-700 whitespace-pre-line"
+                                class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
                             >
                                 {{ structure.presentation_longue }}
                             </p>
                             <p
                                 v-else
-                                class="text-base font-medium leading-5 text-gray-700 whitespace-pre-line"
+                                class="whitespace-pre-line text-base font-medium leading-5 text-gray-700"
                             >
                                 {{ structure.presentation_courte }}
                             </p>
@@ -732,7 +732,7 @@ const events = getEvents();
                                     selectedCategory &&
                                     filteredCriteres.length > 0
                                 "
-                                class="grid w-full grid-cols-1 gap-4 mx-auto my-6 text-gray-600 md:grid-cols-3"
+                                class="mx-auto my-6 grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3"
                             >
                                 <div
                                     v-for="critere in filteredCriteres"
@@ -795,11 +795,11 @@ const events = getEvents();
                                     >
                                         <label
                                             :for="critere.nom"
-                                            class="block text-sm font-medium text-gray-700"
+                                            class="block text-sm font-medium normal-case text-gray-700"
                                         >
                                             {{ critere.nom }}
                                         </label>
-                                        <div class="flex mt-1 rounded-md">
+                                        <div class="mt-1 flex rounded-md">
                                             <TextInput
                                                 type="text"
                                                 v-model="
@@ -809,7 +809,7 @@ const events = getEvents();
                                                 "
                                                 :name="critere.nom"
                                                 :id="critere.nom"
-                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                 placeholder=""
                                                 autocomplete="none"
                                             />
@@ -825,11 +825,11 @@ const events = getEvents();
                                     >
                                         <label
                                             :for="critere.nom"
-                                            class="block text-sm font-medium text-gray-700"
+                                            class="block text-sm font-medium normal-case text-gray-700"
                                         >
                                             {{ critere.nom }}
                                         </label>
-                                        <div class="flex mt-1 rounded-md">
+                                        <div class="mt-1 flex rounded-md">
                                             <TextInput
                                                 type="number"
                                                 min="0"
@@ -840,7 +840,7 @@ const events = getEvents();
                                                 "
                                                 :name="critere.nom"
                                                 :id="critere.nom"
-                                                class="flex-1 block w-full placeholder-gray-400 placeholder-opacity-25 border-gray-300 rounded-md shadow-sm sm:text-sm"
+                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                 placeholder=""
                                                 autocomplete="none"
                                             />
@@ -852,7 +852,7 @@ const events = getEvents();
                                         v-if="
                                             critere.type_champ_form === 'time'
                                         "
-                                        class="flex flex-col items-start max-w-sm space-y-3"
+                                        class="flex max-w-sm flex-col items-start space-y-3"
                                     >
                                         <SingleTimeForm
                                             class="w-full"
@@ -868,7 +868,7 @@ const events = getEvents();
                                         v-if="
                                             critere.type_champ_form === 'times'
                                         "
-                                        class="flex flex-col items-start max-w-sm space-y-3"
+                                        class="flex max-w-sm flex-col items-start space-y-3"
                                     >
                                         <OpenTimesForm
                                             class="w-full"
@@ -882,7 +882,7 @@ const events = getEvents();
                                         v-if="
                                             critere.type_champ_form === 'date'
                                         "
-                                        class="flex flex-col items-start max-w-sm space-y-3"
+                                        class="flex max-w-sm flex-col items-start space-y-3"
                                     >
                                         <SingleDateForm
                                             class="w-full"
@@ -898,7 +898,7 @@ const events = getEvents();
                                         v-if="
                                             critere.type_champ_form === 'dates'
                                         "
-                                        class="flex flex-col items-start max-w-sm space-y-3"
+                                        class="flex max-w-sm flex-col items-start space-y-3"
                                     >
                                         <OpenDaysForm
                                             class="w-full"
@@ -914,7 +914,7 @@ const events = getEvents();
                                         "
                                     >
                                         <div
-                                            class="flex flex-col items-start max-w-sm space-y-3"
+                                            class="flex max-w-sm flex-col items-start space-y-3"
                                         >
                                             <OpenMonthsForm
                                                 class="w-full"
@@ -949,7 +949,7 @@ const events = getEvents();
                                         <div v-if="!addAddress" class="flex-1">
                                             <label
                                                 for="adresse"
-                                                class="block text-sm font-medium text-gray-700"
+                                                class="block text-sm font-medium text-gray-700 capitalize"
                                             >
                                                 Adresse
                                             </label>
@@ -1050,7 +1050,7 @@ const events = getEvents();
                                                     souscritere.dis_cat_crit_val_id ===
                                                         valeur.id
                                                 "
-                                                class="block mt-2"
+                                                class="mt-2 block"
                                             >
                                                 <InputLabel
                                                     class="py-2"
@@ -1079,7 +1079,7 @@ const events = getEvents();
 
                         <TabGroup v-if="selectedCategory">
                             <TabList
-                                class="flex p-1 space-x-1 rounded-xl bg-sky-700"
+                                class="flex space-x-1 rounded-xl bg-sky-700 p-1"
                             >
                                 <Tab as="template" v-slot="{ selected }">
                                     <button
@@ -1113,7 +1113,7 @@ const events = getEvents();
                                 <TabPanel>
                                     <div
                                         v-if="selectedCategory"
-                                        class="grid w-full grid-cols-1 gap-4 my-6 text-gray-600 md:grid-cols-3"
+                                        class="my-6 grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3"
                                     >
                                         <ActiviteCard
                                             v-for="activite in filteredActivitesWithCriteres"
@@ -1124,7 +1124,7 @@ const events = getEvents();
                                                     'structures.activites.show',
                                                     {
                                                         activite: activite,
-                                                        slug: activite.slug_title
+                                                        slug: activite.slug_title,
                                                     }
                                                 )
                                             "
@@ -1134,7 +1134,7 @@ const events = getEvents();
                                 <TabPanel>
                                     <div
                                         v-if="selectedCategory"
-                                        class="w-full min-h-full mt-6 overflow-x-auto rounded-sm shadow-lg"
+                                        class="mt-6 min-h-full w-full overflow-x-auto rounded-sm shadow-lg"
                                     >
                                         <vue-cal
                                             small

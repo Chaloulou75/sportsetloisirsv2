@@ -163,7 +163,7 @@ function submit() {
                                                 >
                                                     <label
                                                         for="name"
-                                                        class="block text-sm font-medium text-gray-700"
+                                                        class="block text-sm font-medium normal-case text-gray-700"
                                                     >
                                                         Nom de la structure *
                                                     </label>
@@ -194,7 +194,7 @@ function submit() {
                                                 >
                                                     <label
                                                         for="structuretype_id"
-                                                        class="block text-sm font-medium text-gray-700"
+                                                        class="block text-sm font-medium normal-case text-gray-700"
                                                     >
                                                         Type de structure *
                                                     </label>
@@ -269,7 +269,7 @@ function submit() {
                                                                     :for="
                                                                         attribut.nom
                                                                     "
-                                                                    class="block text-sm font-medium text-gray-700"
+                                                                    class="block text-sm font-medium normal-case text-gray-700"
                                                                 >
                                                                     {{
                                                                         attribut.nom
@@ -321,7 +321,7 @@ function submit() {
                                                                     :for="
                                                                         attribut.nom
                                                                     "
-                                                                    class="block text-sm font-medium text-gray-700"
+                                                                    class="block text-sm font-medium normal-case text-gray-700"
                                                                 >
                                                                     {{
                                                                         attribut.nom
@@ -432,7 +432,7 @@ function submit() {
                                                                     :for="
                                                                         attribut.nom
                                                                     "
-                                                                    class="block text-sm font-medium text-gray-700"
+                                                                    class="block text-sm font-medium normal-case text-gray-700"
                                                                 >
                                                                     {{
                                                                         attribut.nom
@@ -533,7 +533,7 @@ function submit() {
                                             <div>
                                                 <label
                                                     for="presentation_courte"
-                                                    class="block text-sm font-medium text-gray-700"
+                                                    class="block text-sm font-medium normal-case text-gray-700"
                                                 >
                                                     Description courte *
                                                 </label>
@@ -576,7 +576,7 @@ function submit() {
                                             <div>
                                                 <label
                                                     for="presentation_longue"
-                                                    class="block text-sm font-medium text-gray-700"
+                                                    class="block text-sm font-medium normal-case text-gray-700"
                                                 >
                                                     Présentation longue
                                                 </label>
@@ -618,7 +618,7 @@ function submit() {
                                             <div>
                                                 <label
                                                     for="logo"
-                                                    class="block text-sm font-medium text-gray-700"
+                                                    class="block text-sm font-medium normal-case text-gray-700"
                                                     >Photo ou logo:</label
                                                 >
                                                 <input

@@ -128,7 +128,7 @@ const createCustomer = () => {
                     <div>
                         <label
                             for="phone"
-                            class="block text-sm font-medium text-gray-700"
+                            class="block text-sm font-medium normal-case text-gray-700"
                         >
                             Numéro de téléphone
                         </label>

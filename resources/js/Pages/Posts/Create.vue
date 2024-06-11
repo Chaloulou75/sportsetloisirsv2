@@ -197,7 +197,7 @@ const addArticle = () => {
                     <div class="">
                         <label
                             for="title"
-                            class="block text-sm font-medium text-gray-700"
+                            class="block text-sm font-medium normal-case text-gray-700"
                         >
                             Titre de l'article*
                         </label>
@@ -225,7 +225,7 @@ const addArticle = () => {
                         <InputLabel
                             for="tags"
                             value="Disciplines liées à l'article"
-                            class="block text-sm font-medium text-gray-700"
+                            class="block text-sm font-medium normal-case text-gray-700"
                         />
                         <div
                             v-if="selectedDisciplines.length > 0"
@@ -277,7 +277,7 @@ const addArticle = () => {
                     <div>
                         <label
                             for="thumbnail"
-                            class="block text-sm font-medium text-gray-700"
+                            class="block text-sm font-medium normal-case text-gray-700"
                             >Image:</label
                         >
                         <input
@@ -299,7 +299,7 @@ const addArticle = () => {
                     <div>
                         <label
                             for="excerpt"
-                            class="block text-sm font-medium text-gray-700"
+                            class="block text-sm font-medium normal-case text-gray-700"
                         >
                             Extrait / résumé*
                         </label>
@@ -330,7 +330,7 @@ const addArticle = () => {
                         <InputLabel
                             for="tags"
                             value="Tags de l'article *"
-                            class="block text-sm font-medium text-gray-700"
+                            class="block text-sm font-medium normal-case text-gray-700"
                         />
                         <div
                             v-if="selectedTags.length > 0"
@@ -378,7 +378,7 @@ const addArticle = () => {
                     <div>
                         <label
                             for="body"
-                            class="block text-sm font-medium text-gray-700"
+                            class="block text-sm font-medium normal-case text-gray-700"
                         >
                             Contenu de l'article*
                         </label>

@@ -220,7 +220,7 @@ onMounted(() => {
                                         >
                                             <label
                                                 for="categorie"
-                                                class="block text-sm font-medium text-gray-700"
+                                                class="block text-sm font-medium normal-case text-gray-700"
                                             >
                                                 Categorie
                                             </label>
@@ -260,7 +260,7 @@ onMounted(() => {
                                         <div>
                                             <label
                                                 for="image"
-                                                class="block text-sm font-medium text-gray-700"
+                                                class="block text-sm font-medium normal-case text-gray-700"
                                                 >Ajouter ou modifier la photo ou
                                                 l'image:</label
                                             >
@@ -283,7 +283,7 @@ onMounted(() => {
                                         <div>
                                             <label
                                                 for="titre"
-                                                class="block text-sm font-medium text-gray-700"
+                                                class="block text-sm font-medium normal-case text-gray-700"
                                             >
                                                 Titre de l'activité
                                             </label>
@@ -306,12 +306,10 @@ onMounted(() => {
                                             </div>
                                         </div>
                                         <!-- description -->
-                                        <div
-                                            class="border border-b-2 border-gray-100"
-                                        >
+                                        <div>
                                             <label
                                                 for="description"
-                                                class="block text-sm font-medium text-gray-700"
+                                                class="block text-sm font-medium normal-case text-gray-700"
                                             >
                                                 Description
                                             </label>
@@ -425,7 +423,7 @@ onMounted(() => {
                                                 >
                                                     <label
                                                         :for="critere.nom"
-                                                        class="block text-sm font-medium text-gray-700"
+                                                        class="block text-sm font-medium normal-case text-gray-700"
                                                     >
                                                         {{ critere.nom }}
                                                     </label>
@@ -458,7 +456,7 @@ onMounted(() => {
                                                 >
                                                     <label
                                                         :for="critere.nom"
-                                                        class="block text-sm font-medium text-gray-700"
+                                                        class="block text-sm font-medium normal-case text-gray-700"
                                                     >
                                                         {{ critere.nom }}
                                                     </label>
@@ -602,7 +600,7 @@ onMounted(() => {
                                                             for="
                                                             adresse
                                                         "
-                                                            class="block text-sm font-medium text-gray-700"
+                                                            class="block text-sm font-medium normal-case text-gray-700"
                                                         >
                                                             Adresse
                                                         </label>
@@ -662,11 +660,11 @@ onMounted(() => {
                                                     </div>
                                                 </div>
 
-                                                <!-- Range km  -->
+                                                <!-- Range  -->
                                                 <div
                                                     v-if="
                                                         critere.type_champ_form ===
-                                                        'rayon'
+                                                        'range'
                                                     "
                                                     class="flex w-full max-w-sm flex-col items-start space-y-3"
                                                 >
@@ -678,7 +676,7 @@ onMounted(() => {
                                                             ]
                                                         "
                                                         :name="critere.nom"
-                                                        :metric="`Km`"
+                                                        :metric="critere.nom"
                                                     />
                                                 </div>
 
@@ -820,6 +818,13 @@ onMounted(() => {
                                                             :name="
                                                                 souscritere.nom
                                                             "
+                                                            v-model="
+                                                                form
+                                                                    .souscriteres[
+                                                                    souscritere
+                                                                        .id
+                                                                ]
+                                                            "
                                                             v-if="
                                                                 form.criteres[
                                                                     critere.id
@@ -829,12 +834,31 @@ onMounted(() => {
                                                                 souscritere.dis_cat_crit_val_id ===
                                                                     valeur.id
                                                             "
+                                                        />
+
+                                                        <RangeInputForm
+                                                            v-if="
+                                                                form.criteres[
+                                                                    critere.id
+                                                                ] === valeur &&
+                                                                souscritere.type_champ_form ===
+                                                                    'range' &&
+                                                                souscritere.dis_cat_crit_val_id ===
+                                                                    valeur.id
+                                                            "
+                                                            class="mt-1 w-full max-w-sm"
                                                             v-model="
                                                                 form
                                                                     .souscriteres[
                                                                     souscritere
                                                                         .id
                                                                 ]
+                                                            "
+                                                            :name="
+                                                                souscritere.nom
+                                                            "
+                                                            :metric="
+                                                                souscritere.nom
                                                             "
                                                         />
                                                     </div>

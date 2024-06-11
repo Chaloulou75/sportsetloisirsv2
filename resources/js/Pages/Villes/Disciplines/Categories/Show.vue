@@ -154,6 +154,7 @@ const filteredCriteresByChamp = computed(() => {
             "text",
             "number",
             "rayon",
+            "range",
         ].includes(critere.type_champ_form);
     });
 });
@@ -573,6 +574,23 @@ const filterProducts = () => {
                                         return false;
                                     }
                                 } else if (
+                                    produitCritere.critere.type_champ_form ===
+                                        "range" ||
+                                    produitCritere.critere.type_champ_form ===
+                                        "rayon"
+                                ) {
+                                    const minValue = 0;
+                                    const maxValue = produitCritere.valeur;
+
+                                    if (!isNaN(minValue) && !isNaN(maxValue)) {
+                                        return (
+                                            selectedCritere <= maxValue &&
+                                            selectedCritere >= minValue
+                                        );
+                                    } else {
+                                        return false;
+                                    }
+                                } else if (
                                     typeof selectedCritere === "number" &&
                                     selectedCritere !== null
                                 ) {
@@ -622,8 +640,27 @@ const filterProducts = () => {
                         return (
                             produitCritere.sous_criteres &&
                             produitCritere.sous_criteres.some((sousCritere) => {
+                                // console.log(sousCritere, selectedSousCritere);
                                 if (
-                                    typeof selectedSousCritere === "number" &&
+                                    sousCritere.sous_critere.type_champ_form ===
+                                        "range" &&
+                                    selectedSousCritere !== null &&
+                                    numericSousCritereId ===
+                                        sousCritere.sous_critere_id
+                                ) {
+                                    const minValue = 0;
+                                    const maxValue = sousCritere.valeur;
+                                    if (!isNaN(minValue) && !isNaN(maxValue)) {
+                                        return (
+                                            selectedSousCritere <= maxValue &&
+                                            selectedSousCritere >= minValue
+                                        );
+                                    } else {
+                                        return false;
+                                    }
+                                } else if (
+                                    sousCritere.sous_critere.type_champ_form ===
+                                        "number" &&
                                     selectedSousCritere !== null &&
                                     numericSousCritereId ===
                                         sousCritere.sous_critere_id
@@ -642,7 +679,8 @@ const filterProducts = () => {
                                         return false;
                                     }
                                 } else if (
-                                    typeof selectedSousCritere === "string" &&
+                                    sousCritere.sous_critere.type_champ_form ===
+                                        "string" &&
                                     selectedSousCritere !== null
                                 ) {
                                     if (selectedSousCritere.trim() === "") {
@@ -901,7 +939,7 @@ onMounted(() => {
                             <div class="flex items-center space-x-4">
                                 <label
                                     :for="critere.nom"
-                                    class="block text-sm font-medium text-gray-700"
+                                    class="block text-sm font-medium normal-case text-gray-700"
                                 >
                                     {{ critere.nom }}
                                 </label>
@@ -940,7 +978,7 @@ onMounted(() => {
                             <div class="flex items-center space-x-4">
                                 <label
                                     :for="critere.nom"
-                                    class="block text-sm font-medium text-gray-700"
+                                    class="block text-sm font-medium normal-case text-gray-700"
                                 >
                                     {{ critere.nom }}
                                 </label>
@@ -962,7 +1000,7 @@ onMounted(() => {
                             <div class="flex items-center space-x-4">
                                 <label
                                     :for="critere.nom"
-                                    class="block text-sm font-medium text-gray-700"
+                                    class="block text-sm font-medium normal-case text-gray-700"
                                 >
                                     {{ critere.nom }}
                                 </label>
@@ -984,10 +1022,16 @@ onMounted(() => {
                             v-if="critere.type_champ_form === 'rayon'"
                             class="w-full max-w-sm"
                             v-model="formCriteres.criteres[critere.id]"
-                            :min="0"
-                            :max="200"
                             :name="critere.nom"
-                            :metric="`Km`"
+                            :metric="critere.nom"
+                        />
+
+                        <RangeInputForm
+                            v-if="critere.type_champ_form === 'range'"
+                            class="w-full max-w-sm"
+                            v-model="formCriteres.criteres[critere.id]"
+                            :name="critere.nom"
+                            :metric="critere.nom"
                         />
 
                         <!-- sous criteres -->
@@ -1046,6 +1090,7 @@ onMounted(() => {
                                         "
                                     />
                                 </div>
+
                                 <div
                                     v-if="
                                         formCriteres.criteres[critere.id] ===
@@ -1074,6 +1119,25 @@ onMounted(() => {
                                         "
                                     />
                                 </div>
+                                <!-- range -->
+                                <RangeInputForm
+                                    v-if="
+                                        formCriteres.criteres[critere.id] ===
+                                            valeur &&
+                                        souscritere.type_champ_form ===
+                                            'range' &&
+                                        souscritere.dis_cat_crit_val_id ===
+                                            valeur.id
+                                    "
+                                    class="w-full max-w-sm"
+                                    v-model="
+                                        formCriteres.sousCriteres[
+                                            souscritere.id
+                                        ]
+                                    "
+                                    :name="souscritere.nom"
+                                    :metric="souscritere.nom"
+                                />
                             </div>
                         </div>
                     </div>

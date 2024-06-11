@@ -329,7 +329,7 @@ onMounted(() => {
                                                     >
                                                         <label
                                                             for="name"
-                                                            class="block text-sm font-medium text-gray-700"
+                                                            class="block text-sm font-medium normal-case text-gray-700"
                                                         >
                                                             Nom de la structure
                                                             *
@@ -373,7 +373,7 @@ onMounted(() => {
                                                     >
                                                         <label
                                                             for="structuretype_id"
-                                                            class="block text-sm font-medium text-gray-700"
+                                                            class="block text-sm font-medium normal-case text-gray-700"
                                                         >
                                                             Type de structure *
                                                         </label>
@@ -443,7 +443,7 @@ onMounted(() => {
                                                                         :for="
                                                                             attribut.nom
                                                                         "
-                                                                        class="block text-sm font-medium text-gray-700"
+                                                                        class="block text-sm font-medium normal-case text-gray-700"
                                                                     >
                                                                         {{
                                                                             attribut.nom
@@ -495,7 +495,7 @@ onMounted(() => {
                                                                         :for="
                                                                             attribut.nom
                                                                         "
-                                                                        class="block text-sm font-medium text-gray-700"
+                                                                        class="block text-sm font-medium normal-case text-gray-700"
                                                                     >
                                                                         {{
                                                                             attribut.nom
@@ -606,7 +606,7 @@ onMounted(() => {
                                                                         :for="
                                                                             attribut.nom
                                                                         "
-                                                                        class="block text-sm font-medium text-gray-700"
+                                                                        class="block text-sm font-medium normal-case text-gray-700"
                                                                     >
                                                                         {{
                                                                             attribut.nom
@@ -718,7 +718,7 @@ onMounted(() => {
                                                 <div>
                                                     <label
                                                         for="presentation_courte"
-                                                        class="block text-sm font-medium text-gray-700"
+                                                        class="block text-sm font-medium normal-case text-gray-700"
                                                     >
                                                         Description courte *
                                                     </label>
@@ -761,7 +761,7 @@ onMounted(() => {
                                                 <div>
                                                     <label
                                                         for="presentation_longue"
-                                                        class="block text-sm font-medium text-gray-700"
+                                                        class="block text-sm font-medium normal-case text-gray-700"
                                                     >
                                                         Présentation longue
                                                     </label>
@@ -803,7 +803,7 @@ onMounted(() => {
                                                 <div>
                                                     <label
                                                         for="logo"
-                                                        class="block text-sm font-medium text-gray-700"
+                                                        class="block text-sm font-medium normal-case text-gray-700"
                                                         >Photo ou logo:</label
                                                     >
                                                     <input
@@ -911,7 +911,7 @@ onMounted(() => {
 
                     <template v-if="displayAdresses">
                         <div
-                            class="my-4 flex w-full flex-col space-y-6 rounded-md border border-gray-200 bg-gray-50 px-4 py-2 text-gray-800 shadow-md"
+                            class="mx-auto my-4 flex w-full max-w-5xl flex-col space-y-6 rounded-md border border-gray-200 bg-gray-50 px-4 py-2 text-gray-800 shadow-md"
                         >
                             <div class="flex items-center justify-start">
                                 <h3 class="text-xl font-semibold">
@@ -1045,7 +1045,7 @@ onMounted(() => {
 
                     <template v-if="displayPartenaire">
                         <div
-                            class="my-4 flex w-full flex-col space-y-6 rounded-md border border-gray-200 bg-gray-50 px-4 py-2 text-gray-800 shadow-md"
+                            class="mx-auto my-4 flex w-full max-w-5xl flex-col space-y-6 rounded-md border border-gray-200 bg-gray-50 px-4 py-2 text-gray-800 shadow-md"
                         >
                             <div class="flex items-center justify-start">
                                 <h3 class="text-xl font-semibold">

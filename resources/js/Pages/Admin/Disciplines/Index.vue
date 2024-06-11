@@ -439,7 +439,9 @@ const replicateCatDisTarBooking = () => {
                         class="flex w-full flex-col items-center justify-between space-y-5 md:flex-row md:items-end md:space-x-4 md:space-y-0"
                     >
                         <div class="w-full flex-1">
-                            <p class="block text-sm font-medium text-gray-700">
+                            <p
+                                class="block text-sm font-medium normal-case text-gray-700"
+                            >
                                 Discipline originale:
                             </p>
                             <AutocompleteDisciplineNav
@@ -461,7 +463,9 @@ const replicateCatDisTarBooking = () => {
                         </div>
 
                         <div class="w-full flex-1">
-                            <p class="block text-sm font-medium text-gray-700">
+                            <p
+                                class="block text-sm font-medium normal-case text-gray-700"
+                            >
                                 Discipline cible:
                             </p>
                             <AutocompleteDisciplineNav
@@ -533,7 +537,9 @@ const replicateCatDisTarBooking = () => {
                         class="flex w-full flex-col items-center justify-between space-y-5 md:flex-row md:items-end md:space-x-4 md:space-y-0"
                     >
                         <div class="w-full flex-1">
-                            <p class="block text-sm font-medium text-gray-700">
+                            <p
+                                class="block text-sm font-medium normal-case text-gray-700"
+                            >
                                 Discipline originale:
                             </p>
                             <AutocompleteDisciplineNav
@@ -550,7 +556,9 @@ const replicateCatDisTarBooking = () => {
                         </div>
 
                         <div class="w-full flex-1">
-                            <p class="block text-sm font-medium text-gray-700">
+                            <p
+                                class="block text-sm font-medium normal-case text-gray-700"
+                            >
                                 Discipline cible:
                             </p>
                             <AutocompleteDisciplineNav
@@ -612,7 +620,9 @@ const replicateCatDisTarBooking = () => {
                         class="flex w-full flex-col items-center justify-between space-y-5 md:flex-row md:items-end md:space-x-4 md:space-y-0"
                     >
                         <div class="w-full flex-1">
-                            <p class="block text-sm font-medium text-gray-700">
+                            <p
+                                class="block text-sm font-medium normal-case text-gray-700"
+                            >
                                 Discipline originale:
                             </p>
                             <AutocompleteDisciplineNav
@@ -634,7 +644,9 @@ const replicateCatDisTarBooking = () => {
                         </div>
 
                         <div class="w-full flex-1">
-                            <p class="block text-sm font-medium text-gray-700">
+                            <p
+                                class="block text-sm font-medium normal-case text-gray-700"
+                            >
                                 Discipline cible:
                             </p>
                             <AutocompleteDisciplineNav
@@ -699,7 +711,9 @@ const replicateCatDisTarBooking = () => {
                         class="flex w-full flex-col items-center justify-between space-y-5 md:flex-row md:items-end md:space-x-4 md:space-y-0"
                     >
                         <div class="w-full flex-1">
-                            <p class="block text-sm font-medium text-gray-700">
+                            <p
+                                class="block text-sm font-medium normal-case text-gray-700"
+                            >
                                 Discipline originale:
                             </p>
                             <AutocompleteDisciplineNav
@@ -721,7 +735,7 @@ const replicateCatDisTarBooking = () => {
                             class="flex flex-col items-start"
                         >
                             <label
-                                class="block text-sm font-medium text-gray-700"
+                                class="block text-sm font-medium normal-case text-gray-700"
                                 >Catégorie originale:</label
                             >
                             <select
@@ -751,7 +765,9 @@ const replicateCatDisTarBooking = () => {
                         </div>
 
                         <div class="w-full flex-1">
-                            <p class="block text-sm font-medium text-gray-700">
+                            <p
+                                class="block text-sm font-medium normal-case text-gray-700"
+                            >
                                 Discipline cible:
                             </p>
                             <AutocompleteDisciplineNav
@@ -817,7 +833,9 @@ const replicateCatDisTarBooking = () => {
                         class="flex w-full flex-col items-center justify-between space-y-5 md:flex-row md:items-end md:space-x-4 md:space-y-0"
                     >
                         <div class="w-full flex-1">
-                            <p class="block text-sm font-medium text-gray-700">
+                            <p
+                                class="block text-sm font-medium normal-case text-gray-700"
+                            >
                                 Discipline originale:
                             </p>
                             <AutocompleteDisciplineNav
@@ -838,7 +856,9 @@ const replicateCatDisTarBooking = () => {
                             </p>
                         </div>
                         <div class="w-full flex-1">
-                            <p class="block text-sm font-medium text-gray-700">
+                            <p
+                                class="block text-sm font-medium normal-case text-gray-700"
+                            >
                                 Discipline cible:
                             </p>
                             <AutocompleteDisciplineNav
@@ -907,7 +927,9 @@ const replicateCatDisTarBooking = () => {
                         class="flex w-full flex-col items-center justify-between space-y-5 md:flex-row md:items-end md:space-x-4 md:space-y-0"
                     >
                         <div class="w-full flex-1">
-                            <p class="block text-sm font-medium text-gray-700">
+                            <p
+                                class="block text-sm font-medium normal-case text-gray-700"
+                            >
                                 Discipline originale:
                             </p>
                             <AutocompleteDisciplineNav
@@ -932,7 +954,7 @@ const replicateCatDisTarBooking = () => {
                             class="flex flex-col items-start"
                         >
                             <label
-                                class="block text-sm font-medium text-gray-700"
+                                class="block text-sm font-medium normal-case text-gray-700"
                                 >Catégorie originale:</label
                             >
                             <select
@@ -965,7 +987,9 @@ const replicateCatDisTarBooking = () => {
                         </div>
 
                         <div class="w-full flex-1">
-                            <p class="block text-sm font-medium text-gray-700">
+                            <p
+                                class="block text-sm font-medium normal-case text-gray-700"
+                            >
                                 Discipline cible:
                             </p>
                             <AutocompleteDisciplineNav
@@ -1044,7 +1068,9 @@ const replicateCatDisTarBooking = () => {
                     >
                         <!-- class="flex w-full flex-col items-center justify-between space-y-5 md:flex-row md:items-end md:space-x-4 md:space-y-0" -->
                         <div class="w-full flex-1">
-                            <p class="block text-sm font-medium text-gray-700">
+                            <p
+                                class="block text-sm font-medium normal-case text-gray-700"
+                            >
                                 Discipline originale:
                             </p>
                             <AutocompleteDisciplineNav
@@ -1071,7 +1097,7 @@ const replicateCatDisTarBooking = () => {
                         >
                             <div class="flex flex-col items-start">
                                 <label
-                                    class="block text-sm font-medium text-gray-700"
+                                    class="block text-sm font-medium normal-case text-gray-700"
                                     >Catégorie originale:</label
                                 >
                                 <select
@@ -1114,7 +1140,7 @@ const replicateCatDisTarBooking = () => {
                         >
                             <div class="flex flex-col items-start">
                                 <label
-                                    class="block text-sm font-medium text-gray-700"
+                                    class="block text-sm font-medium normal-case text-gray-700"
                                     >Type de tarif:</label
                                 >
                                 <select
@@ -1148,7 +1174,9 @@ const replicateCatDisTarBooking = () => {
                             </div>
                         </template>
                         <div class="w-full flex-1">
-                            <p class="block text-sm font-medium text-gray-700">
+                            <p
+                                class="block text-sm font-medium normal-case text-gray-700"
+                            >
                                 Discipline cible:
                             </p>
                             <AutocompleteDisciplineNav

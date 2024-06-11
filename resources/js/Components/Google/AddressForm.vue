@@ -102,7 +102,7 @@ onUnmounted(() => {
             <div class="col-span-4 sm:col-span-2">
                 <label
                     for="address"
-                    class="block text-sm font-medium text-gray-700"
+                    class="block text-sm font-medium normal-case text-gray-700"
                 >
                     Adresse *
                 </label>
@@ -129,7 +129,7 @@ onUnmounted(() => {
             <div class="col-span-4 sm:col-span-2">
                 <label
                     for="city"
-                    class="block text-sm font-medium text-gray-700"
+                    class="block text-sm font-medium normal-case text-gray-700"
                     >Ville *</label
                 >
                 <input
@@ -151,7 +151,7 @@ onUnmounted(() => {
             <div class="col-span-4 sm:col-span-2">
                 <label
                     for="zip_code"
-                    class="block text-sm font-medium text-gray-700"
+                    class="block text-sm font-medium normal-case text-gray-700"
                     >ZIP / Code Postal *</label
                 >
                 <input
@@ -172,7 +172,7 @@ onUnmounted(() => {
             <div class="col-span-4 sm:col-span-2">
                 <label
                     for="country"
-                    class="block text-sm font-medium text-gray-700"
+                    class="block text-sm font-medium normal-case text-gray-700"
                     >Pays *</label
                 >
                 <select

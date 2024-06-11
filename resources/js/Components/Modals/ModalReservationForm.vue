@@ -313,7 +313,7 @@ const onSubmit = () => {
                                                 >
                                                     <label
                                                         :for="field.nom"
-                                                        class="block text-sm font-medium text-gray-700"
+                                                        class="block text-sm font-medium normal-case text-gray-700"
                                                     >
                                                         {{ field.nom }}
                                                     </label>
@@ -347,7 +347,7 @@ const onSubmit = () => {
                                                 >
                                                     <label
                                                         :for="field.nom"
-                                                        class="block text-sm font-medium text-gray-700"
+                                                        class="block text-sm font-medium normal-case text-gray-700"
                                                     >
                                                         {{ field.nom }}
                                                     </label>
@@ -430,7 +430,7 @@ const onSubmit = () => {
                                                     >
                                                         <label
                                                             :for="sousField.nom"
-                                                            class="block text-sm font-medium text-gray-700"
+                                                            class="block text-sm font-medium normal-case text-gray-700"
                                                         >
                                                             {{ sousField.nom }}
                                                         </label>
@@ -469,7 +469,7 @@ const onSubmit = () => {
                                                     >
                                                         <label
                                                             :for="sousField.nom"
-                                                            class="block text-sm font-medium text-gray-700"
+                                                            class="block text-sm font-medium normal-case text-gray-700"
                                                         >
                                                             {{ sousField.nom }}
                                                         </label>

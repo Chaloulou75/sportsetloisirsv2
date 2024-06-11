@@ -22,7 +22,10 @@ const isShowing = ref(true);
         leave-from="opacity-100"
         leave-to="opacity-0"
     >
-        <label :for="name" class="block text-sm font-medium text-gray-700">
+        <label
+            :for="name"
+            class="block text-sm font-medium normal-case text-gray-700"
+        >
             {{ name }}
         </label>
 

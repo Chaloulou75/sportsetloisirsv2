@@ -22,7 +22,7 @@ const props = defineProps({
     hoveredProduit: Number,
     structures: Object,
     hoveredStructure: Number,
-    zoom: Number,
+    zoom: [Number, String],
     filteredProduits: Array,
     filteredStructures: Array,
 });
@@ -159,7 +159,7 @@ const handleMoveEnd = () => {
         <div class="flex w-full max-w-sm items-center justify-start space-x-4">
             <label
                 for="zoomSize"
-                class="block text-sm font-medium text-gray-700"
+                class="block text-sm font-medium normal-case text-gray-700"
                 >Zoom</label
             >
             <input

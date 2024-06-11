@@ -647,7 +647,7 @@ onMounted(() => {
                                         >
                                             <label
                                                 for="nom tarif"
-                                                class="block text-sm font-medium text-gray-700"
+                                                class="block text-sm font-medium normal-case text-gray-700"
                                                 >Modifier le nom du type de
                                                 tarif
                                                 <span class="font-semibold">{{
@@ -1787,7 +1787,7 @@ onMounted(() => {
                             >
                                 <label
                                     for="tarif_type_nom"
-                                    class="block text-sm font-medium text-gray-700"
+                                    class="block text-sm font-medium normal-case text-gray-700"
                                     >Modifier le nom du type de tarif?</label
                                 >
                                 <input

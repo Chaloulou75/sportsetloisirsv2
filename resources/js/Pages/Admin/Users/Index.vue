@@ -551,7 +551,7 @@ onMounted(() => {
                                 <div class="mb-4">
                                     <label
                                         for="user"
-                                        class="mb-2 block text-sm font-medium text-gray-700"
+                                        class="mb-2 block text-sm font-medium normal-case text-gray-700"
                                         >Selectionner un utilisateur</label
                                     >
                                     <select
@@ -581,7 +581,7 @@ onMounted(() => {
                                 <div class="mb-4">
                                     <label
                                         for="role"
-                                        class="mb-2 block text-sm font-medium text-gray-700"
+                                        class="mb-2 block text-sm font-medium normal-case text-gray-700"
                                         >Selectionner un rôle</label
                                     >
                                     <select
@@ -644,7 +644,7 @@ onMounted(() => {
                                 <div class="mb-4">
                                     <label
                                         for="user"
-                                        class="mb-2 block text-sm font-medium text-gray-700"
+                                        class="mb-2 block text-sm font-medium normal-case text-gray-700"
                                         >Selectionner un utilisateur</label
                                     >
                                     <select
@@ -674,7 +674,7 @@ onMounted(() => {
                                 <div class="mb-4">
                                     <label
                                         for="role"
-                                        class="mb-2 block text-sm font-medium text-gray-700"
+                                        class="mb-2 block text-sm font-medium normal-case text-gray-700"
                                         >Selectionner un rôle</label
                                     >
                                     <select

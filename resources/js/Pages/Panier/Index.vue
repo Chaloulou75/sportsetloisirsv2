@@ -733,7 +733,7 @@ onBeforeMount(() => {
                     <div class="my-4 w-full">
                         <label
                             for="codePromo"
-                            class="mb-2 block text-sm font-medium text-gray-700"
+                            class="mb-2 block text-sm font-medium normal-case text-gray-700"
                         >
                             Code Promo
                         </label>

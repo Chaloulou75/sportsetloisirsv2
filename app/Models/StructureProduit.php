@@ -137,6 +137,7 @@ class StructureProduit extends Model
             'criteres.critere_valeur.sous_criteres',
             'criteres.critere_valeur.sous_criteres.prod_sous_crit_valeurs.sous_critere_valeur',
             'criteres.sous_criteres',
+            'criteres.sous_criteres.sous_critere',
             'criteres.sous_criteres.sous_critere_valeur',
             'catTarifs',
             'catTarifs.produits:id',

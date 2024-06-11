@@ -144,7 +144,7 @@ const onSubmit = () => {
                                     <div>
                                         <label
                                             for="titre"
-                                            class="mb-1 block text-sm font-medium text-gray-700"
+                                            class="mb-1 block text-sm font-medium normal-case text-gray-700"
                                             >Titre</label
                                         >
                                         <TextInput
@@ -163,7 +163,7 @@ const onSubmit = () => {
                                     <div>
                                         <label
                                             for="hs-select-label"
-                                            class="mb-1 block text-sm font-medium text-gray-700"
+                                            class="mb-1 block text-sm font-medium normal-case text-gray-700"
                                             >Activité liée</label
                                         >
                                         <select
@@ -190,7 +190,7 @@ const onSubmit = () => {
                                                 filteredProducts.length > 0
                                             "
                                             for="hs-select-label"
-                                            class="mb-1 block text-sm font-medium text-gray-700"
+                                            class="mb-1 block text-sm font-medium normal-case text-gray-700"
                                             >Produit lié</label
                                         >
                                         <select

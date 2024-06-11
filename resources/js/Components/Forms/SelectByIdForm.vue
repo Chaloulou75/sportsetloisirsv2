@@ -25,7 +25,10 @@ const isShowing = ref(true);
         leave-to="opacity-0"
     >
         <div :class="classes">
-            <label :for="name" class="block text-sm font-medium text-gray-700">
+            <label
+                :for="name"
+                class="block text-sm font-medium normal-case text-gray-700"
+            >
                 {{ name }}
             </label>
             <div class="mt-1 flex flex-1 rounded-md md:flex-auto">

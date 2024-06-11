@@ -40,7 +40,7 @@ defineExpose({ focus: () => input.value.focus() });
             <div>
                 <label
                     for="email"
-                    class="block text-sm font-medium text-gray-700"
+                    class="block text-sm font-medium normal-case text-gray-700"
                 >
                     Email*
                 </label>
@@ -67,7 +67,7 @@ defineExpose({ focus: () => input.value.focus() });
             <div>
                 <label
                     for="contact"
-                    class="block text-sm font-medium text-gray-700"
+                    class="block text-sm font-medium normal-case text-gray-700"
                 >
                     Nom de l'instructeur*
                 </label>
@@ -96,7 +96,7 @@ defineExpose({ focus: () => input.value.focus() });
             <div>
                 <label
                     for="phone"
-                    class="block text-sm font-medium text-gray-700"
+                    class="block text-sm font-medium normal-case text-gray-700"
                 >
                     Numéro de téléphone*
                 </label>

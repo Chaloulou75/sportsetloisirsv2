@@ -542,7 +542,7 @@ const onSubmitEditProduitForm = () => {
                                                     >
                                                         <label
                                                             :for="critere.nom"
-                                                            class="block text-sm font-medium text-gray-700"
+                                                            class="block text-sm font-medium normal-case text-gray-700"
                                                         >
                                                             {{ critere.nom }}
                                                         </label>
@@ -581,7 +581,7 @@ const onSubmitEditProduitForm = () => {
                                                     >
                                                         <label
                                                             :for="critere.nom"
-                                                            class="block text-sm font-medium text-gray-700"
+                                                            class="block text-sm font-medium normal-case text-gray-700"
                                                         >
                                                             {{ critere.nom }}
                                                         </label>
@@ -733,7 +733,7 @@ const onSubmitEditProduitForm = () => {
                                                                 for="
                                                             adresse
                                                         "
-                                                                class="block text-sm font-medium text-gray-700"
+                                                                class="block text-sm font-medium normal-case text-gray-700"
                                                             >
                                                                 Adresse
                                                             </label>

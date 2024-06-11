@@ -11,7 +11,10 @@ const props = defineProps({
     <div class="grid grid-cols-1 gap-6 md:grid-cols-4">
         <!-- name -->
         <div class="col-span-1 md:col-span-2">
-            <label for="name" class="block text-sm font-medium text-gray-700">
+            <label
+                for="name"
+                class="block text-sm font-medium normal-case text-gray-700"
+            >
                 Nom de la discipline
                 <span class="text-xs italic"></span>
             </label>
@@ -35,7 +38,7 @@ const props = defineProps({
         <div class="col-span-1 md:col-span-3">
             <label
                 for="description"
-                class="block text-sm font-medium text-gray-700"
+                class="block text-sm font-medium normal-case text-gray-700"
             >
                 Description de la discipline
                 <span class="text-xs italic"></span>
@@ -55,7 +58,10 @@ const props = defineProps({
         </div>
 
         <div class="col-span-1 md:col-span-3">
-            <label for="theme" class="block text-sm font-medium text-gray-700">
+            <label
+                for="theme"
+                class="block text-sm font-medium normal-case text-gray-700"
+            >
                 Thème
             </label>
 
