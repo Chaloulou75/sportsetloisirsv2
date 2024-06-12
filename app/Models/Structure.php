@@ -122,7 +122,7 @@ class Structure extends Model
 
     public function city(): BelongsTo
     {
-        return $this->belongsTo(City::class, 'structure_id', 'city_id');
+        return $this->belongsTo(City::class, 'city_id');
     }
 
     public function departement(): BelongsTo
@@ -149,16 +149,6 @@ class Structure extends Model
     {
         return $this->belongsToMany(LienDisciplineCategorie::class, 'structures_categories', 'structure_id', 'categorie_id')->using(StructureCategorie::class)->withTimestamps();
     }
-
-    // public function disciplines(): HasMany
-    // {
-    //     return $this->hasMany(StructureDiscipline::class, 'structure_id');
-    // }
-
-    // public function categories(): HasMany
-    // {
-    //     return $this->hasMany(StructureCategorie::class, 'structure_id');
-    // }
 
     public function activites(): HasMany
     {

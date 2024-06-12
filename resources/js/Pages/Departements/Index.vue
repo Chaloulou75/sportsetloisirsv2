@@ -146,12 +146,11 @@ watch(
                     <Link
                         :href="
                             route('departements.show', {
-                                departement: departement.slug,
+                                departement: departement,
                             })
                         "
-                        v-for="(departement, index) in departements.data"
+                        v-for="departement in departements.data"
                         :key="departement.id"
-                        :index="index"
                         class="flex flex-col items-center justify-center rounded border border-gray-600 px-12 py-3 text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                     >
                         <div>{{ formatCityName(departement.departement) }}</div>

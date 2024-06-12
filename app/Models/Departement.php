@@ -32,9 +32,9 @@ class Departement extends Model
     {
         $query->when(
             $filters['search'] ?? false,
-            fn($query, $search) =>
+            fn ($query, $search) =>
             $query->where(
-                fn($query) =>
+                fn ($query) =>
                 $query->where('departement', 'like', '%' . $search . '%')
                     ->orWhere('slug', 'like', '%' . $search . '%')
                     ->orWhere('numero', 'like', '%' . $search . '%')
@@ -55,11 +55,11 @@ class Departement extends Model
     public function scopeWithCitiesAndRelations(Builder $query): void
     {
         $query->with([
+            'structures:id,name,slug,city_id,departement_id',
             'cities' => function ($q) {
                 $q->whereHas('produits');
             },
             'cities.produits',
-            // 'cities.produits.dates',
             'cities.produits.structure:id,name,slug',
             'cities.produits.adresse',
             'cities.produits.activite:id,titre',
@@ -67,9 +67,6 @@ class Departement extends Model
             'cities.produits.criteres.critere',
             'cities.produits.criteres.critere_valeur.sous_criteres.prod_sous_crit_valeurs',
             'cities.produits.criteres.sous_criteres',
-            // 'cities.produits.tarifs',
-            // 'cities.produits.tarifs.tarifType',
-            // 'cities.produits.tarifs.structureTarifTypeInfos',
             'cities.produits.catTarifs',
             'cities.produits.catTarifs.attributs',
             'cities.produits.catTarifs.attributs.tarif_attribut',

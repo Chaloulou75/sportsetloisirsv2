@@ -44,7 +44,7 @@ class DepartementController extends Controller
                             'structures:id,name,slug,presentation_courte,address,city,zip_code,address_lat,address_lng,departement_id'
                         ])
                         ->whereHas('structures')
-                        ->select(['id', 'departement', 'numero'])
+                        ->select(['id', 'slug', 'departement', 'numero'])
                         ->withCount('structures')
                         ->filter(
                             request(['search'])
@@ -90,12 +90,7 @@ class DepartementController extends Controller
 
         $produits = $collectionProduits->paginate(12);
 
-        $structuresFlat = $departement->cities->flatMap(function ($city) {
-            return $city->structures;
-        });
-
-        $structures = $structuresFlat->each(function ($structure) {
-            $structure->load([
+        $structures = $departement->structures()->with([
                 'adresses'  => function ($query) {
                     $query->latest();
                 },
@@ -104,8 +99,7 @@ class DepartementController extends Controller
                 'activites',
                 'activites.discipline:id,name,slug',
                 'activites.categorie:id,slug,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
-            ])->select(['id', 'name', 'slug', 'structuretype_id', 'address', 'zip_code', 'city', 'address_lat', 'address_lng'])->get();
-        })->paginate(12);
+            ])->select(['id', 'name', 'slug', 'structuretype_id', 'address', 'zip_code', 'city', 'city_id', 'departement_id', 'address_lat', 'address_lng'])->paginate(12);
 
         $posts = Post::with(['comments', 'author', 'tags', 'disciplines'])->latest()->take(6)->get();
 

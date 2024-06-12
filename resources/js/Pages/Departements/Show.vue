@@ -174,7 +174,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                     }}</span>
                 </h3>
                 <div
-                    class="flex w-full flex-col flex-wrap items-stretch justify-center gap-3 text-gray-700 md:flex-row"
+                    class="mx-auto grid h-auto grid-cols-1 place-content-center place-items-stretch gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
                 >
                     <DisciplineSmallCard
                         v-for="discipline in flattenedDisciplines"
