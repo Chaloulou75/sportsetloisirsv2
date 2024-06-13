@@ -7,6 +7,7 @@ import CategoriesResultNavigation from "@/Components/Categories/CategoriesResult
 import { TransitionRoot } from "@headlessui/vue";
 import { HomeIcon, ListBulletIcon, MapIcon } from "@heroicons/vue/24/outline";
 import { useElementVisibility } from "@vueuse/core";
+import CitiesAround from "@/Components/Cities/CitiesAround.vue";
 
 const props = defineProps({
     familles: Object,
@@ -418,6 +419,10 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                             :disciplines-similaires="
                                 discipline.disciplines_similaires
                             "
+                        />
+                        <CitiesAround
+                            v-if="citiesAround.length > 0"
+                            :cities-around="citiesAround"
                         />
                     </TransitionRoot>
 

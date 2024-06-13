@@ -110,11 +110,6 @@ class Structure extends Model
         return $this->belongsToMany(User::class, 'structure_user', 'structure_id', 'user_id')->withPivot('niveau', 'contact', 'email', 'phone');
     }
 
-    public function famille(): BelongsTo
-    {
-        return $this->belongsTo(Famille::class);
-    }
-
     public function cities(): BelongsToMany
     {
         return $this->belongsToMany(City::class, 'structure_adresse', 'structure_id', 'city_id');
@@ -160,10 +155,10 @@ class Structure extends Model
         return $this->hasMany(StructureProduit::class, 'structure_id');
     }
 
-    public function tarifs(): HasMany
-    {
-        return $this->hasMany(StructureTarif::class, 'structure_id');
-    }
+    // public function tarifs(): HasMany
+    // {
+    //     return $this->hasMany(StructureTarif::class, 'structure_id');
+    // }
 
     public function plannings(): HasMany
     {

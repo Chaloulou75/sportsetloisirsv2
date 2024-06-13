@@ -76,41 +76,25 @@ class DepartementDisciplineCategorieController extends Controller
             return $city->produits()->withRelations()->where('discipline_id', $discipline->id)->where('categorie_id', $category->id)->get();
         })->paginate(12);
 
-        $structuresFlat = $departement->cities->flatMap(function ($city) use ($discipline, $category) {
-            return $city->structures->filter(function ($structure) use ($discipline, $category) {
-                return $structure->produits->where('discipline_id', $discipline->id)->where('categorie_id', $category->id)->isNotEmpty();
-            });
-        });
 
-        $structures = $structuresFlat->each(function ($structure) use ($discipline, $category) {
-            $structure->load([
-                'adresses'  => function ($query) {
-                    $query->latest();
-                },
-                'city:id,ville,ville_formatee,code_postal',
-                'structuretype:id,name,slug',
-                'disciplines' => function ($query) use ($discipline) {
-                    $query->where('id', $discipline->id);
-                },
-                'disciplines.discipline:id,name,slug',
-                'categories' => function ($query) use ($category) {
-                    $query->where('id', $category->id);
-                },
-                'activites' => function ($query) use ($discipline, $category) {
-                    $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
-                },
-                'activites.discipline:id,name,slug',
-                'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
-            ])->whereHas('activites', function ($query) use ($discipline, $category) {
+        $structures = $departement->structures()->with([
+            'adresses'  => function ($query) {
+                $query->latest();
+            },
+            'city:id,slug,ville,code_postal',
+            'structuretype:id,name,slug',
+            'activites' => function ($query) use ($discipline, $category) {
                 $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
-            })->select(['id', 'name', 'slug', 'structuretype_id', 'address', 'zip_code', 'city', 'address_lat', 'address_lng'])->get();
-        })->paginate(12);
+            },
+            'activites.discipline:id,name,slug',
+            'activites.categorie:id,slug,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+        ])->select(['id', 'name', 'slug', 'structuretype_id', 'address', 'zip_code', 'city', 'city_id', 'departement_id', 'address_lat', 'address_lng'])
+        ->paginate(12);
 
         $citiesAround = $departement->cities()->whereHas('produits')
-                            ->select('id', 'slug', 'ville')
+                            ->select('id', 'slug', 'ville', 'code_postal')
                             ->limit(10)
                             ->get();
-
         $posts = Post::orderByDiscipline($discipline->id)->take(6)->get();
 
         $departement->timestamp = false;
@@ -125,13 +109,13 @@ class DepartementDisciplineCategorieController extends Controller
             'allStructureTypes' => fn () => $allStructureTypes,
             'criteres' => fn () => $criteres,
             'departement' => fn () => $departement,
-            'citiesAround' => fn () => $citiesAround,
             'produits' => fn () => $produits,
             'structures' => fn () => $structures,
             'discipline' => fn () => $discipline,
             'listDisciplines' => fn () => $listDisciplines,
             'allCities' => fn () => CityResource::collection($allCities),
             'posts' => fn () => PostResource::collection($posts),
+            'citiesAround' => fn () => CityResource::collection($citiesAround),
         ]);
 
     }

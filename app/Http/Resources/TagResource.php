@@ -17,7 +17,7 @@ class TagResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'posts' => $this->whenLoaded('posts', fn () => PostResource::collection($this->posts)),
+            'posts' => PostResource::collection($this->whenLoaded('posts')),
             'updated_at' => $this->updated_at,
             'created_at' => $this->created_at,
         ];

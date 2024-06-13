@@ -39,6 +39,7 @@ import {
     isWithinInterval,
 } from "date-fns";
 import { fr } from "date-fns/locale";
+import CitiesAround from "@/Components/Cities/CitiesAround.vue";
 dayjs.locale("fr");
 
 const props = defineProps({
@@ -1308,6 +1309,10 @@ onMounted(() => {
                                 discipline.disciplines_similaires
                             "
                         />
+                        <CitiesAround
+                            v-if="citiesAround.length > 0"
+                            :cities-around="citiesAround"
+                        />
                     </TransitionRoot>
 
                     <TransitionRoot
@@ -1375,6 +1380,10 @@ onMounted(() => {
                             "
                         />
                     </div>
+                    <CitiesAround
+                        v-if="citiesAround.length > 0"
+                        :cities-around="citiesAround"
+                    />
                 </div>
                 <!-- Blog -->
                 <div

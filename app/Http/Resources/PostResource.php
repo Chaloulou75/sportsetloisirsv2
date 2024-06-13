@@ -17,7 +17,7 @@ class PostResource extends JsonResource
         return [
             'id' => $this->id,
             'author' => UserResource::make($this->whenLoaded('author')),
-            'disciplines' => $this->whenLoaded('disciplines', fn () => $this->disciplines),
+            'disciplines' => ListDisciplineResource::collection($this->whenLoaded('disciplines')),
             'tags' => TagResource::collection($this->whenLoaded('tags')),
             'comments' => CommentResource::collection($this->whenLoaded('comments')),
             'comments_count' => $this->whenCounted('comments'),

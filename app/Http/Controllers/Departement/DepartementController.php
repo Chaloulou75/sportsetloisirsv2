@@ -83,7 +83,7 @@ class DepartementController extends Controller
         ->find($departement->id);
 
         $collectionProduits = $departement->cities->flatMap(function ($city) {
-            return $city->produits;
+            return $city->produits()->withRelations()->get();
         });
 
         $flattenedDisciplines = $collectionProduits->pluck('discipline')->unique();
@@ -103,6 +103,13 @@ class DepartementController extends Controller
 
         $posts = Post::with(['comments', 'author', 'tags', 'disciplines'])->latest()->take(6)->get();
 
+
+        $citiesAround = $departement->cities()
+                ->whereHas('produits')
+                ->select('id', 'slug', 'ville', 'code_postal')
+                ->limit(10)
+                ->get();
+
         $departement->timestamp = false;
         $departement->increment('view_count');
 
@@ -115,6 +122,7 @@ class DepartementController extends Controller
             'produits' => fn () => $produits,
             'structures' => fn () => $structures,
             'posts' => fn () => PostResource::collection($posts),
+            'citiesAround' => fn () => CityResource::collection($citiesAround),
         ]);
     }
 

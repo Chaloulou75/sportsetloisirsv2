@@ -30,18 +30,22 @@ const formatCityName = (ville) => {
             >
                 Les localités à proximités
             </h2>
-            <ul class="list-inside list-disc space-y-1.5">
-                <li v-for="city in citiesAround" :key="city.id">
-                    <Link
-                        :href="route('villes.show', city.slug)"
-                        :active="route().current('villes.show', city.slug)"
-                        class="hover:font-semibold hover:text-gray-900"
-                    >
+            <div
+                class="flex flex-col items-center justify-start space-x-4 px-2 md:flex-row md:px-4"
+            >
+                <Link
+                    v-for="city in citiesAround"
+                    :key="city.id"
+                    :href="route('villes.show', city.slug)"
+                    :active="route().current('villes.show', city.slug)"
+                    class="flex items-center justify-center rounded px-12 py-3 text-sm font-medium text-gray-600 shadow-sm ring ring-gray-400 hover:bg-indigo-500 hover:text-white hover:shadow-lg hover:ring-gray-100 focus:outline-none focus:ring active:bg-indigo-500"
+                >
+                    <p>
                         {{ formatCityName(city.ville) }}
                         <span class="text-xs">({{ city.code_postal }})</span>
-                    </Link>
-                </li>
-            </ul>
+                    </p>
+                </Link>
+            </div>
         </div>
     </TransitionRoot>
 </template>

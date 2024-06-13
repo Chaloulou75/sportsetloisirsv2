@@ -51,13 +51,13 @@ class LienDisciplineCategorie extends Pivot
         return $this->hasMany(LienDisciplineCategorieCritere::class, 'categorie_id');
     }
 
-    // public function criteres(): BelongsToMany
-    // {
-    //     return $this->belongsToMany(Critere::class, 'liens_disciplines_categories_criteres', 'categorie_id', 'critere_id')->withPivot('id', 'discipline_id', 'categorie_id', 'critere_id', 'nom', 'type_champ_form', 'ordre', 'visible_back', 'visible_front', 'visible_block', 'indexable');
-    // }
-
     public function tarif_types(): HasMany
     {
         return $this->hasMany(LienDisCatTariftype::class, 'categorie_id');
     }
+
+    // public function criteres(): BelongsToMany
+    // {
+    //     return $this->belongsToMany(Critere::class, 'liens_disciplines_categories_criteres', 'categorie_id', 'critere_id')->withPivot('id', 'discipline_id', 'categorie_id', 'critere_id', 'nom', 'type_champ_form', 'ordre', 'visible_back', 'visible_front', 'visible_block', 'indexable');
+    // }
 }

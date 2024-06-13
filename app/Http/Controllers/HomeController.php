@@ -12,11 +12,13 @@ use App\Models\Departement;
 use App\Models\ListDiscipline;
 use App\Models\StructureProduit;
 use App\Http\Resources\CityResource;
+use App\Http\Resources\DepartementResource;
 use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use App\Http\Resources\FamilleResource;
 use App\Http\Resources\ListDisciplineResource;
+use App\Http\Resources\StructureResource;
 
 class HomeController extends Controller
 {
@@ -119,10 +121,10 @@ class HomeController extends Controller
             'structuresCount' => fn () => $structuresCount,
             'produitsCount' => fn () => $produitsCount,
             'citiesCount' => fn () => $citiesCount,
-            'lastStructures' => fn () => $lastStructures,
+            'lastStructures' => fn () => StructureResource::collection($lastStructures),
             'allCities' => fn () => CityResource::collection($allCities),
             'topVilles' => fn () => CityResource::collection($topVilles),
-            'topDepartements' => fn () => $topDepartements,
+            'topDepartements' => fn () => DepartementResource::collection($topDepartements),
             'posts' => fn () => PostResource::collection($posts),
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),

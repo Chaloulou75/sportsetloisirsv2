@@ -8,6 +8,7 @@ import DisciplinesSimilaires from "@/Components/Disciplines/DisciplinesSimilaire
 import { TransitionRoot } from "@headlessui/vue";
 import { useElementVisibility } from "@vueuse/core";
 import { HomeIcon, ListBulletIcon, MapIcon } from "@heroicons/vue/24/outline";
+import CitiesAround from "@/Components/Cities/CitiesAround.vue";
 
 const props = defineProps({
     familles: Object,
@@ -408,6 +409,10 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                             :disciplines-similaires="
                                 discipline.disciplines_similaires
                             "
+                        />
+                        <CitiesAround
+                            v-if="citiesAround.length > 0"
+                            :cities-around="citiesAround"
                         />
                     </TransitionRoot>
 

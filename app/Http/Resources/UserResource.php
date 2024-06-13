@@ -20,6 +20,8 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->when($this->id === $request->user()?->id, $this->email),
             'customer' => CustomerResource::make($this->whenLoaded('customer')),
+            'roles' => RoleResource::collection($this->whenLoaded('roles')),
+            'structures' => StructureResource::collection($this->whenLoaded('structures')),
             'updated_at' => $this->updated_at,
             'created_at' => $this->created_at,
         ];

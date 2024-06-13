@@ -11,6 +11,7 @@ use App\Models\ListDiscipline;
 use App\Http\Resources\CityResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
+use App\Http\Resources\ListDisciplineResource;
 
 class FaqController extends Controller
 {
@@ -28,7 +29,7 @@ class FaqController extends Controller
 
         return Inertia::render('Faq/Index', [
             'familles' => fn () => FamilleResource::collection($familles),
-            'listDisciplines' => fn () => $listDisciplines,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => CityResource::collection($allCities),
         ]);
     }

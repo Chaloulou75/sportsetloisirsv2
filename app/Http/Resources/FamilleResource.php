@@ -18,7 +18,7 @@ class FamilleResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
-            'disciplines' => $this->whenLoaded('disciplines', fn () => $this->disciplines),
+            'disciplines' => ListDisciplineResource::collection($this->whenLoaded('disciplines')),
             'updated_at' => $this->updated_at,
             'created_at' => $this->created_at,
         ];

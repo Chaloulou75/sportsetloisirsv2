@@ -25,10 +25,12 @@ class CityResource extends JsonResource
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'tolerance_rayon' => $this->tolerance_rayon,
-            'city_departement' => $this->whenLoaded('city_departement', fn () => $this->city_departement),
-            'structures' => $this->whenLoaded('structures', fn () => $this->structures),
-            'adresses' => $this->whenLoaded('adresses', fn () => $this->adresses),
-            'produits' => $this->whenLoaded('produits', fn () => $this->produits),
+            'city_departement' => DepartementResource::make($this->whenLoaded('city_departement')),
+            'structures' => StructureResource::collection($this->whenLoaded('structures')),
+            'adresses' => StructureAddressResource::collection($this->whenLoaded('adresses')),
+            'produits' => StructureProduitResource::collection($this->whenLoaded('produits')),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
 
     }

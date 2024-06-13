@@ -42,9 +42,9 @@ class City extends Model
     {
         $query->when(
             $filters['search'] ?? false,
-            fn($query, $search) =>
+            fn ($query, $search) =>
             $query->where(
-                fn($query) =>
+                fn ($query) =>
                 $query->where('ville', 'like', '%' . $search . '%')
                     ->orWhere('slug', 'like', '%' . $search . '%')
                     ->orWhere('ville_formatee', 'like', '%' . $search . '%')
@@ -54,10 +54,10 @@ class City extends Model
 
         $query->when(
             $filters['discipline'] ?? false,
-            fn($query, $discipline) =>
+            fn ($query, $discipline) =>
             $query->whereHas(
                 'disciplines',
-                fn($query) =>
+                fn ($query) =>
                 $query->where('slug', $discipline)
             )
         );
@@ -132,5 +132,4 @@ class City extends Model
             'id'
         );
     }
-
 }

@@ -7,6 +7,7 @@ import DisciplineSmallCard from "@/Components/Disciplines/DisciplineSmallCard.vu
 import { TransitionRoot } from "@headlessui/vue";
 import { HomeIcon, ListBulletIcon, MapIcon } from "@heroicons/vue/24/outline";
 import { useElementVisibility } from "@vueuse/core";
+import CitiesAround from "@/Components/Cities/CitiesAround.vue";
 
 const LeafletMapProduitMultiple = defineAsyncComponent(() =>
     import("@/Components/Maps/LeafletMapProduitMultiple.vue")
@@ -36,6 +37,7 @@ const props = defineProps({
     produits: Object,
     structures: Object,
     flattenedDisciplines: Object,
+    citiesAround: Object,
     posts: Object,
     filters: Object,
 });
@@ -372,6 +374,10 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                 />
                             </div>
                         </div>
+                        <CitiesAround
+                            v-if="citiesAround.length > 0"
+                            :cities-around="citiesAround"
+                        />
                     </TransitionRoot>
 
                     <TransitionRoot

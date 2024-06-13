@@ -14,6 +14,7 @@ use App\Models\StructureActivite;
 use App\Http\Resources\CityResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
+use App\Http\Resources\ListDisciplineResource;
 
 class FavoritesController extends Controller
 {
@@ -56,12 +57,12 @@ class FavoritesController extends Controller
         }
 
         return Inertia::render('Favorites/Index', [
-                    'familles' => fn () => FamilleResource::collection($familles),
-                    'structures' => fn () => $structures ?? [],
-                    'activites' => fn () => $activites ?? [],
-                    'produits' => fn () => $produits ?? [],
-                    'allCities' => fn () => CityResource::collection($allCities),
-                    'listDisciplines' => fn () => $listDisciplines,
+            'familles' => fn () => FamilleResource::collection($familles),
+            'structures' => fn () => $structures ?? [],
+            'activites' => fn () => $activites ?? [],
+            'produits' => fn () => $produits ?? [],
+            'allCities' => fn () => CityResource::collection($allCities),
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
         ]);
 
     }

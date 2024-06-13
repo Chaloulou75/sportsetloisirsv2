@@ -34,9 +34,4 @@ class Famille extends Model
         return $this->belongsToMany(ListDiscipline::class, 'liens_familles_disciplines', 'famille_id', 'discipline_id');
     }
 
-    public function structures(): HasMany
-    {
-        return $this->hasMany(Structure::class);
-    }
-
 }
