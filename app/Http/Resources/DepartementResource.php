@@ -25,6 +25,8 @@ class DepartementResource extends JsonResource
             'view_count' => $this->view_count,
             'cities' => CityResource::collection($this->whenLoaded('cities')),
             'structures' => StructureResource::collection($this->whenLoaded('structures')),
+            'structures_count' => $this->whenCounted('structures'),
+            'produits_count' => $this->whenCounted('produits'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -28,7 +28,7 @@ class ListDisciplineResource extends JsonResource
             'str_categories' => StructureCategorieResource::collection($this->whenLoaded('str_categories')),
             'activites' => StructureActiviteResource::collection($this->whenLoaded('activites')),
             'structureProduits' => StructureProduitResource::collection($this->whenLoaded('structureProduits')),
-            'disciplinesSimilaires' => ListDisciplineResource::collection($this->whenLoaded('disciplinesSimilaires')),
+            'disciplines_similaires' => ListDisciplineResource::collection($this->whenLoaded('disciplines_similaires')),
             'posts' => PostResource::collection($this->whenLoaded('posts')),
             'reservations' => ProductReservationResource::collection($this->whenLoaded('reservations')),
             'updated_at' => $this->updated_at,

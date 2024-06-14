@@ -38,7 +38,7 @@ class StructureProduit extends Model
      *
      * @var array
      */
-    protected $with = ['catTarifs'];
+    protected $with = ['cat_tarifs'];
 
     /**
      * The accessors to append to the model's array form.
@@ -51,8 +51,8 @@ class StructureProduit extends Model
     {
         return Attribute::make(
             get: function () {
-                return $this->catTarifs->isNotEmpty()
-                    ? $this->catTarifs->min('amount')
+                return $this->cat_tarifs->isNotEmpty()
+                    ? $this->cat_tarifs->min('amount')
                     : null;
             }
         );
@@ -93,17 +93,17 @@ class StructureProduit extends Model
         return $this->hasMany(StructureProduitSousCritere::class, 'produit_id');
     }
 
-    public function horaire(): BelongsTo
-    {
-        return $this->belongsTo(StructureHoraire::class, 'horaire_id');
-    }
+    // public function horaire(): BelongsTo
+    // {
+    //     return $this->belongsTo(StructureHoraire::class, 'horaire_id');
+    // }
 
-    public function tarifs(): BelongsToMany
-    {
-        return $this->belongsToMany(StructureTarif::class, 'produit_tarif', 'produit_id', 'tarif_id');
-    }
+    // public function tarifs(): BelongsToMany
+    // {
+    //     return $this->belongsToMany(StructureTarif::class, 'produit_tarif', 'produit_id', 'tarif_id');
+    // }
 
-    public function catTarifs(): BelongsToMany
+    public function cat_tarifs(): BelongsToMany
     {
         return $this->belongsToMany(StructureCatTarif::class, 'produit_cat_tarif', 'produit_id', 'cat_tarif_id');
     }
@@ -113,10 +113,10 @@ class StructureProduit extends Model
         return $this->hasMany(StructurePlanning::class, 'produit_id');
     }
 
-    public function dates(): HasMany
-    {
-        return $this->hasMany(StructureActiviteDate::class, 'structure_produit_id');
-    }
+    // public function dates(): HasMany
+    // {
+    //     return $this->hasMany(StructureActiviteDate::class, 'structure_produit_id');
+    // }
 
     public function reservations(): HasMany
     {
@@ -139,24 +139,24 @@ class StructureProduit extends Model
             'criteres.sous_criteres',
             'criteres.sous_criteres.sous_critere',
             'criteres.sous_criteres.sous_critere_valeur',
-            'catTarifs',
-            'catTarifs.produits:id',
-            'catTarifs.categorie',
-            'catTarifs.cat_tarif_type',
-            'catTarifs.cat_tarif_type.tarif_attributs',
-            'catTarifs.cat_tarif_type.tarif_attributs.valeurs',
-            'catTarifs.cat_tarif_type.tarif_attributs.sous_attributs',
-            'catTarifs.cat_tarif_type.tarif_attributs.sous_attributs.valeurs',
-            'catTarifs.cat_tarif_type.tarif_booking_fields',
-            'catTarifs.cat_tarif_type.tarif_booking_fields.valeurs',
-            'catTarifs.cat_tarif_type.tarif_booking_fields.sous_fields',
-            'catTarifs.cat_tarif_type.tarif_booking_fields.sous_fields.valeurs',
-            'catTarifs.attributs',
-            'catTarifs.attributs.tarif_attribut',
-            'catTarifs.attributs.tarif_attribut.valeurs',
-            'catTarifs.attributs.sous_attributs',
-            'catTarifs.attributs.sous_attributs.sous_attribut',
-            'catTarifs.attributs.sous_attributs.sous_attribut_valeur',
+            'cat_tarifs',
+            'cat_tarifs.produits:id',
+            'cat_tarifs.categorie',
+            'cat_tarifs.cat_tarif_type',
+            'cat_tarifs.cat_tarif_type.tarif_attributs',
+            'cat_tarifs.cat_tarif_type.tarif_attributs.valeurs',
+            'cat_tarifs.cat_tarif_type.tarif_attributs.sous_attributs',
+            'cat_tarifs.cat_tarif_type.tarif_attributs.sous_attributs.valeurs',
+            'cat_tarifs.cat_tarif_type.tarif_booking_fields',
+            'cat_tarifs.cat_tarif_type.tarif_booking_fields.valeurs',
+            'cat_tarifs.cat_tarif_type.tarif_booking_fields.sous_fields',
+            'cat_tarifs.cat_tarif_type.tarif_booking_fields.sous_fields.valeurs',
+            'cat_tarifs.attributs',
+            'cat_tarifs.attributs.tarif_attribut',
+            'cat_tarifs.attributs.tarif_attribut.valeurs',
+            'cat_tarifs.attributs.sous_attributs',
+            'cat_tarifs.attributs.sous_attributs.sous_attribut',
+            'cat_tarifs.attributs.sous_attributs.sous_attribut_valeur',
             'plannings' => function ($query) {
                 $query->endNotPassed()->orderByDateStart();
             },

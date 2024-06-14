@@ -34,9 +34,6 @@ const BaseInfoForm = defineAsyncComponent(() =>
 
 const props = defineProps({
     structurestypes: Object,
-    niveaux: Object,
-    publictypes: Object,
-    disciplines: Object,
     structure: Object,
     confirmedReservationsCount: Number,
     allReservationsCount: Number,
@@ -158,11 +155,11 @@ const deleteAdresse = (adresse) => {
     );
 };
 
-const deletePartenaire = (partenaire) => {
+const deletePartenaire = (user) => {
     router.delete(
-        route("structures.partenaires.destroy", {
+        route("structures.users.destroy", {
             structure: props.structure.slug,
-            partenaire: partenaire.id,
+            user: user.id,
         }),
         {
             preserveScroll: true,
@@ -1055,36 +1052,32 @@ onMounted(() => {
                             <ul class="list-inside list-disc space-y-2">
                                 <li
                                     class="flex items-center justify-between"
-                                    v-for="partenaire in structure.partenaires"
-                                    :key="partenaire.id"
+                                    v-for="user in structure.users"
+                                    :key="user.id"
                                 >
                                     <p>
                                         <span
                                             class="font-semibold text-indigo-500"
-                                            >{{ partenaire.name }}</span
-                                        >, {{ partenaire.email }}. Niveau:<span
+                                            >{{ user.name }}</span
+                                        >, {{ user.email }}. Niveau:<span
                                             class="font-semibold"
-                                            v-if="partenaire.pivot.niveau === 1"
+                                            v-if="user.pivot.niveau === 1"
                                         >
                                             Super administrateur</span
                                         >
                                         <span
                                             class="font-semibold"
-                                            v-else-if="
-                                                partenaire.pivot.niveau === 2
-                                            "
+                                            v-else-if="user.pivot.niveau === 2"
                                         >
                                             Administrateur</span
                                         >
                                         <span
                                             class="font-semibold"
-                                            v-else-if="
-                                                partenaire.pivot.niveau === 3
-                                            "
+                                            v-else-if="user.pivot.niveau === 3"
                                         >
                                             Sans permission</span
                                         >, telephone:
-                                        {{ partenaire.pivot.phone }}
+                                        {{ user.pivot.phone }}
                                     </p>
 
                                     <div class="flex items-center gap-x-6">
@@ -1102,9 +1095,7 @@ onMounted(() => {
                                         </button> -->
                                         <button
                                             type="button"
-                                            @click="
-                                                deletePartenaire(partenaire)
-                                            "
+                                            @click="deletePartenaire(user)"
                                         >
                                             <TrashIcon
                                                 class="h-6 w-6 text-red-500 hover:text-red-700"

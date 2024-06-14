@@ -8,6 +8,7 @@ use Inertia\Response;
 use App\Models\Critere;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use App\Http\Resources\CritereResource;
 
 class CritereController extends Controller
 {
@@ -26,17 +27,9 @@ class CritereController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'criteres' => fn () => $criteres,
+            'criteres' => fn () => CritereResource::collection($criteres),
         ]);
 
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -57,22 +50,6 @@ class CritereController extends Controller
 
         return to_route('admin.criteres.index')->with('success', 'Critere créé');
 
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
     }
 
     /**

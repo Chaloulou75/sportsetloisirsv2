@@ -45,16 +45,19 @@ watch(
 </script>
 
 <template>
-    <Head
-        title="Departements"
-        :description="
-            'Trouvez un club de sport ou un cours collectif parmi plus de ' +
-            departements.total +
-            ' disciplines différentes en France. Choisissez parmi ' +
-            structuresCount +
-            ' clubs sur notre site prêts à vous accueillir.'
-        "
-    />
+    <Head title="Departements">
+        <meta
+            head-key="description"
+            name="description"
+            :content="
+                'Trouvez un club de sport ou un cours collectif parmi plus de ' +
+                departements.meta.total +
+                ' departements en France. Choisissez parmi ' +
+                structuresCount +
+                ' structures sur notre site prêts à vous accueillir.'
+            "
+        />
+    </Head>
 
     <ResultLayout
         :familles="familles"

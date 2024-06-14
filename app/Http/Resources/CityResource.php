@@ -27,8 +27,10 @@ class CityResource extends JsonResource
             'tolerance_rayon' => $this->tolerance_rayon,
             'city_departement' => DepartementResource::make($this->whenLoaded('city_departement')),
             'structures' => StructureResource::collection($this->whenLoaded('structures')),
+            'structures_count' => $this->whenCounted('structures'),
             'adresses' => StructureAddressResource::collection($this->whenLoaded('adresses')),
             'produits' => StructureProduitResource::collection($this->whenLoaded('produits')),
+            'produits_count' => $this->whenCounted('produits'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

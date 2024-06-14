@@ -30,7 +30,7 @@ const results = ref();
 
 const onPermissionSubmit = () => {
     addPermissionForm.post(
-        route("structures.partenaires.store", {
+        route("structures.users.store", {
             structure: props.structure.slug,
         }),
         {

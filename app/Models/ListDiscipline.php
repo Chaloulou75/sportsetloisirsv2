@@ -40,7 +40,7 @@ class ListDiscipline extends Model
     {
         $query->with([
             'structureProduits',
-            'disciplinesSimilaires' => function ($query) {
+            'disciplines_similaires' => function ($query) {
                 $query->whereHas('structureProduits')
                     ->select('discipline_similaire_id', 'name', 'slug', 'famille', 'theme', 'view_count');
             }
@@ -90,7 +90,7 @@ class ListDiscipline extends Model
         return $this->hasMany(StructureProduit::class, 'discipline_id');
     }
 
-    public function disciplinesSimilaires(): BelongsToMany
+    public function disciplines_similaires(): BelongsToMany
     {
         return $this->belongsToMany(ListDiscipline::class, 'liens_disciplines_similaires', 'discipline_id', 'discipline_similaire_id');
     }

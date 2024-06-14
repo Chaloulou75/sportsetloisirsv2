@@ -26,11 +26,11 @@ const props = defineProps({
         class="rounded-lg bg-gray-50 ring ring-indigo-600 ring-opacity-30 transition-colors duration-300 hover:bg-gray-100 hover:ring-opacity-100"
     >
         <div class="px-5 py-6 lg:flex">
-            <div v-if="post.thumbnail" class="lg:mr-8">
+            <div v-if="post.thumbnail" class="lg:mr-4">
                 <img
                     :src="post.image_url"
                     alt="Blog Post illustration"
-                    class="h-20 w-20 rounded-xl object-cover"
+                    class="h-16 w-16 rounded-xl object-cover"
                 />
             </div>
 

@@ -15,9 +15,13 @@ use App\Models\StructureProduit;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CityResource;
+use App\Http\Resources\DepartementResource;
 use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
+use App\Http\Resources\ListDisciplineResource;
+use App\Http\Resources\StructureProduitResource;
+use App\Http\Resources\StructureResource;
 
 class DepartementController extends Controller
 {
@@ -54,10 +58,10 @@ class DepartementController extends Controller
                         ->withQueryString();
 
         return Inertia::render('Departements/Index', [
-            'departements' => $departements,
-            'familles' => $familles,
-            'listDisciplines' => $listDisciplines,
-            'allCities' => $allCities,
+            'departements' => DepartementResource::collection($departements),
+            'familles' => FamilleResource::collection($familles),
+            'listDisciplines' => ListDisciplineResource::collection($listDisciplines),
+            'allCities' => CityResource::collection($allCities),
             'structuresCount' => $structuresCount,
             'filters' => request()->all(['search']),
         ]);
@@ -115,12 +119,12 @@ class DepartementController extends Controller
 
         return Inertia::render('Departements/Show', [
             'familles' => fn () => FamilleResource::collection($familles),
-            'listDisciplines' => fn () => $listDisciplines,
-            'flattenedDisciplines' => fn () => $flattenedDisciplines,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
+            'flattenedDisciplines' => fn () => ListDisciplineResource::collection($flattenedDisciplines),
             'allCities' => fn () => CityResource::collection($allCities),
-            'departement' => fn () => $departement,
+            'departement' => fn () => DepartementResource::make($departement),
             'produits' => fn () => $produits,
-            'structures' => fn () => $structures,
+            'structures' => fn () => StructureResource::collection($structures),
             'posts' => fn () => PostResource::collection($posts),
             'citiesAround' => fn () => CityResource::collection($citiesAround),
         ]);

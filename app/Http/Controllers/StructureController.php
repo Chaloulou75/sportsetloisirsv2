@@ -37,6 +37,7 @@ use App\Models\LienDisciplineCategorie;
 use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
+use App\Http\Resources\StructureResource;
 use App\Models\LienDisciplineCategorieCritere;
 
 class StructureController extends Controller
@@ -353,47 +354,28 @@ class StructureController extends Controller
             return Redirect::route('structures.show', $structure->slug)->with('error', 'Vous n\'avez pas la permission d\'éditer cette fiche, vous devez être le créateur de la structure ou un administrateur.');
         }
 
-        $allReservationsCount = ProductReservation::count();
-        $pendingReservationsCount = ProductReservation::where('pending', true)->count();
-        $confirmedReservationsCount = ProductReservation::where('confirmed', true)
+        $allReservationsCount = ProductReservation::where('structure_id', $structure->id)->count();
+        $pendingReservationsCount = ProductReservation::where('structure_id', $structure->id)->where('pending', true)->count();
+        $confirmedReservationsCount = ProductReservation::where('structure_id', $structure->id)->where('confirmed', true)
             ->count();
 
         $structurestypes = Structuretype::with(['structuretypeattributs', 'structuretypeattributs.structuretypevaleurs'])->select(['id', 'name', 'slug'])->get();
-        $disciplines = ListDiscipline::select(['id', 'name', 'slug'])->get();
 
         $structure = Structure::with([
-            'adresses'  => function ($query) {
-                $query->latest();
-            },
-            'creator:id,name,email',
-            'users:id,name',
-            'partenaires',
-            'cities:id,ville,ville_formatee',
-            'departement:id,departement,numero',
-            'structuretype:id,name,slug',
-            'disciplines',
-            'categories',
-            'activites' => function ($query) {
-                $query->orderBy('discipline_id');
-            },
-            'activites.discipline:id,name',
-            'activites.categorie:id,categorie_id,discipline_id,nom_categorie_client',
-            'activites.produits',
-            'activites.produits.adresse',
-            'activites.produits.criteres',
-            'activites.produits.criteres.critere',
-            'activites.produits.tarifs',
-            'activites.produits.tarifs.tarifType',
-            'activites.produits.tarifs.structureTarifTypeInfos',
-            'activites.produits.plannings',
+                'adresses'  => function ($query) {
+                    $query->latest();
+                },
+                'creator',
+                'users',
+                'cities',
+                'departement',
+                'structuretype',
             ])
-            ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'website', 'email', 'facebook', 'instagram', 'youtube', 'tiktok', 'phone1', 'phone2', 'date_creation', 'view_count', 'departement_id', 'abo_news', 'abo_promo', 'logo'])
             ->findOrFail($structure->id);
 
         return Inertia::render('Structures/Edit', [
             'structurestypes' => fn () => $structurestypes,
-            'disciplines' => fn () => $disciplines,
-            'structure' => fn () => $structure,
+            'structure' => fn () => StructureResource::make($structure),
             'allReservationsCount' => fn () => $allReservationsCount,
             'confirmedReservationsCount' => fn () => $confirmedReservationsCount,
             'pendingReservationsCount' => fn () => $pendingReservationsCount,

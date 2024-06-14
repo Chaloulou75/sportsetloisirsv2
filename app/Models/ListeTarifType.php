@@ -20,11 +20,11 @@ class ListeTarifType extends Model
 
     }
 
-    public function tarifs(): HasMany
-    {
-        return $this->hasMany(StructureTarif::class, 'type_id');
+    // public function tarifs(): HasMany
+    // {
+    //     return $this->hasMany(StructureTarif::class, 'type_id');
 
-    }
+    // }
 
     public function categories(): HasMany
     {

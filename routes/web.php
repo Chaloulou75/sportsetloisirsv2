@@ -208,9 +208,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('structures/{structure:slug}/adresses/{adress}', [StructureAddresseController::class, 'update'])->name('structures.adresses.update');
     Route::delete('structures/{structure:slug}/adresses/{adress}', [StructureAddresseController::class, 'destroy'])->name('structures.adresses.destroy');
 
-    Route::post('structures/{structure:slug}/partenaires', [StructureUserController::class, 'store'])->name('structures.partenaires.store');
-    Route::put('structures/{structure:slug}/partenaires/{partenaire}', [StructureUserController::class, 'update'])->name('structures.partenaires.update');
-    Route::delete('structures/{structure:slug}/partenaires/{partenaire}', [StructureUserController::class, 'destroy'])->name('structures.partenaires.destroy');
+    Route::post('structures/{structure:slug}/users', [StructureUserController::class, 'store'])->name('structures.users.store');
+    Route::put('structures/{structure:slug}/users/{user}', [StructureUserController::class, 'update'])->name('structures.users.update');
+    Route::delete('structures/{structure:slug}/users/{user}', [StructureUserController::class, 'destroy'])->name('structures.users.destroy');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

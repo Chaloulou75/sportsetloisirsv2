@@ -67,12 +67,12 @@ class Departement extends Model
             'cities.produits.criteres.critere',
             'cities.produits.criteres.critere_valeur.sous_criteres.prod_sous_crit_valeurs',
             'cities.produits.criteres.sous_criteres',
-            'cities.produits.catTarifs',
-            'cities.produits.catTarifs.attributs',
-            'cities.produits.catTarifs.attributs.tarif_attribut',
-            'cities.produits.catTarifs.attributs.sous_attributs',
-            'cities.produits.catTarifs.attributs.sous_attributs.sous_attribut',
-            'cities.produits.catTarifs.attributs.sous_attributs.sous_attribut_valeur',
+            'cities.produits.cat_tarifs',
+            'cities.produits.cat_tarifs.attributs',
+            'cities.produits.cat_tarifs.attributs.tarif_attribut',
+            'cities.produits.cat_tarifs.attributs.sous_attributs',
+            'cities.produits.cat_tarifs.attributs.sous_attributs.sous_attribut',
+            'cities.produits.cat_tarifs.attributs.sous_attributs.sous_attribut_valeur',
             'cities.produits.plannings',
         ]);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ListeTarifTypeResource;
 use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -20,25 +21,13 @@ class AdminTarifTypeController extends Controller
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 
-        $tarifs = ListeTarifType::with([
-                'categories',
-                'categories.categorie',
-                'categories.categorie.discipline' => function ($query) {
-                    $query->orderBy('name');
-                },
-                'categories.tarif_attributs',
-                'categories.tarif_attributs.valeurs',
-                'categories.tarif_attributs.sous_attributs',
-                'categories.tarif_attributs.sous_attributs.valeurs',
-            ])
-            ->select(['id', 'type', 'slug'])
-            ->get();
+        $tarifs = ListeTarifType::select(['id', 'type', 'slug'])->get();
 
         return Inertia::render('Admin/Tarifs/Index', [
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'tarifs' => fn () => $tarifs,
+            'tarifs' => fn () => ListeTarifTypeResource::collection($tarifs),
         ]);
 
     }

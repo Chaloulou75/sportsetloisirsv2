@@ -26,7 +26,7 @@ class LienDisciplineSimilaire extends Pivot
         return $this->belongsTo(ListDiscipline::class, 'discipline_id');
     }
 
-    public function disciplinesSimilaires(): BelongsTo
+    public function disciplines_similaires(): BelongsTo
     {
         return $this->belongsTo(ListDiscipline::class, 'discipline_similaire_id');
     }

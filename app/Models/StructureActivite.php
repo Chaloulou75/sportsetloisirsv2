@@ -69,7 +69,7 @@ class StructureActivite extends Model
 
     public function instructeurs(): BelongsToMany
     {
-        return $this->belongsToMany(User::class)->withPivot('contact', 'email', 'phone');
+        return $this->belongsToMany(User::class, 'structure_activite_user')->withPivot('contact', 'email', 'phone');
     }
 
     public function dates(): HasMany
@@ -131,24 +131,23 @@ class StructureActivite extends Model
             'produits.criteres.critere_valeur.sous_criteres.prod_sous_crit_valeurs.sous_critere_valeur',
             'produits.criteres.sous_criteres',
             'produits.criteres.sous_criteres.sous_critere_valeur',
-            'produits.catTarifs',
-            'produits.catTarifs.produits:id',
-            'produits.catTarifs.categorie',
-            'produits.catTarifs.cat_tarif_type',
-            'produits.catTarifs.cat_tarif_type.tarif_attributs',
-            'produits.catTarifs.cat_tarif_type.tarif_attributs.valeurs',
-            'produits.catTarifs.cat_tarif_type.tarif_attributs.sous_attributs',
-            'produits.catTarifs.cat_tarif_type.tarif_attributs.sous_attributs.valeurs',
-            'produits.catTarifs.attributs',
-            'produits.catTarifs.attributs.tarif_attribut',
-            'produits.catTarifs.attributs.tarif_attribut.valeurs',
-            'produits.catTarifs.attributs.sous_attributs',
-            'produits.catTarifs.attributs.sous_attributs.sous_attribut',
-            'produits.catTarifs.attributs.sous_attributs.sous_attribut_valeur',
+            'produits.cat_tarifs',
+            'produits.cat_tarifs.produits:id',
+            'produits.cat_tarifs.categorie',
+            'produits.cat_tarifs.cat_tarif_type',
+            'produits.cat_tarifs.cat_tarif_type.tarif_attributs',
+            'produits.cat_tarifs.cat_tarif_type.tarif_attributs.valeurs',
+            'produits.cat_tarifs.cat_tarif_type.tarif_attributs.sous_attributs',
+            'produits.cat_tarifs.cat_tarif_type.tarif_attributs.sous_attributs.valeurs',
+            'produits.cat_tarifs.attributs',
+            'produits.cat_tarifs.attributs.tarif_attribut',
+            'produits.cat_tarifs.attributs.tarif_attribut.valeurs',
+            'produits.cat_tarifs.attributs.sous_attributs',
+            'produits.cat_tarifs.attributs.sous_attributs.sous_attribut',
+            'produits.cat_tarifs.attributs.sous_attributs.sous_attribut_valeur',
             'produits.plannings' => function ($query) {
                 $query->endNotPassed()->orderByDateStart();
             },
         ]);
     }
-
 }

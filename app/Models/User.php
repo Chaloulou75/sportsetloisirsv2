@@ -80,10 +80,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function structures(): BelongsToMany
     {
-        return $this->belongsToMany(Structure::class);
+        return $this->belongsToMany(Structure::class, 'structure_user', 'user_id', 'structure_id')->withPivot('niveau', 'contact', 'email', 'phone');
     }
 
-    public function structureActivites(): BelongsToMany
+    public function structure_activites(): BelongsToMany
     {
         return $this->belongsToMany(StructureActivite::class);
     }

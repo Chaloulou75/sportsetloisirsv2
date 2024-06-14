@@ -10,22 +10,6 @@ use Illuminate\Http\Request;
 class StructureUserController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request, Structure $structure): RedirectResponse
@@ -58,44 +42,20 @@ class StructureUserController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Structure $structure, string $partenaire): RedirectResponse
+    public function destroy(Structure $structure, string $user): RedirectResponse
     {
         //verifier que le partenaire n'est pas le dernier à être Super Admin
-        $partenaireASupprimer = $structure->partenaires()->wherePivot('user_id', $partenaire)->first();
+        $partenaireASupprimer = $structure->users()->wherePivot('user_id', $user)->first();
 
-        $superAdminForStructureCount = $structure->partenaires()->wherePivot('niveau', 1)->count();
+        $superAdminForStructureCount = $structure->users()->wherePivot('niveau', 1)->count();
 
         if(($partenaireASupprimer->pivot->niveau === 1) && ($superAdminForStructureCount < 2)) {
             return to_route('structures.edit', $structure->slug)->with('error', 'Il doit y avoir au minimum un Super Administrateur pour votre structure.');
         }
 
-        $structure->partenaires()->detach($partenaire);
+        $structure->users()->detach($user);
 
         return to_route('structures.edit', $structure->slug)->with('success', 'Partenaire supprimé à votre structure.');
 
