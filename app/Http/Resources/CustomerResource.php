@@ -20,7 +20,7 @@ class CustomerResource extends JsonResource
             'nom' => $this->nom,
             'prenom' => $this->prenom,
             'user' => UserResource::make($this->whenLoaded('user')),
-            'reservations' => ProductReservationResource::make($this->whenLoaded('reservations')),
+            'reservations' => ProductReservationResource::collection($this->whenLoaded('reservations')),
             'adresse' => $this->adresse,
             'zip_code' => $this->zip_code,
             'country' => $this->country,

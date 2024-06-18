@@ -34,7 +34,6 @@ class StructureActiviteResource extends JsonResource
             'produits' => StructureProduitResource::collection($this->whenLoaded('produits')),
             'plannings' => StructurePlanningResource::collection($this->whenLoaded('plannings')),
             'instructeurs' => UserResource::collection($this->whenLoaded('instructeurs')),
-            // 'dates' => StructureActiviteDateResource::collection($this->whenLoaded('dates')),
             'reservations' => ProductReservationResource::collection($this->whenLoaded('reservations')),
         ];
 
