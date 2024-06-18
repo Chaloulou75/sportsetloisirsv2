@@ -65,13 +65,4 @@ class AdminTarifTypeDisCatAttributController extends Controller
 
         return to_route('admin.tarifs.index')->with('success', 'Attribut de type de tarif lié à tous les couples "disciplines- catégories"');
     }
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

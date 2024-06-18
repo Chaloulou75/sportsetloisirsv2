@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ListeTarifTypeAttributResource extends JsonResource
+class LienDisCatTarAttrValeurResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,11 +17,13 @@ class ListeTarifTypeAttributResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'type_id' => $this->type_id,
-            'attribut' => $this->attribut,
+            'cat_tar_att_id' => $this->cat_tar_att_id,
+            'valeur' => $this->valeur,
+            'ordre' => $this->ordre,
+            'attribut' => LienDisCatTartypAttributResource::make($this->whenLoaded('attribut')),
+            'sous_attributs' => LienDisCatTarAttrSousAttrResource::collection($this->whenLoaded('sous_attributs')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'tarif_type' => ListeTarifTypeResource::make($this->whenLoaded('tarifType')),
         ];
 
     }

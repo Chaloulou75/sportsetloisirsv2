@@ -7,16 +7,13 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Famille;
 use App\Models\Structure;
-use App\Models\Discipline;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
-use App\Models\StructureProduit;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CityResource;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
-use Illuminate\Database\Eloquent\Builder;
+use App\Http\Resources\ListDisciplineResource;
 
 class FamilleController extends Controller
 {
@@ -46,7 +43,7 @@ class FamilleController extends Controller
         return Inertia::render('Familles/Index', [
             'familles' => fn () => FamilleResource::collection($familles),
             'allCities' => fn () => CityResource::collection($allCities),
-            'listDisciplines' => fn () => $listDisciplines,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'familleCount' => fn () => $familleCount,
             'disciplinesCount' => fn () => $disciplinesCount,
             'structuresCount' => fn () => $structuresCount,
@@ -90,8 +87,8 @@ class FamilleController extends Controller
         return Inertia::render('Familles/Show', [
             'familles' => fn () => FamilleResource::collection($familles),
             'allCities' => fn () => CityResource::collection($allCities),
-            'listDisciplines' => fn () => $listDisciplines,
-            'famille' => fn () => $famille,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
+            'famille' => fn () => FamilleResource::make($famille),
         ]);
     }
 

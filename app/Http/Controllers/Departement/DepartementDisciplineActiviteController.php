@@ -14,8 +14,15 @@ use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CityResource;
+use App\Http\Resources\DepartementResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
+use App\Http\Resources\LienDisciplineCategorieCritereResource;
+use App\Http\Resources\LienDisciplineCategorieResource;
+use App\Http\Resources\ListDisciplineResource;
+use App\Http\Resources\StructureActiviteResource;
+use App\Http\Resources\StructureProduitResource;
+use App\Http\Resources\StructuretypeResource;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
 
@@ -88,20 +95,20 @@ class DepartementDisciplineActiviteController extends Controller
             ->get();
 
         return Inertia::render('Structures/Activites/Show', [
-            'departement' => fn () => $departement,
-            'discipline' => fn () => $requestDiscipline,
-            'produits' => fn () => $produits,
+            'departement' => fn () => DepartementResource::make($departement),
+            'discipline' => fn () => ListDisciplineResource::make($requestDiscipline) ,
+            'produits' => fn () => StructureProduitResource::collection($produits),
             'familles' => fn () => FamilleResource::collection($familles),
-            'listDisciplines' => fn () => $listDisciplines,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => CityResource::collection($allCities),
-            'activite' => fn () => $activite,
-            'criteres' => fn () => $criteres,
-            'activiteSimilaires' => fn () => $activiteSimilaires,
-            'selectedProduit' => fn () => $selectedProduit,
-            'categories' => fn () => $categories,
-            'firstCategories' => fn () => $firstCategories,
-            'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
-            'allStructureTypes' => fn () => $allStructureTypes,
+            'activite' => fn () => StructureActiviteResource::make($activite) ,
+            'criteres' => fn () => LienDisciplineCategorieCritereResource::collection($criteres),
+            'activiteSimilaires' => fn () => StructureActiviteResource::collection($activiteSimilaires),
+            'selectedProduit' => fn () => StructureProduitResource::make($selectedProduit),
+            'categories' => fn () => LienDisciplineCategorieResource::collection($categories) ,
+            'firstCategories' => fn () => LienDisciplineCategorieResource::collection($firstCategories) ,
+            'categoriesNotInFirst' => fn () => LienDisciplineCategorieResource::collection($categoriesNotInFirst),
+            'allStructureTypes' => fn () => StructuretypeResource::collection($allStructureTypes),
         ]);
     }
 }

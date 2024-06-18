@@ -14,7 +14,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CityResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
+use App\Http\Resources\ListDisciplineResource;
 use App\Models\LienDisciplineCategorieCritere;
+use App\Http\Resources\StructureProduitResource;
+use App\Http\Resources\LienDisciplineCategorieCritereResource;
+use App\Http\Resources\StructureActiviteResource;
 
 class CityActiviteController extends Controller
 {
@@ -67,16 +71,16 @@ class CityActiviteController extends Controller
             ->get();
 
         return Inertia::render('Structures/Activites/Show', [
-            'produits' => fn () => $produits,
             'familles' => fn () => FamilleResource::collection($familles),
-            'listDisciplines' => fn () => $listDisciplines,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
+            'criteres' => fn () => LienDisciplineCategorieCritereResource::collection($criteres),
             'allCities' => fn () => CityResource::collection($allCities),
-            'activite' => fn () => $activite,
-            'criteres' => fn () => $criteres,
             'city' => fn () => CityResource::make($city),
             'citiesAround' => fn () => CityResource::collection($citiesAround),
-            'activiteSimilaires' => fn () => $activiteSimilaires,
-            'selectedProduit' => fn () => $selectedProduit,
+            'activite' => fn () => StructureActiviteResource::make($activite) ,
+            'activiteSimilaires' => fn () => StructureActiviteResource::collection($activiteSimilaires),
+            'selectedProduit' => fn () => StructureProduitResource::make($selectedProduit),
+            'produits' => fn () => StructureProduitResource::collection($produits),
         ]);
     }
 }

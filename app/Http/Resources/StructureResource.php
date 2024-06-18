@@ -14,7 +14,6 @@ class StructureResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -29,7 +28,7 @@ class StructureResource extends JsonResource
             'youtube' => $this->youtube,
             'tiktok' => $this->tiktok,
             'address' => $this->address,
-            'city' => $this->city,
+            'city_name' => $this->city,
             'zip_code' => $this->zip_code,
             'country' => $this->country,
             'address_lat' => $this->address_lat,

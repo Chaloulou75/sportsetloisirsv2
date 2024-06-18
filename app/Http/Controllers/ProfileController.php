@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Resources\ListDisciplineResource;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 class ProfileController extends Controller
@@ -40,7 +41,7 @@ class ProfileController extends Controller
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
             'familles' => fn () => FamilleResource::collection($familles),
-            'listDisciplines' => fn () => $listDisciplines,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => CityResource::collection($allCities),
         ]);
     }

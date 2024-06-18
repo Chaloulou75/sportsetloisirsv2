@@ -17,7 +17,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
 use App\Models\LienDisciplineCategorie;
+use App\Http\Resources\StructureResource;
+use App\Http\Resources\StructuretypeResource;
+use App\Http\Resources\ListDisciplineResource;
 use App\Models\LienDisciplineCategorieCritere;
+use App\Http\Resources\LienDisciplineCategorieResource;
+use App\Http\Resources\LienDisciplineCategorieCritereResource;
 
 class DisciplineCategorieStructureController extends Controller
 {
@@ -71,21 +76,21 @@ class DisciplineCategorieStructureController extends Controller
         $structure->increment('view_count');
 
         return Inertia::render('Structures/Show', [
-            'structure' => fn () => $structure,
+            'structure' => fn () => StructureResource::make($structure),
             'familles' => fn () => FamilleResource::collection($familles),
             'allCities' => fn () => CityResource::collection($allCities),
-            'listDisciplines' => fn () => $listDisciplines,
-            'criteres' => fn () => $criteres,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
+            'criteres' => fn () => LienDisciplineCategorieCritereResource::collection($criteres),
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),
             ],
-            'requestCategory' => fn () => $requestCategory,
-            'categories' => fn () => $categories,
-            'firstCategories' => fn () => $firstCategories,
-            'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
-            'allStructureTypes' => fn () => $allStructureTypes,
-            'requestDiscipline' => fn () => $requestDiscipline,
+            'categories' => fn () => LienDisciplineCategorieResource::collection($categories),
+            'firstCategories' => fn () => LienDisciplineCategorieResource::collection($firstCategories),
+            'categoriesNotInFirst' => fn () => LienDisciplineCategorieResource::collection($categoriesNotInFirst),
+            'allStructureTypes' => fn () => StructuretypeResource::collection($allStructureTypes),
+            'requestCategory' => fn () => LienDisciplineCategorieResource::make($requestCategory),
+            'requestDiscipline' => fn () => ListDisciplineResource::make($requestDiscipline),
         ]);
     }
 }

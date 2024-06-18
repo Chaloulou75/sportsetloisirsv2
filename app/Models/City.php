@@ -111,9 +111,9 @@ class City extends Model
         return $this->belongsTo(Departement::class, 'departement', 'numero');
     }
 
-    public function structures(): HasMany
+    public function structures(): BelongsToMany
     {
-        return $this->hasMany(Structure::class);
+        return $this->belongsToMany(Structure::class, 'structure_adresse', 'city_id', 'structure_id')->withPivot('name', 'email', 'phone', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng');
     }
 
     public function adresses(): HasMany

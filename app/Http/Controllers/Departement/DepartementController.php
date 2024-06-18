@@ -98,15 +98,13 @@ class DepartementController extends Controller
                 'adresses'  => function ($query) {
                     $query->latest();
                 },
-                'city:id,slug,ville,code_postal',
-                'structuretype:id,name,slug',
+                'structuretype',
                 'activites',
-                'activites.discipline:id,name,slug',
-                'activites.categorie:id,slug,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
-            ])->select(['id', 'name', 'slug', 'structuretype_id', 'address', 'zip_code', 'city', 'city_id', 'departement_id', 'address_lat', 'address_lng'])->paginate(12);
+                'activites.discipline',
+                'activites.categorie',
+            ])->paginate(12);
 
         $posts = Post::with(['comments', 'author', 'tags', 'disciplines'])->latest()->take(6)->get();
-
 
         $citiesAround = $departement->cities()
                 ->whereHas('produits')
@@ -123,7 +121,7 @@ class DepartementController extends Controller
             'flattenedDisciplines' => fn () => ListDisciplineResource::collection($flattenedDisciplines),
             'allCities' => fn () => CityResource::collection($allCities),
             'departement' => fn () => DepartementResource::make($departement),
-            'produits' => fn () => $produits,
+            'produits' => fn () => StructureProduitResource::collection($produits),
             'structures' => fn () => StructureResource::collection($structures),
             'posts' => fn () => PostResource::collection($posts),
             'citiesAround' => fn () => CityResource::collection($citiesAround),

@@ -17,6 +17,9 @@ use App\Http\Resources\CityResource;
 use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
+use App\Http\Resources\ListDisciplineResource;
+use App\Http\Resources\StructureProduitResource;
+use App\Http\Resources\StructureResource;
 
 class CityController extends Controller
 {
@@ -55,7 +58,7 @@ class CityController extends Controller
         return Inertia::render('Villes/Index', [
             'cities' => fn () => CityResource::collection($cities),
             'familles' => fn () => FamilleResource::collection($familles),
-            'listDisciplines' => fn () => $listDisciplines,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => CityResource::collection($allCities),
             'structuresCount' => fn () => $structuresCount,
             'produitsCount' => fn () => $produitsCount,
@@ -99,28 +102,22 @@ class CityController extends Controller
                 'adresses'  => function ($query) {
                     $query->latest();
                 },
-                'city:id,slug,ville,code_postal',
-                'structuretype:id,name,slug',
+                'structuretype',
                 'activites',
-                'activites.discipline:id,name,slug,theme',
-                'activites.categorie:id,slug,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
-            ])
-            ->select(['id', 'name', 'slug', 'structuretype_id', 'address', 'zip_code', 'city', 'address_lat', 'address_lng'])
-            ->get();
+                'activites.discipline',
+                'activites.categorie',
+            ])->get();
         });
 
         $structuresFromCity = $city->structures()->with([
                 'adresses'  => function ($query) {
                     $query->latest();
                 },
-                'city:id,slug,ville,code_postal',
-                'structuretype:id,name,slug',
+                'structuretype',
                 'activites',
-                'activites.discipline:id,name,slug,theme',
-                'activites.categorie:id,slug,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
-        ])
-        ->select(['id', 'name', 'slug', 'structuretype_id', 'address', 'zip_code', 'city', 'address_lat', 'address_lng'])
-        ->get();
+                'activites.discipline',
+                'activites.categorie',
+        ])->get();
 
         $structures = $structuresFromCity->merge($citiesAroundStructures)->paginate(12);
 
@@ -131,13 +128,13 @@ class CityController extends Controller
 
         return Inertia::render('Villes/Show', [
             'familles' => fn () => FamilleResource::collection($familles),
-            'listDisciplines' => fn () => $listDisciplines,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => CityResource::collection($allCities),
-            'city' => fn () => $city,
-            'citiesAround' => fn () => $citiesAround,
-            'produits' => fn () => $produits,
-            'flattenedDisciplines' => fn () => $flattenedDisciplines,
-            'structures' => fn () => $structures,
+            'city' => fn () => CityResource::make($city),
+            'citiesAround' => fn () => CityResource::collection($citiesAround),
+            'produits' => fn () => StructureProduitResource::collection($produits),
+            'flattenedDisciplines' => fn () =>  ListDisciplineResource::collection($flattenedDisciplines),
+            'structures' => fn () => StructureResource::collection($structures),
             'posts' => fn () => PostResource::collection($posts),
             'filters' => request()->all(['discipline']),
         ]);

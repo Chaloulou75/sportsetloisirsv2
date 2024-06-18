@@ -23,7 +23,11 @@ use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineSimilaire;
 use App\Http\Resources\CategorieResource;
 use App\Http\Requests\StoreDisciplineRequest;
+use App\Http\Resources\StructuretypeResource;
 use App\Http\Resources\ListDisciplineResource;
+use App\Http\Resources\LienDisciplineCategorieResource;
+use App\Http\Resources\StructureProduitResource;
+use App\Http\Resources\StructureResource;
 
 class DisciplineController extends Controller
 {
@@ -56,9 +60,9 @@ class DisciplineController extends Controller
                         ->withQueryString();
 
         return Inertia::render('Disciplines/Index', [
-            'disciplines' => fn () => $disciplines,
+            'disciplines' => fn () => ListDisciplineResource::collection($disciplines),
             'familles' => fn () => FamilleResource::collection($familles),
-            'listDisciplines' => fn () => $listDisciplines,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => CityResource::collection($allCities),
             'structuresCount' => fn () => $structuresCount,
             'filters' => request()->all(['search']),
@@ -117,15 +121,15 @@ class DisciplineController extends Controller
 
         return Inertia::render('Disciplines/Show', [
             'familles' => fn () => FamilleResource::collection($familles),
-            'discipline' => fn () => $discipline,
-            'categories' => fn () => $categories,
-            'firstCategories' => fn () => $firstCategories,
-            'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
-            'allStructureTypes' => fn () => $allStructureTypes,
-            'listDisciplines' => fn () => $listDisciplines,
+            'discipline' => fn () => ListDisciplineResource::make($discipline),
+            'categories' => fn () => LienDisciplineCategorieResource::collection($categories),
+            'firstCategories' => fn () => LienDisciplineCategorieResource::collection($firstCategories),
+            'categoriesNotInFirst' => fn () => LienDisciplineCategorieResource::collection($categoriesNotInFirst),
+            'allStructureTypes' => fn () => StructuretypeResource::collection($allStructureTypes),
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => CityResource::collection($allCities),
-            'produits' => fn () => $produits,
-            'structures' => fn () => $structures,
+            'produits' => fn () => StructureProduitResource::collection($produits),
+            'structures' => fn () => StructureResource::collection($structures),
             'posts' => fn () => PostResource::collection($posts),
         ]);
     }
@@ -165,7 +169,7 @@ class DisciplineController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'discipline' => fn () => $discipline,
+            'discipline' => fn () => ListDisciplineResource::make($discipline),
         ]);
     }
     /**
@@ -227,11 +231,11 @@ class DisciplineController extends Controller
     {
         $discipline = ListDiscipline::findOrFail($id);
 
-        $activiteSimilairesIds = LienDisciplineSimilaire::where('discipline_id', $discipline->id)->select('discipline_similaire_id')->get();
+        $disSimilairesIds = LienDisciplineSimilaire::where('discipline_id', $discipline->id)->select('discipline_similaire_id')->get();
 
-        $activiteSimilaires = ListDiscipline::whereIn('id', $activiteSimilairesIds)->get();
+        $disSimilaires = ListDiscipline::whereIn('id', $disSimilairesIds)->get();
 
-        return ListDisciplineResource::collection($activiteSimilaires);
+        return ListDisciplineResource::collection($disSimilaires);
 
     }
 }

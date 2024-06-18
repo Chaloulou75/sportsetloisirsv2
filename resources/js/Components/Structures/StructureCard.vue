@@ -94,14 +94,6 @@ const getUniqueActivitesTitre = (activites) => {
         return false;
     });
 };
-
-const formatCityName = (ville) => {
-    if (ville) {
-        return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
-    } else {
-        return "";
-    }
-};
 </script>
 
 <template>
@@ -185,14 +177,14 @@ const formatCityName = (ville) => {
                         v-if="structure.adresses.length > 0"
                         class="text-sm font-medium"
                     >
-                        {{ formatCityName(structure.adresses[0].city) }}
+                        {{ structure.adresses[0].city_name }}
                         <span class="text-xs"
                             >({{ structure.adresses[0].zip_code }})</span
                         >
                     </div>
 
                     <div v-else class="text-sm font-medium">
-                        <span>{{ formatCityName(structure.city) }}</span>
+                        <span>{{ structure.city }}</span>
                         <span class="text-xs">({{ structure.zip_code }})</span>
                     </div>
                 </div>
@@ -268,16 +260,16 @@ const formatCityName = (ville) => {
                     <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
                     <div
                         v-if="structure.adresses.length > 0"
-                        class="text-sm font-medium"
+                        class="text-sm font-medium normal-case"
                     >
-                        {{ formatCityName(structure.adresses[0].city) }}
+                        {{ structure.adresses[0].city_name }}
                         <span class="text-xs"
                             >({{ structure.adresses[0].zip_code }})</span
                         >
                     </div>
 
-                    <div v-else class="text-sm font-medium">
-                        <span>{{ formatCityName(structure.city) }}</span>
+                    <div v-else class="text-sm font-medium normal-case">
+                        <span>{{ structure.city }}</span>
                         <span class="text-xs">({{ structure.zip_code }})</span>
                     </div>
                 </div>

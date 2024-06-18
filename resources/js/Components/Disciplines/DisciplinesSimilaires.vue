@@ -20,7 +20,7 @@ const DisciplineSmallCard = defineAsyncComponent(() =>
             Les disciplines similaires
         </h2>
         <div
-            class="flex w-full flex-col flex-wrap items-stretch justify-start gap-4 md:flex-row"
+            class="flex w-full flex-col flex-wrap items-stretch justify-start gap-4 px-2 md:flex-row md:px-4"
         >
             <DisciplineSmallCard
                 v-for="discipline in disciplinesSimilaires"

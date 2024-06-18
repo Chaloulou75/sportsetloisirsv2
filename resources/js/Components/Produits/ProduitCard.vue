@@ -192,7 +192,7 @@ const formatCityName = (ville) => {
                         <dt class="sr-only">Ville</dt>
                         <MapPinIcon class="mr-1 h-4 w-4 text-indigo-700" />
                         <p class="font-semibold">
-                            {{ produit.adresse.city }} ({{
+                            {{ produit.adresse.city_name }} ({{
                                 produit.adresse.zip_code
                             }})
                         </p>

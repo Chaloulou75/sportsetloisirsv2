@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Categorie;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use Illuminate\Http\RedirectResponse;
-use App\Models\LienDisciplineCategorie;
 
 class AdminCategorieDisciplineController extends Controller
 {

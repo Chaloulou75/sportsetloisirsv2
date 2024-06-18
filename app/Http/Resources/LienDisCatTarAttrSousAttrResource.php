@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LienDisCatTartypAttributResource extends JsonResource
+class LienDisCatTarAttrSousAttrResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,13 +17,14 @@ class LienDisCatTartypAttributResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'cat_tarif_id' => $this->cat_tarif_id,
+            'cat_tar_att_id' => $this->cat_tar_att_id,
+            'att_valeur_id' => $this->att_valeur_id,
             'nom' => $this->nom,
             'type_champ_form' => $this->type_champ_form,
             'ordre' => $this->ordre,
-            'cat_tarif_type' => LienDisCatTariftypeResource::make($this->whenLoaded('cat_tarif_type')),
-            'valeurs' => LienDisCatTarAttrValeurResource::collection($this->whenLoaded('valeurs')),
-            'sous_attributs' => LienDisCatTarAttrSousAttrResource::collection($this->whenLoaded('sous_attributs')),
+            'attribut' => LienDisCatTartypAttributResource::make($this->whenLoaded('attribut')),
+            'attribut_valeur' => LienDisCatTarAttrValeurResource::make($this->whenLoaded('attribut_valeur')),
+            'valeurs' => LienDisCatTarAttrSousAttrValeurResource::collection($this->whenLoaded('valeurs')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

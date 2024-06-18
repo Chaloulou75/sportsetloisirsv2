@@ -34,7 +34,6 @@ import {
     parse,
     isValid,
     isSameDay,
-    set,
     endOfMonth,
     isWithinInterval,
 } from "date-fns";
@@ -121,10 +120,6 @@ const scrollToCriteres = () => {
 };
 
 provide("scrollToCriteres", scrollToCriteres);
-
-const formatCityName = (ville) => {
-    return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
-};
 
 const hoveredProduit = ref(null);
 const hoveredStructure = ref(null);
@@ -1149,7 +1144,7 @@ onMounted(() => {
                             >
                                 <div
                                     ref="listToAnimate"
-                                    class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
+                                    class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:gap-8 lg:grid-cols-2"
                                 >
                                     <ProduitCard
                                         v-for="(
@@ -1207,7 +1202,7 @@ onMounted(() => {
                                     Les structures
                                 </h2>
                                 <div
-                                    class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 lg:grid-cols-2"
+                                    class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:gap-8 lg:grid-cols-2"
                                 >
                                     <StructureCard
                                         v-for="(

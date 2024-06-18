@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Resources\FamilleResource;
+use App\Http\Resources\ListDisciplineResource;
 
 class FamilleDisciplineController extends Controller
 {
@@ -45,7 +46,7 @@ class FamilleDisciplineController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'discipline' => fn () => $discipline,
+            'discipline' => fn () => ListDisciplineResource::make($discipline),
             'familles' => fn () => FamilleResource::collection($familles),
         ]);
     }
@@ -65,11 +66,4 @@ class FamilleDisciplineController extends Controller
         return to_route('admin.disciplines.familles.edit', $discipline)->with('success', 'Famille supprimée');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

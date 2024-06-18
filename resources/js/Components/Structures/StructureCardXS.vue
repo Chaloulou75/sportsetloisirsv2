@@ -27,10 +27,6 @@ const getUniqueActivitesTitre = (activites) => {
         return false;
     });
 };
-
-const formatCityName = (ville) => {
-    return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
-};
 </script>
 
 <template>
@@ -82,18 +78,18 @@ const formatCityName = (ville) => {
                 <ul class="flex items-center py-1.5">
                     <li
                         v-if="structure.adresses.length > 0"
-                        class="list-inside list-disc text-xs font-medium"
+                        class="list-inside list-disc text-xs font-medium normal-case"
                     >
-                        {{ formatCityName(structure.adresses[0].city) }}
+                        {{ structure.adresses[0].city_name }}
                         <span class="text-xs"
                             >({{ structure.adresses[0].zip_code }})</span
                         >
                     </li>
                     <li
                         v-else
-                        class="list-inside list-disc text-sm font-medium"
+                        class="list-inside list-disc text-sm font-medium normal-case"
                     >
-                        {{ formatCityName(structure.city) }}
+                        {{ structure.city_name }}
                         <span class="text-xs">({{ structure.zip_code }})</span>
                     </li>
                 </ul>

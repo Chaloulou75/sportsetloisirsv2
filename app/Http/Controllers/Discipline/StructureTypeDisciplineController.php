@@ -17,7 +17,13 @@ use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
 use App\Models\LienDisciplineCategorie;
+use App\Http\Resources\StructuretypeResource;
+use App\Http\Resources\ListDisciplineResource;
 use App\Models\LienDisciplineCategorieCritere;
+use App\Http\Resources\LienDisciplineCategorieResource;
+use App\Http\Resources\LienDisciplineCategorieCritereResource;
+use App\Http\Resources\StructureProduitResource;
+use App\Http\Resources\StructureResource;
 
 class StructureTypeDisciplineController extends Controller
 {
@@ -64,13 +70,12 @@ class StructureTypeDisciplineController extends Controller
             'adresses'  => function ($query) {
                 $query->latest();
             },
-            'city:id,slug,ville,ville_formatee,code_postal',
-            'structuretype:id,name,slug',
+            'structuretype',
             'activites' => function ($query) use ($discipline) {
                 $query->where('discipline_id', $discipline->id);
             },
-            'activites.discipline:id,name,slug',
-            'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+            'activites.discipline',
+            'activites.categorie',
         ])
         ->whereHas('activites', function ($subquery) use ($discipline) {
             $subquery->where('discipline_id', $discipline->id);
@@ -90,18 +95,18 @@ class StructureTypeDisciplineController extends Controller
 
         return Inertia::render('Disciplines/Structuretypes/Show', [
             'familles' => fn () => FamilleResource::collection($familles),
-            'categories' => fn () => $categories,
-            'firstCategories' => fn () => $firstCategories,
-            'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
-            'structuretypeElected' => fn () => $structuretypeElected,
-            'allStructureTypes' => fn () => $allStructureTypes,
-            'produits' => fn () => $produits,
-            'structures' => fn () => $structures,
-            'discipline' => fn () => $discipline,
-            'criteres' => fn () => $criteres,
-            'listDisciplines' => fn () => $listDisciplines,
+            'categories' => fn () => LienDisciplineCategorieResource::collection($categories),
+            'firstCategories' => fn () => LienDisciplineCategorieResource::collection($firstCategories),
+            'categoriesNotInFirst' => fn () => LienDisciplineCategorieResource::collection($categoriesNotInFirst),
+            'allStructureTypes' => fn () => StructuretypeResource::collection($allStructureTypes),
+            'produits' => fn () => StructureProduitResource::collection($produits),
+            'structures' => fn () => StructureResource::collection($structures) ,
+            'discipline' => fn () => ListDisciplineResource::make($discipline),
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
+            'criteres' => fn () => LienDisciplineCategorieCritereResource::collection($criteres),
             'allCities' => fn () => CityResource::collection($allCities),
             'posts' => fn () => PostResource::collection($posts),
+            'structuretypeElected' => StructuretypeResource::make($structuretypeElected),
         ]);
 
     }

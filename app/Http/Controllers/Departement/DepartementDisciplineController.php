@@ -13,9 +13,15 @@ use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CityResource;
+use App\Http\Resources\DepartementResource;
 use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
+use App\Http\Resources\LienDisciplineCategorieResource;
+use App\Http\Resources\ListDisciplineResource;
+use App\Http\Resources\StructureProduitResource;
+use App\Http\Resources\StructureResource;
+use App\Http\Resources\StructuretypeResource;
 use App\Models\LienDisciplineCategorie;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
@@ -71,39 +77,35 @@ class DepartementDisciplineController extends Controller
             'adresses'  => function ($query) {
                 $query->latest();
             },
-            'city:id,slug,ville,code_postal',
-            'structuretype:id,name,slug',
+            'structuretype',
             'activites' => function ($query) use ($discipline) {
                 $query->where('discipline_id', $discipline->id);
             },
-            'activites.discipline:id,name,slug',
-            'activites.categorie:id,slug,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
-        ])->select(['id', 'name', 'slug', 'structuretype_id', 'address', 'zip_code', 'city', 'city_id', 'departement_id', 'address_lat', 'address_lng'])
-        ->paginate(12);
+            'activites.discipline',
+            'activites.categorie',
+        ])->paginate(12);
 
         $posts = Post::orderByDiscipline($discipline->id)->take(6)->get();
-
 
         $citiesAround = $departement->cities()->whereHas('produits')
                                     ->select('id', 'slug', 'ville', 'code_postal')
                                     ->limit(10)
                                     ->get();
 
-
         $departement->timestamp = false;
         $departement->increment('view_count');
 
         return Inertia::render('Departements/Disciplines/Show', [
             'familles' => fn () => FamilleResource::collection($familles),
-            'categories' => fn () => $categories,
-            'firstCategories' => fn () => $firstCategories,
-            'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
-            'allStructureTypes' => fn () => $allStructureTypes,
-            'departement' => fn () => $departement,
-            'produits' => fn () => $produits,
-            'structures' => fn () => $structures,
-            'discipline' => fn () => $discipline,
-            'listDisciplines' => fn () => $listDisciplines,
+            'categories' => fn () => LienDisciplineCategorieResource::collection($categories),
+            'firstCategories' => fn () => LienDisciplineCategorieResource::collection($firstCategories) ,
+            'categoriesNotInFirst' => fn () => LienDisciplineCategorieResource::collection($categoriesNotInFirst),
+            'allStructureTypes' => fn () => StructuretypeResource::collection($allStructureTypes),
+            'departement' => fn () => DepartementResource::make($departement),
+            'produits' => fn () => StructureProduitResource::collection($produits),
+            'structures' => fn () => StructureResource::collection($structures),
+            'discipline' => fn () => ListDisciplineResource::make($discipline),
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => CityResource::collection($allCities),
             'posts' => fn () => PostResource::collection($posts),
             'citiesAround' => fn () => CityResource::collection($citiesAround),

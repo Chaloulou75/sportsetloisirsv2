@@ -107,7 +107,7 @@ class Structure extends Model
 
     public function cities(): BelongsToMany
     {
-        return $this->belongsToMany(City::class, 'structure_adresse', 'structure_id', 'city_id');
+        return $this->belongsToMany(City::class, 'structure_adresse', 'structure_id', 'city_id')->withPivot('name', 'email', 'phone', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng');
     }
 
     public function city(): BelongsTo
@@ -173,7 +173,6 @@ class Structure extends Model
             'adresses'  => function ($query) {
                 $query->latest();
             },
-            'city',
             'departement:id,departement,numero',
             'structuretype:id,name,slug',
             'disciplines:id,name,slug,theme',

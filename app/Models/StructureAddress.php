@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class StructureAddress extends Model
+class StructureAddress extends Pivot
 {
     use HasFactory;
 
@@ -30,7 +31,7 @@ class StructureAddress extends Model
         return $this->belongsTo(City::class);
     }
 
-    public function departement()
+    public function departement(): HasManyThrough
     {
         return $this->hasManyThrough(
             Departement::class,
@@ -42,8 +43,4 @@ class StructureAddress extends Model
         );
     }
 
-    public function produits(): HasMany
-    {
-        return $this->hasMany(StructureProduit::class, 'lieu_id');
-    }
 }

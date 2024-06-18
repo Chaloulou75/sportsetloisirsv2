@@ -172,7 +172,7 @@ const form = useForm({
     structuretype_id: props.structure.structuretype_id,
     attributs: ref([props.structure.attributs]),
     address: props.structure.address,
-    city: props.structure.city,
+    city: props.structure.city_name,
     zip_code: props.structure.zip_code,
     country: props.structure.country,
     address_lat: props.structure.address_lat,

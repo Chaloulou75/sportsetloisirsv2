@@ -8,6 +8,7 @@ use Inertia\Response;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use Illuminate\Http\RedirectResponse;
+use App\Http\Resources\ListDisciplineResource;
 
 class DisciplineSimilaireController extends Controller
 {
@@ -50,9 +51,9 @@ class DisciplineSimilaireController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'discipline' => fn () => $discipline,
-            'listDisciplines' => fn () => $listDisciplines,
-            'disciplinesSimilaires' => fn () => $disciplinesSimilaires,
+            'discipline' => fn () => ListDisciplineResource::make($discipline),
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
+            'disciplinesSimilaires' => fn () => ListDisciplineResource::collection($disciplinesSimilaires),
         ]);
     }
 
@@ -70,12 +71,4 @@ class DisciplineSimilaireController extends Controller
         return to_route('admin.disciplines.similaires.edit', $discipline)->with('success', 'Discipline similaire supprimée');
     }
 
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Request $request, ListDiscipline $discipline)
-    {
-        //
-    }
 }

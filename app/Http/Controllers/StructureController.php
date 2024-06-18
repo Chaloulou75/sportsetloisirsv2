@@ -68,7 +68,7 @@ class StructureController extends Controller
                 'categories',
                 'activites',
             ])->withCount(['disciplines', 'activites'])
-            ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'logo'])
+            ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city_name', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'logo'])
                         ->filter(
                             request(['search'])
                         )

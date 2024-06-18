@@ -353,9 +353,9 @@ const events = getEvents();
                                 <Link
                                     preserve-scroll
                                     :href="route('villes.show', city.slug)"
-                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
+                                    class="flex h-10 items-center bg-white pe-4 ps-8 text-xs font-medium normal-case transition hover:text-gray-900"
                                 >
-                                    {{ formatCityName(city.ville) }}
+                                    {{ city.ville }}
                                 </Link>
                             </li>
 
@@ -511,7 +511,7 @@ const events = getEvents();
                             <h3 class="text-base">
                                 Localisation:
                                 <span class="font-semibold">
-                                    {{ structure.adresses[0].city }},
+                                    {{ structure.adresses[0].city_name }},
                                     {{ structure.adresses[0].zip_code }}
                                 </span>
                             </h3>

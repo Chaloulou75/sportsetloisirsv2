@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ListDisciplineResource;
 use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -25,32 +26,8 @@ class AdminDisciplineController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'listDisciplines' => fn () => $listDisciplines,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
     }
 
     /**
@@ -65,24 +42,8 @@ class AdminDisciplineController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'discipline' => fn () => $discipline,
+            'discipline' => fn () => ListDisciplineResource::make($discipline),
         ]);
 
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

@@ -9,7 +9,6 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Famille;
 use App\Models\Structure;
-use App\Rules\NestedArrays;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
 use Illuminate\Validation\Rule;
@@ -29,8 +28,12 @@ use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Storage;
 use App\Models\LiensDisCatCritValSsCrit;
 use App\Models\StructureProduitSousCritere;
+use App\Http\Resources\ListDisciplineResource;
 use App\Models\LienDisciplineCategorieCritere;
+use App\Http\Resources\StructureProduitResource;
+use App\Http\Resources\StructureActiviteResource;
 use App\Models\LienDisciplineCategorieCritereValeur;
+use App\Http\Resources\LienDisciplineCategorieCritereResource;
 
 class ActiviteController extends Controller
 {
@@ -155,13 +158,13 @@ class ActiviteController extends Controller
 
         return Inertia::render('Structures/Activites/Show', [
             'familles' => fn () => FamilleResource::collection($familles),
-            'listDisciplines' => fn () => $listDisciplines,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => CityResource::collection($allCities),
-            'activite' => fn () => $activite,
-            'produits' => fn () => $produits,
-            'criteres' => fn () => $criteres,
-            'selectedProduit' => fn () => $selectedProduit,
-            'activiteSimilaires' => fn () => $activiteSimilaires
+            'activite' => fn () => StructureActiviteResource::make($activite),
+            'produits' => fn () => StructureProduitResource::collection($produits) ,
+            'criteres' => fn () => LienDisciplineCategorieCritereResource::collection($criteres),
+            'selectedProduit' => fn () => StructureProduitResource::make($selectedProduit),
+            'activiteSimilaires' => fn () => StructureActiviteResource::collection($activiteSimilaires),
         ]);
     }
 

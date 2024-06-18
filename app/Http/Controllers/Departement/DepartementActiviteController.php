@@ -12,8 +12,13 @@ use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CityResource;
+use App\Http\Resources\DepartementResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
+use App\Http\Resources\LienDisciplineCategorieCritereResource;
+use App\Http\Resources\ListDisciplineResource;
+use App\Http\Resources\StructureActiviteResource;
+use App\Http\Resources\StructureProduitResource;
 use App\Models\LienDisciplineCategorieCritere;
 
 class DepartementActiviteController extends Controller
@@ -62,15 +67,15 @@ class DepartementActiviteController extends Controller
             ->get();
 
         return Inertia::render('Structures/Activites/Show', [
-                    'departement' => fn () => $departement,
-                    'produits' => fn () => $produits,
-                    'familles' => fn () => FamilleResource::collection($familles),
-                    'listDisciplines' => fn () => $listDisciplines,
-                    'allCities' => fn () => CityResource::collection($allCities),
-                    'activite' => fn () => $activite,
-                    'criteres' => fn () => $criteres,
-                    'activiteSimilaires' => fn () => $activiteSimilaires,
-                    'selectedProduit' => fn () => $selectedProduit,
+            'departement' => fn () => DepartementResource::make($departement),
+            'produits' => fn () => StructureProduitResource::collection($produits),
+            'familles' => fn () => FamilleResource::collection($familles),
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
+            'allCities' => fn () => CityResource::collection($allCities),
+            'activite' => fn () => StructureActiviteResource::make($activite),
+            'criteres' => fn () => LienDisciplineCategorieCritereResource::collection($criteres),
+            'activiteSimilaires' => fn () => StructureActiviteResource::collection($activiteSimilaires),
+            'selectedProduit' => fn () => StructureProduitResource::make($selectedProduit),
         ]);
     }
 }

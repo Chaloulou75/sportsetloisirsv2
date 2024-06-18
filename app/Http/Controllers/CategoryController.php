@@ -32,7 +32,7 @@ class CategoryController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'categories' => fn () => $categories,
+            'categories' => fn () => CategorieResource::collection($categories),
         ]);
     }
 

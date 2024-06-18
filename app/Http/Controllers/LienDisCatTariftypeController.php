@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\LienDisCatTariftypeResource;
+use App\Http\Resources\LienDisciplineCategorieResource;
+use App\Http\Resources\ListDisciplineResource;
+use App\Http\Resources\ListeTarifTypeResource;
 use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -53,10 +57,10 @@ class LienDisCatTariftypeController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'categorie' => fn () => $categorie,
-            'categories' => fn () => $categories,
-            'discipline' => fn () => $discipline,
-            'listeTarifsTypes' => fn () => $listeTarifsTypes,
+            'categorie' => fn () => LienDisciplineCategorieResource::make($categorie),
+            'categories' => fn () => LienDisciplineCategorieResource::collection($categories),
+            'discipline' => fn () => ListDisciplineResource::make($discipline),
+            'listeTarifsTypes' => fn () => ListeTarifTypeResource::collection($listeTarifsTypes),
         ]);
 
     }
@@ -118,10 +122,10 @@ class LienDisCatTariftypeController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'categorie' => fn () => $categorie,
-            'categories' => fn () => $categories,
-            'discipline' => fn () => $discipline,
-            'tarifType' => fn () => $tarifType,
+            'categorie' => fn () => LienDisciplineCategorieResource::make($categorie),
+            'categories' => fn () => LienDisciplineCategorieResource::collection($categories),
+            'discipline' => fn () => ListDisciplineResource::make($discipline),
+            'tarifType' => fn () => LienDisCatTariftypeResource::make($tarifType),
         ]);
     }
 

@@ -19,6 +19,7 @@ use App\Http\Resources\CommentResource;
 use App\Http\Resources\FamilleResource;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\ListDisciplineResource;
+use App\Http\Resources\TagResource;
 
 class PostController extends Controller
 {
@@ -91,7 +92,7 @@ class PostController extends Controller
             'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => CityResource::collection($allCities),
             'disciplines' => fn () => ListDisciplineResource::collection($disciplines),
-            'tags' => fn () => $tags,
+            'tags' => fn () => TagResource::collection($tags),
         ]);
     }
 

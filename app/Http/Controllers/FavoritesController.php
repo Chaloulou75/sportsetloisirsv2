@@ -15,6 +15,9 @@ use App\Http\Resources\CityResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
 use App\Http\Resources\ListDisciplineResource;
+use App\Http\Resources\StructureActiviteResource;
+use App\Http\Resources\StructureProduitResource;
+use App\Http\Resources\StructureResource;
 
 class FavoritesController extends Controller
 {
@@ -58,60 +61,12 @@ class FavoritesController extends Controller
 
         return Inertia::render('Favorites/Index', [
             'familles' => fn () => FamilleResource::collection($familles),
-            'structures' => fn () => $structures ?? [],
-            'activites' => fn () => $activites ?? [],
-            'produits' => fn () => $produits ?? [],
+            'structures' => fn () => StructureResource::collection($structures ?? []),
+            'activites' => fn () => StructureActiviteResource::collection($activites ?? []),
+            'produits' => fn () => StructureProduitResource::collection($produits ?? []),
             'allCities' => fn () => CityResource::collection($allCities),
             'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
         ]);
 
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

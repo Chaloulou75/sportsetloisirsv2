@@ -19,14 +19,6 @@ use App\Http\Resources\ListDisciplineResource;
 class CustomerController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Show the form for creating a new resource.
      */
     public function create()
@@ -46,9 +38,9 @@ class CustomerController extends Controller
 
         return Inertia::render('Panier/Customers/Create', [
             'familles' => fn () => FamilleResource::collection($familles),
-            'listDisciplines' => fn () => $listDisciplines,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => CityResource::collection($allCities),
-            'customer' => fn () => $customer ?? null,
+            'customer' => fn () => CustomerResource::make($customer) ?? null,
         ]);
 
     }
@@ -93,29 +85,5 @@ class CustomerController extends Controller
             'allCities' => fn () => CityResource::collection($allCities),
             'customer' => fn () => CustomerResource::make($customer),
         ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Customer $customer)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCustomerRequest $request, Customer $customer)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Customer $customer)
-    {
-        //
     }
 }

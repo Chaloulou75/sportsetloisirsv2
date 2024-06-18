@@ -15,14 +15,22 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use Illuminate\Validation\Rule;
+use App\Models\LienDisCatTariftype;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
 use App\Models\LienDisciplineCategorie;
+use App\Http\Resources\StructureResource;
+use App\Http\Resources\StructuretypeResource;
+use App\Http\Resources\ListDisciplineResource;
 use App\Models\LienDisciplineCategorieCritere;
 use App\Http\Resources\DisCatTarifTypeResource;
+use App\Http\Resources\StructureProduitResource;
+use App\Http\Resources\LienDisCatTariftypeResource;
+use App\Http\Resources\LienDisciplineCategorieResource;
+use App\Http\Resources\LienDisciplineCategorieCritereResource;
 
 class CategoryDisciplineController extends Controller
 {
@@ -74,13 +82,12 @@ class CategoryDisciplineController extends Controller
             'adresses'  => function ($query) {
                 $query->latest();
             },
-            'city:id,slug,ville,ville_formatee,code_postal',
-            'structuretype:id,name,slug',
+            'structuretype',
             'activites' => function ($query) use ($discipline, $category) {
                 $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
             },
-            'activites.discipline:id,name,slug',
-            'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+            'activites.discipline',
+            'activites.categorie',
         ])
         ->whereHas('activites', function ($subquery) use ($discipline, $category) {
             $subquery->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
@@ -96,17 +103,17 @@ class CategoryDisciplineController extends Controller
 
         return Inertia::render('Disciplines/Categories/Show', [
             'familles' => fn () => FamilleResource::collection($familles),
-            'category' => fn () => $category,
-            'categories' => fn () => $categories,
-            'firstCategories' => fn () => $firstCategories,
-            'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
-            'allStructureTypes' => fn () => $allStructureTypes,
-            'discipline' => fn () => $discipline,
-            'criteres' => fn () => $criteres,
-            'listDisciplines' => fn () => $listDisciplines,
+            'category' => fn () => LienDisciplineCategorieResource::make($category),
+            'categories' => fn () => LienDisciplineCategorieResource::collection($categories),
+            'firstCategories' => fn () => LienDisciplineCategorieResource::collection($firstCategories),
+            'categoriesNotInFirst' => fn () => LienDisciplineCategorieResource::collection($categoriesNotInFirst),
+            'allStructureTypes' => fn () => StructuretypeResource::collection($allStructureTypes),
+            'discipline' => fn () => ListDisciplineResource::make($discipline),
+            'criteres' => fn () => LienDisciplineCategorieCritereResource::collection($criteres),
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => CityResource::collection($allCities),
-            'produits' => fn () => $produits,
-            'structures' => fn () => $structures,
+            'produits' => fn () => StructureProduitResource::collection($produits),
+            'structures' => fn () => StructureResource::collection($structures),
             'posts' => fn () => PostResource::collection($posts),
         ]);
 
@@ -233,6 +240,6 @@ class CategoryDisciplineController extends Controller
         $disCat = LienDisciplineCategorie::with('tarif_types')->where('categorie_id', $categorie->id)->where('discipline_id', $discipline->id)->firstOrFail();
 
         $tarifs = $disCat->tarif_types;
-        return DisCatTarifTypeResource::collection($tarifs);
+        return LienDisCatTariftypeResource::collection($tarifs);
     }
 }

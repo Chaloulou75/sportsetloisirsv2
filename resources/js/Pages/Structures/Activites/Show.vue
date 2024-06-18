@@ -978,7 +978,8 @@ onMounted(() => {
                                     <MapPinIcon class="h-4 w-4" /> Localisation:
                                     <span class="font-semibold">
                                         {{
-                                            activite.structure.adresses[0].city
+                                            activite.structure.adresses[0]
+                                                .city_name
                                         }},
                                         {{
                                             activite.structure.adresses[0]

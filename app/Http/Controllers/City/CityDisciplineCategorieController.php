@@ -16,8 +16,14 @@ use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
 use App\Models\LienDisciplineCategorie;
+use App\Http\Resources\StructureResource;
+use App\Http\Resources\StructuretypeResource;
+use App\Http\Resources\ListDisciplineResource;
 use App\Models\LienDisciplineCategorieCritere;
+use App\Http\Resources\StructureProduitResource;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use App\Http\Resources\LienDisciplineCategorieResource;
+use App\Http\Resources\LienDisciplineCategorieCritereResource;
 
 class CityDisciplineCategorieController extends Controller
 {
@@ -42,7 +48,6 @@ class CityDisciplineCategorieController extends Controller
         ->where('slug', $category)
         ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
         ->first();
-
 
         $city = City::with(['structures', 'produits.adresse'])
                             ->withProductsAndDepartement()
@@ -98,37 +103,32 @@ class CityDisciplineCategorieController extends Controller
                 'adresses'  => function ($query) {
                     $query->latest();
                 },
-                'city:id,slug,ville,ville_formatee,code_postal',
-                'structuretype:id,name,slug',
+
+                'structuretype',
                 'activites' => function ($query) use ($discipline, $category) {
                     $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
                 },
-                'activites.discipline:id,name,slug',
-                'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+                'activites.discipline',
+                'activites.categorie',
             ])->whereHas('activites', function ($query) use ($discipline, $category) {
                 $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
-            })
-            ->select(['id', 'name', 'slug', 'structuretype_id', 'address', 'zip_code', 'city', 'address_lat', 'address_lng'])
-            ->get();
+            })->get();
         });
 
         $structuresFromCity = $city->structures()->with([
             'adresses'  => function ($query) {
                 $query->latest();
             },
-            'city:id,slug,ville,ville_formatee,code_postal',
-            'structuretype:id,name,slug',
+            'structuretype',
             'activites' => function ($query) use ($discipline, $category) {
                 $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
             },
-            'activites.discipline:id,name,slug',
-            'activites.categorie:id,discipline_id,categorie_id,nom_categorie_pro,nom_categorie_client',
+            'activites.discipline',
+            'activites.categorie',
         ])
         ->whereHas('activites', function ($query) use ($discipline, $category) {
             $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
-        })
-        ->select(['id', 'name', 'slug', 'structuretype_id', 'address', 'zip_code', 'city', 'address_lat', 'address_lng'])
-        ->get();
+        })->get();
 
         $structures = $structuresFromCity->merge($citiesAroundStructures)->paginate(12);
 
@@ -139,21 +139,20 @@ class CityDisciplineCategorieController extends Controller
 
         return Inertia::render('Villes/Disciplines/Categories/Show', [
             'familles' => fn () => FamilleResource::collection($familles),
-            'category' => fn () => $category,
-            'categories' => fn () => $categories,
-            'firstCategories' => fn () => $firstCategories,
-            'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
-            'allStructureTypes' => fn () => $allStructureTypes,
-            'city' => fn () => $city,
+            'category' => fn () => LienDisciplineCategorieResource::make($category),
+            'categories' => fn () => LienDisciplineCategorieResource::collection($categories),
+            'firstCategories' => fn () => LienDisciplineCategorieResource::collection($firstCategories),
+            'categoriesNotInFirst' => fn () => LienDisciplineCategorieResource::collection($categoriesNotInFirst),
+            'allStructureTypes' => fn () => StructuretypeResource::collection($allStructureTypes),
+            'city' => fn () => CityResource::make($city),
             'citiesAround' => fn () => CityResource::collection($citiesAround),
-            'produits' => fn () => $produits,
-            'structures' => fn () => $structures,
-            'discipline' => fn () => $discipline,
-            'criteres' => fn () => $criteres,
-            'listDisciplines' => fn () => $listDisciplines,
+            'produits' => fn () => StructureProduitResource::collection($produits),
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
+            'structures' => fn () => StructureResource::collection($structures),
+            'discipline' => fn () => ListDisciplineResource::make($discipline),
+            'criteres' => fn () => LienDisciplineCategorieCritereResource::collection($criteres),
             'allCities' => fn () => CityResource::collection($allCities),
             'posts' => fn () => PostResource::collection($posts),
         ]);
-
     }
 }

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CritereResource;
+use App\Http\Resources\LienDisciplineCategorieResource;
+use App\Http\Resources\ListDisciplineResource;
 use App\Http\Resources\TypeChampResource;
 use App\Models\User;
 use Inertia\Inertia;
@@ -15,7 +18,6 @@ use Illuminate\Validation\Rule;
 use Illuminate\Http\RedirectResponse;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisciplineCategorieCritere;
-use App\Models\LienDisciplineCategorieCritereValeur;
 use App\Models\TypeChamp;
 
 class CategoryDisciplineCritereController extends Controller
@@ -98,10 +100,10 @@ class CategoryDisciplineCritereController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'categorie' => fn () => $categorie,
-            'categories' => fn () => $categories,
-            'discipline' => fn () => $discipline,
-            'listeCriteres' => fn () => $listeCriteres,
+            'categorie' => fn () => LienDisciplineCategorieResource::make($categorie),
+            'categories' => fn () => LienDisciplineCategorieResource::collection($categories),
+            'discipline' => fn () => ListDisciplineResource::make($discipline),
+            'listeCriteres' => fn () => CritereResource::collection($listeCriteres),
             'type_champs' => fn () => TypeChampResource::collection($typeChamps),
         ]);
 

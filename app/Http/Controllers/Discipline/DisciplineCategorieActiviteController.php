@@ -16,7 +16,13 @@ use App\Http\Resources\CityResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
 use App\Models\LienDisciplineCategorie;
+use App\Http\Resources\StructuretypeResource;
+use App\Http\Resources\ListDisciplineResource;
 use App\Models\LienDisciplineCategorieCritere;
+use App\Http\Resources\StructureProduitResource;
+use App\Http\Resources\StructureActiviteResource;
+use App\Http\Resources\LienDisciplineCategorieResource;
+use App\Http\Resources\LienDisciplineCategorieCritereResource;
 
 class DisciplineCategorieActiviteController extends Controller
 {
@@ -84,20 +90,20 @@ class DisciplineCategorieActiviteController extends Controller
             ->get();
 
         return Inertia::render('Structures/Activites/Show', [
-            'discipline' => fn () => $requestDiscipline,
+            'selectedProduit' => fn () => StructureProduitResource::make($selectedProduit),
+            'discipline' => fn () => ListDisciplineResource::make($requestDiscipline),
+            'produits' => fn () => StructureProduitResource::collection($produits) ,
             'familles' => fn () => FamilleResource::collection($familles),
-            'listDisciplines' => fn () => $listDisciplines,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => CityResource::collection($allCities),
-            'activite' => fn () => $activite,
-            'criteres' => fn () => $criteres,
-            'activiteSimilaires' => fn () => $activiteSimilaires,
-            'selectedProduit' => fn () => $selectedProduit,
-            'categories' => fn () => $categories,
-            'firstCategories' => fn () => $firstCategories,
-            'categoriesNotInFirst' => fn () => $categoriesNotInFirst,
-            'allStructureTypes' => fn () => $allStructureTypes,
-            'requestCategory' => fn () => $requestCategory,
-            'produits' => fn () => $produits,
+            'activite' => fn () => StructureActiviteResource::make($activite),
+            'criteres' => fn () => LienDisciplineCategorieCritereResource::collection($criteres),
+            'activiteSimilaires' => fn () => StructureActiviteResource::collection($activiteSimilaires),
+            'categories' => fn () => LienDisciplineCategorieResource::collection($categories),
+            'firstCategories' => fn () => LienDisciplineCategorieResource::collection($firstCategories),
+            'categoriesNotInFirst' => fn () => LienDisciplineCategorieResource::collection($categoriesNotInFirst),
+            'allStructureTypes' => fn () => StructuretypeResource::collection($allStructureTypes),
+            'requestCategory' => fn () => LienDisciplineCategorieResource::make($requestCategory),
         ]);
     }
 }

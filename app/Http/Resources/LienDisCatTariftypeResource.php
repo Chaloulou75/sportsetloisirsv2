@@ -14,6 +14,18 @@ class LienDisCatTariftypeResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'nom' => $this->nom,
+            'show_planning' => $this->show_planning,
+            'discipline' =>  ListDisciplineResource::make($this->whenLoaded('discipline')),
+            'categorie' =>  LienDisciplineCategorieResource::make($this->whenLoaded('categorie')),
+            'tarif_type' =>  ListeTarifTypeResource::make($this->whenLoaded('tarif_type')),
+            'tarif_attributs' => LienDisCatTartypAttributResource::collection($this->whenLoaded('tarif_attributs')),
+            'tarif_booking_fields' => LienDisCatTarBookingFieldResource::collection($this->whenLoaded('tarif_booking_fields')),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ];
+
     }
 }
