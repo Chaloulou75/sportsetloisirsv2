@@ -170,7 +170,6 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                     class="flex h-10 items-center gap-1.5 bg-gray-100 px-4 transition hover:text-gray-900"
                                 >
                                     <HomeIcon class="h-4 w-4" />
-
                                     <span
                                         class="ms-1.5 hidden text-xs font-medium md:block"
                                     >

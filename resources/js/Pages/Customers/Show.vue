@@ -137,7 +137,10 @@ onMounted(() => {
                                         class="mr-1 size-4 text-gray-600"
                                     />
                                     <p class="font-semibold">
-                                        {{ reservation.produit.adresse.city }}
+                                        {{
+                                            reservation.produit.adresse
+                                                .city_name
+                                        }}
                                         ({{
                                             reservation.produit.adresse
                                                 .zip_code
