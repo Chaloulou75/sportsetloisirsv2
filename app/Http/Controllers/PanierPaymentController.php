@@ -14,10 +14,12 @@ use Stripe\Checkout\Session;
 use App\Models\ListDiscipline;
 use App\Models\ProductReservation;
 use App\Http\Resources\CityResource;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
 use Stripe\Exception\ApiErrorException;
 use App\Http\Resources\ListDisciplineResource;
+use App\Http\Resources\ProductReservationResource;
 
 class PanierPaymentController extends Controller
 {
@@ -92,8 +94,8 @@ class PanierPaymentController extends Controller
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => CityResource::collection($allCities),
-            'reservations' => fn () => $reservations ?? null,
-            'user' => fn () =>  $user ?? null,
+            'reservations' => fn () => ProductReservationResource::collection($reservations ?? null),
+            'user' => fn () => UserResource::make($user ?? null),
             'totalPrice' => fn () => $totalPrice ?? null,
             'clientSecret' => fn () => $intent->client_secret,
             'returnUrl' => fn () => $returnUrl,

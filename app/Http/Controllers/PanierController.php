@@ -19,6 +19,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
 use App\Http\Resources\ListDisciplineResource;
+use App\Http\Resources\ProductReservationResource;
 use App\Models\LienDisCatTarBookingFieldSousField;
 
 class PanierController extends Controller
@@ -56,7 +57,7 @@ class PanierController extends Controller
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => CityResource::collection($allCities),
-            'reservations' => fn () => $reservations ?? null
+            'reservations' => fn () => ProductReservationResource::collection($reservations ?? null)
         ]);
     }
 
