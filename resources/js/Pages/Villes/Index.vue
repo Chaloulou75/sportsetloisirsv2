@@ -50,16 +50,19 @@ onMounted(() => {
 </script>
 
 <template>
-    <Head
-        title="Villes"
-        :description="
-            'Trouvez un club de sport ou un cours collectif parmi plus de ' +
-            cities.total +
-            ' disciplines différentes en France. Choisissez parmi ' +
-            structuresCount +
-            ' clubs sur notre site prêts à vous accueillir.'
-        "
-    />
+    <Head title="Villes">
+        <meta
+            head-key="description"
+            name="description"
+            :content="
+                'Trouvez un club de sport ou un cours collectif parmi plus de ' +
+                cities.total +
+                ' disciplines différentes en France. Choisissez parmi ' +
+                structuresCount +
+                ' clubs sur notre site prêts à vous accueillir.'
+            "
+        />
+    </Head>
 
     <ResultLayout
         :familles="familles"

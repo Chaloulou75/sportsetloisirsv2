@@ -88,7 +88,13 @@ onMounted(() => {
 });
 </script>
 <template>
-    <Head title="Gestion du site" :description="'Administration du site.'" />
+    <Head title="Gestion du site, critères">
+        <meta
+            head-key="description"
+            name="description"
+            content="Administration du site. Critères"
+        />
+    </Head>
     <AdminLayout>
         <template #header>
             <div class="flex h-full items-center justify-start">

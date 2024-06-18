@@ -120,10 +120,7 @@ const addArticle = () => {
 </script>
 
 <template>
-    <Head
-        title="Ecrire un article de blog"
-        :description="'Creation d\'un article de blog sur www.sports-et-loisirs.fr.'"
-    />
+    <Head title="Ecrire un article de blog" />
 
     <ResultLayout
         :familles="familles"

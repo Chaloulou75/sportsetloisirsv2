@@ -115,16 +115,19 @@ const onfilteredStructuresUpdate = (filteredStr) => {
 </script>
 
 <template>
-    <Head
-        :title="discipline.name"
-        :description="
-            'Vous souhaitez pratiquer un sport de ' +
-            discipline.name +
-            ' en France ? ' +
-            discipline.activites_count +
-            ' structures sur notre site prêts à vous accueillir.'
-        "
-    />
+    <Head :title="discipline.name">
+        <meta
+            head-key="description"
+            name="description"
+            :content="
+                'Vous souhaitez pratiquer un sport de ' +
+                discipline.name +
+                ' en France ? ' +
+                discipline.activites_count +
+                ' structures sur notre site prêts à vous accueillir.'
+            "
+        />
+    </Head>
 
     <ResultLayout
         :familles="familles"

@@ -13,7 +13,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <Head title="Questions fréquentes" description="Questions fréquentes" />
+    <Head title="Questions fréquentes" />
 
     <ResultLayout
         :familles="familles"

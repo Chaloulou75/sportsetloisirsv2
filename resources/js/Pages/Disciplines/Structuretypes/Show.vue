@@ -113,10 +113,13 @@ const onfilteredStructuresUpdate = (filteredStr) => {
 </script>
 
 <template>
-    <Head
-        :title="`${structuretypeElected.name} de ${discipline.name}`"
-        :description="`${structuretypeElected.name} de ${discipline.name}.`"
-    />
+    <Head :title="`${structuretypeElected.name} de ${discipline.name}`">
+        <meta
+            head-key="description"
+            name="description"
+            :content="`${structuretypeElected.name} de ${discipline.name}.`"
+        />
+    </Head>
 
     <ResultLayout
         :familles="familles"

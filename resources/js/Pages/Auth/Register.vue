@@ -31,10 +31,7 @@ const submit = () => {
 </script>
 
 <template>
-    <Head
-        title="Inscription"
-        description="Sports-et-loisirs.fr recense les structures proposant des activités de sport ou de loisirs en France - plus de 300 disciplines et 32000 clubs référencés."
-    />
+    <Head title="Inscription" />
     <ResultLayout
         :familles="familles"
         :list-disciplines="listDisciplines"

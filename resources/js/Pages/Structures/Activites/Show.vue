@@ -887,12 +887,15 @@ onMounted(() => {
 </script>
 
 <template>
-    <Head
-        :title="activite.titre + ' - ' + activite.structure.name"
-        :description="
-            'Fiche détaillée de ' + activite.titre + '. Horaires et tarifs.'
-        "
-    />
+    <Head :title="activite.titre + ' - ' + activite.structure.name">
+        <meta
+            head-key="description"
+            name="description"
+            :content="
+                'Fiche détaillée de ' + activite.titre + '. Horaires et tarifs.'
+            "
+        />
+    </Head>
 
     <ResultLayout
         :familles="familles"

@@ -61,10 +61,13 @@ onMounted(() => {
 });
 </script>
 <template>
-    <Head
-        title="Gestion des tags du blog"
-        :description="'Administration du blog.'"
-    />
+    <Head title="Gestion des tags du blog">
+        <meta
+            head-key="description"
+            name="description"
+            content="Administration du blog."
+        />
+    </Head>
     <AdminLayout>
         <template #header>
             <div class="flex h-full items-center justify-start">

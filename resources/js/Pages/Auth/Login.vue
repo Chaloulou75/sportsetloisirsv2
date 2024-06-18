@@ -31,10 +31,13 @@ const submit = () => {
 </script>
 
 <template>
-    <Head
-        title="Connexion"
-        description="Sports-et-loisirs.fr recense les structures proposant des activités de sport ou de loisirs en France - plus de 300 disciplines et 32000 clubs référencés."
-    />
+    <Head title="Connexion">
+        <meta
+            head-key="description"
+            name="description"
+            :content="`Sports-et-loisirs.fr recense les structures proposant des activités de sport ou de loisirs en France - plus de 300 disciplines et 32000 clubs référencés.`"
+        />
+    </Head>
     <ResultLayout
         :familles="familles"
         :list-disciplines="listDisciplines"

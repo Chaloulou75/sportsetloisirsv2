@@ -14,16 +14,7 @@ defineProps({
 </script>
 
 <template>
-    <Head
-        :title="famille.name"
-        :description="
-            'Vous souhaitez pratiquer un sport de ' +
-            famille.name +
-            ' en France ? ' +
-            famille.activites_count +
-            ' activités sur notre site prêts à vous accueillir.'
-        "
-    />
+    <Head :title="famille.name" />
 
     <ResultLayout
         :familles="familles"

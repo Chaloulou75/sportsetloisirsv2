@@ -12,7 +12,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <Head title="Mentions Légales" description="Mentions Légales" />
+    <Head title="Mentions Légales" />
 
     <ResultLayout
         :familles="familles"

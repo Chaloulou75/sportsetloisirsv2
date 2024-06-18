@@ -64,16 +64,19 @@ watch(
 </script>
 
 <template>
-    <Head
-        title="Structures"
-        :description="
-            'Trouvez un club de sport ou un cours collectif parmi plus de ' +
-            structures.total +
-            ' structures différentes en France. Choisissez parmi ' +
-            structuresCount +
-            ' clubs sur notre site prêts à vous accueillir.'
-        "
-    />
+    <Head title="Structures">
+        <meta
+            head-key="description"
+            name="description"
+            :content="
+                'Trouvez un club de sport ou un cours collectif parmi plus de ' +
+                structures.total +
+                ' structures différentes en France. Choisissez parmi ' +
+                structuresCount +
+                ' clubs sur notre site prêts à vous accueillir.'
+            "
+        />
+    </Head>
 
     <ResultLayout
         :familles="familles"

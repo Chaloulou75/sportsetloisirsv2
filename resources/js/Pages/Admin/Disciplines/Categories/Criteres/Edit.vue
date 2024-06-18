@@ -449,10 +449,13 @@ onMounted(() => {
 });
 </script>
 <template>
-    <Head
-        :title="`Administration de la discipline ${discipline.name}`"
-        :description="`Administration de la discipline ${discipline.name}`"
-    />
+    <Head :title="`Administration de la discipline ${discipline.name}`">
+        <meta
+            head-key="description"
+            name="description"
+            :content="`Administration de la discipline ${discipline.name}`"
+        />
+    </Head>
     <AdminLayout>
         <template #header>
             <div class="flex h-full items-center justify-start">

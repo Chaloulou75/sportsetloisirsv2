@@ -32,7 +32,13 @@ const markNotificationAsRead = (notification) => {
 };
 </script>
 <template>
-    <Head title="Gestion du site" description="Administration du site." />
+    <Head title="Gestion du site">
+        <meta
+            head-key="description"
+            name="description"
+            :content="`Administration du site.`"
+        />
+    </Head>
     <AdminLayout>
         <template #header>
             <div class="flex h-full items-center justify-start">

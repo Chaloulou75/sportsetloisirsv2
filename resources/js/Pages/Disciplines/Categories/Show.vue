@@ -754,10 +754,13 @@ onMounted(() => {
 </script>
 
 <template>
-    <Head
-        :title="`${category.nom_categorie_client} de ${discipline.name}`"
-        :description="`${category.nom_categorie_client} de ${discipline.name}.`"
-    />
+    <Head :title="`${category.nom_categorie_client} de ${discipline.name}`">
+        <meta
+            head-key="description"
+            name="description"
+            :content="`${category.nom_categorie_client} de ${discipline.name}.`"
+        />
+    </Head>
 
     <ResultLayout
         :familles="familles"

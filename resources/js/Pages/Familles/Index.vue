@@ -13,16 +13,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <Head
-        title="Familles d'activités"
-        :description="
-            'Trouvez un club de sport ou un cours collectif parmi plus de ' +
-            disciplinesCount +
-            ' disciplines différentes en France. Choisissez parmi ' +
-            structuresCount +
-            ' clubs sur notre site prêts à vous accueillir.'
-        "
-    />
+    <Head title="Familles d'activités" />
 
     <ResultLayout
         :familles="familles"

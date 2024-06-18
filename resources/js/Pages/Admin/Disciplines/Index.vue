@@ -289,10 +289,13 @@ const replicateCatDisTarBooking = () => {
 };
 </script>
 <template>
-    <Head
-        title="Gestion du contenu"
-        description="Administration du site. Gestion du contenu"
-    />
+    <Head title="Gestion du contenu">
+        <meta
+            head-key="description"
+            name="description"
+            content="Administration du site. Gestion du contenu"
+        />
+    </Head>
     <AdminLayout>
         <template #header>
             <div class="flex h-full items-center justify-start">

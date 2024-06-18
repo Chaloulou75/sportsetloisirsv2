@@ -18,10 +18,7 @@ const props = defineProps({
 });
 </script>
 <template>
-    <Head
-        title="Mes Favoris"
-        description="Vos structures et activités favorites."
-    />
+    <Head title="Mes Favoris"" />
 
     <ResultLayout
         :familles="familles"

@@ -118,19 +118,13 @@ const onfilteredStructuresUpdate = (filteredStr) => {
 </script>
 
 <template>
-    <Head
-        :title="departement.departement"
-        :description="
-            'Envie de faire du ' +
-            discipline.name +
-            ' à ' +
-            departement.departement +
-            '? Choisissez parmi plus de ' +
-            departement.structures_count +
-            ' structures pour pratiquer une activité sportive ou de loisirs à ' +
-            departement.departement
-        "
-    />
+    <Head :title="`${discipline.name} à ${departement.departement}`">
+        <meta
+            head-key="description"
+            name="description"
+            :content="`${discipline.name} à ${departement.departement}. Choisissez parmi plus de ${departement.structures_count} structures pour pratiquer une activité sportive ou de loisirs à ${departement.departement}`"
+        />
+    </Head>
 
     <ResultLayout
         :familles="familles"

@@ -96,10 +96,13 @@ onMounted(() => {
 });
 </script>
 <template>
-    <Head
-        title="Gestion des types de tarifs"
-        :description="'Administration des types de tarifs.'"
-    />
+    <Head title="Gestion des types de tarifs">
+        <meta
+            head-key="description"
+            name="description"
+            :content="`Administration des types de tarifs.`"
+        />
+    </Head>
     <AdminLayout>
         <template #header>
             <div class="flex h-full items-center justify-start">

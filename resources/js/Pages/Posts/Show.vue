@@ -87,7 +87,13 @@ const incrementPostLike = () => {
 </script>
 
 <template>
-    <Head :title="post.title" :description="post.excerpt" />
+    <Head :title="post.title">
+        <meta
+            head-key="description"
+            name="description"
+            :content="post.excerpt"
+        />
+    </Head>
 
     <ResultLayout
         :familles="familles"

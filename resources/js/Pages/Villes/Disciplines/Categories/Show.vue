@@ -754,15 +754,18 @@ onMounted(() => {
         :title="`${category.nom_categorie_client} de ${
             discipline.name
         } à ${formatCityName(city.ville)}.`"
-        :description="`${category.nom_categorie_client} de ${
-            discipline.name
-        } à ${formatCityName(city.ville)}. Choisissez parmi plus de ${
-            city.structures_count
-        } structures pour pratiquer une activité sportive ou de loisirs à ${formatCityName(
-            city.ville
-        )}`"
-    />
-
+    >
+        <meta
+            head-key="description"
+            name="description"
+            :content="`${category.nom_categorie_client} de ${
+                discipline.name
+            } à ${formatCityName(city.ville)}. Choisissez parmi plus de ${
+                city.structures_count
+            } structures pour pratiquer une activité sportive ou de loisirs à ${formatCityName(
+                city.ville
+            )}`"
+    /></Head>
     <ResultLayout
         :familles="familles"
         :list-disciplines="listDisciplines"

@@ -44,17 +44,19 @@ watch(
 </script>
 
 <template>
-    <Head
-        title="Disciplines"
-        :description="
-            'Trouvez un club de sport ou un cours collectif parmi plus de ' +
-            disciplines.total +
-            ' disciplines différentes en France. Choisissez parmi ' +
-            structuresCount +
-            ' clubs sur notre site prêts à vous accueillir.'
-        "
-    />
-
+    <Head :title="`Disciplines`">
+        <meta
+            head-key="description"
+            name="description"
+            :content="
+                'Trouvez un club de sport ou un cours collectif parmi plus de ' +
+                disciplines.total +
+                ' disciplines différentes en France. Choisissez parmi ' +
+                structuresCount +
+                ' clubs sur notre site prêts à vous accueillir.'
+            "
+        />
+    </Head>
     <ResultLayout
         :familles="familles"
         :list-disciplines="listDisciplines"

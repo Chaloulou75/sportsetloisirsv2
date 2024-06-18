@@ -49,7 +49,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <Head title="Blog" :description="'Blog de www.sports-et-loisirs.fr.'" />
+    <Head title="Blog" />
 
     <ResultLayout
         :familles="familles"

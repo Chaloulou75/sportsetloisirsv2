@@ -122,19 +122,21 @@ const onfilteredStructuresUpdate = (filteredStr) => {
 </script>
 
 <template>
-    <Head
-        :title="` ${discipline.name} à ${formatCityName(city.ville)}`"
-        :description="
-            'Envie de faire du ' +
-            discipline.name +
-            ' à ' +
-            formatCityName(city.ville) +
-            '? Choisissez parmi plus de ' +
-            city.structures_count +
-            ' structures pour pratiquer une activité sportive ou de loisirs à ' +
-            formatCityName(city.ville)
-        "
-    />
+    <Head :title="` ${discipline.name} à ${formatCityName(city.ville)}`">
+        <meta
+            head-key="description"
+            name="description"
+            :content="
+                'Envie de faire du ' +
+                discipline.name +
+                ' à ' +
+                formatCityName(city.ville) +
+                '? Choisissez parmi plus de ' +
+                city.structures_count +
+                ' structures pour pratiquer une activité sportive ou de loisirs à ' +
+                formatCityName(city.ville)
+            "
+    /></Head>
 
     <ResultLayout
         :familles="familles"

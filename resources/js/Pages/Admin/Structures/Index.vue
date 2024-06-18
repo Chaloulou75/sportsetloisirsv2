@@ -10,10 +10,13 @@ const props = defineProps({
 });
 </script>
 <template>
-    <Head
-        title="Gestion des structures"
-        :description="'Administration du site.'"
-    />
+    <Head title="Gestion des structures">
+        <meta
+            head-key="description"
+            name="description"
+            :content="`Administration du site.`"
+        />
+    </Head>
     <AdminLayout>
         <template #header>
             <div class="flex h-full items-center justify-start">

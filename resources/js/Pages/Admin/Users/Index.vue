@@ -164,10 +164,13 @@ onMounted(() => {
 });
 </script>
 <template>
-    <Head
-        title="Gestion des utilisateurs"
-        :description="'Administration du site. Gestion des utilisateurs'"
-    />
+    <Head title="Gestion des utilisateurs">
+        <meta
+            head-key="description"
+            name="description"
+            :content="`Administration du site. Gestion des utilisateurs.`"
+        />
+    </Head>
     <AdminLayout>
         <template #header>
             <div class="flex h-full items-center justify-start">

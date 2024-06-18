@@ -72,6 +72,13 @@ onMounted(() => {
         title="Mon compte client"
         description="Récapitulatif de mes réservations"
     />
+    <Head title="Mon compte client">
+        <meta
+            head-key="description"
+            name="description"
+            :content="`Récapitulatif de mes réservations.`"
+        />
+    </Head>
 
     <ResultLayout
         :familles="familles"
