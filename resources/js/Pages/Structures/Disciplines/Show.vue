@@ -17,7 +17,6 @@ const props = defineProps({
     structureActivites: Object,
     uniqueCriteresInProducts: Object,
     criteres: Object,
-    // activiteForTarifs: Object,
     strCatTarifs: Object,
     confirmedReservationsCount: Number,
     allReservationsCount: Number,

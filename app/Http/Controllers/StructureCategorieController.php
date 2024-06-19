@@ -2,26 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\LienDisciplineCategorieCritereResource;
+use App\Http\Resources\LienDisciplineCategorieResource;
+use App\Http\Resources\ListDisciplineResource;
+use App\Http\Resources\StructureCatTarifResource;
+use App\Http\Resources\StructureResource;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Structure;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
-use App\Models\ListeTarifType;
 use App\Models\StructureProduit;
 use App\Models\StructureActivite;
 use App\Models\StructureCatTarif;
 use App\Models\StructurePlanning;
 use App\Models\ProductReservation;
 use App\Models\StructureCategorie;
-use App\Models\StructureDiscipline;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\RedirectResponse;
 use App\Models\LienDisciplineCategorie;
 use App\Models\StructureProduitCritere;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Database\Eloquent\Builder;
 use App\Models\LienDisciplineCategorieCritere;
 
 class StructureCategorieController extends Controller
@@ -94,20 +95,20 @@ class StructureCategorieController extends Controller
                     'produits.criteres.critere_valeur.sous_criteres.prod_sous_crit_valeurs.sous_critere_valeur',
                     'produits.criteres.sous_criteres',
                     'produits.criteres.sous_criteres.sous_critere_valeur',
-                    'produits.catTarifs',
-                    'produits.catTarifs.produits:id',
-                    'produits.catTarifs.categorie',
-                    'produits.catTarifs.cat_tarif_type',
-                    'produits.catTarifs.cat_tarif_type.tarif_attributs',
-                    'produits.catTarifs.cat_tarif_type.tarif_attributs.valeurs',
-                    'produits.catTarifs.cat_tarif_type.tarif_attributs.sous_attributs',
-                    'produits.catTarifs.cat_tarif_type.tarif_attributs.sous_attributs.valeurs',
-                    'produits.catTarifs.attributs',
-                    'produits.catTarifs.attributs.tarif_attribut',
-                    'produits.catTarifs.attributs.tarif_attribut.valeurs',
-                    'produits.catTarifs.attributs.sous_attributs',
-                    'produits.catTarifs.attributs.sous_attributs.sous_attribut',
-                    'produits.catTarifs.attributs.sous_attributs.sous_attribut_valeur',
+                    'produits.cat_tarifs',
+                    'produits.cat_tarifs.produits:id',
+                    'produits.cat_tarifs.categorie',
+                    'produits.cat_tarifs.cat_tarif_type',
+                    'produits.cat_tarifs.cat_tarif_type.tarif_attributs',
+                    'produits.cat_tarifs.cat_tarif_type.tarif_attributs.valeurs',
+                    'produits.cat_tarifs.cat_tarif_type.tarif_attributs.sous_attributs',
+                    'produits.cat_tarifs.cat_tarif_type.tarif_attributs.sous_attributs.valeurs',
+                    'produits.cat_tarifs.attributs',
+                    'produits.cat_tarifs.attributs.tarif_attribut',
+                    'produits.cat_tarifs.attributs.tarif_attribut.valeurs',
+                    'produits.cat_tarifs.attributs.sous_attributs',
+                    'produits.cat_tarifs.attributs.sous_attributs.sous_attribut',
+                    'produits.cat_tarifs.attributs.sous_attributs.sous_attribut_valeur',
                     'produits.plannings' => function ($query) {
                         $query->endNotPassed()->orderByDateStart();
                     },
@@ -136,14 +137,13 @@ class StructureCategorieController extends Controller
                 ->where('categorie_id', $categorie->id)
                 ->get();
 
-
         return Inertia::render('Structures/Categories/Show', [
-            'structure' => fn () => $structure,
-            'uniqueCriteresInProducts' => fn () => $uniqueCriteresInProducts,
-            'criteres' => fn () => $criteres,
-            'discipline' => fn () => $discipline,
-            'categorie' => fn () => $categorie,
-            'strCatTarifs' => fn () => $strCatTarifs,
+            'structure' => fn () => StructureResource::make($structure),
+            'uniqueCriteresInProducts' => fn () => LienDisciplineCategorieCritereResource::collection($uniqueCriteresInProducts),
+            'criteres' => fn () => LienDisciplineCategorieCritereResource::collection($criteres),
+            'discipline' => fn () => ListDisciplineResource::make($discipline),
+            'categorie' => fn () => LienDisciplineCategorieResource::make($categorie),
+            'strCatTarifs' => fn () => StructureCatTarifResource::collection($strCatTarifs),
             'allReservationsCount' => fn () => $allReservationsCount,
             'confirmedReservationsCount' => fn () => $confirmedReservationsCount,
             'pendingReservationsCount' => fn () => $pendingReservationsCount,

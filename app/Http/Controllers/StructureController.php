@@ -26,6 +26,7 @@ use App\Models\ProductReservation;
 use App\Models\StructureCategorie;
 use App\Models\StructureDiscipline;
 use App\Http\Resources\CityResource;
+use App\Http\Resources\DepartementResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
@@ -33,11 +34,14 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use App\Models\StructureTarifTypeInfo;
 use App\Http\Resources\FamilleResource;
+use App\Http\Resources\LienDisciplineCategorieResource;
+use App\Http\Resources\ListDisciplineResource;
 use App\Models\LienDisciplineCategorie;
 use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Resources\StructureResource;
+use App\Http\Resources\StructuretypeResource;
 use App\Models\LienDisciplineCategorieCritere;
 
 class StructureController extends Controller
@@ -77,11 +81,11 @@ class StructureController extends Controller
                         ->withQueryString();
 
         return Inertia::render('Structures/Index', [
-            'structures' => fn () => $structures,
+            'structures' => fn () => StructureResource::collection($structures),
             'filters' => request()->all(['search']),
             'familles' => fn () => FamilleResource::collection($familles),
             'allCities' => fn () => CityResource::collection($allCities),
-            'listDisciplines' => fn () => $listDisciplines,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
         ]);
     }
 
@@ -105,11 +109,11 @@ class StructureController extends Controller
         $disciplines = ListDiscipline::select(['id', 'name', 'slug'])->get();
 
         return Inertia::render('Structures/Create', [
-            'structurestypes' => fn () => $structurestypes,
-            'disciplines' => fn () => $disciplines,
+            'structurestypes' => fn () => StructuretypeResource::collection($structurestypes),
+            'disciplines' => fn () => ListDisciplineResource::collection($disciplines),
             'familles' => fn () => FamilleResource::collection($familles),
             'allCities' => fn () => CityResource::collection($allCities),
-            'listDisciplines' => fn () => $listDisciplines,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
         ]);
     }
 
@@ -324,24 +328,24 @@ class StructureController extends Controller
         $structure->increment('view_count');
 
         return Inertia::render('Structures/Show', [
-            'structure' => fn () => $structure,
+            'structure' => fn () => StructureResource::make($structure),
             'familles' => fn () => FamilleResource::collection($familles),
             'allCities' => fn () => CityResource::collection($allCities),
-            'listDisciplines' => fn () => $listDisciplines,
+            'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'criteres' => fn () => $criteres,
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),
             ],
             'requestCategory' => fn () => $requestCategory,
-            'categories' => fn () => $categories,
+            'categories' => fn () => LienDisciplineCategorieResource::collection($categories),
             'categoriesWithoutProduit' => fn () => $categoriesWithoutProduit,
-            'allStructureTypes' => fn () => $allStructureTypes,
-            'structuretypeElected' => fn () => $structuretypeElected,
-            'city' => fn () => $city,
-            'citiesAround' => fn () => $citiesAround,
-            'departement' => fn () => $departement,
-            'requestDiscipline' => fn () => $requestDiscipline,
+            'allStructureTypes' => fn () => StructuretypeResource::collection($allStructureTypes) ,
+            'structuretypeElected' => fn () => StructuretypeResource::make($structuretypeElected),
+            'city' => fn () => CityResource::make($city),
+            'citiesAround' => fn () => CityResource::collection($citiesAround),
+            'departement' => fn () => DepartementResource::make($departement),
+            'requestDiscipline' => fn () => ListDisciplineResource::make($requestDiscipline),
         ]);
     }
 
@@ -374,7 +378,7 @@ class StructureController extends Controller
             ->findOrFail($structure->id);
 
         return Inertia::render('Structures/Edit', [
-            'structurestypes' => fn () => $structurestypes,
+            'structurestypes' => fn () => StructuretypeResource::collection($structurestypes),
             'structure' => fn () => StructureResource::make($structure),
             'allReservationsCount' => fn () => $allReservationsCount,
             'confirmedReservationsCount' => fn () => $confirmedReservationsCount,
