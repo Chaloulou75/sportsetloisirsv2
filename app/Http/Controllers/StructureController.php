@@ -34,6 +34,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use App\Models\StructureTarifTypeInfo;
 use App\Http\Resources\FamilleResource;
+use App\Http\Resources\LienDisciplineCategorieCritereResource;
 use App\Http\Resources\LienDisciplineCategorieResource;
 use App\Http\Resources\ListDisciplineResource;
 use App\Models\LienDisciplineCategorie;
@@ -332,14 +333,14 @@ class StructureController extends Controller
             'familles' => fn () => FamilleResource::collection($familles),
             'allCities' => fn () => CityResource::collection($allCities),
             'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
-            'criteres' => fn () => $criteres,
+            'criteres' => fn () => LienDisciplineCategorieCritereResource::collection($criteres),
             'can' => [
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),
             ],
-            'requestCategory' => fn () => $requestCategory,
+            'requestCategory' => fn () => LienDisciplineCategorieResource::make($requestCategory),
             'categories' => fn () => LienDisciplineCategorieResource::collection($categories),
-            'categoriesWithoutProduit' => fn () => $categoriesWithoutProduit,
+            'categoriesWithoutProduit' => fn () => LienDisciplineCategorieResource::collection($categoriesWithoutProduit),
             'allStructureTypes' => fn () => StructuretypeResource::collection($allStructureTypes) ,
             'structuretypeElected' => fn () => StructuretypeResource::make($structuretypeElected),
             'city' => fn () => CityResource::make($city),
