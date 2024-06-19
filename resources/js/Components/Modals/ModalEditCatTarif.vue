@@ -1,6 +1,6 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, onMounted } from "vue";
 import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
@@ -53,136 +53,6 @@ const editCatTarifForm = useForm({
     activites: {},
     produits: {},
 });
-
-//tarif
-watch(
-    () => props.tarifToUpdate,
-    (newtarif) => {
-        editCatTarifForm.produits = {};
-        if (newtarif) {
-            editCatTarifForm.discipline_id = newtarif.categorie.discipline_id;
-            editCatTarifForm.categorie_id = newtarif.categorie_id;
-            editCatTarifForm.tarif_type = newtarif.cat_tarif_type;
-            editCatTarifForm.titre = newtarif.titre;
-            editCatTarifForm.description = newtarif.description;
-            editCatTarifForm.amount = newtarif.amount;
-
-            if (
-                editCatTarifForm.tarif_type &&
-                editCatTarifForm.tarif_type.tarif_attributs.length > 0
-            ) {
-                editCatTarifForm.tarif_type.tarif_attributs.forEach(
-                    (tarifAttr) => {
-                        newtarif.attributs.forEach((attribut) => {
-                            if (tarifAttr.id === attribut.cat_tar_att_id) {
-                                if (tarifAttr.valeurs.length > 0) {
-                                    tarifAttr.valeurs.forEach((attrValeur) => {
-                                        if (
-                                            attribut.dis_cat_tar_att_valeur_id !==
-                                            null
-                                        ) {
-                                            if (
-                                                attrValeur.id ===
-                                                attribut.dis_cat_tar_att_valeur_id
-                                            ) {
-                                                if (
-                                                    attribut.tarif_attribut
-                                                        .type_champ_form ===
-                                                    "checkbox"
-                                                ) {
-                                                    if (
-                                                        !editCatTarifForm
-                                                            .attributs[
-                                                            tarifAttr.id
-                                                        ]
-                                                    ) {
-                                                        editCatTarifForm.attributs[
-                                                            tarifAttr.id
-                                                        ] = [];
-                                                    }
-                                                    editCatTarifForm.attributs[
-                                                        tarifAttr.id
-                                                    ].push(attrValeur);
-                                                } else {
-                                                    editCatTarifForm.attributs[
-                                                        tarifAttr.id
-                                                    ] = attrValeur;
-                                                }
-                                            }
-                                        }
-                                    });
-                                } else {
-                                    editCatTarifForm.attributs[tarifAttr.id] =
-                                        attribut.valeur;
-                                }
-                                if (tarifAttr.sous_attributs.length > 0) {
-                                    tarifAttr.sous_attributs.forEach(
-                                        (sousAttributOff) => {
-                                            attribut.sous_attributs.forEach(
-                                                (sousAttrTarif) => {
-                                                    if (
-                                                        sousAttributOff.id ===
-                                                        sousAttrTarif.sousattribut_id
-                                                    ) {
-                                                        if (
-                                                            sousAttrTarif.sous_attribut_valeur !==
-                                                            null
-                                                        ) {
-                                                            if (
-                                                                sousAttrTarif
-                                                                    .sous_attribut
-                                                                    .type_champ_form ===
-                                                                "checkbox"
-                                                            ) {
-                                                                if (
-                                                                    !editCatTarifForm
-                                                                        .sousattributs[
-                                                                        sousAttributOff
-                                                                            .id
-                                                                    ]
-                                                                ) {
-                                                                    editCatTarifForm.sousattributs[
-                                                                        sousAttributOff.id
-                                                                    ] = [];
-                                                                }
-                                                                editCatTarifForm.sousattributs[
-                                                                    sousAttributOff
-                                                                        .id
-                                                                ].push(
-                                                                    sousAttrTarif.sous_attribut_valeur
-                                                                );
-                                                            } else {
-                                                                editCatTarifForm.sousattributs[
-                                                                    sousAttributOff.id
-                                                                ] =
-                                                                    sousAttrTarif.sous_attribut_valeur;
-                                                            }
-                                                        } else {
-                                                            editCatTarifForm.sousattributs[
-                                                                sousAttributOff.id
-                                                            ] =
-                                                                sousAttrTarif.valeur;
-                                                        }
-                                                    }
-                                                }
-                                            );
-                                        }
-                                    );
-                                }
-                            }
-                        });
-                    }
-                );
-            }
-            if (newtarif.produits) {
-                newtarif.produits.forEach((produit) => {
-                    editCatTarifForm.produits[produit.id] = true;
-                });
-            }
-        }
-    },
-    { deep: true, immediate: true }
-);
 
 //dis_id
 watch(
@@ -369,6 +239,136 @@ watch(
     { deep: true }
 );
 
+//tarif_to_update
+watch(
+    () => props.tarifToUpdate,
+    (newtarif) => {
+        // editCatTarifForm.produits = {};
+        if (newtarif) {
+            editCatTarifForm.discipline_id = newtarif.categorie.discipline_id;
+            editCatTarifForm.categorie_id = newtarif.categorie_id;
+            editCatTarifForm.tarif_type = newtarif.cat_tarif_type;
+            editCatTarifForm.titre = newtarif.titre;
+            editCatTarifForm.description = newtarif.description;
+            editCatTarifForm.amount = newtarif.amount;
+
+            if (
+                editCatTarifForm.tarif_type &&
+                editCatTarifForm.tarif_type.tarif_attributs.length > 0
+            ) {
+                editCatTarifForm.tarif_type.tarif_attributs.forEach(
+                    (tarifAttr) => {
+                        newtarif.attributs.forEach((attribut) => {
+                            if (tarifAttr.id === attribut.cat_tar_att_id) {
+                                if (tarifAttr.valeurs.length > 0) {
+                                    tarifAttr.valeurs.forEach((attrValeur) => {
+                                        if (
+                                            attribut.dis_cat_tar_att_valeur_id !==
+                                            null
+                                        ) {
+                                            if (
+                                                attrValeur.id ===
+                                                attribut.dis_cat_tar_att_valeur_id
+                                            ) {
+                                                if (
+                                                    attribut.tarif_attribut
+                                                        .type_champ_form ===
+                                                    "checkbox"
+                                                ) {
+                                                    if (
+                                                        !editCatTarifForm
+                                                            .attributs[
+                                                            tarifAttr.id
+                                                        ]
+                                                    ) {
+                                                        editCatTarifForm.attributs[
+                                                            tarifAttr.id
+                                                        ] = [];
+                                                    }
+                                                    editCatTarifForm.attributs[
+                                                        tarifAttr.id
+                                                    ].push(attrValeur);
+                                                } else {
+                                                    editCatTarifForm.attributs[
+                                                        tarifAttr.id
+                                                    ] = attrValeur;
+                                                }
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    editCatTarifForm.attributs[tarifAttr.id] =
+                                        attribut.valeur;
+                                }
+                                if (tarifAttr.sous_attributs.length > 0) {
+                                    tarifAttr.sous_attributs.forEach(
+                                        (sousAttributOff) => {
+                                            attribut.sous_attributs.forEach(
+                                                (sousAttrTarif) => {
+                                                    if (
+                                                        sousAttributOff.id ===
+                                                        sousAttrTarif.sousattribut_id
+                                                    ) {
+                                                        if (
+                                                            sousAttrTarif.sous_attribut_valeur !==
+                                                            null
+                                                        ) {
+                                                            if (
+                                                                sousAttrTarif
+                                                                    .sous_attribut
+                                                                    .type_champ_form ===
+                                                                "checkbox"
+                                                            ) {
+                                                                if (
+                                                                    !editCatTarifForm
+                                                                        .sousattributs[
+                                                                        sousAttributOff
+                                                                            .id
+                                                                    ]
+                                                                ) {
+                                                                    editCatTarifForm.sousattributs[
+                                                                        sousAttributOff.id
+                                                                    ] = [];
+                                                                }
+                                                                editCatTarifForm.sousattributs[
+                                                                    sousAttributOff
+                                                                        .id
+                                                                ].push(
+                                                                    sousAttrTarif.sous_attribut_valeur
+                                                                );
+                                                            } else {
+                                                                editCatTarifForm.sousattributs[
+                                                                    sousAttributOff.id
+                                                                ] =
+                                                                    sousAttrTarif.sous_attribut_valeur;
+                                                            }
+                                                        } else {
+                                                            editCatTarifForm.sousattributs[
+                                                                sousAttributOff.id
+                                                            ] =
+                                                                sousAttrTarif.valeur;
+                                                        }
+                                                    }
+                                                }
+                                            );
+                                        }
+                                    );
+                                }
+                            }
+                        });
+                    }
+                );
+            }
+            if (newtarif.produits) {
+                newtarif.produits.forEach((produit) => {
+                    editCatTarifForm.produits[produit.id] = true;
+                });
+            }
+        }
+    },
+    { deep: true, immediate: true }
+);
+
 const updateSelectedCheckboxes = (attributId, optionValue, checked) => {
     const selectedAttribut = editCatTarifForm.attributs[attributId];
     if (checked) {
@@ -446,6 +446,8 @@ const onSubmit = () => {
         }
     );
 };
+
+onMounted(() => {});
 </script>
 <template>
     <TransitionRoot appear :show="show" as="template">
@@ -1234,9 +1236,6 @@ const onSubmit = () => {
                                                                             :value="
                                                                                 produit.id
                                                                             "
-                                                                            :name="
-                                                                                produit.id
-                                                                            "
                                                                             v-model="
                                                                                 editCatTarifForm
                                                                                     .produits[
@@ -1248,12 +1247,13 @@ const onSubmit = () => {
                                                                         />
                                                                         <span
                                                                             class="ml-2 text-sm text-gray-600"
-                                                                            >Produit
+                                                                        >
+                                                                            Produit
                                                                             n°
                                                                             {{
                                                                                 produit.id
-                                                                            }}</span
-                                                                        >
+                                                                            }}
+                                                                        </span>
                                                                     </label>
                                                                 </div>
                                                             </div>

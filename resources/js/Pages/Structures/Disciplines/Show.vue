@@ -292,9 +292,6 @@ const latestAdresseId = computed(() => {
                 :structure="structure"
                 :discipline="discipline"
                 :produit="currentProduit"
-                :all-categories="categoriesListByDiscipline"
-                :activite-for-tarifs="activiteForTarifs"
-                :structure-activites="structure.activites"
                 :show="showAddTarifModal"
                 @close="showAddTarifModal = false"
                 @show-display="handleButtonEvent('Mes tarifs')"
@@ -302,7 +299,6 @@ const latestAdresseId = computed(() => {
             <ModalAddPlanning
                 :errors="errors"
                 :structure="structure"
-                :structure-activites="structure.activites"
                 :produit="currentProduit"
                 :show="showAddPlanningModal"
                 @close="showAddPlanningModal = false"

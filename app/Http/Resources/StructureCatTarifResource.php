@@ -21,6 +21,7 @@ class StructureCatTarifResource extends JsonResource
             'description' => $this->description,
             'amount' => $this->amount,
             'structure_id' => $this->structure_id,
+            'categorie_id' => $this->categorie_id,
             'dis_cat_tar_typ_id' => $this->dis_cat_tar_typ_id,
             'structure' => StructureResource::make($this->whenLoaded('structure')),
             'categorie' => LienDisciplineCategorieResource::make($this->whenLoaded('categorie')),
