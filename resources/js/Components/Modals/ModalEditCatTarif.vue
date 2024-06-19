@@ -243,7 +243,6 @@ watch(
 watch(
     () => props.tarifToUpdate,
     (newtarif) => {
-        // editCatTarifForm.produits = {};
         if (newtarif) {
             editCatTarifForm.discipline_id = newtarif.categorie.discipline_id;
             editCatTarifForm.categorie_id = newtarif.categorie_id;
@@ -360,6 +359,7 @@ watch(
                 );
             }
             if (newtarif.produits) {
+                editCatTarifForm.produits = {};
                 newtarif.produits.forEach((produit) => {
                     editCatTarifForm.produits[produit.id] = true;
                 });
