@@ -42,10 +42,6 @@ class StructureFactory extends Factory
             'facebook' => $this->faker->word(),
             'youtube' => $this->faker->word(),
             'presentation_courte' => 'Notre ' . ucwords($name). ' spécialisé ' . $this->faker->realText(300),
-            // 'start_at' => $this->faker->date(),
-            // 'end_at' => $this->faker->date(),
-            // 'hour_start_at' => $this->faker->time(),
-            // 'hour_end_at' => $this->faker->time(),
         ];
     }
 }

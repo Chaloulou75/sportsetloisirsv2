@@ -32,7 +32,6 @@ class DepartementDisciplineStructureController extends Controller
          */
     public function show(Departement $departement, ListDiscipline $discipline, Structure $structure): Response
     {
-
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });

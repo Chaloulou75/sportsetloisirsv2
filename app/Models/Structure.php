@@ -173,17 +173,17 @@ class Structure extends Model
             'adresses'  => function ($query) {
                 $query->latest();
             },
-            'departement:id,departement,numero',
-            'structuretype:id,name,slug',
-            'disciplines:id,name,slug,theme',
+            'departement',
+            'structuretype',
+            'disciplines',
             'disciplines.str_categories' => function ($query) {
                 $query->withCount('str_activites');
             },
             'disciplines.str_categories.str_activites',
             'categories',
             'activites',
-            'activites.discipline:id,name,slug,theme',
-            'activites.categorie:id,categorie_id,discipline_id,nom_categorie_client,nom_categorie_pro',
+            'activites.discipline',
+            'activites.categorie',
             'activites.produits',
             'activites.produits.adresse',
             'activites.produits.criteres',

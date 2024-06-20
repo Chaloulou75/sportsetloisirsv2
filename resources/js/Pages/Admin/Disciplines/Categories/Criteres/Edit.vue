@@ -876,7 +876,7 @@ onMounted(() => {
                                         >
                                             <div class="py-2">
                                                 <div
-                                                    class="flex flex-grow items-center justify-around"
+                                                    class="flex flex-grow items-center justify-start space-x-3"
                                                 >
                                                     <div
                                                         class="underline decoration-gray-300 decoration-2 underline-offset-2"
@@ -888,8 +888,8 @@ onMounted(() => {
                                                                 souscritere.nom
                                                             }}
                                                             <span
-                                                                class="text-sm font-medium"
-                                                                >(Champ:
+                                                                class="text-sm font-medium italic"
+                                                                >(Type de champ:
                                                                 {{
                                                                     souscritere.type_champ_form
                                                                 }})</span

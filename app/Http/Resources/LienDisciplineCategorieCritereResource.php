@@ -31,6 +31,8 @@ class LienDisciplineCategorieCritereResource extends JsonResource
             'categorie' => LienDisciplineCategorieResource::make($this->whenLoaded('categorie')),
             'critere' => CritereResource::make($this->whenLoaded('critere')),
             'valeurs' => LienDisciplineCategorieCritereValeurResource::collection($this->whenLoaded('valeurs')),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
 
     }

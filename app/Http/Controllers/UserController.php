@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\RoleResource;
 use App\Models\Role;
 use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
 
 class UserController extends Controller
 {
@@ -31,8 +33,8 @@ class UserController extends Controller
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
-            'users' => fn () => $users,
-            'roles' => fn () => $roles,
+            'users' => fn () => UserResource::collection($users),
+            'roles' => fn () => RoleResource::collection($roles),
             'filters' => request()->all(['search']),
         ]);
     }

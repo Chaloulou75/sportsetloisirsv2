@@ -66,14 +66,13 @@ class StructureController extends Controller
                 'adresses'  => function ($query) {
                     $query->latest();
                 },
-                'city:id,slug,ville',
-                'departement:id,slug,departement,numero',
-                'structuretype:id,name,slug',
+                'departement',
+                'structuretype',
                 'disciplines',
                 'categories',
                 'activites',
             ])->withCount(['disciplines', 'activites'])
-            ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city_name', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'logo'])
+            ->select(['id', 'name', 'slug', 'presentation_courte', 'presentation_longue', 'address', 'zip_code', 'city', 'country', 'address_lat', 'address_lng', 'user_id','structuretype_id', 'logo'])
                         ->filter(
                             request(['search'])
                         )
@@ -227,12 +226,6 @@ class StructureController extends Controller
      */
     public function show(Structure $structure): Response
     {
-        $discipline = request()->discipline;
-        $city = request()->city;
-        $departement = request()->departement;
-        $category = request()->category;
-        $structuretype = request()->structuretype;
-
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
@@ -243,79 +236,7 @@ class StructureController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $structure = Structure::withRelations()
-                            ->where('slug', $structure->slug)
-                            ->first();
-
-        if($departement !== null) {
-            $departement = Departement::with([
-                        'structures',
-                        'cities' => function ($query) {
-                            $query->has('produits')->with(['produits', 'produits.adresse']);
-                        }])
-                        ->select(['id', 'slug', 'numero', 'departement', 'prefixe', 'view_count', 'latitude', 'longitude'])
-                        ->where('slug', $departement)
-                        ->withCount('structures')
-                        ->first();
-
-        } else {
-            $departement = null;
-        }
-
-        if ($city !== null) {
-            $city = City::with([
-                'structures',
-                'produits',
-                'produits.adresse'
-            ])
-            ->select(['id', 'slug', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon'])
-            ->where('id', $city)
-            ->withCount('structures')
-            ->first();
-
-            $citiesAround = City::with('structures', 'produits', 'produits.adresse')
-                ->select('id', 'code_postal', 'ville', 'ville_formatee', 'nom_departement', 'view_count', 'latitude', 'longitude', 'tolerance_rayon')
-                ->selectRaw("(6366 * acos(cos(radians({$city->latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$city->longitude})) + sin(radians({$city->latitude})) * sin(radians(latitude)))) AS distance")
-                ->whereNot('id', $city->id)
-                ->havingRaw('distance <= ?', [$city->tolerance_rayon])
-                ->orderBy('distance', 'ASC')
-                ->limit(10)
-                ->get();
-        } else {
-            $citiesAround = null;
-        }
-
-        if($discipline !== null) {
-
-            $requestDiscipline = ListDiscipline::withProductsAndDisciplinesSimilaires()
-            ->where('slug', $discipline)
-            ->first();
-
-            $categories = $structure->activites->pluck('categorie')->where('discipline_id', $requestDiscipline->id);
-
-            $categoriesWithoutProduit = LienDisciplineCategorie::whereNotIn('id', $categories->pluck('id'))->where('discipline_id', $requestDiscipline->id)
-            ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
-            ->get();
-
-            if($category !== null) {
-                $requestCategory = LienDisciplineCategorie::where('discipline_id', $requestDiscipline->id)->where('id', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
-            } else {
-                $requestCategory = null;
-            }
-
-            if($structuretype !== null) {
-                $structuretypeElected = Structuretype::where('id', $structuretype)->select(['id', 'name', 'slug'])->first();
-            } else {
-                $structuretypeElected = null;
-            }
-
-        } else {
-            $requestDiscipline = null;
-            $requestCategory = null;
-            $categories = null;
-            $categoriesWithoutProduit = null;
-            $structuretypeElected = null;
-        }
+        $structure = Structure::withRelations()->find($structure->id);
 
         $allStructureTypes = Structuretype::whereHas('structures')->select(['id', 'name', 'slug'])->get();
 
@@ -338,15 +259,7 @@ class StructureController extends Controller
                 'update' => optional(Auth::user())->can('update', $structure),
                 'delete' => optional(Auth::user())->can('delete', $structure),
             ],
-            'requestCategory' => fn () => LienDisciplineCategorieResource::make($requestCategory),
-            'categories' => fn () => LienDisciplineCategorieResource::collection($categories),
-            'categoriesWithoutProduit' => fn () => LienDisciplineCategorieResource::collection($categoriesWithoutProduit),
-            'allStructureTypes' => fn () => StructuretypeResource::collection($allStructureTypes) ,
-            'structuretypeElected' => fn () => StructuretypeResource::make($structuretypeElected),
-            'city' => fn () => CityResource::make($city),
-            'citiesAround' => fn () => CityResource::collection($citiesAround),
-            'departement' => fn () => DepartementResource::make($departement),
-            'requestDiscipline' => fn () => ListDisciplineResource::make($requestDiscipline),
+            'allStructureTypes' => fn () => StructuretypeResource::collection($allStructureTypes),
         ]);
     }
 
@@ -372,7 +285,6 @@ class StructureController extends Controller
                 },
                 'creator',
                 'users',
-                'cities',
                 'departement',
                 'structuretype',
             ])
