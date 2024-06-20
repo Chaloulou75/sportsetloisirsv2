@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\City;
+use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,10 +24,9 @@ class StructureFactory extends Factory
 
         return [
             'structuretype_id' => $this->faker->numberBetween(1, 4),
-            'user_id' => $this->faker->numberBetween(1, 20),
+            'user_id' => User::factory(),
             'name' => ucwords($name),
             'slug' => $slug .'-'.$this->faker->numberBetween(1, 99),
-            // 'famille_id' => $this->faker->numberBetween(1, 10),
             'address' => $this->faker->streetAddress(),
             'city' => $this->faker->randomElement(City::all())['ville'],
             'zip_code' => $this->faker->postcode(),

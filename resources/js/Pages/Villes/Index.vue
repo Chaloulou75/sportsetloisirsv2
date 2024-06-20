@@ -179,7 +179,7 @@ onMounted(() => {
                     </Link>
                 </div>
                 <div class="flex justify-end p-10">
-                    <Pagination :links="cities.links" :only="['cities']" />
+                    <Pagination :links="cities.meta.links" :only="['cities']" />
                 </div>
             </div>
         </div>

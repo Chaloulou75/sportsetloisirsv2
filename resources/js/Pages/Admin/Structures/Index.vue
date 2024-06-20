@@ -46,21 +46,16 @@ const props = defineProps({
                             Gérer les structures existantes:
                         </h3>
                         <div
-                            class="flex flex-wrap items-stretch justify-center gap-4"
+                            class="mt-4 grid h-full grid-cols-1 place-content-center place-items-stretch gap-4 md:grid-cols-4 md:gap-6"
                         >
-                            <div
+                            <Link
                                 v-for="structure in structures"
                                 :key="structures.id"
+                                class="inline-flex items-center justify-center space-y-1 rounded border border-gray-200 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-blue-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-blue-500"
+                                :href="route('structures.edit', structure.slug)"
                             >
-                                <Link
-                                    class="inline-flex w-40 items-center justify-center space-y-1 rounded border border-gray-600 px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
-                                    :href="
-                                        route('structures.edit', structure.slug)
-                                    "
-                                >
-                                    {{ structure.name }}
-                                </Link>
-                            </div>
+                                {{ structure.name }}
+                            </Link>
                         </div>
                     </div>
 

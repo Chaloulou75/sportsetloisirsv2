@@ -298,13 +298,7 @@ const events = getEvents();
 
 <template>
     <Head
-        :title="
-            structure.name +
-            ' - ' +
-            structure.adresses[0].city +
-            ' - ' +
-            structure.structuretype.name
-        "
+        :title="structure.name + ' - ' + structure.structuretype.name"
         :description="
             'Fiche détaillée de ' + structure.name + '. Horaires et tarifs.'
         "
@@ -507,7 +501,10 @@ const events = getEvents();
                                 Coordonnées de la structure
                             </h3>
                         </div>
-                        <div class="flex flex-col space-y-3">
+                        <div
+                            class="flex flex-col space-y-3"
+                            v-if="structure.adresses.length > 0"
+                        >
                             <h3 class="text-base">
                                 Localisation:
                                 <span class="font-semibold">

@@ -174,7 +174,7 @@ watch(
                 </div>
                 <div class="flex justify-end p-10">
                     <Pagination
-                        :links="departements.links"
+                        :links="departements.meta.links"
                         :only="['departements']"
                     />
                 </div>

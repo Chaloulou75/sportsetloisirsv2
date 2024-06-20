@@ -305,7 +305,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                 </div>
                                 <div class="flex justify-end p-10">
                                     <Pagination
-                                        :links="produits.links"
+                                        :links="produits.meta.links"
                                         :only="['produits']"
                                     />
                                 </div>
@@ -361,7 +361,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                 </div>
                                 <div class="flex justify-end p-10">
                                     <Pagination
-                                        :links="structures.links"
+                                        :links="structures.meta.links"
                                         :only="['structures']"
                                     />
                                 </div>

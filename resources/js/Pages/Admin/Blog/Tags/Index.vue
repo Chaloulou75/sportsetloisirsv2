@@ -195,7 +195,7 @@ onMounted(() => {
                     </button>
                 </div>
                 <div v-if="tags.data" class="flex justify-end p-10">
-                    <Pagination :links="tags.links" :only="['tags']" />
+                    <Pagination :links="tags.meta.links" :only="['tags']" />
                 </div>
                 <div v-else>
                     <p class="text-base text-gray-700">Pas encore de tags.</p>

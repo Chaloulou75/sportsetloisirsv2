@@ -4,8 +4,6 @@ import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import Breadcrumb from "@/Components/Panier/Breadcrumb.vue";
-import TextInput from "@/Components/Forms/TextInput.vue";
-import InputLabel from "@/Components/Forms/InputLabel.vue";
 import { loadStripe } from "@stripe/stripe-js";
 import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 

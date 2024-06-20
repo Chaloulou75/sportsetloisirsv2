@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Models\Famille;
 use App\Models\Customer;
 use App\Models\ListDiscipline;
+use App\Models\ProductReservation;
 use App\Http\Resources\CityResource;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
@@ -35,6 +36,12 @@ class CustomerController extends Controller
 
         $user = auth()->user();
         $customer = $user->customer;
+
+        $reservations = ProductReservation::withRelations()->withCount('plannings')->where('user_id', $user->id)->where('paid', false)->get();
+
+        if($reservations->isEmpty()) {
+            return to_route('panier.index')->with('error', 'Votre panier est vide pour l\'instant');
+        }
 
         return Inertia::render('Panier/Customers/Create', [
             'familles' => fn () => FamilleResource::collection($familles),

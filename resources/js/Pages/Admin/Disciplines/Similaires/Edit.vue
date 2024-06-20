@@ -137,7 +137,7 @@ const detachDiscipline = (disciplineIn) => {
                             </button>
                         </li>
                         <Pagination
-                            :links="listDisciplines.links"
+                            :links="listDisciplines.meta.links"
                             :only="['listDisciplines']"
                         />
                     </ul>

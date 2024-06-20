@@ -57,7 +57,7 @@ class PanierController extends Controller
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
             'allCities' => fn () => CityResource::collection($allCities),
-            'reservations' => fn () => ProductReservationResource::collection($reservations ?? null)
+            'reservations' => fn () => ProductReservationResource::collection($reservations) ?? null
         ]);
     }
 

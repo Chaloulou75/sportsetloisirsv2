@@ -2,22 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use Stripe\Stripe;
 use App\Models\City;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Famille;
 use Stripe\StripeClient;
 use Illuminate\Http\Request;
-use Stripe\Checkout\Session;
 use App\Models\ListDiscipline;
 use App\Models\ProductReservation;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\FamilleResource;
-use Stripe\Exception\ApiErrorException;
 use App\Http\Resources\ListDisciplineResource;
 use App\Http\Resources\ProductReservationResource;
 
@@ -26,7 +22,7 @@ class PanierPaymentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index()
     {
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -42,6 +38,10 @@ class PanierPaymentController extends Controller
         $customer = $user->customer;
 
         $reservations = ProductReservation::withRelations()->withCount('plannings')->where('user_id', $user->id)->where('paid', false)->get();
+
+        if($reservations->isEmpty()) {
+            return to_route('panier.index')->with('error', 'Votre panier est vide pour l\'instant');
+        }
 
         $totalPrice = 0;
         foreach($reservations as $reservation) {

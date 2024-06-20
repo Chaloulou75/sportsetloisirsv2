@@ -169,7 +169,7 @@ onMounted(() => {
                     />
                 </div>
                 <div v-if="posts.data.length > 0" class="flex justify-end p-10">
-                    <Pagination :links="posts.links" :only="['posts']" />
+                    <Pagination :links="posts.meta.links" :only="['posts']" />
                 </div>
                 <template v-else>
                     <div class="py-6 md:py-12">
