@@ -22,9 +22,13 @@ use App\Http\Resources\StructureActiviteResource;
 
 class CityActiviteController extends Controller
 {
-    public function show(City $city, StructureActivite $activite, ?string $produit = null): Response
+    public function show(City $city, StructureActivite $activite, string $slug, ?string $produit = null): Response
     {
-        $selectedProduit = StructureProduit::withRelations()->find(request()->produit);
+
+        if ($produit !== null) {
+            $selectedProduit = StructureProduitResource::make(StructureProduit::withRelations()->find($produit));
+        }
+
 
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -79,7 +83,7 @@ class CityActiviteController extends Controller
             'citiesAround' => fn () => CityResource::collection($citiesAround),
             'activite' => fn () => StructureActiviteResource::make($activite) ,
             'activiteSimilaires' => fn () => StructureActiviteResource::collection($activiteSimilaires),
-            'selectedProduit' => fn () => StructureProduitResource::make($selectedProduit),
+            'selectedProduit' => fn () => $selectedProduit ?? null,
             'produits' => fn () => StructureProduitResource::collection($produits),
         ]);
     }

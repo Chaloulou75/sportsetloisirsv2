@@ -15,11 +15,12 @@ export function useFilterProducts(
     selectedCriteres,
     selectedSousCriteres
 ) {
+    const items = props.produits.data ? props.produits.data : props.produits;
     const filterProducts = () => {
         if (selectedCriteres.value.length === 0) {
-            filteredProduits.value = props.produits.data;
+            filteredProduits.value = items;
         } else {
-            filteredProduits.value = props.produits.data.filter((produit) => {
+            filteredProduits.value = items.filter((produit) => {
                 return (
                     selectedCriteres.value.every((selectedCritereEntry) => {
                         const [critereId, selectedCritere] =

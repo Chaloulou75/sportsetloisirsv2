@@ -27,9 +27,13 @@ use App\Http\Resources\LienDisciplineCategorieCritereResource;
 
 class CityDisciplineActiviteController extends Controller
 {
-    public function show(City $city, ListDiscipline $discipline, StructureActivite $activite, ?string $produit = null): Response
+    public function show(City $city, ListDiscipline $discipline, StructureActivite $activite, string $slug, ?string $produit = null): Response
     {
-        $selectedProduit = StructureProduit::withRelations()->find(request()->produit);
+
+        if ($produit !== null) {
+            $selectedProduit = StructureProduitResource::make(StructureProduit::withRelations()->find($produit));
+        }
+
 
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -110,7 +114,7 @@ class CityDisciplineActiviteController extends Controller
             'citiesAround' => fn () => CityResource::collection($citiesAround),
             'discipline' => fn () => ListDisciplineResource::make($requestDiscipline),
             'activiteSimilaires' => fn () => StructureActiviteResource::collection($activiteSimilaires),
-            'selectedProduit' => fn () => StructureProduitResource::make($selectedProduit),
+            'selectedProduit' => fn () => $selectedProduit ?? null,
             'categories' => fn () => LienDisciplineCategorieResource::collection($categories),
             'firstCategories' => fn () => LienDisciplineCategorieResource::collection($firstCategories),
             'categoriesNotInFirst' => fn () => LienDisciplineCategorieResource::collection($categoriesNotInFirst),

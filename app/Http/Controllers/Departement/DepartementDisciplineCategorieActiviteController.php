@@ -28,9 +28,13 @@ use App\Http\Resources\LienDisciplineCategorieCritereResource;
 
 class DepartementDisciplineCategorieActiviteController extends Controller
 {
-    public function show(Departement $departement, ListDiscipline $discipline, $category, StructureActivite $activite, ?string $produit = null): Response
+    public function show(Departement $departement, ListDiscipline $discipline, $category, StructureActivite $activite, string $slug, ?string $produit = null): Response
     {
-        $selectedProduit = StructureProduit::withRelations()->find(request()->produit);
+
+        if ($produit !== null) {
+            $selectedProduit = StructureProduitResource::make(StructureProduit::withRelations()->find($produit));
+        }
+
 
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -109,7 +113,7 @@ class DepartementDisciplineCategorieActiviteController extends Controller
             'activite' => fn () => StructureActiviteResource::make($activite) ,
             'criteres' => fn () => LienDisciplineCategorieCritereResource::collection($criteres),
             'activiteSimilaires' => fn () => StructureActiviteResource::collection($activiteSimilaires),
-            'selectedProduit' => fn () => StructureProduitResource::make($selectedProduit),
+            'selectedProduit' => fn () => $selectedProduit ?? null,
             'requestCategory' => fn () => LienDisciplineCategorieResource::make($requestCategory),
             'categories' => fn () => LienDisciplineCategorieResource::collection($categories) ,
             'firstCategories' => fn () => LienDisciplineCategorieResource::collection($firstCategories) ,

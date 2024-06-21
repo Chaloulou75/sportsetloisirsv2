@@ -23,9 +23,13 @@ use App\Models\LienDisciplineCategorieCritere;
 
 class DepartementActiviteController extends Controller
 {
-    public function show(Departement $departement, StructureActivite $activite, ?string $produit = null): Response
+    public function show(Departement $departement, StructureActivite $activite, string $slug, ?string $produit = null): Response
     {
-        $selectedProduit = StructureProduit::withRelations()->find(request()->produit);
+
+        if ($produit !== null) {
+            $selectedProduit = StructureProduitResource::make(StructureProduit::withRelations()->find($produit));
+        }
+
 
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -75,7 +79,7 @@ class DepartementActiviteController extends Controller
             'activite' => fn () => StructureActiviteResource::make($activite),
             'criteres' => fn () => LienDisciplineCategorieCritereResource::collection($criteres),
             'activiteSimilaires' => fn () => StructureActiviteResource::collection($activiteSimilaires),
-            'selectedProduit' => fn () => StructureProduitResource::make($selectedProduit),
+            'selectedProduit' => fn () => $selectedProduit ?? null,
         ]);
     }
 }

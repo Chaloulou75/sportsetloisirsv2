@@ -26,9 +26,11 @@ use App\Http\Resources\LienDisciplineCategorieCritereResource;
 
 class DisciplineActiviteController extends Controller
 {
-    public function show(ListDiscipline $discipline, StructureActivite $activite, ?string $produit = null): Response
+    public function show(ListDiscipline $discipline, StructureActivite $activite, string $slug, ?string $produit = null): Response
     {
-        $selectedProduit = StructureProduit::withRelations()->find(request()->produit);
+        if ($produit !== null) {
+            $selectedProduit = StructureProduitResource::make(StructureProduit::withRelations()->find($produit));
+        }
 
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -44,7 +46,6 @@ class DisciplineActiviteController extends Controller
 
         $categories = LienDisciplineCategorie::whereHas('structures_produits')
                 ->where('discipline_id', $requestDiscipline->id)
-                ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
                 ->withCount('structures_produits')
                 ->orderByDesc('structures_produits_count')
                 ->get();
@@ -87,7 +88,7 @@ class DisciplineActiviteController extends Controller
             ->get();
 
         return Inertia::render('Structures/Activites/Show', [
-            'selectedProduit' => fn () => StructureProduitResource::make($selectedProduit),
+            'selectedProduit' => fn () => $selectedProduit ?? null,
             'discipline' => fn () => ListDisciplineResource::make($requestDiscipline),
             'produits' => fn () => StructureProduitResource::collection($produits) ,
             'familles' => fn () => FamilleResource::collection($familles),

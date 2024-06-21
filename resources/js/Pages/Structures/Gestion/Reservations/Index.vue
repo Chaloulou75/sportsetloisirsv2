@@ -220,7 +220,7 @@ const updateReservation = (reservation) => {
                         </ReservationsList>
                         <div class="flex w-full items-center justify-end">
                             <Pagination
-                                :links="pendingReservations.meta.links"
+                                :links="pendingReservations.links"
                                 :only="['pendingReservations']"
                             />
                         </div>
@@ -280,7 +280,7 @@ const updateReservation = (reservation) => {
 
                         <div class="flex w-full items-center justify-end">
                             <Pagination
-                                :links="confirmedReservations.meta.links"
+                                :links="confirmedReservations.links"
                                 :only="['confirmedReservations']"
                             />
                         </div>
@@ -316,7 +316,7 @@ const updateReservation = (reservation) => {
 
                         <div class="flex w-full items-center justify-end">
                             <Pagination
-                                :links="finishedReservations.meta.links"
+                                :links="finishedReservations.links"
                                 :only="['finishedReservations']"
                             />
                         </div>
@@ -351,7 +351,7 @@ const updateReservation = (reservation) => {
                         />
                         <div class="flex w-full items-center justify-end">
                             <Pagination
-                                :links="cancelledReservations.meta.links"
+                                :links="cancelledReservations.links"
                                 :only="['cancelledReservations']"
                             />
                         </div>

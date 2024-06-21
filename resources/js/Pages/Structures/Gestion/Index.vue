@@ -168,7 +168,7 @@ const markReservationAsRead = () => {
                     />
                     <div class="flex w-full items-center justify-end">
                         <Pagination
-                            :links="pendingReservations.meta.links"
+                            :links="pendingReservations.links"
                             :only="['pendingReservations']"
                         />
                     </div>
@@ -221,7 +221,7 @@ const markReservationAsRead = () => {
                     />
                     <div class="flex w-full items-center justify-end">
                         <Pagination
-                            :links="confirmedReservations.meta.links"
+                            :links="confirmedReservations.links"
                             :only="['confirmedReservations']"
                         />
                     </div>

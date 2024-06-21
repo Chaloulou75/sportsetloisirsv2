@@ -27,6 +27,7 @@ class LienDisciplineCategorieResource extends JsonResource
             'str_categories' => StructureCategorieResource::collection($this->whenLoaded('str_categories')),
             'str_activites' => StructureActiviteResource::collection($this->whenLoaded('str_activites')),
             'structures_produits' => StructureProduitResource::collection($this->whenLoaded('structures_produits')),
+            'structures_produits_count' => $this->whenCounted('structures_produits'),
             'criteres' => LienDisciplineCategorieCritereResource::collection($this->whenLoaded('criteres')),
             'tarif_types' => LienDisCatTariftypeResource::collection($this->whenLoaded('tarif_types')),
             'created_at' => $this->created_at,
