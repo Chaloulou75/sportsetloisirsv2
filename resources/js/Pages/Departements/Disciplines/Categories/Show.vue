@@ -1,6 +1,6 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { Head, Link } from "@inertiajs/vue3";
+import { Head, Link, useForm } from "@inertiajs/vue3";
 import {
     ref,
     computed,
@@ -10,20 +10,15 @@ import {
     onMounted,
 } from "vue";
 import { useFilterProducts } from "@/composables/useFilterProducts";
+import CritereForm from "@/Components/Criteres/CritereForm.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
-import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
-import SelectForm from "@/Components/Forms/SelectForm.vue";
-import TextInput from "@/Components/Forms/TextInput.vue";
-import InputLabel from "@/Components/Forms/InputLabel.vue";
-import RangeInputForm from "@/Components/Forms/RangeInputForm.vue";
 import CitiesAround from "@/Components/Cities/CitiesAround.vue";
 import autoAnimate from "@formkit/auto-animate";
 import { TransitionRoot } from "@headlessui/vue";
 import {
     AdjustmentsHorizontalIcon,
     HomeIcon,
-    ArrowPathIcon,
     ListBulletIcon,
     MapIcon,
     XMarkIcon,
@@ -133,20 +128,6 @@ const hideStructureTooltip = () => {
 
 const showCriteres = ref(false);
 
-const filteredCriteresByChamp = computed(() => {
-    return props.criteres.filter((critere) => {
-        return [
-            "select",
-            "checkbox",
-            "radio",
-            "text",
-            "number",
-            "rayon",
-            "range",
-        ].includes(critere.type_champ_form);
-    });
-});
-
 const toggleCriteres = () => {
     showCriteres.value = !showCriteres.value;
 };
@@ -157,8 +138,8 @@ const toggleCriteresLg = () => {
     showCriteresLg.value = !showCriteresLg.value;
 };
 
-const formCriteres = ref({
-    criteres: {},
+const formCriteres = useForm({
+    criteresBase: {},
     sousCriteres: {},
 });
 const selectedCriteres = ref([]);
@@ -174,21 +155,22 @@ const onfilteredStructuresUpdate = (filteredStr) => {
 };
 
 const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
+    console.log(critereId, optionValue, checked);
     if (checked) {
-        if (!formCriteres.value.criteres[critereId]) {
-            formCriteres.value.criteres[critereId] = [optionValue];
+        if (!formCriteres.criteresBase[critereId]) {
+            formCriteres.criteresBase[critereId] = [optionValue];
         } else {
-            formCriteres.value.criteres[critereId].push(optionValue);
+            formCriteres.criteresBase[critereId].push(optionValue);
         }
     } else {
-        const selectedCritere = formCriteres.value.criteres[critereId];
+        const selectedCritere = formCriteres.criteresBase[critereId];
         if (selectedCritere) {
             const index = selectedCritere.indexOf(optionValue);
             if (index !== -1) {
                 selectedCritere.splice(index, 1);
             }
             if (selectedCritere.length === 0) {
-                delete formCriteres.value.criteres[critereId];
+                delete formCriteres.criteresBase[critereId];
             }
         }
     }
@@ -197,8 +179,8 @@ const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
 const isCheckboxSelected = computed(() => {
     return (critereId, optionValue) => {
         return (
-            formCriteres.value.criteres[critereId] &&
-            formCriteres.value.criteres[critereId].includes(optionValue)
+            formCriteres.criteresBase[critereId] &&
+            formCriteres.criteresBase[critereId].includes(optionValue)
         );
     };
 });
@@ -211,7 +193,7 @@ const { filterProducts } = useFilterProducts(
 );
 
 watch(
-    () => formCriteres.value.criteres,
+    () => formCriteres.criteresBase,
     (newCriteres) => {
         selectedCriteres.value = Object.entries(newCriteres);
         filterProducts();
@@ -220,7 +202,7 @@ watch(
 );
 
 watch(
-    () => formCriteres.value.sousCriteres,
+    () => formCriteres.sousCriteres,
     (newSousCriteres) => {
         selectedSousCriteres.value = Object.entries(newSousCriteres);
         filterProducts();
@@ -229,8 +211,8 @@ watch(
 );
 
 const resetFormCriteres = () => {
-    formCriteres.value.criteres = {};
-    formCriteres.value.sousCriteres = {};
+    formCriteres.criteresBase = {};
+    formCriteres.sousCriteres = {};
     selectedCriteres.value = [];
     filterProducts();
 };
@@ -391,235 +373,16 @@ onMounted(() => {
                     </button>
                 </div>
 
-                <div
-                    v-if="criteres"
-                    class="mx-auto w-full flex-col items-start justify-center gap-4 overflow-x-auto rounded bg-transparent px-2 py-2 backdrop-blur-md md:flex-row md:items-center md:justify-between md:space-y-0 md:px-6"
-                    :class="{
-                        flex: showCriteres,
-                        hidden: !showCriteres,
-                        'md:flex': showCriteresLg,
-                        'md:hidden': !showCriteresLg,
-                    }"
-                >
-                    <div
-                        v-for="critere in filteredCriteresByChamp"
-                        :key="critere.id"
-                        class="w-full max-w-full shrink-0 md:w-auto"
-                    >
-                        <!-- select -->
-                        <SelectForm
-                            :classes="'flex items-center space-x-4'"
-                            class="max-w-sm"
-                            v-if="critere.type_champ_form === 'select'"
-                            :name="critere.nom"
-                            v-model="formCriteres.criteres[critere.id]"
-                            :options="critere.valeurs"
-                        />
-
-                        <!-- checkbox -->
-                        <CheckboxForm
-                            :classes="'flex items-center space-x-4'"
-                            class="max-w-sm"
-                            v-if="critere.type_champ_form === 'checkbox'"
-                            :critere="critere"
-                            :name="critere.nom"
-                            v-model="formCriteres.criteres[critere.id]"
-                            :options="critere.valeurs"
-                            :is-checkbox-selected="isCheckboxSelected"
-                            @update-selected-checkboxes="
-                                updateSelectedCheckboxes
-                            "
-                        />
-                        <!-- radio -->
-                        <div v-if="critere.type_champ_form === 'radio'">
-                            <div class="flex items-center space-x-4">
-                                <label
-                                    :for="critere.nom"
-                                    class="block text-sm font-medium normal-case text-gray-700"
-                                >
-                                    {{ critere.nom }}
-                                </label>
-
-                                <div class="flex rounded-md">
-                                    <div>
-                                        <label
-                                            class="inline-flex items-center"
-                                            v-for="(
-                                                option, index
-                                            ) in critere.valeurs"
-                                            :key="option.id"
-                                        >
-                                            <input
-                                                v-model="
-                                                    formCriteres.criteres[
-                                                        critere.id
-                                                    ]
-                                                "
-                                                type="radio"
-                                                class="form-radio"
-                                                :name="option.valeur"
-                                                :value="option.valeur"
-                                                checked
-                                            />
-                                            <span class="ml-2">{{
-                                                option.valeur
-                                            }}</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- input text -->
-                        <div v-if="critere.type_champ_form === 'text'">
-                            <div class="flex items-center space-x-4">
-                                <label
-                                    :for="critere.nom"
-                                    class="block text-sm font-medium normal-case text-gray-700"
-                                >
-                                    {{ critere.nom }}
-                                </label>
-                                <div class="flex-1">
-                                    <TextInput
-                                        type="text"
-                                        v-model="
-                                            formCriteres.criteres[critere.id]
-                                        "
-                                        :name="critere.nom"
-                                        :id="critere.nom"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- input Number -->
-                        <div v-if="critere.type_champ_form === 'number'">
-                            <div class="flex items-center space-x-4">
-                                <label
-                                    :for="critere.nom"
-                                    class="block text-sm font-medium normal-case text-gray-700"
-                                >
-                                    {{ critere.nom }}
-                                </label>
-                                <div class="flex">
-                                    <TextInput
-                                        type="number"
-                                        min="0"
-                                        v-model="
-                                            formCriteres.criteres[critere.id]
-                                        "
-                                        :name="critere.nom"
-                                        :id="critere.nom"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Range km  -->
-                        <RangeInputForm
-                            v-if="critere.type_champ_form === 'rayon'"
-                            class="w-full max-w-sm"
-                            v-model="formCriteres.criteres[critere.id]"
-                            :name="critere.nom"
-                            :metric="critere.nom"
-                        />
-
-                        <RangeInputForm
-                            v-if="critere.type_champ_form === 'range'"
-                            class="w-full max-w-sm"
-                            v-model="formCriteres.criteres[critere.id]"
-                            :name="critere.nom"
-                            :metric="critere.nom"
-                        />
-
-                        <!-- sous criteres -->
-                        <div v-for="valeur in critere.valeurs" :key="valeur.id">
-                            <div
-                                v-for="souscritere in valeur.sous_criteres"
-                                :key="souscritere.id"
-                                class=""
-                            >
-                                <SelectForm
-                                    :classes="'flex items-center space-x-4'"
-                                    class="max-w-sm py-2"
-                                    v-if="
-                                        formCriteres.criteres[critere.id] ===
-                                            valeur &&
-                                        souscritere.type_champ_form ===
-                                            'select' &&
-                                        souscritere.dis_cat_crit_val_id ===
-                                            valeur.id
-                                    "
-                                    :name="souscritere.nom"
-                                    v-model="
-                                        formCriteres.sousCriteres[
-                                            souscritere.id
-                                        ]
-                                    "
-                                    :options="souscritere.sous_criteres_valeurs"
-                                />
-
-                                <div
-                                    v-if="
-                                        formCriteres.criteres[critere.id] ===
-                                            valeur &&
-                                        souscritere.type_champ_form ===
-                                            'number' &&
-                                        souscritere.dis_cat_crit_val_id ===
-                                            valeur.id
-                                    "
-                                    class="mt-2 flex items-center space-x-4"
-                                >
-                                    <InputLabel
-                                        class="py-2"
-                                        for="Quantité"
-                                        value="Quantité"
-                                    />
-                                    <TextInput
-                                        class="w-full"
-                                        type="number"
-                                        min="0"
-                                        id="Nombre"
-                                        name="Nombre"
-                                        v-model="
-                                            formCriteres.sousCriteres[
-                                                souscritere.id
-                                            ]
-                                        "
-                                    />
-                                </div>
-
-                                <!-- range -->
-                                <RangeInputForm
-                                    v-if="
-                                        formCriteres.criteres[critere.id] ===
-                                            valeur &&
-                                        souscritere.type_champ_form ===
-                                            'range' &&
-                                        souscritere.dis_cat_crit_val_id ===
-                                            valeur.id
-                                    "
-                                    class="w-full max-w-sm"
-                                    v-model="
-                                        formCriteres.sousCriteres[
-                                            souscritere.id
-                                        ]
-                                    "
-                                    :name="souscritere.nom"
-                                    :metric="souscritere.nom"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <button
-                        class="flex w-full justify-center md:w-auto"
-                        type="button"
-                        @click="resetFormCriteres"
-                    >
-                        <ArrowPathIcon
-                            class="h-8 w-8 text-gray-400 transition duration-200 hover:-rotate-90 hover:text-gray-600"
-                        />
-                    </button>
-                </div>
+                <CritereForm
+                    :criteres="criteres"
+                    :show-criteres="showCriteres"
+                    :show-criteres-lg="showCriteresLg"
+                    :is-checkbox-selected="isCheckboxSelected"
+                    v-model:criteres-base="formCriteres.criteresBase"
+                    v-model:sous-criteres="formCriteres.sousCriteres"
+                    @update-checkboxes="updateSelectedCheckboxes"
+                    @reset-criteres="resetFormCriteres"
+                />
             </div>
 
             <template v-if="produits.data.length > 0">
