@@ -153,7 +153,6 @@ const onfilteredStructuresUpdate = (filteredStr) => {
 };
 
 const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
-    console.log(critereId, optionValue, checked);
     if (checked) {
         if (!formCriteres.criteresBase[critereId]) {
             formCriteres.criteresBase[critereId] = [optionValue];

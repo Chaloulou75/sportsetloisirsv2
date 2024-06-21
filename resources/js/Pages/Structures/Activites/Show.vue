@@ -97,27 +97,27 @@ const selectedProduct = ref();
 const selectedCriteres = ref([]);
 const selectedSousCriteres = ref([]);
 
-const critereForm = ref({
-    criteres: {},
-    souscriteres: {},
+const formCriteres = useForm({
+    criteresBase: {},
+    sousCriteres: {},
 });
 
 const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
     if (checked) {
-        if (!critereForm.value.criteres[critereId]) {
-            critereForm.value.criteres[critereId] = [optionValue];
+        if (!formCriteres.criteresBase[critereId]) {
+            formCriteres.criteresBase[critereId] = [optionValue];
         } else {
-            critereForm.value.criteres[critereId].push(optionValue);
+            formCriteres.criteresBase[critereId].push(optionValue);
         }
     } else {
-        const selectedCritere = critereForm.value.criteres[critereId];
+        const selectedCritere = formCriteres.criteresBase[critereId];
         if (selectedCritere) {
             const index = selectedCritere.indexOf(optionValue);
             if (index !== -1) {
                 selectedCritere.splice(index, 1);
             }
             if (selectedCritere.length === 0) {
-                delete critereForm.value.criteres[critereId];
+                delete formCriteres.criteresBase[critereId];
             }
         }
     }
@@ -126,8 +126,8 @@ const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
 const isCheckboxSelected = computed(() => {
     return (critereId, optionValue) => {
         return (
-            critereForm.value.criteres[critereId] &&
-            critereForm.value.criteres[critereId].includes(optionValue)
+            formCriteres.criteresBase[critereId] &&
+            formCriteres.criteresBase[critereId].includes(optionValue)
         );
     };
 });
@@ -140,7 +140,7 @@ const { filterProducts } = useFilterProducts(
 );
 
 watch(
-    () => critereForm.value.criteres,
+    () => formCriteres.criteresBase,
     (newCriteres) => {
         selectedCriteres.value = Object.entries(newCriteres);
         filterProducts();
@@ -149,7 +149,7 @@ watch(
 );
 
 watch(
-    () => critereForm.value.souscriteres,
+    () => formCriteres.sousCriteres,
     (newSousCriteres) => {
         selectedSousCriteres.value = Object.entries(newSousCriteres);
         filterProducts();
@@ -161,8 +161,8 @@ watch(
     () => selectedProduct.value,
     (newValue) => {
         if (newValue) {
-            critereForm.value.criteres = {};
-            critereForm.value.souscriteres = {};
+            formCriteres.criteresBase = {};
+            formCriteres.sousCriteres = {};
 
             props.criteres.forEach((officialCritere) => {
                 newValue.criteres.forEach((critere) => {
@@ -178,7 +178,7 @@ watch(
                             const [hours, minutes] = produitValeur
                                 .split("h")
                                 .map(Number);
-                            critereForm.value.criteres[critereId] = {
+                            formCriteres.criteresBase[critereId] = {
                                 hours,
                                 minutes,
                             };
@@ -193,7 +193,7 @@ watch(
                                 { locale: fr }
                             );
                             if (isValid(parsedDate)) {
-                                critereForm.value.criteres[critereId] =
+                                formCriteres.criteresBase[critereId] =
                                     parsedDate;
                             }
                         } else if (
@@ -215,7 +215,7 @@ watch(
                                 });
 
                             if (start && end) {
-                                critereForm.value.criteres[critereId] = [
+                                formCriteres.criteresBase[critereId] = [
                                     start,
                                     end,
                                 ];
@@ -248,7 +248,7 @@ watch(
                                     year: endMonth.getFullYear(),
                                 };
 
-                                critereForm.value.criteres[critereId] = [
+                                formCriteres.criteresBase[critereId] = [
                                     startMonthYear,
                                     endMonthYear,
                                 ];
@@ -266,7 +266,7 @@ watch(
                                     return { hours, minutes };
                                 });
 
-                            critereForm.value.criteres[critereId] = [
+                            formCriteres.criteresBase[critereId] = [
                                 openTime,
                                 closeTime,
                             ];
@@ -281,7 +281,7 @@ watch(
                                         critereValueId
                                     ) {
                                         if (
-                                            !critereForm.value.criteres[
+                                            !formCriteres.criteresBase[
                                                 critereId
                                             ]
                                         ) {
@@ -289,32 +289,32 @@ watch(
                                                 officialCritere.type_champ_form ===
                                                 "checkbox"
                                             ) {
-                                                critereForm.value.criteres[
+                                                formCriteres.criteresBase[
                                                     critereId
                                                 ] = [officialCritereValeur];
                                             } else {
-                                                critereForm.value.criteres[
+                                                formCriteres.criteresBase[
                                                     critereId
                                                 ] = officialCritereValeur;
                                             }
                                         } else {
                                             const existingValue =
-                                                critereForm.value.criteres[
+                                                formCriteres.criteresBase[
                                                     critereId
                                                 ];
 
                                             if (!Array.isArray(existingValue)) {
-                                                critereForm.value.criteres[
+                                                formCriteres.criteresBase[
                                                     critereId
                                                 ] = [existingValue];
                                                 if (
-                                                    !critereForm.value.criteres[
+                                                    !formCriteres.criteresBase[
                                                         critereId
                                                     ].includes(
                                                         officialCritereValeur
                                                     )
                                                 ) {
-                                                    critereForm.value.criteres[
+                                                    formCriteres.criteresBase[
                                                         critereId
                                                     ].push(
                                                         officialCritereValeur
@@ -322,13 +322,13 @@ watch(
                                                 }
                                             } else {
                                                 if (
-                                                    !critereForm.value.criteres[
+                                                    !formCriteres.criteresBase[
                                                         critereId
                                                     ].includes(
                                                         officialCritereValeur
                                                     )
                                                 ) {
-                                                    critereForm.value.criteres[
+                                                    formCriteres.criteresBase[
                                                         critereId
                                                     ].push(
                                                         officialCritereValeur
@@ -366,7 +366,7 @@ watch(
                                                                             prodSousCritValeur.id ===
                                                                                 officialSousCritereValeurId
                                                                         ) {
-                                                                            critereForm.value.souscriteres[
+                                                                            formCriteres.sousCriteres[
                                                                                 souscritereId
                                                                             ] =
                                                                                 officialSousCritereValeur;
@@ -384,7 +384,7 @@ watch(
                                                                     prodSousCritValeur !==
                                                                     null
                                                                 ) {
-                                                                    critereForm.value.souscriteres[
+                                                                    formCriteres.sousCriteres[
                                                                         souscritereId
                                                                     ] =
                                                                         prodSousCritValeur;
@@ -399,7 +399,7 @@ watch(
                                 }
                             );
                         } else if (produitValeur !== null) {
-                            critereForm.value.criteres[critereId] =
+                            formCriteres.criteresBase[critereId] =
                                 produitValeur;
                         }
                     }
@@ -410,8 +410,8 @@ watch(
 );
 
 const resetFormCriteres = () => {
-    critereForm.value.criteres = {};
-    critereForm.value.souscriteres = {};
+    formCriteres.criteresBase = {};
+    formCriteres.sousCriteres = {};
     selectedCriteres.value = [];
     filterProducts();
 };
@@ -652,7 +652,9 @@ onMounted(() => {
                                     class="max-w-sm"
                                     v-if="critere.type_champ_form === 'select'"
                                     :name="critere.nom"
-                                    v-model="critereForm.criteres[critere.id]"
+                                    v-model="
+                                        formCriteres.criteresBase[critere.id]
+                                    "
                                     :options="critere.valeurs"
                                 />
 
@@ -664,7 +666,9 @@ onMounted(() => {
                                     "
                                     :critere="critere"
                                     :name="critere.nom"
-                                    v-model="critereForm.criteres[critere.id]"
+                                    v-model="
+                                        formCriteres.criteresBase[critere.id]
+                                    "
                                     :options="critere.valeurs"
                                     :is-checkbox-selected="isCheckboxSelected"
                                     @update-selected-checkboxes="
@@ -677,7 +681,9 @@ onMounted(() => {
                                     class="max-w-sm"
                                     v-if="critere.type_champ_form === 'radio'"
                                     :name="critere.nom"
-                                    v-model="critereForm.criteres[critere.id]"
+                                    v-model="
+                                        formCriteres.criteresBase[critere.id]
+                                    "
                                     :options="critere.valeurs"
                                 />
 
@@ -696,7 +702,9 @@ onMounted(() => {
                                         <TextInput
                                             type="text"
                                             v-model="
-                                                critereForm.criteres[critere.id]
+                                                formCriteres.criteresBase[
+                                                    critere.id
+                                                ]
                                             "
                                             :name="critere.nom"
                                             :id="critere.nom"
@@ -723,7 +731,9 @@ onMounted(() => {
                                             type="number"
                                             min="0"
                                             v-model="
-                                                critereForm.criteres[critere.id]
+                                                formCriteres.criteresBase[
+                                                    critere.id
+                                                ]
                                             "
                                             :name="critere.nom"
                                             :id="critere.nom"
@@ -742,7 +752,9 @@ onMounted(() => {
                                     <SingleTimeForm
                                         class="w-full"
                                         v-model="
-                                            critereForm.criteres[critere.id]
+                                            formCriteres.criteresBase[
+                                                critere.id
+                                            ]
                                         "
                                         :name="critere.nom"
                                     />
@@ -756,7 +768,9 @@ onMounted(() => {
                                     <OpenTimesForm
                                         class="w-full"
                                         v-model="
-                                            critereForm.criteres[critere.id]
+                                            formCriteres.criteresBase[
+                                                critere.id
+                                            ]
                                         "
                                         :name="critere.nom"
                                     />
@@ -770,7 +784,9 @@ onMounted(() => {
                                     <SingleDateForm
                                         class="w-full"
                                         v-model="
-                                            critereForm.criteres[critere.id]
+                                            formCriteres.criteresBase[
+                                                critere.id
+                                            ]
                                         "
                                         :name="critere.nom"
                                     />
@@ -784,7 +800,9 @@ onMounted(() => {
                                     <OpenDaysForm
                                         class="w-full"
                                         v-model="
-                                            critereForm.criteres[critere.id]
+                                            formCriteres.criteresBase[
+                                                critere.id
+                                            ]
                                         "
                                         :name="critere.nom"
                                     />
@@ -798,7 +816,9 @@ onMounted(() => {
                                         <OpenMonthsForm
                                             class="w-full"
                                             v-model="
-                                                critereForm.criteres[critere.id]
+                                                formCriteres.criteresBase[
+                                                    critere.id
+                                                ]
                                             "
                                             :name="critere.nom"
                                         />
@@ -813,7 +833,9 @@ onMounted(() => {
                                     <RangeInputForm
                                         class="w-full max-w-sm"
                                         v-model="
-                                            critereForm.criteres[critere.id]
+                                            formCriteres.criteresBase[
+                                                critere.id
+                                            ]
                                         "
                                         :name="critere.nom"
                                         :metric="`Km`"
@@ -833,7 +855,7 @@ onMounted(() => {
                                             :classes="'block'"
                                             class="max-w-sm py-2"
                                             v-if="
-                                                critereForm.criteres[
+                                                formCriteres.criteresBase[
                                                     critere.id
                                                 ] === valeur &&
                                                 souscritere.type_champ_form ===
@@ -843,7 +865,7 @@ onMounted(() => {
                                             "
                                             :name="souscritere.nom"
                                             v-model="
-                                                critereForm.souscriteres[
+                                                formCriteres.sousCriteres[
                                                     souscritere.id
                                                 ]
                                             "
@@ -857,7 +879,7 @@ onMounted(() => {
                                             :for="souscritere.nom"
                                             :value="souscritere.nom"
                                             v-if="
-                                                critereForm.criteres[
+                                                formCriteres.criteresBase[
                                                     critere.id
                                                 ] === valeur &&
                                                 souscritere.type_champ_form ===
@@ -873,7 +895,7 @@ onMounted(() => {
                                             :id="souscritere.nom"
                                             :name="souscritere.nom"
                                             v-if="
-                                                critereForm.criteres[
+                                                formCriteres.criteresBase[
                                                     critere.id
                                                 ] === valeur &&
                                                 souscritere.type_champ_form ===
@@ -882,7 +904,7 @@ onMounted(() => {
                                                     valeur.id
                                             "
                                             v-model="
-                                                critereForm.souscriteres[
+                                                formCriteres.sousCriteres[
                                                     souscritere.id
                                                 ]
                                             "
@@ -893,7 +915,7 @@ onMounted(() => {
                                             :for="souscritere.nom"
                                             :value="souscritere.nom"
                                             v-if="
-                                                critereForm.criteres[
+                                                formCriteres.criteresBase[
                                                     critere.id
                                                 ] === valeur &&
                                                 souscritere.type_champ_form ===
@@ -908,7 +930,7 @@ onMounted(() => {
                                             :id="souscritere.nom"
                                             :name="souscritere.nom"
                                             v-if="
-                                                critereForm.criteres[
+                                                formCriteres.criteresBase[
                                                     critere.id
                                                 ] === valeur &&
                                                 souscritere.type_champ_form ===
@@ -917,7 +939,7 @@ onMounted(() => {
                                                     valeur.id
                                             "
                                             v-model="
-                                                critereForm.souscriteres[
+                                                formCriteres.sousCriteres[
                                                     souscritere.id
                                                 ]
                                             "
