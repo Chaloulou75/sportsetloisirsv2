@@ -47,7 +47,6 @@ const handleResetFormCriteres = () => {
 </script>
 <template>
     <div
-        v-if="criteres"
         class="mx-auto w-full flex-col items-start justify-center gap-4 overflow-x-auto rounded bg-transparent px-2 py-2 backdrop-blur-md md:flex-row md:items-center md:justify-between md:space-y-0 md:px-6"
         :class="{
             flex: showCriteres,

@@ -341,6 +341,7 @@ onMounted(() => {
                 </div>
 
                 <CritereForm
+                    v-if="criteres"
                     :criteres="criteres"
                     :show-criteres="showCriteres"
                     :show-criteres-lg="showCriteresLg"
