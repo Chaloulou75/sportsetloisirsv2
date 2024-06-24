@@ -9,6 +9,7 @@ import InputLabel from "@/Components/Forms/InputLabel.vue";
 import InputError from "@/Components/Forms/InputError.vue";
 import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import { ChevronLeftIcon } from "@heroicons/vue/24/outline";
+import AutoComplete from "primevue/autocomplete";
 
 const Pagination = defineAsyncComponent(() =>
     import("@/Components/Pagination.vue")
@@ -120,6 +121,41 @@ const assignRoleForm = useForm({
     user: null,
     role: null,
 });
+
+const filteredUsers = ref();
+
+// const searchUser = (event) => {
+//     setTimeout(() => {
+//         if (!event.query.trim().length) {
+//             filteredUsers.value = [...props.users.data];
+//         } else {
+//             filteredUsers.value = props.users.data.filter((user) => {
+//                 const query = event.query.toLowerCase();
+//                 return (
+//                     user.name.toLowerCase().startsWith(query) ||
+//                     user.email.toLowerCase().startsWith(query)
+//                 );
+//             });
+//         }
+//     }, 250);
+// };
+
+const searchUser = debounce((event) => {
+    const query = event.query.toLowerCase();
+    if (!query.trim().length) {
+        filteredUsers.value = [...props.users.data];
+    } else {
+        router.get(
+            route("admin.users.index"),
+            { search: query },
+            {
+                preserveState: true,
+                replace: true,
+                only: ["users"],
+            }
+        );
+    }
+}, 500);
 
 const assignRole = () => {
     assignRoleForm.post(route("admin.role_user.store"), {
@@ -552,29 +588,45 @@ onMounted(() => {
                                 Assigner un rôle:
                             </h4>
                             <form @submit.prevent="assignRole">
-                                <div class="mb-4">
+                                <div
+                                    class="card mb-4 flex w-full flex-col justify-center"
+                                >
                                     <label
-                                        for="user"
+                                        for="name"
                                         class="mb-2 block text-sm font-medium normal-case text-gray-700"
                                         >Selectionner un utilisateur</label
                                     >
-                                    <select
+                                    <AutoComplete
+                                        dropdown
+                                        class="w-full flex-1"
                                         v-model="assignRoleForm.user"
-                                        id="user"
-                                        name="user"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                                        optionLabel="name"
+                                        :suggestions="filteredUsers"
+                                        @complete="searchUser"
+                                        :pt="{
+                                            input: {
+                                                class: [
+                                                    'w-full text-sm leading-[normal] appearance-none rounded-md rounded-tr-none rounded-br-none m-0 p-3 text-surface-700 border bg-surface-0  border-surface-300 focus:outline-none focus:outline-offset-0 focus:ring focus:ring-primary-400/50 transition-colors duration-200',
+                                                ],
+                                            },
+                                        }"
                                     >
-                                        <option value="" disabled>
-                                            Selectionner un utilisateur
-                                        </option>
-                                        <option
-                                            v-for="user in users.data"
-                                            :key="user.id"
-                                            :value="user.id"
-                                        >
-                                            {{ user.name }}
-                                        </option>
-                                    </select>
+                                        <template #option="slotProps">
+                                            <div
+                                                class="flex items-center text-sm"
+                                            >
+                                                <div>
+                                                    {{ slotProps.option.name }}
+                                                    <span class="text-xs italic"
+                                                        >({{
+                                                            slotProps.option
+                                                                .email
+                                                        }})</span
+                                                    >
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </AutoComplete>
                                     <InputError
                                         v-if="errors.assignRoleForm"
                                         class="mt-1"
@@ -645,34 +697,44 @@ onMounted(() => {
                                 Détacher un rôle:
                             </h4>
                             <form @submit.prevent="detachRole">
+                                <label
+                                    for="name"
+                                    class="mb-2 block text-sm font-medium normal-case text-gray-700"
+                                    >Selectionner un utilisateur</label
+                                >
                                 <div class="mb-4">
-                                    <label
-                                        for="user"
-                                        class="mb-2 block text-sm font-medium normal-case text-gray-700"
-                                        >Selectionner un utilisateur</label
-                                    >
-                                    <select
+                                    <AutoComplete
+                                        dropdown
+                                        class="w-full flex-1"
                                         v-model="detachRoleForm.user"
-                                        id="user"
-                                        name="user"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                                        optionLabel="name"
+                                        :suggestions="filteredUsers"
+                                        @complete="searchUser"
+                                        :pt="{
+                                            input: {
+                                                class: [
+                                                    'w-full text-base leading-[normal] appearance-none rounded-md rounded-tr-none rounded-br-none m-0 p-3 text-surface-700 border bg-surface-0  border-surface-300 focus:outline-none focus:outline-offset-0 focus:ring focus:ring-primary-400/50 transition-colors duration-200',
+                                                ],
+                                            },
+                                        }"
                                     >
-                                        <option value="" disabled>
-                                            Selectionner un utilisateur
-                                        </option>
-                                        <option
-                                            v-for="user in users.data"
-                                            :key="user.id"
-                                            :value="user.id"
-                                        >
-                                            {{ user.name }}
-                                        </option>
-                                    </select>
-                                    <InputError
-                                        v-if="errors.detachRoleForm"
-                                        class="mt-1"
-                                        :message="errors.detachRoleForm.user"
-                                    />
+                                        <template #option="slotProps">
+                                            <div
+                                                class="flex items-center text-sm"
+                                            >
+                                                <div>
+                                                    {{ slotProps.option.name }}
+                                                    <span
+                                                        class="text-xs italic"
+                                                        >{{
+                                                            slotProps.option
+                                                                .email
+                                                        }}</span
+                                                    >
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </AutoComplete>
                                 </div>
 
                                 <div class="mb-4">

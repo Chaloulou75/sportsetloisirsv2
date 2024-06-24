@@ -14,11 +14,15 @@ class AdminRoleUserController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'user' => 'required|exists:users,id',
+            'user.id' => 'required|exists:users,id',
             'role' => 'required|exists:roles,id',
         ]);
-        $user = User::findOrFail($validated['user']);
-        $role = Role::findOrFail($validated['role']);
+
+        $userId = $validated['user']['id'];
+        $roleId = $validated['role'];
+
+        $user = User::findOrFail($userId);
+        $role = Role::findOrFail($roleId);
 
         $userRoles = $user->roles()->pluck('role_id');
         if ($userRoles->contains($validated['role'])) {
@@ -43,12 +47,16 @@ class AdminRoleUserController extends Controller
      */
     public function destroy(Request $request)
     {
-        $request->validate([
-            'user' => 'required|exists:users,id',
+        $validated = $request->validate([
+            'user.id' => 'required|exists:users,id',
             'role' => 'required|exists:roles,id',
         ]);
-        $user = User::findOrFail($request->input('user'));
-        $role = Role::findOrFail($request->input('role'));
+
+        $userId = $validated['user']['id'];
+        $roleId = $validated['role'];
+
+        $user = User::findOrFail($userId);
+        $role = Role::findOrFail($roleId);
 
         $user->roles()->detach($role);
 

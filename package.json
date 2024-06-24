@@ -43,6 +43,7 @@
         "libphonenumber-js": "^1.10.61",
         "maz-ui": "^3.18.1",
         "preline": "^2.0.3",
+        "primevue": "^3.52.0",
         "swiper": "^10.0.3",
         "universal-cookie": "^4.0.4",
         "vue-cal": "^4.8.1",

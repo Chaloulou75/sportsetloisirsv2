@@ -17,7 +17,7 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'email' => $this->when($this->id === $request->user()?->id, $this->email),
+            'email' => $this->when($request->user()?->isAdmin() || $this->id === $request->user()?->id, $this->email),
             'roles' => RoleResource::collection($this->whenLoaded('roles')),
             'structures' => StructureResource::collection($this->whenLoaded('structures')),
             'structure_activites' => StructureActiviteResource::collection($this->whenLoaded('structure_activites')),

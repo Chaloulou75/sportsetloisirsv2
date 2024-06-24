@@ -10,8 +10,8 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::table('structures', function (Blueprint $table) {
-            $table->renameColumn('city', 'city_name');
+        Schema::table('type_champs', function (Blueprint $table) {
+            $table->boolean('criterable')->default(true)->after('type');
         });
     }
 
@@ -20,8 +20,8 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::table('structures', function (Blueprint $table) {
-            $table->renameColumn('city_name', 'city');
+        Schema::table('type_champs', function (Blueprint $table) {
+            $table->dropColumn('criterable');
         });
     }
 };

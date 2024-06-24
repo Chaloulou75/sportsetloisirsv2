@@ -9,6 +9,8 @@ use App\Models\Critere;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Resources\CritereResource;
+use App\Http\Resources\TypeChampResource;
+use App\Models\TypeChamp;
 
 class CritereController extends Controller
 {
@@ -23,11 +25,14 @@ class CritereController extends Controller
 
         $criteres = Critere::select(['id', 'nom'])->get();
 
+        $typeChamps = TypeChamp::select(['id', 'type', 'criterable'])->get();
+
         return Inertia::render('Admin/Criteres/Index', [
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
             ],
             'criteres' => fn () => CritereResource::collection($criteres),
+            'type_champs' => fn () => TypeChampResource::collection($typeChamps),
         ]);
 
     }

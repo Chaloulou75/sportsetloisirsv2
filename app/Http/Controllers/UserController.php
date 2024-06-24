@@ -21,6 +21,7 @@ class UserController extends Controller
         $this->authorize('viewAdmin', $user);
 
         $roles = Role::with('users')->select(['id', 'name', 'description'])->withCount('users')->get();
+
         $users = User::with(['roles', 'structures:id,name,slug', 'customer'])
                 ->filter(
                     request(['search'])

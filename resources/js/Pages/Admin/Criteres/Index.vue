@@ -16,6 +16,7 @@ import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 const props = defineProps({
     errors: Object,
     criteres: Object,
+    type_champs: Object,
     user_can: Object,
 });
 
@@ -254,6 +255,34 @@ onMounted(() => {
                         </form>
                     </div>
                 </div>
+            </div>
+            <div
+                class="flex w-full flex-col items-start justify-center space-y-4 py-4"
+            >
+                <h3
+                    class="mb-4 w-full text-center text-lg font-bold text-slate-700 underline decoration-sky-600 decoration-2 underline-offset-2"
+                >
+                    Les types de champs:
+                </h3>
+                <ul
+                    class="max-w-3xl list-inside list-disc space-y-2 py-4 text-sm text-slate-600 marker:text-indigo-600"
+                >
+                    <li
+                        v-for="champ in type_champs"
+                        :key="champ.id"
+                        class="text-base text-slate-600"
+                    >
+                        {{ champ.type }}:
+                        <span
+                            class="text-sm text-blue-500"
+                            v-if="champ.criterable"
+                        >
+                            Criterable</span
+                        ><span class="text-sm text-blue-500" v-else>
+                            Module non criterable</span
+                        >
+                    </li>
+                </ul>
             </div>
         </div>
     </AdminLayout>
