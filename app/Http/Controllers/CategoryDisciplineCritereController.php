@@ -77,7 +77,6 @@ class CategoryDisciplineCritereController extends Controller
                 $query->orderBy('ordre');
             },
         ])
-        ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
         ->findOrFail($categorie->id);
 
         $categories = LienDisciplineCategorie::with([
@@ -90,11 +89,10 @@ class CategoryDisciplineCritereController extends Controller
                 'criteres.valeurs.sous_criteres.sous_criteres_valeurs'
             ])
             ->where('discipline_id', $discipline->id)
-            ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
             ->get();
 
         $listeCriteres = Critere::select(['id', 'nom'])->get();
-        $typeChamps = TypeChamp::select(['id', 'type'])->get();
+        $typeChamps = TypeChamp::select(['id', 'type', 'criterable'])->get();
 
         return Inertia::render('Admin/Disciplines/Categories/Criteres/Edit', [
             'user_can' => [
@@ -123,6 +121,7 @@ class CategoryDisciplineCritereController extends Controller
             'visible_block' => 'required|boolean:0,1,true,false',
             'ordre' => 'nullable|numeric',
             'indexable' => 'nullable|boolean:0,1,true,false',
+            'unite' => 'nullable|string|max:255',
         ]);
 
         $discCatCritere = LienDisciplineCategorieCritere::with(['discipline', 'categorie', 'valeurs'])->findOrFail($critere->id);
@@ -133,6 +132,7 @@ class CategoryDisciplineCritereController extends Controller
             'visible_block' => $request->visible_block,
             'ordre' => $request->ordre,
             'indexable' => $request->indexable,
+            'unite' => $request->unite,
         ]);
 
         return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $discCatCritere->discipline->slug, 'categorie' => $discCatCritere->categorie])->with('success', 'Visibilité du critère mise à jour');
@@ -157,6 +157,24 @@ class CategoryDisciplineCritereController extends Controller
         ]);
 
         return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $discCatCritere->discipline->slug, 'categorie' => $discCatCritere->categorie])->with('success', 'Nom du critère mis à jour');
+    }
+
+    public function unite(Request $request, LienDisciplineCategorieCritere $critere): RedirectResponse
+    {
+        $user = auth()->user();
+        $this->authorize('viewAdmin', $user);
+
+        $request->validate([
+            'unite' => 'required|string|min:3',
+        ]);
+
+        $discCatCritere = LienDisciplineCategorieCritere::with(['discipline', 'categorie', 'valeurs'])->findOrFail($critere->id);
+
+        $discCatCritere->update([
+            'unite' => $request->unite,
+        ]);
+
+        return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $discCatCritere->discipline->slug, 'categorie' => $discCatCritere->categorie])->with('success', 'Unité du critère mis à jour');
     }
     /**
      * Remove the specified resource from storage.

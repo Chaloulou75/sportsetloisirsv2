@@ -17,4 +17,13 @@ class TypeChamp extends Model
      * @var array
      */
     protected $guarded = [];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'criterable' => 'boolean',
+    ];
 }

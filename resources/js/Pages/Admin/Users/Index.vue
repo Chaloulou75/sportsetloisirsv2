@@ -724,12 +724,11 @@ onMounted(() => {
                                             >
                                                 <div>
                                                     {{ slotProps.option.name }}
-                                                    <span
-                                                        class="text-xs italic"
-                                                        >{{
+                                                    <span class="text-xs italic"
+                                                        >({{
                                                             slotProps.option
                                                                 .email
-                                                        }}</span
+                                                        }})</span
                                                     >
                                                 </div>
                                             </div>

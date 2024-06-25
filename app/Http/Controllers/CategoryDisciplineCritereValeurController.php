@@ -18,14 +18,18 @@ class CategoryDisciplineCritereValeurController extends Controller
     {
         $critere = LienDisciplineCategorieCritere::with(['discipline', 'categorie'])->findOrFail($critere->id);
 
-        $request->validate([
-            'valeur' => ['required', 'string', 'max:255'],
+        $validatedData = $request->validate([
+            'valeur' => ['required'],
             'disciplineCategorieCritereId' => ['required', Rule::exists('liens_disciplines_categories_criteres', 'id')],
         ]);
 
+        if (is_array($validatedData['valeur'])) {
+            $validatedData['valeur'] = json_encode($validatedData['valeur']);
+        }
+
         $lienDisCatCritVal = LienDisciplineCategorieCritereValeur::create([
-            'discipline_categorie_critere_id' => $request->disciplineCategorieCritereId,
-            'valeur' => $request->valeur,
+            'discipline_categorie_critere_id' => $validatedData['disciplineCategorieCritereId'],
+            'valeur' => $validatedData['valeur'],
             'defaut' => 0,
             'inclus_all' => false,
         ]);

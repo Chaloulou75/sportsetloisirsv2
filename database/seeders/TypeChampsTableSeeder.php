@@ -18,19 +18,18 @@ class TypeChampsTableSeeder extends Seeder
         $now = Carbon::now();
 
         $typeChamps = [
-            ['type' => 'select', 'created_at' => $now],
-            ['type' => 'checkbox', 'created_at' => $now],
-            ['type' => 'text', 'created_at' => $now],
-            ['type' => 'number', 'created_at' => $now],
-            ['type' => 'adresse', 'created_at' => $now],
-            ['type' => 'date', 'created_at' => $now],
-            ['type' => 'dates', 'created_at' => $now],
-            ['type' => 'time', 'created_at' => $now],
-            ['type' => 'times', 'created_at' => $now],
-            ['type' => 'mois', 'created_at' => $now],
-            ['type' => 'rayon', 'created_at' => $now],
-            ['type' => 'instructeur', 'created_at' => $now],
-            ['type' => 'range', 'created_at' => $now],
+            ['type' => 'select', 'criterable' => 'true', 'created_at' => $now],
+            ['type' => 'checkbox', 'criterable' => 'true', 'created_at' => $now],
+            ['type' => 'text', 'criterable' => 'true', 'created_at' => $now],
+            ['type' => 'number', 'criterable' => 'true', 'created_at' => $now],
+            ['type' => 'adresse', 'criterable' => 'false', 'created_at' => $now],
+            ['type' => 'date', 'criterable' => 'true', 'created_at' => $now],
+            ['type' => 'dates', 'criterable' => 'true', 'created_at' => $now],
+            ['type' => 'time', 'criterable' => 'true', 'created_at' => $now],
+            ['type' => 'times', 'criterable' => 'true', 'created_at' => $now],
+            ['type' => 'mois', 'criterable' => 'true', 'created_at' => $now],
+            ['type' => 'instructeur', 'criterable' => 'false', 'created_at' => $now],
+            ['type' => 'range', 'criterable' => 'true', 'created_at' => $now],
         ];
 
         DB::table('type_champs')->insert($typeChamps);

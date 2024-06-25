@@ -274,12 +274,12 @@ onMounted(() => {
                     >
                         {{ champ.type }}:
                         <span
-                            class="text-sm text-blue-500"
                             v-if="champ.criterable"
+                            class="text-sm text-blue-500"
                         >
-                            Criterable</span
-                        ><span class="text-sm text-blue-500" v-else>
-                            Module non criterable</span
+                            Module criterable</span
+                        ><span v-else class="text-sm text-blue-500">
+                            Module informationnel (non criterable)</span
                         >
                     </li>
                 </ul>

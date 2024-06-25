@@ -301,6 +301,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/categories-disciplines-criteres', [CategoryDisciplineCritereController::class, 'store'])->name('categories-disciplines-criteres.store');
         Route::patch('/categories-disciplines-criteres/{critere}', [CategoryDisciplineCritereController::class, 'update'])->name('categories-disciplines-criteres.update');
         Route::patch('/categories-disciplines-criteres-nom/{critere}', [CategoryDisciplineCritereController::class, 'updatename'])->name('categories-disciplines-criteres-nom.updatename');
+
+        Route::patch('/categories-disciplines-criteres-nom/{critere}', [CategoryDisciplineCritereController::class, 'unite'])->name('categories-disciplines-criteres-nom.unite');
+
         Route::delete('/categories-disciplines-criteres/{lienDisciplineCategorieCritere}', [CategoryDisciplineCritereController::class, 'destroy'])->name('categories-disciplines-criteres.destroy');
 
         Route::post('/categories-disciplines-criteres-valeurs/{critere}', [CategoryDisciplineCritereValeurController::class, 'store'])->name('categories-disciplines-criteres-valeurs.store');

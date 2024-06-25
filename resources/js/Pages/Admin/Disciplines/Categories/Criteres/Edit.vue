@@ -1,12 +1,14 @@
 <script setup>
+import { Head, Link, router, useForm } from "@inertiajs/vue3";
+import { ref, watch, computed, onMounted } from "vue";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import NavAdminDiscipline from "@/Components/Admin/NavAdminDiscipline.vue";
 import NavAdminDisciplineCategorie from "@/Components/Admin/NavAdminDisciplineCategorie.vue";
 import NavAdminDisCatParametres from "@/Components/Admin/NavAdminDisCatParametres.vue";
-import { Head, Link, router, useForm } from "@inertiajs/vue3";
-import { ref, watch, computed, onMounted } from "vue";
 import autoAnimate from "@formkit/auto-animate";
 import Checkbox from "@/Components/Forms/Checkbox.vue";
+import RangeMultiple from "@/Components/Forms/RangeMultiple.vue";
+import InputText from "primevue/inputtext";
 import {
     XCircleIcon,
     PlusCircleIcon,
@@ -37,8 +39,24 @@ const props = defineProps({
 const visibleUpdateNomCritereForms = ref([]);
 const critereNameForm = ref({});
 const critereVisibilityForm = ref({});
+const critereUniteForm = ref({});
 const valeurForm = ref({});
 const sousvaleurForm = ref({});
+const decodeIfJson = (value) => {
+    if (typeof value === "string") {
+        try {
+            const parsed = JSON.parse(value);
+            // Check if the parsed value is an array
+            if (Array.isArray(parsed)) {
+                return parsed;
+            }
+        } catch (e) {
+            // Not a valid JSON string, return the original value
+        }
+    }
+    return value;
+};
+
 const initializeValeurForm = () => {
     for (const categoryId in props.categories) {
         const category = props.categories[categoryId];
@@ -56,13 +74,16 @@ const initializeValeurForm = () => {
             critereNameForm.value[critere.id] = useForm({
                 nom: ref(critere.nom),
             });
+            critereUniteForm.value[critere.id] = useForm({
+                unite: ref(critere.unite),
+            });
 
             for (const valeurId in critere.valeurs) {
                 const valeur = critere.valeurs[valeurId];
 
                 valeurForm.value[valeur.id] = useForm({
                     id: ref(valeur.id),
-                    valeur: ref(valeur.valeur),
+                    valeur: ref(decodeIfJson(valeur.valeur)),
                     ordre: ref(valeur.ordre),
                     inclus_all: ref(!!valeur.inclus_all),
                     remember: true,
@@ -77,7 +98,7 @@ const initializeValeurForm = () => {
 
                         sousvaleurForm.value[sousvaleur.id] = useForm({
                             id: ref(sousvaleur.id),
-                            valeur: ref(sousvaleur.valeur),
+                            valeur: ref(decodeIfJson(sousvaleur.valeur)),
                             ordre: ref(sousvaleur.ordre),
                             remember: true,
                         });
@@ -137,6 +158,21 @@ const updateCritereVisibility = (critere) => {
             indexable: !!critereVisibilityForm.value[critere.id].indexable,
         },
         {
+            preserveScroll: true,
+        }
+    );
+};
+
+const updateUniteCritere = (critere) => {
+    router.patch(
+        route("categories-disciplines-criteres-nom.unite", {
+            critere: critere,
+        }),
+        {
+            unite: critereUniteForm.value[critere.id].unite,
+        },
+        {
+            errorBag: "critereUniteForm",
             preserveScroll: true,
         }
     );
@@ -297,7 +333,7 @@ const showAddSousValeurForm = (souscritere) => {
 };
 
 const addSousValeurForm = useForm({
-    sousvaleur: ref(null),
+    valeur: ref(null),
     remember: true,
 });
 
@@ -358,15 +394,15 @@ const showAddCritereForm = (categorie) => {
 //     { type: "time" },
 //     { type: "times" },
 //     { type: "mois" },
-//     { type: "rayon" },
+//     { type: "range" },
 //     { type: "instructeur" },
 // ];
 
-const sous_crit_type_champs = [
-    { type: "select" },
-    { type: "text" },
-    { type: "number" },
-];
+// const sous_crit_type_champs = [
+//     { type: "select" },
+//     { type: "text" },
+//     { type: "number" },
+// ];
 
 const addCritereForm = useForm({
     critere: props.listeCriteres[0],
@@ -735,6 +771,31 @@ onMounted(() => {
                                     />
                                 </button>
                             </div>
+                            <form
+                                @submit.prevent="updateUniteCritere(critere)"
+                                v-if="
+                                    critere.type_champ_form === 'range' ||
+                                    critere.type_champ_form === 'range multiple'
+                                "
+                                class="my-8 flex items-center space-x-2"
+                            >
+                                <label class="text-sm font-semibold" for="unite"
+                                    >Unité pour les champs de type
+                                    "range"</label
+                                >
+                                <InputText
+                                    class="text-sm"
+                                    id="unité"
+                                    size="small"
+                                    placeholder="unité"
+                                    v-model="critereUniteForm[critere.id].unite"
+                                />
+                                <button type="submit">
+                                    <ArrowPathIcon
+                                        class="h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
+                                    />
+                                </button>
+                            </form>
                         </div>
                         <ul
                             class="list-inside list-disc py-2 marker:text-indigo-600"
@@ -747,7 +808,7 @@ onMounted(() => {
                                 <template v-if="valeurForm[valeur.id]">
                                     <form
                                         v-if="valeur"
-                                        class="inline-flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0"
+                                        class="inline-flex flex-col space-y-2 md:flex-row md:items-center md:space-x-2 md:space-y-0"
                                         @submit.prevent="updateValeur(valeur)"
                                     >
                                         <div class="flex flex-col">
@@ -1115,7 +1176,7 @@ onMounted(() => {
                                                                         name="newValeur"
                                                                         id="newValeur"
                                                                         class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                                        placeholder=""
+                                                                        placeholder="Valeur"
                                                                         autocomplete="none"
                                                                     />
                                                                 </div>
@@ -1172,7 +1233,11 @@ onMounted(() => {
                                                             (souscritere.type_champ_form ===
                                                                 'select' ||
                                                                 souscritere.type_champ_form ===
-                                                                    'checkbox')
+                                                                    'checkbox' ||
+                                                                souscritere.type_champ_form ===
+                                                                    'range' ||
+                                                                souscritere.type_champ_form ===
+                                                                    'range multiple')
                                                         "
                                                         type="button"
                                                         @click="
@@ -1264,10 +1329,7 @@ onMounted(() => {
                                                                     active,
                                                                     selected,
                                                                 }"
-                                                                v-for="(
-                                                                    type_champ,
-                                                                    index
-                                                                ) in type_champs"
+                                                                v-for="type_champ in type_champs"
                                                                 :key="
                                                                     type_champ.id
                                                                 "
@@ -1294,6 +1356,22 @@ onMounted(() => {
                                                                         >{{
                                                                             type_champ.type
                                                                         }}</span
+                                                                    ><span
+                                                                        v-if="
+                                                                            type_champ.criterable
+                                                                        "
+                                                                        class="text-sm text-blue-500"
+                                                                    >
+                                                                        Module
+                                                                        criterable</span
+                                                                    ><span
+                                                                        v-else
+                                                                        class="text-sm text-blue-500"
+                                                                    >
+                                                                        Module
+                                                                        informationnel
+                                                                        (non
+                                                                        criterable)</span
                                                                     >
                                                                     <span
                                                                         v-if="
@@ -1345,7 +1423,14 @@ onMounted(() => {
                                     class="inline-flex flex-grow items-center justify-between"
                                     @submit.prevent="addValeur(critere)"
                                 >
-                                    <div>
+                                    <RangeMultiple
+                                        v-if="
+                                            critere.type_champ_form ===
+                                            'range multiple'
+                                        "
+                                        v-model:valeur="addValeurForm.valeur"
+                                    />
+                                    <div v-else>
                                         <label for="newValeur"></label>
                                         <div class="mt-1 flex rounded-md">
                                             <input
@@ -1397,7 +1482,9 @@ onMounted(() => {
                                     (critere.type_champ_form === 'select' ||
                                         critere.type_champ_form ===
                                             'checkbox' ||
-                                        critere.type_champ_form === 'range')
+                                        critere.type_champ_form === 'range' ||
+                                        critere.type_champ_form ===
+                                            'range multiple')
                                 "
                                 type="button"
                                 @click="toggleAddValeurForm(critere)"
@@ -1544,9 +1631,7 @@ onMounted(() => {
                                         >
                                             <ListboxOption
                                                 v-slot="{ active, selected }"
-                                                v-for="(
-                                                    type_champ, index
-                                                ) in type_champs"
+                                                v-for="type_champ in type_champs"
                                                 :key="type_champ.id"
                                                 :value="type_champ"
                                                 as="template"
@@ -1569,6 +1654,20 @@ onMounted(() => {
                                                         >{{
                                                             type_champ.type
                                                         }}</span
+                                                    >
+                                                    <span
+                                                        v-if="
+                                                            type_champ.criterable
+                                                        "
+                                                        class="text-sm text-blue-500"
+                                                    >
+                                                        Module criterable</span
+                                                    ><span
+                                                        v-else
+                                                        class="text-sm text-blue-500"
+                                                    >
+                                                        Module informationnel
+                                                        (non criterable)</span
                                                     >
                                                     <span
                                                         v-if="selected"

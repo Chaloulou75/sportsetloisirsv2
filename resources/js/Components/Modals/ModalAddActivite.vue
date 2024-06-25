@@ -15,6 +15,7 @@ import OpenTimesForm from "@/Components/Forms/DayTime/OpenTimesForm.vue";
 import OpenMonthsForm from "@/Components/Forms/DayTime/OpenMonthsForm.vue";
 import InstructeurForm from "@/Components/Forms/InstructeurForm.vue";
 import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
+import RangeMultiple from "@/Components/Forms/RangeMultiple.vue";
 import {
     TransitionRoot,
     TransitionChild,
@@ -91,6 +92,11 @@ watch(
         newFilteredCriteres.forEach((critere) => {
             if (
                 critere.type_champ_form === "select" &&
+                critere.valeurs.length > 0
+            ) {
+                form.criteres[critere.id] = critere.valeurs[0];
+            } else if (
+                critere.type_champ_form === "range multiple" &&
                 critere.valeurs.length > 0
             ) {
                 form.criteres[critere.id] = critere.valeurs[0];
@@ -350,7 +356,7 @@ onMounted(() => {
 
                                         <div
                                             v-if="filteredCriteres.length > 0"
-                                            class="mx-auto grid w-full grid-cols-1 gap-4 bg-gray-50 p-2 shadow md:grid-cols-3"
+                                            class="mx-auto grid w-full grid-cols-1 gap-4 bg-gray-50 p-4 shadow md:grid-cols-3 md:gap-8"
                                         >
                                             <div
                                                 v-for="critere in filteredCriteres"
@@ -677,6 +683,25 @@ onMounted(() => {
                                                         "
                                                         :name="critere.nom"
                                                         :metric="critere.nom"
+                                                    />
+                                                </div>
+
+                                                <!-- Range Multiple -->
+                                                <div
+                                                    v-if="
+                                                        critere.type_champ_form ===
+                                                        'range multiple'
+                                                    "
+                                                >
+                                                    <RangeMultiple
+                                                        class="w-full max-w-sm"
+                                                        v-model="
+                                                            form.criteres[
+                                                                critere.id
+                                                            ]
+                                                        "
+                                                        :name="critere.nom"
+                                                        :unite="critere.unite"
                                                     />
                                                 </div>
 

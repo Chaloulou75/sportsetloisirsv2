@@ -19,14 +19,19 @@ class LienDisCatCritValSsCritValeurController extends Controller
         $discipline = $sousCritere->critere_valeur->critere->discipline->slug;
         $categorie = $sousCritere->critere_valeur->critere->categorie;
 
-        $request->validate([
-            'valeur' => ['required', 'string', 'max:255'],
+        $validatedData = $request->validate([
+            'valeur' => ['required'],
             'dccValSsCritId' => ['required', Rule::exists('liens_dis_cat_crit_val_sous_criteres', 'id')],
         ]);
 
+
+        if (is_array($validatedData['valeur'])) {
+            $validatedData['valeur'] = json_encode($validatedData['valeur']);
+        }
+
         $sousCritVal = LiensDisCatCritValSsCritValeur::create([
-            'dcc_val_ss_crit_id' => $request->dccValSsCritId,
-            'valeur' => $request->valeur,
+            'dcc_val_ss_crit_id' => $validatedData['dccValSsCritId'],
+            'valeur' => $validatedData['valeur'],
             'defaut' => 0,
         ]);
 
