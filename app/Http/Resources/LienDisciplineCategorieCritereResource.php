@@ -20,6 +20,8 @@ class LienDisciplineCategorieCritereResource extends JsonResource
             'nom' => $this->nom,
             'type_champ_form' => $this->type_champ_form,
             'unite' => $this->unite,
+            'min' => $this->min,
+            'max' => $this->max,
             'discipline_id' => $this->discipline_id,
             'categorie_id' => $this->categorie_id,
             'critere_id' => $this->critere_id,

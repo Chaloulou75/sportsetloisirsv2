@@ -52,11 +52,10 @@ class CategoryDisciplineController extends Controller
         $discipline = ListDiscipline::withProductsAndDisciplinesSimilaires()
         ->find($discipline->id);
 
-        $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('slug', $category)->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])->first();
+        $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('slug', $category)->first();
 
         $categories = LienDisciplineCategorie::whereHas('structures_produits')
             ->where('discipline_id', $discipline->id)
-            ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
             ->withCount('structures_produits')
             ->orderByDesc('structures_produits_count')
             ->get();
@@ -68,9 +67,8 @@ class CategoryDisciplineController extends Controller
             $query->whereHas('produits', function ($subquery) use ($discipline) {
                 $subquery->where('discipline_id', $discipline->id);
             });
-        })
-                        ->select(['id', 'name', 'slug'])
-                        ->get();
+        })->select(['id', 'name', 'slug'])
+        ->get();
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
         ->where('discipline_id', $discipline->id)
@@ -100,6 +98,8 @@ class CategoryDisciplineController extends Controller
 
         $discipline->timestamp = false;
         $discipline->increment('view_count');
+
+        // return StructureProduitResource::collection($produits);
 
         return Inertia::render('Disciplines/Categories/Show', [
             'familles' => fn () => FamilleResource::collection($familles),

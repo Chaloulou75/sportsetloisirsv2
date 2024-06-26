@@ -1,6 +1,6 @@
 <script setup>
 import Slider from "primevue/slider";
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 
 const props = defineProps({
     name: String,
@@ -15,7 +15,10 @@ const props = defineProps({
     unite: String,
 });
 
-const model = defineModel("valeur");
+const model = defineModel();
+// Ensure min and max are numbers
+const min = computed(() => Number(props.min));
+const max = computed(() => Number(props.max));
 const value = ref([Number(props.min), Number(props.max)]);
 
 const ensureMinMax = (values) => {
@@ -52,7 +55,7 @@ watch(value, (newValue) => {
             v-if="name"
             :for="name"
             class="block text-sm font-medium normal-case text-gray-700"
-            >{{ name }}</label
+            >{{ name }} ({{ unite }})</label
         >
         <Slider
             v-model="model"

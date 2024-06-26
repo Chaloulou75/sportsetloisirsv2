@@ -166,12 +166,16 @@ class CategoryDisciplineCritereController extends Controller
 
         $request->validate([
             'unite' => 'required|string|min:3',
+            'min' => 'nullable|integer',
+            'max' => 'nullable|integer',
         ]);
 
         $discCatCritere = LienDisciplineCategorieCritere::with(['discipline', 'categorie', 'valeurs'])->findOrFail($critere->id);
 
         $discCatCritere->update([
             'unite' => $request->unite,
+            'min' => $request->min,
+            'max' => $request->max,
         ]);
 
         return to_route('admin.disciplines.categories.criteres.edit', ['discipline' => $discCatCritere->discipline->slug, 'categorie' => $discCatCritere->categorie])->with('success', 'Unité du critère mis à jour');

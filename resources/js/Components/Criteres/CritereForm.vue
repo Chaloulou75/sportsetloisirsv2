@@ -11,12 +11,13 @@ import SingleTimeForm from "@/Components/Forms/DayTime/SingleTimeForm.vue";
 import OpenTimesForm from "@/Components/Forms/DayTime/OpenTimesForm.vue";
 import OpenMonthsForm from "@/Components/Forms/DayTime/OpenMonthsForm.vue";
 import { ArrowPathIcon } from "@heroicons/vue/24/outline";
+import RangeMultiple from "@/Components/Forms/RangeMultiple.vue";
 
 const props = defineProps({
     criteres: Object,
     showCriteres: Boolean,
     showCriteresLg: Boolean,
-    isCheckboxSelected: Function,
+    // isCheckboxSelected: Function,
 });
 
 const filteredCriteresByChamp = computed(() => {
@@ -29,13 +30,14 @@ const filteredCriteresByChamp = computed(() => {
             "number",
             "rayon",
             "range",
+            "range multiple",
         ].includes(critere.type_champ_form);
     });
 });
 
 const criteresModel = defineModel("criteresBase");
 const sousCriteresModel = defineModel("sousCriteres");
-const emit = defineEmits(["reset-criteres", "update-checkboxes"]);
+const emit = defineEmits(["reset-criteres"]); //, "update-checkboxes"
 
 const handleUpdateSelectedCheckboxes = (critereId, optionValue, checked) => {
     emit("update-checkboxes", critereId, optionValue, checked);
@@ -62,7 +64,6 @@ const handleResetFormCriteres = () => {
         >
             <!-- select -->
             <SelectForm
-                :classes="'flex items-center space-x-2'"
                 class="max-w-sm"
                 v-if="critere.type_champ_form === 'select'"
                 :name="critere.nom"
@@ -71,16 +72,15 @@ const handleResetFormCriteres = () => {
             />
             <!-- checkbox -->
             <CheckboxForm
-                :classes="'flex items-center space-x-2'"
                 class="max-w-sm"
                 v-if="critere.type_champ_form === 'checkbox'"
                 :critere="critere"
                 :name="critere.nom"
                 v-model="criteresModel[critere.id]"
                 :options="critere.valeurs"
-                :is-checkbox-selected="isCheckboxSelected"
-                @update-selected-checkboxes="handleUpdateSelectedCheckboxes"
             />
+            <!-- :is-checkbox-selected="isCheckboxSelected"
+                @update-selected-checkboxes="handleUpdateSelectedCheckboxes" -->
             <!-- radio -->
             <div v-if="critere.type_champ_form === 'radio'">
                 <div class="flex items-center space-x-2">
@@ -112,10 +112,7 @@ const handleResetFormCriteres = () => {
                 </div>
             </div>
             <!-- input text -->
-            <div
-                v-if="critere.type_champ_form === 'text'"
-                class="flex items-center space-x-2"
-            >
+            <div v-if="critere.type_champ_form === 'text'">
                 <label
                     :for="critere.nom"
                     class="block text-sm font-medium normal-case text-gray-700"
@@ -132,10 +129,7 @@ const handleResetFormCriteres = () => {
                 </div>
             </div>
             <!-- input Number -->
-            <div
-                v-if="critere.type_champ_form === 'number'"
-                class="flex items-center space-x-2"
-            >
+            <div v-if="critere.type_champ_form === 'number'">
                 <label
                     :for="critere.nom"
                     class="block text-sm font-medium normal-case text-gray-700"
@@ -166,6 +160,15 @@ const handleResetFormCriteres = () => {
                 v-model="criteresModel[critere.id]"
                 :name="critere.nom"
                 :metric="critere.nom"
+            />
+            <RangeMultiple
+                v-if="critere.type_champ_form === 'range multiple'"
+                class="w-full max-w-sm"
+                v-model="criteresModel[critere.id]"
+                :name="critere.nom"
+                :unite="critere.unite"
+                :min="critere.min"
+                :max="critere.max"
             />
             <!-- Heure seule -->
             <div
@@ -230,7 +233,6 @@ const handleResetFormCriteres = () => {
                 >
                     <!-- select -->
                     <SelectForm
-                        :classes="'flex items-center space-x-4'"
                         class="max-w-sm py-2"
                         v-if="
                             criteresModel[critere.id] === valeur &&

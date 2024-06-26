@@ -344,12 +344,12 @@ onMounted(() => {
                     :criteres="criteres"
                     :show-criteres="showCriteres"
                     :show-criteres-lg="showCriteresLg"
-                    :is-checkbox-selected="isCheckboxSelected"
                     v-model:criteres-base="formCriteres.criteresBase"
                     v-model:sous-criteres="formCriteres.sousCriteres"
-                    @update-checkboxes="updateSelectedCheckboxes"
                     @reset-criteres="resetFormCriteres"
                 />
+                <!-- :is-checkbox-selected="isCheckboxSelected"
+                @update-checkboxes="updateSelectedCheckboxes" -->
             </div>
 
             <template v-if="produits.data.length > 0">

@@ -28,12 +28,16 @@ export function useFilterProducts(
                         const numericCritereId = parseInt(critereId);
                         if (
                             selectedCritere === null ||
+                            selectedCritere.length === 0 ||
                             selectedCritere.inclus_all === true
                         ) {
                             return true;
                         } else if (Array.isArray(selectedCritere)) {
                             return selectedCritere.some((critereInArray) => {
-                                if (critereInArray === null) {
+                                if (
+                                    critereInArray === null ||
+                                    critereInArray.inclus_all === true
+                                ) {
                                     return true;
                                 } else if (
                                     critereInArray !== null &&
@@ -298,13 +302,18 @@ export function useFilterProducts(
                                                 );
                                             if (
                                                 valeurIdExists &&
-                                                valeurIdExists !== null &&
                                                 numericCritereId ===
                                                     produitCritere.critere_id
                                             ) {
-                                                return (
-                                                    produitCritere.valeur_id ===
-                                                    critereInArray.id
+                                                return selectedCritere.some(
+                                                    (critereInArray) => {
+                                                        if (
+                                                            critereInArray.id ===
+                                                            produitCritere.valeur_id
+                                                        ) {
+                                                            return true;
+                                                        }
+                                                    }
                                                 );
                                             } else {
                                                 return false;

@@ -95,45 +95,11 @@ watch(
                 critere.valeurs.length > 0
             ) {
                 form.criteres[critere.id] = critere.valeurs[0];
-            } else if (
-                critere.type_champ_form === "range multiple" &&
-                critere.valeurs.length > 0
-            ) {
-                form.criteres[critere.id] = critere.valeurs[0];
             }
         });
     },
     { immediate: true }
 );
-
-const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
-    const selectedCriteria = form.criteres[critereId];
-
-    if (checked) {
-        if (!Array.isArray(selectedCriteria)) {
-            // Use ref() to ensure reactivity when modifying arrays
-            form.criteres[critereId] = ref([optionValue]);
-        } else {
-            selectedCriteria.push(optionValue);
-        }
-    } else {
-        if (Array.isArray(selectedCriteria)) {
-            const index = selectedCriteria.indexOf(optionValue);
-            if (index !== -1) {
-                selectedCriteria.splice(index, 1);
-            }
-        }
-    }
-};
-
-const isCheckboxSelected = computed(() => {
-    return (critereId, optionValue) => {
-        return (
-            form.criteres[critereId] &&
-            form.criteres[critereId].includes(optionValue)
-        );
-    };
-});
 
 const onSubmit = () => {
     form.post(
@@ -395,12 +361,6 @@ onMounted(() => {
                                                         ]
                                                     "
                                                     :options="critere.valeurs"
-                                                    :is-checkbox-selected="
-                                                        isCheckboxSelected
-                                                    "
-                                                    @update-selected-checkboxes="
-                                                        updateSelectedCheckboxes
-                                                    "
                                                 />
 
                                                 <!-- radio -->
@@ -702,6 +662,8 @@ onMounted(() => {
                                                         "
                                                         :name="critere.nom"
                                                         :unite="critere.unite"
+                                                        :min="critere.min"
+                                                        :max="critere.max"
                                                     />
                                                 </div>
 
@@ -769,6 +731,40 @@ onMounted(() => {
                                                                 souscritere.sous_criteres_valeurs
                                                             "
                                                         />
+
+                                                        <!-- sous crit checkbox -->
+                                                        <CheckboxForm
+                                                            class="max-w-sm"
+                                                            v-if="
+                                                                form.criteres[
+                                                                    critere.id
+                                                                ] === valeur &&
+                                                                souscritere.type_champ_form ===
+                                                                    'checkbox'
+                                                            "
+                                                            :critere="
+                                                                souscritere
+                                                            "
+                                                            :name="
+                                                                souscritere.nom
+                                                            "
+                                                            v-model="
+                                                                form
+                                                                    .souscriteres[
+                                                                    souscritere
+                                                                        .id
+                                                                ]
+                                                            "
+                                                            :options="
+                                                                souscritere.sous_criteres_valeurs
+                                                            "
+                                                        />
+                                                        <!-- :is-checkbox-selected="
+                                                                isCheckboxSelected
+                                                            "
+                                                            @update-selected-checkboxes="
+                                                                updateSelectedCheckboxes
+                                                            " -->
                                                         <!-- sous crit number -->
                                                         <InputLabel
                                                             class="py-2"

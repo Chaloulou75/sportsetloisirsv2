@@ -9,6 +9,7 @@ import autoAnimate from "@formkit/auto-animate";
 import Checkbox from "@/Components/Forms/Checkbox.vue";
 import RangeMultiple from "@/Components/Forms/RangeMultiple.vue";
 import InputText from "primevue/inputtext";
+import InputNumber from "primevue/inputnumber";
 import {
     XCircleIcon,
     PlusCircleIcon,
@@ -76,6 +77,8 @@ const initializeValeurForm = () => {
             });
             critereUniteForm.value[critere.id] = useForm({
                 unite: ref(critere.unite),
+                min: ref(critere.min),
+                max: ref(critere.max),
             });
 
             for (const valeurId in critere.valeurs) {
@@ -170,6 +173,8 @@ const updateUniteCritere = (critere) => {
         }),
         {
             unite: critereUniteForm.value[critere.id].unite,
+            min: critereUniteForm.value[critere.id].min,
+            max: critereUniteForm.value[critere.id].max,
         },
         {
             errorBag: "critereUniteForm",
@@ -777,7 +782,7 @@ onMounted(() => {
                                     critere.type_champ_form === 'range' ||
                                     critere.type_champ_form === 'range multiple'
                                 "
-                                class="my-8 flex items-center space-x-2"
+                                class="my-6 flex flex-col items-center space-y-2 md:flex-row md:space-x-2 md:space-y-0"
                             >
                                 <label class="text-sm font-semibold" for="unite"
                                     >Unité pour les champs de type
@@ -786,9 +791,28 @@ onMounted(() => {
                                 <InputText
                                     class="text-sm"
                                     id="unité"
-                                    size="small"
                                     placeholder="unité"
                                     v-model="critereUniteForm[critere.id].unite"
+                                />
+                                <label class="text-sm font-semibold" for="min"
+                                    >Min</label
+                                >
+                                <InputNumber
+                                    inputId="integeronly"
+                                    class="text-sm"
+                                    id="min"
+                                    placeholder="Min"
+                                    v-model="critereUniteForm[critere.id].min"
+                                />
+                                <label class="text-sm font-semibold" for="max"
+                                    >Max</label
+                                >
+                                <InputNumber
+                                    inputId="integeronly"
+                                    class="text-sm"
+                                    id="max"
+                                    placeholder="Max"
+                                    v-model="critereUniteForm[critere.id].max"
                                 />
                                 <button type="submit">
                                     <ArrowPathIcon
@@ -812,7 +836,20 @@ onMounted(() => {
                                         @submit.prevent="updateValeur(valeur)"
                                     >
                                         <div class="flex flex-col">
+                                            <RangeMultiple
+                                                v-if="
+                                                    critere.type_champ_form ===
+                                                    'range multiple'
+                                                "
+                                                v-model="
+                                                    valeurForm[valeur.id].valeur
+                                                "
+                                                :unite="critere.unite"
+                                                :min="critere.min"
+                                                :max="critere.max"
+                                            />
                                             <input
+                                                v-else
                                                 v-model="
                                                     valeurForm[valeur.id].valeur
                                                 "
@@ -1428,7 +1465,10 @@ onMounted(() => {
                                             critere.type_champ_form ===
                                             'range multiple'
                                         "
-                                        v-model:valeur="addValeurForm.valeur"
+                                        v-model="addValeurForm.valeur"
+                                        :unite="critere.unite"
+                                        :min="critere.min"
+                                        :max="critere.max"
                                     />
                                     <div v-else>
                                         <label for="newValeur"></label>
@@ -1480,11 +1520,7 @@ onMounted(() => {
                                 v-if="
                                     !showAddValeurForm(critere) &&
                                     (critere.type_champ_form === 'select' ||
-                                        critere.type_champ_form ===
-                                            'checkbox' ||
-                                        critere.type_champ_form === 'range' ||
-                                        critere.type_champ_form ===
-                                            'range multiple')
+                                        critere.type_champ_form === 'checkbox')
                                 "
                                 type="button"
                                 @click="toggleAddValeurForm(critere)"
