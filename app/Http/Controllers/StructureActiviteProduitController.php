@@ -94,10 +94,11 @@ class StructureActiviteProduitController extends Controller
 
         if (isset($criteresValuesSets)) {
             foreach ($criteresValuesSets as $critereId => $criteresValues) {
+                $critere = LienDisciplineCategorieCritere::withValeurs()->findOrFail($critereId);
 
                 $defaut = LienDisciplineCategorieCritereValeur::where('defaut', true)->where('discipline_categorie_critere_id', $critereId)->first();
 
-                $this->insertCriteresRecursively($structure, $activite, $structureProduit, $critereId, $criteresValues, $defaut);
+                $this->insertCriteresRecursively($structure, $activite, $structureProduit, $critere, $criteresValues, $defaut);
             }
         }
 
@@ -143,8 +144,7 @@ class StructureActiviteProduitController extends Controller
             }
         }
 
-
-        return to_route('structures.categories.show', ['structure' => $structure, 'discipline' => $activite->discipline, 'categorie' => $activite->categorie ])->with('success', 'Produit ajouté.');
+        return to_route('structures.disciplines.show', ['structure' => $structure, 'discipline' => $activite->discipline ])->with('success', 'Produit ajouté.');
 
     }
 
@@ -184,9 +184,12 @@ class StructureActiviteProduitController extends Controller
             }
 
             foreach ($criteresValuesSets as $critereId => $criteresValues) {
+
+                $critere = LienDisciplineCategorieCritere::withValeurs()->findOrFail($critereId);
+
                 $defaut = LienDisciplineCategorieCritereValeur::where('defaut', true)->where('discipline_categorie_critere_id', $critereId)->first();
 
-                $this->insertCriteresRecursively($structure, $activite, $structureProduit, $critereId, $criteresValues, $defaut);
+                $this->insertCriteresRecursively($structure, $activite, $structureProduit, $critere, $criteresValues, $defaut);
             }
         }
 
@@ -285,7 +288,7 @@ class StructureActiviteProduitController extends Controller
             }
         }
 
-        $produit->catTarifs()->detach();
+        $produit->cat_tarifs()->detach();
 
         $produit->delete();
 
@@ -328,34 +331,41 @@ class StructureActiviteProduitController extends Controller
         return to_route('structures.disciplines.show', ['structure' => $structure->slug, 'discipline' => $activite->discipline->slug ])->with('success', "Le produit a bien été dupliqué");
     }
 
-    private function insertCriteresRecursively($structure, $structureActivite, $structureProduit, $critereId, $criteresValues, $defaut)
+    private function insertCriteresRecursively($structure, $structureActivite, $structureProduit, $critere, $criteresValues, $defaut)
     {
         if (!empty($criteresValues)) {
             if (isset($criteresValues['valeur'])) {
                 // Object
-                $this->handleSingleValue($structure, $structureActivite, $structureProduit, $critereId, $criteresValues['id'] ?? null, $criteresValues['valeur'] ?? null, $defaut);
-            } elseif (isset($criteresValues['hours'], $criteresValues['minutes'])) {
+                $this->handleSingleValue($structure, $structureActivite, $structureProduit, $critere->id ?? $criteresValues['discipline_categorie_critere_id'], $criteresValues['id'] ?? null, $criteresValues['valeur'] ?? null, $defaut);
+            } elseif (isset($criteresValues) && $critere->type_champ_form === 'time') {
                 // Single hour
-                $this->handleSingleValue($structure, $structureActivite, $structureProduit, $critereId, null, Carbon::createFromTime($criteresValues['hours'], $criteresValues['minutes'])->format('H:i'), $defaut);
-            } elseif (is_array($criteresValues) && isset($criteresValues[0]['hours'], $criteresValues[0]['minutes'])) {
-                // Multiple hours
-                $this->handleMultipleHours($structure, $structureActivite, $structureProduit, $critereId, $criteresValues);
-            } elseif (is_string($criteresValues) && strtotime($criteresValues) !== false) {
+                $time = Carbon::parse($criteresValues)->setTimezone('Europe/Paris')->format('H:i');
+                $this->handleSingleValue($structure, $structureActivite, $structureProduit, $critere->id, null, $time, $defaut);
+            } elseif (is_array($criteresValues) && $critere->type_champ_form === 'times') {
+                // Multiple hours ok
+                $this->handleMultipleHours($structure, $structureActivite, $structureProduit, $critere->id, $criteresValues);
+            } elseif (is_string($criteresValues) && $critere->type_champ_form === 'date') {
                 // Single date
-                $this->handleSingleValue($structure, $structureActivite, $structureProduit, $critereId, null, Carbon::parse($criteresValues)->setTimezone('Europe/Paris')->format('Y-m-d'), $defaut);
-            } elseif (is_array($criteresValues) && count($criteresValues) > 0 && is_string($criteresValues[0]) && strtotime($criteresValues[0]) !== false) {
+                $this->handleSingleValue($structure, $structureActivite, $structureProduit, $critere->id, null, Carbon::parse($criteresValues)->setTimezone('Europe/Paris')->format('Y-m-d'), $defaut);
+            } elseif (is_array($criteresValues) && $critere->type_champ_form === 'dates') {
                 // Multiple dates
-                $this->handleMultipleDates($structure, $structureActivite, $structureProduit, $critereId, $criteresValues);
-            } elseif (is_array($criteresValues) && isset($criteresValues[0]['month']) && isset($criteresValues[0]['year'])) {
+                $this->handleMultipleDates($structure, $structureActivite, $structureProduit, $critere->id, $criteresValues);
+            } elseif (is_array($criteresValues) && $critere->type_champ_form === 'mois') {
                 // Month start/end
-                $this->handleMonthStartEnd($structure, $structureActivite, $structureProduit, $critereId, $criteresValues);
+                $this->handleMonthStartEnd($structure, $structureActivite, $structureProduit, $critere->id, $criteresValues);
             } elseif (is_string($criteresValues) || is_numeric($criteresValues)) {
                 // String or numeric value
-                $this->handleSingleValue($structure, $structureActivite, $structureProduit, $critereId, null, $criteresValues, null);
+                $this->handleSingleValue($structure, $structureActivite, $structureProduit, $critere->id, null, $criteresValues, null);
+            } elseif (is_array($criteresValues) && $critere->type_champ_form === 'range multiple') {
+                $value = array_map(function ($value) {
+                    return (string)$value;
+                }, $criteresValues);
+
+                $this->handleSingleValue($structure, $structureActivite, $structureProduit, $critere->id, null, json_encode($value), null);
             } else {
                 // Recursive call for nested values
                 foreach ($criteresValues as $critereValue) {
-                    $this->insertCriteresRecursively($structure, $structureActivite, $structureProduit, $critereId, $critereValue, $defaut);
+                    $this->insertCriteresRecursively($structure, $structureActivite, $structureProduit, $critere, $critereValue, $defaut);
                 }
             }
         }
@@ -413,9 +423,10 @@ class StructureActiviteProduitController extends Controller
 
     private function handleMultipleHours($structure, $structureActivite, $structureProduit, $critereId, $criteresValues)
     {
-        $horaires = array_map(function ($horaire) {
-            return Carbon::createFromTime($horaire['hours'], $horaire['minutes'])->format('H:i');
-        }, $criteresValues);
+        $horaires = array_map(function ($datetime) {
+            $carbonDate = Carbon::parse($datetime);
+            return $carbonDate->format('H:i');
+        }, array_values($criteresValues));
 
         $this->createStructureProduitCritere($structure, $structureActivite, $structureProduit, $critereId, null, json_encode($horaires));
     }
@@ -431,11 +442,14 @@ class StructureActiviteProduitController extends Controller
 
     private function handleMonthStartEnd($structure, $structureActivite, $structureProduit, $critereId, $criteresValues)
     {
-        $dates = array_map(function ($dateInfo) {
-            $month = $dateInfo['month'];
-            $year = $dateInfo['year'];
-            return Carbon::create($year, $month, 1, 0, 0, 0)->format('Y-m-d');
-        }, $criteresValues);
+        $monthStart = Carbon::parse($criteresValues['monthStart']);
+        $monthEnd = Carbon::parse($criteresValues['monthEnd']);
+
+        // Extract the year and month, and create the first day of each month
+        $dates = [
+            $monthStart->startOfMonth()->format('Y-m-d'),
+            $monthEnd->startOfMonth()->format('Y-m-d')
+        ];
 
         $this->createStructureProduitCritere($structure, $structureActivite, $structureProduit, $critereId, null, json_encode($dates));
     }

@@ -49,12 +49,12 @@ watch(value, (newValue) => {
 
 <template>
     <div
-        class="card flex w-[14rem] flex-col items-start justify-start space-y-3"
+        class="card flex w-[14rem] max-w-sm flex-col items-start justify-start space-y-2"
     >
         <label
             v-if="name"
             :for="name"
-            class="block text-sm font-medium normal-case text-gray-700"
+            class="mb-1 block text-sm font-medium normal-case text-gray-700"
             >{{ name }} ({{ unite }})</label
         >
         <Slider
@@ -65,7 +65,7 @@ watch(value, (newValue) => {
             range
             class="w-full"
         />
-        <p class="w-full text-sm" v-if="model">
+        <p class="w-full text-sm text-gray-700" v-if="model">
             De {{ model[0] }} à {{ model[1] }} {{ unite }}
         </p>
     </div>

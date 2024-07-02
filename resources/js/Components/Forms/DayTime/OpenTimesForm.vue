@@ -1,28 +1,31 @@
 <script setup>
-import VueDatePicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
-import { ref, onMounted } from "vue";
+// import VueDatePicker from "@vuepic/vue-datepicker";
+// import "@vuepic/vue-datepicker/dist/main.css";
+import Calendar from "primevue/calendar";
+import { ref, watch } from "vue";
 import { TransitionRoot } from "@headlessui/vue";
 
-const model = defineModel();
+const model = defineModel({ debut: null, fin: null });
 const props = defineProps({
     name: String,
 });
 const isShowing = ref(true);
+const debut = ref();
+const fin = ref();
 
-onMounted(() => {
-    if (!model.value) {
-        // const startTime = {
-        //     hours: 10,
-        //     minutes: 0,
-        // };
-        // const endTime = {
-        //     hours: 19,
-        //     minutes: 0,
-        // };
-        // model.value = [startTime, endTime];
+watch(
+    () => debut.value,
+    (newVal) => {
+        model.value = { debut: newVal, fin: fin.value };
     }
-});
+);
+
+watch(
+    () => fin.value,
+    (newVal) => {
+        model.value = { debut: debut.value, fin: newVal };
+    }
+);
 </script>
 <template>
     <TransitionRoot
@@ -35,14 +38,34 @@ onMounted(() => {
         leave-from="opacity-100"
         leave-to="opacity-0"
     >
-        <div class="z-10 w-full">
+        <div class="flex w-full max-w-sm flex-col items-start space-y-2">
             <label
                 :for="name"
-                class="block text-sm font-medium normal-case text-gray-700"
+                class="mb-1 block text-sm font-medium normal-case text-gray-700"
             >
                 {{ name }}
             </label>
-            <VueDatePicker
+            <div class="card flex justify-start">
+                <Calendar
+                    v-model="debut"
+                    showIcon
+                    iconDisplay="input"
+                    :id="`${name}-debut`"
+                    timeOnly
+                    showButtonBar
+                />
+            </div>
+            <div class="card flex justify-start">
+                <Calendar
+                    v-model="fin"
+                    showIcon
+                    iconDisplay="input"
+                    :id="`${name}-fin`"
+                    timeOnly
+                    showButtonBar
+                />
+            </div>
+            <!-- <VueDatePicker
                 v-model="model"
                 :transitions="true"
                 time-picker
@@ -52,7 +75,7 @@ onMounted(() => {
                 selectText="confirmer"
                 :placeholder="name"
             >
-            </VueDatePicker>
+            </VueDatePicker> -->
         </div>
     </TransitionRoot>
 </template>

@@ -30,6 +30,7 @@ class TypeChampsTableSeeder extends Seeder
             ['type' => 'mois', 'criterable' => 'true', 'created_at' => $now],
             ['type' => 'instructeur', 'criterable' => 'false', 'created_at' => $now],
             ['type' => 'range', 'criterable' => 'true', 'created_at' => $now],
+            ['type' => 'radio', 'criterable' => 'true', 'created_at' => $now],
         ];
 
         DB::table('type_champs')->insert($typeChamps);

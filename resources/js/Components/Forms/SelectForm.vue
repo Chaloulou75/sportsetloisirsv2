@@ -1,10 +1,11 @@
 <script setup>
+import Dropdown from "primevue/dropdown";
 import { ref } from "vue";
 import { TransitionRoot } from "@headlessui/vue";
 
 const model = defineModel();
 const props = defineProps({
-    options: Array,
+    options: [Array, Object],
     name: String,
     classes: String,
 });
@@ -24,14 +25,24 @@ const isShowing = ref(true);
         leave-from="opacity-100"
         leave-to="opacity-0"
     >
-        <div :class="classes">
+        <div>
             <label
                 :for="name"
-                class="block text-sm font-medium normal-case text-gray-700"
+                class="mb-1 block text-sm font-medium normal-case text-gray-700"
             >
                 {{ name }}
             </label>
-            <div class="mt-1 flex flex-1 rounded-md md:flex-auto">
+            <Dropdown
+                v-model="model"
+                :options="options"
+                optionLabel="valeur"
+                :placeholder="`Selectionner un ${name}`"
+                class="w-full text-sm md:w-[14rem]"
+                :ptOptions="{ mergeProps: true }"
+                :pt="{ item: 'text-sm' }"
+                showClear
+            />
+            <!-- <div class="mt-1 flex flex-1 rounded-md md:flex-auto">
                 <select
                     ref="select"
                     :name="name"
@@ -44,14 +55,14 @@ const isShowing = ref(true);
                         {{ name }}
                     </option>
                     <option
-                        v-for="(option, index) in options"
+                        v-for="option in options"
                         :key="option.id"
                         :value="option"
                     >
                         {{ option.valeur }}
                     </option>
                 </select>
-            </div>
+            </div> -->
         </div>
     </TransitionRoot>
 </template>

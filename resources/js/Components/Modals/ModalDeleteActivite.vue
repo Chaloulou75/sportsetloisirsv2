@@ -1,5 +1,6 @@
 <script setup>
 import { router } from "@inertiajs/vue3";
+import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import {
     Dialog,
     DialogPanel,

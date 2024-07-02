@@ -1,29 +1,30 @@
 <script setup>
-import VueDatePicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
-import { ref, onMounted } from "vue";
+import Calendar from "primevue/calendar";
+import { ref, watch } from "vue";
 import { TransitionRoot } from "@headlessui/vue";
 
-const model = defineModel();
+const model = defineModel({ monthStart: null, monthEnd: null });
 const props = defineProps({
     name: String,
 });
 
 const isShowing = ref(true);
+const monthStart = ref();
+const monthEnd = ref();
 
-onMounted(() => {
-    if (!model.value) {
-        // const currentDate = {
-        //     month: new Date().getMonth(),
-        //     year: new Date().getFullYear(),
-        // };
-        // const endMonth = {
-        //     month: currentDate.month,
-        //     year: currentDate.year,
-        // };
-        // model.value = [currentDate, endMonth];
+watch(
+    () => monthStart.value,
+    (newVal) => {
+        model.value = { monthStart: newVal, monthEnd: monthEnd.value };
     }
-});
+);
+
+watch(
+    () => monthEnd.value,
+    (newVal) => {
+        model.value = { monthStart: monthStart.value, monthEnd: newVal };
+    }
+);
 </script>
 <template>
     <TransitionRoot
@@ -36,14 +37,38 @@ onMounted(() => {
         leave-from="opacity-100"
         leave-to="opacity-0"
     >
-        <div class="z-10 w-full">
+        <div class="flex w-full max-w-sm flex-col items-start space-y-2">
             <label
                 :for="name"
                 class="block text-sm font-medium normal-case text-gray-700"
             >
                 {{ name }}
             </label>
-            <VueDatePicker
+            <div class="card flex justify-start">
+                <Calendar
+                    v-model="monthStart"
+                    view="month"
+                    dateFormat="mm/yy"
+                    showIcon
+                    iconDisplay="input"
+                    :id="`${name}-start`"
+                    showButtonBar
+                />
+            </div>
+
+            <div class="card flex justify-start">
+                <Calendar
+                    v-model="monthEnd"
+                    view="month"
+                    dateFormat="mm/yy"
+                    showIcon
+                    iconDisplay="input"
+                    :id="`${name}-end`"
+                    showButtonBar
+                />
+            </div>
+
+            <!-- <VueDatePicker
                 v-model="model"
                 :transitions="true"
                 month-picker
@@ -53,7 +78,7 @@ onMounted(() => {
                 selectText="Confirmer"
                 placeholder="Selectionnez vos mois d'ouvertures"
             >
-            </VueDatePicker>
+            </VueDatePicker> -->
         </div>
     </TransitionRoot>
 </template>

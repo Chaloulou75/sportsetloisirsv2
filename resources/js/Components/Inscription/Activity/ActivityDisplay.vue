@@ -112,6 +112,15 @@ const groupCriteres = (criteres) => {
     }, {});
 };
 
+function decodeValue(valeur) {
+    try {
+        return JSON.parse(valeur);
+    } catch (e) {
+        console.log("Failed to parse JSON", e);
+        return [];
+    }
+}
+
 const formatCurrency = (value) => {
     const numericValue = Number(value.replace(/[^0-9.-]+/g, ""));
     if (!isNaN(numericValue)) {
@@ -464,8 +473,28 @@ const destroyTarif = (tarif) => {
                                                                         >
                                                                             <span
                                                                                 v-if="
-                                                                                    critere.valeur
+                                                                                    crit.type_champ_form ===
+                                                                                    'range multiple'
                                                                                 "
+                                                                            >
+                                                                                De
+                                                                                {{
+                                                                                    decodeValue(
+                                                                                        critere.valeur
+                                                                                    )[0]
+                                                                                }}
+                                                                                à
+                                                                                {{
+                                                                                    decodeValue(
+                                                                                        critere.valeur
+                                                                                    )[1]
+                                                                                }}
+                                                                                {{
+                                                                                    crit.unite
+                                                                                }}
+                                                                            </span>
+                                                                            <span
+                                                                                v-else
                                                                                 class="text-left text-sm text-gray-600"
                                                                             >
                                                                                 {{

@@ -458,7 +458,7 @@ onMounted(() => {
         </template>
         <template #default>
             <div
-                class="sticky left-0 right-0 top-16 z-[1199] bg-transparent backdrop-blur-md"
+                class="sticky left-0 right-0 top-16 z-40 bg-transparent backdrop-blur-md"
                 ref="categoriesEl"
                 v-if="categories && categories.length > 0"
             >
@@ -838,7 +838,9 @@ onMounted(() => {
                                             ]
                                         "
                                         :name="critere.nom"
-                                        :metric="`Km`"
+                                        :unite="critere.unite"
+                                        :min="critere.min"
+                                        :max="critere.max"
                                     />
                                 </div>
                                 <!-- sous criteres -->

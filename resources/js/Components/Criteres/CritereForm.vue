@@ -12,6 +12,7 @@ import OpenTimesForm from "@/Components/Forms/DayTime/OpenTimesForm.vue";
 import OpenMonthsForm from "@/Components/Forms/DayTime/OpenMonthsForm.vue";
 import { ArrowPathIcon } from "@heroicons/vue/24/outline";
 import RangeMultiple from "@/Components/Forms/RangeMultiple.vue";
+import RadioForm from "@/Components/Forms/RadioForm.vue";
 
 const props = defineProps({
     criteres: Object,
@@ -37,11 +38,7 @@ const filteredCriteresByChamp = computed(() => {
 
 const criteresModel = defineModel("criteresBase");
 const sousCriteresModel = defineModel("sousCriteres");
-const emit = defineEmits(["reset-criteres"]); //, "update-checkboxes"
-
-const handleUpdateSelectedCheckboxes = (critereId, optionValue, checked) => {
-    emit("update-checkboxes", critereId, optionValue, checked);
-};
+const emit = defineEmits(["reset-criteres"]);
 
 const handleResetFormCriteres = () => {
     emit("reset-criteres");
@@ -49,7 +46,7 @@ const handleResetFormCriteres = () => {
 </script>
 <template>
     <div
-        class="mx-auto w-full flex-col items-start justify-center gap-4 overflow-x-auto rounded bg-transparent px-2 py-2 backdrop-blur-md md:flex-row md:items-center md:justify-between md:space-y-0 md:px-6"
+        class="mx-auto w-full flex-col items-center justify-center gap-4 overflow-x-auto rounded bg-transparent px-2 py-2 backdrop-blur-md md:flex-row md:items-start md:justify-between md:px-6 md:pt-4"
         :class="{
             flex: showCriteres,
             hidden: !showCriteres,
@@ -79,37 +76,13 @@ const handleResetFormCriteres = () => {
                 v-model="criteresModel[critere.id]"
                 :options="critere.valeurs"
             />
-            <!-- :is-checkbox-selected="isCheckboxSelected"
-                @update-selected-checkboxes="handleUpdateSelectedCheckboxes" -->
             <!-- radio -->
             <div v-if="critere.type_champ_form === 'radio'">
-                <div class="flex items-center space-x-2">
-                    <label
-                        :for="critere.nom"
-                        class="block text-sm font-medium normal-case text-gray-700"
-                    >
-                        {{ critere.nom }}
-                    </label>
-                    <div class="flex rounded-md">
-                        <div>
-                            <label
-                                class="inline-flex items-center"
-                                v-for="(option, index) in critere.valeurs"
-                                :key="option.id"
-                            >
-                                <input
-                                    v-model="criteresModel[critere.id]"
-                                    type="radio"
-                                    class="form-radio"
-                                    :name="option.valeur"
-                                    :value="option.valeur"
-                                    checked
-                                />
-                                <span class="ml-2">{{ option.valeur }}</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
+                <RadioForm
+                    v-model="criteresModel[critere.id]"
+                    :name="critere.nom"
+                    :options="critere.valeurs"
+                />
             </div>
             <!-- input text -->
             <div v-if="critere.type_champ_form === 'text'">
@@ -146,14 +119,7 @@ const handleResetFormCriteres = () => {
                     />
                 </div>
             </div>
-            <!-- Range km  -->
-            <RangeInputForm
-                v-if="critere.type_champ_form === 'rayon'"
-                class="w-full max-w-sm"
-                v-model="criteresModel[critere.id]"
-                :name="critere.nom"
-                :metric="critere.nom"
-            />
+            <!-- Range  -->
             <RangeInputForm
                 v-if="critere.type_champ_form === 'range'"
                 class="w-full max-w-sm"

@@ -1520,7 +1520,9 @@ onMounted(() => {
                                 v-if="
                                     !showAddValeurForm(critere) &&
                                     (critere.type_champ_form === 'select' ||
-                                        critere.type_champ_form === 'checkbox')
+                                        critere.type_champ_form ===
+                                            'checkbox' ||
+                                        critere.type_champ_form === 'radio')
                                 "
                                 type="button"
                                 @click="toggleAddValeurForm(critere)"

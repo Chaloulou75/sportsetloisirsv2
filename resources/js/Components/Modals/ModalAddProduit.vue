@@ -13,6 +13,7 @@ import SingleTimeForm from "@/Components/Forms/DayTime/SingleTimeForm.vue";
 import OpenTimesForm from "@/Components/Forms/DayTime/OpenTimesForm.vue";
 import OpenMonthsForm from "@/Components/Forms/DayTime/OpenMonthsForm.vue";
 import InstructeurForm from "@/Components/Forms/InstructeurForm.vue";
+import RangeMultiple from "@/Components/Forms/RangeMultiple.vue";
 import LoadingSVG from "@/Components/SVG/LoadingSVG.vue";
 import { XCircleIcon } from "@heroicons/vue/24/outline";
 import {
@@ -537,13 +538,12 @@ const onSubmitAddProduitForm = () => {
                                                         </div>
                                                     </div>
 
-                                                    <!-- Range km  -->
+                                                    <!-- Range  -->
                                                     <div
                                                         v-if="
                                                             critere.type_champ_form ===
-                                                            'rayon'
+                                                            'range'
                                                         "
-                                                        class="flex w-full max-w-sm flex-col items-start space-y-3"
                                                     >
                                                         <RangeInputForm
                                                             class="w-full max-w-sm"
@@ -554,9 +554,31 @@ const onSubmitAddProduitForm = () => {
                                                                 ]
                                                             "
                                                             :name="critere.nom"
-                                                            :metric="`Km`"
+                                                            :min="critere.min"
+                                                            :max="critere.max"
+                                                            :unite="
+                                                                critere.unite
+                                                            "
                                                         />
                                                     </div>
+                                                    <!-- Range Multiple -->
+                                                    <RangeMultiple
+                                                        v-if="
+                                                            critere.type_champ_form ===
+                                                            'range multiple'
+                                                        "
+                                                        class="w-full max-w-sm"
+                                                        v-model="
+                                                            formAddProduit
+                                                                .criteres[
+                                                                critere.id
+                                                            ]
+                                                        "
+                                                        :name="critere.nom"
+                                                        :unite="critere.unite"
+                                                        :min="critere.min"
+                                                        :max="critere.max"
+                                                    />
 
                                                     <!-- Instructeur -->
                                                     <div

@@ -189,7 +189,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
         </template>
         <template #default>
             <div
-                class="sticky left-0 right-0 top-16 z-[1199] bg-transparent backdrop-blur-md"
+                class="sticky left-0 right-0 top-16 z-40 bg-transparent backdrop-blur-md"
                 ref="categoriesEl"
                 v-if="categories.length > 0"
             >
@@ -408,7 +408,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
                                 <button
                                     v-if="displayMap"
                                     type="button"
-                                    class="fixed inset-x-2 bottom-4 z-[1199] mx-auto flex w-3/4 max-w-xs items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-xs text-white transition duration-75 hover:scale-105 hover:bg-gray-800 hover:font-semibold md:w-auto md:text-sm"
+                                    class="fixed inset-x-2 bottom-4 z-40 mx-auto flex w-3/4 max-w-xs items-center justify-center rounded-full bg-gray-900 px-4 py-3 text-xs text-white transition duration-75 hover:scale-105 hover:bg-gray-800 hover:font-semibold md:w-auto md:text-sm"
                                     @click="goToListe"
                                 >
                                     <ListBulletIcon class="mr-2 h-5 w-5" />

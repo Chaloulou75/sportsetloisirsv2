@@ -25,25 +25,25 @@ const isShowing = ref(true);
         leave-from="opacity-100"
         leave-to="opacity-0"
     >
-        <div class="card flex justify-center">
+        <div class="card flex justify-start">
             <div class="flex flex-col gap-2">
-                <span class="text-sm font-medium text-gray-700">{{
+                <span v-if="name" class="text-sm font-medium text-gray-700">{{
                     name
                 }}</span>
                 <div
-                    v-for="(option, index) of options"
+                    v-for="option in options"
                     :key="option.id"
                     class="flex items-center"
                 >
                     <Checkbox
                         v-model="model"
-                        :inputId="option.index"
+                        :inputId="option.valeur"
                         name="option"
                         :value="option"
                     />
                     <label
                         class="ml-2 text-sm font-medium text-gray-700"
-                        :for="option.index"
+                        :for="option.valeur"
                         >{{ option.valeur }}</label
                     >
                 </div>

@@ -627,45 +627,40 @@ onMounted(() => {
                                                 </div>
 
                                                 <!-- Range  -->
-                                                <div
+                                                <RangeInputForm
                                                     v-if="
                                                         critere.type_champ_form ===
                                                         'range'
                                                     "
-                                                    class="flex w-full max-w-sm flex-col items-start space-y-3"
-                                                >
-                                                    <RangeInputForm
-                                                        class="w-full max-w-sm"
-                                                        v-model="
-                                                            form.criteres[
-                                                                critere.id
-                                                            ]
-                                                        "
-                                                        :name="critere.nom"
-                                                        :metric="critere.nom"
-                                                    />
-                                                </div>
+                                                    class="w-full max-w-sm"
+                                                    v-model="
+                                                        form.criteres[
+                                                            critere.id
+                                                        ]
+                                                    "
+                                                    :name="critere.nom"
+                                                    :min="critere.min"
+                                                    :max="critere.max"
+                                                    :unite="critere.unite"
+                                                />
 
                                                 <!-- Range Multiple -->
-                                                <div
+                                                <RangeMultiple
                                                     v-if="
                                                         critere.type_champ_form ===
                                                         'range multiple'
                                                     "
-                                                >
-                                                    <RangeMultiple
-                                                        class="w-full max-w-sm"
-                                                        v-model="
-                                                            form.criteres[
-                                                                critere.id
-                                                            ]
-                                                        "
-                                                        :name="critere.nom"
-                                                        :unite="critere.unite"
-                                                        :min="critere.min"
-                                                        :max="critere.max"
-                                                    />
-                                                </div>
+                                                    class="w-full max-w-sm"
+                                                    v-model="
+                                                        form.criteres[
+                                                            critere.id
+                                                        ]
+                                                    "
+                                                    :name="critere.nom"
+                                                    :unite="critere.unite"
+                                                    :min="critere.min"
+                                                    :max="critere.max"
+                                                />
 
                                                 <!-- Instructeur -->
                                                 <div

@@ -101,9 +101,14 @@ const updateIsFavorite = async () => {
     isFavorite.value = favoriteProduitIds.includes(produitId);
 };
 
-onMounted(() => {
-    updateIsFavorite();
-});
+function decodeValue(valeur) {
+    try {
+        return JSON.parse(valeur);
+    } catch (e) {
+        console.error("Failed to parse JSON", e);
+        return [];
+    }
+}
 
 const formatDate = (dateTime) => {
     return dayjs(dateTime).locale("fr").format("DD MMMM YYYY");
@@ -131,6 +136,10 @@ const formatCurrency = (value) => {
 const formatCityName = (ville) => {
     return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
 };
+
+onMounted(() => {
+    updateIsFavorite();
+});
 </script>
 
 <template>
@@ -251,9 +260,17 @@ const formatCityName = (ville) => {
                                         {{ critere.critere.nom }}
                                     </div>
                                     <div
-                                        v-if="critere.valeur"
-                                        class="text-center text-xs"
+                                        v-if="
+                                            critere.critere.type_champ_form ===
+                                            'range multiple'
+                                        "
                                     >
+                                        De
+                                        {{ decodeValue(critere.valeur)[0] }} à
+                                        {{ decodeValue(critere.valeur)[1] }}
+                                        {{ critere.critere.unite }}
+                                    </div>
+                                    <div v-else class="text-center text-xs">
                                         {{ critere.valeur }}
                                         <span
                                             v-if="

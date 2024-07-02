@@ -1,10 +1,10 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { TransitionRoot } from "@headlessui/vue";
 
 const model = defineModel();
 const props = defineProps({
-    options: Array,
+    options: [Array, Object],
     name: String,
     classes: String,
 });

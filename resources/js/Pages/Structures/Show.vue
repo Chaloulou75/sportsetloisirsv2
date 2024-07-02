@@ -471,7 +471,7 @@ const events = getEvents();
         </template>
         <template #default>
             <div
-                class="sticky left-0 right-0 top-16 z-[1199] bg-transparent backdrop-blur-md"
+                class="sticky left-0 right-0 top-16 z-40 bg-transparent backdrop-blur-md"
                 ref="categoriesEl"
                 v-if="categories && categories.length > 0"
             >
@@ -650,7 +650,7 @@ const events = getEvents();
                             </p>
                         </div>
                         <!-- Disciplines -->
-                        <div>
+                        <div v-if="uniqueDisciplines.length > 0">
                             <h3
                                 class="my-4 text-lg font-semibold text-gray-700"
                             >
@@ -676,9 +676,8 @@ const events = getEvents();
                             </div>
                         </div>
                         <!-- Categories -->
-                        <div>
+                        <div v-if="selectedDiscipline">
                             <h3
-                                v-if="selectedDiscipline"
                                 class="my-4 text-lg font-semibold text-gray-700"
                             >
                                 Les catégories proposées pour
@@ -688,7 +687,10 @@ const events = getEvents();
                                 :
                             </h3>
                             <div
-                                v-if="selectedDiscipline"
+                                v-if="
+                                    selectedDiscipline &&
+                                    filteredCategories.length > 0
+                                "
                                 class="grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3 lg:grid-cols-4 lg:gap-6"
                             >
                                 <button
@@ -708,9 +710,8 @@ const events = getEvents();
                             </div>
                         </div>
                         <!-- Filters -->
-                        <div>
+                        <div v-if="selectedCategory">
                             <h3
-                                v-if="selectedCategory"
                                 class="my-4 text-lg font-semibold text-gray-700"
                             >
                                 Les activités proposées pour
