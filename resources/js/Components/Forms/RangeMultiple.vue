@@ -57,14 +57,10 @@ watch(value, (newValue) => {
             class="mb-1 block text-sm font-medium normal-case text-gray-700"
             >{{ name }} ({{ unite }})</label
         >
-        <Slider
-            v-model="model"
-            :min="min"
-            :max="max"
-            :name="name"
-            range
-            class="w-full"
-        />
+        <div class="px-2">
+            <Slider v-model="model" :min="min" :max="max" :name="name" range />
+        </div>
+
         <p class="w-full text-sm text-gray-700" v-if="model">
             De {{ model[0] }} à {{ model[1] }} {{ unite }}
         </p>

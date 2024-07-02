@@ -29,9 +29,13 @@ const filteredCriteresByChamp = computed(() => {
             "radio",
             "text",
             "number",
-            "rayon",
             "range",
             "range multiple",
+            "date",
+            "dates",
+            "time",
+            "times",
+            "mois",
         ].includes(critere.type_champ_form);
     });
 });
@@ -46,7 +50,7 @@ const handleResetFormCriteres = () => {
 </script>
 <template>
     <div
-        class="mx-auto w-full flex-col items-center justify-center gap-4 overflow-x-auto rounded bg-transparent px-2 py-2 backdrop-blur-md md:flex-row md:items-start md:justify-between md:px-6 md:pt-4"
+        class="mx-auto w-full flex-col items-center justify-center gap-6 overflow-x-auto rounded bg-transparent px-2 py-2 backdrop-blur-md md:flex-row md:items-start md:justify-between md:px-6 md:pt-4"
         :class="{
             flex: showCriteres,
             hidden: !showCriteres,
@@ -77,13 +81,13 @@ const handleResetFormCriteres = () => {
                 :options="critere.valeurs"
             />
             <!-- radio -->
-            <div v-if="critere.type_champ_form === 'radio'">
-                <RadioForm
-                    v-model="criteresModel[critere.id]"
-                    :name="critere.nom"
-                    :options="critere.valeurs"
-                />
-            </div>
+            <RadioForm
+                v-if="critere.type_champ_form === 'radio'"
+                v-model="criteresModel[critere.id]"
+                :name="critere.nom"
+                :options="critere.valeurs"
+            />
+
             <!-- input text -->
             <div v-if="critere.type_champ_form === 'text'">
                 <label
@@ -125,7 +129,9 @@ const handleResetFormCriteres = () => {
                 class="w-full max-w-sm"
                 v-model="criteresModel[critere.id]"
                 :name="critere.nom"
-                :metric="critere.nom"
+                :unite="critere.unite"
+                :min="critere.min"
+                :max="critere.max"
             />
             <RangeMultiple
                 v-if="critere.type_champ_form === 'range multiple'"
@@ -137,65 +143,49 @@ const handleResetFormCriteres = () => {
                 :max="critere.max"
             />
             <!-- Heure seule -->
-            <div
+            <SingleTimeForm
                 v-if="critere.type_champ_form === 'time'"
-                class="flex max-w-sm flex-col items-start"
-            >
-                <SingleTimeForm
-                    class="w-full"
-                    v-model="criteresModel[critere.id]"
-                    :name="critere.nom"
-                />
-            </div>
+                class="w-full max-w-sm"
+                v-model="criteresModel[critere.id]"
+                :name="critere.nom"
+            />
             <!-- Heures x2 ouverture / fermeture -->
-            <div
+
+            <OpenTimesForm
                 v-if="critere.type_champ_form === 'times'"
-                class="flex max-w-sm flex-col items-start space-y-3"
-            >
-                <OpenTimesForm
-                    class="w-full"
-                    v-model="criteresModel[critere.id]"
-                    :name="critere.nom"
-                />
-            </div>
+                class="w-full max-w-sm"
+                v-model="criteresModel[critere.id]"
+                :name="critere.nom"
+            />
             <!-- Date seule -->
-            <div
+
+            <SingleDateForm
                 v-if="critere.type_champ_form === 'date'"
-                class="flex max-w-sm flex-col items-start space-y-3"
-            >
-                <SingleDateForm
-                    class="w-full"
-                    v-model="criteresModel[critere.id]"
-                    :name="critere.nom"
-                />
-            </div>
+                class="w-full max-w-sm"
+                v-model="criteresModel[critere.id]"
+                :name="critere.nom"
+            />
+
             <!-- Dates x 2 -->
-            <div
+            <OpenDaysForm
                 v-if="critere.type_champ_form === 'dates'"
-                class="flex max-w-sm flex-col items-start space-y-3"
-            >
-                <OpenDaysForm
-                    class="w-full"
-                    v-model="criteresModel[critere.id]"
-                    :name="critere.nom"
-                />
-            </div>
+                class="w-full max-w-sm"
+                v-model="criteresModel[critere.id]"
+                :name="critere.nom"
+            />
             <!-- Mois -->
-            <div v-if="critere.type_champ_form === 'mois'">
-                <div class="flex max-w-sm flex-col items-start space-y-3">
-                    <OpenMonthsForm
-                        class="w-full"
-                        v-model="criteresModel[critere.id]"
-                        :name="critere.nom"
-                    />
-                </div>
-            </div>
+
+            <OpenMonthsForm
+                v-if="critere.type_champ_form === 'mois'"
+                class="w-full max-w-sm"
+                v-model="criteresModel[critere.id]"
+                :name="critere.nom"
+            />
             <!-- sous criteres -->
-            <div v-for="valeur in critere.valeurs" :key="valeur.id">
+            <template v-for="valeur in critere.valeurs" :key="valeur.id">
                 <div
                     v-for="souscritere in valeur.sous_criteres"
                     :key="souscritere.id"
-                    class=""
                 >
                     <!-- select -->
                     <SelectForm
@@ -267,7 +257,7 @@ const handleResetFormCriteres = () => {
                         :metric="souscritere.nom"
                     />
                 </div>
-            </div>
+            </template>
         </div>
         <button
             class="flex w-full justify-center md:w-auto"

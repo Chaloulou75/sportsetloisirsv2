@@ -43,13 +43,10 @@ const isShowing = ref(true);
                 class="mb-1 block text-sm font-medium normal-case text-gray-700"
                 >{{ name }} <span v-if="unite">({{ unite }})</span></label
             >
-            <Slider
-                v-model="model"
-                :min="min"
-                :max="max"
-                :name="name"
-                class="w-full"
-            />
+            <div class="px-2">
+                <Slider v-model="model" :min="min" :max="max" :name="name" />
+            </div>
+
             <p class="w-full text-sm text-gray-700" v-if="model">
                 {{ model }} {{ unite }}
             </p>

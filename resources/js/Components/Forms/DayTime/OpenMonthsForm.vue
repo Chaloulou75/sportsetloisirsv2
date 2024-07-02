@@ -37,7 +37,7 @@ watch(
         leave-from="opacity-100"
         leave-to="opacity-0"
     >
-        <div class="flex w-full max-w-sm flex-col items-start space-y-2">
+        <div class="flex w-full max-w-sm flex-col items-start space-y-1">
             <label
                 :for="name"
                 class="block text-sm font-medium normal-case text-gray-700"
