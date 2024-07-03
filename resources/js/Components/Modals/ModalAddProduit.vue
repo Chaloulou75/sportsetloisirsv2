@@ -2,6 +2,7 @@
 import { useForm } from "@inertiajs/vue3";
 import { ref, watch, computed, defineAsyncComponent } from "vue";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
+import Checkbox from "@/Components/Forms/Checkbox.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
 import RadioForm from "@/Components/Forms/RadioForm.vue";
 import RangeInputForm from "@/Components/Forms/RangeInputForm.vue";

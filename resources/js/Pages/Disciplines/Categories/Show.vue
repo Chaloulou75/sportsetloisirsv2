@@ -78,13 +78,11 @@ const displayMap = ref(false);
 const goToMap = () => {
     displayProduits.value = !displayProduits.value;
     displayMap.value = !displayMap.value;
-    // mapStructure.value.scrollIntoView({ behavior: "smooth" });
 };
 
 const goToListe = () => {
     displayProduits.value = !displayProduits.value;
     displayMap.value = !displayMap.value;
-    // listeStructure.value.scrollIntoView({ behavior: "smooth" });
 };
 
 const criteresEl = ref(null);
@@ -151,36 +149,6 @@ const onFilteredProduitsUpdate = (filtered) => {
 const onfilteredStructuresUpdate = (filteredStr) => {
     filteredStructures.value = filteredStr;
 };
-
-const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
-    if (checked) {
-        if (!formCriteres.criteresBase[critereId]) {
-            formCriteres.criteresBase[critereId] = [optionValue];
-        } else {
-            formCriteres.criteresBase[critereId].push(optionValue);
-        }
-    } else {
-        const selectedCritere = formCriteres.criteresBase[critereId];
-        if (selectedCritere) {
-            const index = selectedCritere.indexOf(optionValue);
-            if (index !== -1) {
-                selectedCritere.splice(index, 1);
-            }
-            if (selectedCritere.length === 0) {
-                delete formCriteres.criteresBase[critereId];
-            }
-        }
-    }
-};
-
-const isCheckboxSelected = computed(() => {
-    return (critereId, optionValue) => {
-        return (
-            formCriteres.criteresBase[critereId] &&
-            formCriteres.criteresBase[critereId].includes(optionValue)
-        );
-    };
-});
 
 const { filterProducts } = useFilterProducts(
     props,
@@ -314,7 +282,7 @@ onMounted(() => {
         <template #default>
             <div
                 ref="criteresEl"
-                class="sticky left-0 right-0 top-16 z-40 bg-transparent backdrop-blur-md"
+                class="sticky left-0 right-0 top-16 z-50 bg-gray-50 backdrop-blur-md"
             >
                 <CategoriesResultNavigation
                     :category="category"
@@ -326,31 +294,29 @@ onMounted(() => {
                     :show-criteres="showCriteresLg"
                     @call-toggle-criteres="toggleCriteresLg"
                 />
-                <!-- Criteres -->
-                <div
-                    class="flex w-full items-center justify-between border-b border-gray-300 px-2 py-3 md:hidden"
-                >
-                    <h3 class="font-semibold">
-                        {{ category.nom_categorie_client }}
-                    </h3>
-                    <button type="button" @click="toggleCriteres">
-                        <XMarkIcon v-if="showCriteres" class="h-6 w-6" />
-                        <AdjustmentsHorizontalIcon v-else class="h-6 w-6" />
-                    </button>
-                </div>
-
-                <CritereForm
-                    v-if="criteres"
-                    :criteres="criteres"
-                    :show-criteres="showCriteres"
-                    :show-criteres-lg="showCriteresLg"
-                    v-model:criteres-base="formCriteres.criteresBase"
-                    v-model:sous-criteres="formCriteres.sousCriteres"
-                    @reset-criteres="resetFormCriteres"
-                />
-                <!-- :is-checkbox-selected="isCheckboxSelected"
-                @update-checkboxes="updateSelectedCheckboxes" -->
             </div>
+            <!-- Criteres -->
+            <div
+                class="flex w-full items-center justify-between border-b border-gray-300 px-2 py-3 md:hidden"
+            >
+                <h3 class="font-semibold">
+                    {{ category.nom_categorie_client }}
+                </h3>
+                <button type="button" @click="toggleCriteres">
+                    <XMarkIcon v-if="showCriteres" class="h-6 w-6" />
+                    <AdjustmentsHorizontalIcon v-else class="h-6 w-6" />
+                </button>
+            </div>
+
+            <CritereForm
+                v-if="criteres"
+                :criteres="criteres"
+                :show-criteres="showCriteres"
+                :show-criteres-lg="showCriteresLg"
+                v-model:criteres-base="formCriteres.criteresBase"
+                v-model:sous-criteres="formCriteres.sousCriteres"
+                @reset-criteres="resetFormCriteres"
+            />
 
             <template v-if="produits.data.length > 0">
                 <div class="mx-auto py-6 md:py-12">

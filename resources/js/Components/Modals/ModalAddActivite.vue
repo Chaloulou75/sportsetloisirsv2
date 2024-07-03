@@ -3,6 +3,7 @@ import { useForm } from "@inertiajs/vue3";
 import { ref, watch, onMounted, computed, defineAsyncComponent } from "vue";
 import { XCircleIcon } from "@heroicons/vue/24/outline";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
+import Checkbox from "@/Components/Forms/Checkbox.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
 import RadioForm from "@/Components/Forms/RadioForm.vue";
 import RangeInputForm from "@/Components/Forms/RangeInputForm.vue";
@@ -602,28 +603,18 @@ onMounted(() => {
                                                                         adresse.zip_code
                                                                     }},
                                                                     {{
-                                                                        adresse.city
+                                                                        adresse.city_name
                                                                     }}
                                                                 </option>
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div
-                                                        class="flex items-center"
-                                                    >
-                                                        <input
-                                                            v-model="addAddress"
-                                                            id="addAddress"
-                                                            type="checkbox"
-                                                            class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
-                                                        />
-                                                        <label
-                                                            for="addAddress"
-                                                            class="ml-2 text-sm font-medium text-gray-700"
-                                                            >Ajouter une
-                                                            adresse</label
-                                                        >
-                                                    </div>
+                                                    <Checkbox
+                                                        v-model:checked="
+                                                            addAddress
+                                                        "
+                                                        name="Ajouter une adresse"
+                                                    />
                                                 </div>
 
                                                 <!-- Range  -->
@@ -670,24 +661,12 @@ onMounted(() => {
                                                     "
                                                     class="flex w-full items-start"
                                                 >
-                                                    <input
-                                                        v-model="addInstructeur"
-                                                        id="addInstructeur"
-                                                        type="checkbox"
-                                                        class="form-checkbox h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
+                                                    <Checkbox
+                                                        v-model:checked="
+                                                            addInstructeur
+                                                        "
+                                                        name="Ajouter un instructeur"
                                                     />
-                                                    <label
-                                                        for="addInstructeur"
-                                                        class="ml-2 text-sm font-medium text-gray-700"
-                                                        >Ajouter un instructeur
-                                                        <span
-                                                            class="text-xs italic text-gray-600"
-                                                            >(celui-ci doit
-                                                            préalablement être
-                                                            inscrit sur
-                                                            sports-et-loisirs)</span
-                                                        >
-                                                    </label>
                                                 </div>
 
                                                 <!-- sous criteres -->

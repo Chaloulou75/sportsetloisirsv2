@@ -1,6 +1,4 @@
 <script setup>
-// import VueDatePicker from "@vuepic/vue-datepicker";
-// import "@vuepic/vue-datepicker/dist/main.css";
 import Calendar from "primevue/calendar";
 import { ref, watch } from "vue";
 import { TransitionRoot } from "@headlessui/vue";
@@ -10,20 +8,20 @@ const props = defineProps({
     name: String,
 });
 const isShowing = ref(true);
-const debut = ref();
-const fin = ref();
+const start = ref();
+const end = ref();
 
 watch(
-    () => debut.value,
+    () => start.value,
     (newVal) => {
-        model.value = { debut: newVal, fin: fin.value };
+        model.value = { debut: newVal, fin: end.value };
     }
 );
 
 watch(
-    () => fin.value,
+    () => end.value,
     (newVal) => {
-        model.value = { debut: debut.value, fin: newVal };
+        model.value = { debut: start.value, fin: newVal };
     }
 );
 </script>
@@ -47,7 +45,7 @@ watch(
             </label>
             <div class="card flex justify-start">
                 <Calendar
-                    v-model="debut"
+                    v-model="start"
                     showIcon
                     iconDisplay="input"
                     :id="`${name}-debut`"
@@ -57,7 +55,7 @@ watch(
             </div>
             <div class="card flex justify-start">
                 <Calendar
-                    v-model="fin"
+                    v-model="end"
                     showIcon
                     iconDisplay="input"
                     :id="`${name}-fin`"
@@ -65,17 +63,6 @@ watch(
                     showButtonBar
                 />
             </div>
-            <!-- <VueDatePicker
-                v-model="model"
-                :transitions="true"
-                time-picker
-                range
-                locale="fr"
-                cancelText="annuler"
-                selectText="confirmer"
-                :placeholder="name"
-            >
-            </VueDatePicker> -->
         </div>
     </TransitionRoot>
 </template>

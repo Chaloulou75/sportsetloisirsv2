@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import Slider from "primevue/slider";
 import { TransitionRoot } from "@headlessui/vue";
 
@@ -19,6 +19,9 @@ const props = defineProps({
         default: null,
     },
 });
+
+const min = computed(() => Number(props.min));
+const max = computed(() => Number(props.max));
 
 const isShowing = ref(true);
 </script>

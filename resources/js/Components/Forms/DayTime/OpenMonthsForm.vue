@@ -9,20 +9,20 @@ const props = defineProps({
 });
 
 const isShowing = ref(true);
-const monthStart = ref();
-const monthEnd = ref();
+const start = ref();
+const end = ref();
 
 watch(
-    () => monthStart.value,
+    () => start.value,
     (newVal) => {
-        model.value = { monthStart: newVal, monthEnd: monthEnd.value };
+        model.value = { monthStart: newVal, monthEnd: end.value };
     }
 );
 
 watch(
-    () => monthEnd.value,
+    () => end.value,
     (newVal) => {
-        model.value = { monthStart: monthStart.value, monthEnd: newVal };
+        model.value = { monthStart: start.value, monthEnd: newVal };
     }
 );
 </script>
@@ -46,7 +46,7 @@ watch(
             </label>
             <div class="card flex justify-start">
                 <Calendar
-                    v-model="monthStart"
+                    v-model="start"
                     view="month"
                     dateFormat="mm/yy"
                     showIcon
@@ -58,7 +58,7 @@ watch(
 
             <div class="card flex justify-start">
                 <Calendar
-                    v-model="monthEnd"
+                    v-model="end"
                     view="month"
                     dateFormat="mm/yy"
                     showIcon
@@ -67,18 +67,6 @@ watch(
                     showButtonBar
                 />
             </div>
-
-            <!-- <VueDatePicker
-                v-model="model"
-                :transitions="true"
-                month-picker
-                range
-                locale="fr"
-                cancelText="Annuler"
-                selectText="Confirmer"
-                placeholder="Selectionnez vos mois d'ouvertures"
-            >
-            </VueDatePicker> -->
         </div>
     </TransitionRoot>
 </template>

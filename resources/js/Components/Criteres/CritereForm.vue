@@ -18,7 +18,6 @@ const props = defineProps({
     criteres: Object,
     showCriteres: Boolean,
     showCriteresLg: Boolean,
-    // isCheckboxSelected: Function,
 });
 
 const filteredCriteresByChamp = computed(() => {
@@ -50,7 +49,7 @@ const handleResetFormCriteres = () => {
 </script>
 <template>
     <div
-        class="mx-auto w-full flex-col items-center justify-center gap-6 overflow-x-auto rounded bg-transparent px-2 py-2 backdrop-blur-md md:flex-row md:items-start md:justify-between md:px-6 md:pt-4"
+        class="relative mx-auto w-full flex-col items-center justify-center gap-6 overflow-x-auto rounded bg-gray-50 px-2 py-2 backdrop-blur-md md:flex-row md:items-start md:justify-between md:px-6 md:pt-4"
         :class="{
             flex: showCriteres,
             hidden: !showCriteres,
@@ -150,7 +149,6 @@ const handleResetFormCriteres = () => {
                 :name="critere.nom"
             />
             <!-- Heures x2 ouverture / fermeture -->
-
             <OpenTimesForm
                 v-if="critere.type_champ_form === 'times'"
                 class="w-full max-w-sm"
@@ -158,7 +156,6 @@ const handleResetFormCriteres = () => {
                 :name="critere.nom"
             />
             <!-- Date seule -->
-
             <SingleDateForm
                 v-if="critere.type_champ_form === 'date'"
                 class="w-full max-w-sm"
@@ -182,87 +179,89 @@ const handleResetFormCriteres = () => {
                 :name="critere.nom"
             />
             <!-- sous criteres -->
-            <template v-for="valeur in critere.valeurs" :key="valeur.id">
-                <div
-                    v-for="souscritere in valeur.sous_criteres"
-                    :key="souscritere.id"
-                >
-                    <!-- select -->
-                    <SelectForm
-                        class="max-w-sm py-2"
-                        v-if="
-                            criteresModel[critere.id] === valeur &&
-                            souscritere.type_champ_form === 'select' &&
-                            souscritere.dis_cat_crit_val_id === valeur.id
-                        "
-                        :name="souscritere.nom"
-                        v-model="sousCriteresModel[souscritere.id]"
-                        :options="souscritere.sous_criteres_valeurs"
-                    />
-                    <!-- number -->
+            <template v-if="critere.valeurs">
+                <div v-for="valeur in critere.valeurs" :key="valeur.id">
                     <div
-                        v-if="
-                            criteresModel[critere.id] === valeur &&
-                            souscritere.type_champ_form === 'number' &&
-                            souscritere.dis_cat_crit_val_id === valeur.id
-                        "
-                        class="mt-2 flex items-center space-x-4"
+                        v-for="souscritere in valeur.sous_criteres"
+                        :key="souscritere.id"
                     >
-                        <InputLabel
-                            class="py-2"
-                            :for="souscritere.nom"
-                            :value="souscritere.nom"
-                        />
-                        <TextInput
-                            class="w-full"
-                            type="number"
-                            min="0"
-                            :id="souscritere.nom"
+                        <!-- select -->
+                        <SelectForm
+                            class="max-w-sm py-2"
+                            v-if="
+                                criteresModel[critere.id] === valeur &&
+                                souscritere.type_champ_form === 'select' &&
+                                souscritere.dis_cat_crit_val_id === valeur.id
+                            "
                             :name="souscritere.nom"
                             v-model="sousCriteresModel[souscritere.id]"
+                            :options="souscritere.sous_criteres_valeurs"
                         />
-                    </div>
-                    <!-- text -->
-                    <div
-                        v-if="
-                            criteresModel[critere.id] === valeur &&
-                            souscritere.type_champ_form === 'text' &&
-                            souscritere.dis_cat_crit_val_id === valeur.id
-                        "
-                        class="mt-2 flex items-center space-x-4"
-                    >
-                        <InputLabel
-                            class="py-2"
-                            :for="souscritere.nom"
-                            :value="souscritere.nom"
-                        />
-                        <TextInput
-                            class="w-full"
-                            type="text"
-                            :id="souscritere.nom"
-                            :name="souscritere.nom"
+                        <!-- number -->
+                        <div
+                            v-if="
+                                criteresModel[critere.id] === valeur &&
+                                souscritere.type_champ_form === 'number' &&
+                                souscritere.dis_cat_crit_val_id === valeur.id
+                            "
+                            class="mt-2 flex items-center space-x-4"
+                        >
+                            <InputLabel
+                                class="py-2"
+                                :for="souscritere.nom"
+                                :value="souscritere.nom"
+                            />
+                            <TextInput
+                                class="w-full"
+                                type="number"
+                                min="0"
+                                :id="souscritere.nom"
+                                :name="souscritere.nom"
+                                v-model="sousCriteresModel[souscritere.id]"
+                            />
+                        </div>
+                        <!-- text -->
+                        <div
+                            v-if="
+                                criteresModel[critere.id] === valeur &&
+                                souscritere.type_champ_form === 'text' &&
+                                souscritere.dis_cat_crit_val_id === valeur.id
+                            "
+                            class="mt-2 flex items-center space-x-4"
+                        >
+                            <InputLabel
+                                class="py-2"
+                                :for="souscritere.nom"
+                                :value="souscritere.nom"
+                            />
+                            <TextInput
+                                class="w-full"
+                                type="text"
+                                :id="souscritere.nom"
+                                :name="souscritere.nom"
+                                v-model="sousCriteresModel[souscritere.id]"
+                            />
+                        </div>
+                        <!-- range -->
+                        <RangeInputForm
+                            v-if="
+                                criteresModel[critere.id] === valeur &&
+                                souscritere.type_champ_form === 'range' &&
+                                souscritere.dis_cat_crit_val_id === valeur.id
+                            "
+                            class="w-full max-w-sm"
                             v-model="sousCriteresModel[souscritere.id]"
+                            :name="souscritere.nom"
+                            :unite="souscritere.nom"
                         />
                     </div>
-                    <!-- range -->
-                    <RangeInputForm
-                        v-if="
-                            criteresModel[critere.id] === valeur &&
-                            souscritere.type_champ_form === 'range' &&
-                            souscritere.dis_cat_crit_val_id === valeur.id
-                        "
-                        class="w-full max-w-sm"
-                        v-model="sousCriteresModel[souscritere.id]"
-                        :name="souscritere.nom"
-                        :metric="souscritere.nom"
-                    />
                 </div>
             </template>
         </div>
         <button
             class="flex w-full justify-center md:w-auto"
             type="button"
-            @click="handleResetFormCriteres"
+            @click.prevent="handleResetFormCriteres"
         >
             <ArrowPathIcon
                 class="h-6 w-6 text-gray-500 transition duration-200 hover:-rotate-90 hover:text-gray-700 md:h-8 md:w-8"

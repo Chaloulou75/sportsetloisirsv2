@@ -43,6 +43,9 @@ defineExpose({ focus: () => input.value.focus() });
                     class="block text-sm font-medium normal-case text-gray-700"
                 >
                     Email*
+                    <span class="text-xs italic">
+                        (Celui-ci doit être inscrit sur sports-et-loisirs.fr)
+                    </span>
                 </label>
                 <div class="mt-1 flex rounded-md shadow-sm">
                     <input
