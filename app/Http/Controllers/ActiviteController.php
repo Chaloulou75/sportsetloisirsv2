@@ -291,7 +291,7 @@ class ActiviteController extends Controller
             'instructeur_contact' => ['nullable'],
             'instructeur_phone' => ['nullable'],
         ]);
-
+        dd($request->souscriteres);
         $structure = Structure::with([
             'adresses',
             'disciplines',

@@ -25,7 +25,7 @@ class CritereController extends Controller
 
         $criteres = Critere::select(['id', 'nom'])->get();
 
-        $typeChamps = TypeChamp::select(['id', 'type', 'criterable'])->get();
+        $typeChamps = TypeChamp::all();
 
         return Inertia::render('Admin/Criteres/Index', [
             'user_can' => [

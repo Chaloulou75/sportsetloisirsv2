@@ -300,7 +300,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::post('/categories-disciplines-criteres', [CategoryDisciplineCritereController::class, 'store'])->name('categories-disciplines-criteres.store');
         Route::patch('/categories-disciplines-criteres/{critere}', [CategoryDisciplineCritereController::class, 'update'])->name('categories-disciplines-criteres.update');
-        Route::patch('/categories-disciplines-criteres-nom/{critere}', [CategoryDisciplineCritereController::class, 'updatename'])->name('categories-disciplines-criteres-nom.updatename');
+        Route::put('/categories-disciplines-criteres-nom/{critere}', [CategoryDisciplineCritereController::class, 'updatename'])->name('admin-dcc-updatename');
 
         Route::patch('/categories-disciplines-criteres-nom/{critere}', [CategoryDisciplineCritereController::class, 'unite'])->name('categories-disciplines-criteres-nom.unite');
 
@@ -312,6 +312,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         //Sous critere
         Route::post('/dcc-sous-criteres/{valeur}', [LienDisCatCritValSsCritController::class, 'store'])->name('dcc-sous-criteres.store');
+        Route::put('/dcc-sous-criteres/{souscritere}', [LienDisCatCritValSsCritController::class, 'update'])->name('dcc-sous-criteres.update');
         Route::delete('/dcc-sous-criteres/{souscritere}', [LienDisCatCritValSsCritController::class, 'destroy'])->name('dcc-sous-criteres.destroy');
 
         // Sous critere Valeurs

@@ -8,7 +8,6 @@ const props = defineProps({
     options: Array,
     name: String,
     classes: String,
-    critere: Object,
 });
 
 const isShowing = ref(true);

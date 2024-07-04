@@ -294,30 +294,30 @@ onMounted(() => {
                     :show-criteres="showCriteresLg"
                     @call-toggle-criteres="toggleCriteresLg"
                 />
-            </div>
-            <!-- Criteres -->
-            <div
-                class="flex w-full items-center justify-between border-b border-gray-300 px-2 py-3 md:hidden"
-            >
-                <h3 class="font-semibold">
-                    {{ category.nom_categorie_client }}
-                </h3>
-                <button type="button" @click="toggleCriteres">
-                    <XMarkIcon v-if="showCriteres" class="h-6 w-6" />
-                    <AdjustmentsHorizontalIcon v-else class="h-6 w-6" />
-                </button>
-            </div>
 
-            <CritereForm
-                v-if="criteres"
-                :criteres="criteres"
-                :show-criteres="showCriteres"
-                :show-criteres-lg="showCriteresLg"
-                v-model:criteres-base="formCriteres.criteresBase"
-                v-model:sous-criteres="formCriteres.sousCriteres"
-                @reset-criteres="resetFormCriteres"
-            />
+                <!-- Criteres -->
+                <div
+                    class="flex w-full items-center justify-between border-b border-gray-300 px-2 py-3 md:hidden"
+                >
+                    <h3 class="font-semibold">
+                        {{ category.nom_categorie_client }}
+                    </h3>
+                    <button type="button" @click="toggleCriteres">
+                        <XMarkIcon v-if="showCriteres" class="h-6 w-6" />
+                        <AdjustmentsHorizontalIcon v-else class="h-6 w-6" />
+                    </button>
+                </div>
 
+                <CritereForm
+                    v-if="criteres"
+                    :criteres="criteres"
+                    :show-criteres="showCriteres"
+                    :show-criteres-lg="showCriteresLg"
+                    v-model:criteres-base="formCriteres.criteresBase"
+                    v-model:sous-criteres="formCriteres.sousCriteres"
+                    @reset-criteres="resetFormCriteres"
+                />
+            </div>
             <template v-if="produits.data.length > 0">
                 <div class="mx-auto py-6 md:py-12">
                     <TransitionRoot

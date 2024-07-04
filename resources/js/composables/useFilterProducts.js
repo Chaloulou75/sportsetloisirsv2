@@ -24,7 +24,7 @@ export function useFilterProducts(
                 return selectedCriteres.value.every((selectedCritereEntry) => {
                     const [critereId, selectedCritere] = selectedCritereEntry;
                     const numericCritereId = parseInt(critereId);
-
+                    console.log(critereId, selectedCritere);
                     if (
                         selectedCritere === null ||
                         selectedCritere.length === 0 ||
@@ -173,6 +173,32 @@ export function useFilterProducts(
                                     ).padStart(2, "0")}`;
                                     return valeur === selectedTime;
                                 }
+                            } else if (
+                                Array.isArray(selectedCritere) &&
+                                selectedCritere.length === 2 &&
+                                produitCritere.critere.type_champ_form ===
+                                    "range multiple" &&
+                                produitCritere.critere_id === numericCritereId
+                            ) {
+                                const [minValue, maxValue] = selectedCritere;
+                                let prodValues;
+                                try {
+                                    prodValues = JSON.parse(
+                                        produitCritere.valeur
+                                    ).map(Number);
+                                } catch (e) {
+                                    return false;
+                                }
+
+                                if (prodValues.length === 2) {
+                                    const [prodMin, prodMax] = prodValues;
+                                    return (
+                                        minValue >= prodMin &&
+                                        maxValue <= prodMax
+                                    );
+                                }
+
+                                return false;
                             } else if (Array.isArray(selectedCritere)) {
                                 return selectedCritere.some(
                                     (critereInArray) => {
@@ -275,11 +301,14 @@ export function useFilterProducts(
                             } else {
                                 // Handle other types (number, string, etc.)
                                 if (
-                                    produitCritere.valeur_id !== null &&
                                     numericCritereId ===
-                                        produitCritere.critere_id
+                                    produitCritere.critere_id
                                 ) {
-                                    if (typeof selectedCritere === "number") {
+                                    if (
+                                        typeof selectedCritere === "number" &&
+                                        produitCritere.critere
+                                            .type_champ_form === "number"
+                                    ) {
                                         // NUMBER
                                         const prodValeurAsNumber = parseFloat(
                                             produitCritere.valeur
@@ -290,7 +319,22 @@ export function useFilterProducts(
                                                 selectedCritere
                                         );
                                     } else if (
-                                        typeof selectedCritere === "string"
+                                        typeof selectedCritere === "number" &&
+                                        produitCritere.critere
+                                            .type_champ_form === "range"
+                                    ) {
+                                        // RANGE
+                                        const prodValeurAsNumber = parseFloat(
+                                            produitCritere.valeur
+                                        );
+                                        return (
+                                            prodValeurAsNumber <=
+                                            selectedCritere
+                                        );
+                                    } else if (
+                                        typeof selectedCritere === "string" &&
+                                        produitCritere.critere
+                                            .type_champ_form === "text"
                                     ) {
                                         if (selectedCritere.trim() === "") {
                                             return true;
@@ -423,7 +467,7 @@ export function useFilterProducts(
         }
     };
 
-    const debouncedFilterProducts = debounce(filterProducts, 300);
+    const debouncedFilterProducts = debounce(filterProducts, 1000);
 
     watch([selectedCriteres, selectedSousCriteres], () => {
         debouncedFilterProducts();

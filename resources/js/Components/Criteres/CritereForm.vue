@@ -74,7 +74,6 @@ const handleResetFormCriteres = () => {
             <CheckboxForm
                 class="max-w-sm"
                 v-if="critere.type_champ_form === 'checkbox'"
-                :critere="critere"
                 :name="critere.nom"
                 v-model="criteresModel[critere.id]"
                 :options="critere.valeurs"
@@ -197,6 +196,29 @@ const handleResetFormCriteres = () => {
                             v-model="sousCriteresModel[souscritere.id]"
                             :options="souscritere.sous_criteres_valeurs"
                         />
+                        <CheckboxForm
+                            class="max-w-sm"
+                            v-if="
+                                criteresModel[critere.id] === valeur &&
+                                souscritere.type_champ_form === 'checkbox' &&
+                                souscritere.dis_cat_crit_val_id === valeur.id
+                            "
+                            :name="souscritere.nom"
+                            v-model="sousCriteresModel[souscritere.id]"
+                            :options="souscritere.sous_criteres_valeurs"
+                        />
+
+                        <!-- radio -->
+                        <RadioForm
+                            v-if="
+                                criteresModel[critere.id] === valeur &&
+                                souscritere.type_champ_form === 'radio' &&
+                                souscritere.dis_cat_crit_val_id === valeur.id
+                            "
+                            v-model="sousCriteresModel[souscritere.id]"
+                            :name="souscritere.nom"
+                            :options="souscritere.sous_criteres_valeurs"
+                        />
                         <!-- number -->
                         <div
                             v-if="
@@ -252,7 +274,23 @@ const handleResetFormCriteres = () => {
                             class="w-full max-w-sm"
                             v-model="sousCriteresModel[souscritere.id]"
                             :name="souscritere.nom"
-                            :unite="souscritere.nom"
+                            :min="souscritere.min"
+                            :max="souscritere.max"
+                            :unite="souscritere.unite"
+                        />
+                        <RangeMultiple
+                            v-if="
+                                criteresModel[critere.id] === valeur &&
+                                souscritere.type_champ_form ===
+                                    'range multiple' &&
+                                souscritere.dis_cat_crit_val_id === valeur.id
+                            "
+                            class="w-full max-w-sm"
+                            v-model="sousCriteresModel[souscritere.id]"
+                            :name="souscritere.nom"
+                            :min="souscritere.min"
+                            :max="souscritere.max"
+                            :unite="souscritere.unite"
                         />
                     </div>
                 </div>

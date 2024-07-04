@@ -41,6 +41,7 @@ const visibleUpdateNomCritereForms = ref([]);
 const critereNameForm = ref({});
 const critereVisibilityForm = ref({});
 const critereUniteForm = ref({});
+const souscritereUniteForm = ref({});
 const valeurForm = ref({});
 const sousvaleurForm = ref({});
 const decodeIfJson = (value) => {
@@ -51,9 +52,7 @@ const decodeIfJson = (value) => {
             if (Array.isArray(parsed)) {
                 return parsed;
             }
-        } catch (e) {
-            // Not a valid JSON string, return the original value
-        }
+        } catch (e) {}
     }
     return value;
 };
@@ -77,8 +76,8 @@ const initializeValeurForm = () => {
             });
             critereUniteForm.value[critere.id] = useForm({
                 unite: ref(critere.unite),
-                min: ref(critere.min),
-                max: ref(critere.max),
+                min: ref(Number(critere.min)),
+                max: ref(Number(critere.max)),
             });
 
             for (const valeurId in critere.valeurs) {
@@ -94,6 +93,12 @@ const initializeValeurForm = () => {
 
                 for (const souscritereId in valeur.sous_criteres) {
                     const souscritere = valeur.sous_criteres[souscritereId];
+
+                    souscritereUniteForm.value[souscritere.id] = useForm({
+                        unite: ref(souscritere.unite),
+                        min: ref(Number(souscritere.min)),
+                        max: ref(Number(souscritere.max)),
+                    });
 
                     for (const sousvaleurId in souscritere.sous_criteres_valeurs) {
                         const sousvaleur =
@@ -128,8 +133,8 @@ const isUpdateFormVisible = (critereId) => {
 };
 
 const updateNameCritere = (critere) => {
-    router.patch(
-        route("categories-disciplines-criteres-nom.updatename", {
+    router.put(
+        route("admin-dcc-updatename", {
             critere: critere,
         }),
         {
@@ -191,6 +196,23 @@ const deleteCritere = (disciplineCategorieCritere) => {
         {
             preserveScroll: true,
             lienDisciplineCategorieCritere: disciplineCategorieCritere,
+        }
+    );
+};
+
+const updateUniteSousCritere = (souscritere) => {
+    router.put(
+        route("dcc-sous-criteres.update", {
+            souscritere: souscritere,
+        }),
+        {
+            unite: souscritereUniteForm.value[souscritere.id].unite,
+            min: souscritereUniteForm.value[souscritere.id].min,
+            max: souscritereUniteForm.value[souscritere.id].max,
+        },
+        {
+            errorBag: "souscritereUniteForm",
+            preserveScroll: true,
         }
     );
 };
@@ -388,27 +410,6 @@ const showAddCritereForm = (categorie) => {
     return critereFormsVisibility.value[categorie.id] || false;
 };
 
-// const type_champs = [
-//     { type: "select" },
-//     { type: "checkbox" },
-//     { type: "text" },
-//     { type: "number" },
-//     { type: "adresse" },
-//     { type: "date" },
-//     { type: "dates" },
-//     { type: "time" },
-//     { type: "times" },
-//     { type: "mois" },
-//     { type: "range" },
-//     { type: "instructeur" },
-// ];
-
-// const sous_crit_type_champs = [
-//     { type: "select" },
-//     { type: "text" },
-//     { type: "number" },
-// ];
-
 const addCritereForm = useForm({
     critere: props.listeCriteres[0],
     type_champ: props.type_champs[0],
@@ -469,7 +470,7 @@ const addSousCritere = (valeur) => {
         }),
         {
             nom: addSousCritereForm.nom,
-            type_champ: addSousCritereForm.type_champ.type,
+            type_champ: addSousCritereForm.type_champ,
         },
         {
             errorBag: "addSousCritereForm",
@@ -576,6 +577,7 @@ onMounted(() => {
                                         >
                                     </span>
                                 </div>
+                                <!-- Nom et modif du nom du critere -->
                                 <div>
                                     <button
                                         class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
@@ -659,7 +661,7 @@ onMounted(() => {
                                     </form>
                                 </div>
                             </div>
-
+                            <!-- Ordre et visibilite des criteres -->
                             <div
                                 class="flex flex-col items-start space-y-2 md:flex-row md:items-center md:justify-between md:space-x-2 md:space-y-0"
                             >
@@ -776,6 +778,7 @@ onMounted(() => {
                                     />
                                 </button>
                             </div>
+                            <!-- Form Unite for Range -->
                             <form
                                 @submit.prevent="updateUniteCritere(critere)"
                                 v-if="
@@ -821,6 +824,7 @@ onMounted(() => {
                                 </button>
                             </form>
                         </div>
+                        <!-- Valeurs des criteres -->
                         <ul
                             class="list-inside list-disc py-2 marker:text-indigo-600"
                         >
@@ -946,7 +950,7 @@ onMounted(() => {
                                                 />
                                             </button>
                                             <button
-                                                class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white p-2 text-center text-xs font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                                class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white p-3 text-center text-xs font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                                                 type="button"
                                                 @click="
                                                     toggleAddSousCritereForm(
@@ -966,6 +970,7 @@ onMounted(() => {
                                             </button>
                                         </div>
                                     </form>
+                                    <!-- Sous criteres -->
                                     <div v-if="valeur.sous_criteres">
                                         <div
                                             v-for="souscritere in valeur.sous_criteres"
@@ -1009,6 +1014,93 @@ onMounted(() => {
                                                         />
                                                     </button>
                                                 </div>
+                                                <!-- Form Sous critere Range -->
+                                                <form
+                                                    @submit.prevent="
+                                                        updateUniteSousCritere(
+                                                            souscritere
+                                                        )
+                                                    "
+                                                    v-if="
+                                                        souscritere.type_champ_form ===
+                                                            'range' ||
+                                                        souscritere.type_champ_form ===
+                                                            'range multiple'
+                                                    "
+                                                    class="my-6 flex flex-col items-center space-y-2 md:flex-row md:space-x-2 md:space-y-0"
+                                                >
+                                                    <label
+                                                        class="text-sm font-semibold"
+                                                        for="unite"
+                                                        >Unité pour les champs
+                                                        de type "range"</label
+                                                    >
+                                                    <div
+                                                        class="flex flex-col items-start"
+                                                    >
+                                                        <InputText
+                                                            class="text-sm"
+                                                            id="unité"
+                                                            placeholder="unité"
+                                                            v-model="
+                                                                souscritereUniteForm[
+                                                                    souscritere
+                                                                        .id
+                                                                ].unite
+                                                            "
+                                                        />
+                                                        <div
+                                                            v-if="
+                                                                errors.souscritereUniteForm
+                                                            "
+                                                            class="mt-2 text-xs text-red-500"
+                                                        >
+                                                            {{
+                                                                errors
+                                                                    .souscritereUniteForm
+                                                                    .unite
+                                                            }}
+                                                        </div>
+                                                    </div>
+
+                                                    <label
+                                                        class="text-sm font-semibold"
+                                                        for="min"
+                                                        >Min</label
+                                                    >
+                                                    <InputNumber
+                                                        inputId="integeronly"
+                                                        class="text-sm"
+                                                        id="min"
+                                                        placeholder="Min"
+                                                        v-model="
+                                                            souscritereUniteForm[
+                                                                souscritere.id
+                                                            ].min
+                                                        "
+                                                    />
+                                                    <label
+                                                        class="text-sm font-semibold"
+                                                        for="max"
+                                                        >Max</label
+                                                    >
+                                                    <InputNumber
+                                                        inputId="integeronly"
+                                                        class="text-sm"
+                                                        id="max"
+                                                        placeholder="Max"
+                                                        v-model="
+                                                            souscritereUniteForm[
+                                                                souscritere.id
+                                                            ].max
+                                                        "
+                                                    />
+                                                    <button type="submit">
+                                                        <ArrowPathIcon
+                                                            class="h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
+                                                        />
+                                                    </button>
+                                                </form>
                                                 <ul
                                                     v-if="
                                                         souscritere.sous_criteres_valeurs
@@ -1260,21 +1352,16 @@ onMounted(() => {
                                                 <div
                                                     class="flex w-full items-center justify-center py-2"
                                                 >
-                                                    <!---->
                                                     <button
                                                         class="inline-flex items-center justify-center space-y-1 rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                                                         v-if="
                                                             !showAddSousValeurForm(
                                                                 souscritere
                                                             ) &&
-                                                            (souscritere.type_champ_form ===
-                                                                'select' ||
-                                                                souscritere.type_champ_form ===
-                                                                    'checkbox' ||
-                                                                souscritere.type_champ_form ===
-                                                                    'range' ||
-                                                                souscritere.type_champ_form ===
-                                                                    'range multiple')
+                                                            souscritere.type_champ &&
+                                                            souscritere
+                                                                .type_champ
+                                                                .sous_criterable
                                                         "
                                                         type="button"
                                                         @click="
@@ -1284,7 +1371,8 @@ onMounted(() => {
                                                         "
                                                     >
                                                         <div>
-                                                            Ajouter une valeur à
+                                                            Ajouter une valeur
+                                                            au sous critère
                                                             <span
                                                                 class="font-semibold"
                                                             >
@@ -1298,7 +1386,7 @@ onMounted(() => {
                                             </div>
                                         </div>
                                     </div>
-
+                                    <!-- ajout de sous criteres -->
                                     <form
                                         v-if="showAddSousCritereForm(valeur)"
                                         class="inline-flex w-full max-w-sm flex-grow items-end justify-between py-2"
@@ -1410,6 +1498,22 @@ onMounted(() => {
                                                                         (non
                                                                         criterable)</span
                                                                     >
+                                                                    /
+                                                                    <span
+                                                                        v-if="
+                                                                            type_champ.sous_criterable
+                                                                        "
+                                                                        class="text-sm text-green-500"
+                                                                    >
+                                                                        Sous
+                                                                        criterable</span
+                                                                    ><span
+                                                                        v-else
+                                                                        class="text-sm text-green-500"
+                                                                        >Non
+                                                                        sous
+                                                                        criterable</span
+                                                                    >
                                                                     <span
                                                                         v-if="
                                                                             selected
@@ -1451,6 +1555,7 @@ onMounted(() => {
                                 </template>
                             </li>
                         </ul>
+                        <!-- Ajout de valeur de critere -->
                         <ul
                             v-if="showAddValeurForm(critere)"
                             class="list-inside list-disc marker:text-indigo-600"
@@ -1519,10 +1624,7 @@ onMounted(() => {
                                 class="inline-flex items-center justify-center space-y-1 rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                                 v-if="
                                     !showAddValeurForm(critere) &&
-                                    (critere.type_champ_form === 'select' ||
-                                        critere.type_champ_form ===
-                                            'checkbox' ||
-                                        critere.type_champ_form === 'radio')
+                                    critere.type_champ.sous_criterable
                                 "
                                 type="button"
                                 @click="toggleAddValeurForm(critere)"
@@ -1537,6 +1639,7 @@ onMounted(() => {
                         </div>
                     </li>
                 </ul>
+                <!-- Ajout de critere -->
                 <div class="flex w-full items-center justify-start">
                     <button
                         class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
@@ -1551,6 +1654,7 @@ onMounted(() => {
                             }}</span>
                         </div>
                     </button>
+                    <!-- formulaire ajout de critere -->
                     <form
                         v-if="showAddCritereForm(categorie)"
                         class="inline-flex max-w-md flex-grow items-center justify-between"
@@ -1706,6 +1810,20 @@ onMounted(() => {
                                                     >
                                                         Module informationnel
                                                         (non criterable)</span
+                                                    >
+                                                    /
+                                                    <span
+                                                        v-if="
+                                                            type_champ.sous_criterable
+                                                        "
+                                                        class="text-sm text-green-500"
+                                                    >
+                                                        Sous criterable</span
+                                                    ><span
+                                                        v-else
+                                                        class="text-sm text-green-500"
+                                                        >Non sous
+                                                        criterable</span
                                                     >
                                                     <span
                                                         v-if="selected"

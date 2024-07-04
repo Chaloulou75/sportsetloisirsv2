@@ -815,7 +815,6 @@ onMounted(() => {});
                                                     attribut.type_champ_form ===
                                                     'checkbox'
                                                 "
-                                                :critere="attribut"
                                                 :name="attribut.nom"
                                                 v-model="
                                                     editCatTarifForm.attributs[
@@ -930,7 +929,6 @@ onMounted(() => {});
                                                         sousattribut.type_champ_form ===
                                                         'checkbox'
                                                     "
-                                                    :critere="sousattribut"
                                                     :name="sousattribut.nom"
                                                     v-model="
                                                         editCatTarifForm

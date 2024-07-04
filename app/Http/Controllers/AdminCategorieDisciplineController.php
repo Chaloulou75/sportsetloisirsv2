@@ -96,6 +96,10 @@ class AdminCategorieDisciplineController extends Controller
                                 'critere_id' => $critere->critere_id,
                                 'nom' => $critere->nom,
                                 'type_champ_form' => $critere->type_champ_form,
+                                'type_champ_id' => $critere->type_champ_id,
+                                'unite' => $critere->unite,
+                                'min' => $critere->min,
+                                'max' => $critere->max,
                                 'ordre' => $critere->ordre,
                                 'visible_back' => $critere->visible_back,
                                 'visible_front' => $critere->visible_front,
@@ -115,8 +119,12 @@ class AdminCategorieDisciplineController extends Controller
                                         foreach($valeur->sous_criteres as $sousCritere) {
                                             $sousCrit = $critValeur->sous_criteres()->create([
                                                 'nom' => $sousCritere->nom,
-                                                'type_champ_form' => $sousCritere->type_champ_form
-                                            ]);
+                                                'type_champ_form' => $sousCritere->type_champ_form,
+                                                'type_champ_id' => $sousCritere->type_champ_id,
+                                                'unite' => $sousCritere->unite,
+                                                'min' => $sousCritere->min,
+                                                'max' => $sousCritere->max,
+                                             ]);
                                             if($sousCritere->sous_criteres_valeurs) {
                                                 foreach($sousCritere->sous_criteres_valeurs as $sousCritValeur) {
                                                     $sousCrit->sous_criteres_valeurs()->create([
@@ -249,6 +257,10 @@ class AdminCategorieDisciplineController extends Controller
                                 [
                                     'nom' => $critere->nom,
                                     'type_champ_form' => $critere->type_champ_form,
+                                    'type_champ_id' => $critere->type_champ_id,
+                                    'unite' => $critere->unite,
+                                    'min' => $critere->min,
+                                    'max' => $critere->max,
                                     'ordre' => $critere->ordre,
                                     'visible_back' => $critere->visible_back,
                                     'visible_front' => $critere->visible_front,
@@ -278,7 +290,11 @@ class AdminCategorieDisciplineController extends Controller
                                                     'nom' => $sousCritere->nom
                                                 ],
                                                 [
-                                                    'type_champ_form' => $sousCritere->type_champ_form
+                                                    'type_champ_form' => $sousCritere->type_champ_form,
+                                                    'type_champ_id' => $sousCritere->type_champ_id,
+                                                    'unite' => $sousCritere->unite,
+                                                    'min' => $sousCritere->min,
+                                                    'max' => $sousCritere->max,
                                                 ]
                                             );
                                             if($sousCritere->sous_criteres_valeurs) {

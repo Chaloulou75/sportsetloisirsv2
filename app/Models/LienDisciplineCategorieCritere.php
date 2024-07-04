@@ -49,6 +49,11 @@ class LienDisciplineCategorieCritere extends Model
         return $this->belongsTo(Critere::class, 'critere_id');
     }
 
+    public function type_champ(): BelongsTo
+    {
+        return $this->belongsTo(TypeChamp::class, 'type_champ_id');
+    }
+
     public function valeurs(): HasMany
     {
         return $this->hasMany(LienDisciplineCategorieCritereValeur::class, 'discipline_categorie_critere_id');
@@ -60,10 +65,12 @@ class LienDisciplineCategorieCritere extends Model
     public function scopeWithValeurs(Builder $query): void
     {
         $query->with([
+            'type_champ',
             'valeurs' => function ($query) {
                 $query->orderBy('ordre');
             },
             'valeurs.sous_criteres',
+            'valeurs.sous_criteres.type_champ',
             'valeurs.sous_criteres.sous_criteres_valeurs' => function ($query) {
                 $query->orderBy('ordre');
             },

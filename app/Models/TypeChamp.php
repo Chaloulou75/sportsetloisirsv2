@@ -25,5 +25,6 @@ class TypeChamp extends Model
      */
     protected $casts = [
         'criterable' => 'boolean',
+        'sous_criterable' => 'boolean',
     ];
 }

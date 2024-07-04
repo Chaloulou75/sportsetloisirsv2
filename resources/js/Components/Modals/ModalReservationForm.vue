@@ -288,7 +288,6 @@ const onSubmit = () => {
                                                         field.type_champ_form ===
                                                         'checkbox'
                                                     "
-                                                    :critere="field"
                                                     :name="field.nom"
                                                     v-model="
                                                         bookingForm.attributs[
@@ -402,7 +401,6 @@ const onSubmit = () => {
                                                             sousField.type_champ_form ===
                                                             'checkbox'
                                                         "
-                                                        :critere="sousField"
                                                         :name="sousField.nom"
                                                         v-model="
                                                             bookingForm

@@ -18,6 +18,7 @@ class TypeChampResource extends JsonResource
             'id' => $this->id,
             'type' => $this->type,
             'criterable' => $this->criterable,
+            'sous_criterable' => $this->sous_criterable,
             'updated_at' => $this->updated_at,
             'created_at' => $this->created_at,
         ];

@@ -30,6 +30,7 @@ class CategoryDisciplineCritereController extends Controller
         $request->validate([
             'critere.id' => ['required', Rule::exists('liste_criteres', 'id')],
             'categorie.id' => ['required', Rule::exists('liens_disciplines_categories', 'id')],
+            'type_champ.id' => ['required', Rule::exists('type_champs', 'id')],
             'type_champ.type' => ['required', 'string', 'max:255'],
             'nom' => ['nullable', 'string'],
         ]);
@@ -42,6 +43,7 @@ class CategoryDisciplineCritereController extends Controller
             "critere_id" => $request->critere['id'],
             "nom" => $request->nom ?? $request->critere['nom'],
             "type_champ_form" => $request->type_champ['type'],
+            "type_champ_id" => $request->type_champ['id'],
             "visible_back" => true,
             "visible_front" => true,
             "visible_block" => true,
@@ -68,11 +70,13 @@ class CategoryDisciplineCritereController extends Controller
             'criteres' => function ($query) {
                 $query->orderBy('ordre');
             },
+            'criteres.type_champ',
             'criteres.critere',
             'criteres.valeurs' => function ($query) {
                 $query->orderBy('ordre');
             },
             'criteres.valeurs.sous_criteres',
+            'criteres.valeurs.sous_criteres.type_champ',
             'criteres.valeurs.sous_criteres.sous_criteres_valeurs' => function ($query) {
                 $query->orderBy('ordre');
             },
@@ -83,16 +87,18 @@ class CategoryDisciplineCritereController extends Controller
                 'discipline',
                 'categorie',
                 'criteres',
+                'criteres.type_champ',
                 'criteres.critere',
                 'criteres.valeurs',
                 'criteres.valeurs.sous_criteres',
+                'criteres.valeurs.sous_criteres.type_champ',
                 'criteres.valeurs.sous_criteres.sous_criteres_valeurs'
             ])
             ->where('discipline_id', $discipline->id)
             ->get();
 
         $listeCriteres = Critere::select(['id', 'nom'])->get();
-        $typeChamps = TypeChamp::select(['id', 'type', 'criterable'])->get();
+        $typeChamps = TypeChamp::all();
 
         return Inertia::render('Admin/Disciplines/Categories/Criteres/Edit', [
             'user_can' => [
@@ -145,9 +151,8 @@ class CategoryDisciplineCritereController extends Controller
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
-
         $request->validate([
-            'nom' => 'required|string|min:3',
+            'nom' => 'required|string',
         ]);
 
         $discCatCritere = LienDisciplineCategorieCritere::with(['discipline', 'categorie', 'valeurs'])->findOrFail($critere->id);
@@ -165,12 +170,12 @@ class CategoryDisciplineCritereController extends Controller
         $this->authorize('viewAdmin', $user);
 
         $request->validate([
-            'unite' => 'required|string|min:3',
+            'unite' => 'required|string|min:1|max:255',
             'min' => 'nullable|integer',
             'max' => 'nullable|integer',
         ]);
 
-        $discCatCritere = LienDisciplineCategorieCritere::with(['discipline', 'categorie', 'valeurs'])->findOrFail($critere->id);
+        $discCatCritere = LienDisciplineCategorieCritere::with(['discipline', 'categorie'])->findOrFail($critere->id);
 
         $discCatCritere->update([
             'unite' => $request->unite,
@@ -246,6 +251,10 @@ class CategoryDisciplineCritereController extends Controller
                                 'critere_id' => $critere->critere_id,
                                 'nom' => $critere->nom,
                                 'type_champ_form' => $critere->type_champ_form,
+                                'type_champ_id' => $critere->type_champ_id,
+                                'unite' => $critere->unite,
+                                'min' => $critere->min,
+                                'max' => $critere->max,
                                 'ordre' => $critere->ordre,
                                 'visible_back' => $critere->visible_back,
                                 'visible_front' => $critere->visible_front,
@@ -265,7 +274,11 @@ class CategoryDisciplineCritereController extends Controller
                                         foreach($valeur->sous_criteres as $sousCritere) {
                                             $sousCrit = $critValeur->sous_criteres()->create([
                                                 'nom' => $sousCritere->nom,
-                                                'type_champ_form' => $sousCritere->type_champ_form
+                                                'type_champ_form' => $sousCritere->type_champ_form,
+                                                'type_champ_id' => $sousCritere->type_champ_id,
+                                                'unite' => $sousCritere->unite,
+                                                'min' => $sousCritere->min,
+                                                'max' => $sousCritere->max,
                                             ]);
                                             if($sousCritere->sous_criteres_valeurs) {
                                                 foreach($sousCritere->sous_criteres_valeurs as $sousCritValeur) {
@@ -298,6 +311,10 @@ class CategoryDisciplineCritereController extends Controller
                                 [
                                     'nom' => $critere->nom,
                                     'type_champ_form' => $critere->type_champ_form,
+                                    'type_champ_id' => $critere->type_champ_id,
+                                    'unite' => $critere->unite,
+                                'min' => $critere->min,
+                                'max' => $critere->max,
                                     'ordre' => $critere->ordre,
                                     'visible_back' => $critere->visible_back,
                                     'visible_front' => $critere->visible_front,
@@ -327,7 +344,11 @@ class CategoryDisciplineCritereController extends Controller
                                                     'nom' => $sousCritere->nom
                                                 ],
                                                 [
-                                                    'type_champ_form' => $sousCritere->type_champ_form
+                                                    'type_champ_form' => $sousCritere->type_champ_form,
+                                                    'type_champ_id' => $sousCritere->type_champ_id,
+                                                    'unite' => $sousCritere->unite,
+                                                    'min' => $sousCritere->min,
+                                                    'max' => $sousCritere->max,
                                                 ]
                                             );
                                             if($sousCritere->sous_criteres_valeurs) {
@@ -408,6 +429,10 @@ class CategoryDisciplineCritereController extends Controller
                             'critere_id' => $critere->critere_id,
                             'nom' => $critere->nom,
                             'type_champ_form' => $critere->type_champ_form,
+                            'type_champ_id' => $critere->type_champ_id,
+                            'unite' => $critere->unite,
+                            'min' => $critere->min,
+                            'max' => $critere->max,
                             'ordre' => $critere->ordre,
                             'visible_back' => $critere->visible_back,
                             'visible_front' => $critere->visible_front,
@@ -427,7 +452,11 @@ class CategoryDisciplineCritereController extends Controller
                                     foreach($valeur->sous_criteres as $sousCritere) {
                                         $sousCrit = $critValeur->sous_criteres()->create([
                                             'nom' => $sousCritere->nom,
-                                            'type_champ_form' => $sousCritere->type_champ_form
+                                            'type_champ_form' => $sousCritere->type_champ_form,
+                                            'type_champ_id' => $sousCritere->type_champ_id,
+                                            'unite' => $sousCritere->unite,
+                                            'min' => $sousCritere->min,
+                                            'max' => $sousCritere->max,
                                         ]);
                                         if($sousCritere->sous_criteres_valeurs) {
                                             foreach($sousCritere->sous_criteres_valeurs as $sousCritValeur) {
@@ -461,6 +490,10 @@ class CategoryDisciplineCritereController extends Controller
                             [
                                 'nom' => $critere->nom,
                                 'type_champ_form' => $critere->type_champ_form,
+                                'type_champ_id' => $critere->type_champ_id,
+                                'unite' => $critere->unite,
+                                'min' => $critere->min,
+                                'max' => $critere->max,
                                 'ordre' => $critere->ordre,
                                 'visible_back' => $critere->visible_back,
                                 'visible_front' => $critere->visible_front,
@@ -490,7 +523,11 @@ class CategoryDisciplineCritereController extends Controller
                                                 'nom' => $sousCritere->nom
                                             ],
                                             [
-                                                'type_champ_form' => $sousCritere->type_champ_form
+                                                'type_champ_form' => $sousCritere->type_champ_form,
+                                                'type_champ_id' => $sousCritere->type_champ_id,
+                                                'unite' => $sousCritere->unite,
+                                                'min' => $sousCritere->min,
+                                                'max' => $sousCritere->max,
                                             ]
                                         );
                                         if($sousCritere->sous_criteres_valeurs) {

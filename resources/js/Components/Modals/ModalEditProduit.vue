@@ -494,7 +494,6 @@ const onSubmitEditProduitForm = () => {
                                                             critere.type_champ_form ===
                                                             'checkbox'
                                                         "
-                                                        :critere="critere"
                                                         :name="critere.nom"
                                                         v-model="
                                                             formEditProduit

@@ -281,6 +281,14 @@ onMounted(() => {
                         ><span v-else class="text-sm text-blue-500">
                             Module informationnel (non criterable)</span
                         >
+                        <span
+                            v-if="champ.sous_criterable"
+                            class="text-sm text-green-600"
+                        >
+                            Sous criterable</span
+                        ><span v-else class="text-sm text-green-600">
+                            Non sous criterable</span
+                        >
                     </li>
                 </ul>
             </div>

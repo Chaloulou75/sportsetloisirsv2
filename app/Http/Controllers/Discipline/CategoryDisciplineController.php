@@ -156,13 +156,14 @@ class CategoryDisciplineController extends Controller
                 'discipline',
                 'categorie',
                 'criteres',
+                'criteres.type_champ',
                 'criteres.critere',
                 'criteres.valeurs',
                 'criteres.valeurs.sous_criteres',
+                'criteres.valeurs.sous_criteres.type_champ',
                 'criteres.valeurs.sous_criteres.sous_criteres_valeurs',
             ])
             ->where('discipline_id', $discipline->id)
-            ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
             ->get();
 
         $categoriesIds = $categories->pluck('categorie_id');

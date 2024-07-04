@@ -354,7 +354,6 @@ onMounted(() => {
                                                         critere.type_champ_form ===
                                                         'checkbox'
                                                     "
-                                                    :critere="critere"
                                                     :name="critere.nom"
                                                     v-model="
                                                         form.criteres[
@@ -706,18 +705,15 @@ onMounted(() => {
                                                             "
                                                         />
 
-                                                        <!-- sous crit checkbox -->
-                                                        <CheckboxForm
-                                                            class="max-w-sm"
+                                                        <RadioForm
                                                             v-if="
                                                                 form.criteres[
                                                                     critere.id
                                                                 ] === valeur &&
                                                                 souscritere.type_champ_form ===
-                                                                    'checkbox'
-                                                            "
-                                                            :critere="
-                                                                souscritere
+                                                                    'radio' &&
+                                                                souscritere.dis_cat_crit_val_id ===
+                                                                    valeur.id
                                                             "
                                                             :name="
                                                                 souscritere.nom
@@ -733,12 +729,31 @@ onMounted(() => {
                                                                 souscritere.sous_criteres_valeurs
                                                             "
                                                         />
-                                                        <!-- :is-checkbox-selected="
-                                                                isCheckboxSelected
+
+                                                        <!-- sous crit checkbox -->
+                                                        <CheckboxForm
+                                                            class="max-w-sm"
+                                                            v-if="
+                                                                form.criteres[
+                                                                    critere.id
+                                                                ] === valeur &&
+                                                                souscritere.type_champ_form ===
+                                                                    'checkbox'
                                                             "
-                                                            @update-selected-checkboxes="
-                                                                updateSelectedCheckboxes
-                                                            " -->
+                                                            :name="
+                                                                souscritere.nom
+                                                            "
+                                                            v-model="
+                                                                form
+                                                                    .souscriteres[
+                                                                    souscritere
+                                                                        .id
+                                                                ]
+                                                            "
+                                                            :options="
+                                                                souscritere.sous_criteres_valeurs
+                                                            "
+                                                        />
                                                         <!-- sous crit number -->
                                                         <InputLabel
                                                             class="py-2"
@@ -852,8 +867,46 @@ onMounted(() => {
                                                             :name="
                                                                 souscritere.nom
                                                             "
-                                                            :metric="
+                                                            :min="
+                                                                souscritere.min
+                                                            "
+                                                            :max="
+                                                                souscritere.max
+                                                            "
+                                                            :unite="
+                                                                souscritere.unite
+                                                            "
+                                                        />
+
+                                                        <RangeMultiple
+                                                            v-if="
+                                                                form.criteres[
+                                                                    critere.id
+                                                                ] === valeur &&
+                                                                souscritere.type_champ_form ===
+                                                                    'range multiple' &&
+                                                                souscritere.dis_cat_crit_val_id ===
+                                                                    valeur.id
+                                                            "
+                                                            class="mt-1 w-full max-w-sm"
+                                                            v-model="
+                                                                form
+                                                                    .souscriteres[
+                                                                    souscritere
+                                                                        .id
+                                                                ]
+                                                            "
+                                                            :name="
                                                                 souscritere.nom
+                                                            "
+                                                            :min="
+                                                                souscritere.min
+                                                            "
+                                                            :max="
+                                                                souscritere.max
+                                                            "
+                                                            :unite="
+                                                                souscritere.unite
                                                             "
                                                         />
                                                     </div>
