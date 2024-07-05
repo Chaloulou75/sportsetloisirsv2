@@ -676,6 +676,7 @@ onMounted(() => {
                                                     <div
                                                         v-for="souscritere in valeur.sous_criteres"
                                                         :key="souscritere.id"
+                                                        class="ml-3 mt-2"
                                                     >
                                                         <!-- sous crit select -->
                                                         <SelectForm
@@ -845,7 +846,7 @@ onMounted(() => {
                                                                     valeur.id
                                                             "
                                                         />
-
+                                                        <!-- Range -->
                                                         <RangeInputForm
                                                             v-if="
                                                                 form.criteres[
@@ -877,16 +878,16 @@ onMounted(() => {
                                                                 souscritere.unite
                                                             "
                                                         />
-
+                                                        <!-- range multiple -->
                                                         <RangeMultiple
                                                             v-if="
                                                                 form.criteres[
                                                                     critere.id
                                                                 ] === valeur &&
-                                                                souscritere.type_champ_form ===
-                                                                    'range multiple' &&
                                                                 souscritere.dis_cat_crit_val_id ===
-                                                                    valeur.id
+                                                                    valeur.id &&
+                                                                souscritere.type_champ_form ===
+                                                                    'range multiple'
                                                             "
                                                             class="mt-1 w-full max-w-sm"
                                                             v-model="
@@ -909,6 +910,148 @@ onMounted(() => {
                                                                 souscritere.unite
                                                             "
                                                         />
+
+                                                        <div
+                                                            v-if="
+                                                                form.criteres[
+                                                                    critere.id
+                                                                ] === valeur &&
+                                                                souscritere.dis_cat_crit_val_id ===
+                                                                    valeur.id &&
+                                                                souscritere.type_champ_form ===
+                                                                    'time'
+                                                            "
+                                                            class="flex max-w-sm flex-col items-start space-y-3"
+                                                        >
+                                                            <SingleTimeForm
+                                                                class="w-full"
+                                                                v-model="
+                                                                    form
+                                                                        .souscriteres[
+                                                                        souscritere
+                                                                            .id
+                                                                    ]
+                                                                "
+                                                                :name="
+                                                                    souscritere.nom
+                                                                "
+                                                            />
+                                                        </div>
+
+                                                        <!-- Heures x2 ouverture / fermeture -->
+                                                        <div
+                                                            v-if="
+                                                                form.criteres[
+                                                                    critere.id
+                                                                ] === valeur &&
+                                                                souscritere.dis_cat_crit_val_id ===
+                                                                    valeur.id &&
+                                                                souscritere.type_champ_form ===
+                                                                    'times'
+                                                            "
+                                                            class="flex max-w-sm flex-col items-start space-y-3"
+                                                        >
+                                                            <OpenTimesForm
+                                                                class="w-full"
+                                                                v-model="
+                                                                    form
+                                                                        .souscriteres[
+                                                                        souscritere
+                                                                            .id
+                                                                    ]
+                                                                "
+                                                                :name="
+                                                                    souscritere.nom
+                                                                "
+                                                            />
+                                                        </div>
+
+                                                        <!-- Date seule -->
+                                                        <div
+                                                            v-if="
+                                                                form.criteres[
+                                                                    critere.id
+                                                                ] === valeur &&
+                                                                souscritere.dis_cat_crit_val_id ===
+                                                                    valeur.id &&
+                                                                souscritere.type_champ_form ===
+                                                                    'date'
+                                                            "
+                                                            class="flex max-w-sm flex-col items-start space-y-3"
+                                                        >
+                                                            <SingleDateForm
+                                                                class="w-full"
+                                                                v-model="
+                                                                    form
+                                                                        .souscriteres[
+                                                                        souscritere
+                                                                            .id
+                                                                    ]
+                                                                "
+                                                                :name="
+                                                                    souscritere.nom
+                                                                "
+                                                            />
+                                                        </div>
+
+                                                        <!-- Dates x 2 -->
+                                                        <div
+                                                            v-if="
+                                                                form.criteres[
+                                                                    critere.id
+                                                                ] === valeur &&
+                                                                souscritere.dis_cat_crit_val_id ===
+                                                                    valeur.id &&
+                                                                souscritere.type_champ_form ===
+                                                                    'dates'
+                                                            "
+                                                            class="flex max-w-sm flex-col items-start space-y-3"
+                                                        >
+                                                            <OpenDaysForm
+                                                                class="w-full"
+                                                                v-model="
+                                                                    form
+                                                                        .souscriteres[
+                                                                        souscritere
+                                                                            .id
+                                                                    ]
+                                                                "
+                                                                :name="
+                                                                    souscritere.nom
+                                                                "
+                                                            />
+                                                        </div>
+
+                                                        <!-- Mois -->
+                                                        <div
+                                                            v-if="
+                                                                form.criteres[
+                                                                    critere.id
+                                                                ] === valeur &&
+                                                                souscritere.dis_cat_crit_val_id ===
+                                                                    valeur.id &&
+                                                                souscritere.type_champ_form ===
+                                                                    'mois'
+                                                            "
+                                                        >
+                                                            <div
+                                                                class="flex max-w-sm flex-col items-start space-y-3"
+                                                            >
+                                                                <OpenMonthsForm
+                                                                    class="w-full"
+                                                                    v-model="
+                                                                        form
+                                                                            .souscriteres[
+                                                                            souscritere
+                                                                                .id
+                                                                        ]
+                                                                    "
+                                                                    :name="
+                                                                        souscritere.nom
+                                                                    "
+                                                                />
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

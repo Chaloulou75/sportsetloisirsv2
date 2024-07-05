@@ -425,7 +425,7 @@ class StructureActiviteProduitController extends Controller
     {
         $horaires = array_map(function ($datetime) {
             $carbonDate = Carbon::parse($datetime);
-            return $carbonDate->format('H:i');
+            return $carbonDate->setTimezone('Europe/Paris')->format('H:i');
         }, array_values($criteresValues));
 
         $this->createStructureProduitCritere($structure, $structureActivite, $structureProduit, $critereId, null, json_encode($horaires));

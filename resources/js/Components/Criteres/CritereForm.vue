@@ -22,20 +22,7 @@ const props = defineProps({
 
 const filteredCriteresByChamp = computed(() => {
     return props.criteres.filter((critere) => {
-        return [
-            "select",
-            "checkbox",
-            "radio",
-            "text",
-            "number",
-            "range",
-            "range multiple",
-            "date",
-            "dates",
-            "time",
-            "times",
-            "mois",
-        ].includes(critere.type_champ_form);
+        return critere.type_champ.criterable;
     });
 });
 
@@ -90,7 +77,7 @@ const handleResetFormCriteres = () => {
             <div v-if="critere.type_champ_form === 'text'">
                 <label
                     :for="critere.nom"
-                    class="block text-sm font-medium normal-case text-gray-700"
+                    class="mb-1 block text-sm font-medium normal-case text-gray-700"
                 >
                     {{ critere.nom }}
                 </label>
@@ -107,7 +94,7 @@ const handleResetFormCriteres = () => {
             <div v-if="critere.type_champ_form === 'number'">
                 <label
                     :for="critere.nom"
-                    class="block text-sm font-medium normal-case text-gray-700"
+                    class="mb-1 block text-sm font-medium normal-case text-gray-700"
                 >
                     {{ critere.nom }}
                 </label>
@@ -131,6 +118,7 @@ const handleResetFormCriteres = () => {
                 :min="critere.min"
                 :max="critere.max"
             />
+            <!-- Range multiple -->
             <RangeMultiple
                 v-if="critere.type_champ_form === 'range multiple'"
                 class="w-full max-w-sm"
@@ -183,10 +171,11 @@ const handleResetFormCriteres = () => {
                     <div
                         v-for="souscritere in valeur.sous_criteres"
                         :key="souscritere.id"
+                        class="ml-1 mt-2"
                     >
                         <!-- select -->
                         <SelectForm
-                            class="max-w-sm py-2"
+                            class="max-w-sm"
                             v-if="
                                 criteresModel[critere.id] === valeur &&
                                 souscritere.type_champ_form === 'select' &&
@@ -226,7 +215,7 @@ const handleResetFormCriteres = () => {
                                 souscritere.type_champ_form === 'number' &&
                                 souscritere.dis_cat_crit_val_id === valeur.id
                             "
-                            class="mt-2 flex items-center space-x-4"
+                            class="flex items-center space-x-4"
                         >
                             <InputLabel
                                 class="py-2"

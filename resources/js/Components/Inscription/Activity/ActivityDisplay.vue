@@ -472,35 +472,12 @@ const destroyTarif = (tarif) => {
                                                                             "
                                                                         >
                                                                             <span
-                                                                                v-if="
-                                                                                    crit.type_champ_form ===
-                                                                                    'range multiple'
-                                                                                "
-                                                                            >
-                                                                                De
-                                                                                {{
-                                                                                    decodeValue(
-                                                                                        critere.valeur
-                                                                                    )[0]
-                                                                                }}
-                                                                                à
-                                                                                {{
-                                                                                    decodeValue(
-                                                                                        critere.valeur
-                                                                                    )[1]
-                                                                                }}
-                                                                                {{
-                                                                                    crit.unite
-                                                                                }}
-                                                                            </span>
-                                                                            <span
-                                                                                v-else
                                                                                 class="text-left text-sm text-gray-600"
                                                                             >
                                                                                 {{
                                                                                     critere.valeur
                                                                                 }}
-                                                                                <ul
+                                                                                <template
                                                                                     v-if="
                                                                                         critere.sous_criteres &&
                                                                                         critere
@@ -508,20 +485,29 @@ const destroyTarif = (tarif) => {
                                                                                             .length >
                                                                                             0
                                                                                     "
-                                                                                    class="list-inside list-disc text-xs text-gray-600"
                                                                                 >
-                                                                                    <li
-                                                                                        v-for="sousCritere in critere.sous_criteres"
+                                                                                    <ul
+                                                                                        v-for="sousCrit in critere.sous_criteres"
                                                                                         :key="
-                                                                                            sousCritere.id
+                                                                                            sousCrit.id
                                                                                         "
-                                                                                        class="text-xs text-gray-600"
+                                                                                        class="ml-1 text-xs"
                                                                                     >
-                                                                                        {{
-                                                                                            sousCritere.valeur
-                                                                                        }}
-                                                                                    </li>
-                                                                                </ul>
+                                                                                        <span
+                                                                                            class="font-semibold"
+                                                                                            >{{
+                                                                                                sousCrit
+                                                                                                    .sous_critere
+                                                                                                    .nom
+                                                                                            }}:</span
+                                                                                        >
+                                                                                        <li>
+                                                                                            {{
+                                                                                                sousCrit.valeur
+                                                                                            }}
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                </template>
                                                                             </span>
                                                                         </li>
                                                                     </ul>

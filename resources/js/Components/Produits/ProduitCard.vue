@@ -101,26 +101,6 @@ const updateIsFavorite = async () => {
     isFavorite.value = favoriteProduitIds.includes(produitId);
 };
 
-function decodeValue(valeur) {
-    try {
-        return JSON.parse(valeur);
-    } catch (e) {
-        console.error("Failed to parse JSON", e);
-        return [];
-    }
-}
-
-const formatDate = (dateTime) => {
-    return dayjs(dateTime).locale("fr").format("DD MMMM YYYY");
-};
-
-const formatTime = (time) => {
-    const hours = time.substring(0, 2);
-    const minutes = time.substring(3, 5);
-    let formattedTime = `${hours}h${minutes}`;
-    return formattedTime;
-};
-
 const formatCurrency = (value) => {
     const numericValue = Number(value.replace(/[^0-9.-]+/g, ""));
     if (!isNaN(numericValue)) {
@@ -131,10 +111,6 @@ const formatCurrency = (value) => {
         }
     }
     return value;
-};
-
-const formatCityName = (ville) => {
-    return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
 };
 
 onMounted(() => {
@@ -259,18 +235,7 @@ onMounted(() => {
                                     >
                                         {{ critere.critere.nom }}
                                     </div>
-                                    <div
-                                        v-if="
-                                            critere.critere.type_champ_form ===
-                                            'range multiple'
-                                        "
-                                    >
-                                        De
-                                        {{ decodeValue(critere.valeur)[0] }} à
-                                        {{ decodeValue(critere.valeur)[1] }}
-                                        {{ critere.critere.unite }}
-                                    </div>
-                                    <div v-else class="text-center text-xs">
+                                    <div class="text-center text-xs">
                                         {{ critere.valeur }}
                                         <span
                                             v-if="
@@ -279,10 +244,13 @@ onMounted(() => {
                                             "
                                         >
                                             <span
-                                                v-for="sousCriteres in critere.sous_criteres"
-                                                :key="sousCriteres.id"
+                                                v-for="sousCritere in critere.sous_criteres"
+                                                :key="sousCritere.id"
                                             >
-                                                ({{ sousCriteres.valeur }})
+                                                {{
+                                                    sousCritere.sous_critere.nom
+                                                }}
+                                                : {{ sousCritere.valeur }}
                                             </span>
                                         </span>
                                     </div>

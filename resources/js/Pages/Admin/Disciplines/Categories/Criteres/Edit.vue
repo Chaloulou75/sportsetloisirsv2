@@ -26,6 +26,7 @@ import {
     ListboxOptions,
     ListboxOption,
 } from "@headlessui/vue";
+import TextInput from "@/Components/Forms/TextInput.vue";
 
 const props = defineProps({
     errors: Object,
@@ -458,24 +459,21 @@ const showAddSousCritereForm = (valeur) => {
 };
 
 const addSousCritereForm = useForm({
-    nom: ref(null),
+    nom: null,
     type_champ: ref(props.type_champs[0]),
     remember: true,
 });
 
 const addSousCritere = (valeur) => {
-    router.post(
+    addSousCritereForm.post(
         route("dcc-sous-criteres.store", {
             valeur: valeur,
         }),
         {
-            nom: addSousCritereForm.nom,
-            type_champ: addSousCritereForm.type_champ,
-        },
-        {
             errorBag: "addSousCritereForm",
             preserveScroll: true,
             onSuccess: () => {
+                initializeValeurForm();
                 addSousCritereForm.reset();
                 toggleAddSousCritereForm(valeur);
             },
@@ -1040,7 +1038,7 @@ onMounted(() => {
                                                     >
                                                         <InputText
                                                             class="text-sm"
-                                                            id="unité"
+                                                            id="unite"
                                                             placeholder="unité"
                                                             v-model="
                                                                 souscritereUniteForm[
@@ -1277,7 +1275,7 @@ onMounted(() => {
                                                             souscritere
                                                         )
                                                     "
-                                                    class="ml-4 list-inside list-disc marker:text-indigo-600"
+                                                    class="ml-4 mt-2 list-inside list-disc marker:text-indigo-600"
                                                 >
                                                     <li
                                                         class="text-sm text-slate-600"
@@ -1399,7 +1397,7 @@ onMounted(() => {
                                                 >Ajouter un sous critère:</label
                                             >
                                             <div class="mt-1 flex rounded-md">
-                                                <input
+                                                <TextInput
                                                     v-model="
                                                         addSousCritereForm.nom
                                                     "
@@ -1407,9 +1405,17 @@ onMounted(() => {
                                                     name="newSousCritere"
                                                     id="newSousCritere"
                                                     class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                    placeholder=""
+                                                    placeholder="Nom du sous critère"
                                                     autocomplete="none"
                                                 />
+                                                <span
+                                                    v-if="
+                                                        errors.addSousCritereForm
+                                                    "
+                                                    >{{
+                                                        errors.addSousCritereForm
+                                                    }}</span
+                                                >
                                             </div>
 
                                             <Listbox

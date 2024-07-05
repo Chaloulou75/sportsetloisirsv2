@@ -181,23 +181,20 @@ export function useFilterProducts(
                                 produitCritere.critere_id === numericCritereId
                             ) {
                                 const [minValue, maxValue] = selectedCritere;
-                                let prodValues;
-                                try {
-                                    prodValues = JSON.parse(
-                                        produitCritere.valeur
-                                    ).map(Number);
-                                } catch (e) {
-                                    return false;
-                                }
+                                const valeurMatch =
+                                    produitCritere.valeur.match(
+                                        /De (\d+) à (\d+)/
+                                    );
 
-                                if (prodValues.length === 2) {
-                                    const [prodMin, prodMax] = prodValues;
+                                if (valeurMatch && valeurMatch.length === 3) {
+                                    const prodMin = Number(valeurMatch[1]);
+                                    const prodMax = Number(valeurMatch[2]);
+
                                     return (
                                         minValue >= prodMin &&
                                         maxValue <= prodMax
                                     );
                                 }
-
                                 return false;
                             } else if (Array.isArray(selectedCritere)) {
                                 return selectedCritere.some(

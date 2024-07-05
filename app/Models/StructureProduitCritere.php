@@ -72,6 +72,19 @@ class StructureProduitCritere extends Model
                             return implode(' à ', $formattedMonths);
                         }
                     }
+
+                    if ($this->critere && $this->critere->type_champ_form === 'range multiple') {
+                        try {
+                            $decodedValue = json_decode($value, true);
+                            if (is_array($decodedValue) && count($decodedValue) === 2) {
+                                return "De {$decodedValue[0]} à {$decodedValue[1]} {$this->critere->unite}";
+                            }
+                            return [];
+                        } catch (\Exception $e) {
+                            return [];
+                        }
+                    }
+
                     return $value;
                 }
                 return $value;

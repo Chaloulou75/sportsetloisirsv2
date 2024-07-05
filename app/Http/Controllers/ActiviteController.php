@@ -291,7 +291,7 @@ class ActiviteController extends Controller
             'instructeur_contact' => ['nullable'],
             'instructeur_phone' => ['nullable'],
         ]);
-        dd($request->souscriteres);
+
         $structure = Structure::with([
             'adresses',
             'disciplines',
@@ -398,7 +398,7 @@ class ActiviteController extends Controller
                 $critereValeurId = $sousCritere->critere_valeur->id;
                 $sousCritereId = $sousCritere->id;
 
-                $this->insertSousCriteresRecursively($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $souscritereValue);
+                $this->insertSousCriteresRecursively($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritere, $souscritereValue);
             }
         }
 
@@ -486,20 +486,74 @@ class ActiviteController extends Controller
         ]);
     }
 
-    private function insertSousCriteresRecursively($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $souscritereValue)
+    private function insertSousCriteresRecursively($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritere, $souscritereValue)
     {
-        if (isset($souscritereValue['id'])) {
-            $this->createProduitSousCritere($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $souscritereValue);
-        } elseif(is_array($souscritereValue)) {
-            foreach ($souscritereValue as $subSouscriteresValue) {
-                $this->insertSousCriteresRecursively($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $subSouscriteresValue);
+        if (!empty($souscritereValue)) {
+            if (isset($souscritereValue['id'])) {
+
+                $this->createProduitSousCritere($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritere, $souscritereValue);
+
+            } elseif(is_string($souscritereValue) && $sousCritere->type_champ_form === 'time') {
+
+                $time = Carbon::parse($souscritereValue)->setTimezone('Europe/Paris')->format('H:i');
+
+                $this->createProduitSousCritere($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritere, $time);
+
+            } elseif(is_string($souscritereValue) && $sousCritere->type_champ_form === 'times') {
+
+                $horaires = array_map(function ($datetime) {
+                    $carbonDate = Carbon::parse($datetime);
+                    return $carbonDate->setTimezone('Europe/Paris')->format('H:i');
+                }, array_values($souscritereValue));
+
+                $this->createProduitSousCritere($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritere, json_encode($horaires));
+
+            } elseif (is_string($souscritereValue) && $sousCritere->type_champ_form === 'date') {
+                // Single date
+                $this->createProduitSousCritere($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritere, Carbon::parse($souscritereValue)->setTimezone('Europe/Paris')->format('Y-m-d'));
+
+            } elseif (is_array($souscritereValue) && $sousCritere->type_champ_form === 'dates') {
+                // Multiple dates
+                $dates = array_map(function ($date) {
+                    return Carbon::parse($date)->setTimezone('Europe/Paris')->format('Y-m-d');
+                }, $souscritereValue);
+
+                $this->createProduitSousCritere($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritere, json_encode($dates));
+
+            } elseif (is_array($souscritereValue) && $sousCritere->type_champ_form === 'mois') {
+                // Mois
+                $monthStart = Carbon::parse($souscritereValue['monthStart']);
+                $monthEnd = Carbon::parse($souscritereValue['monthEnd']);
+                // Extract the year and month, and create the first day of each month
+                $dates = [
+                    $monthStart->startOfMonth()->format('Y-m-d'),
+                    $monthEnd->startOfMonth()->format('Y-m-d')
+                ];
+
+                $this->createProduitSousCritere($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritere, json_encode($dates));
+
+            } elseif(is_array($souscritereValue) && $sousCritere->type_champ_form === 'range multiple') {
+
+                $value = array_map(function ($value) {
+                    return (string)$value;
+                }, $souscritereValue);
+
+                $this->createProduitSousCritere($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritere, json_encode($value));
+
+            } elseif(is_array($souscritereValue)) {
+
+                foreach ($souscritereValue as $subSouscriteresValue) {
+                    $this->insertSousCriteresRecursively($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritere, $subSouscriteresValue);
+                }
+
+            } else {
+                $this->createProduitSousCritere($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritere, $souscritereValue);
             }
-        } else {
-            $this->createProduitSousCritere($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $souscritereValue);
         }
+
     }
 
-    private function createProduitSousCritere($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritereId, $souscriteresValues)
+    private function createProduitSousCritere($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritere, $souscriteresValues)
     {
         $prodCrit = StructureProduitCritere::where('produit_id', $structureProduit->id)->where('critere_id', $critereId)->where('valeur_id', $critereValeurId)->first();
 
@@ -510,7 +564,7 @@ class ActiviteController extends Controller
                 'critere_id' => $critereId,
                 'prod_crit_id' => $prodCrit->id,
                 'critere_valeur_id' => $critereValeurId,
-                'sous_critere_id' => $sousCritereId,
+                'sous_critere_id' => $sousCritere->id,
                 'sous_critere_valeur_id' => $souscriteresValues['id'] ?? null,
                 'valeur' => $souscriteresValues['valeur'] ?? $souscriteresValues,
             ]);
@@ -526,7 +580,7 @@ class ActiviteController extends Controller
     {
         $horaires = array_map(function ($datetime) {
             $carbonDate = Carbon::parse($datetime);
-            return $carbonDate->format('H:i');
+            return $carbonDate->setTimezone('Europe/Paris')->format('H:i');
         }, array_values($criteresValues));
 
         $this->createStructureProduitCritere($structure, $structureActivite, $structureProduit, $critereId, null, json_encode($horaires));
