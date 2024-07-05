@@ -197,12 +197,7 @@ onMounted(() => {
                         </p>
                     </div>
 
-                    <template
-                        v-if="
-                            produit.criteres.length > 0 ||
-                            produit.dates.length > 0
-                        "
-                    >
+                    <template v-if="produit.criteres.length > 0">
                         <div
                             class="mt-auto grid w-full grid-cols-3 justify-items-center gap-1 text-xs text-gray-900"
                         >
@@ -237,22 +232,33 @@ onMounted(() => {
                                     </div>
                                     <div class="text-center text-xs">
                                         {{ critere.valeur }}
-                                        <span
+                                        <template
                                             v-if="
                                                 critere.sous_criteres &&
                                                 critere.sous_criteres.length > 0
                                             "
                                         >
-                                            <span
+                                            <template
                                                 v-for="sousCritere in critere.sous_criteres"
                                                 :key="sousCritere.id"
                                             >
-                                                {{
-                                                    sousCritere.sous_critere.nom
-                                                }}
-                                                : {{ sousCritere.valeur }}
-                                            </span>
-                                        </span>
+                                                <ul
+                                                    class="list-inside list-disc"
+                                                >
+                                                    <span
+                                                        class="text-slate-500"
+                                                        >{{
+                                                            sousCritere
+                                                                .sous_critere
+                                                                .nom
+                                                        }}</span
+                                                    >:
+                                                    <li>
+                                                        {{ sousCritere.valeur }}
+                                                    </li>
+                                                </ul>
+                                            </template>
+                                        </template>
                                     </div>
                                 </div>
                             </template>
