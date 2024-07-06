@@ -160,8 +160,8 @@ class StructureCategorieController extends Controller
      */
     public function destroy(Structure $structure, LienDisciplineCategorie $categorie): RedirectResponse
     {
-        StructureActivite::where('structure_id', $structure->id)->where('categorie_id', $categorie->id)->delete();
-        StructureProduit::where('structure_id', $structure->id)->where('categorie_id', $categorie->id)->delete();
+        $structure->activites()->where('categorie_id', $categorie->id)->delete();
+        $structure->produits()->where('categorie_id', $categorie->id)->delete();
         StructureProduitCritere::where('structure_id', $structure->id)->where('categorie_id', $categorie->id)->delete();
         StructurePlanning::where('structure_id', $structure->id)->where('categorie_id', $categorie->id)->delete();
 

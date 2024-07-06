@@ -137,7 +137,7 @@ export function useFilterProducts(
                                 selectedCritere instanceof Date &&
                                 selectedCritere !== null
                             ) {
-                                // DATE ok
+                                // DATE
                                 if (
                                     produitCritere.critere.type_champ_form ===
                                     "date"

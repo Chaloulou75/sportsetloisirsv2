@@ -1,6 +1,6 @@
 <script setup>
 import Calendar from "primevue/calendar";
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { TransitionRoot } from "@headlessui/vue";
 
 const model = defineModel({ debut: null, fin: null });
@@ -10,6 +10,15 @@ const props = defineProps({
 const isShowing = ref(true);
 const start = ref();
 const end = ref();
+
+// watch(
+//     () => model.value,
+//     (newVal) => {
+//         start.value = newVal.debut;
+//         end.value = newVal.fin;
+//     },
+//     { immediate: true }
+// );
 
 watch(
     () => start.value,
@@ -24,6 +33,13 @@ watch(
         model.value = { debut: start.value, fin: newVal };
     }
 );
+
+onMounted(() => {
+    if (model.value) {
+        start.value = model.value.debut;
+        end.value = model.value.fin;
+    }
+});
 </script>
 <template>
     <TransitionRoot

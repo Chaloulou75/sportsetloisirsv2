@@ -669,7 +669,7 @@ onMounted(() => {
                                                 </div>
 
                                                 <!-- sous criteres -->
-                                                <div
+                                                <template
                                                     v-for="valeur in critere.valeurs"
                                                     :key="valeur.id"
                                                 >
@@ -910,7 +910,7 @@ onMounted(() => {
                                                                 souscritere.unite
                                                             "
                                                         />
-
+                                                        <!-- time -->
                                                         <div
                                                             v-if="
                                                                 form.criteres[
@@ -1053,7 +1053,7 @@ onMounted(() => {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </template>
                                             </div>
                                         </div>
                                         <!-- newAddress -->
