@@ -213,38 +213,27 @@ class ActiviteController extends Controller
     public function destroy(Structure $structure, StructureActivite $activite): RedirectResponse
     {
 
+        $discipline = $activite->discipline;
+        $categorieId = $activite->categorie->id;
+
         if ($activite->image) {
             Storage::disk('public')->delete($activite->image);
         }
 
-        $discipline = $activite->discipline;
-        $categorieId = $activite->categorie->id;
-
         $activite->delete();
 
-        $structureCategories = StructureCategorie::doesntHave('activites')
-        ->where('structure_id', $structure->id)
-        ->where('discipline_id', $discipline->id)
-        ->where('categorie_id', $categorieId)
-        ->get();
+        $catCount = $structure->activites()->where('categorie_id', $categorieId)->count();
+        if($catCount < 1) {
 
-        if($structureCategories->isNotEmpty()) {
-            foreach($structureCategories as $structureCategorie) {
-                $structureCategorie->delete();
+            $structure->categories()->where('liens_disciplines_categories.categorie_id', $categorieId)->detach($categorieId);
+
+            $disCount = $structure->activites()->where('discipline_id', $discipline->id)->count();
+            if($disCount < 1) {
+                $structure->disciplines()->where('discipline_id', $discipline->id)->detach($discipline->id);
+
+                return to_route('structures.disciplines.index', ['structure' => $structure->slug])->with('success', 'l\'activité a été supprimée.');
             }
-        };
-
-        $structureDisciplines = StructureDiscipline::doesntHave('categories')
-        ->where('structure_id', $structure->id)
-        ->where('discipline_id', $discipline->id)
-        ->get();
-
-        if($structureDisciplines->isNotEmpty()) {
-            foreach($structureDisciplines as $structureDiscipline) {
-                $structureDiscipline->delete();
-            }
-        };
-
+        }
 
         return to_route('structures.disciplines.show', ['structure' => $structure->slug, 'discipline' => $discipline ])->with('success', 'l\'activité a été supprimée.');
 

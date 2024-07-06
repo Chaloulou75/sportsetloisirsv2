@@ -229,9 +229,11 @@ class StructureDisciplineController extends Controller
      */
     public function destroy(Structure $structure, ListDiscipline $discipline): RedirectResponse
     {
-        StructureCategorie::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->delete();
-        StructureActivite::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->delete();
-        StructureProduit::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->delete();
+        $strCat = $structure->categories()->where('liens_disciplines_categories.discipline_id', $discipline->id)->get();
+        $categoryIds = $strCat->pluck('id');
+        $structure->categories()->detach($categoryIds);
+        $structure->activites()->where('discipline_id', $discipline->id)->delete();
+        $structure->produits()->where('discipline_id', $discipline->id)->delete();
         StructureProduitCritere::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->delete();
         StructurePlanning::where('structure_id', $structure->id)->where('discipline_id', $discipline->id)->delete();
 
