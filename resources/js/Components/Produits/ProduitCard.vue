@@ -238,26 +238,26 @@ onMounted(() => {
                                                 critere.sous_criteres.length > 0
                                             "
                                         >
-                                            <template
-                                                v-for="sousCritere in critere.sous_criteres"
-                                                :key="sousCritere.id"
+                                            <ul
+                                                v-for="sousCrit in critere.sous_criteres"
+                                                :key="sousCrit.id"
+                                                class="text-center text-xs"
                                             >
-                                                <ul
-                                                    class="list-inside list-disc"
+                                                <li
+                                                    class="font-semibold text-gray-500"
                                                 >
+                                                    {{
+                                                        sousCrit.sous_critere
+                                                            .nom
+                                                    }}:
                                                     <span
-                                                        class="text-slate-500"
+                                                        class="font-thin text-gray-700"
                                                         >{{
-                                                            sousCritere
-                                                                .sous_critere
-                                                                .nom
+                                                            sousCrit.valeur
                                                         }}</span
-                                                    >:
-                                                    <li>
-                                                        {{ sousCritere.valeur }}
-                                                    </li>
-                                                </ul>
-                                            </template>
+                                                    >
+                                                </li>
+                                            </ul>
                                         </template>
                                     </div>
                                 </div>

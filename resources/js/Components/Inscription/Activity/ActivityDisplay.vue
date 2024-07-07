@@ -491,20 +491,22 @@ const destroyTarif = (tarif) => {
                                                                                         :key="
                                                                                             sousCrit.id
                                                                                         "
-                                                                                        class="ml-1 text-xs"
+                                                                                        class="text-center text-xs"
                                                                                     >
-                                                                                        <span
+                                                                                        <li
                                                                                             class="font-semibold"
-                                                                                            >{{
+                                                                                        >
+                                                                                            {{
                                                                                                 sousCrit
                                                                                                     .sous_critere
                                                                                                     .nom
-                                                                                            }}:</span
-                                                                                        >
-                                                                                        <li>
-                                                                                            {{
-                                                                                                sousCrit.valeur
-                                                                                            }}
+                                                                                            }}:
+                                                                                            <span
+                                                                                                class="font-thin"
+                                                                                                >{{
+                                                                                                    sousCrit.valeur
+                                                                                                }}</span
+                                                                                            >
                                                                                         </li>
                                                                                     </ul>
                                                                                 </template>

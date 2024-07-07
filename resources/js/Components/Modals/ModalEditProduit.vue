@@ -263,282 +263,342 @@ watch(
                                                     sousCriteres.forEach(
                                                         (sousCritere) => {
                                                             const prodSousCritValeur =
-                                                                sousCritere.sous_critere_valeur;
-                                                            console.log(
-                                                                "sousCrit:",
-                                                                sousCritere,
-                                                                "prodSSCrit:",
-                                                                prodSousCritValeur,
-                                                                "off :",
-                                                                officialSousCritere
-                                                            );
-                                                            // if (
-                                                            //     prodSousCritValeur !==
-                                                            //     null
-                                                            // ) {
-                                                            //     if (
-                                                            //         officialSousCritere.type_champ_form ===
-                                                            //         "time"
-                                                            //     ) {
-                                                            //         const [
-                                                            //             hours,
-                                                            //             minutes,
-                                                            //         ] =
-                                                            //             prodSousCritValeur
-                                                            //                 .split(
-                                                            //                     "h"
-                                                            //                 )
-                                                            //                 .map(
-                                                            //                     Number
-                                                            //                 );
-                                                            //         const date =
-                                                            //             new Date();
-                                                            //         date.setHours(
-                                                            //             hours
-                                                            //         );
-                                                            //         date.setMinutes(
-                                                            //             minutes
-                                                            //         );
-                                                            //         formEditProduit.souscriteres[
-                                                            //             souscritereId
-                                                            //         ] = date;
-                                                            //     } else if (
-                                                            //         officialSousCritere.type_champ_form ===
-                                                            //         "date"
-                                                            //     ) {
-                                                            //         const parsedDate =
-                                                            //             parse(
-                                                            //                 prodSousCritValeur,
-                                                            //                 "d MMMM yyyy",
-                                                            //                 new Date(),
-                                                            //                 {
-                                                            //                     locale: fr,
-                                                            //                 }
-                                                            //             );
-                                                            //         if (
-                                                            //             isValid(
-                                                            //                 parsedDate
-                                                            //             )
-                                                            //         ) {
-                                                            //             formEditProduit.souscriteres[
-                                                            //                 souscritereId
-                                                            //             ] =
-                                                            //                 parsedDate;
-                                                            //         }
-                                                            //     } else if (
-                                                            //         officialSousCritere.type_champ_form ===
-                                                            //         "dates"
-                                                            //     ) {
-                                                            //         const [
-                                                            //             start,
-                                                            //             end,
-                                                            //         ] =
-                                                            //             prodSousCritValeur
-                                                            //                 .split(
-                                                            //                     " au "
-                                                            //                 )
-                                                            //                 .map(
-                                                            //                     (
-                                                            //                         dateStr
-                                                            //                     ) => {
-                                                            //                         const parsedDate =
-                                                            //                             parse(
-                                                            //                                 dateStr,
-                                                            //                                 "d MMMM yyyy",
-                                                            //                                 new Date(),
-                                                            //                                 {
-                                                            //                                     locale: fr,
-                                                            //                                 }
-                                                            //                             );
-                                                            //                         return isValid(
-                                                            //                             parsedDate
-                                                            //                         )
-                                                            //                             ? parsedDate
-                                                            //                             : null;
-                                                            //                     }
-                                                            //                 );
-                                                            //         if (
-                                                            //             start &&
-                                                            //             end
-                                                            //         ) {
-                                                            //             formEditProduit.souscriteres[
-                                                            //                 souscritereId
-                                                            //             ] = [
-                                                            //                 start,
-                                                            //                 end,
-                                                            //             ];
-                                                            //         }
-                                                            //     } else if (
-                                                            //         officialSousCritere.type_champ_form ===
-                                                            //         "mois"
-                                                            //     ) {
-                                                            //         const [
-                                                            //             startMonthStr,
-                                                            //             endMonthStr,
-                                                            //         ] =
-                                                            //             prodSousCritValeur.split(
-                                                            //                 " à "
-                                                            //             );
-                                                            //         const prodStartMonth =
-                                                            //             parse(
-                                                            //                 startMonthStr.trim(),
-                                                            //                 "MMMM yyyy",
-                                                            //                 new Date(),
-                                                            //                 {
-                                                            //                     locale: fr,
-                                                            //                 }
-                                                            //             );
-                                                            //         const prodEndMonth =
-                                                            //             parse(
-                                                            //                 endMonthStr.trim(),
-                                                            //                 "MMMM yyyy",
-                                                            //                 new Date(),
-                                                            //                 {
-                                                            //                     locale: fr,
-                                                            //                 }
-                                                            //             );
-                                                            //         if (
-                                                            //             prodStartMonth &&
-                                                            //             prodEndMonth
-                                                            //         ) {
-                                                            //             formEditProduit.souscriteres[
-                                                            //                 souscritereId
-                                                            //             ] = {
-                                                            //                 monthStart:
-                                                            //                     prodStartMonth,
-                                                            //                 monthEnd:
-                                                            //                     prodEndMonth,
-                                                            //             };
-                                                            //         }
-                                                            //     } else if (
-                                                            //         officialSousCritere.type_champ_form ===
-                                                            //         "times"
-                                                            //     ) {
-                                                            //         const [
-                                                            //             startStr,
-                                                            //             endStr,
-                                                            //         ] =
-                                                            //             prodSousCritValeur.split(
-                                                            //                 " à "
-                                                            //             );
-                                                            //         const [
-                                                            //             startHours,
-                                                            //             startMinutes,
-                                                            //         ] = startStr
-                                                            //             .split(
-                                                            //                 "h"
-                                                            //             )
-                                                            //             .map(
-                                                            //                 Number
-                                                            //             );
-                                                            //         const [
-                                                            //             endHours,
-                                                            //             endMinutes,
-                                                            //         ] = endStr
-                                                            //             .split(
-                                                            //                 "h"
-                                                            //             )
-                                                            //             .map(
-                                                            //                 Number
-                                                            //             );
+                                                                sousCritere.valeur;
 
-                                                            //         const startDate =
-                                                            //             new Date();
-                                                            //         startDate.setHours(
-                                                            //             startHours
-                                                            //         );
-                                                            //         startDate.setMinutes(
-                                                            //             startMinutes
-                                                            //         );
+                                                            if (
+                                                                souscritereId ===
+                                                                    sousCritere.sous_critere_id &&
+                                                                prodSousCritValeur !==
+                                                                    null
+                                                            ) {
+                                                                if (
+                                                                    officialSousCritere.type_champ_form ===
+                                                                    "time"
+                                                                ) {
+                                                                    const [
+                                                                        hours,
+                                                                        minutes,
+                                                                    ] =
+                                                                        prodSousCritValeur
+                                                                            .split(
+                                                                                "h"
+                                                                            )
+                                                                            .map(
+                                                                                Number
+                                                                            );
+                                                                    const date =
+                                                                        new Date();
+                                                                    date.setHours(
+                                                                        hours
+                                                                    );
+                                                                    date.setMinutes(
+                                                                        minutes
+                                                                    );
+                                                                    formEditProduit.souscriteres[
+                                                                        souscritereId
+                                                                    ] = date;
+                                                                } else if (
+                                                                    officialSousCritere.type_champ_form ===
+                                                                    "date"
+                                                                ) {
+                                                                    const parsedDate =
+                                                                        parse(
+                                                                            prodSousCritValeur,
+                                                                            "d MMMM yyyy",
+                                                                            new Date(),
+                                                                            {
+                                                                                locale: fr,
+                                                                            }
+                                                                        );
+                                                                    if (
+                                                                        isValid(
+                                                                            parsedDate
+                                                                        )
+                                                                    ) {
+                                                                        formEditProduit.souscriteres[
+                                                                            souscritereId
+                                                                        ] =
+                                                                            parsedDate;
+                                                                    }
+                                                                } else if (
+                                                                    officialSousCritere.type_champ_form ===
+                                                                    "dates"
+                                                                ) {
+                                                                    const [
+                                                                        start,
+                                                                        end,
+                                                                    ] =
+                                                                        prodSousCritValeur
+                                                                            .split(
+                                                                                " au "
+                                                                            )
+                                                                            .map(
+                                                                                (
+                                                                                    dateStr
+                                                                                ) => {
+                                                                                    const parsedDate =
+                                                                                        parse(
+                                                                                            dateStr,
+                                                                                            "d MMMM yyyy",
+                                                                                            new Date(),
+                                                                                            {
+                                                                                                locale: fr,
+                                                                                            }
+                                                                                        );
+                                                                                    return isValid(
+                                                                                        parsedDate
+                                                                                    )
+                                                                                        ? parsedDate
+                                                                                        : null;
+                                                                                }
+                                                                            );
+                                                                    if (
+                                                                        start &&
+                                                                        end
+                                                                    ) {
+                                                                        formEditProduit.souscriteres[
+                                                                            souscritereId
+                                                                        ] = [
+                                                                            start,
+                                                                            end,
+                                                                        ];
+                                                                    }
+                                                                } else if (
+                                                                    officialSousCritere.type_champ_form ===
+                                                                    "mois"
+                                                                ) {
+                                                                    const [
+                                                                        startMonthStr,
+                                                                        endMonthStr,
+                                                                    ] =
+                                                                        prodSousCritValeur.split(
+                                                                            " à "
+                                                                        );
+                                                                    const prodStartMonth =
+                                                                        parse(
+                                                                            startMonthStr.trim(),
+                                                                            "MMMM yyyy",
+                                                                            new Date(),
+                                                                            {
+                                                                                locale: fr,
+                                                                            }
+                                                                        );
+                                                                    const prodEndMonth =
+                                                                        parse(
+                                                                            endMonthStr.trim(),
+                                                                            "MMMM yyyy",
+                                                                            new Date(),
+                                                                            {
+                                                                                locale: fr,
+                                                                            }
+                                                                        );
+                                                                    if (
+                                                                        prodStartMonth &&
+                                                                        prodEndMonth
+                                                                    ) {
+                                                                        formEditProduit.souscriteres[
+                                                                            souscritereId
+                                                                        ] = {
+                                                                            monthStart:
+                                                                                prodStartMonth,
+                                                                            monthEnd:
+                                                                                prodEndMonth,
+                                                                        };
+                                                                    }
+                                                                } else if (
+                                                                    officialSousCritere.type_champ_form ===
+                                                                    "times"
+                                                                ) {
+                                                                    const [
+                                                                        startStr,
+                                                                        endStr,
+                                                                    ] =
+                                                                        prodSousCritValeur.split(
+                                                                            " à "
+                                                                        );
+                                                                    const [
+                                                                        startHours,
+                                                                        startMinutes,
+                                                                    ] = startStr
+                                                                        .split(
+                                                                            "h"
+                                                                        )
+                                                                        .map(
+                                                                            Number
+                                                                        );
+                                                                    const [
+                                                                        endHours,
+                                                                        endMinutes,
+                                                                    ] = endStr
+                                                                        .split(
+                                                                            "h"
+                                                                        )
+                                                                        .map(
+                                                                            Number
+                                                                        );
 
-                                                            //         const endDate =
-                                                            //             new Date();
-                                                            //         endDate.setHours(
-                                                            //             endHours
-                                                            //         );
-                                                            //         endDate.setMinutes(
-                                                            //             endMinutes
-                                                            //         );
+                                                                    const startDate =
+                                                                        new Date();
+                                                                    startDate.setHours(
+                                                                        startHours
+                                                                    );
+                                                                    startDate.setMinutes(
+                                                                        startMinutes
+                                                                    );
 
-                                                            //         formEditProduit.souscriteres[
-                                                            //             souscritereId
-                                                            //         ] = {
-                                                            //             debut: startDate,
-                                                            //             fin: endDate,
-                                                            //         };
-                                                            //     } else if (
-                                                            //         officialSousCritere.type_champ_form ===
-                                                            //         "range"
-                                                            //     ) {
-                                                            //         formEditProduit.souscriteres[
-                                                            //             souscritereId
-                                                            //         ] =
-                                                            //             Number(
-                                                            //                 prodSousCritValeur
-                                                            //             );
-                                                            //     } else if (
-                                                            //         officialSousCritere.type_champ_form ===
-                                                            //         "range multiple"
-                                                            //     ) {
-                                                            //         const matches =
-                                                            //             prodSousCritValeur.match(
-                                                            //                 /(\d+)/g
-                                                            //             );
-                                                            //         if (
-                                                            //             matches &&
-                                                            //             matches.length ===
-                                                            //                 2
-                                                            //         ) {
-                                                            //             const [
-                                                            //                 minVal,
-                                                            //                 maxVal,
-                                                            //             ] =
-                                                            //                 matches.map(
-                                                            //                     Number
-                                                            //                 ); // Convert to numbers
-                                                            //             formEditProduit.souscriteres[
-                                                            //                 souscritereId
-                                                            //             ] = [
-                                                            //                 minVal,
-                                                            //                 maxVal,
-                                                            //             ];
-                                                            //         }
-                                                            //     } else if (
-                                                            //         officialSousCritere
-                                                            //             .sous_criteres_valeurs
-                                                            //             .length >
-                                                            //         0
-                                                            //     ) {
-                                                            //         officialSousCritere.sous_criteres_valeurs.forEach(
-                                                            //             (
-                                                            //                 officialSousCritereValeur
-                                                            //             ) => {
-                                                            //                 const officialSousCritereValeurId =
-                                                            //                     officialSousCritereValeur.id;
+                                                                    const endDate =
+                                                                        new Date();
+                                                                    endDate.setHours(
+                                                                        endHours
+                                                                    );
+                                                                    endDate.setMinutes(
+                                                                        endMinutes
+                                                                    );
 
-                                                            //                 const prodSousCritValeur =
-                                                            //                     sousCritere.sous_critere_valeur;
-                                                            //                 if (
-                                                            //                     prodSousCritValeur &&
-                                                            //                     prodSousCritValeur.id ===
-                                                            //                         officialSousCritereValeurId
-                                                            //                 ) {
-                                                            //                     formEditProduit.souscriteres[
-                                                            //                         souscritereId
-                                                            //                     ] =
-                                                            //                         officialSousCritereValeur;
-                                                            //                 }
-                                                            //             }
-                                                            //         );
-                                                            //     } else {
-                                                            //         const prodSousCritValeur =
-                                                            //             sousCritere.valeur;
-                                                            //         formEditProduit.souscriteres[
-                                                            //             souscritereId
-                                                            //         ] =
-                                                            //             prodSousCritValeur;
-                                                            //     }
-                                                            // }
+                                                                    formEditProduit.souscriteres[
+                                                                        souscritereId
+                                                                    ] = {
+                                                                        debut: startDate,
+                                                                        fin: endDate,
+                                                                    };
+                                                                } else if (
+                                                                    officialSousCritere.type_champ_form ===
+                                                                    "range"
+                                                                ) {
+                                                                    formEditProduit.souscriteres[
+                                                                        souscritereId
+                                                                    ] =
+                                                                        Number(
+                                                                            prodSousCritValeur
+                                                                        );
+                                                                } else if (
+                                                                    officialSousCritere.type_champ_form ===
+                                                                    "range multiple"
+                                                                ) {
+                                                                    const matches =
+                                                                        prodSousCritValeur.match(
+                                                                            /(\d+)/g
+                                                                        );
+                                                                    if (
+                                                                        matches &&
+                                                                        matches.length ===
+                                                                            2
+                                                                    ) {
+                                                                        const [
+                                                                            minVal,
+                                                                            maxVal,
+                                                                        ] =
+                                                                            matches.map(
+                                                                                Number
+                                                                            ); // Convert to numbers
+                                                                        formEditProduit.souscriteres[
+                                                                            souscritereId
+                                                                        ] = [
+                                                                            minVal,
+                                                                            maxVal,
+                                                                        ];
+                                                                    }
+                                                                } else if (
+                                                                    officialSousCritere
+                                                                        .sous_criteres_valeurs
+                                                                        .length >
+                                                                    0
+                                                                ) {
+                                                                    officialSousCritere.sous_criteres_valeurs.forEach(
+                                                                        (
+                                                                            officialSousCritereValeur
+                                                                        ) => {
+                                                                            const officialSousCritereValeurId =
+                                                                                officialSousCritereValeur.id;
+
+                                                                            const prodSousCritValeur =
+                                                                                sousCritere.sous_critere_valeur;
+                                                                            if (
+                                                                                prodSousCritValeur &&
+                                                                                prodSousCritValeur.id ===
+                                                                                    officialSousCritereValeurId
+                                                                            ) {
+                                                                                if (
+                                                                                    !formEditProduit
+                                                                                        .souscriteres[
+                                                                                        souscritereId
+                                                                                    ]
+                                                                                ) {
+                                                                                    if (
+                                                                                        officialSousCritere.type_champ_form ===
+                                                                                        "checkbox"
+                                                                                    ) {
+                                                                                        formEditProduit.souscriteres[
+                                                                                            souscritereId
+                                                                                        ] =
+                                                                                            [
+                                                                                                officialSousCritereValeur,
+                                                                                            ];
+                                                                                    } else {
+                                                                                        formEditProduit.souscriteres[
+                                                                                            souscritereId
+                                                                                        ] =
+                                                                                            officialSousCritereValeur;
+                                                                                    }
+                                                                                } else {
+                                                                                    const existingValue =
+                                                                                        formEditProduit
+                                                                                            .souscriteres[
+                                                                                            souscritereId
+                                                                                        ];
+
+                                                                                    if (
+                                                                                        !Array.isArray(
+                                                                                            existingValue
+                                                                                        )
+                                                                                    ) {
+                                                                                        formEditProduit.souscriteres[
+                                                                                            souscritereId
+                                                                                        ] =
+                                                                                            [
+                                                                                                existingValue,
+                                                                                            ];
+                                                                                        if (
+                                                                                            !formEditProduit.souscriteres[
+                                                                                                souscritereId
+                                                                                            ].includes(
+                                                                                                officialSousCritereValeur
+                                                                                            )
+                                                                                        ) {
+                                                                                            formEditProduit.souscriteres[
+                                                                                                souscritereId
+                                                                                            ].push(
+                                                                                                officialSousCritereValeur
+                                                                                            );
+                                                                                        }
+                                                                                    } else {
+                                                                                        if (
+                                                                                            !formEditProduit.souscriteres[
+                                                                                                souscritereId
+                                                                                            ].includes(
+                                                                                                officialSousCritereValeur
+                                                                                            )
+                                                                                        ) {
+                                                                                            formEditProduit.souscriteres[
+                                                                                                souscritereId
+                                                                                            ].push(
+                                                                                                officialSousCritereValeur
+                                                                                            );
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    );
+                                                                } else {
+                                                                    const prodSousCritValeur =
+                                                                        sousCritere.valeur;
+                                                                    formEditProduit.souscriteres[
+                                                                        souscritereId
+                                                                    ] =
+                                                                        prodSousCritValeur;
+                                                                }
+                                                            }
                                                         }
                                                     );
                                                 }
