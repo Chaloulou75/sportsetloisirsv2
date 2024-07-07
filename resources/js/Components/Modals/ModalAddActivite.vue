@@ -2,6 +2,7 @@
 import { useForm } from "@inertiajs/vue3";
 import { ref, watch, onMounted, computed, defineAsyncComponent } from "vue";
 import { XCircleIcon } from "@heroicons/vue/24/outline";
+import Dropdown from "primevue/dropdown";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
 import Checkbox from "@/Components/Forms/Checkbox.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
@@ -189,7 +190,7 @@ onMounted(() => {
                                         <!-- categories -->
                                         <div
                                             v-if="discipline.categories"
-                                            class="flex w-full flex-col items-center justify-start space-x-0 space-y-2 md:flex-row md:space-x-6 md:space-y-0"
+                                            class="flex w-full flex-col items-start justify-start space-y-2"
                                         >
                                             <label
                                                 for="categorie"
@@ -200,27 +201,21 @@ onMounted(() => {
                                             <div
                                                 class="mt-1 flex w-full rounded-md md:w-1/2"
                                             >
-                                                <select
-                                                    name="categorie"
-                                                    id="categorie"
+                                                <Dropdown
                                                     v-model="form.categorie_id"
-                                                    class="block w-full rounded-lg border-gray-300 text-sm text-gray-800 shadow-sm"
-                                                >
-                                                    <option
-                                                        v-for="categorie in discipline.categories"
-                                                        :key="
-                                                            categorie.pivot.id
-                                                        "
-                                                        :value="
-                                                            categorie.pivot.id
-                                                        "
-                                                    >
-                                                        {{
-                                                            categorie.pivot
-                                                                .nom_categorie_pro
-                                                        }}
-                                                    </option>
-                                                </select>
+                                                    :options="
+                                                        discipline.categories
+                                                    "
+                                                    optionLabel="pivot.nom_categorie_pro"
+                                                    optionValue="pivot.id"
+                                                    placeholder="Selectionner une catégorie"
+                                                    class="w-full text-sm md:w-[14rem]"
+                                                    :ptOptions="{
+                                                        mergeProps: true,
+                                                    }"
+                                                    :pt="{ item: 'text-sm' }"
+                                                    showClear
+                                                />
                                             </div>
                                             <div
                                                 v-if="form.errors.categorie_id"
@@ -253,7 +248,7 @@ onMounted(() => {
                                             >
                                         </div>
                                         <!-- titre -->
-                                        <div>
+                                        <div class="max-w-sm">
                                             <label
                                                 for="titre"
                                                 class="block text-sm font-medium normal-case text-gray-700"
@@ -279,7 +274,7 @@ onMounted(() => {
                                             </div>
                                         </div>
                                         <!-- description -->
-                                        <div>
+                                        <div class="max-w-sm">
                                             <label
                                                 for="description"
                                                 class="block text-sm font-medium normal-case text-gray-700"

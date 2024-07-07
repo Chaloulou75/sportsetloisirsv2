@@ -716,7 +716,7 @@ onMounted(() => {});
                                                 Titre
                                             </label>
                                             <div class="mt-1 flex rounded-md">
-                                                <input
+                                                <TextInput
                                                     v-model="
                                                         editCatTarifForm.titre
                                                     "

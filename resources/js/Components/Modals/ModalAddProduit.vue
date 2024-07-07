@@ -612,7 +612,7 @@ const onSubmitAddProduitForm = () => {
                                                     </div>
 
                                                     <!-- sous criteres -->
-                                                    <div
+                                                    <template
                                                         v-for="valeur in critere.valeurs"
                                                         :key="valeur.id"
                                                     >
@@ -621,8 +621,9 @@ const onSubmitAddProduitForm = () => {
                                                             :key="
                                                                 souscritere.id
                                                             "
-                                                            class=""
+                                                            class="ml-3 mt-2"
                                                         >
+                                                            <!-- sous crit select -->
                                                             <SelectForm
                                                                 :classes="'block'"
                                                                 class="max-w-sm py-2"
@@ -653,6 +654,62 @@ const onSubmitAddProduitForm = () => {
                                                                 "
                                                             />
 
+                                                            <RadioForm
+                                                                v-if="
+                                                                    formAddProduit
+                                                                        .criteres[
+                                                                        critere
+                                                                            .id
+                                                                    ] ===
+                                                                        valeur &&
+                                                                    souscritere.type_champ_form ===
+                                                                        'radio' &&
+                                                                    souscritere.dis_cat_crit_val_id ===
+                                                                        valeur.id
+                                                                "
+                                                                :name="
+                                                                    souscritere.nom
+                                                                "
+                                                                v-model="
+                                                                    formAddProduit
+                                                                        .souscriteres[
+                                                                        souscritere
+                                                                            .id
+                                                                    ]
+                                                                "
+                                                                :options="
+                                                                    souscritere.sous_criteres_valeurs
+                                                                "
+                                                            />
+
+                                                            <!-- sous crit checkbox -->
+                                                            <CheckboxForm
+                                                                class="max-w-sm"
+                                                                v-if="
+                                                                    formAddProduit
+                                                                        .criteres[
+                                                                        critere
+                                                                            .id
+                                                                    ] ===
+                                                                        valeur &&
+                                                                    souscritere.type_champ_form ===
+                                                                        'checkbox'
+                                                                "
+                                                                :name="
+                                                                    souscritere.nom
+                                                                "
+                                                                v-model="
+                                                                    formAddProduit
+                                                                        .souscriteres[
+                                                                        souscritere
+                                                                            .id
+                                                                    ]
+                                                                "
+                                                                :options="
+                                                                    souscritere.sous_criteres_valeurs
+                                                                "
+                                                            />
+                                                            <!-- sous crit number -->
                                                             <InputLabel
                                                                 class="py-2"
                                                                 :for="
@@ -704,6 +761,7 @@ const onSubmitAddProduitForm = () => {
                                                                     ]
                                                                 "
                                                             />
+                                                            <!-- sous crit text -->
                                                             <InputLabel
                                                                 class="py-2"
                                                                 :for="
@@ -734,6 +792,13 @@ const onSubmitAddProduitForm = () => {
                                                                 :name="
                                                                     souscritere.nom
                                                                 "
+                                                                v-model="
+                                                                    formAddProduit
+                                                                        .souscriteres[
+                                                                        souscritere
+                                                                            .id
+                                                                    ]
+                                                                "
                                                                 v-if="
                                                                     formAddProduit
                                                                         .criteres[
@@ -746,6 +811,22 @@ const onSubmitAddProduitForm = () => {
                                                                     souscritere.dis_cat_crit_val_id ===
                                                                         valeur.id
                                                                 "
+                                                            />
+                                                            <!-- Range -->
+                                                            <RangeInputForm
+                                                                v-if="
+                                                                    formAddProduit
+                                                                        .criteres[
+                                                                        critere
+                                                                            .id
+                                                                    ] ===
+                                                                        valeur &&
+                                                                    souscritere.type_champ_form ===
+                                                                        'range' &&
+                                                                    souscritere.dis_cat_crit_val_id ===
+                                                                        valeur.id
+                                                                "
+                                                                class="mt-1 w-full max-w-sm"
                                                                 v-model="
                                                                     formAddProduit
                                                                         .souscriteres[
@@ -753,9 +834,213 @@ const onSubmitAddProduitForm = () => {
                                                                             .id
                                                                     ]
                                                                 "
+                                                                :name="
+                                                                    souscritere.nom
+                                                                "
+                                                                :min="
+                                                                    souscritere.min
+                                                                "
+                                                                :max="
+                                                                    souscritere.max
+                                                                "
+                                                                :unite="
+                                                                    souscritere.unite
+                                                                "
                                                             />
+                                                            <!-- range multiple -->
+                                                            <RangeMultiple
+                                                                v-if="
+                                                                    formAddProduit
+                                                                        .criteres[
+                                                                        critere
+                                                                            .id
+                                                                    ] ===
+                                                                        valeur &&
+                                                                    souscritere.dis_cat_crit_val_id ===
+                                                                        valeur.id &&
+                                                                    souscritere.type_champ_form ===
+                                                                        'range multiple'
+                                                                "
+                                                                class="mt-1 w-full max-w-sm"
+                                                                v-model="
+                                                                    formAddProduit
+                                                                        .souscriteres[
+                                                                        souscritere
+                                                                            .id
+                                                                    ]
+                                                                "
+                                                                :name="
+                                                                    souscritere.nom
+                                                                "
+                                                                :min="
+                                                                    souscritere.min
+                                                                "
+                                                                :max="
+                                                                    souscritere.max
+                                                                "
+                                                                :unite="
+                                                                    souscritere.unite
+                                                                "
+                                                            />
+                                                            <!-- time -->
+                                                            <div
+                                                                v-if="
+                                                                    formAddProduit
+                                                                        .criteres[
+                                                                        critere
+                                                                            .id
+                                                                    ] ===
+                                                                        valeur &&
+                                                                    souscritere.dis_cat_crit_val_id ===
+                                                                        valeur.id &&
+                                                                    souscritere.type_champ_form ===
+                                                                        'time'
+                                                                "
+                                                                class="flex max-w-sm flex-col items-start space-y-3"
+                                                            >
+                                                                <SingleTimeForm
+                                                                    class="w-full"
+                                                                    v-model="
+                                                                        formAddProduit
+                                                                            .souscriteres[
+                                                                            souscritere
+                                                                                .id
+                                                                        ]
+                                                                    "
+                                                                    :name="
+                                                                        souscritere.nom
+                                                                    "
+                                                                />
+                                                            </div>
+
+                                                            <!-- Heures x2 ouverture / fermeture -->
+                                                            <div
+                                                                v-if="
+                                                                    formAddProduit
+                                                                        .criteres[
+                                                                        critere
+                                                                            .id
+                                                                    ] ===
+                                                                        valeur &&
+                                                                    souscritere.dis_cat_crit_val_id ===
+                                                                        valeur.id &&
+                                                                    souscritere.type_champ_form ===
+                                                                        'times'
+                                                                "
+                                                                class="flex max-w-sm flex-col items-start space-y-3"
+                                                            >
+                                                                <OpenTimesForm
+                                                                    class="w-full"
+                                                                    v-model="
+                                                                        formAddProduit
+                                                                            .souscriteres[
+                                                                            souscritere
+                                                                                .id
+                                                                        ]
+                                                                    "
+                                                                    :name="
+                                                                        souscritere.nom
+                                                                    "
+                                                                />
+                                                            </div>
+
+                                                            <!-- Date seule -->
+                                                            <div
+                                                                v-if="
+                                                                    formAddProduit
+                                                                        .criteres[
+                                                                        critere
+                                                                            .id
+                                                                    ] ===
+                                                                        valeur &&
+                                                                    souscritere.dis_cat_crit_val_id ===
+                                                                        valeur.id &&
+                                                                    souscritere.type_champ_form ===
+                                                                        'date'
+                                                                "
+                                                                class="flex max-w-sm flex-col items-start space-y-3"
+                                                            >
+                                                                <SingleDateForm
+                                                                    class="w-full"
+                                                                    v-model="
+                                                                        formAddProduit
+                                                                            .souscriteres[
+                                                                            souscritere
+                                                                                .id
+                                                                        ]
+                                                                    "
+                                                                    :name="
+                                                                        souscritere.nom
+                                                                    "
+                                                                />
+                                                            </div>
+
+                                                            <!-- Dates x 2 -->
+                                                            <div
+                                                                v-if="
+                                                                    formAddProduit
+                                                                        .criteres[
+                                                                        critere
+                                                                            .id
+                                                                    ] ===
+                                                                        valeur &&
+                                                                    souscritere.dis_cat_crit_val_id ===
+                                                                        valeur.id &&
+                                                                    souscritere.type_champ_form ===
+                                                                        'dates'
+                                                                "
+                                                                class="flex max-w-sm flex-col items-start space-y-3"
+                                                            >
+                                                                <OpenDaysForm
+                                                                    class="w-full"
+                                                                    v-model="
+                                                                        formAddProduit
+                                                                            .souscriteres[
+                                                                            souscritere
+                                                                                .id
+                                                                        ]
+                                                                    "
+                                                                    :name="
+                                                                        souscritere.nom
+                                                                    "
+                                                                />
+                                                            </div>
+
+                                                            <!-- Mois -->
+                                                            <div
+                                                                v-if="
+                                                                    formAddProduit
+                                                                        .criteres[
+                                                                        critere
+                                                                            .id
+                                                                    ] ===
+                                                                        valeur &&
+                                                                    souscritere.dis_cat_crit_val_id ===
+                                                                        valeur.id &&
+                                                                    souscritere.type_champ_form ===
+                                                                        'mois'
+                                                                "
+                                                            >
+                                                                <div
+                                                                    class="flex max-w-sm flex-col items-start space-y-3"
+                                                                >
+                                                                    <OpenMonthsForm
+                                                                        class="w-full"
+                                                                        v-model="
+                                                                            formAddProduit
+                                                                                .souscriteres[
+                                                                                souscritere
+                                                                                    .id
+                                                                            ]
+                                                                        "
+                                                                        :name="
+                                                                            souscritere.nom
+                                                                        "
+                                                                    />
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    </template>
                                                 </div>
                                             </div>
 

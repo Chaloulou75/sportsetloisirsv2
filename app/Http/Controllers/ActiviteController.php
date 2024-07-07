@@ -385,7 +385,6 @@ class ActiviteController extends Controller
 
                 $critereId = $sousCritere->critere_valeur->discipline_categorie_critere_id;
                 $critereValeurId = $sousCritere->critere_valeur->id;
-                $sousCritereId = $sousCritere->id;
 
                 $this->insertSousCriteresRecursively($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritere, $souscritereValue);
             }
@@ -488,7 +487,7 @@ class ActiviteController extends Controller
 
                 $this->createProduitSousCritere($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritere, $time);
 
-            } elseif(is_string($souscritereValue) && $sousCritere->type_champ_form === 'times') {
+            } elseif(is_array($souscritereValue) && $sousCritere->type_champ_form === 'times') {
 
                 $horaires = array_map(function ($datetime) {
                     $carbonDate = Carbon::parse($datetime);
@@ -539,7 +538,6 @@ class ActiviteController extends Controller
                 $this->createProduitSousCritere($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritere, $souscritereValue);
             }
         }
-
     }
 
     private function createProduitSousCritere($structureActivite, $structureProduit, $critereId, $critereValeurId, $sousCritere, $souscriteresValues)

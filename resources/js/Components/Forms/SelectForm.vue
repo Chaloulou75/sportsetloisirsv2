@@ -10,7 +10,6 @@ const props = defineProps({
     classes: String,
 });
 
-const select = ref(null);
 const isShowing = ref(true);
 </script>
 
@@ -36,33 +35,12 @@ const isShowing = ref(true);
                 v-model="model"
                 :options="options"
                 optionLabel="valeur"
-                :placeholder="`Selectionner un ${name}`"
+                :placeholder="name"
                 class="w-full text-sm md:w-[14rem]"
                 :ptOptions="{ mergeProps: true }"
                 :pt="{ item: 'text-sm' }"
                 showClear
             />
-            <!-- <div class="mt-1 flex flex-1 rounded-md md:flex-auto">
-                <select
-                    ref="select"
-                    :name="name"
-                    :id="name"
-                    v-model="model"
-                    class="block w-full rounded-md border-gray-300 text-sm text-gray-800 shadow-sm"
-                >
-                    <option disabled value="">
-                        Selectionner un
-                        {{ name }}
-                    </option>
-                    <option
-                        v-for="option in options"
-                        :key="option.id"
-                        :value="option"
-                    >
-                        {{ option.valeur }}
-                    </option>
-                </select>
-            </div> -->
         </div>
     </TransitionRoot>
 </template>
