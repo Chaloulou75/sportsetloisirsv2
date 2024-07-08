@@ -1,7 +1,7 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
-import { ref, defineAsyncComponent, provide, watch, onMounted } from "vue";
+import { ref, defineAsyncComponent, watch, onMounted } from "vue";
 import { useFilterProducts } from "@/composables/useFilterProducts";
 import CritereForm from "@/Components/Criteres/CritereForm.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
@@ -15,7 +15,6 @@ import {
     MapIcon,
     XMarkIcon,
 } from "@heroicons/vue/24/outline";
-import { useElementVisibility } from "@vueuse/core";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 dayjs.locale("fr");
@@ -78,24 +77,6 @@ const goToListe = () => {
     displayMap.value = !displayMap.value;
 };
 
-const criteresEl = ref(null);
-const isCriteresVisible = useElementVisibility(criteresEl);
-const scrollToCriteres = () => {
-    if (criteresEl.value) {
-        const offset = window.innerWidth >= 768 ? -125 : -135;
-        const scrollY =
-            window.scrollY +
-            criteresEl.value.getBoundingClientRect().top +
-            offset;
-        window.scroll({
-            top: scrollY,
-            behavior: "smooth",
-        });
-    }
-};
-
-provide("scrollToCriteres", scrollToCriteres);
-
 const hoveredProduit = ref(null);
 const hoveredStructure = ref(null);
 
@@ -115,13 +96,10 @@ const hideStructureTooltip = () => {
 };
 
 const showCriteres = ref(false);
-
+const showCriteresLg = ref(true);
 const toggleCriteres = () => {
     showCriteres.value = !showCriteres.value;
 };
-
-const showCriteresLg = ref(true);
-
 const toggleCriteresLg = () => {
     showCriteresLg.value = !showCriteresLg.value;
 };
@@ -274,7 +252,6 @@ onMounted(() => {
         </template>
         <template #default>
             <div
-                ref="criteresEl"
                 class="sticky left-0 right-0 top-16 z-50 bg-gray-50 backdrop-blur-md"
             >
                 <CategoriesResultNavigation
