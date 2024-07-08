@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch } from "vue";
 import { useForm } from "@inertiajs/vue3";
+import Dropdown from "primevue/dropdown";
 import OpenDaysForm from "@/Components/Forms/DayTime/OpenDaysForm.vue";
 import OpenTimesForm from "@/Components/Forms/DayTime/OpenTimesForm.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
@@ -160,71 +161,65 @@ const onSubmit = () => {
                                             "
                                         />
                                     </div>
-                                    <div>
-                                        <label
-                                            for="hs-select-label"
-                                            class="mb-1 block text-sm font-medium normal-case text-gray-700"
-                                            >Activité liée</label
-                                        >
-                                        <select
+                                    <label
+                                        for="activite"
+                                        class="block text-sm font-medium normal-case text-gray-700"
+                                    >
+                                        Activité liée
+                                    </label>
+                                    <div
+                                        class="mt-1 flex w-full rounded-md md:w-1/2"
+                                    >
+                                        <Dropdown
                                             v-model="addPlanningForm.activite"
-                                            id="hs-select-label"
-                                            class="block w-full max-w-sm rounded-lg border-gray-200 px-4 py-2.5 pe-9 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                                        >
-                                            <option disabled>
-                                                Sélectionner une activité
-                                            </option>
-                                            <option
-                                                v-for="activite in structure.activites"
-                                                :key="activite.id"
-                                                :value="activite.id"
-                                            >
-                                                {{ activite.titre }}
-                                            </option>
-                                        </select>
+                                            :options="structure.activites"
+                                            optionLabel="titre"
+                                            optionValue="id"
+                                            :placeholder="`Selectionner une activité`"
+                                            class="w-full text-sm md:w-[14rem]"
+                                            :ptOptions="{
+                                                mergeProps: true,
+                                            }"
+                                            :pt="{ item: 'text-sm' }"
+                                            showClear
+                                        />
                                     </div>
-                                    <div>
+                                    <div
+                                        v-if="
+                                            filteredProducts &&
+                                            filteredProducts.length > 0
+                                        "
+                                    >
                                         <label
-                                            v-if="
-                                                filteredProducts &&
-                                                filteredProducts.length > 0
-                                            "
-                                            for="hs-select-label"
-                                            class="mb-1 block text-sm font-medium normal-case text-gray-700"
-                                            >Produit lié</label
+                                            for="produit"
+                                            class="block text-sm font-medium normal-case text-gray-700"
                                         >
-                                        <select
-                                            v-if="
-                                                filteredProducts &&
-                                                filteredProducts.length > 0
-                                            "
-                                            v-model="addPlanningForm.produit"
-                                            id="hs-select-label"
-                                            class="block w-full max-w-sm rounded-lg border-gray-200 px-4 py-2.5 pe-9 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
+                                            Produit lié
+                                        </label>
+                                        <div
+                                            class="mt-1 flex w-full rounded-md md:w-1/2"
                                         >
-                                            <option disabled>
-                                                Sélectionner un produit
-                                            </option>
-                                            <option
-                                                v-for="produit in filteredProducts"
-                                                :key="produit.id"
-                                                :value="produit.id"
-                                            >
-                                                {{ produit.id }}
-                                            </option>
-                                        </select>
-
-                                        <p
-                                            class="py-2 text-sm text-red-600"
-                                            v-if="
-                                                filteredProducts &&
-                                                !filteredProducts.length > 0
-                                            "
-                                        >
-                                            Il faut au préalable ajouter au
-                                            moins un produit à l'activité.
-                                        </p>
+                                            <Dropdown
+                                                v-model="
+                                                    addPlanningForm.produit
+                                                "
+                                                :options="filteredProducts"
+                                                optionLabel="id"
+                                                optionValue="id"
+                                                :placeholder="`Selectionner une produit`"
+                                                class="w-full text-sm md:w-[14rem]"
+                                                :ptOptions="{
+                                                    mergeProps: true,
+                                                }"
+                                                :pt="{ item: 'text-sm' }"
+                                                showClear
+                                            />
+                                        </div>
                                     </div>
+                                    <p v-else class="py-2 text-sm text-red-600">
+                                        Il faut au préalable ajouter au moins un
+                                        produit à l'activité.
+                                    </p>
 
                                     <!-- Heures x2 ouverture / fermeture -->
                                     <div

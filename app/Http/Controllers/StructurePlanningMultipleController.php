@@ -18,30 +18,31 @@ class StructurePlanningMultipleController extends Controller
      */
     public function store(Request $request, Structure $structure): RedirectResponse
     {
+        // dd($request->all());
         $request->validate([
             'title' => ['nullable', 'string'],
             'activite' => ['required', Rule::exists(StructureActivite::class, 'id')],
             'produit' => ['required', Rule::exists(StructureProduit::class, 'id')],
             'horaires' => 'required|array',
-            'horaires.*' => 'required|array',
-            'horaires.*.hours' => 'required|integer|min:0|max:23',
-            'horaires.*.minutes' => 'required|integer|min:0|max:59',
             'dates' => 'required|array',
         ]);
 
         $activite = StructureActivite::findOrFail($request->activite);
         $produit = StructureProduit::findOrFail($request->produit);
-        $horaires = array_map(function ($horaire) {
-            return Carbon::createFromTime($horaire['hours'], $horaire['minutes'])->format('H:i');
-        }, $request->horaires);
+
+        $horaires = array_map(function ($datetime) {
+            $carbonDate = Carbon::parse($datetime);
+            return $carbonDate->setTimezone('Europe/Paris')->format('H:i');
+        }, array_values($request->horaires));
+
         $dates = array_map(function ($date) {
             return Carbon::parse($date)->setTimezone('Europe/Paris')->format('Y-m-d');
         }, $request->dates);
 
-        $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $dates[0]);
-        $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $dates[1]);
-        $startTime = \Carbon\Carbon::createFromFormat('H:i', $horaires[0]);
-        $endTime = \Carbon\Carbon::createFromFormat('H:i', $horaires[1]);
+        $startDate = Carbon::createFromFormat('Y-m-d', $dates[0]);
+        $endDate = Carbon::createFromFormat('Y-m-d', $dates[1]);
+        $startTime = Carbon::createFromFormat('H:i', $horaires[0]);
+        $endTime = Carbon::createFromFormat('H:i', $horaires[1]);
 
         $combinedDatePairs = [];
         $currentDate = $startDate->copy();

@@ -1,14 +1,7 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
-import {
-    ref,
-    computed,
-    defineAsyncComponent,
-    provide,
-    watch,
-    onMounted,
-} from "vue";
+import { ref, defineAsyncComponent, provide, watch, onMounted } from "vue";
 import { useFilterProducts } from "@/composables/useFilterProducts";
 import CritereForm from "@/Components/Criteres/CritereForm.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
