@@ -26,7 +26,6 @@ use App\Models\ProductReservation;
 use App\Models\StructureCategorie;
 use App\Models\StructureDiscipline;
 use App\Http\Resources\CityResource;
-use App\Http\Resources\DepartementResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
@@ -35,9 +34,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\StructureTarifTypeInfo;
 use App\Http\Resources\FamilleResource;
 use App\Http\Resources\LienDisciplineCategorieCritereResource;
-use App\Http\Resources\LienDisciplineCategorieResource;
 use App\Http\Resources\ListDisciplineResource;
-use App\Models\LienDisciplineCategorie;
 use App\Models\StructureProduitCritere;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
@@ -105,7 +102,8 @@ class StructureController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $structurestypes = Structuretype::with(['structuretypeattributs', 'structuretypeattributs.structuretypevaleurs'])->select(['id', 'name', 'slug'])->get();
+        $structurestypes = Structuretype::with(['attributs', 'attributs.valeurs'])->select(['id', 'name', 'slug'])->get();
+
         $disciplines = ListDiscipline::select(['id', 'name', 'slug'])->get();
 
         return Inertia::render('Structures/Create', [
@@ -205,14 +203,32 @@ class StructureController extends Controller
         ]);
 
         $attributs = $request['attributs'];
+        if($attributs) {
+            foreach ($attributs as $key => $attribut) {
+                if (isset($attribut)) {
 
-        foreach ($attributs as $key => $attribut) {
-            if (isset($attribut)) {
-                StructureTypeInfo::create([
-                    'structure_id' => $structure->id,
-                    'attribut_id' => $key,
-                    'valeur' => $attribut
-                ]);
+                    foreach($structure->structuretype->attributs as $typeAttribut) {
+                        if($key === $typeAttribut->id) {
+
+                            if(is_array($attribut) && isset($attribut['id'])) {
+
+                                $structure->structuretype_infos()->create([
+                                    'attribut_id' => $key,
+                                    'valeur_id' => $attribut['id'],
+                                    'valeur' => $attribut['nom'],
+
+                                ]);
+
+                            } else {
+                                $structure->structuretype_infos()->create([
+                                    'attribut_id' => $key,
+                                    'valeur_id' => null,
+                                    'valeur' => $attribut,
+                                ]);
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -277,9 +293,9 @@ class StructureController extends Controller
         $confirmedReservationsCount = ProductReservation::where('structure_id', $structure->id)->where('confirmed', true)
             ->count();
 
-        $structurestypes = Structuretype::with(['structuretypeattributs', 'structuretypeattributs.structuretypevaleurs'])->select(['id', 'name', 'slug'])->get();
+        $structurestypes = Structuretype::with(['attributs', 'attributs.valeurs'])->select(['id', 'name', 'slug'])->get();
 
-        $structure = Structure::with([
+        $structure->load([
                 'adresses'  => function ($query) {
                     $query->latest();
                 },
@@ -287,8 +303,8 @@ class StructureController extends Controller
                 'users',
                 'departement',
                 'structuretype',
-            ])
-            ->findOrFail($structure->id);
+                'structuretype_infos',
+            ]);
 
         return Inertia::render('Structures/Edit', [
             'structurestypes' => fn () => StructuretypeResource::collection($structurestypes),
@@ -384,14 +400,32 @@ class StructureController extends Controller
         $structureAddress->update($validatedAddress);
 
         $attributs = $request['attributs'];
-
-        foreach ($attributs as $key => $attribut) {
-            if (isset($attribut)) {
-                $structuretypeinfo = StructureTypeInfo::where('attribut_id', $key)->firstOrfail();
-                $structuretypeinfo->update([
-                    'attribut_id' => $key,
-                    'valeur' => $attribut
-                ]);
+        if($attributs) {
+            $structure->structuretype_infos()->delete();
+            foreach ($attributs as $key => $attribut) {
+                if (isset($attribut)) {
+                    foreach($structure->structuretype->attributs as $typeAttribut) {
+                        if($key === $typeAttribut->id) {
+                            if(is_array($attribut) && isset($attribut['id'])) {
+                                $structure->structuretype_infos()->create(
+                                    [
+                                        'attribut_id' => $key,
+                                        'valeur_id' => $attribut['id'],
+                                        'valeur' => $attribut['nom'],
+                                    ]
+                                );
+                            } else {
+                                $structure->structuretype_infos()->create(
+                                    [
+                                        'attribut_id' => $key,
+                                        'valeur_id' => null,
+                                        'valeur' => $attribut,
+                                    ]
+                                );
+                            }
+                        }
+                    }
+                }
             }
         }
 

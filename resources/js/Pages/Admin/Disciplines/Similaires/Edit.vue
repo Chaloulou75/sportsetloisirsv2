@@ -41,7 +41,7 @@ const detachDiscipline = (disciplineIn) => {
             discipline: props.discipline,
         }),
         {
-            _method: "PUT",
+            _method: "put",
             disciplineIn: disciplineIn.discipline_similaire_id,
         },
         {

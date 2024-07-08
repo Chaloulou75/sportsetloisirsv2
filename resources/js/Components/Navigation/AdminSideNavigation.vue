@@ -3,9 +3,6 @@ import { ref, computed } from "vue";
 import { usePage, Link } from "@inertiajs/vue3";
 import BreezeApplicationLogo from "@/Components/ApplicationLogo.vue";
 import BreezeResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
-
-const props = defineProps({});
-
 const showingInsNavigationDropdown = ref(false);
 
 const page = usePage();
@@ -18,7 +15,7 @@ const user = computed(() => page.props.auth.user);
         <div class="w-full space-y-6 md:sticky md:inset-x-0 md:top-0">
             <!-- Hamburger logo -->
             <div
-                class="flex h-16 justify-between bg-blue-50 pl-4 pr-4 shadow-sm"
+                class="flex h-16 items-center justify-between bg-blue-50 pl-4 pr-4 shadow-sm"
             >
                 <div class="flex items-center">
                     <Link :href="route('welcome')">

@@ -25,7 +25,7 @@ const detachCategorie = (categorieIn) => {
             discipline: props.discipline,
         }),
         {
-            _method: "PUT",
+            _method: "put",
             categorieIn: categorieIn.categorie_id,
         },
         {

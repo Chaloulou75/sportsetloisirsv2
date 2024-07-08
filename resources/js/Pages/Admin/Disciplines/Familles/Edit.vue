@@ -35,7 +35,7 @@ const detachFamille = (familleIn) => {
             discipline: props.discipline,
         }),
         {
-            _method: "PUT",
+            _method: "put",
             familleIn: familleIn.id,
         },
         {

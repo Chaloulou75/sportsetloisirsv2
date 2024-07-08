@@ -306,7 +306,7 @@ const replicateCatDisTarBooking = () => {
                     <ChevronLeftIcon class="h-10 w-10 text-white" />
                 </Link>
                 <h1
-                    class="px-3 text-center text-base font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
+                    class="px-3 text-center text-sm font-semibold text-indigo-700 md:px-12 md:py-4 md:text-left md:text-2xl md:font-bold"
                 >
                     Gestion du contenu (disciplines, catégories, critères,
                     tarifs, formulaires de réservation)

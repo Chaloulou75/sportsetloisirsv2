@@ -47,6 +47,7 @@ class StructureResource extends JsonResource
             'cities' => CityResource::collection($this->whenLoaded('cities')),
             'departement' => DepartementResource::make($this->whenLoaded('departement')),
             'structuretype' => StructuretypeResource::make($this->whenLoaded('structuretype')),
+            'structuretype_infos' => StructureTypeInfoResource::collection($this->whenLoaded('structuretype_infos')),
             'adresses' => StructureAddressResource::collection($this->whenLoaded('adresses')),
             'disciplines' => ListDisciplineResource::collection($this->whenLoaded('disciplines')),
             'categories' => LienDisciplineCategorieResource::collection($this->whenLoaded('categories')),

@@ -20,7 +20,7 @@ class StructuretypeResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'structures' => StructureResource::collection($this->whenLoaded('structures')),
-            'structuretypeattributs' => StructureTypeAttributResource::collection($this->whenLoaded('structuretypeattributs')),
+            'attributs' => StructureTypeAttributResource::collection($this->whenLoaded('attributs')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

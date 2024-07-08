@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class StructureTypeAttributResource extends JsonResource
+class StructureTypeValeurResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,11 +17,10 @@ class StructureTypeAttributResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'structuretype_id' => $this->structuretype_id,
+            'id_champ' => $this->id_champ,
             'nom' => $this->nom,
-            'type_champ_form' => $this->type_champ_form,
-            'structuretype' => StructuretypeResource::make($this->whenLoaded('structuretype')),
-            'valeurs' => StructureTypeValeurResource::collection($this->whenLoaded('valeurs')),
+            'structuretype_attribut' => StructureTypeAttributResource::make($this->whenLoaded('structuretype_attribut')),
+            'structuretype_infos' => StructureTypeInfoResource::collection($this->whenLoaded('structuretype_infos')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

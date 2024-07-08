@@ -19,13 +19,12 @@ class Structuretype extends Model
         return 'slug';
     }
 
-
     public function structures(): HasMany
     {
         return $this->hasMany(Structure::class);
     }
 
-    public function structuretypeattributs(): HasMany
+    public function attributs(): HasMany
     {
         return $this->hasMany(StructureTypeAttribut::class, 'structuretype_id');
 

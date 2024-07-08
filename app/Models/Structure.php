@@ -125,6 +125,11 @@ class Structure extends Model
         return $this->belongsTo(Structuretype::class);
     }
 
+    public function structuretype_infos(): HasMany
+    {
+        return $this->hasMany(StructureTypeInfo::class);
+    }
+
     public function adresses(): HasMany
     {
         return $this->hasMany(StructureAddress::class, 'structure_id');

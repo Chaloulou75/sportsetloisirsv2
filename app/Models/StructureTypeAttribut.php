@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class StructureTypeAttribut extends Model
 {
@@ -23,11 +22,11 @@ class StructureTypeAttribut extends Model
 
     public function structuretype(): BelongsTo
     {
-        return $this->belongsTo(Structuretype::class, 'liste_structures_types_attributs');
+        return $this->belongsTo(Structuretype::class, 'structuretype_id');
     }
 
-    public function structuretypevaleurs(): HasMany
+    public function valeurs(): HasMany
     {
-        return $this->hasMany(StructureTypeValeur::class, 'id_champ', 'id');
+        return $this->hasMany(StructureTypeValeur::class, 'id_champ');
     }
 }
