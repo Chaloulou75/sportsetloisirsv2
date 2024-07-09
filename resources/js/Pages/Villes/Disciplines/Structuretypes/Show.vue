@@ -1,13 +1,12 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import { ref, defineAsyncComponent, provide } from "vue";
+import { ref, defineAsyncComponent } from "vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
 import CitiesAround from "@/Components/Cities/CitiesAround.vue";
 import { TransitionRoot } from "@headlessui/vue";
 import { HomeIcon, ListBulletIcon, MapIcon } from "@heroicons/vue/24/outline";
-import { useElementVisibility } from "@vueuse/core";
 
 const props = defineProps({
     familles: Object,
@@ -51,41 +50,19 @@ const Pagination = defineAsyncComponent(() =>
 );
 
 const mapStructure = ref(null);
-const mapIsVisible = useElementVisibility(mapStructure);
 const listeStructure = ref(null);
-const listeIsVisible = useElementVisibility(listeStructure);
 const displayProduits = ref(true);
 const displayMap = ref(false);
 
 const goToMap = () => {
     displayProduits.value = !displayProduits.value;
     displayMap.value = !displayMap.value;
-    // mapStructure.value.scrollIntoView({ behavior: "smooth" });
 };
 
 const goToListe = () => {
     displayProduits.value = !displayProduits.value;
     displayMap.value = !displayMap.value;
-    // listeStructure.value.scrollIntoView({ behavior: "smooth" });
 };
-
-const categoriesEl = ref(null);
-const isCategoriesVisible = useElementVisibility(categoriesEl);
-const scrollToCategories = () => {
-    if (categoriesEl.value) {
-        const offset = window.innerWidth >= 768 ? -60 : -60;
-        const scrollY =
-            window.scrollY +
-            categoriesEl.value.getBoundingClientRect().top +
-            offset;
-        window.scroll({
-            top: scrollY,
-            behavior: "smooth",
-        });
-    }
-};
-
-provide("scrollToCategories", scrollToCategories);
 
 const formatCityName = (ville) => {
     return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
@@ -145,7 +122,6 @@ const onfilteredStructuresUpdate = (filteredStr) => {
         :discipline="discipline"
         :city="city"
         :categories="categories"
-        :is-categories-visible="isCategoriesVisible"
     >
         <template #header>
             <ResultsHeader :discipline="discipline">

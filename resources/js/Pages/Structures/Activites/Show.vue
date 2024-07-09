@@ -1,7 +1,7 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
-import { ref, computed, watch, onMounted, defineAsyncComponent } from "vue";
+import { ref, watch, onMounted, defineAsyncComponent } from "vue";
 import { useFilterProducts } from "@/composables/useFilterProducts";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
@@ -10,6 +10,7 @@ import SelectForm from "@/Components/Forms/SelectForm.vue";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
 import RadioForm from "@/Components/Forms/RadioForm.vue";
 import RangeInputForm from "@/Components/Forms/RangeInputForm.vue";
+import RangeMultiple from "@/Components/Forms/RangeMultiple.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
 import InputLabel from "@/Components/Forms/InputLabel.vue";
 import OpenDaysForm from "@/Components/Forms/DayTime/OpenDaysForm.vue";
@@ -29,13 +30,7 @@ import {
     PhoneIcon,
     ShareIcon,
 } from "@heroicons/vue/24/outline";
-import {
-    parse,
-    isValid,
-    isSameDay,
-    endOfMonth,
-    isWithinInterval,
-} from "date-fns";
+import { parse, isValid } from "date-fns";
 import { fr } from "date-fns/locale";
 dayjs.locale("fr");
 
@@ -93,43 +88,12 @@ async function startShare() {
 
 const listToAnimate = ref();
 const filteredProduits = ref(props.produits);
-const selectedProduct = ref();
 const selectedCriteres = ref([]);
 const selectedSousCriteres = ref([]);
 
 const formCriteres = useForm({
     criteresBase: {},
     sousCriteres: {},
-});
-
-const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
-    if (checked) {
-        if (!formCriteres.criteresBase[critereId]) {
-            formCriteres.criteresBase[critereId] = [optionValue];
-        } else {
-            formCriteres.criteresBase[critereId].push(optionValue);
-        }
-    } else {
-        const selectedCritere = formCriteres.criteresBase[critereId];
-        if (selectedCritere) {
-            const index = selectedCritere.indexOf(optionValue);
-            if (index !== -1) {
-                selectedCritere.splice(index, 1);
-            }
-            if (selectedCritere.length === 0) {
-                delete formCriteres.criteresBase[critereId];
-            }
-        }
-    }
-};
-
-const isCheckboxSelected = computed(() => {
-    return (critereId, optionValue) => {
-        return (
-            formCriteres.criteresBase[critereId] &&
-            formCriteres.criteresBase[critereId].includes(optionValue)
-        );
-    };
 });
 
 const { filterProducts } = useFilterProducts(
@@ -158,34 +122,32 @@ watch(
 );
 
 watch(
-    () => selectedProduct.value,
+    () => props.selectedProduit,
     (newValue) => {
         if (newValue) {
             formCriteres.criteresBase = {};
             formCriteres.sousCriteres = {};
 
-            props.criteres.forEach((officialCritere) => {
-                newValue.criteres.forEach((critere) => {
-                    const critereId = critere.critere_id;
-                    const produitValeur = critere.valeur;
-                    const critereValueId = critere.valeur_id;
-                    const sousCriteres = critere.sous_criteres;
-                    if (officialCritere.id === critereId) {
-                        if (
-                            officialCritere.type_champ_form === "time" &&
-                            produitValeur !== null
-                        ) {
+            newValue.criteres.forEach((critere) => {
+                const critereId = critere.critere_id;
+                const produitValeur = critere.valeur;
+                const critereValue = critere.critere_valeur;
+                const sousCriteres = critere.sous_criteres;
+
+                props.criteres.forEach((officialCritere) => {
+                    if (
+                        officialCritere.id === critereId &&
+                        produitValeur !== null
+                    ) {
+                        if (officialCritere.type_champ_form === "time") {
                             const [hours, minutes] = produitValeur
                                 .split("h")
                                 .map(Number);
-                            formCriteres.criteresBase[critereId] = {
-                                hours,
-                                minutes,
-                            };
-                        } else if (
-                            officialCritere.type_champ_form === "date" &&
-                            produitValeur !== null
-                        ) {
+                            const date = new Date();
+                            date.setHours(hours);
+                            date.setMinutes(minutes);
+                            formCriteres.criteresBase[critereId] = date;
+                        } else if (officialCritere.type_champ_form === "date") {
                             const parsedDate = parse(
                                 produitValeur,
                                 "d MMMM yyyy",
@@ -197,8 +159,7 @@ watch(
                                     parsedDate;
                             }
                         } else if (
-                            officialCritere.type_champ_form === "dates" &&
-                            produitValeur !== null
+                            officialCritere.type_champ_form === "dates"
                         ) {
                             const [start, end] = produitValeur
                                 .split(" au ")
@@ -213,72 +174,79 @@ watch(
                                         ? parsedDate
                                         : null;
                                 });
-
                             if (start && end) {
                                 formCriteres.criteresBase[critereId] = [
                                     start,
                                     end,
                                 ];
                             }
-                        } else if (
-                            officialCritere.type_champ_form === "mois" &&
-                            produitValeur !== null
-                        ) {
-                            const [startMonth, endMonth] = produitValeur
-                                .split(" à ")
-                                .map((dateStr) => {
-                                    const parsedDate = parse(
-                                        dateStr,
-                                        "MMMM yyyy",
-                                        new Date(),
-                                        { locale: fr }
-                                    );
-                                    return isValid(parsedDate)
-                                        ? parsedDate
-                                        : null;
-                                });
-
-                            if (startMonth && endMonth) {
-                                const startMonthYear = {
-                                    month: startMonth.getMonth(),
-                                    year: startMonth.getFullYear(),
+                        } else if (officialCritere.type_champ_form === "mois") {
+                            const [startMonthStr, endMonthStr] =
+                                produitValeur.split(" à ");
+                            const prodStartMonth = parse(
+                                startMonthStr.trim(),
+                                "MMMM yyyy",
+                                new Date(),
+                                { locale: fr }
+                            );
+                            const prodEndMonth = parse(
+                                endMonthStr.trim(),
+                                "MMMM yyyy",
+                                new Date(),
+                                { locale: fr }
+                            );
+                            if (prodStartMonth && prodEndMonth) {
+                                formCriteres.criteresBase[critereId] = {
+                                    monthStart: prodStartMonth,
+                                    monthEnd: prodEndMonth,
                                 };
-                                const endMonthYear = {
-                                    month: endMonth.getMonth(),
-                                    year: endMonth.getFullYear(),
-                                };
-
-                                formCriteres.criteresBase[critereId] = [
-                                    startMonthYear,
-                                    endMonthYear,
-                                ];
                             }
                         } else if (
-                            officialCritere.type_champ_form === "times" &&
-                            produitValeur !== null
+                            officialCritere.type_champ_form === "times"
                         ) {
-                            const [openTime, closeTime] = produitValeur
-                                .split(" à ")
-                                .map((timeString) => {
-                                    const [hours, minutes] = timeString
-                                        .split("h")
-                                        .map(Number);
-                                    return { hours, minutes };
-                                });
+                            const [startStr, endStr] =
+                                produitValeur.split(" à ");
+                            const [startHours, startMinutes] = startStr
+                                .split("h")
+                                .map(Number);
+                            const [endHours, endMinutes] = endStr
+                                .split("h")
+                                .map(Number);
 
-                            formCriteres.criteresBase[critereId] = [
-                                openTime,
-                                closeTime,
-                            ];
+                            const startDate = new Date();
+                            startDate.setHours(startHours);
+                            startDate.setMinutes(startMinutes);
+
+                            const endDate = new Date();
+                            endDate.setHours(endHours);
+                            endDate.setMinutes(endMinutes);
+
+                            formCriteres.criteresBase[critereId] = {
+                                debut: startDate,
+                                fin: endDate,
+                            };
                         } else if (
-                            officialCritere.valeurs.length > 0 &&
-                            critereValueId
+                            officialCritere.type_champ_form === "range"
                         ) {
+                            formCriteres.criteresBase[critereId] =
+                                Number(produitValeur);
+                        } else if (
+                            officialCritere.type_champ_form === "range multiple"
+                        ) {
+                            const matches = produitValeur.match(/(\d+)/g);
+                            if (matches && matches.length === 2) {
+                                const [minVal, maxVal] = matches.map(Number); // Convert to numbers
+                                formCriteres.criteresBase[critereId] = [
+                                    minVal,
+                                    maxVal,
+                                ];
+                            }
+                        } else if (officialCritere.valeurs.length > 0) {
                             officialCritere.valeurs.forEach(
                                 (officialCritereValeur) => {
                                     if (
                                         officialCritereValeur.id ===
-                                        critereValueId
+                                        critereValue.id
                                     ) {
                                         if (
                                             !formCriteres.criteresBase[
@@ -343,62 +311,355 @@ watch(
                                                 (officialSousCritere) => {
                                                     const souscritereId =
                                                         officialSousCritere.id;
-                                                    if (
-                                                        officialSousCritere
-                                                            .sous_criteres_valeurs
-                                                            .length > 0
-                                                    ) {
-                                                        officialSousCritere.sous_criteres_valeurs.forEach(
-                                                            (
-                                                                officialSousCritereValeur
-                                                            ) => {
-                                                                const officialSousCritereValeurId =
-                                                                    officialSousCritereValeur.id;
-                                                                sousCriteres.forEach(
-                                                                    (
-                                                                        sousCritere
-                                                                    ) => {
-                                                                        const prodSousCritValeur =
-                                                                            sousCritere.sous_critere_valeur;
 
-                                                                        if (
-                                                                            prodSousCritValeur &&
-                                                                            prodSousCritValeur.id ===
-                                                                                officialSousCritereValeurId
-                                                                        ) {
-                                                                            formCriteres.sousCriteres[
-                                                                                souscritereId
-                                                                            ] =
-                                                                                officialSousCritereValeur;
-                                                                        }
-                                                                    }
-                                                                );
-                                                            }
-                                                        );
-                                                    } else {
-                                                        sousCriteres.forEach(
-                                                            (sousCritere) => {
-                                                                const prodSousCritValeur =
-                                                                    sousCritere.valeur;
-                                                                if (
-                                                                    prodSousCritValeur !==
+                                                    sousCriteres.forEach(
+                                                        (sousCritere) => {
+                                                            const prodSousCritValeur =
+                                                                sousCritere.valeur;
+
+                                                            if (
+                                                                souscritereId ===
+                                                                    sousCritere.sous_critere_id &&
+                                                                prodSousCritValeur !==
                                                                     null
+                                                            ) {
+                                                                if (
+                                                                    officialSousCritere.type_champ_form ===
+                                                                    "time"
                                                                 ) {
+                                                                    const [
+                                                                        hours,
+                                                                        minutes,
+                                                                    ] =
+                                                                        prodSousCritValeur
+                                                                            .split(
+                                                                                "h"
+                                                                            )
+                                                                            .map(
+                                                                                Number
+                                                                            );
+                                                                    const date =
+                                                                        new Date();
+                                                                    date.setHours(
+                                                                        hours
+                                                                    );
+                                                                    date.setMinutes(
+                                                                        minutes
+                                                                    );
+                                                                    formCriteres.sousCriteres[
+                                                                        souscritereId
+                                                                    ] = date;
+                                                                } else if (
+                                                                    officialSousCritere.type_champ_form ===
+                                                                    "date"
+                                                                ) {
+                                                                    const parsedDate =
+                                                                        parse(
+                                                                            prodSousCritValeur,
+                                                                            "d MMMM yyyy",
+                                                                            new Date(),
+                                                                            {
+                                                                                locale: fr,
+                                                                            }
+                                                                        );
+                                                                    if (
+                                                                        isValid(
+                                                                            parsedDate
+                                                                        )
+                                                                    ) {
+                                                                        formCriteres.sousCriteres[
+                                                                            souscritereId
+                                                                        ] =
+                                                                            parsedDate;
+                                                                    }
+                                                                } else if (
+                                                                    officialSousCritere.type_champ_form ===
+                                                                    "dates"
+                                                                ) {
+                                                                    const [
+                                                                        start,
+                                                                        end,
+                                                                    ] =
+                                                                        prodSousCritValeur
+                                                                            .split(
+                                                                                " au "
+                                                                            )
+                                                                            .map(
+                                                                                (
+                                                                                    dateStr
+                                                                                ) => {
+                                                                                    const parsedDate =
+                                                                                        parse(
+                                                                                            dateStr,
+                                                                                            "d MMMM yyyy",
+                                                                                            new Date(),
+                                                                                            {
+                                                                                                locale: fr,
+                                                                                            }
+                                                                                        );
+                                                                                    return isValid(
+                                                                                        parsedDate
+                                                                                    )
+                                                                                        ? parsedDate
+                                                                                        : null;
+                                                                                }
+                                                                            );
+                                                                    if (
+                                                                        start &&
+                                                                        end
+                                                                    ) {
+                                                                        formCriteres.sousCriteres[
+                                                                            souscritereId
+                                                                        ] = [
+                                                                            start,
+                                                                            end,
+                                                                        ];
+                                                                    }
+                                                                } else if (
+                                                                    officialSousCritere.type_champ_form ===
+                                                                    "mois"
+                                                                ) {
+                                                                    const [
+                                                                        startMonthStr,
+                                                                        endMonthStr,
+                                                                    ] =
+                                                                        prodSousCritValeur.split(
+                                                                            " à "
+                                                                        );
+                                                                    const prodStartMonth =
+                                                                        parse(
+                                                                            startMonthStr.trim(),
+                                                                            "MMMM yyyy",
+                                                                            new Date(),
+                                                                            {
+                                                                                locale: fr,
+                                                                            }
+                                                                        );
+                                                                    const prodEndMonth =
+                                                                        parse(
+                                                                            endMonthStr.trim(),
+                                                                            "MMMM yyyy",
+                                                                            new Date(),
+                                                                            {
+                                                                                locale: fr,
+                                                                            }
+                                                                        );
+                                                                    if (
+                                                                        prodStartMonth &&
+                                                                        prodEndMonth
+                                                                    ) {
+                                                                        formCriteres.sousCriteres[
+                                                                            souscritereId
+                                                                        ] = {
+                                                                            monthStart:
+                                                                                prodStartMonth,
+                                                                            monthEnd:
+                                                                                prodEndMonth,
+                                                                        };
+                                                                    }
+                                                                } else if (
+                                                                    officialSousCritere.type_champ_form ===
+                                                                    "times"
+                                                                ) {
+                                                                    const [
+                                                                        startStr,
+                                                                        endStr,
+                                                                    ] =
+                                                                        prodSousCritValeur.split(
+                                                                            " à "
+                                                                        );
+                                                                    const [
+                                                                        startHours,
+                                                                        startMinutes,
+                                                                    ] = startStr
+                                                                        .split(
+                                                                            "h"
+                                                                        )
+                                                                        .map(
+                                                                            Number
+                                                                        );
+                                                                    const [
+                                                                        endHours,
+                                                                        endMinutes,
+                                                                    ] = endStr
+                                                                        .split(
+                                                                            "h"
+                                                                        )
+                                                                        .map(
+                                                                            Number
+                                                                        );
+
+                                                                    const startDate =
+                                                                        new Date();
+                                                                    startDate.setHours(
+                                                                        startHours
+                                                                    );
+                                                                    startDate.setMinutes(
+                                                                        startMinutes
+                                                                    );
+
+                                                                    const endDate =
+                                                                        new Date();
+                                                                    endDate.setHours(
+                                                                        endHours
+                                                                    );
+                                                                    endDate.setMinutes(
+                                                                        endMinutes
+                                                                    );
+
+                                                                    formCriteres.sousCriteres[
+                                                                        souscritereId
+                                                                    ] = {
+                                                                        debut: startDate,
+                                                                        fin: endDate,
+                                                                    };
+                                                                } else if (
+                                                                    officialSousCritere.type_champ_form ===
+                                                                    "range"
+                                                                ) {
+                                                                    formCriteres.sousCriteres[
+                                                                        souscritereId
+                                                                    ] =
+                                                                        Number(
+                                                                            prodSousCritValeur
+                                                                        );
+                                                                } else if (
+                                                                    officialSousCritere.type_champ_form ===
+                                                                    "range multiple"
+                                                                ) {
+                                                                    const matches =
+                                                                        prodSousCritValeur.match(
+                                                                            /(\d+)/g
+                                                                        );
+                                                                    if (
+                                                                        matches &&
+                                                                        matches.length ===
+                                                                            2
+                                                                    ) {
+                                                                        const [
+                                                                            minVal,
+                                                                            maxVal,
+                                                                        ] =
+                                                                            matches.map(
+                                                                                Number
+                                                                            ); // Convert to numbers
+                                                                        formCriteres.sousCriteres[
+                                                                            souscritereId
+                                                                        ] = [
+                                                                            minVal,
+                                                                            maxVal,
+                                                                        ];
+                                                                    }
+                                                                } else if (
+                                                                    officialSousCritere
+                                                                        .sous_criteres_valeurs
+                                                                        .length >
+                                                                    0
+                                                                ) {
+                                                                    officialSousCritere.sous_criteres_valeurs.forEach(
+                                                                        (
+                                                                            officialSousCritereValeur
+                                                                        ) => {
+                                                                            const officialSousCritereValeurId =
+                                                                                officialSousCritereValeur.id;
+
+                                                                            const prodSousCritValeur =
+                                                                                sousCritere.sous_critere_valeur;
+                                                                            if (
+                                                                                prodSousCritValeur &&
+                                                                                prodSousCritValeur.id ===
+                                                                                    officialSousCritereValeurId
+                                                                            ) {
+                                                                                if (
+                                                                                    !formCriteres
+                                                                                        .sousCriteres[
+                                                                                        souscritereId
+                                                                                    ]
+                                                                                ) {
+                                                                                    if (
+                                                                                        officialSousCritere.type_champ_form ===
+                                                                                        "checkbox"
+                                                                                    ) {
+                                                                                        formCriteres.sousCriteres[
+                                                                                            souscritereId
+                                                                                        ] =
+                                                                                            [
+                                                                                                officialSousCritereValeur,
+                                                                                            ];
+                                                                                    } else {
+                                                                                        formCriteres.sousCriteres[
+                                                                                            souscritereId
+                                                                                        ] =
+                                                                                            officialSousCritereValeur;
+                                                                                    }
+                                                                                } else {
+                                                                                    const existingValue =
+                                                                                        formCriteres
+                                                                                            .sousCriteres[
+                                                                                            souscritereId
+                                                                                        ];
+
+                                                                                    if (
+                                                                                        !Array.isArray(
+                                                                                            existingValue
+                                                                                        )
+                                                                                    ) {
+                                                                                        formCriteres.sousCriteres[
+                                                                                            souscritereId
+                                                                                        ] =
+                                                                                            [
+                                                                                                existingValue,
+                                                                                            ];
+                                                                                        if (
+                                                                                            !formCriteres.sousCriteres[
+                                                                                                souscritereId
+                                                                                            ].includes(
+                                                                                                officialSousCritereValeur
+                                                                                            )
+                                                                                        ) {
+                                                                                            formCriteres.sousCriteres[
+                                                                                                souscritereId
+                                                                                            ].push(
+                                                                                                officialSousCritereValeur
+                                                                                            );
+                                                                                        }
+                                                                                    } else {
+                                                                                        if (
+                                                                                            !formCriteres.sousCriteres[
+                                                                                                souscritereId
+                                                                                            ].includes(
+                                                                                                officialSousCritereValeur
+                                                                                            )
+                                                                                        ) {
+                                                                                            formCriteres.sousCriteres[
+                                                                                                souscritereId
+                                                                                            ].push(
+                                                                                                officialSousCritereValeur
+                                                                                            );
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    );
+                                                                } else {
+                                                                    const prodSousCritValeur =
+                                                                        sousCritere.valeur;
                                                                     formCriteres.sousCriteres[
                                                                         souscritereId
                                                                     ] =
                                                                         prodSousCritValeur;
                                                                 }
                                                             }
-                                                        );
-                                                    }
+                                                        }
+                                                    );
                                                 }
                                             );
                                         }
                                     }
                                 }
                             );
-                        } else if (produitValeur !== null) {
+                        } else {
                             formCriteres.criteresBase[critereId] =
                                 produitValeur;
                         }
@@ -406,7 +667,8 @@ watch(
                 });
             });
         }
-    }
+    },
+    { deep: true, immediate: true }
 );
 
 const resetFormCriteres = () => {
@@ -427,7 +689,6 @@ onMounted(() => {
     if (listToAnimate.value) {
         autoAnimate(listToAnimate.value);
     }
-    selectedProduct.value = props.selectedProduit ?? null;
     filterProducts();
 });
 </script>
@@ -648,7 +909,6 @@ onMounted(() => {
                             >
                                 <!-- select -->
                                 <SelectForm
-                                    :classes="'block'"
                                     class="max-w-sm"
                                     v-if="critere.type_champ_form === 'select'"
                                     :name="critere.nom"
@@ -657,7 +917,6 @@ onMounted(() => {
                                     "
                                     :options="critere.valeurs"
                                 />
-
                                 <!-- checkbox -->
                                 <CheckboxForm
                                     class="max-w-sm"
@@ -669,35 +928,26 @@ onMounted(() => {
                                         formCriteres.criteresBase[critere.id]
                                     "
                                     :options="critere.valeurs"
-                                    :is-checkbox-selected="isCheckboxSelected"
-                                    @update-selected-checkboxes="
-                                        updateSelectedCheckboxes
-                                    "
                                 />
-
                                 <!-- radio -->
                                 <RadioForm
-                                    class="max-w-sm"
                                     v-if="critere.type_champ_form === 'radio'"
-                                    :name="critere.nom"
                                     v-model="
                                         formCriteres.criteresBase[critere.id]
                                     "
+                                    :name="critere.nom"
                                     :options="critere.valeurs"
                                 />
 
-                                <!-- input text  -->
-                                <div
-                                    class="max-w-sm"
-                                    v-if="critere.type_champ_form === 'text'"
-                                >
+                                <!-- input text -->
+                                <div v-if="critere.type_champ_form === 'text'">
                                     <label
                                         :for="critere.nom"
-                                        class="block text-sm font-medium text-gray-700"
+                                        class="mb-1 block text-sm font-medium normal-case text-gray-700"
                                     >
                                         {{ critere.nom }}
                                     </label>
-                                    <div class="mt-1 flex rounded-md">
+                                    <div class="flex-1">
                                         <TextInput
                                             type="text"
                                             v-model="
@@ -707,25 +957,20 @@ onMounted(() => {
                                             "
                                             :name="critere.nom"
                                             :id="critere.nom"
-                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                            placeholder=""
-                                            autocomplete="none"
                                         />
                                     </div>
                                 </div>
-
-                                <!-- number text -->
+                                <!-- input Number -->
                                 <div
-                                    class="max-w-sm"
                                     v-if="critere.type_champ_form === 'number'"
                                 >
                                     <label
                                         :for="critere.nom"
-                                        class="block text-sm font-medium text-gray-700"
+                                        class="mb-1 block text-sm font-medium normal-case text-gray-700"
                                     >
                                         {{ critere.nom }}
                                     </label>
-                                    <div class="mt-1 flex rounded-md">
+                                    <div class="flex-1">
                                         <TextInput
                                             type="number"
                                             min="0"
@@ -736,217 +981,268 @@ onMounted(() => {
                                             "
                                             :name="critere.nom"
                                             :id="critere.nom"
-                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                            placeholder=""
-                                            autocomplete="none"
                                         />
                                     </div>
                                 </div>
-
+                                <!-- Range  -->
+                                <RangeInputForm
+                                    v-if="critere.type_champ_form === 'range'"
+                                    class="w-full max-w-sm"
+                                    v-model="
+                                        formCriteres.criteresBase[critere.id]
+                                    "
+                                    :name="critere.nom"
+                                    :unite="critere.unite"
+                                    :min="critere.min"
+                                    :max="critere.max"
+                                />
+                                <!-- Range multiple -->
+                                <RangeMultiple
+                                    v-if="
+                                        critere.type_champ_form ===
+                                        'range multiple'
+                                    "
+                                    class="w-full max-w-sm"
+                                    v-model="
+                                        formCriteres.criteresBase[critere.id]
+                                    "
+                                    :name="critere.nom"
+                                    :unite="critere.unite"
+                                    :min="critere.min"
+                                    :max="critere.max"
+                                />
                                 <!-- Heure seule -->
-                                <div
+                                <SingleTimeForm
                                     v-if="critere.type_champ_form === 'time'"
-                                    class="flex max-w-sm flex-col items-start space-y-3"
-                                >
-                                    <SingleTimeForm
-                                        class="w-full"
-                                        v-model="
-                                            formCriteres.criteresBase[
-                                                critere.id
-                                            ]
-                                        "
-                                        :name="critere.nom"
-                                    />
-                                </div>
-
+                                    class="w-full max-w-sm"
+                                    v-model="
+                                        formCriteres.criteresBase[critere.id]
+                                    "
+                                    :name="critere.nom"
+                                />
                                 <!-- Heures x2 ouverture / fermeture -->
-                                <div
+                                <OpenTimesForm
                                     v-if="critere.type_champ_form === 'times'"
-                                    class="flex max-w-sm flex-col items-start space-y-3"
-                                >
-                                    <OpenTimesForm
-                                        class="w-full"
-                                        v-model="
-                                            formCriteres.criteresBase[
-                                                critere.id
-                                            ]
-                                        "
-                                        :name="critere.nom"
-                                    />
-                                </div>
-
+                                    class="w-full max-w-sm"
+                                    v-model="
+                                        formCriteres.criteresBase[critere.id]
+                                    "
+                                    :name="critere.nom"
+                                />
                                 <!-- Date seule -->
-                                <div
+                                <SingleDateForm
                                     v-if="critere.type_champ_form === 'date'"
-                                    class="flex max-w-sm flex-col items-start space-y-3"
-                                >
-                                    <SingleDateForm
-                                        class="w-full"
-                                        v-model="
-                                            formCriteres.criteresBase[
-                                                critere.id
-                                            ]
-                                        "
-                                        :name="critere.nom"
-                                    />
-                                </div>
+                                    class="w-full max-w-sm"
+                                    v-model="
+                                        formCriteres.criteresBase[critere.id]
+                                    "
+                                    :name="critere.nom"
+                                />
 
                                 <!-- Dates x 2 -->
-                                <div
+                                <OpenDaysForm
                                     v-if="critere.type_champ_form === 'dates'"
-                                    class="flex max-w-sm flex-col items-start space-y-3"
-                                >
-                                    <OpenDaysForm
-                                        class="w-full"
-                                        v-model="
-                                            formCriteres.criteresBase[
-                                                critere.id
-                                            ]
-                                        "
-                                        :name="critere.nom"
-                                    />
-                                </div>
-
+                                    class="w-full max-w-sm"
+                                    v-model="
+                                        formCriteres.criteresBase[critere.id]
+                                    "
+                                    :name="critere.nom"
+                                />
                                 <!-- Mois -->
-                                <div v-if="critere.type_champ_form === 'mois'">
-                                    <div
-                                        class="flex max-w-sm flex-col items-start space-y-3"
-                                    >
-                                        <OpenMonthsForm
-                                            class="w-full"
-                                            v-model="
-                                                formCriteres.criteresBase[
-                                                    critere.id
-                                                ]
-                                            "
-                                            :name="critere.nom"
-                                        />
-                                    </div>
-                                </div>
 
-                                <!-- Range km  -->
-                                <div
-                                    v-if="critere.type_champ_form === 'rayon'"
-                                    class="flex w-full max-w-sm flex-col items-start space-y-3"
-                                >
-                                    <RangeInputForm
-                                        class="w-full max-w-sm"
-                                        v-model="
-                                            formCriteres.criteresBase[
-                                                critere.id
-                                            ]
-                                        "
-                                        :name="critere.nom"
-                                        :unite="critere.unite"
-                                        :min="critere.min"
-                                        :max="critere.max"
-                                    />
-                                </div>
+                                <OpenMonthsForm
+                                    v-if="critere.type_champ_form === 'mois'"
+                                    class="w-full max-w-sm"
+                                    v-model="
+                                        formCriteres.criteresBase[critere.id]
+                                    "
+                                    :name="critere.nom"
+                                />
                                 <!-- sous criteres -->
-                                <div
-                                    v-for="valeur in critere.valeurs"
-                                    :key="valeur.id"
-                                >
+                                <template v-if="critere.valeurs">
                                     <div
-                                        v-for="souscritere in valeur.sous_criteres"
-                                        :key="souscritere.id"
+                                        v-for="valeur in critere.valeurs"
+                                        :key="valeur.id"
                                     >
-                                        <!-- sous crit select -->
-                                        <SelectForm
-                                            :classes="'block'"
-                                            class="max-w-sm py-2"
-                                            v-if="
-                                                formCriteres.criteresBase[
-                                                    critere.id
-                                                ] === valeur &&
-                                                souscritere.type_champ_form ===
-                                                    'select' &&
-                                                souscritere.dis_cat_crit_val_id ===
-                                                    valeur.id
-                                            "
-                                            :name="souscritere.nom"
-                                            v-model="
-                                                formCriteres.sousCriteres[
-                                                    souscritere.id
-                                                ]
-                                            "
-                                            :options="
-                                                souscritere.sous_criteres_valeurs
-                                            "
-                                        />
-                                        <!-- sous crit number -->
-                                        <InputLabel
-                                            class="py-2"
-                                            :for="souscritere.nom"
-                                            :value="souscritere.nom"
-                                            v-if="
-                                                formCriteres.criteresBase[
-                                                    critere.id
-                                                ] === valeur &&
-                                                souscritere.type_champ_form ===
-                                                    'number' &&
-                                                souscritere.dis_cat_crit_val_id ===
-                                                    valeur.id
-                                            "
-                                        />
-                                        <TextInput
-                                            class="w-full max-w-sm"
-                                            type="number"
-                                            min="0"
-                                            :id="souscritere.nom"
-                                            :name="souscritere.nom"
-                                            v-if="
-                                                formCriteres.criteresBase[
-                                                    critere.id
-                                                ] === valeur &&
-                                                souscritere.type_champ_form ===
-                                                    'number' &&
-                                                souscritere.dis_cat_crit_val_id ===
-                                                    valeur.id
-                                            "
-                                            v-model="
-                                                formCriteres.sousCriteres[
-                                                    souscritere.id
-                                                ]
-                                            "
-                                        />
-                                        <!-- sous crit text -->
-                                        <InputLabel
-                                            class="py-2"
-                                            :for="souscritere.nom"
-                                            :value="souscritere.nom"
-                                            v-if="
-                                                formCriteres.criteresBase[
-                                                    critere.id
-                                                ] === valeur &&
-                                                souscritere.type_champ_form ===
-                                                    'text' &&
-                                                souscritere.dis_cat_crit_val_id ===
-                                                    valeur.id
-                                            "
-                                        />
-                                        <TextInput
-                                            class="w-full max-w-sm"
-                                            type="text"
-                                            :id="souscritere.nom"
-                                            :name="souscritere.nom"
-                                            v-if="
-                                                formCriteres.criteresBase[
-                                                    critere.id
-                                                ] === valeur &&
-                                                souscritere.type_champ_form ===
-                                                    'text' &&
-                                                souscritere.dis_cat_crit_val_id ===
-                                                    valeur.id
-                                            "
-                                            v-model="
-                                                formCriteres.sousCriteres[
-                                                    souscritere.id
-                                                ]
-                                            "
-                                        />
+                                        <div
+                                            v-for="souscritere in valeur.sous_criteres"
+                                            :key="souscritere.id"
+                                            class="ml-1 mt-2"
+                                        >
+                                            <!-- select -->
+                                            <SelectForm
+                                                class="max-w-sm"
+                                                v-if="
+                                                    formCriteres.criteresBase[
+                                                        critere.id
+                                                    ] === valeur &&
+                                                    souscritere.type_champ_form ===
+                                                        'select' &&
+                                                    souscritere.dis_cat_crit_val_id ===
+                                                        valeur.id
+                                                "
+                                                :name="souscritere.nom"
+                                                v-model="
+                                                    formCriteres.sousCriteres[
+                                                        souscritere.id
+                                                    ]
+                                                "
+                                                :options="
+                                                    souscritere.sous_criteres_valeurs
+                                                "
+                                            />
+                                            <CheckboxForm
+                                                class="max-w-sm"
+                                                v-if="
+                                                    formCriteres.criteresBase[
+                                                        critere.id
+                                                    ] === valeur &&
+                                                    souscritere.type_champ_form ===
+                                                        'checkbox' &&
+                                                    souscritere.dis_cat_crit_val_id ===
+                                                        valeur.id
+                                                "
+                                                :name="souscritere.nom"
+                                                v-model="
+                                                    formCriteres.sousCriteres[
+                                                        souscritere.id
+                                                    ]
+                                                "
+                                                :options="
+                                                    souscritere.sous_criteres_valeurs
+                                                "
+                                            />
+
+                                            <!-- radio -->
+                                            <RadioForm
+                                                v-if="
+                                                    formCriteres.criteresBase[
+                                                        critere.id
+                                                    ] === valeur &&
+                                                    souscritere.type_champ_form ===
+                                                        'radio' &&
+                                                    souscritere.dis_cat_crit_val_id ===
+                                                        valeur.id
+                                                "
+                                                v-model="
+                                                    formCriteres.sousCriteres[
+                                                        souscritere.id
+                                                    ]
+                                                "
+                                                :name="souscritere.nom"
+                                                :options="
+                                                    souscritere.sous_criteres_valeurs
+                                                "
+                                            />
+                                            <!-- number -->
+                                            <div
+                                                v-if="
+                                                    formCriteres.criteresBase[
+                                                        critere.id
+                                                    ] === valeur &&
+                                                    souscritere.type_champ_form ===
+                                                        'number' &&
+                                                    souscritere.dis_cat_crit_val_id ===
+                                                        valeur.id
+                                                "
+                                                class="flex items-center space-x-4"
+                                            >
+                                                <InputLabel
+                                                    class="py-2"
+                                                    :for="souscritere.nom"
+                                                    :value="souscritere.nom"
+                                                />
+                                                <TextInput
+                                                    class="w-full"
+                                                    type="number"
+                                                    min="0"
+                                                    :id="souscritere.nom"
+                                                    :name="souscritere.nom"
+                                                    v-model="
+                                                        formCriteres
+                                                            .sousCriteres[
+                                                            souscritere.id
+                                                        ]
+                                                    "
+                                                />
+                                            </div>
+                                            <!-- text -->
+                                            <div
+                                                v-if="
+                                                    formCriteres.criteresBase[
+                                                        critere.id
+                                                    ] === valeur &&
+                                                    souscritere.type_champ_form ===
+                                                        'text' &&
+                                                    souscritere.dis_cat_crit_val_id ===
+                                                        valeur.id
+                                                "
+                                                class="mt-2 flex items-center space-x-4"
+                                            >
+                                                <InputLabel
+                                                    class="py-2"
+                                                    :for="souscritere.nom"
+                                                    :value="souscritere.nom"
+                                                />
+                                                <TextInput
+                                                    class="w-full"
+                                                    type="text"
+                                                    :id="souscritere.nom"
+                                                    :name="souscritere.nom"
+                                                    v-model="
+                                                        formCriteres
+                                                            .sousCriteres[
+                                                            souscritere.id
+                                                        ]
+                                                    "
+                                                />
+                                            </div>
+                                            <!-- range -->
+                                            <RangeInputForm
+                                                v-if="
+                                                    formCriteres.criteresBase[
+                                                        critere.id
+                                                    ] === valeur &&
+                                                    souscritere.type_champ_form ===
+                                                        'range' &&
+                                                    souscritere.dis_cat_crit_val_id ===
+                                                        valeur.id
+                                                "
+                                                class="w-full max-w-sm"
+                                                v-model="
+                                                    formCriteres.sousCriteres[
+                                                        souscritere.id
+                                                    ]
+                                                "
+                                                :name="souscritere.nom"
+                                                :min="souscritere.min"
+                                                :max="souscritere.max"
+                                                :unite="souscritere.unite"
+                                            />
+                                            <RangeMultiple
+                                                v-if="
+                                                    formCriteres.criteresBase[
+                                                        critere.id
+                                                    ] === valeur &&
+                                                    souscritere.type_champ_form ===
+                                                        'range multiple' &&
+                                                    souscritere.dis_cat_crit_val_id ===
+                                                        valeur.id
+                                                "
+                                                class="w-full max-w-sm"
+                                                v-model="
+                                                    formCriteres.sousCriteres[
+                                                        souscritere.id
+                                                    ]
+                                                "
+                                                :name="souscritere.nom"
+                                                :min="souscritere.min"
+                                                :max="souscritere.max"
+                                                :unite="souscritere.unite"
+                                            />
+                                        </div>
                                     </div>
-                                </div>
+                                </template>
                             </div>
                         </div>
 

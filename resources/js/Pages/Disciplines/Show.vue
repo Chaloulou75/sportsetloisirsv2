@@ -111,7 +111,6 @@ const onfilteredStructuresUpdate = (filteredStr) => {
         :all-cities="allCities"
         :discipline="discipline"
         :categories="props.categories"
-        :is-categories-visible="isCategoriesVisible"
     >
         <template #header>
             <ResultsHeader :discipline="discipline">

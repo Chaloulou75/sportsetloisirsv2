@@ -42,9 +42,14 @@ watch(
 );
 
 // Update model when value array changes
-watch(value, (newValue) => {
-    model.value = ensureMinMax(newValue);
-});
+watch(
+    () => value,
+    (newValue) => {
+        if (newValue) {
+            model.value = ensureMinMax(newValue);
+        }
+    }
+);
 </script>
 
 <template>

@@ -85,27 +85,6 @@ const hideStructureTooltip = () => {
     hoveredStructure.value = null;
 };
 
-const categoriesEl = ref(null);
-const isCategoriesVisible = useElementVisibility(categoriesEl);
-const scrollToCategories = () => {
-    if (categoriesEl.value) {
-        const offset = window.innerWidth >= 768 ? -60 : -60;
-        const scrollY =
-            window.scrollY +
-            categoriesEl.value.getBoundingClientRect().top +
-            offset;
-        window.scroll({
-            top: scrollY,
-            behavior: "smooth",
-        });
-    }
-};
-provide("scrollToCategories", scrollToCategories);
-
-const formatCityName = (ville) => {
-    return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
-};
-
 const filteredProduits = ref(props.produits.data);
 const onFilteredProduitsUpdate = (filtered) => {
     filteredProduits.value = filtered;
@@ -132,7 +111,6 @@ const onfilteredStructuresUpdate = (filteredStr) => {
         :all-cities="allCities"
         :discipline="discipline"
         :categories="props.categories"
-        :is-categories-visible="isCategoriesVisible"
         :departement="departement"
     >
         <template #header>

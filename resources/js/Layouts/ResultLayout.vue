@@ -17,7 +17,6 @@ const props = defineProps({
     currentCategory: Object,
     categories: Object,
     familles: Object,
-    isCategoriesVisible: Boolean,
     isCriteresVisible: Boolean,
 });
 const headerClass = computed(() => {
@@ -53,8 +52,6 @@ const isShowing = ref(true);
                     :current-discipline="discipline"
                     :current-city="city"
                     :current-category="currentCategory"
-                    :is-criteres-visible="isCriteresVisible"
-                    :is-categories-visible="isCategoriesVisible"
                 />
                 <FamilleResultNavigation
                     :familles="familles"

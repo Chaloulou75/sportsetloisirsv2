@@ -61,32 +61,12 @@ const displayMap = ref(false);
 const goToMap = () => {
     displayProduits.value = !displayProduits.value;
     displayMap.value = !displayMap.value;
-    // mapStructure.value.scrollIntoView({ behavior: "smooth" });
 };
 
 const goToListe = () => {
     displayProduits.value = !displayProduits.value;
     displayMap.value = !displayMap.value;
-    // listeStructure.value.scrollIntoView({ behavior: "smooth" });
 };
-
-const categoriesEl = ref(null);
-const isCategoriesVisible = useElementVisibility(categoriesEl);
-const scrollToCategories = () => {
-    if (categoriesEl.value) {
-        const offset = window.innerWidth >= 768 ? -60 : -60;
-        const scrollY =
-            window.scrollY +
-            categoriesEl.value.getBoundingClientRect().top +
-            offset;
-        window.scroll({
-            top: scrollY,
-            behavior: "smooth",
-        });
-    }
-};
-
-provide("scrollToCategories", scrollToCategories);
 
 const formatCityName = (ville) => {
     return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
@@ -145,7 +125,6 @@ const onfilteredStructuresUpdate = (filteredStr) => {
         :discipline="discipline"
         :city="city"
         :categories="props.categories"
-        :is-categories-visible="isCategoriesVisible"
     >
         <template #header>
             <ResultsHeader :discipline="discipline">

@@ -288,7 +288,7 @@ onMounted(() => {
                     @reset-criteres="resetFormCriteres"
                 />
             </div>
-            <template v-if="produits.data.length > 0">
+            <template v-if="filteredProduits.length > 0">
                 <div class="mx-auto py-6 md:py-12">
                     <TransitionRoot
                         as="div"

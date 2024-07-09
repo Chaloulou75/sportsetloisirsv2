@@ -1,14 +1,7 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
-import {
-    ref,
-    computed,
-    defineAsyncComponent,
-    provide,
-    watch,
-    onMounted,
-} from "vue";
+import { ref, computed, defineAsyncComponent, watch, onMounted } from "vue";
 import { useFilterProducts } from "@/composables/useFilterProducts";
 import CritereForm from "@/Components/Criteres/CritereForm.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
@@ -23,7 +16,6 @@ import {
     MapIcon,
     XMarkIcon,
 } from "@heroicons/vue/24/outline";
-import { useElementVisibility } from "@vueuse/core";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 dayjs.locale("fr");
@@ -71,42 +63,19 @@ const Pagination = defineAsyncComponent(() =>
 );
 
 const mapStructure = ref(null);
-const mapIsVisible = useElementVisibility(mapStructure);
 const listeStructure = ref(null);
-const listeIsVisible = useElementVisibility(listeStructure);
-
 const displayProduits = ref(true);
 const displayMap = ref(false);
 
 const goToMap = () => {
     displayProduits.value = !displayProduits.value;
     displayMap.value = !displayMap.value;
-    // mapStructure.value.scrollIntoView({ behavior: "smooth" });
 };
 
 const goToListe = () => {
     displayProduits.value = !displayProduits.value;
     displayMap.value = !displayMap.value;
-    // listeStructure.value.scrollIntoView({ behavior: "smooth" });
 };
-
-const criteresEl = ref(null);
-const isCriteresVisible = useElementVisibility(criteresEl);
-const scrollToCriteres = () => {
-    if (criteresEl.value) {
-        const offset = window.innerWidth >= 768 ? -125 : -135;
-        const scrollY =
-            window.scrollY +
-            criteresEl.value.getBoundingClientRect().top +
-            offset;
-        window.scroll({
-            top: scrollY,
-            behavior: "smooth",
-        });
-    }
-};
-
-provide("scrollToCriteres", scrollToCriteres);
 
 const hoveredProduit = ref(null);
 const hoveredStructure = ref(null);
@@ -153,37 +122,6 @@ const onFilteredProduitsUpdate = (filtered) => {
 const onfilteredStructuresUpdate = (filteredStr) => {
     filteredStructures.value = filteredStr;
 };
-
-const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
-    console.log(critereId, optionValue, checked);
-    if (checked) {
-        if (!formCriteres.criteresBase[critereId]) {
-            formCriteres.criteresBase[critereId] = [optionValue];
-        } else {
-            formCriteres.criteresBase[critereId].push(optionValue);
-        }
-    } else {
-        const selectedCritere = formCriteres.criteresBase[critereId];
-        if (selectedCritere) {
-            const index = selectedCritere.indexOf(optionValue);
-            if (index !== -1) {
-                selectedCritere.splice(index, 1);
-            }
-            if (selectedCritere.length === 0) {
-                delete formCriteres.criteresBase[critereId];
-            }
-        }
-    }
-};
-
-const isCheckboxSelected = computed(() => {
-    return (critereId, optionValue) => {
-        return (
-            formCriteres.criteresBase[critereId] &&
-            formCriteres.criteresBase[critereId].includes(optionValue)
-        );
-    };
-});
 
 const { filterProducts } = useFilterProducts(
     props,
@@ -378,10 +316,8 @@ onMounted(() => {
                     :criteres="criteres"
                     :show-criteres="showCriteres"
                     :show-criteres-lg="showCriteresLg"
-                    :is-checkbox-selected="isCheckboxSelected"
                     v-model:criteres-base="formCriteres.criteresBase"
                     v-model:sous-criteres="formCriteres.sousCriteres"
-                    @update-checkboxes="updateSelectedCheckboxes"
                     @reset-criteres="resetFormCriteres"
                 />
             </div>

@@ -24,7 +24,6 @@ export function useFilterProducts(
                 return selectedCriteres.value.every((selectedCritereEntry) => {
                     const [critereId, selectedCritere] = selectedCritereEntry;
                     const numericCritereId = parseInt(critereId);
-                    console.log(critereId, selectedCritere);
                     if (
                         selectedCritere === null ||
                         selectedCritere.length === 0 ||

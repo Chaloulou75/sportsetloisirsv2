@@ -614,7 +614,8 @@ watch(
                 });
             });
         }
-    }
+    },
+    { deep: true, immediate: true }
 );
 
 const onSubmitEditProduitForm = () => {

@@ -22,7 +22,6 @@ const props = defineProps({
     currentCity: Object,
     currentCategory: Object,
     categories: Object,
-    isCategoriesVisible: Boolean,
     isCriteresVisible: Boolean,
 });
 const page = usePage();
