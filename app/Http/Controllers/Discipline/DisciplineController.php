@@ -10,7 +10,6 @@ use Inertia\Response;
 use App\Models\Famille;
 use App\Models\Structure;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use App\Http\Controllers\Controller;

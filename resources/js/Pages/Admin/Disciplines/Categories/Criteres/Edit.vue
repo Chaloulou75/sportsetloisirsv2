@@ -7,6 +7,7 @@ import NavAdminDisciplineCategorie from "@/Components/Admin/NavAdminDisciplineCa
 import NavAdminDisCatParametres from "@/Components/Admin/NavAdminDisCatParametres.vue";
 import autoAnimate from "@formkit/auto-animate";
 import Checkbox from "@/Components/Forms/Checkbox.vue";
+import Dropdown from "primevue/dropdown";
 import RangeMultiple from "@/Components/Forms/RangeMultiple.vue";
 import InputText from "primevue/inputtext";
 import InputNumber from "primevue/inputnumber";
@@ -15,17 +16,8 @@ import {
     PlusCircleIcon,
     ArrowPathIcon,
     TrashIcon,
-    ChevronUpDownIcon,
     ChevronLeftIcon,
-    CheckCircleIcon,
 } from "@heroicons/vue/24/outline";
-import {
-    Listbox,
-    ListboxLabel,
-    ListboxButton,
-    ListboxOptions,
-    ListboxOption,
-} from "@headlessui/vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
 
 const props = defineProps({
@@ -421,7 +413,9 @@ const addCritereForm = useForm({
 watch(
     () => addCritereForm.critere,
     (newValue) => {
-        addCritereForm.nom = newValue.nom;
+        if (newValue) {
+            addCritereForm.nom = newValue.nom;
+        }
     }
 );
 
@@ -1417,126 +1411,33 @@ onMounted(() => {
                                                     }}</span
                                                 >
                                             </div>
-
-                                            <Listbox
-                                                v-if="addSousCritereForm.nom"
-                                                class="w-full flex-grow"
-                                                v-model="
-                                                    addSousCritereForm.type_champ
-                                                "
-                                            >
-                                                <div class="relative mt-1">
-                                                    <ListboxButton
-                                                        class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
-                                                    >
-                                                        <span
-                                                            class="block truncate"
-                                                            >{{
-                                                                addSousCritereForm
-                                                                    .type_champ
-                                                                    .type
-                                                            }}</span
-                                                        >
-                                                        <span
-                                                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
-                                                        >
-                                                            <ChevronUpDownIcon
-                                                                class="h-5 w-5 text-gray-400"
-                                                                aria-hidden="true"
-                                                            />
-                                                        </span>
-                                                    </ListboxButton>
-
-                                                    <transition
-                                                        leave-active-class="transition duration-100 ease-in"
-                                                        leave-from-class="opacity-100"
-                                                        leave-to-class="opacity-0"
-                                                    >
-                                                        <ListboxOptions
-                                                            class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-                                                        >
-                                                            <ListboxOption
-                                                                v-slot="{
-                                                                    active,
-                                                                    selected,
-                                                                }"
-                                                                v-for="type_champ in type_champs"
-                                                                :key="
-                                                                    type_champ.id
-                                                                "
-                                                                :value="
-                                                                    type_champ
-                                                                "
-                                                                as="template"
-                                                            >
-                                                                <li
-                                                                    :class="[
-                                                                        active
-                                                                            ? 'bg-amber-100 text-amber-900'
-                                                                            : 'text-gray-700',
-                                                                        'relative cursor-default select-none py-2 pl-10 pr-4',
-                                                                    ]"
-                                                                >
-                                                                    <span
-                                                                        :class="[
-                                                                            selected
-                                                                                ? 'font-medium'
-                                                                                : 'font-normal',
-                                                                            'block truncate',
-                                                                        ]"
-                                                                        >{{
-                                                                            type_champ.type
-                                                                        }}</span
-                                                                    ><span
-                                                                        v-if="
-                                                                            type_champ.criterable
-                                                                        "
-                                                                        class="text-sm text-blue-500"
-                                                                    >
-                                                                        Module
-                                                                        criterable</span
-                                                                    ><span
-                                                                        v-else
-                                                                        class="text-sm text-blue-500"
-                                                                    >
-                                                                        Module
-                                                                        informationnel
-                                                                        (non
-                                                                        criterable)</span
-                                                                    >
-                                                                    /
-                                                                    <span
-                                                                        v-if="
-                                                                            type_champ.sous_criterable
-                                                                        "
-                                                                        class="text-sm text-green-500"
-                                                                    >
-                                                                        Sous
-                                                                        criterable</span
-                                                                    ><span
-                                                                        v-else
-                                                                        class="text-sm text-green-500"
-                                                                        >Non
-                                                                        sous
-                                                                        criterable</span
-                                                                    >
-                                                                    <span
-                                                                        v-if="
-                                                                            selected
-                                                                        "
-                                                                        class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
-                                                                    >
-                                                                        <CheckCircleIcon
-                                                                            class="h-5 w-5"
-                                                                            aria-hidden="true"
-                                                                        />
-                                                                    </span>
-                                                                </li>
-                                                            </ListboxOption>
-                                                        </ListboxOptions>
-                                                    </transition>
+                                            <div class="mt-1">
+                                                <label
+                                                    for="ssCritChamp"
+                                                    class="block text-left text-xs font-medium normal-case text-gray-700"
+                                                >
+                                                    Type de champ:
+                                                </label>
+                                                <div class="mt-1">
+                                                    <Dropdown
+                                                        v-model="
+                                                            addSousCritereForm.type_champ
+                                                        "
+                                                        :options="type_champs"
+                                                        optionLabel="type"
+                                                        id="ssCritChamp"
+                                                        placeholder="Type de champ"
+                                                        class="w-full text-sm md:w-[14rem]"
+                                                        :ptOptions="{
+                                                            mergeProps: true,
+                                                        }"
+                                                        :pt="{
+                                                            item: 'text-sm',
+                                                        }"
+                                                        showClear
+                                                    />
                                                 </div>
-                                            </Listbox>
+                                            </div>
                                         </div>
                                         <button
                                             type="submit"
@@ -1667,185 +1568,58 @@ onMounted(() => {
                         @submit.prevent="addCritere(categorie)"
                     >
                         <div class="flex w-full flex-grow flex-col space-y-3">
-                            <Listbox
-                                as="div"
-                                class="w-full flex-grow"
-                                v-model="addCritereForm.critere"
-                            >
-                                <div class="relative mt-1">
-                                    <ListboxLabel
-                                        class="text-sm font-medium text-gray-700"
-                                        >Critere:</ListboxLabel
-                                    >
-
-                                    <ListboxButton
-                                        class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
-                                    >
-                                        <span class="block truncate">{{
-                                            addCritereForm.critere.nom
-                                        }}</span>
-                                        <span
-                                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
-                                        >
-                                            <ChevronUpDownIcon
-                                                class="h-5 w-5 text-gray-400"
-                                                aria-hidden="true"
-                                            />
-                                        </span>
-                                    </ListboxButton>
-
-                                    <transition
-                                        leave-active-class="transition duration-100 ease-in"
-                                        leave-from-class="opacity-100"
-                                        leave-to-class="opacity-0"
-                                    >
-                                        <ListboxOptions
-                                            class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-                                        >
-                                            <ListboxOption
-                                                v-slot="{ active, selected }"
-                                                v-for="critere in listeCriteres"
-                                                :key="critere.id"
-                                                :value="critere"
-                                                as="template"
-                                            >
-                                                <li
-                                                    :class="[
-                                                        active
-                                                            ? 'bg-amber-100 text-amber-900'
-                                                            : 'text-gray-700',
-                                                        'relative cursor-default select-none py-2 pl-10 pr-4',
-                                                    ]"
-                                                >
-                                                    <span
-                                                        :class="[
-                                                            selected
-                                                                ? 'font-medium'
-                                                                : 'font-normal',
-                                                            'block truncate',
-                                                        ]"
-                                                        >{{ critere.nom }}</span
-                                                    >
-                                                    <span
-                                                        v-if="selected"
-                                                        class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
-                                                    >
-                                                        <CheckCircleIcon
-                                                            class="h-5 w-5"
-                                                            aria-hidden="true"
-                                                        />
-                                                    </span>
-                                                </li>
-                                            </ListboxOption>
-                                        </ListboxOptions>
-                                    </transition>
+                            <div>
+                                <label
+                                    for="critere"
+                                    class="block text-sm font-medium normal-case text-gray-700"
+                                >
+                                    Ajouter un critère:
+                                </label>
+                                <div class="mt-1">
+                                    <Dropdown
+                                        v-model="addCritereForm.critere"
+                                        :options="listeCriteres"
+                                        optionLabel="nom"
+                                        id="critere"
+                                        placeholder="Critère"
+                                        class="w-full text-sm md:w-[14rem]"
+                                        :ptOptions="{
+                                            mergeProps: true,
+                                        }"
+                                        :pt="{
+                                            item: 'text-sm',
+                                        }"
+                                        showClear
+                                    />
                                 </div>
-                            </Listbox>
+                            </div>
 
-                            <Listbox
-                                as="div"
-                                v-if="addCritereForm.critere"
-                                class="w-full flex-grow"
-                                v-model="addCritereForm.type_champ"
-                            >
-                                <div class="relative mt-1">
-                                    <ListboxLabel
-                                        class="text-sm font-medium text-gray-700"
-                                        >Type de champ:</ListboxLabel
-                                    >
-                                    <ListboxButton
-                                        class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
-                                    >
-                                        <span class="block truncate">{{
-                                            addCritereForm.type_champ.type
-                                        }}</span>
-                                        <span
-                                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
-                                        >
-                                            <ChevronUpDownIcon
-                                                class="h-5 w-5 text-gray-400"
-                                                aria-hidden="true"
-                                            />
-                                        </span>
-                                    </ListboxButton>
-
-                                    <transition
-                                        leave-active-class="transition duration-100 ease-in"
-                                        leave-from-class="opacity-100"
-                                        leave-to-class="opacity-0"
-                                    >
-                                        <ListboxOptions
-                                            class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-                                        >
-                                            <ListboxOption
-                                                v-slot="{ active, selected }"
-                                                v-for="type_champ in type_champs"
-                                                :key="type_champ.id"
-                                                :value="type_champ"
-                                                as="template"
-                                            >
-                                                <li
-                                                    :class="[
-                                                        active
-                                                            ? 'bg-amber-100 text-amber-900'
-                                                            : 'text-gray-700',
-                                                        'relative cursor-default select-none py-2 pl-10 pr-4',
-                                                    ]"
-                                                >
-                                                    <span
-                                                        :class="[
-                                                            selected
-                                                                ? 'font-medium'
-                                                                : 'font-normal',
-                                                            'block truncate',
-                                                        ]"
-                                                        >{{
-                                                            type_champ.type
-                                                        }}</span
-                                                    >
-                                                    <span
-                                                        v-if="
-                                                            type_champ.criterable
-                                                        "
-                                                        class="text-sm text-blue-500"
-                                                    >
-                                                        Module criterable</span
-                                                    ><span
-                                                        v-else
-                                                        class="text-sm text-blue-500"
-                                                    >
-                                                        Module informationnel
-                                                        (non criterable)</span
-                                                    >
-                                                    /
-                                                    <span
-                                                        v-if="
-                                                            type_champ.sous_criterable
-                                                        "
-                                                        class="text-sm text-green-500"
-                                                    >
-                                                        Sous criterable</span
-                                                    ><span
-                                                        v-else
-                                                        class="text-sm text-green-500"
-                                                        >Non sous
-                                                        criterable</span
-                                                    >
-                                                    <span
-                                                        v-if="selected"
-                                                        class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
-                                                    >
-                                                        <CheckCircleIcon
-                                                            class="h-5 w-5"
-                                                            aria-hidden="true"
-                                                        />
-                                                    </span>
-                                                </li>
-                                            </ListboxOption>
-                                        </ListboxOptions>
-                                    </transition>
+                            <div>
+                                <label
+                                    for="champ"
+                                    class="block text-sm font-medium normal-case text-gray-700"
+                                >
+                                    Type de champ:
+                                </label>
+                                <div class="mt-1">
+                                    <Dropdown
+                                        v-model="addCritereForm.type_champ"
+                                        :options="type_champs"
+                                        optionLabel="type"
+                                        id="champ"
+                                        placeholder="Type de champ"
+                                        class="w-full text-sm md:w-[14rem]"
+                                        :ptOptions="{
+                                            mergeProps: true,
+                                        }"
+                                        :pt="{
+                                            item: 'text-sm',
+                                        }"
+                                        showClear
+                                    />
                                 </div>
-                            </Listbox>
+                            </div>
+
                             <div
                                 v-if="addCritereForm.critere"
                                 class="mt-1 flex flex-col rounded-md"

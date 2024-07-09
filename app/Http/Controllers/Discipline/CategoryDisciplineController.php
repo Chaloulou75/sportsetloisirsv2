@@ -99,8 +99,6 @@ class CategoryDisciplineController extends Controller
         $discipline->timestamp = false;
         $discipline->increment('view_count');
 
-        // return StructureProduitResource::collection($produits);
-
         return Inertia::render('Disciplines/Categories/Show', [
             'familles' => fn () => FamilleResource::collection($familles),
             'category' => fn () => LienDisciplineCategorieResource::make($category),

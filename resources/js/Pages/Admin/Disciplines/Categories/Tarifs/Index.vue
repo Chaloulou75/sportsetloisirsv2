@@ -1,11 +1,12 @@
 <script setup>
+import { Head, Link, router, useForm } from "@inertiajs/vue3";
+import { ref, watch, onMounted } from "vue";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import NavAdminDiscipline from "@/Components/Admin/NavAdminDiscipline.vue";
 import NavAdminDisciplineCategorie from "@/Components/Admin/NavAdminDisciplineCategorie.vue";
 import NavAdminDisCatParametres from "@/Components/Admin/NavAdminDisCatParametres.vue";
 import NavAdminDisCatTarifsForm from "@/Components/Admin/NavAdminDisCatTarifsForm.vue";
-import { Head, Link, router, useForm } from "@inertiajs/vue3";
-import { ref, watch, onMounted } from "vue";
+import Dropdown from "primevue/dropdown";
 import autoAnimate from "@formkit/auto-animate";
 import {
     XCircleIcon,
@@ -16,13 +17,6 @@ import {
     ChevronLeftIcon,
     CheckCircleIcon,
 } from "@heroicons/vue/24/outline";
-import {
-    Listbox,
-    ListboxButton,
-    ListboxOptions,
-    ListboxOption,
-    ListboxLabel,
-} from "@headlessui/vue";
 
 const props = defineProps({
     errors: Object,
@@ -31,6 +25,7 @@ const props = defineProps({
     categorie: Object,
     listeTarifsTypes: Object,
     user_can: Object,
+    type_champs: Object,
 });
 
 const updateNomTarifTypeFormVisibility = ref([]);
@@ -67,7 +62,9 @@ const addTarifTypeForm = useForm({
 watch(
     () => addTarifTypeForm.type,
     (newValue) => {
-        addTarifTypeForm.nom = newValue.type;
+        if (newValue) {
+            addTarifTypeForm.nom = newValue.type;
+        }
     }
 );
 
@@ -170,16 +167,9 @@ const showAddSousAttributValeurForm = (sousAttribut) => {
     return addSousAttributValeurFormVisibility.value[sousAttribut.id] || false;
 };
 
-const type_champs = [
-    { type: "select" },
-    { type: "checkbox" },
-    { type: "text" },
-    { type: "number" },
-];
-
 const addAttributForm = useForm({
     nom: null,
-    type_champ: type_champs[0],
+    type_champ: props.type_champs[0],
     remember: true,
 });
 
@@ -190,13 +180,13 @@ const addValeurForm = useForm({
 
 const addSousAttributForm = useForm({
     nom: null,
-    type_champ: type_champs[0],
+    type_champ: props.type_champs[0],
     remember: true,
 });
 
 const addSousAttributValeurForm = useForm({
     valeur: null,
-    type_champ: type_champs[0],
+    type_champ: props.type_champs[0],
     remember: true,
 });
 
@@ -1115,7 +1105,9 @@ onMounted(() => {
                                                         (sousAttribut.type_champ_form ===
                                                             'select' ||
                                                             sousAttribut.type_champ_form ===
-                                                                'checkbox')
+                                                                'checkbox' ||
+                                                            sousAttribut.type_champ_form ===
+                                                                'radio')
                                                     "
                                                 >
                                                     <button
@@ -1232,7 +1224,9 @@ onMounted(() => {
                                                     (attribut.type_champ_form ===
                                                         'select' ||
                                                         attribut.type_champ_form ===
-                                                            'checkbox')
+                                                            'checkbox' ||
+                                                        attribut.type_champ_form ===
+                                                            'radio')
                                                 "
                                                 @click="
                                                     toggleAddValeurForm(
@@ -1366,7 +1360,7 @@ onMounted(() => {
                                             "
                                         >
                                             <form
-                                                class="ml-6 inline-flex flex-grow items-end justify-between text-center text-xs font-medium text-gray-600"
+                                                class="ml-6 inline-flex flex-grow items-end justify-between text-xs font-medium text-gray-600"
                                                 @submit.prevent="
                                                     addTarifAttributSousAttribut(
                                                         tarifType,
@@ -1375,7 +1369,7 @@ onMounted(() => {
                                                 "
                                             >
                                                 <div
-                                                    class="flex flex-col items-start"
+                                                    class="flex flex-col items-start space-y-2"
                                                 >
                                                     <label for="newSousAttribut"
                                                         >Ajouter un sous
@@ -1414,97 +1408,35 @@ onMounted(() => {
                                                                 .nom
                                                         }}
                                                     </div>
-                                                    <Listbox
-                                                        class="w-full flex-grow"
-                                                        v-model="
-                                                            addSousAttributForm.type_champ
-                                                        "
-                                                    >
-                                                        <div
-                                                            class="relative mt-1"
+                                                    <div>
+                                                        <label
+                                                            for="ssAttrChamp"
+                                                            class="block text-left text-xs font-medium normal-case text-gray-700"
                                                         >
-                                                            <ListboxButton
-                                                                class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
-                                                            >
-                                                                <span
-                                                                    class="block truncate"
-                                                                    >{{
-                                                                        addSousAttributForm
-                                                                            .type_champ
-                                                                            .type
-                                                                    }}</span
-                                                                >
-                                                                <span
-                                                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
-                                                                >
-                                                                    <ChevronUpDownIcon
-                                                                        class="h-5 w-5 text-gray-400"
-                                                                        aria-hidden="true"
-                                                                    />
-                                                                </span>
-                                                            </ListboxButton>
-
-                                                            <transition
-                                                                leave-active-class="transition duration-100 ease-in"
-                                                                leave-from-class="opacity-100"
-                                                                leave-to-class="opacity-0"
-                                                            >
-                                                                <ListboxOptions
-                                                                    class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-left text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-                                                                >
-                                                                    <ListboxOption
-                                                                        v-slot="{
-                                                                            active,
-                                                                            selected,
-                                                                        }"
-                                                                        v-for="(
-                                                                            type_champ,
-                                                                            index
-                                                                        ) in type_champs"
-                                                                        :key="
-                                                                            index
-                                                                        "
-                                                                        :value="
-                                                                            type_champ
-                                                                        "
-                                                                        as="template"
-                                                                    >
-                                                                        <li
-                                                                            :class="[
-                                                                                active
-                                                                                    ? 'bg-amber-100 text-amber-900'
-                                                                                    : 'text-gray-700',
-                                                                                'relative cursor-default select-none py-2 pl-10 pr-4',
-                                                                            ]"
-                                                                        >
-                                                                            <span
-                                                                                :class="[
-                                                                                    selected
-                                                                                        ? 'font-medium'
-                                                                                        : 'font-normal',
-                                                                                    'block truncate',
-                                                                                ]"
-                                                                                >{{
-                                                                                    type_champ.type
-                                                                                }}</span
-                                                                            >
-                                                                            <span
-                                                                                v-if="
-                                                                                    selected
-                                                                                "
-                                                                                class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
-                                                                            >
-                                                                                <CheckCircleIcon
-                                                                                    class="h-5 w-5"
-                                                                                    aria-hidden="true"
-                                                                                />
-                                                                            </span>
-                                                                        </li>
-                                                                    </ListboxOption>
-                                                                </ListboxOptions>
-                                                            </transition>
+                                                            Type de champ:
+                                                        </label>
+                                                        <div class="mt-1">
+                                                            <Dropdown
+                                                                v-model="
+                                                                    addSousAttributForm.type_champ
+                                                                "
+                                                                :options="
+                                                                    type_champs
+                                                                "
+                                                                optionLabel="type"
+                                                                id="ssAttrChamp"
+                                                                placeholder="Type de champ"
+                                                                class="w-full text-sm md:w-[14rem]"
+                                                                :ptOptions="{
+                                                                    mergeProps: true,
+                                                                }"
+                                                                :pt="{
+                                                                    item: 'text-sm',
+                                                                }"
+                                                                showClear
+                                                            />
                                                         </div>
-                                                    </Listbox>
+                                                    </div>
                                                 </div>
                                                 <button
                                                     type="submit"
@@ -1550,118 +1482,70 @@ onMounted(() => {
                                 </button>
                                 <form
                                     v-if="showAddAttributForm(tarifType)"
-                                    class="ml-6 inline-flex flex-grow items-end justify-between text-center text-xs font-medium text-gray-600"
+                                    class="ml-6 inline-flex flex-grow items-end justify-between text-xs font-medium text-gray-600"
                                     @submit.prevent="
                                         addTarifAttribut(tarifType)
                                     "
                                 >
-                                    <div class="flex flex-col items-start">
-                                        <label for="newAttribut"
-                                            >Ajouter un attribut à
-                                            <span class="font-semibold">{{
-                                                tarifType.nom
-                                            }}</span
-                                            >:</label
-                                        >
-                                        <div class="mt-1 flex rounded-md">
-                                            <input
-                                                v-model="addAttributForm.nom"
-                                                type="text"
-                                                name="newAttribut"
-                                                id="newAttribut"
-                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                placeholder=""
-                                                autocomplete="none"
-                                            />
-                                        </div>
-                                        <div
-                                            v-if="errors.addAttributForm"
-                                            class="text-xs text-red-500"
-                                        >
-                                            {{ errors.addAttributForm.nom }}
-                                        </div>
-                                        <Listbox
-                                            class="w-full flex-grow"
-                                            v-model="addAttributForm.type_champ"
-                                        >
-                                            <div class="relative mt-1">
-                                                <ListboxButton
-                                                    class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
-                                                >
-                                                    <span
-                                                        class="block truncate"
-                                                        >{{
-                                                            addAttributForm
-                                                                .type_champ.type
-                                                        }}</span
-                                                    >
-                                                    <span
-                                                        class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
-                                                    >
-                                                        <ChevronUpDownIcon
-                                                            class="h-5 w-5 text-gray-400"
-                                                            aria-hidden="true"
-                                                        />
-                                                    </span>
-                                                </ListboxButton>
-
-                                                <transition
-                                                    leave-active-class="transition duration-100 ease-in"
-                                                    leave-from-class="opacity-100"
-                                                    leave-to-class="opacity-0"
-                                                >
-                                                    <ListboxOptions
-                                                        class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-left text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-                                                    >
-                                                        <ListboxOption
-                                                            v-slot="{
-                                                                active,
-                                                                selected,
-                                                            }"
-                                                            v-for="(
-                                                                type_champ,
-                                                                index
-                                                            ) in type_champs"
-                                                            :key="index"
-                                                            :value="type_champ"
-                                                            as="template"
-                                                        >
-                                                            <li
-                                                                :class="[
-                                                                    active
-                                                                        ? 'bg-amber-100 text-amber-900'
-                                                                        : 'text-gray-700',
-                                                                    'relative cursor-default select-none py-2 pl-10 pr-4',
-                                                                ]"
-                                                            >
-                                                                <span
-                                                                    :class="[
-                                                                        selected
-                                                                            ? 'font-medium'
-                                                                            : 'font-normal',
-                                                                        'block truncate',
-                                                                    ]"
-                                                                    >{{
-                                                                        type_champ.type
-                                                                    }}</span
-                                                                >
-                                                                <span
-                                                                    v-if="
-                                                                        selected
-                                                                    "
-                                                                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
-                                                                >
-                                                                    <CheckCircleIcon
-                                                                        class="h-5 w-5"
-                                                                        aria-hidden="true"
-                                                                    />
-                                                                </span>
-                                                            </li>
-                                                        </ListboxOption>
-                                                    </ListboxOptions>
-                                                </transition>
+                                    <div
+                                        class="flex flex-col items-start space-y-2"
+                                    >
+                                        <div>
+                                            <label for="newAttribut"
+                                                >Ajouter un attribut à
+                                                <span class="font-semibold">{{
+                                                    tarifType.nom
+                                                }}</span
+                                                >:</label
+                                            >
+                                            <div class="mt-1 flex rounded-md">
+                                                <input
+                                                    v-model="
+                                                        addAttributForm.nom
+                                                    "
+                                                    type="text"
+                                                    name="newAttribut"
+                                                    id="newAttribut"
+                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                    placeholder=""
+                                                    autocomplete="none"
+                                                />
                                             </div>
-                                        </Listbox>
+                                            <div
+                                                v-if="errors.addAttributForm"
+                                                class="text-xs text-red-500"
+                                            >
+                                                {{ errors.addAttributForm.nom }}
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label
+                                                for="ssAttrChamp"
+                                                class="block text-left text-xs font-medium normal-case text-gray-700"
+                                            >
+                                                Type de champ:
+                                            </label>
+                                            <div class="mt-1">
+                                                <Dropdown
+                                                    v-model="
+                                                        addAttributForm.type_champ
+                                                    "
+                                                    :options="type_champs"
+                                                    optionLabel="type"
+                                                    id="ssAttrChamp"
+                                                    placeholder="Type de champ"
+                                                    class="w-full text-sm md:w-[14rem]"
+                                                    :ptOptions="{
+                                                        mergeProps: true,
+                                                    }"
+                                                    :pt="{
+                                                        item: 'text-sm',
+                                                    }"
+                                                    showClear
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
                                     <button
                                         type="submit"
@@ -1708,85 +1592,35 @@ onMounted(() => {
                         @submit.prevent="addTarifType(categorie)"
                     >
                         <div class="flex w-full flex-grow flex-col space-y-3">
-                            <Listbox
-                                as="div"
-                                class="w-full flex-grow"
-                                v-model="addTarifTypeForm.type"
-                            >
-                                <div class="relative mt-1">
-                                    <ListboxLabel
-                                        class="text-sm font-medium text-gray-700"
-                                        >Type de tarif:</ListboxLabel
-                                    >
-                                    <ListboxButton
-                                        class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
-                                    >
-                                        <span class="block truncate">{{
-                                            addTarifTypeForm.type.type
-                                        }}</span>
-                                        <span
-                                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
-                                        >
-                                            <ChevronUpDownIcon
-                                                class="h-5 w-5 text-gray-400"
-                                                aria-hidden="true"
-                                            />
-                                        </span>
-                                    </ListboxButton>
-
-                                    <transition
-                                        leave-active-class="transition duration-100 ease-in"
-                                        leave-from-class="opacity-100"
-                                        leave-to-class="opacity-0"
-                                    >
-                                        <ListboxOptions
-                                            class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-left text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-                                        >
-                                            <ListboxOption
-                                                v-slot="{ active, selected }"
-                                                v-for="tarifsType in listeTarifsTypes"
-                                                :key="tarifsType.id"
-                                                :value="tarifsType"
-                                                as="template"
-                                            >
-                                                <li
-                                                    :class="[
-                                                        active
-                                                            ? 'bg-amber-100 text-amber-900'
-                                                            : 'text-gray-700',
-                                                        'relative cursor-default select-none py-2 pl-10 pr-4',
-                                                    ]"
-                                                >
-                                                    <span
-                                                        :class="[
-                                                            selected
-                                                                ? 'font-medium'
-                                                                : 'font-normal',
-                                                            'block truncate',
-                                                        ]"
-                                                        >{{
-                                                            tarifsType.type
-                                                        }}</span
-                                                    >
-                                                    <span
-                                                        v-if="selected"
-                                                        class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
-                                                    >
-                                                        <CheckCircleIcon
-                                                            class="h-5 w-5"
-                                                            aria-hidden="true"
-                                                        />
-                                                    </span>
-                                                </li>
-                                            </ListboxOption>
-                                        </ListboxOptions>
-                                    </transition>
+                            <div>
+                                <label
+                                    for="champ"
+                                    class="block text-sm font-medium normal-case text-gray-700"
+                                >
+                                    Type de tarif:
+                                </label>
+                                <div class="mt-1">
+                                    <Dropdown
+                                        v-model="addTarifTypeForm.type"
+                                        :options="listeTarifsTypes"
+                                        optionLabel="type"
+                                        id="champ"
+                                        placeholder="Type de tarif"
+                                        class="w-full text-sm md:w-[14rem]"
+                                        :ptOptions="{
+                                            mergeProps: true,
+                                        }"
+                                        :pt="{
+                                            item: 'text-sm',
+                                        }"
+                                        showClear
+                                    />
                                 </div>
-                            </Listbox>
+                            </div>
 
                             <div
                                 v-if="addTarifTypeForm.type"
-                                class="mt-1 flex flex-col rounded-md"
+                                class="mt-1 flex max-w-sm flex-col rounded-md"
                             >
                                 <label
                                     for="tarif_type_nom"

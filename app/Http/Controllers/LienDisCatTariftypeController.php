@@ -6,6 +6,7 @@ use App\Http\Resources\LienDisCatTariftypeResource;
 use App\Http\Resources\LienDisciplineCategorieResource;
 use App\Http\Resources\ListDisciplineResource;
 use App\Http\Resources\ListeTarifTypeResource;
+use App\Http\Resources\TypeChampResource;
 use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -18,6 +19,7 @@ use Illuminate\Validation\Rule;
 use App\Models\LienDisCatTariftype;
 use Illuminate\Http\RedirectResponse;
 use App\Models\LienDisciplineCategorie;
+use App\Models\TypeChamp;
 
 class LienDisCatTariftypeController extends Controller
 {
@@ -53,6 +55,8 @@ class LienDisCatTariftypeController extends Controller
 
         $listeTarifsTypes = ListeTarifType::with('tariftypeattributs')->select(['id', 'type'])->get();
 
+        $typeChamps = TypeChamp::whereIn('type', ['select', 'checkbox', 'radio', 'text', 'number'])->get();
+
         return Inertia::render('Admin/Disciplines/Categories/Tarifs/Index', [
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
@@ -61,6 +65,7 @@ class LienDisCatTariftypeController extends Controller
             'categories' => fn () => LienDisciplineCategorieResource::collection($categories),
             'discipline' => fn () => ListDisciplineResource::make($discipline),
             'listeTarifsTypes' => fn () => ListeTarifTypeResource::collection($listeTarifsTypes),
+            'type_champs' => fn () => TypeChampResource::collection($typeChamps),
         ]);
 
     }
