@@ -60,7 +60,10 @@ const displayActivites = ref(true);
 const displayTarifs = ref(false);
 const displayPlanning = ref(false);
 
+const currentDisplay = ref("Mes activites");
+
 const handleButtonEvent = (message) => {
+    currentDisplay.value = message;
     if (message === "Mes activites") {
         displayActivites.value = true;
         displayTarifs.value = false;
@@ -224,8 +227,9 @@ const latestAdresseId = computed(() => {
         </template>
         <template #default>
             <MicroNavActiviteBackPro
+                :current-display="currentDisplay"
                 :discipline="discipline"
-                @eventFromChild="handleButtonEvent"
+                @event-from-child="handleButtonEvent"
             />
             <div
                 class="relative flex flex-col space-y-6 py-2 md:flex-row md:space-x-6 md:space-y-0 md:py-8"
@@ -265,7 +269,7 @@ const latestAdresseId = computed(() => {
                         <PlanningDisplay
                             :errors="errors"
                             :structure="structure"
-                            @show-display="handleButtonEvent('Planning')"
+                            @show-display="handleButtonEvent"
                         />
                     </template>
                     <template v-if="displayTarifs">
@@ -274,7 +278,7 @@ const latestAdresseId = computed(() => {
                             :structure="structure"
                             :discipline="discipline"
                             :str-cat-tarifs="strCatTarifs"
-                            @show-display="handleButtonEvent('Mes tarifs')"
+                            @show-display="handleButtonEvent"
                         />
                     </template>
                 </div>
@@ -294,7 +298,7 @@ const latestAdresseId = computed(() => {
                 :produit="currentProduit"
                 :show="showAddTarifModal"
                 @close="showAddTarifModal = false"
-                @show-display="handleButtonEvent('Mes tarifs')"
+                @show-display="handleButtonEvent"
             />
             <ModalAddPlanning
                 :errors="errors"
@@ -302,7 +306,7 @@ const latestAdresseId = computed(() => {
                 :produit="currentProduit"
                 :show="showAddPlanningModal"
                 @close="showAddPlanningModal = false"
-                @show-display="handleButtonEvent('Planning')"
+                @show-display="handleButtonEvent"
             />
         </template>
     </ProLayout>

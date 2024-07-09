@@ -160,8 +160,8 @@ const onSubmitEventForm = () => {
             remember: true,
             onSuccess: () => {
                 formPlanning.reset();
-                emit("showDisplay");
                 closeModal();
+                emit("showDisplay", "Planning");
             },
             structure: props.structure.slug,
         }
@@ -177,7 +177,7 @@ const handleEventDeleted = (event) => {
         {
             preserveScroll: true,
             onSuccess: () => {
-                emit("showDisplay");
+                emit("showDisplay", "Planning");
                 closeModal();
             },
         }
@@ -198,7 +198,7 @@ const handleEventChanged = (event) => {
         {
             preserveScroll: true,
             onSuccess: () => {
-                emit("showDisplay");
+                emit("showDisplay", "Planning");
             },
         }
     );

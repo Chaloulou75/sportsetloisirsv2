@@ -57,7 +57,10 @@ const displayActivites = ref(true);
 const displayTarifs = ref(false);
 const displayPlanning = ref(false);
 
+const currentDisplay = ref("Mes activites");
+
 const handleButtonEvent = (message) => {
+    currentDisplay.value = message;
     if (message === "Mes activites") {
         displayActivites.value = true;
         displayTarifs.value = false;
@@ -179,7 +182,10 @@ const openAddPlanningModal = () => {
             </div>
         </template>
         <template #default>
-            <MicroNavActiviteBackPro @event-from-child="handleButtonEvent" />
+            <MicroNavActiviteBackPro
+                :current-display="currentDisplay"
+                @event-from-child="handleButtonEvent"
+            />
             <div class="relative my-4 flex flex-col md:flex-row md:space-y-0">
                 <div class="mx-auto max-w-full flex-1 lg:px-4">
                     <template v-if="displayActivites">
@@ -383,7 +389,7 @@ const openAddPlanningModal = () => {
                             :errors="errors"
                             :structure="structure"
                             :str-cat-tarifs="strCatTarifs"
-                            @show-display="handleButtonEvent('Mes tarifs')"
+                            @show-display="handleButtonEvent"
                         />
                     </template>
                 </div>
@@ -408,14 +414,14 @@ const openAddPlanningModal = () => {
                 :structure="structure"
                 :show="showAddTarifModal"
                 @close="showAddTarifModal = false"
-                @show-display="handleButtonEvent('Mes tarifs')"
+                @show-display="handleButtonEvent"
             />
             <ModalAddPlanning
                 :errors="errors"
                 :structure="structure"
                 :show="showAddPlanningModal"
                 @close="showAddPlanningModal = false"
-                @show-display="handleButtonEvent('Planning')"
+                @show-display="handleButtonEvent"
             />
         </template>
     </ProLayout>

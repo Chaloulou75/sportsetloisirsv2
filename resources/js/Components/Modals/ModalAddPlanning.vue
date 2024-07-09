@@ -78,7 +78,7 @@ const onSubmit = () => {
             onSuccess: () => {
                 addPlanningForm.reset();
                 emit("close");
-                emit("showDisplay");
+                emit("showDisplay", "Planning");
             },
         }
     );

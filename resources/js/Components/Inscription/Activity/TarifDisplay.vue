@@ -37,7 +37,7 @@ const destroyCatTarif = (catTarif) => {
             preserveScroll: true,
             only: ["strCatTarifs"],
             onSuccess: () => {
-                emit("showDisplay");
+                emit("showDisplay", "Mes tarifs");
             },
         }
     );
@@ -56,7 +56,7 @@ const formatCurrency = (value) => {
 };
 
 const emitShowDisplay = () => {
-    emit("showDisplay");
+    emit("showDisplay", "Mes tarifs");
 };
 </script>
 <template>

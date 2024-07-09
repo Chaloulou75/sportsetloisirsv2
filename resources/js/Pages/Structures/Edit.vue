@@ -275,7 +275,7 @@ onMounted(() => {
             <MicroNavBackPro
                 :can="can"
                 :structure="structure"
-                @eventFromChild="handleButtonEvent"
+                @event-from-child="handleButtonEvent"
             />
             <div
                 class="relative flex flex-col space-y-6 py-2 md:flex-row md:space-x-6 md:space-y-0 md:py-8"

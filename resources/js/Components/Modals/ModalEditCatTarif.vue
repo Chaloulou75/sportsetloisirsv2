@@ -389,7 +389,7 @@ const onSubmit = () => {
             onSuccess: () => {
                 editCatTarifForm.reset();
                 emit("close");
-                emit("showDisplay");
+                emit("showDisplay", "Mes tarifs");
             },
         }
     );

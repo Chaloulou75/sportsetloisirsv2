@@ -58,7 +58,7 @@ const props = defineProps({
                     :confirmed-reservations-count="confirmedReservationsCount"
                     :total-amount-confirmed="totalAmountConfirmed"
                     :can="can"
-                    @eventFromChild="handleButtonEvent"
+                    @event-from-child="handleButtonEvent"
                 />
 
                 <div class="h-full w-full max-w-full md:w-5/6">

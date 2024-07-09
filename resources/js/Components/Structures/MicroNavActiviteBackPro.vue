@@ -1,14 +1,15 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 const emit = defineEmits(["eventFromChild"]);
 
 const props = defineProps({
     activite: Object,
     discipline: Object,
     categorie: Object,
+    currentDisplay: String,
 });
 
-const activeButton = ref("Mes activites");
+const activeButton = ref(props.currentDisplay);
 
 const emitEvent = (message) => {
     emit("eventFromChild", message);
@@ -21,6 +22,13 @@ const getButtonClass = (buttonName) => {
         "text-white": activeButton.value === buttonName,
     };
 };
+
+watch(
+    () => props.currentDisplay,
+    (newDisplay) => {
+        activeButton.value = newDisplay;
+    }
+);
 </script>
 <template>
     <div

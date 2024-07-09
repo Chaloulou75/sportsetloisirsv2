@@ -250,7 +250,7 @@ const onSubmit = () => {
             onSuccess: () => {
                 addTarifForm.reset();
                 emit("close");
-                emit("showDisplay");
+                emit("showDisplay", "Mes tarifs");
             },
         }
     );
