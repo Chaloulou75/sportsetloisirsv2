@@ -509,7 +509,7 @@ onMounted(() => {
                                             v-model="addTarifForm.description"
                                             autoResize
                                             rows="4"
-                                            cols="25"
+                                            cols="45"
                                         />
                                         <div
                                             v-if="errors.addTarifForm"
@@ -649,6 +649,7 @@ onMounted(() => {
                                                     />
                                                 </div>
                                             </div>
+
                                             <!-- sous attributs -->
                                             <template
                                                 v-for="sousattribut in attribut.sous_attributs"
@@ -916,7 +917,7 @@ onMounted(() => {
                                                                 />
 
                                                                 <div
-                                                                    class="ml-8 flex flex-col items-center space-x-0 space-y-3 md:ml-16 md:flex-row md:flex-wrap md:space-x-8 md:space-y-0"
+                                                                    class="ml-8 flex flex-col items-center gap-4 md:ml-16 md:flex-row md:flex-wrap"
                                                                 >
                                                                     <div
                                                                         v-for="produit in activite.produits"
