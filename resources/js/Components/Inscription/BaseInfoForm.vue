@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import MazPhoneNumberInput from "maz-ui/components/MazPhoneNumberInput";
 import { GlobeAltIcon } from "@heroicons/vue/24/solid";
+import Calendar from "primevue/calendar";
 
 const website = defineModel("website");
 const email = defineModel("email");
@@ -84,14 +85,13 @@ const results = ref();
                 En activité depuis:
             </label>
             <div class="mt-1 flex rounded-md shadow-sm">
-                <input
-                    type="date"
+                <Calendar
                     v-model="date_creation"
+                    showIcon
+                    iconDisplay="input"
+                    dateFormat="dd/mm/yy"
                     name="date_creation"
                     id="date_creation"
-                    class="form-input block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-50 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    placeholder=""
-                    autocomplete="none"
                 />
             </div>
             <div v-if="errors.date_creation" class="mt-2 text-xs text-red-500">

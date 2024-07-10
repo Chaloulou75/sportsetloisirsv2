@@ -1112,7 +1112,6 @@ onMounted(() => {
                                                     souscritere.sous_criteres_valeurs
                                                 "
                                             />
-
                                             <!-- radio -->
                                             <RadioForm
                                                 v-if="
@@ -1240,6 +1239,103 @@ onMounted(() => {
                                                 :max="souscritere.max"
                                                 :unite="souscritere.unite"
                                             />
+                                            <!-- Heure seule -->
+                                            <SingleTimeForm
+                                                v-if="
+                                                    formCriteres.criteresBase[
+                                                        critere.id
+                                                    ] === valeur &&
+                                                    souscritere.type_champ_form ===
+                                                        'time' &&
+                                                    souscritere.dis_cat_crit_val_id ===
+                                                        valeur.id
+                                                "
+                                                class="w-full max-w-sm"
+                                                v-model="
+                                                    formCriteres.sousCriteres[
+                                                        souscritere.id
+                                                    ]
+                                                "
+                                                :name="souscritere.nom"
+                                            />
+                                            <!-- Heures x2 ouverture / fermeture -->
+                                            <OpenTimesForm
+                                                v-if="
+                                                    formCriteres.criteresBase[
+                                                        critere.id
+                                                    ] === valeur &&
+                                                    souscritere.type_champ_form ===
+                                                        'times' &&
+                                                    souscritere.dis_cat_crit_val_id ===
+                                                        valeur.id
+                                                "
+                                                class="w-full max-w-sm"
+                                                v-model="
+                                                    formCriteres.sousCriteres[
+                                                        souscritere.id
+                                                    ]
+                                                "
+                                                :name="souscritere.nom"
+                                            />
+                                            <!-- Date seule -->
+                                            <SingleDateForm
+                                                v-if="
+                                                    formCriteres.criteresBase[
+                                                        critere.id
+                                                    ] === valeur &&
+                                                    souscritere.type_champ_form ===
+                                                        'date' &&
+                                                    souscritere.dis_cat_crit_val_id ===
+                                                        valeur.id
+                                                "
+                                                class="w-full max-w-sm"
+                                                v-model="
+                                                    formCriteres.sousCriteres[
+                                                        souscritere.id
+                                                    ]
+                                                "
+                                                :name="souscritere.nom"
+                                            />
+
+                                            <!-- Dates x 2 -->
+                                            <OpenDaysForm
+                                                v-if="
+                                                    formCriteres.criteresBase[
+                                                        critere.id
+                                                    ] === valeur &&
+                                                    souscritere.type_champ_form ===
+                                                        'dates' &&
+                                                    souscritere.dis_cat_crit_val_id ===
+                                                        valeur.id
+                                                "
+                                                class="w-full max-w-sm"
+                                                v-model="
+                                                    formCriteres.sousCriteres[
+                                                        souscritere.id
+                                                    ]
+                                                "
+                                                :name="souscritere.nom"
+                                            />
+                                            <!-- Mois -->
+
+                                            <OpenMonthsForm
+                                                v-if="
+                                                    formCriteres.criteresBase[
+                                                        critere.id
+                                                    ] === valeur &&
+                                                    souscritere.type_champ_form ===
+                                                        'mois' &&
+                                                    souscritere.dis_cat_crit_val_id ===
+                                                        valeur.id
+                                                "
+                                                class="w-full max-w-sm"
+                                                v-model="
+                                                    formCriteres.sousCriteres[
+                                                        souscritere.id
+                                                    ]
+                                                "
+                                                :name="souscritere.nom"
+                                            />
                                         </div>
                                     </div>
                                 </template>
@@ -1273,7 +1369,7 @@ onMounted(() => {
                                 "
                                 @click.prevent="openReservationModal"
                                 type="button"
-                                class="inline-flex w-full items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm text-white duration-300 hover:-translate-y-1 hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50 md:w-auto"
+                                class="inline-flex w-full items-center justify-center rounded-lg bg-blue-600 px-6 py-3 text-sm text-white duration-300 hover:-translate-y-1 hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50 md:w-auto"
                             >
                                 Sélectionner
                             </button>

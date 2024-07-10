@@ -2,7 +2,10 @@
 import { ref, computed } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import SelectForm from "@/Components/Forms/SelectForm.vue";
+import Checkbox from "@/Components/Forms/Checkbox.vue";
+import Dropdown from "primevue/dropdown";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
+import RadioForm from "@/Components/Forms/RadioForm.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
 import { XCircleIcon } from "@heroicons/vue/24/outline";
 import {
@@ -57,67 +60,6 @@ const bookingForm = useForm({
     attributs: {},
     sousattributs: {},
     plannings: [],
-});
-
-const updateSelectedCheckboxes = (fieldId, optionValue, checked) => {
-    const selectedValue = bookingForm.attributs[fieldId];
-
-    if (checked) {
-        if (!Array.isArray(selectedValue)) {
-            bookingForm.attributs[fieldId] = ref([optionValue]);
-        } else {
-            selectedValue.push(optionValue);
-        }
-    } else {
-        if (Array.isArray(selectedValue)) {
-            const index = selectedValue.indexOf(optionValue);
-            if (index !== -1) {
-                selectedValue.splice(index, 1);
-            }
-        }
-    }
-};
-
-const isCheckboxSelected = computed(() => {
-    return (fieldId, optionValue) => {
-        return (
-            bookingForm.attributs[fieldId] &&
-            bookingForm.attributs[fieldId].includes(optionValue)
-        );
-    };
-});
-
-const updateSousAttrSelectedCheckboxes = (
-    sousFieldId,
-    optionValue,
-    checked
-) => {
-    const selectedSousField = bookingForm.sousattributs[sousFieldId];
-
-    if (checked) {
-        if (!Array.isArray(selectedSousField)) {
-            // Use ref() to ensure reactivity when modifying arrays
-            bookingForm.sousattributs[sousFieldId] = ref([optionValue]);
-        } else {
-            selectedSousField.push(optionValue);
-        }
-    } else {
-        if (Array.isArray(selectedSousField)) {
-            const index = selectedSousField.indexOf(optionValue);
-            if (index !== -1) {
-                selectedSousField.splice(index, 1);
-            }
-        }
-    }
-};
-
-const isCheckboxSousAttrSelected = computed(() => {
-    return (sousFieldId, optionValue) => {
-        return (
-            bookingForm.sousattributs[sousFieldId] &&
-            bookingForm.sousattributs[sousFieldId].includes(optionValue)
-        );
-    };
 });
 
 const onSubmit = () => {
@@ -267,7 +209,6 @@ const onSubmit = () => {
                                             >
                                                 <!-- select  -->
                                                 <SelectForm
-                                                    :classes="'block'"
                                                     class="max-w-sm"
                                                     v-if="
                                                         field.type_champ_form ===
@@ -295,12 +236,19 @@ const onSubmit = () => {
                                                         ]
                                                     "
                                                     :options="field.valeurs"
-                                                    :is-checkbox-selected="
-                                                        isCheckboxSelected
+                                                />
+                                                <RadioForm
+                                                    v-if="
+                                                        field.type_champ_form ===
+                                                        'radio'
                                                     "
-                                                    @update-selected-checkboxes="
-                                                        updateSelectedCheckboxes
+                                                    v-model="
+                                                        bookingForm.attributs[
+                                                            field.id
+                                                        ]
                                                     "
+                                                    :name="field.nom"
+                                                    :options="field.valeurs"
                                                 />
                                                 <!-- input text -->
                                                 <div
@@ -375,20 +323,35 @@ const onSubmit = () => {
                                                     v-for="sousField in field.sous_fields"
                                                     :key="sousField.id"
                                                 >
-                                                    <SelectForm
-                                                        :classes="'block '"
+                                                    <Dropdown
                                                         class="mt-2 w-full max-w-sm"
                                                         v-if="
                                                             sousField.type_champ_form ===
                                                             'select'
                                                         "
-                                                        :name="sousField.nom"
                                                         v-model="
                                                             bookingForm
                                                                 .sousattributs[
                                                                 sousField.id
                                                             ]
                                                         "
+                                                        :options="
+                                                            sousField.valeurs
+                                                        "
+                                                        optionLabel="valeur"
+                                                    />
+                                                    <RadioForm
+                                                        v-if="
+                                                            sousField.type_champ_form ===
+                                                            'radio'
+                                                        "
+                                                        v-model="
+                                                            bookingForm
+                                                                .sousattributs[
+                                                                sousField.id
+                                                            ]
+                                                        "
+                                                        :name="sousField.nom"
                                                         :options="
                                                             sousField.valeurs
                                                         "
@@ -410,12 +373,6 @@ const onSubmit = () => {
                                                         "
                                                         :options="
                                                             sousField.valeurs
-                                                        "
-                                                        :is-checkbox-selected="
-                                                            isCheckboxSousAttrSelected
-                                                        "
-                                                        @update-selected-checkboxes="
-                                                            updateSousAttrSelectedCheckboxes
                                                         "
                                                     />
                                                     <!-- input text -->
@@ -527,13 +484,13 @@ const onSubmit = () => {
                                                     formatDate(planning.end)
                                                 }}</span
                                             >
-                                            <input
-                                                v-model="bookingForm.plannings"
-                                                :id="planning.id"
-                                                :name="planning.id"
+                                            <Checkbox
+                                                v-model:checked="
+                                                    bookingForm.plannings[
+                                                        planning.id
+                                                    ]
+                                                "
                                                 :value="planning.id"
-                                                type="checkbox"
-                                                class="ms-auto mt-0.5 shrink-0 rounded border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                                             />
                                         </label>
                                     </div>

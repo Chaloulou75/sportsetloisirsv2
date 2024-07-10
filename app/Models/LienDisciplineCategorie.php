@@ -21,6 +21,14 @@ class LienDisciplineCategorie extends Pivot
      */
     protected $guarded = [];
 
+    /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName(): String
+    {
+        return 'slug';
+    }
+
     public function discipline(): BelongsTo
     {
         return $this->belongsTo(ListDiscipline::class, 'discipline_id');

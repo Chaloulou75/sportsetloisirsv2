@@ -1,8 +1,9 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
+import { Head, Link, useForm, router } from "@inertiajs/vue3";
 import { ref, defineAsyncComponent, watch, onMounted } from "vue";
 import { useFilterProducts } from "@/composables/useFilterProducts";
+import { debounce } from "lodash";
 import CritereForm from "@/Components/Criteres/CritereForm.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
@@ -33,6 +34,7 @@ const props = defineProps({
     produits: Object,
     structures: Object,
     posts: Object,
+    filters: Object,
 });
 
 const ProduitCard = defineAsyncComponent(() =>
@@ -128,27 +130,55 @@ const { filterProducts } = useFilterProducts(
     selectedSousCriteres
 );
 
+const debouncedFilter = debounce((newFormCriteres) => {
+    router.get(
+        route("disciplines.categories.show", {
+            discipline: props.discipline.slug,
+            category: props.category.slug,
+        }),
+        {
+            criteresBase: newFormCriteres.criteresBase,
+            sousCriteres: newFormCriteres.sousCriteres,
+        },
+        {
+            preserveState: true,
+            preserveScroll: true,
+            only: ["produits"],
+            onSuccess: () => {
+                filteredProduits.value = props.produits.data;
+            },
+        }
+    );
+}, 300);
+
 watch(
-    () => formCriteres.criteresBase,
-    (newCriteres) => {
-        selectedCriteres.value = Object.entries(newCriteres);
-        filterProducts();
+    () => formCriteres,
+    (newFormCriteres) => {
+        debouncedFilter(newFormCriteres);
     },
     { deep: true }
 );
 
-watch(
-    () => formCriteres.sousCriteres,
-    (newSousCriteres) => {
-        selectedSousCriteres.value = Object.entries(newSousCriteres);
-        filterProducts();
-    },
-    { deep: true }
-);
+// watch(
+//     () => formCriteres.criteresBase,
+//     (newCriteres) => {
+//         selectedCriteres.value = Object.entries(newCriteres);
+//         filterProducts();
+//     },
+//     { deep: true }
+// );
+
+// watch(
+//     () => formCriteres.sousCriteres,
+//     (newSousCriteres) => {
+//         selectedSousCriteres.value = Object.entries(newSousCriteres);
+//         filterProducts();
+//     },
+//     { deep: true }
+// );
 
 const resetFormCriteres = () => {
-    formCriteres.criteresBase = {};
-    formCriteres.sousCriteres = {};
+    formCriteres.reset();
     selectedCriteres.value = [];
     filterProducts();
 };
@@ -176,7 +206,6 @@ onMounted(() => {
         :all-cities="allCities"
         :discipline="discipline"
         :current-category="category"
-        :is-criteres-visible="isCriteresVisible"
     >
         <template #header>
             <ResultsHeader :discipline="discipline">

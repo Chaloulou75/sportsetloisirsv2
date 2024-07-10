@@ -327,7 +327,6 @@ onMounted(() => {
                                             >
                                                 <!-- select -->
                                                 <SelectForm
-                                                    :classes="'block'"
                                                     class="max-w-sm"
                                                     v-if="
                                                         critere.type_champ_form ===

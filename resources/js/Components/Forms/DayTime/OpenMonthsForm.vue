@@ -12,15 +12,6 @@ const isShowing = ref(true);
 const start = ref();
 const end = ref();
 
-// watch(
-//     () => model.value,
-//     (newVal) => {
-//         start.value = newVal.monthStart;
-//         end.value = newVal.monthEnd;
-//     },
-//     { immediate: true }
-// );
-
 watch(
     () => start.value,
     (newVal) => {

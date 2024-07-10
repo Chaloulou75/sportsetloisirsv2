@@ -21,6 +21,8 @@ Route::get('/dis-{discipline}/activites-{activite}-{slug}/{produit?}', [Discipli
 
 Route::get('/dis-{discipline}/cat-{category:slug}', [CategoryDisciplineController::class, 'show'])->name('disciplines.categories.show');
 
+Route::post('/dis-{discipline}/cat-{category:slug}/filter', [CategoryDisciplineController::class, 'filter'])->name('disciplines.categories.filter');
+
 Route::get('/dis-{discipline}/cat-{category:slug}/str-{structure}', [DisciplineCategorieStructureController::class, 'show'])->name('disciplines.categories.structures.show');
 
 Route::get('/dis-{discipline}/cat-{category:slug}/activites-{activite}-{slug}/{produit?}', [DisciplineCategorieActiviteController::class, 'show'])->name('disciplines.categories.activites.show');

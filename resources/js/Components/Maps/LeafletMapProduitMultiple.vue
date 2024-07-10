@@ -36,8 +36,8 @@ const StructureCardXS = defineAsyncComponent(() =>
 
 const map = ref(null);
 const center = ref([
-    props.produits[0].adresse.address_lat,
-    props.produits[0].adresse.address_lng,
+    props.produits[0].adresse.address_lat ?? "48.866667",
+    props.produits[0].adresse.address_lng ?? "2.333333",
 ]);
 const bounds = ref(null);
 const filteredProduits = ref(props.filteredProduits);

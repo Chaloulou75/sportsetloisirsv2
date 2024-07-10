@@ -73,6 +73,7 @@ class PanierController extends Controller
             'sousattributs' => ['nullable'],
             'plannings' => ['nullable'],
         ]);
+        dd($request->all());
 
         $user = auth()->user();
         $produit = StructureProduit::withRelations()->find($request->produitId);

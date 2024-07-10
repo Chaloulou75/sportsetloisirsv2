@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
 use Illuminate\Validation\Rule;
+use App\Models\StructureProduit;
 use App\Models\LienDisCatTariftype;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CityResource;
@@ -37,8 +38,9 @@ class CategoryDisciplineController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ListDiscipline $discipline, $category): Response
+    public function show(Request $request, ListDiscipline $discipline, $category): Response
     {
+
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
@@ -52,7 +54,7 @@ class CategoryDisciplineController extends Controller
         $discipline = ListDiscipline::withProductsAndDisciplinesSimilaires()
         ->find($discipline->id);
 
-        $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('slug', $category)->first();
+        $category = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('slug', $category)->firstOrFail();
 
         $categories = LienDisciplineCategorie::whereHas('structures_produits')
             ->where('discipline_id', $discipline->id)
@@ -76,6 +78,8 @@ class CategoryDisciplineController extends Controller
         ->where('visible_front', true)
         ->get();
 
+        $produits = $discipline->structureProduits()->withRelations()->where('categorie_id', $category->id)->filter($request->only(['criteresBase', 'sousCriteres']))->paginate(10);
+
         $structures = Structure::with([
             'adresses'  => function ($query) {
                 $query->latest();
@@ -91,8 +95,6 @@ class CategoryDisciplineController extends Controller
             $subquery->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
         })
         ->paginate(12);
-
-        $produits = $discipline->structureProduits()->withRelations()->where('categorie_id', $category->id)->paginate(12);
 
         $posts = Post::orderByDiscipline($discipline->id)->take(6)->get();
 
@@ -113,8 +115,8 @@ class CategoryDisciplineController extends Controller
             'produits' => fn () => StructureProduitResource::collection($produits),
             'structures' => fn () => StructureResource::collection($structures),
             'posts' => fn () => PostResource::collection($posts),
+            'filters' => $request->only(['criteresBase', 'sousCriteres']),
         ]);
-
     }
 
     public function store(Request $request, ListDiscipline $discipline)
@@ -241,4 +243,5 @@ class CategoryDisciplineController extends Controller
         $tarifs = $disCat->tarif_types;
         return LienDisCatTariftypeResource::collection($tarifs);
     }
+
 }
