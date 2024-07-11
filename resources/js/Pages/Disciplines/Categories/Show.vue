@@ -2,7 +2,7 @@
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link, useForm, router } from "@inertiajs/vue3";
 import { ref, defineAsyncComponent, watch, onMounted } from "vue";
-import { useFilterProducts } from "@/composables/useFilterProducts";
+// import { useFilterProducts } from "@/composables/useFilterProducts";
 import { debounce } from "lodash";
 import CritereForm from "@/Components/Criteres/CritereForm.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
@@ -107,11 +107,12 @@ const toggleCriteresLg = () => {
 };
 
 const formCriteres = useForm({
-    criteresBase: {},
-    sousCriteres: {},
+    criteresBase: props.filters.crit || {},
+    sousCriteres: props.filters.ssCrit || {},
+    remember: true,
+    page: 1,
 });
-const selectedCriteres = ref([]);
-const selectedSousCriteres = ref([]);
+
 const filteredProduits = ref(props.produits.data);
 const filteredStructures = ref(props.structures.data);
 
@@ -123,33 +124,28 @@ const onfilteredStructuresUpdate = (filteredStr) => {
     filteredStructures.value = filteredStr;
 };
 
-const { filterProducts } = useFilterProducts(
-    props,
-    filteredProduits,
-    selectedCriteres,
-    selectedSousCriteres
-);
-
 const debouncedFilter = debounce((newFormCriteres) => {
-    router.get(
+    router.post(
         route("disciplines.categories.show", {
             discipline: props.discipline.slug,
             category: props.category.slug,
         }),
         {
-            criteresBase: newFormCriteres.criteresBase,
-            sousCriteres: newFormCriteres.sousCriteres,
+            filters: {
+                crit: newFormCriteres.criteresBase,
+                ssCrit: newFormCriteres.sousCriteres,
+            },
         },
         {
             preserveState: true,
             preserveScroll: true,
-            only: ["produits"],
+            only: ["produits", "filters"],
             onSuccess: () => {
                 filteredProduits.value = props.produits.data;
             },
         }
     );
-}, 300);
+}, 500);
 
 watch(
     () => formCriteres,
@@ -159,35 +155,29 @@ watch(
     { deep: true }
 );
 
-// watch(
-//     () => formCriteres.criteresBase,
-//     (newCriteres) => {
-//         selectedCriteres.value = Object.entries(newCriteres);
-//         filterProducts();
-//     },
-//     { deep: true }
-// );
-
-// watch(
-//     () => formCriteres.sousCriteres,
-//     (newSousCriteres) => {
-//         selectedSousCriteres.value = Object.entries(newSousCriteres);
-//         filterProducts();
-//     },
-//     { deep: true }
-// );
-
 const resetFormCriteres = () => {
     formCriteres.reset();
-    selectedCriteres.value = [];
-    filterProducts();
+    router.post(
+        route("disciplines.categories.show", {
+            discipline: props.discipline.slug,
+            category: props.category.slug,
+        }),
+        { filters: {} },
+        {
+            preserveState: true,
+            preserveScroll: true,
+            only: ["produits", "filters"],
+            onSuccess: () => {
+                filteredProduits.value = props.produits.data;
+            },
+        }
+    );
 };
 
 onMounted(() => {
     if (listToAnimate.value) {
         autoAnimate(listToAnimate.value);
     }
-    filterProducts();
 });
 </script>
 
@@ -388,7 +378,7 @@ onMounted(() => {
                                 <div class="flex justify-end p-10">
                                     <Pagination
                                         :links="produits.meta.links"
-                                        :only="['produits']"
+                                        :only="['produits', 'filters']"
                                     />
                                 </div>
 

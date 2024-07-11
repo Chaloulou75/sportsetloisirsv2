@@ -151,9 +151,10 @@ class StructureProduit extends Model
 
     public function scopeFilter(Builder $query, array $filters): Builder
     {
-        return $query->when($filters['criteresBase'] ?? null, function ($query, $criteresBase) {
+        return $query->when($filters['crit'] ?? null, function ($query, $criteresBase) {
             foreach ($criteresBase as $critereId => $selectedCritere) {
-                if ($this->isEmptyCritere($selectedCritere)) {
+
+                if ($this->isEmptyCritere($selectedCritere) || (isset($selectedCritere['inclus_all']) && $selectedCritere['inclus_all'] === true)) {
                     continue;
                 }
 
@@ -161,14 +162,15 @@ class StructureProduit extends Model
                     $q->where('critere_id', $critereId);
                     $this->applyFilterBasedOnType($q, $selectedCritere, $critereId);
                 });
+
             }
-        })->when($filters['sousCriteres'] ?? null, function ($query, $sousCriteres) {
+        })->when($filters['ssCrit'] ?? null, function ($query, $sousCriteres) {
             foreach ($sousCriteres as $sousCritereId => $selectedSousCritere) {
                 if ($selectedSousCritere === null) {
                     continue;
                 }
 
-                $query->whereHas('criteres.sousCriteres', function ($q) use ($sousCritereId, $selectedSousCritere) {
+                $query->whereHas('criteres.sous_criteres', function ($q) use ($sousCritereId, $selectedSousCritere) {
                     $q->where('sous_critere_id', $sousCritereId);
                     $this->applySousCritereFilter($q, $selectedSousCritere, $sousCritereId);
                 });
@@ -183,12 +185,12 @@ class StructureProduit extends Model
 
     private function getTypeChampForm($selectedCritere, $critereId)
     {
-        $crit = StructureProduitCritere::find($critereId);
-        if (!$crit) {
+        $critere = LienDisciplineCategorieCritere::find($critereId);
+        if (!$critere) {
             return null;
         }
-        dd($crit->critere->type_champ_form);
-        return $crit->critere->type_champ_form;
+
+        return $critere->type_champ_form;
     }
 
     private function applyFilterBasedOnType($query, $selectedCritere, $critereId): void
@@ -206,8 +208,10 @@ class StructureProduit extends Model
                 $query->where('valeur', $selectedCritere);
                 break;
             case 'range':
-            case 'range multiple':
                 $this->applyRangeFilter($query, $selectedCritere);
+                break;
+            case 'range multiple':
+                $this->applyRangeMultipleFilter($query, $selectedCritere);
                 break;
             case 'time':
                 $this->applySingleTimeFilter($query, $selectedCritere);
@@ -229,86 +233,165 @@ class StructureProduit extends Model
         }
     }
 
+    private function applyMultipleValuesFilter($query, $selectedCritere): void
+    {
+        if (is_array($selectedCritere) && isset($selectedCritere['id'])) {
+            $query->where('valeur_id', $selectedCritere['id']);
+        } elseif (is_array($selectedCritere)) {
+            foreach ($selectedCritere as $critereSet) {
+                if (is_array($critereSet) && isset($critereSet['id'])) {
+                    $query->where('valeur_id', $critereSet['id']);
+                }
+            }
+        }
+    }
+
     private function applyRangeFilter($query, $selectedCritere): void
     {
-        if (is_array($selectedCritere) && count($selectedCritere) === 2) {
-            $query->whereBetween('valeur', $selectedCritere);
+        // ok
+        if (isset($selectedCritere)) {
+            $query->where('valeur', '<=', $selectedCritere);
+        }
+    }
+
+    private function applyRangeMultipleFilter($query, $selectedCritere): void
+    {
+        if (isset($selectedCritere['min']) && isset($selectedCritere['max'])) {
+            $minValue = $selectedCritere['min'];
+            $maxValue = $selectedCritere['max'];
+
+            $query->where(function ($q) use ($minValue, $maxValue) {
+                $q->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(valeur, ',', 1), ',', -1) >= ?", [$minValue])
+                  ->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(valeur, ',', -1), ',', -1) <= ?", [$maxValue]);
+            });
         }
     }
 
     private function applySingleTimeFilter($query, $selectedCritere): void
     {
-        $time = Carbon::parse($selectedCritere)->format('H:i');
-        $query->whereTime('valeur', $time);
+        // ok!
+        $time = Carbon::parse($selectedCritere)->setTimezone('Europe/Paris')->format('H:i');
+        $query->where('valeur', $time);
     }
 
     private function applyOpenTimesFilter($query, $selectedCritere): void
     {
-        $times = json_decode($selectedCritere, true);
-        if (is_array($times) && count($times) === 2) {
-            $startTime = Carbon::parse($times[0])->format('H:i');
-            $endTime = Carbon::parse($times[1])->format('H:i');
-            $query->whereTime('valeur', '>=', $startTime)
-                  ->whereTime('valeur', '<=', $endTime);
+        // ok??
+        if (is_array($selectedCritere) && count($selectedCritere) === 2 && isset($selectedCritere['debut']) && isset($selectedCritere['fin'])) {
+
+            $startTime = Carbon::parse($selectedCritere['debut'])->setTimezone('Europe/Paris')->format('H:i');
+            $endTime = Carbon::parse($selectedCritere['fin'])->setTimezone('Europe/Paris')->format('H:i');
+            $query->where(function ($query) use ($startTime, $endTime) {
+                $query->whereRaw('JSON_UNQUOTE(valeur->"$[0]") <= ? AND JSON_UNQUOTE(valeur->"$[1]") >= ?', [$startTime, $endTime])
+                      ->orWhereRaw('JSON_UNQUOTE(valeur->"$[0]") >= ? AND JSON_UNQUOTE(valeur->"$[1]") <= ?', [$startTime, $endTime])
+                      ->orwhereRaw('TIME(valeur->"$[0]") <= ? AND TIME(valeur->"$[1]") >= ?', [$startTime, $endTime]);
+            });
         }
     }
 
     private function applySingleDateFilter($query, $selectedCritere): void
     {
-        $date = Carbon::parse($selectedCritere);
-        $query->whereDate('valeur', $date);
+        //OK!
+        if (!$selectedCritere) {
+            return;
+        }
+        $selectedDate = Carbon::parse($selectedCritere)
+                    ->setTimezone('Europe/Paris')
+                    ->startOfDay();
+        $formattedDate = $selectedDate->format('Y-m-d');
+        $query->where('valeur', $formattedDate);
     }
 
     private function applyOpenDaysFilter($query, $selectedCritere): void
     {
-        $dates = json_decode($selectedCritere, true);
-        if (is_array($dates) && count($dates) === 2) {
-            $startDate = Carbon::parse($dates[0]);
-            $endDate = Carbon::parse($dates[1]);
-            $query->whereDate('valeur', '>=', $startDate)
-                  ->whereDate('valeur', '<=', $endDate);
+        // OK!
+        if (is_array($selectedCritere) && count($selectedCritere) === 2) {
+            $startDate = Carbon::parse($selectedCritere[0])
+                    ->setTimezone('Europe/Paris')
+                    ->startOfDay();
+            $formattedStartDate = $startDate->format('Y-m-d');
+
+            $endDate = Carbon::parse($selectedCritere[1])
+                    ->setTimezone('Europe/Paris')
+                    ->startOfDay();
+            $formattedEndDate = $endDate->format('Y-m-d');
+
+            $query->where(function ($query) use ($formattedStartDate, $formattedEndDate) {
+                $query->whereRaw('JSON_UNQUOTE(valeur->"$[0]") <= ? AND JSON_UNQUOTE(valeur->"$[1]") >= ?', [$formattedStartDate, $formattedEndDate ])
+                      ->orWhereRaw('JSON_UNQUOTE(valeur->"$[0]") <= ? AND JSON_UNQUOTE(valeur->"$[1]") >= ?', [$formattedStartDate, $formattedEndDate])
+                      ->orWhereRaw('JSON_UNQUOTE(valeur->"$[0]") >= ? AND JSON_UNQUOTE(valeur->"$[1]") <= ?', [$formattedStartDate, $formattedEndDate]);
+            });
         }
     }
 
     private function applyOpenMonthsFilter($query, $selectedCritere): void
     {
-        $months = json_decode($selectedCritere, true);
-        if (is_array($months) && count($months) === 2) {
-            $startMonth = Carbon::parse($months[0])->startOfMonth();
-            $endMonth = Carbon::parse($months[1])->endOfMonth();
-            $query->where(function ($subQ) use ($startMonth, $endMonth) {
-                $subQ->whereDate('valeur', '>=', $startMonth)
-                      ->whereDate('valeur', '<=', $endMonth);
+        // ok
+        if (is_array($selectedCritere) && count($selectedCritere) === 2) {
+            $monthStart = Carbon::parse($selectedCritere['monthStart'])->startOfMonth()->format('Y-m-d');
+            $monthEnd = Carbon::parse($selectedCritere['monthEnd'])->startOfMonth()->format('Y-m-d');
+            $query->where(function ($q) use ($monthStart, $monthEnd) {
+                $q->whereRaw('JSON_UNQUOTE(valeur->"$[0]") <= ? AND JSON_UNQUOTE(valeur->"$[1]") >= ?', [$monthStart, $monthEnd])
+                      ->orWhereRaw('JSON_UNQUOTE(valeur->"$[0]") <= ? AND JSON_UNQUOTE(valeur->"$[1]") >= ?', [$monthStart, $monthEnd])
+                      ->orWhereRaw('JSON_UNQUOTE(valeur->"$[0]") >= ? AND JSON_UNQUOTE(valeur->"$[1]") <= ?', [$monthStart, $monthEnd]);
             });
         }
     }
 
     private function applySousCritereFilter($query, $selectedSousCritere, $sousCritereId): void
     {
-        $sousCritere = StructureProduitSousCritere::find($sousCritereId);
+        $sousCritere = LiensDisCatCritValSsCrit::find($sousCritereId);
         if (!$sousCritere) {
             return;
         }
 
-        $typeChampForm = $sousCritere->sous_critere->type_champ_form;
+        $typeChampForm = $sousCritere->type_champ_form;
 
         switch ($typeChampForm) {
             case 'select':
             case 'checkbox':
             case 'radio':
-                $this->applyMultipleValuesFilter($query, $selectedSousCritere);
+                $this->applyMultipleValuesSousCritFilter($query, $selectedSousCritere);
                 break;
             case 'text':
             case 'number':
                 $query->where('valeur', $selectedSousCritere);
                 break;
             case 'range':
-            case 'range multiple':
                 $this->applyRangeFilter($query, $selectedSousCritere);
                 break;
-                // Ajoutez d'autres cas pour les sous-critères si nécessaire
+            case 'range multiple':
+                $this->applyRangeMultipleFilter($query, $selectedSousCritere);
+                break;
+            case 'time':
+                $this->applySingleTimeFilter($query, $selectedSousCritere);
+                break;
+            case 'times':
+                $this->applyOpenTimesFilter($query, $selectedSousCritere);
+                break;
+            case 'date':
+                $this->applySingleDateFilter($query, $selectedSousCritere);
+                break;
+            case 'dates':
+                $this->applyOpenDaysFilter($query, $selectedSousCritere);
+                break;
+            case 'mois':
+                $this->applyOpenMonthsFilter($query, $selectedSousCritere);
+                break;
             default:
                 $query->where('valeur', $selectedSousCritere);
+        }
+    }
+    private function applyMultipleValuesSousCritFilter($query, $selectedSousCritere): void
+    {
+        if (is_array($selectedSousCritere) && isset($selectedSousCritere['id'])) {
+            $query->where('sous_critere_valeur_id', $selectedSousCritere['id']);
+        } elseif (is_array($selectedSousCritere)) {
+            foreach ($selectedSousCritere as $critereSet) {
+                if (is_array($critereSet) && isset($critereSet['id'])) {
+                    $query->where('sous_critere_valeur_id', $critereSet['id']);
+                }
+            }
         }
     }
 }

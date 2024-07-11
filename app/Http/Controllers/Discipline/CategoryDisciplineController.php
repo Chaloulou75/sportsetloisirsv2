@@ -40,6 +40,7 @@ class CategoryDisciplineController extends Controller
      */
     public function show(Request $request, ListDiscipline $discipline, $category): Response
     {
+        $filters = $request->input('filters', []);
 
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -78,7 +79,12 @@ class CategoryDisciplineController extends Controller
         ->where('visible_front', true)
         ->get();
 
-        $produits = $discipline->structureProduits()->withRelations()->where('categorie_id', $category->id)->filter($request->only(['criteresBase', 'sousCriteres']))->paginate(10);
+        $produits = $discipline->structureProduits()
+                                ->withRelations()
+                                ->where('categorie_id', $category->id)
+                                ->filter($filters)
+                                ->paginate(4)
+                                ->withQueryString();
 
         $structures = Structure::with([
             'adresses'  => function ($query) {
@@ -115,7 +121,7 @@ class CategoryDisciplineController extends Controller
             'produits' => fn () => StructureProduitResource::collection($produits),
             'structures' => fn () => StructureResource::collection($structures),
             'posts' => fn () => PostResource::collection($posts),
-            'filters' => $request->only(['criteresBase', 'sousCriteres']),
+            'filters' => $filters,
         ]);
     }
 
