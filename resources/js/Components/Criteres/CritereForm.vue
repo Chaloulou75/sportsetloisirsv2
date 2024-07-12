@@ -30,6 +30,14 @@ const filteredCriteresByChamp = computed(() => {
 const criteresModel = defineModel("criteresBase");
 const sousCriteresModel = defineModel("sousCriteres");
 const emit = defineEmits(["reset-criteres"]);
+// , "reset-sous-criteres"
+// watch(
+//     () => criteresModel,
+//     (newCriteresModel) => {
+//         emit("reset-sous-criteres", newCriteresModel);
+//     },
+//     { deep: true }
+// );
 
 const handleResetFormCriteres = () => {
     emit("reset-criteres");
