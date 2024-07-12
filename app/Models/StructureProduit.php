@@ -235,15 +235,20 @@ class StructureProduit extends Model
 
     private function applyMultipleValuesFilter($query, $selectedCritere): void
     {
-        if (is_array($selectedCritere) && isset($selectedCritere['id'])) {
-            $query->where('valeur_id', $selectedCritere['id']);
-        } elseif (is_array($selectedCritere)) {
-            foreach ($selectedCritere as $critereSet) {
-                if (is_array($critereSet) && isset($critereSet['id'])) {
-                    $query->where('valeur_id', $critereSet['id']);
-                }
+        if (is_array($selectedCritere)) {
+            if (isset($selectedCritere['id'])) {
+                $query->where('valeur_id', $selectedCritere['id']);
+            } else {
+                $query->where(function ($subQuery) use ($selectedCritere) {
+                    foreach ($selectedCritere as $critereSet) {
+                        if (is_array($critereSet) && isset($critereSet['id'])) {
+                            $subQuery->orWhere('valeur_id', $critereSet['id']);
+                        }
+                    }
+                });
             }
         }
+
     }
 
     private function applyRangeFilter($query, $selectedCritere): void
@@ -384,14 +389,20 @@ class StructureProduit extends Model
     }
     private function applyMultipleValuesSousCritFilter($query, $selectedSousCritere): void
     {
-        if (is_array($selectedSousCritere) && isset($selectedSousCritere['id'])) {
-            $query->where('sous_critere_valeur_id', $selectedSousCritere['id']);
-        } elseif (is_array($selectedSousCritere)) {
-            foreach ($selectedSousCritere as $critereSet) {
-                if (is_array($critereSet) && isset($critereSet['id'])) {
-                    $query->where('sous_critere_valeur_id', $critereSet['id']);
-                }
+        if (is_array($selectedSousCritere)) {
+            if (isset($selectedSousCritere['id'])) {
+                $query->where('sous_critere_valeur_id', $selectedSousCritere['id']);
+            } else {
+                $query->where(function ($subQuery) use ($selectedSousCritere) {
+                    foreach ($selectedSousCritere as $critereSet) {
+                        if (is_array($critereSet) && isset($critereSet['id'])) {
+                            $subQuery->orWhere('sous_critere_valeur_id', $critereSet['id']);
+                        }
+                    }
+                });
             }
         }
+
+
     }
 }
