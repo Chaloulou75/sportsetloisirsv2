@@ -40,7 +40,8 @@ class CategoryDisciplineController extends Controller
      */
     public function show(Request $request, ListDiscipline $discipline, $category): Response
     {
-        $filters = $request->input('filters', []);
+        $filters = $request->only(['crit', 'ssCrit']);
+        $page = $request->input('page', 1);
 
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -79,30 +80,30 @@ class CategoryDisciplineController extends Controller
         ->where('visible_front', true)
         ->get();
 
+        $posts = Post::orderByDiscipline($discipline->id)->take(6)->get();
+
+        $structures = Structure::with([
+                    'adresses'  => function ($query) {
+                        $query->latest();
+                    },
+                    'structuretype',
+                    'activites' => function ($query) use ($discipline, $category) {
+                        $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
+                    },
+                    'activites.discipline',
+                    'activites.categorie',
+                ])
+                ->whereHas('activites', function ($subquery) use ($discipline, $category) {
+                    $subquery->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
+                })
+                ->paginate(4, ['*'], 'strpage')
+                ->withQueryString();
+
         $produits = $discipline->structureProduits()
                                 ->withRelations()
                                 ->where('categorie_id', $category->id)
                                 ->filter($filters)
-                                ->paginate(4)
-                                ->withQueryString();
-
-        $structures = Structure::with([
-            'adresses'  => function ($query) {
-                $query->latest();
-            },
-            'structuretype',
-            'activites' => function ($query) use ($discipline, $category) {
-                $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
-            },
-            'activites.discipline',
-            'activites.categorie',
-        ])
-        ->whereHas('activites', function ($subquery) use ($discipline, $category) {
-            $subquery->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
-        })
-        ->paginate(12);
-
-        $posts = Post::orderByDiscipline($discipline->id)->take(6)->get();
+                                ->paginate(4, ['*'], 'prodpage', $page);
 
         $discipline->timestamp = false;
         $discipline->increment('view_count');
@@ -121,7 +122,7 @@ class CategoryDisciplineController extends Controller
             'produits' => fn () => StructureProduitResource::collection($produits),
             'structures' => fn () => StructureResource::collection($structures),
             'posts' => fn () => PostResource::collection($posts),
-            'filters' => $filters,
+            'filters' => fn () => $filters ?? null,
         ]);
     }
 
@@ -249,5 +250,4 @@ class CategoryDisciplineController extends Controller
         $tarifs = $disCat->tarif_types;
         return LienDisCatTariftypeResource::collection($tarifs);
     }
-
 }

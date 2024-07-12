@@ -15,6 +15,7 @@ const props = defineProps({
             v-model="checked"
             :inputId="name"
             :name="name"
+            :id="name"
             :value="value"
             :binary="true"
         />

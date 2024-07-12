@@ -2,7 +2,6 @@
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link, useForm, router } from "@inertiajs/vue3";
 import { ref, defineAsyncComponent, watch, onMounted } from "vue";
-// import { useFilterProducts } from "@/composables/useFilterProducts";
 import { debounce } from "lodash";
 import CritereForm from "@/Components/Criteres/CritereForm.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
@@ -61,8 +60,6 @@ const Pagination = defineAsyncComponent(() =>
     import("@/Components/Pagination.vue")
 );
 
-const listToAnimate = ref();
-
 const mapStructure = ref(null);
 const listeStructure = ref(null);
 
@@ -106,24 +103,20 @@ const toggleCriteresLg = () => {
     showCriteresLg.value = !showCriteresLg.value;
 };
 
-const formCriteres = useForm({
-    criteresBase: props.filters.crit || {},
-    sousCriteres: props.filters.ssCrit || {},
-    remember: true,
-    page: 1,
-});
-
 const filteredProduits = ref(props.produits.data);
 const filteredStructures = ref(props.structures.data);
-
 const onFilteredProduitsUpdate = (filtered) => {
     filteredProduits.value = filtered;
 };
-
 const onfilteredStructuresUpdate = (filteredStr) => {
     filteredStructures.value = filteredStr;
 };
 
+const formCriteres = useForm({
+    criteresBase: props.filters?.crit ?? {},
+    sousCriteres: props.filters?.ssCrit ?? {},
+    page: props.produits.meta.current_page,
+});
 const debouncedFilter = debounce((newFormCriteres) => {
     router.post(
         route("disciplines.categories.show", {
@@ -131,10 +124,9 @@ const debouncedFilter = debounce((newFormCriteres) => {
             category: props.category.slug,
         }),
         {
-            filters: {
-                crit: newFormCriteres.criteresBase,
-                ssCrit: newFormCriteres.sousCriteres,
-            },
+            crit: newFormCriteres.criteresBase,
+            ssCrit: newFormCriteres.sousCriteres,
+            page: newFormCriteres.page,
         },
         {
             preserveState: true,
@@ -145,7 +137,7 @@ const debouncedFilter = debounce((newFormCriteres) => {
             },
         }
     );
-}, 500);
+}, 300);
 
 watch(
     () => formCriteres,
@@ -157,23 +149,22 @@ watch(
 
 const resetFormCriteres = () => {
     formCriteres.reset();
-    router.post(
-        route("disciplines.categories.show", {
-            discipline: props.discipline.slug,
-            category: props.category.slug,
-        }),
-        { filters: {} },
-        {
-            preserveState: true,
-            preserveScroll: true,
-            only: ["produits", "filters"],
-            onSuccess: () => {
-                filteredProduits.value = props.produits.data;
-            },
-        }
-    );
+    formCriteres.page = 1;
+    debouncedFilter(formCriteres);
 };
 
+const handlePageChange = (newPage) => {
+    if (newPage === "previous") {
+        formCriteres.page = Math.max(1, formCriteres.page - 1);
+    } else if (newPage === "next") {
+        formCriteres.page = formCriteres.page + 1;
+    } else {
+        formCriteres.page = newPage;
+    }
+    debouncedFilter(formCriteres);
+};
+
+const listToAnimate = ref();
 onMounted(() => {
     if (listToAnimate.value) {
         autoAnimate(listToAnimate.value);
@@ -300,6 +291,7 @@ onMounted(() => {
                 <CritereForm
                     v-if="criteres"
                     :criteres="criteres"
+                    :filters="filters"
                     :show-criteres="showCriteres"
                     :show-criteres-lg="showCriteresLg"
                     v-model:criteres-base="formCriteres.criteresBase"
@@ -375,10 +367,11 @@ onMounted(() => {
                                         >
                                     </p>
                                 </div>
-                                <div class="flex justify-end p-10">
+                                <div class="my-10 flex justify-end">
                                     <Pagination
                                         :links="produits.meta.links"
                                         :only="['produits', 'filters']"
+                                        @page-changed="handlePageChange"
                                     />
                                 </div>
 
@@ -429,7 +422,7 @@ onMounted(() => {
                                         >
                                     </p>
                                 </div>
-                                <div class="flex justify-end p-10">
+                                <div class="my-10 flex justify-end md:px-2">
                                     <Pagination
                                         :links="structures.meta.links"
                                         :only="['structures']"

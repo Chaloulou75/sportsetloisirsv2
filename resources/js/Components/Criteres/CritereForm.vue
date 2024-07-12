@@ -18,6 +18,7 @@ const props = defineProps({
     criteres: Object,
     showCriteres: Boolean,
     showCriteresLg: Boolean,
+    filters: Object,
 });
 
 const filteredCriteresByChamp = computed(() => {
@@ -35,7 +36,7 @@ const handleResetFormCriteres = () => {
 };
 </script>
 <template>
-    <div
+    <form
         class="relative mx-auto w-full flex-col items-center justify-center gap-6 overflow-x-auto rounded bg-gray-50 px-2 py-2 backdrop-blur-md md:flex-row md:items-start md:justify-between md:px-6 md:pt-4"
         :class="{
             flex: showCriteres,
@@ -294,5 +295,5 @@ const handleResetFormCriteres = () => {
                 class="h-6 w-6 text-gray-500 transition duration-200 hover:-rotate-90 hover:text-gray-700 md:h-8 md:w-8"
             />
         </button>
-    </div>
+    </form>
 </template>

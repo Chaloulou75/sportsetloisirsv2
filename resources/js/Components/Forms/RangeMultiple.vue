@@ -63,7 +63,14 @@ watch(
             >{{ name }} ({{ unite }})</label
         >
         <div class="px-2">
-            <Slider v-model="model" :min="min" :max="max" :name="name" range />
+            <Slider
+                v-model="model"
+                :min="min"
+                :max="max"
+                :name="name"
+                :id="name"
+                range
+            />
         </div>
 
         <p class="w-full text-sm text-gray-700" v-if="model">

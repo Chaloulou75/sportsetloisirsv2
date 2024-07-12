@@ -36,6 +36,7 @@ const isShowing = ref(true);
                 :options="options"
                 optionLabel="valeur"
                 :placeholder="name"
+                :name="name"
                 class="w-full text-sm md:w-[14rem]"
                 :ptOptions="{ mergeProps: true }"
                 :pt="{ item: 'text-sm' }"

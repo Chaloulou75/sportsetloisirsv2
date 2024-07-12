@@ -47,7 +47,13 @@ const isShowing = ref(true);
                 >{{ name }} <span v-if="unite">({{ unite }})</span></label
             >
             <div class="px-2">
-                <Slider v-model="model" :min="min" :max="max" :name="name" />
+                <Slider
+                    v-model="model"
+                    :min="min"
+                    :max="max"
+                    :name="name"
+                    :id="name"
+                />
             </div>
 
             <p class="w-full text-sm text-gray-700" v-if="model">

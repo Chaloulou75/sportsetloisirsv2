@@ -37,6 +37,7 @@ const isShowing = ref(true);
                     <Checkbox
                         v-model="model"
                         :inputId="option.valeur"
+                        :id="option.valeur"
                         name="option"
                         :value="option"
                     />
